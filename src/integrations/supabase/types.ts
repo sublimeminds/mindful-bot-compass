@@ -235,6 +235,60 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          created_at: string | null
+          daily_summaries: boolean | null
+          email_notifications: boolean | null
+          id: string
+          insight_notifications: boolean | null
+          milestone_notifications: boolean | null
+          notification_frequency: string | null
+          progress_updates: boolean | null
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          session_reminders: boolean | null
+          streak_reminders: boolean | null
+          updated_at: string | null
+          user_id: string
+          weekly_reports: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          daily_summaries?: boolean | null
+          email_notifications?: boolean | null
+          id?: string
+          insight_notifications?: boolean | null
+          milestone_notifications?: boolean | null
+          notification_frequency?: string | null
+          progress_updates?: boolean | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          session_reminders?: boolean | null
+          streak_reminders?: boolean | null
+          updated_at?: string | null
+          user_id: string
+          weekly_reports?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          daily_summaries?: boolean | null
+          email_notifications?: boolean | null
+          id?: string
+          insight_notifications?: boolean | null
+          milestone_notifications?: boolean | null
+          notification_frequency?: string | null
+          progress_updates?: boolean | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          session_reminders?: boolean | null
+          streak_reminders?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+          weekly_reports?: boolean | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   User, 
   Settings, 
@@ -15,14 +15,17 @@ import {
   Download, 
   Trash2,
   ArrowLeft,
-  Camera
+  Camera,
+  Moon
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
 
 const UserProfile = () => {
   const { user, updateProfile, signOut } = useAuth();
+  const { preferences, isLoading: prefsLoading, updatePreferences } = useNotificationPreferences();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -31,10 +34,7 @@ const UserProfile = () => {
     email: ''
   });
 
-  const [preferences, setPreferences] = useState({
-    emailNotifications: true,
-    sessionReminders: true,
-    progressUpdates: false,
+  const [appPreferences, setAppPreferences] = useState({
     darkMode: false
   });
 
@@ -73,9 +73,14 @@ const UserProfile = () => {
     }
   };
 
-  const handlePreferenceChange = (key: string, value: boolean) => {
-    setPreferences(prev => ({ ...prev, [key]: value }));
-    // In a real app, this would save to the backend
+  const handleNotificationPreferenceChange = async (key: string, value: boolean | string) => {
+    if (!preferences) return;
+    
+    await updatePreferences({ [key]: value });
+  };
+
+  const handleAppPreferenceChange = (key: string, value: boolean) => {
+    setAppPreferences(prev => ({ ...prev, [key]: value }));
     toast({
       title: "Preference Updated",
       description: `${key} has been ${value ? 'enabled' : 'disabled'}.`,
@@ -83,7 +88,6 @@ const UserProfile = () => {
   };
 
   const handleExportData = () => {
-    // In a real app, this would export user data
     toast({
       title: "Data Export",
       description: "Your data export has been initiated. You'll receive an email when ready.",
@@ -91,7 +95,6 @@ const UserProfile = () => {
   };
 
   const handleDeleteAccount = () => {
-    // In a real app, this would show a confirmation dialog
     toast({
       title: "Account Deletion",
       description: "Please contact support to delete your account.",
@@ -124,7 +127,7 @@ const UserProfile = () => {
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="preferences">Preferences</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
             <TabsTrigger value="privacy">Privacy</TabsTrigger>
             <TabsTrigger value="account">Account</TabsTrigger>
           </TabsList>
@@ -192,7 +195,7 @@ const UserProfile = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="preferences" className="space-y-6">
+          <TabsContent value="notifications" className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -201,44 +204,132 @@ const UserProfile = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium">Email Notifications</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Receive email updates about your progress
-                    </p>
+                {prefsLoading ? (
+                  <div className="text-center py-4 text-muted-foreground">
+                    Loading preferences...
                   </div>
-                  <Switch
-                    checked={preferences.emailNotifications}
-                    onCheckedChange={(checked) => handlePreferenceChange('emailNotifications', checked)}
-                  />
-                </div>
+                ) : preferences ? (
+                  <>
+                    {/* Notification Types */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium">Session Reminders</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Get reminded about therapy sessions and self-care
+                          </p>
+                        </div>
+                        <Switch
+                          checked={preferences.sessionReminders}
+                          onCheckedChange={(checked) => handleNotificationPreferenceChange('sessionReminders', checked)}
+                        />
+                      </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium">Session Reminders</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Get reminded about scheduled therapy sessions
-                    </p>
-                  </div>
-                  <Switch
-                    checked={preferences.sessionReminders}
-                    onCheckedChange={(checked) => handlePreferenceChange('sessionReminders', checked)}
-                  />
-                </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium">Milestone Achievements</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Celebrate your progress and achievements
+                          </p>
+                        </div>
+                        <Switch
+                          checked={preferences.milestoneNotifications}
+                          onCheckedChange={(checked) => handleNotificationPreferenceChange('milestoneNotifications', checked)}
+                        />
+                      </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium">Progress Updates</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Weekly summaries of your mental health progress
-                    </p>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium">Progress Updates</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Weekly summaries of your mental health progress
+                          </p>
+                        </div>
+                        <Switch
+                          checked={preferences.progressUpdates}
+                          onCheckedChange={(checked) => handleNotificationPreferenceChange('progressUpdates', checked)}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium">Insight Notifications</h4>
+                          <p className="text-sm text-muted-foreground">
+                            AI-generated insights about your therapy patterns
+                          </p>
+                        </div>
+                        <Switch
+                          checked={preferences.insightNotifications}
+                          onCheckedChange={(checked) => handleNotificationPreferenceChange('insightNotifications', checked)}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium">Streak Reminders</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Maintain your therapy session streaks
+                          </p>
+                        </div>
+                        <Switch
+                          checked={preferences.streakReminders}
+                          onCheckedChange={(checked) => handleNotificationPreferenceChange('streakReminders', checked)}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Advanced Settings */}
+                    <div className="border-t pt-6">
+                      <h4 className="font-medium mb-4">Advanced Settings</h4>
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="frequency">Notification Frequency</Label>
+                          <Select
+                            value={preferences.notificationFrequency}
+                            onValueChange={(value) => handleNotificationPreferenceChange('notificationFrequency', value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select frequency" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="minimal">Minimal - Only essential notifications</SelectItem>
+                              <SelectItem value="normal">Normal - Balanced notifications</SelectItem>
+                              <SelectItem value="frequent">Frequent - All available notifications</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="quietStart">Quiet Hours Start</Label>
+                            <Input
+                              id="quietStart"
+                              type="time"
+                              value={preferences.quietHoursStart || ''}
+                              onChange={(e) => handleNotificationPreferenceChange('quietHoursStart', e.target.value)}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="quietEnd">Quiet Hours End</Label>
+                            <Input
+                              id="quietEnd"
+                              type="time"
+                              value={preferences.quietHoursEnd || ''}
+                              onChange={(e) => handleNotificationPreferenceChange('quietHoursEnd', e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          No notifications will be sent during quiet hours
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-4 text-muted-foreground">
+                    Failed to load notification preferences
                   </div>
-                  <Switch
-                    checked={preferences.progressUpdates}
-                    onCheckedChange={(checked) => handlePreferenceChange('progressUpdates', checked)}
-                  />
-                </div>
+                )}
               </CardContent>
             </Card>
 
@@ -258,8 +349,8 @@ const UserProfile = () => {
                     </p>
                   </div>
                   <Switch
-                    checked={preferences.darkMode}
-                    onCheckedChange={(checked) => handlePreferenceChange('darkMode', checked)}
+                    checked={appPreferences.darkMode}
+                    onCheckedChange={(checked) => handleAppPreferenceChange('darkMode', checked)}
                   />
                 </div>
               </CardContent>

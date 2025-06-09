@@ -1,6 +1,6 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { NotificationService } from './notificationService';
+import { NotificationPreferencesService } from './notificationPreferencesService';
 
 export interface SessionPattern {
   userId: string;
@@ -196,7 +196,7 @@ export class IntelligentNotificationService {
         }
       }
 
-      // Create notifications for insights
+      // Create notifications for insights - now respects user preferences
       for (const insight of insights) {
         await NotificationService.createNotification(userId, {
           type: insight.type as any,
@@ -223,6 +223,7 @@ export class IntelligentNotificationService {
       const achievedMilestone = milestones.find(m => m.sessions === patterns.totalSessions);
       
       if (achievedMilestone) {
+        // Now respects user preferences
         await NotificationService.createNotification(userId, {
           type: 'milestone_achieved',
           title: `🎉 ${achievedMilestone.title}`,
@@ -275,7 +276,7 @@ export class IntelligentNotificationService {
         }
       }
 
-      // Create gentle reminders for inactive users
+      // Create gentle reminders for inactive users - now respects preferences
       for (const user of inactiveUsers) {
         await NotificationService.createNotification(user.id, {
           type: 'session_reminder',

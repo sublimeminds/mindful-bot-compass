@@ -1,4 +1,6 @@
+
 import { supabase } from '@/integrations/supabase/client';
+import { NotificationPreferencesService } from './notificationPreferencesService';
 
 export interface Notification {
   id: string;
@@ -19,6 +21,13 @@ export class NotificationService {
     notification: Omit<Notification, 'id' | 'userId' | 'isRead' | 'createdAt'>
   ): Promise<boolean> {
     try {
+      // Check if user wants to receive this type of notification
+      const shouldSend = await NotificationPreferencesService.shouldSendNotification(userId, notification.type);
+      if (!shouldSend) {
+        console.log(`Notification blocked by user preferences: ${notification.type} for user ${userId}`);
+        return true; // Return true because the "operation" was successful, just blocked
+      }
+
       const { error } = await supabase
         .from('notifications')
         .insert({
