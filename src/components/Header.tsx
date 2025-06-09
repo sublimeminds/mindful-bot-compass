@@ -135,7 +135,11 @@ const Header = () => {
                 </Sheet>
               </>
             ) : (
-              <Button onClick={() => navigate("/auth")} size="sm">
+              <Button 
+                onClick={() => navigate("/auth")} 
+                size="sm"
+                className="bg-gradient-to-r from-therapy-600 to-therapy-800 hover:from-therapy-700 hover:to-therapy-900 text-white"
+              >
                 Sign In
               </Button>
             )}
