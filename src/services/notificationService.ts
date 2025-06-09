@@ -61,12 +61,12 @@ export class NotificationService {
       return data?.map(notification => ({
         id: notification.id,
         userId: notification.user_id,
-        type: notification.type,
+        type: notification.type as Notification['type'],
         title: notification.title,
         message: notification.message,
         data: notification.data || {},
         isRead: notification.is_read,
-        priority: notification.priority,
+        priority: notification.priority as Notification['priority'],
         createdAt: new Date(notification.created_at),
         scheduledFor: notification.scheduled_for ? new Date(notification.scheduled_for) : undefined
       })) || [];
