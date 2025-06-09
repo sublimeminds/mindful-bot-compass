@@ -24,15 +24,9 @@ export const TherapistProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [currentTherapist, setCurrentTherapist] = useState<TherapistPersonality | null>(null);
 
   useEffect(() => {
-    if (onboardingData?.therapist_personality) {
-      const personality = therapistPersonalities.find(
-        p => p.id === onboardingData.therapist_personality
-      );
-      setCurrentTherapist(personality || null);
-    } else {
-      // Default to CBT specialist if no personality selected
-      setCurrentTherapist(therapistPersonalities[0]);
-    }
+    // For now, always use the CBT specialist as default since therapist_personality 
+    // isn't implemented in the database yet
+    setCurrentTherapist(therapistPersonalities[0]);
   }, [onboardingData]);
 
   const getPersonalityPrompt = () => {

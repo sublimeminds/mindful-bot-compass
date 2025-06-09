@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,47 +25,33 @@ const Onboarding = () => {
   const [preferences, setPreferences] = useState<string[]>([]);
   const [selectedPersonality, setSelectedPersonality] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { user, refreshProfile } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (user) {
-      refreshProfile();
-    }
-  }, [user, refreshProfile]);
 
   const handleComplete = async () => {
     if (!user) return;
 
     setIsLoading(true);
     try {
-      const onboardingData = {
-        goals,
-        preferences,
-        therapist_personality: selectedPersonality,
-        completed_at: new Date().toISOString()
-      };
-
+      // Insert into user_onboarding table
       const { error: insertError } = await supabase
-        .from('onboarding_data')
+        .from('user_onboarding')
         .insert({
           user_id: user.id,
           goals,
-          preferences,
-          therapist_personality: selectedPersonality
+          preferences
         });
 
       if (insertError) throw insertError;
 
+      // Update profile to mark onboarding complete
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ onboarding_complete: true })
         .eq('id', user.id);
 
       if (updateError) throw updateError;
-
-      await refreshProfile();
 
       toast({
         title: "Welcome to MindfulAI!",

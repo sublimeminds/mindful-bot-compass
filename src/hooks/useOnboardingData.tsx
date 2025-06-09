@@ -23,8 +23,8 @@ export const useOnboardingData = () => {
 
       try {
         const { data, error } = await supabase
-          .from('onboarding_data')
-          .select('goals, preferences, therapist_personality')
+          .from('user_onboarding')
+          .select('goals, preferences')
           .eq('user_id', user.id)
           .single();
 
@@ -34,7 +34,7 @@ export const useOnboardingData = () => {
           setOnboardingData({
             goals: data.goals || [],
             preferences: data.preferences || [],
-            therapist_personality: data.therapist_personality
+            therapist_personality: undefined // Will be added later when we create the proper table
           });
         }
       } catch (error) {

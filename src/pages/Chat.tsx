@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,20 +28,24 @@ const Chat = () => {
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
-  const { currentSession, startSession, endSession, saveMessage, loadMessages } = useSession();
+  const { currentSession, startSession, endSession } = useSession();
   const navigate = useNavigate();
   const { currentTherapist, getPersonalityPrompt } = useTherapist();
 
   useEffect(() => {
-    const loadInitialMessages = async () => {
-      if (currentSession) {
-        const initialMessages = await loadMessages(currentSession.id);
-        setMessages(initialMessages);
-      }
-    };
-
-    loadInitialMessages();
-  }, [currentSession, loadMessages]);
+    // Load session messages when session changes
+    if (currentSession && currentSession.messages) {
+      const transformedMessages = currentSession.messages.map(msg => ({
+        id: msg.id,
+        content: msg.content,
+        isUser: msg.sender === 'user',
+        timestamp: new Date(msg.timestamp)
+      }));
+      setMessages(transformedMessages);
+    } else {
+      setMessages([]);
+    }
+  }, [currentSession]);
 
   useEffect(() => {
     // Scroll to bottom on message change
@@ -71,7 +76,7 @@ const Chat = () => {
     if (!currentSession) return;
 
     try {
-      await endSession(currentSession.id);
+      await endSession();
       setMessages([]);
       toast({
         title: "Session Ended",
@@ -122,10 +127,6 @@ const Chat = () => {
 
       const finalMessages = [...updatedMessages, aiMessage];
       setMessages(finalMessages);
-
-      // Save messages to session
-      await saveMessage(currentSession.id, newUserMessage);
-      await saveMessage(currentSession.id, aiMessage);
 
     } catch (error) {
       console.error('Error sending message:', error);
