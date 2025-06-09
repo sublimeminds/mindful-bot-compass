@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import { Progress } from '@/components/ui/progress';
 
 interface ScrollProgressIndicatorProps {
   sections: string[];
@@ -33,7 +32,7 @@ const ScrollProgressIndicator = ({ sections, isAuthenticated }: ScrollProgressIn
             const elementHeight = rect.height;
             
             // Consider section active if it's at least 30% visible
-            if (elementTop <= window.innerHeight * 0.3 && elementTop + elementHeight > window.innerHeight * 0.3) {
+            if (elementTop <= window.innerHeight * 0.4 && elementTop + elementHeight > window.innerHeight * 0.4) {
               currentActiveSection = element.id ? `#${element.id}` : '';
               break;
             }
@@ -54,25 +53,37 @@ const ScrollProgressIndicator = ({ sections, isAuthenticated }: ScrollProgressIn
 
   return (
     <div className="fixed top-16 left-0 right-0 z-40">
-      {/* Elegant progress bar with gradient */}
-      <div className="relative h-1 bg-gradient-to-r from-muted/30 via-muted/50 to-muted/30">
+      {/* Enhanced progress bar with smoother gradients */}
+      <div className="relative h-1">
+        {/* Background track */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-muted/20 to-transparent" />
+        
+        {/* Active progress with enhanced styling */}
         <div 
-          className="absolute top-0 left-0 h-full bg-gradient-to-r from-therapy-500 via-therapy-600 to-calm-500 transition-all duration-300 ease-out shadow-sm"
+          className="absolute top-0 left-0 h-full transition-all duration-500 ease-out"
           style={{ 
             width: `${scrollProgress}%`,
-            boxShadow: scrollProgress > 5 ? '0 0 8px rgba(14, 165, 233, 0.4)' : 'none'
+            background: scrollProgress > 2 
+              ? 'linear-gradient(90deg, rgba(14, 165, 233, 0.8) 0%, rgba(59, 130, 246, 0.9) 50%, rgba(147, 51, 234, 0.8) 100%)'
+              : 'transparent',
+            boxShadow: scrollProgress > 5 
+              ? '0 0 12px rgba(59, 130, 246, 0.5), 0 0 24px rgba(147, 51, 234, 0.3)' 
+              : 'none'
           }}
         />
       </div>
       
-      {/* Section indicator - only show when scrolling */}
-      {scrollProgress > 5 && (
-        <div className="absolute top-2 right-4 animate-fade-in">
-          <div className="bg-background/95 backdrop-blur-md border border-border/30 rounded-full px-3 py-1.5 shadow-lg">
+      {/* Floating section indicator - enhanced design */}
+      {scrollProgress > 3 && (
+        <div className="absolute top-3 right-4 animate-fade-in">
+          <div className="bg-background/90 backdrop-blur-xl border border-border/40 rounded-2xl px-4 py-2 shadow-xl shadow-black/10">
             {!isAuthenticated && activeSection && (
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500 animate-pulse" />
-                <span className="text-xs font-medium text-foreground/80">
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500 animate-pulse" />
+                  <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500 animate-ping opacity-30" />
+                </div>
+                <span className="text-sm font-semibold text-foreground/90 tracking-wide">
                   {activeSection === '#features' && 'Features'}
                   {activeSection === '#pricing' && 'Pricing'}
                   {!activeSection && 'Overview'}
@@ -81,10 +92,10 @@ const ScrollProgressIndicator = ({ sections, isAuthenticated }: ScrollProgressIn
             )}
             
             {isAuthenticated && (
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500" />
-                <span className="text-xs font-medium text-foreground/80">
-                  {Math.round(scrollProgress)}% read
+              <div className="flex items-center space-x-3">
+                <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500" />
+                <span className="text-sm font-semibold text-foreground/90 tracking-wide">
+                  {Math.round(scrollProgress)}% complete
                 </span>
               </div>
             )}

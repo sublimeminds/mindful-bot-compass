@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -15,6 +15,41 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
+
+  // Track active section for public pages
+  useEffect(() => {
+    if (!isAuthenticated && location.pathname === '/') {
+      const handleScroll = () => {
+        const sections = ['#features', '#pricing'];
+        let currentSection = '';
+
+        for (const sectionId of sections) {
+          const element = document.querySelector(sectionId);
+          if (element) {
+            const rect = element.getBoundingClientRect();
+            const elementTop = rect.top;
+            const elementHeight = rect.height;
+            
+            // Consider section active if it's at least 30% visible
+            if (elementTop <= window.innerHeight * 0.4 && elementTop + elementHeight > window.innerHeight * 0.4) {
+              currentSection = sectionId;
+              break;
+            }
+          }
+        }
+        
+        setActiveSection(currentSection);
+      };
+
+      window.addEventListener('scroll', handleScroll);
+      handleScroll(); // Call once to set initial state
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [isAuthenticated, location.pathname]);
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -64,7 +99,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 border-b border-border/20 sticky top-0 z-50 shadow-sm">
+      <header className="bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 border-b border-border/20 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -89,7 +124,7 @@ const Header = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center justify-center flex-1 mx-8">
-              <div className="flex items-center space-x-2 bg-muted/30 backdrop-blur-sm rounded-full p-1.5 border border-border/30">
+              <div className="flex items-center space-x-2 bg-muted/40 backdrop-blur-sm rounded-full p-1.5 border border-border/40 shadow-sm">
                 {isAuthenticated ? (
                   <>
                     {/* Authenticated Navigation */}
@@ -180,13 +215,14 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    {/* Public Navigation */}
+                    {/* Public Navigation with Active Section Highlighting */}
                     {publicNavItems.map((item) => {
                       const Icon = item.icon;
+                      const isActive = item.path.startsWith('#') ? activeSection === item.path : location.pathname === item.path;
                       return (
                         <Button
                           key={item.path}
-                          variant="ghost"
+                          variant={isActive ? "default" : "ghost"}
                           size="sm"
                           onClick={() => {
                             if (item.path.startsWith('#')) {
@@ -195,7 +231,11 @@ const Header = () => {
                               handleNavigation(item.path);
                             }
                           }}
-                          className="flex items-center space-x-2 rounded-full hover:bg-background/80 hover:shadow-sm hover:scale-105 transition-all duration-300 font-medium text-foreground/80 hover:text-foreground"
+                          className={`flex items-center space-x-2 rounded-full transition-all duration-300 font-medium ${
+                            isActive 
+                              ? "bg-gradient-to-r from-therapy-500 to-therapy-600 text-white shadow-lg shadow-therapy-500/25 scale-105" 
+                              : "hover:bg-background/80 hover:shadow-sm hover:scale-105 text-foreground/80 hover:text-foreground"
+                          }`}
                         >
                           <Icon className="h-4 w-4" />
                           <span>{item.label}</span>
@@ -328,11 +368,14 @@ const Header = () => {
                         <h3 className="font-semibold text-sm text-therapy-600 uppercase tracking-wide">Navigation</h3>
                         {publicNavItems.map((item) => {
                           const Icon = item.icon;
+                          const isActive = item.path.startsWith('#') ? activeSection === item.path : location.pathname === item.path;
                           return (
                             <Button
                               key={item.path}
-                              variant="ghost"
-                              className="justify-start w-full rounded-xl"
+                              variant={isActive ? "default" : "ghost"}
+                              className={`justify-start w-full rounded-xl ${
+                                isActive ? "bg-gradient-to-r from-therapy-500 to-therapy-600 text-white" : ""
+                              }`}
                               onClick={() => {
                                 if (item.path.startsWith('#')) {
                                   setIsMenuOpen(false);
