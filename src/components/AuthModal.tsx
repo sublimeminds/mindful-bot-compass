@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Heart, Mail, Lock, User } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from '@/contexts/AuthContext';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { signIn, signUp } = useAuth();
 
   if (!isOpen) return null;
 
@@ -31,17 +33,27 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate authentication - in production this would use Supabase
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      let result;
       
-      // Mock successful authentication
-      localStorage.setItem('user_authenticated', 'true');
-      localStorage.setItem('user_email', formData.email);
-      
+      if (mode === 'signin') {
+        result = await signIn(formData.email, formData.password);
+      } else {
+        result = await signUp(formData.email, formData.password, formData.name);
+      }
+
+      if (result.error) {
+        toast({
+          title: 'Authentication Error',
+          description: result.error.message || 'Please try again.',
+          variant: 'destructive'
+        });
+        return;
+      }
+
       toast({
         title: mode === 'signin' ? 'Welcome back!' : 'Account created successfully!',
-        description: mode === 'signin' ? 'You\'ve been signed in.' : 'Let\'s personalize your therapy experience.',
+        description: mode === 'signin' ? 'You\'ve been signed in.' : 'Please check your email to verify your account.',
       });
 
       onClose();
@@ -51,10 +63,10 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
       } else {
         navigate('/chat');
       }
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: 'Authentication Error',
-        description: 'Please try again.',
+        description: error.message || 'Please try again.',
         variant: 'destructive'
       });
     } finally {

@@ -9,7 +9,137 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          onboarding_complete: boolean | null
+          plan: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+          name: string
+          onboarding_complete?: boolean | null
+          plan?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          onboarding_complete?: boolean | null
+          plan?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      session_messages: {
+        Row: {
+          content: string
+          emotion: string | null
+          id: string
+          sender: string
+          session_id: string
+          timestamp: string
+        }
+        Insert: {
+          content: string
+          emotion?: string | null
+          id?: string
+          sender: string
+          session_id: string
+          timestamp?: string
+        }
+        Update: {
+          content?: string
+          emotion?: string | null
+          id?: string
+          sender?: string
+          session_id?: string
+          timestamp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "therapy_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapy_sessions: {
+        Row: {
+          created_at: string
+          end_time: string | null
+          id: string
+          mood_after: number | null
+          mood_before: number | null
+          notes: string | null
+          start_time: string
+          techniques: string[] | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          mood_after?: number | null
+          mood_before?: number | null
+          notes?: string | null
+          start_time?: string
+          techniques?: string[] | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          mood_after?: number | null
+          mood_before?: number | null
+          notes?: string | null
+          start_time?: string
+          techniques?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_onboarding: {
+        Row: {
+          concerns: string[] | null
+          created_at: string
+          experience: string | null
+          goals: string[] | null
+          id: string
+          preferences: string[] | null
+          user_id: string
+        }
+        Insert: {
+          concerns?: string[] | null
+          created_at?: string
+          experience?: string | null
+          goals?: string[] | null
+          id?: string
+          preferences?: string[] | null
+          user_id: string
+        }
+        Update: {
+          concerns?: string[] | null
+          created_at?: string
+          experience?: string | null
+          goals?: string[] | null
+          id?: string
+          preferences?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

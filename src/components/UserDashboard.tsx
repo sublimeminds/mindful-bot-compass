@@ -1,19 +1,29 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Calendar, TrendingUp, Clock, Award } from "lucide-react";
+import { Heart, Calendar, TrendingUp, Clock, Award, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSession } from "@/contexts/SessionContext";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const UserDashboard = () => {
-  const { user } = useAuth();
-  const { sessions, startSession } = useSession();
+  const { profile, signOut } = useAuth();
+  const { sessions, startSession, loadSessions } = useSession();
   const navigate = useNavigate();
 
-  const handleStartSession = () => {
-    startSession();
+  useEffect(() => {
+    loadSessions();
+  }, []);
+
+  const handleStartSession = async () => {
+    await startSession();
     navigate('/chat');
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
   };
 
   const totalSessions = sessions.length;
@@ -29,19 +39,33 @@ const UserDashboard = () => {
         .reduce((sum, s) => sum + (s.mood.after || 0), 0) / sessions.filter(s => s.mood.after).length
     : 0;
 
+  if (!profile) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Welcome back, {user?.name}</h1>
+          <h1 className="text-3xl font-bold text-foreground">Welcome back, {profile.name}</h1>
           <p className="text-muted-foreground">Continue your journey to mental wellness</p>
         </div>
-        <Button 
-          onClick={handleStartSession}
-          className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
-        >
-          Start Session
-        </Button>
+        <div className="flex items-center space-x-2">
+          <Button 
+            onClick={handleStartSession}
+            className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
+          >
+            Start Session
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleSignOut}
+            className="flex items-center space-x-2"
+          >
+            <LogOut className="h-4 w-4" />
+            <span>Sign Out</span>
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -90,9 +114,9 @@ const UserDashboard = () => {
             <Award className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold capitalize">{user?.plan}</div>
+            <div className="text-2xl font-bold capitalize">{profile.plan}</div>
             <p className="text-xs text-muted-foreground">
-              {user?.plan === 'free' ? 'Upgrade for more features' : 'Premium member'}
+              {profile.plan === 'free' ? 'Upgrade for more features' : 'Premium member'}
             </p>
           </CardContent>
         </Card>

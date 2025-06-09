@@ -1,22 +1,26 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 
-interface User {
+interface UserProfile {
   id: string;
   email: string;
   name: string;
   plan: 'free' | 'premium';
-  onboardingComplete: boolean;
+  onboarding_complete: boolean;
 }
 
 interface AuthContextType {
   user: User | null;
+  profile: UserProfile | null;
+  session: Session | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<{ error?: any }>;
+  signUp: (email: string, password: string, name: string) => Promise<{ error?: any }>;
   signOut: () => Promise<void>;
-  updateUser: (updates: Partial<User>) => void;
+  updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,52 +35,73 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Check for existing auth on mount
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
+  const fetchProfile = async (userId: string) => {
     try {
-      const stored = localStorage.getItem('user_authenticated');
-      const email = localStorage.getItem('user_email');
-      const onboardingData = localStorage.getItem('onboarding_data');
-      
-      if (stored && email) {
-        setUser({
-          id: 'mock-user-id',
-          email,
-          name: email.split('@')[0],
-          plan: 'free',
-          onboardingComplete: !!onboardingData
-        });
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+        return;
       }
+
+      setProfile(data);
     } catch (error) {
-      console.error('Auth check failed:', error);
-    } finally {
-      setIsLoading(false);
+      console.error('Error fetching profile:', error);
     }
   };
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('Auth state changed:', event, session);
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          // Defer profile fetch to avoid blocking auth state updates
+          setTimeout(() => {
+            fetchProfile(session.user.id);
+          }, 0);
+        } else {
+          setProfile(null);
+        }
+        
+        setIsLoading(false);
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      }
+      
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const signIn = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      // Mock authentication - replace with Supabase
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      localStorage.setItem('user_authenticated', 'true');
-      localStorage.setItem('user_email', email);
-      
-      const onboardingData = localStorage.getItem('onboarding_data');
-      setUser({
-        id: 'mock-user-id',
+      const { error } = await supabase.auth.signInWithPassword({
         email,
-        name: email.split('@')[0],
-        plan: 'free',
-        onboardingComplete: !!onboardingData
+        password,
       });
+      return { error };
     } finally {
       setIsLoading(false);
     }
@@ -85,45 +110,62 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signUp = async (email: string, password: string, name: string) => {
     setIsLoading(true);
     try {
-      // Mock registration - replace with Supabase
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const redirectUrl = `${window.location.origin}/`;
       
-      localStorage.setItem('user_authenticated', 'true');
-      localStorage.setItem('user_email', email);
-      
-      setUser({
-        id: 'mock-user-id',
+      const { error } = await supabase.auth.signUp({
         email,
-        name,
-        plan: 'free',
-        onboardingComplete: false
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            name: name,
+          },
+        },
       });
+      
+      return { error };
     } finally {
       setIsLoading(false);
     }
   };
 
   const signOut = async () => {
-    localStorage.removeItem('user_authenticated');
-    localStorage.removeItem('user_email');
-    localStorage.removeItem('onboarding_data');
-    setUser(null);
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
-  const updateUser = (updates: Partial<User>) => {
-    if (user) {
-      setUser({ ...user, ...updates });
+  const updateProfile = async (updates: Partial<UserProfile>) => {
+    if (!user) return;
+    
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', user.id);
+
+      if (error) {
+        console.error('Error updating profile:', error);
+        return;
+      }
+
+      setProfile(prev => prev ? { ...prev, ...updates } : null);
+    } catch (error) {
+      console.error('Error updating profile:', error);
     }
   };
 
   const value: AuthContextType = {
     user,
+    profile,
+    session,
     isAuthenticated: !!user,
     isLoading,
     signIn,
     signUp,
     signOut,
-    updateUser
+    updateProfile
   };
 
   return (
