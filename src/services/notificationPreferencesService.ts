@@ -102,7 +102,7 @@ export class NotificationPreferencesService {
 
   static async shouldSendNotification(
     userId: string,
-    notificationType: 'session_reminder' | 'milestone_achieved' | 'insight_generated' | 'progress_update' | 'streak_reminder'
+    notificationType: 'session_reminder' | 'milestone_achieved' | 'insight_generated' | 'progress_update' | 'mood_check' | 'streak_reminder'
   ): Promise<boolean> {
     try {
       const preferences = await this.getUserPreferences(userId);
@@ -125,6 +125,8 @@ export class NotificationPreferencesService {
           return preferences.progressUpdates;
         case 'streak_reminder':
           return preferences.streakReminders;
+        case 'mood_check':
+          return preferences.sessionReminders; // Treat mood checks as session reminders
         default:
           return true;
       }
