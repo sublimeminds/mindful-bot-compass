@@ -21,17 +21,29 @@ interface SessionData {
   };
   techniques: string[];
   notes: string;
+  goalProgress?: Record<string, number>; // Track progress on specific goals
+  sessionRating?: number; // How helpful was this session (1-5)
+  breakthroughs?: string[]; // Key insights or breakthroughs
 }
 
 interface SessionContextType {
   currentSession: SessionData | null;
   sessions: SessionData[];
-  startSession: () => Promise<void>;
-  endSession: (mood?: number, notes?: string) => Promise<void>;
+  startSession: (moodBefore?: number) => Promise<void>;
+  endSession: (moodAfter?: number, notes?: string, rating?: number) => Promise<void>;
   addMessage: (content: string, sender: 'user' | 'ai', emotion?: 'positive' | 'negative' | 'neutral') => Promise<void>;
   addTechnique: (technique: string) => void;
+  addBreakthrough: (breakthrough: string) => void;
+  updateGoalProgress: (goal: string, progress: number) => void;
   getSessions: () => SessionData[];
   loadSessions: () => Promise<void>;
+  getSessionInsights: () => {
+    totalSessions: number;
+    averageRating: number;
+    mostUsedTechniques: string[];
+    moodTrend: number;
+    totalBreakthroughs: number;
+  };
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -49,7 +61,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   const [currentSession, setCurrentSession] = useState<SessionData | null>(null);
   const [sessions, setSessions] = useState<SessionData[]>([]);
 
-  const startSession = async () => {
+  const startSession = async (moodBefore?: number) => {
     if (!user) return;
     
     try {
@@ -58,6 +70,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
         .insert({
           user_id: user.id,
           start_time: new Date().toISOString(),
+          mood_before: moodBefore,
         })
         .select()
         .single();
@@ -72,9 +85,11 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
         userId: user.id,
         startTime: new Date(data.start_time),
         messages: [],
-        mood: {},
-        techniques: data.techniques || [],
-        notes: data.notes || ''
+        mood: { before: moodBefore },
+        techniques: [],
+        notes: '',
+        goalProgress: {},
+        breakthroughs: []
       };
       
       setCurrentSession(newSession);
@@ -83,7 +98,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
     }
   };
 
-  const endSession = async (moodAfter?: number, notes?: string) => {
+  const endSession = async (moodAfter?: number, notes?: string, rating?: number) => {
     if (!currentSession || !user) return;
     
     try {
@@ -106,7 +121,8 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
         ...currentSession,
         endTime: new Date(),
         mood: { ...currentSession.mood, after: moodAfter },
-        notes: notes || currentSession.notes
+        notes: notes || currentSession.notes,
+        sessionRating: rating
       };
       
       setSessions(prev => [...prev, endedSession]);
@@ -165,6 +181,27 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
     } : null);
   };
 
+  const addBreakthrough = (breakthrough: string) => {
+    if (!currentSession) return;
+    
+    setCurrentSession(prev => prev ? {
+      ...prev,
+      breakthroughs: [...(prev.breakthroughs || []), breakthrough]
+    } : null);
+  };
+
+  const updateGoalProgress = (goal: string, progress: number) => {
+    if (!currentSession) return;
+    
+    setCurrentSession(prev => prev ? {
+      ...prev,
+      goalProgress: {
+        ...prev.goalProgress,
+        [goal]: progress
+      }
+    } : null);
+  };
+
   const loadSessions = async () => {
     if (!user) return;
     
@@ -200,7 +237,9 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
           after: session.mood_after
         },
         techniques: session.techniques || [],
-        notes: session.notes || ''
+        notes: session.notes || '',
+        goalProgress: {},
+        breakthroughs: []
       }));
 
       setSessions(loadedSessions);
@@ -211,6 +250,46 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
 
   const getSessions = () => sessions;
 
+  const getSessionInsights = () => {
+    const completedSessions = sessions.filter(s => s.endTime);
+    
+    const totalSessions = completedSessions.length;
+    const averageRating = completedSessions
+      .filter(s => s.sessionRating)
+      .reduce((sum, s) => sum + (s.sessionRating || 0), 0) / 
+      completedSessions.filter(s => s.sessionRating).length || 0;
+
+    const allTechniques = completedSessions.flatMap(s => s.techniques);
+    const techniqueCount = allTechniques.reduce((acc, tech) => {
+      acc[tech] = (acc[tech] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const mostUsedTechniques = Object.entries(techniqueCount)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 3)
+      .map(([tech]) => tech);
+
+    const moodChanges = completedSessions
+      .filter(s => s.mood.before && s.mood.after)
+      .map(s => (s.mood.after! - s.mood.before!));
+    
+    const moodTrend = moodChanges.length > 0 
+      ? moodChanges.reduce((sum, change) => sum + change, 0) / moodChanges.length 
+      : 0;
+
+    const totalBreakthroughs = completedSessions
+      .reduce((sum, s) => sum + (s.breakthroughs?.length || 0), 0);
+
+    return {
+      totalSessions,
+      averageRating,
+      mostUsedTechniques,
+      moodTrend,
+      totalBreakthroughs
+    };
+  };
+
   const value: SessionContextType = {
     currentSession,
     sessions,
@@ -218,8 +297,11 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
     endSession,
     addMessage,
     addTechnique,
+    addBreakthrough,
+    updateGoalProgress,
     getSessions,
-    loadSessions
+    loadSessions,
+    getSessionInsights
   };
 
   return (

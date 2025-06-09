@@ -9,6 +9,7 @@ import { useSessionStats } from "@/hooks/useSessionStats";
 import MoodChart from "@/components/analytics/MoodChart";
 import ProgressReport from "@/components/analytics/ProgressReport";
 import GoalProgress from "@/components/analytics/GoalProgress";
+import SessionInsights from "@/components/analytics/SessionInsights";
 
 const Analytics = () => {
   const navigate = useNavigate();
@@ -55,6 +56,9 @@ const Analytics = () => {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Session Insights Overview */}
+        <SessionInsights />
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

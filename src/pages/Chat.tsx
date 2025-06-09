@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { sendMessage } from "@/services/aiService";
 import { Badge } from "@/components/ui/badge";
 import { useTherapist } from "@/contexts/TherapistContext";
+import SessionEndModal from "@/components/SessionEndModal";
 
 interface Message {
   id: string;
@@ -25,10 +26,11 @@ const Chat = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showEndModal, setShowEndModal] = useState(false);
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
-  const { currentSession, startSession, endSession } = useSession();
+  const { currentSession, startSession, endSession, addBreakthrough } = useSession();
   const navigate = useNavigate();
   const { currentTherapist, getPersonalityPrompt } = useTherapist();
 
@@ -58,7 +60,7 @@ const Chat = () => {
 
   const handleStartSession = async () => {
     try {
-      await startSession();
+      await startSession(7); // Default mood
       toast({
         title: "Session Started",
         description: "Your therapy session has begun. Share what's on your mind.",
@@ -72,20 +74,34 @@ const Chat = () => {
     }
   };
 
-  const handleEndSession = async () => {
+  const handleEndSession = () => {
+    setShowEndModal(true);
+  };
+
+  const handleSessionEndSubmit = async (data: {
+    moodAfter: number;
+    notes: string;
+    rating: number;
+    breakthroughs: string[];
+  }) => {
     if (!currentSession) return;
 
     try {
-      await endSession();
+      // Add breakthroughs to session
+      data.breakthroughs.forEach(breakthrough => {
+        addBreakthrough(breakthrough);
+      });
+
+      await endSession(data.moodAfter, data.notes, data.rating);
       setMessages([]);
       toast({
-        title: "Session Ended",
-        description: "Your therapy session has ended. Feel free to start a new one anytime.",
+        title: "Session Completed",
+        description: "Thank you for your feedback. Your progress has been saved.",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to end session. Please try again.",
+        description: "Failed to complete session. Please try again.",
         variant: "destructive",
       });
     }
@@ -256,6 +272,12 @@ const Chat = () => {
           )}
         </div>
       </div>
+
+      <SessionEndModal
+        isOpen={showEndModal}
+        onClose={() => setShowEndModal(false)}
+        onSubmit={handleSessionEndSubmit}
+      />
     </div>
   );
 };
