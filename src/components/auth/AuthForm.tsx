@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const AuthForm = () => {
-  const { signIn, signUp, signInWithGoogle } = useAuth();
+  const { signIn, signUp } = useAuth();
   const { toast } = useToast();
   
   const [formData, setFormData] = useState({
@@ -27,11 +27,19 @@ const AuthForm = () => {
     setIsLoading(true);
     
     try {
-      await signIn(formData.email, formData.password);
-      toast({
-        title: "Welcome back!",
-        description: "You've successfully signed in.",
-      });
+      const { error } = await signIn(formData.email, formData.password);
+      if (error) {
+        toast({
+          title: "Sign In Failed",
+          description: error.message || "Please check your credentials and try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Welcome back!",
+          description: "You've successfully signed in.",
+        });
+      }
     } catch (error: any) {
       toast({
         title: "Sign In Failed",
@@ -67,34 +75,23 @@ const AuthForm = () => {
     setIsLoading(true);
     
     try {
-      await signUp(formData.email, formData.password, formData.name);
-      toast({
-        title: "Account Created!",
-        description: "Please check your email to verify your account.",
-      });
+      const { error } = await signUp(formData.email, formData.password, formData.name);
+      if (error) {
+        toast({
+          title: "Sign Up Failed",
+          description: error.message || "Failed to create account. Please try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Account Created!",
+          description: "Please check your email to verify your account.",
+        });
+      }
     } catch (error: any) {
       toast({
         title: "Sign Up Failed",
         description: error.message || "Failed to create account. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    try {
-      await signInWithGoogle();
-      toast({
-        title: "Welcome!",
-        description: "You've successfully signed in with Google.",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Google Sign In Failed",
-        description: error.message || "Failed to sign in with Google.",
         variant: "destructive",
       });
     } finally {
@@ -173,24 +170,6 @@ const AuthForm = () => {
                   {isLoading ? "Signing In..." : "Sign In"}
                 </Button>
               </form>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-                </div>
-              </div>
-
-              <Button 
-                variant="outline" 
-                className="w-full" 
-                onClick={handleGoogleSignIn}
-                disabled={isLoading}
-              >
-                Continue with Google
-              </Button>
             </TabsContent>
 
             <TabsContent value="signup" className="space-y-4">
@@ -276,24 +255,6 @@ const AuthForm = () => {
                   {isLoading ? "Creating Account..." : "Create Account"}
                 </Button>
               </form>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-                </div>
-              </div>
-
-              <Button 
-                variant="outline" 
-                className="w-full" 
-                onClick={handleGoogleSignIn}
-                disabled={isLoading}
-              >
-                Continue with Google
-              </Button>
             </TabsContent>
           </Tabs>
 

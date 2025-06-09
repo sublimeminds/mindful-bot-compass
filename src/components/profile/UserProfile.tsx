@@ -28,8 +28,7 @@ const UserProfile = () => {
 
   const [profileData, setProfileData] = useState({
     name: '',
-    email: '',
-    bio: ''
+    email: ''
   });
 
   const [preferences, setPreferences] = useState({
@@ -45,8 +44,7 @@ const UserProfile = () => {
     if (user) {
       setProfileData({
         name: user.user_metadata?.name || '',
-        email: user.email || '',
-        bio: user.user_metadata?.bio || ''
+        email: user.email || ''
       });
     }
   }, [user]);
@@ -57,8 +55,7 @@ const UserProfile = () => {
 
     try {
       await updateProfile({
-        name: profileData.name,
-        bio: profileData.bio
+        name: profileData.name
       });
       
       toast({
@@ -181,16 +178,6 @@ const UserProfile = () => {
                         className="bg-muted"
                       />
                     </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="bio">Bio</Label>
-                    <Input
-                      id="bio"
-                      value={profileData.bio}
-                      onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                      placeholder="Tell us a bit about yourself"
-                    />
                   </div>
 
                   <Button 
