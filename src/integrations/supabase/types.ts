@@ -181,6 +181,60 @@ export type Database = {
         }
         Relationships: []
       }
+      mood_entries: {
+        Row: {
+          activities: string[] | null
+          anxiety: number
+          created_at: string
+          depression: number
+          energy: number
+          id: string
+          notes: string | null
+          overall: number
+          sleep_quality: number | null
+          social_connection: number | null
+          stress: number
+          timestamp: string
+          triggers: string[] | null
+          user_id: string
+          weather: string | null
+        }
+        Insert: {
+          activities?: string[] | null
+          anxiety: number
+          created_at?: string
+          depression: number
+          energy: number
+          id?: string
+          notes?: string | null
+          overall: number
+          sleep_quality?: number | null
+          social_connection?: number | null
+          stress: number
+          timestamp?: string
+          triggers?: string[] | null
+          user_id: string
+          weather?: string | null
+        }
+        Update: {
+          activities?: string[] | null
+          anxiety?: number
+          created_at?: string
+          depression?: number
+          energy?: number
+          id?: string
+          notes?: string | null
+          overall?: number
+          sleep_quality?: number | null
+          social_connection?: number | null
+          stress?: number
+          timestamp?: string
+          triggers?: string[] | null
+          user_id?: string
+          weather?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -210,6 +264,91 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      session_analytics: {
+        Row: {
+          created_at: string
+          effectiveness_score: number
+          id: string
+          key_breakthrough: string | null
+          mood_improvement: number | null
+          session_id: string
+          session_rating: number | null
+          techniques_effectiveness: Json | null
+        }
+        Insert: {
+          created_at?: string
+          effectiveness_score: number
+          id?: string
+          key_breakthrough?: string | null
+          mood_improvement?: number | null
+          session_id: string
+          session_rating?: number | null
+          techniques_effectiveness?: Json | null
+        }
+        Update: {
+          created_at?: string
+          effectiveness_score?: number
+          id?: string
+          key_breakthrough?: string | null
+          mood_improvement?: number | null
+          session_id?: string
+          session_rating?: number | null
+          techniques_effectiveness?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_analytics_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "therapy_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_insights: {
+        Row: {
+          actionable_suggestion: string | null
+          confidence_score: number | null
+          created_at: string
+          description: string
+          id: string
+          insight_type: string
+          priority: string
+          session_id: string
+          title: string
+        }
+        Insert: {
+          actionable_suggestion?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          description: string
+          id?: string
+          insight_type: string
+          priority?: string
+          session_id: string
+          title: string
+        }
+        Update: {
+          actionable_suggestion?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          description?: string
+          id?: string
+          insight_type?: string
+          priority?: string
+          session_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_insights_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "therapy_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       session_messages: {
         Row: {

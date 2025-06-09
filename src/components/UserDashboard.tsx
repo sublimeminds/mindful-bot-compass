@@ -9,46 +9,30 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useSession } from "@/contexts/SessionContext";
 import { useOnboardingData } from "@/hooks/useOnboardingData";
 import { useSessionStats } from "@/hooks/useSessionStats";
+import { useSessionHistory } from "@/hooks/useSessionHistory";
 import { useNavigate } from "react-router-dom";
 import ProgressStats from "./ProgressStats";
-import SessionCard from "./SessionCard";
+import EnhancedSessionCard from "./session/EnhancedSessionCard";
+import SessionDetailsModal from "./session/SessionDetailsModal";
 import QuickActions from "./QuickActions";
 import SessionRecommendations from "./SessionRecommendations";
-import { supabase } from '@/integrations/supabase/client';
+import { SessionSummary } from "@/services/sessionHistoryService";
 
 const UserDashboard = () => {
   const { user } = useAuth();
-  const { loadSessions, getSessions } = useSession();
   const { onboardingData } = useOnboardingData();
   const { stats, isLoading: statsLoading } = useSessionStats();
-  const [recentSessions, setRecentSessions] = useState<any[]>([]);
-  const [isLoadingSessions, setIsLoadingSessions] = useState(true);
+  const { sessionSummaries, isLoading: sessionsLoading } = useSessionHistory();
+  const [selectedSession, setSelectedSession] = useState<SessionSummary | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchRecentSessions = async () => {
-      await loadSessions();
-      const allSessions = getSessions();
-      
-      // Transform sessions for SessionCard
-      const transformedSessions = allSessions.slice(0, 3).map(session => ({
-        id: session.id,
-        startTime: session.startTime,
-        endTime: session.endTime,
-        messageCount: session.messages.length,
-        mood: session.mood,
-        techniques: session.techniques,
-        notes: session.notes
-      }));
-      
-      setRecentSessions(transformedSessions);
-      setIsLoadingSessions(false);
-    };
+  const recentSessions = sessionSummaries.slice(0, 3);
 
-    if (user) {
-      fetchRecentSessions();
-    }
-  }, [user, loadSessions, getSessions]);
+  const handleViewDetails = (session: SessionSummary) => {
+    setSelectedSession(session);
+    setIsDetailsOpen(true);
+  };
 
   const getUserInitials = () => {
     const name = user?.user_metadata?.name || user?.email || '';
@@ -114,14 +98,18 @@ const UserDashboard = () => {
               </Button>
             </div>
             
-            {isLoadingSessions ? (
+            {sessionsLoading ? (
               <div className="text-center py-8 text-muted-foreground">
                 Loading sessions...
               </div>
             ) : recentSessions.length > 0 ? (
               <div className="space-y-4">
                 {recentSessions.map(session => (
-                  <SessionCard key={session.id} session={session} />
+                  <EnhancedSessionCard
+                    key={session.id}
+                    session={session}
+                    onViewDetails={handleViewDetails}
+                  />
                 ))}
               </div>
             ) : (
@@ -132,6 +120,10 @@ const UserDashboard = () => {
                   <p className="text-muted-foreground mb-4">
                     Start your first therapy session to begin tracking your progress
                   </p>
+                  <Button onClick={() => navigate('/chat')}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Start Your First Session
+                  </Button>
                 </CardContent>
               </Card>
             )}
@@ -187,6 +179,16 @@ const UserDashboard = () => {
             )}
           </div>
         </div>
+
+        {/* Session Details Modal */}
+        <SessionDetailsModal
+          session={selectedSession}
+          isOpen={isDetailsOpen}
+          onClose={() => {
+            setIsDetailsOpen(false);
+            setSelectedSession(null);
+          }}
+        />
       </div>
     </div>
   );
