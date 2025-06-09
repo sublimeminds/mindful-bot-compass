@@ -5,6 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Send, Bot, User, Heart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { useSession } from "@/contexts/SessionContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useOnboardingData } from "@/hooks/useOnboardingData";
 
 interface Message {
   id: string;
@@ -15,19 +19,14 @@ interface Message {
 }
 
 const Chat = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: "Hello! I'm your AI therapy companion. I'm here to provide a safe, supportive space for you to explore your thoughts and feelings. How are you feeling today?",
-      sender: 'ai',
-      timestamp: new Date(),
-      emotion: 'positive'
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { currentSession } = useSession();
+  const { onboardingData } = useOnboardingData();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -37,10 +36,100 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Load session messages on mount
+  useEffect(() => {
+    if (currentSession) {
+      loadSessionMessages();
+    } else {
+      // Start with welcome message if no session
+      setMessages([{
+        id: '1',
+        content: generateWelcomeMessage(),
+        sender: 'ai',
+        timestamp: new Date(),
+        emotion: 'positive'
+      }]);
+    }
+  }, [currentSession, onboardingData]);
+
+  const generateWelcomeMessage = () => {
+    if (!onboardingData) {
+      return "Hello! I'm your AI therapy companion. I'm here to provide a safe, supportive space for you to explore your thoughts and feelings. How are you feeling today?";
+    }
+
+    let welcomeMessage = "Welcome back! I'm glad you're here for another session. ";
+    
+    if (onboardingData.goals.length > 0) {
+      welcomeMessage += `I remember you're working on ${onboardingData.goals.slice(0, 2).join(' and ')}. `;
+    }
+    
+    welcomeMessage += "How are you feeling today, and what would you like to focus on?";
+    
+    return welcomeMessage;
+  };
+
+  const loadSessionMessages = async () => {
+    if (!currentSession) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('session_messages')
+        .select('*')
+        .eq('session_id', currentSession.id)
+        .order('timestamp', { ascending: true });
+
+      if (error) {
+        console.error('Error loading messages:', error);
+        return;
+      }
+
+      const loadedMessages: Message[] = data.map(msg => ({
+        id: msg.id,
+        content: msg.content,
+        sender: msg.sender as 'user' | 'ai',
+        timestamp: new Date(msg.timestamp),
+        emotion: msg.emotion as 'positive' | 'negative' | 'neutral' | undefined
+      }));
+
+      if (loadedMessages.length === 0) {
+        // Start with welcome message for new sessions
+        const welcomeMessage: Message = {
+          id: 'welcome',
+          content: generateWelcomeMessage(),
+          sender: 'ai',
+          timestamp: new Date(),
+          emotion: 'positive'
+        };
+        setMessages([welcomeMessage]);
+        await saveMessage(welcomeMessage);
+      } else {
+        setMessages(loadedMessages);
+      }
+    } catch (error) {
+      console.error('Error loading session messages:', error);
+    }
+  };
+
+  const saveMessage = async (message: Message) => {
+    if (!currentSession) return;
+
+    try {
+      await supabase.from('session_messages').insert({
+        session_id: currentSession.id,
+        content: message.content,
+        sender: message.sender,
+        emotion: message.emotion,
+        timestamp: message.timestamp.toISOString()
+      });
+    } catch (error) {
+      console.error('Error saving message:', error);
+    }
+  };
+
   const analyzeEmotion = (text: string): 'positive' | 'negative' | 'neutral' => {
-    // Simple emotion analysis - in production this would use AI
-    const positiveWords = ['happy', 'good', 'great', 'wonderful', 'excited', 'grateful'];
-    const negativeWords = ['sad', 'angry', 'depressed', 'anxious', 'worried', 'afraid'];
+    // Simple emotion analysis - could be enhanced with AI
+    const positiveWords = ['happy', 'good', 'great', 'wonderful', 'excited', 'grateful', 'better', 'progress'];
+    const negativeWords = ['sad', 'angry', 'depressed', 'anxious', 'worried', 'afraid', 'stressed', 'overwhelmed'];
     
     const lowerText = text.toLowerCase();
     const hasPositive = positiveWords.some(word => lowerText.includes(word));
@@ -52,23 +141,33 @@ const Chat = () => {
   };
 
   const generateAIResponse = async (userMessage: string): Promise<string> => {
-    // Simulate AI processing time
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Basic therapeutic responses - in production this would use actual AI
-    const emotion = analyzeEmotion(userMessage);
-    
-    if (emotion === 'negative') {
-      return "I hear that you're going through a difficult time. It takes courage to share these feelings. Can you tell me more about what's been weighing on your mind?";
-    } else if (emotion === 'positive') {
-      return "I'm glad to hear there are positive moments in your life. It's important to acknowledge and celebrate these feelings. What specifically has been going well for you?";
-    } else {
-      return "Thank you for sharing that with me. I'm here to listen and support you. What would be most helpful for you to explore right now?";
+    if (!user) throw new Error('User not authenticated');
+
+    try {
+      const { data, error } = await supabase.functions.invoke('ai-therapy-chat', {
+        body: { message: userMessage, userId: user.id }
+      });
+
+      if (error) throw error;
+      
+      return data.response;
+    } catch (error) {
+      console.error('Error calling AI service:', error);
+      // Fallback to basic response
+      const emotion = analyzeEmotion(userMessage);
+      
+      if (emotion === 'negative') {
+        return "I hear that you're going through a difficult time. It takes courage to share these feelings. Can you tell me more about what's been weighing on your mind?";
+      } else if (emotion === 'positive') {
+        return "I'm glad to hear there are positive moments in your life. It's important to acknowledge and celebrate these feelings. What specifically has been going well for you?";
+      } else {
+        return "Thank you for sharing that with me. I'm here to listen and support you. What would be most helpful for you to explore right now?";
+      }
     }
   };
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() || !currentSession) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -79,6 +178,7 @@ const Chat = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    await saveMessage(userMessage);
     setInputMessage('');
     setIsTyping(true);
 
@@ -94,6 +194,7 @@ const Chat = () => {
       };
 
       setMessages(prev => [...prev, aiMessage]);
+      await saveMessage(aiMessage);
     } catch (error) {
       toast({
         title: "Connection Error",
@@ -111,6 +212,21 @@ const Chat = () => {
       handleSendMessage();
     }
   };
+
+  if (!currentSession) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
+        <Card className="max-w-md mx-auto p-6 text-center">
+          <CardContent>
+            <Heart className="h-12 w-12 text-therapy-500 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold mb-2">No Active Session</h2>
+            <p className="text-muted-foreground mb-4">Please start a therapy session from your dashboard to begin chatting.</p>
+            <Button onClick={() => window.history.back()}>Go Back</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-4">
