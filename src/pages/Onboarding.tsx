@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Heart, ArrowRight, ArrowLeft } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface OnboardingData {
   goals: string[];
@@ -22,7 +24,10 @@ const Onboarding = () => {
     experience: '',
     preferences: []
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const { user, updateProfile } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const totalSteps = 4;
 
@@ -75,13 +80,63 @@ const Onboarding = () => {
     }));
   };
 
-  const handleNext = () => {
+  const saveOnboardingData = async () => {
+    if (!user) return false;
+
+    try {
+      // Save onboarding data to database
+      const { error: onboardingError } = await supabase
+        .from('user_onboarding')
+        .insert({
+          user_id: user.id,
+          goals: data.goals,
+          concerns: data.concerns,
+          experience: data.experience,
+          preferences: data.preferences
+        });
+
+      if (onboardingError) {
+        console.error('Error saving onboarding data:', onboardingError);
+        toast({
+          title: "Error",
+          description: "Failed to save your preferences. Please try again.",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      // Mark onboarding as complete
+      await updateProfile({ onboarding_complete: true });
+      
+      return true;
+    } catch (error) {
+      console.error('Error in saveOnboardingData:', error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
+      return false;
+    }
+  };
+
+  const handleNext = async () => {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Save onboarding data and navigate to chat
-      localStorage.setItem('onboarding_data', JSON.stringify(data));
-      navigate('/chat');
+      // Complete onboarding
+      setIsLoading(true);
+      const success = await saveOnboardingData();
+      
+      if (success) {
+        toast({
+          title: "Welcome to MindfulAI!",
+          description: "Your preferences have been saved. Let's start your first session.",
+        });
+        navigate('/');
+      }
+      
+      setIsLoading(false);
     }
   };
 
@@ -262,10 +317,10 @@ const Onboarding = () => {
           
           <Button
             onClick={handleNext}
-            disabled={!isStepValid()}
+            disabled={!isStepValid() || isLoading}
             className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 flex items-center space-x-2"
           >
-            <span>{currentStep === totalSteps ? 'Start Therapy' : 'Next'}</span>
+            <span>{isLoading ? 'Saving...' : currentStep === totalSteps ? 'Start Therapy' : 'Next'}</span>
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
