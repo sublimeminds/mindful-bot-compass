@@ -8,6 +8,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { SessionProvider } from "./contexts/SessionContext";
 import { TherapistProvider } from "./contexts/TherapistContext";
 import IntelligentNotificationProvider from "./components/IntelligentNotificationProvider";
+import NotificationToastHandler from "./components/NotificationToastHandler";
 import Index from "./pages/Index";
 import Chat from "./pages/Chat";
 import Auth from "./pages/Auth";
@@ -28,6 +29,7 @@ const App = () => (
       <SessionProvider>
         <TherapistProvider>
           <IntelligentNotificationProvider>
+            <NotificationToastHandler />
             <TooltipProvider>
               <Toaster />
               <Sonner />
@@ -44,7 +46,6 @@ const App = () => (
                   <Route path="/techniques" element={<Techniques />} />
                   <Route path="/techniques/:techniqueId" element={<Techniques />} />
                   <Route path="/goals" element={<Goals />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
