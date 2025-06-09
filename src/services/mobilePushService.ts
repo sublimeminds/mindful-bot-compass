@@ -91,8 +91,7 @@ export class MobilePushService {
         data: payload.data,
         requireInteraction: payload.requireInteraction,
         silent: payload.silent,
-        tag: payload.tag,
-        timestamp: payload.timestamp || Date.now()
+        tag: payload.tag
       });
     }
   }
