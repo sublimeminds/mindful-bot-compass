@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +9,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useIntelligentNotifications } from '@/hooks/useIntelligentNotifications';
 import { IntelligentNotificationService } from '@/services/intelligentNotificationService';
 import { NotificationService } from '@/services/notificationService';
-import { Bell, Zap, Target, Lightbulb, Heart, TrendingUp } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { Bell, Zap, Target, Lightbulb, Heart, TrendingUp, Clock, Settings } from 'lucide-react';
 
 const NotificationDebugPanel = () => {
   const { user } = useAuth();
@@ -161,6 +161,46 @@ const NotificationDebugPanel = () => {
     }
   };
 
+  const handleSetupCronJobs = async () => {
+    if (!user) return;
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('setup-cron-job');
+      
+      if (error) {
+        console.error('Error setting up cron jobs:', error);
+      } else {
+        console.log('Cron jobs setup result:', data);
+      }
+    } catch (error) {
+      console.error('Error setting up cron jobs:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTriggerScheduledNotifications = async () => {
+    if (!user) return;
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-intelligent-notifications', {
+        body: { source: 'manual_test' }
+      });
+      
+      if (error) {
+        console.error('Error triggering scheduled notifications:', error);
+      } else {
+        console.log('Scheduled notifications result:', data);
+      }
+    } catch (error) {
+      console.error('Error triggering scheduled notifications:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (!user) {
     return (
       <Card className="mb-6">
@@ -292,6 +332,38 @@ const NotificationDebugPanel = () => {
               Test Inactivity Check
             </Button>
           </div>
+        </div>
+
+        {/* Scheduled Notifications */}
+        <div>
+          <h3 className="font-medium mb-3 flex items-center gap-2">
+            <Clock className="h-4 w-4" />
+            Scheduled Notifications
+          </h3>
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSetupCronJobs}
+              disabled={isLoading}
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Setup Cron Jobs
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleTriggerScheduledNotifications}
+              disabled={isLoading}
+            >
+              <Clock className="h-4 w-4 mr-2" />
+              Trigger Scheduled Check
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">
+            Cron jobs run automatically: hourly checks, daily summaries at 9 AM, weekly reports on Sundays
+          </p>
         </div>
 
         {/* Custom Notification Form */}
