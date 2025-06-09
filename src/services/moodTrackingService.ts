@@ -14,6 +14,9 @@ export interface MoodEntry {
   userId: string;
   timestamp: Date;
   mood: DetailedMood;
+  overall: number; // Add this for backward compatibility
+  anxiety: number; // Add this for backward compatibility
+  energy: number; // Add this for backward compatibility
   activities?: string[];
   notes?: string;
   weather?: string;
@@ -65,6 +68,50 @@ export class MoodTrackingService {
     ];
   }
 
+  static async getMoodEntries(userId: string): Promise<MoodEntry[]> {
+    // Mock implementation for now - in real app this would query Supabase
+    const mockEntries: MoodEntry[] = [
+      {
+        id: '1',
+        userId,
+        timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+        mood: { overall: 6, anxiety: 4, depression: 3, stress: 5, energy: 7, sleep_quality: 6, social_connection: 5 },
+        overall: 6,
+        anxiety: 4,
+        energy: 7,
+        activities: ['Exercise', 'Work', 'Reading'],
+        triggers: ['Work Stress'],
+        notes: 'Had a good workout in the morning'
+      },
+      {
+        id: '2',
+        userId,
+        timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+        mood: { overall: 8, anxiety: 2, depression: 2, stress: 3, energy: 8, sleep_quality: 8, social_connection: 7 },
+        overall: 8,
+        anxiety: 2,
+        energy: 8,
+        activities: ['Socializing', 'Meditation', 'Cooking'],
+        triggers: [],
+        notes: 'Great day with friends, felt very connected'
+      },
+      {
+        id: '3',
+        userId,
+        timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+        mood: { overall: 4, anxiety: 7, depression: 5, stress: 8, energy: 3, sleep_quality: 4, social_connection: 3 },
+        overall: 4,
+        anxiety: 7,
+        energy: 3,
+        activities: ['Work'],
+        triggers: ['Work Stress', 'Lack of Sleep'],
+        notes: 'Difficult day at work, stayed up too late'
+      }
+    ];
+    
+    return mockEntries;
+  }
+
   static analyzeMoodPatterns(moodEntries: MoodEntry[]): MoodPattern {
     if (moodEntries.length < 2) {
       return {
@@ -85,7 +132,7 @@ export class MoodTrackingService {
     // Calculate trend
     const firstEntry = sortedEntries[0];
     const lastEntry = sortedEntries[sortedEntries.length - 1];
-    const overallChange = lastEntry.mood.overall - firstEntry.mood.overall;
+    const overallChange = lastEntry.overall - firstEntry.overall;
     const averageChange = overallChange / sortedEntries.length;
 
     let trend: 'improving' | 'declining' | 'stable';
@@ -127,7 +174,7 @@ export class MoodTrackingService {
       else if (hour >= 17 && hour < 22) timeOfDay = 'evening';
       else timeOfDay = 'night';
       
-      timeGroups[timeOfDay].push(entry.mood.overall);
+      timeGroups[timeOfDay].push(entry.overall);
     });
 
     const averages = Object.entries(timeGroups).map(([time, moods]) => ({
@@ -150,7 +197,7 @@ export class MoodTrackingService {
           if (!triggerImpact[trigger]) {
             triggerImpact[trigger] = { total: 0, count: 0 };
           }
-          triggerImpact[trigger].total += entry.mood.overall;
+          triggerImpact[trigger].total += entry.overall;
           triggerImpact[trigger].count += 1;
         });
       }
@@ -175,7 +222,7 @@ export class MoodTrackingService {
           if (!activityImpact[activity]) {
             activityImpact[activity] = { total: 0, count: 0 };
           }
-          activityImpact[activity].total += entry.mood.overall;
+          activityImpact[activity].total += entry.overall;
           activityImpact[activity].count += 1;
         });
       }
@@ -205,9 +252,9 @@ export class MoodTrackingService {
 
       if (withActivity.length > 0 && withoutActivity.length > 0) {
         const avgWith = withActivity.reduce((sum, entry) => 
-          sum + entry.mood.overall, 0) / withActivity.length;
+          sum + entry.overall, 0) / withActivity.length;
         const avgWithout = withoutActivity.reduce((sum, entry) => 
-          sum + entry.mood.overall, 0) / withoutActivity.length;
+          sum + entry.overall, 0) / withoutActivity.length;
 
         const impact = (avgWith - avgWithout) / 10; // Normalize to -1 to 1
         const confidence = Math.min(withActivity.length / 10, 1); // More data = higher confidence

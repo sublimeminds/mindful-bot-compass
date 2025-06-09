@@ -1,6 +1,14 @@
 
-import { SessionData } from '@/contexts/SessionContext';
 import { MoodEntry } from '@/services/moodTrackingService';
+
+// Define SessionData locally since it's not exported from SessionContext
+export interface SessionData {
+  id: string;
+  startTime: Date;
+  endTime?: Date;
+  notes: string;
+  techniques: string[];
+}
 
 export interface AnalyticsData {
   sessionStats: {
