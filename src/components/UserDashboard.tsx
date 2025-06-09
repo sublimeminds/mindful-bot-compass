@@ -1,8 +1,10 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Plus, Calendar, TrendingUp, MessageCircle } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Heart, Plus, Calendar, TrendingUp, MessageCircle, Settings, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSession } from "@/contexts/SessionContext";
 import { useOnboardingData } from "@/hooks/useOnboardingData";
@@ -48,6 +50,11 @@ const UserDashboard = () => {
     }
   }, [user, loadSessions, getSessions]);
 
+  const getUserInitials = () => {
+    const name = user?.user_metadata?.name || user?.email || '';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
   if (!user) return null;
 
   return (
@@ -68,6 +75,22 @@ const UserDashboard = () => {
               "Continue your journey toward better mental health" : 
               "Let's start your therapy journey"}
           </p>
+          
+          {/* User Profile Section */}
+          <div className="flex items-center justify-center mt-4 space-x-4">
+            <Avatar className="h-12 w-12">
+              <AvatarImage src="" alt={user.user_metadata?.name} />
+              <AvatarFallback>{getUserInitials()}</AvatarFallback>
+            </Avatar>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => navigate('/profile')}
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Profile & Settings
+            </Button>
+          </div>
         </div>
 
         {/* Progress Stats */}
