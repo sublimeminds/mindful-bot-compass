@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,8 @@ const Header = () => {
     <header className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
+          {/* Logo */}
+          <div className="flex items-center flex-shrink-0">
             <button 
               onClick={() => navigate("/")}
               className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
@@ -46,29 +48,32 @@ const Header = () => {
             </button>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Centered */}
           {isAuthenticated && (
-            <nav className="hidden md:flex items-center space-x-1">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.path;
-                return (
-                  <Button
-                    key={item.path}
-                    variant={isActive ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => handleNavigation(item.path)}
-                    className={`flex items-center space-x-1 ${isActive ? "bg-therapy-100 text-therapy-800" : ""}`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span>{item.label}</span>
-                  </Button>
-                );
-              })}
+            <nav className="hidden md:flex items-center justify-center flex-1 mx-8">
+              <div className="flex items-center space-x-1">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Button
+                      key={item.path}
+                      variant={isActive ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => handleNavigation(item.path)}
+                      className={`flex items-center space-x-1 ${isActive ? "bg-therapy-100 text-therapy-800" : ""}`}
+                    >
+                      <Icon className="h-4 w-4" />
+                      <span className="hidden lg:inline">{item.label}</span>
+                    </Button>
+                  );
+                })}
+              </div>
             </nav>
           )}
 
-          <div className="flex items-center space-x-4">
+          {/* Right side - User menu */}
+          <div className="flex items-center space-x-3 flex-shrink-0">
             {isAuthenticated ? (
               <>
                 <NotificationCenter />
@@ -81,7 +86,7 @@ const Header = () => {
                           {user?.email?.[0]?.toUpperCase() || "U"}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="hidden sm:inline">{user?.email}</span>
+                      <span className="hidden sm:inline max-w-32 truncate">{user?.email}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
@@ -89,8 +94,8 @@ const Header = () => {
                       <User className="h-4 w-4 mr-2" />
                       Profile
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate("/notifications")}>
-                      <Bell className="h-4 w-4 mr-2" />
+                    <DropdownMenuItem onClick={() => navigate("/notification-settings")}>
+                      <Settings className="h-4 w-4 mr-2" />
                       Notification Settings
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />

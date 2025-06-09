@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -16,6 +17,7 @@ import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import NotificationAnalytics from "./pages/NotificationAnalytics";
+import NotificationSettings from "./pages/NotificationSettings";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,7 @@ function App() {
                 <Route path="/session-history" element={<SessionHistory />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/notifications" element={<NotificationAnalytics />} />
+                <Route path="/notification-settings" element={<NotificationSettings />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />
