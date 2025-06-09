@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Heart, Menu, X, User, Settings, LogOut, BarChart3, Target, Calendar, MessageSquare, Bell, ChevronDown, BookOpen, Brain, Shield, HelpCircle } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { User } from "lucide-react";
 import NotificationCenter from "./NotificationCenter";
 import ScrollProgressIndicator from "./ScrollProgressIndicator";
+import Logo from "./navigation/Logo";
+import PublicNavigation from "./navigation/PublicNavigation";
+import AuthenticatedNavigation from "./navigation/AuthenticatedNavigation";
+import UserMenu from "./navigation/UserMenu";
+import MobileMenu from "./navigation/MobileMenu";
 
 const Header = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -51,39 +53,6 @@ const Header = () => {
     }
   }, [isAuthenticated, location.pathname]);
 
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    setIsMenuOpen(false);
-  };
-
-  const publicNavItems = [
-    { path: "#features", label: "Features", icon: Heart },
-    { path: "#pricing", label: "Pricing", icon: Target },
-    { path: "/auth", label: "Sign In", icon: User },
-  ];
-
-  const mainNavItems = [
-    { path: "/", label: "Dashboard", icon: BarChart3 },
-    { path: "/chat", label: "Therapy Chat", icon: MessageSquare },
-    { path: "/mood", label: "Mood Tracking", icon: Heart },
-    { path: "/goals", label: "Goals", icon: Target },
-  ];
-
-  const toolsMenuItems = [
-    { path: "/analytics", label: "Analytics", icon: BarChart3 },
-    { path: "/techniques", label: "Techniques", icon: Brain },
-    { path: "/session-history", label: "Session History", icon: Calendar },
-  ];
-
-  const resourcesMenuItems = [
-    { path: "/notifications", label: "Notification Analytics", icon: Bell },
-    { path: "/notification-settings", label: "Notification Settings", icon: Settings },
-    { path: "#", label: "Help Center", icon: HelpCircle },
-    { path: "#", label: "Crisis Resources", icon: Shield },
-    { path: "#", label: "Learning Hub", icon: BookOpen },
-    { path: "#", label: "Community", icon: MessageSquare },
-  ];
-
   const scrollToSection = (sectionId: string) => {
     if (sectionId.startsWith('#')) {
       const element = document.querySelector(sectionId);
@@ -103,148 +72,18 @@ const Header = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center flex-shrink-0">
-              <button 
-                onClick={() => navigate("/")}
-                className="flex items-center space-x-3 hover:opacity-90 transition-all duration-300 group"
-              >
-                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-therapy-500 via-therapy-600 to-calm-500 rounded-xl shadow-lg group-hover:shadow-therapy-500/30 transition-all duration-300 group-hover:scale-105">
-                  <Heart className="h-6 w-6 text-white" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xl font-bold bg-gradient-to-r from-therapy-600 via-therapy-700 to-calm-600 bg-clip-text text-transparent">
-                    MindfulAI
-                  </span>
-                  <span className="text-xs text-muted-foreground font-medium -mt-1">
-                    Therapy Platform
-                  </span>
-                </div>
-              </button>
-            </div>
+            <Logo />
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center justify-center flex-1 mx-8">
-              <div className="flex items-center space-x-2 bg-muted/40 backdrop-blur-sm rounded-full p-1.5 border border-border/40 shadow-sm">
-                {isAuthenticated ? (
-                  <>
-                    {/* Authenticated Navigation */}
-                    {mainNavItems.map((item) => {
-                      const Icon = item.icon;
-                      const isActive = location.pathname === item.path;
-                      return (
-                        <Button
-                          key={item.path}
-                          variant={isActive ? "default" : "ghost"}
-                          size="sm"
-                          onClick={() => handleNavigation(item.path)}
-                          className={`flex items-center space-x-2 rounded-full transition-all duration-300 font-medium ${
-                            isActive 
-                              ? "bg-gradient-to-r from-therapy-500 to-therapy-600 text-white shadow-lg shadow-therapy-500/25 scale-105" 
-                              : "hover:bg-background/80 hover:shadow-sm hover:scale-105 text-foreground/80 hover:text-foreground"
-                          }`}
-                        >
-                          <Icon className="h-4 w-4" />
-                          <span>{item.label}</span>
-                        </Button>
-                      );
-                    })}
-
-                    {/* Tools Dropdown */}
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="flex items-center space-x-2 rounded-full hover:bg-background/80 hover:shadow-sm hover:scale-105 transition-all duration-300 font-medium text-foreground/80 hover:text-foreground"
-                        >
-                          <Brain className="h-4 w-4" />
-                          <span>Tools</span>
-                          <ChevronDown className="h-3 w-3" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="center" className="w-52 bg-background/95 backdrop-blur-xl border border-border/30 shadow-xl rounded-xl">
-                        <DropdownMenuLabel className="font-semibold text-therapy-700">Therapy Tools</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {toolsMenuItems.map((item) => {
-                          const Icon = item.icon;
-                          return (
-                            <DropdownMenuItem
-                              key={item.path}
-                              onClick={() => handleNavigation(item.path)}
-                              className="cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors"
-                            >
-                              <Icon className="h-4 w-4 mr-3 text-therapy-500" />
-                              <span className="font-medium">{item.label}</span>
-                            </DropdownMenuItem>
-                          );
-                        })}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-
-                    {/* Resources Dropdown */}
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="flex items-center space-x-2 rounded-full hover:bg-background/80 hover:shadow-sm hover:scale-105 transition-all duration-300 font-medium text-foreground/80 hover:text-foreground"
-                        >
-                          <BookOpen className="h-4 w-4" />
-                          <span>Resources</span>
-                          <ChevronDown className="h-3 w-3" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="center" className="w-56 bg-background/95 backdrop-blur-xl border border-border/30 shadow-xl rounded-xl">
-                        <DropdownMenuLabel className="font-semibold text-therapy-700">Support & Learning</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {resourcesMenuItems.map((item) => {
-                          const Icon = item.icon;
-                          return (
-                            <DropdownMenuItem
-                              key={item.label}
-                              onClick={() => item.path !== "#" && handleNavigation(item.path)}
-                              className="cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors"
-                            >
-                              <Icon className="h-4 w-4 mr-3 text-therapy-500" />
-                              <span className="font-medium">{item.label}</span>
-                            </DropdownMenuItem>
-                          );
-                        })}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </>
-                ) : (
-                  <>
-                    {/* Public Navigation with Active Section Highlighting */}
-                    {publicNavItems.map((item) => {
-                      const Icon = item.icon;
-                      const isActive = item.path.startsWith('#') ? activeSection === item.path : location.pathname === item.path;
-                      return (
-                        <Button
-                          key={item.path}
-                          variant={isActive ? "default" : "ghost"}
-                          size="sm"
-                          onClick={() => {
-                            if (item.path.startsWith('#')) {
-                              scrollToSection(item.path);
-                            } else {
-                              handleNavigation(item.path);
-                            }
-                          }}
-                          className={`flex items-center space-x-2 rounded-full transition-all duration-300 font-medium ${
-                            isActive 
-                              ? "bg-gradient-to-r from-therapy-500 to-therapy-600 text-white shadow-lg shadow-therapy-500/25 scale-105" 
-                              : "hover:bg-background/80 hover:shadow-sm hover:scale-105 text-foreground/80 hover:text-foreground"
-                          }`}
-                        >
-                          <Icon className="h-4 w-4" />
-                          <span>{item.label}</span>
-                        </Button>
-                      );
-                    })}
-                  </>
-                )}
-              </div>
+              {isAuthenticated ? (
+                <AuthenticatedNavigation />
+              ) : (
+                <PublicNavigation 
+                  activeSection={activeSection}
+                  scrollToSection={scrollToSection}
+                />
+              )}
             </nav>
 
             {/* Right side */}
@@ -252,34 +91,7 @@ const Header = () => {
               {isAuthenticated ? (
                 <>
                   <NotificationCenter />
-                  
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="flex items-center space-x-2 hover:bg-muted/50 rounded-full transition-all duration-300 hover:scale-105">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback className="text-sm bg-gradient-to-br from-therapy-500 to-calm-500 text-white font-semibold">
-                            {user?.email?.[0]?.toUpperCase() || "U"}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="hidden sm:inline max-w-32 truncate font-medium text-foreground/80">{user?.email}</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-xl border border-border/30 shadow-xl rounded-xl">
-                      <DropdownMenuItem onClick={() => navigate("/profile")} className="hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors">
-                        <User className="h-4 w-4 mr-3 text-therapy-500" />
-                        <span className="font-medium">Profile</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate("/notification-settings")} className="hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors">
-                        <Settings className="h-4 w-4 mr-3 text-therapy-500" />
-                        <span className="font-medium">Notification Settings</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={logout} className="text-red-600 hover:bg-red-50 focus:bg-red-50 rounded-lg mx-1 transition-colors">
-                        <LogOut className="h-4 w-4 mr-3" />
-                        <span className="font-medium">Sign Out</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <UserMenu user={user} logout={logout} />
                 </>
               ) : (
                 <Button 
@@ -292,109 +104,14 @@ const Header = () => {
                 </Button>
               )}
 
-              {/* Mobile menu trigger */}
-              <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-                <SheetTrigger asChild className="lg:hidden">
-                  <Button variant="ghost" size="sm" className="rounded-full hover:bg-muted/50 transition-all duration-300">
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-72 bg-background/95 backdrop-blur-xl border-l border-border/30">
-                  <div className="flex flex-col space-y-6 mt-6">
-                    {isAuthenticated ? (
-                      <>
-                        <div className="space-y-3">
-                          <h3 className="font-semibold text-sm text-therapy-600 uppercase tracking-wide">Main Navigation</h3>
-                          {mainNavItems.map((item) => {
-                            const Icon = item.icon;
-                            const isActive = location.pathname === item.path;
-                            return (
-                              <Button
-                                key={item.path}
-                                variant={isActive ? "default" : "ghost"}
-                                className={`justify-start w-full rounded-xl ${
-                                  isActive ? "bg-gradient-to-r from-therapy-500 to-therapy-600 text-white" : ""
-                                }`}
-                                onClick={() => handleNavigation(item.path)}
-                              >
-                                <Icon className="h-4 w-4 mr-3" />
-                                <span className="font-medium">{item.label}</span>
-                              </Button>
-                            );
-                          })}
-                        </div>
-
-                        <div className="space-y-3">
-                          <h3 className="font-semibold text-sm text-therapy-600 uppercase tracking-wide">Therapy Tools</h3>
-                          {toolsMenuItems.map((item) => {
-                            const Icon = item.icon;
-                            const isActive = location.pathname === item.path;
-                            return (
-                              <Button
-                                key={item.path}
-                                variant={isActive ? "default" : "ghost"}
-                                className={`justify-start w-full rounded-xl ${
-                                  isActive ? "bg-gradient-to-r from-therapy-500 to-therapy-600 text-white" : ""
-                                }`}
-                                onClick={() => handleNavigation(item.path)}
-                              >
-                                <Icon className="h-4 w-4 mr-3" />
-                                <span className="font-medium">{item.label}</span>
-                              </Button>
-                            );
-                          })}
-                        </div>
-
-                        <div className="space-y-3">
-                          <h3 className="font-semibold text-sm text-therapy-600 uppercase tracking-wide">Support & Resources</h3>
-                          {resourcesMenuItems.map((item) => {
-                            const Icon = item.icon;
-                            return (
-                              <Button
-                                key={item.label}
-                                variant="ghost"
-                                className="justify-start w-full rounded-xl"
-                                onClick={() => item.path !== "#" && handleNavigation(item.path)}
-                              >
-                                <Icon className="h-4 w-4 mr-3" />
-                                <span className="font-medium">{item.label}</span>
-                              </Button>
-                            );
-                          })}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="space-y-3">
-                        <h3 className="font-semibold text-sm text-therapy-600 uppercase tracking-wide">Navigation</h3>
-                        {publicNavItems.map((item) => {
-                          const Icon = item.icon;
-                          const isActive = item.path.startsWith('#') ? activeSection === item.path : location.pathname === item.path;
-                          return (
-                            <Button
-                              key={item.path}
-                              variant={isActive ? "default" : "ghost"}
-                              className={`justify-start w-full rounded-xl ${
-                                isActive ? "bg-gradient-to-r from-therapy-500 to-therapy-600 text-white" : ""
-                              }`}
-                              onClick={() => {
-                                if (item.path.startsWith('#')) {
-                                  setIsMenuOpen(false);
-                                  scrollToSection(item.path);
-                                } else {
-                                  handleNavigation(item.path);
-                                }
-                              }}
-                            >
-                              <Icon className="h-4 w-4 mr-3" />
-                              <span className="font-medium">{item.label}</span>
-                            </Button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                </SheetContent>
-              </Sheet>
+              {/* Mobile menu */}
+              <MobileMenu 
+                isMenuOpen={isMenuOpen}
+                setIsMenuOpen={setIsMenuOpen}
+                isAuthenticated={isAuthenticated}
+                activeSection={activeSection}
+                scrollToSection={scrollToSection}
+              />
             </div>
           </div>
         </div>
