@@ -50,12 +50,16 @@ const Goals = () => {
     }
   }, [user]);
 
-  const loadGoals = () => {
+  const loadGoals = async () => {
     if (!user) return;
-    const userGoals = GoalService.getGoals(user.id);
-    const goalInsights = GoalService.getGoalInsights(user.id);
-    setGoals(userGoals);
-    setInsights(goalInsights);
+    try {
+      const userGoals = await GoalService.getGoals(user.id);
+      const goalInsights = await GoalService.getGoalInsights(user.id);
+      setGoals(userGoals);
+      setInsights(goalInsights);
+    } catch (error) {
+      console.error('Error loading goals:', error);
+    }
   };
 
   const loadTemplates = () => {

@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +31,24 @@ interface GoalDetailsModalProps {
 const GoalDetailsModal = ({ goal, isOpen, onClose, onEdit, onGoalUpdated }: GoalDetailsModalProps) => {
   const [progressUpdate, setProgressUpdate] = useState('');
   const [progressNote, setProgressNote] = useState('');
+  const [progressHistory, setProgressHistory] = useState<GoalProgress[]>([]);
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (goal && isOpen) {
+      loadProgressHistory();
+    }
+  }, [goal, isOpen]);
+
+  const loadProgressHistory = async () => {
+    if (!goal) return;
+    try {
+      const history = await GoalService.getGoalProgress(goal.id);
+      setProgressHistory(history);
+    } catch (error) {
+      console.error('Error loading progress history:', error);
+    }
+  };
 
   if (!goal) return null;
 
@@ -103,8 +119,6 @@ const GoalDetailsModal = ({ goal, isOpen, onClose, onEdit, onGoalUpdated }: Goal
       });
     }
   };
-
-  const progressHistory = GoalService.getGoalProgress(goal.id);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

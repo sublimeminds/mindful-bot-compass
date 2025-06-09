@@ -137,7 +137,7 @@ export class GoalService {
     }
   ];
 
-  static async createGoal(goalData: Omit<Goal, 'id' | 'createdAt' | 'updatedAt' | 'milestones'>, milestones?: Omit<GoalMilestone, 'id' | 'goalId'>[]): Promise<Goal> {
+  static async createGoal(goalData: Omit<Goal, 'id' | 'createdAt' | 'updatedAt' | 'milestones'>, milestones?: Omit<GoalMilestone, 'id' | 'goalId' | 'completedAt' | 'isCompleted'>[]): Promise<Goal> {
     const { data: goalRecord, error: goalError } = await supabase
       .from('goals')
       .insert({
@@ -192,7 +192,8 @@ export class GoalService {
             title: m.title,
             description: m.description,
             target_value: m.targetValue,
-            reward: m.reward
+            reward: m.reward,
+            is_completed: false
           }))
         )
         .select();
@@ -407,7 +408,7 @@ export class GoalService {
       description: record.description,
       icon: record.icon,
       type: record.type as Achievement['type'],
-      criteria: record.criteria || {},
+      criteria: (record.criteria as any) || {},
       unlockedAt: new Date(record.unlocked_at),
       isUnlocked: true
     }));
