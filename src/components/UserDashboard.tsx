@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import ProgressStats from "./ProgressStats";
 import SessionCard from "./SessionCard";
 import QuickActions from "./QuickActions";
+import SessionRecommendations from "./SessionRecommendations";
 import { supabase } from '@/integrations/supabase/client';
 
 const UserDashboard = () => {
@@ -116,6 +117,9 @@ const UserDashboard = () => {
           {/* Sidebar */}
           <div className="space-y-6">
             <QuickActions />
+            
+            {/* Session Recommendations */}
+            <SessionRecommendations />
             
             {/* Goals & Preferences */}
             {onboardingData && (

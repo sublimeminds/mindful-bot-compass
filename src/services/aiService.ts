@@ -1,4 +1,6 @@
+
 import { Message } from "@/types";
+import { SessionRecommendationService } from "./sessionRecommendationService";
 
 const API_URL = process.env.NEXT_PUBLIC_OPENAI_API_URL || "https://api.openai.com/v1/chat/completions";
 const API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
@@ -8,10 +10,41 @@ export const sendMessage = async (
   conversationHistory: Message[] = [],
   therapistPrompt?: string
 ): Promise<string> => {
+  // Check for stored session recommendation
+  const storedRecommendation = sessionStorage.getItem('sessionRecommendation');
+  let enhancedPrompt = therapistPrompt;
+
+  if (storedRecommendation && conversationHistory.length < 3) {
+    const recommendation = JSON.parse(storedRecommendation);
+    enhancedPrompt = `${therapistPrompt}
+
+SPECIAL SESSION FOCUS: This is a "${recommendation.title}" session.
+Session Goal: ${recommendation.description}
+Recommended Techniques: ${recommendation.techniques.join(', ')}
+Estimated Duration: ${recommendation.estimatedDuration} minutes
+
+Please guide this session according to these parameters. Start with the session focus and use the recommended techniques when appropriate. Keep responses focused and therapeutic.
+
+If this is the first message, use this opening prompt: "${recommendation.prompt}"`;
+  }
+
+  // Generate smart follow-up questions if we have conversation context
+  if (conversationHistory.length > 0) {
+    const followUpQuestions = SessionRecommendationService.getSmartFollowUpQuestions(
+      conversationHistory.map(m => m.content),
+      message
+    );
+    
+    enhancedPrompt += `
+
+SMART FOLLOW-UP SUGGESTIONS: Consider using these follow-up questions when appropriate:
+${followUpQuestions.map((q, i) => `${i + 1}. ${q}`).join('\n')}`;
+  }
+
   const messages = [
     {
       role: "system",
-      content: therapistPrompt || `You are MindfulAI, a compassionate and professional AI therapist. Your role is to provide supportive, evidence-based mental health guidance while maintaining appropriate boundaries.
+      content: enhancedPrompt || `You are MindfulAI, a compassionate and professional AI therapist. Your role is to provide supportive, evidence-based mental health guidance while maintaining appropriate boundaries.
 
 Guidelines:
 - Be empathetic, non-judgmental, and supportive
@@ -44,7 +77,7 @@ Remember: You are a supportive tool, not a replacement for professional therapy.
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
         messages: messages,
-        max_tokens: 150,
+        max_tokens: 200,
         temperature: 0.7,
         n: 1,
       }),
@@ -56,6 +89,12 @@ Remember: You are a supportive tool, not a replacement for professional therapy.
 
     const data = await response.json();
     const aiMessage = data.choices[0].message.content;
+    
+    // Clear the recommendation after the first few messages
+    if (conversationHistory.length >= 2) {
+      sessionStorage.removeItem('sessionRecommendation');
+    }
+    
     return aiMessage;
 
   } catch (error: any) {
