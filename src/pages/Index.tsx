@@ -17,7 +17,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       <Header />
       
-      <main>
+      <main className="pt-12"> {/* Add padding-top to account for progress bar */}
         {isAuthenticated && user ? (
           <IntelligentNotificationProvider>
             <NotificationToastHandler />
@@ -33,8 +33,12 @@ const Index = () => {
         ) : (
           <>
             <HeroSection />
-            <FeaturesSection />
-            <PricingSection />
+            <div id="features">
+              <FeaturesSection />
+            </div>
+            <div id="pricing">
+              <PricingSection />
+            </div>
           </>
         )}
       </main>
