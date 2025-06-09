@@ -1,14 +1,14 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Send, Bot, User, Heart } from "lucide-react";
+import { Send, Bot, User, Heart, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSession } from "@/contexts/SessionContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useOnboardingData } from "@/hooks/useOnboardingData";
+import SessionEndModal from "@/components/SessionEndModal";
 
 interface Message {
   id: string;
@@ -22,6 +22,7 @@ const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showEndModal, setShowEndModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
@@ -166,6 +167,10 @@ const Chat = () => {
     }
   };
 
+  const handleEndSession = () => {
+    setShowEndModal(true);
+  };
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || !currentSession) return;
 
@@ -237,8 +242,20 @@ const Chat = () => {
               <Heart className="h-6 w-6 text-white" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-foreground mb-2">AI Therapy Session</h1>
-          <p className="text-muted-foreground">A safe space to explore your thoughts and feelings</p>
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold text-foreground mb-2">AI Therapy Session</h1>
+              <p className="text-muted-foreground">A safe space to explore your thoughts and feelings</p>
+            </div>
+            <Button 
+              variant="outline" 
+              onClick={handleEndSession}
+              className="flex items-center space-x-2"
+            >
+              <X className="h-4 w-4" />
+              <span>End Session</span>
+            </Button>
+          </div>
         </div>
 
         <Card className="h-[600px] flex flex-col shadow-lg">
@@ -317,6 +334,11 @@ const Chat = () => {
           </CardContent>
         </Card>
       </div>
+
+      <SessionEndModal
+        isOpen={showEndModal}
+        onClose={() => setShowEndModal(false)}
+      />
     </div>
   );
 };

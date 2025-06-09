@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useSession } from "@/contexts/SessionContext";
 import { useOnboardingData } from "@/hooks/useOnboardingData";
 import { useSessionStats } from "@/hooks/useSessionStats";
+import { useNavigate } from "react-router-dom";
 import ProgressStats from "./ProgressStats";
 import SessionCard from "./SessionCard";
 import QuickActions from "./QuickActions";
@@ -20,6 +20,7 @@ const UserDashboard = () => {
   const { stats, isLoading: statsLoading } = useSessionStats();
   const [recentSessions, setRecentSessions] = useState<any[]>([]);
   const [isLoadingSessions, setIsLoadingSessions] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecentSessions = async () => {
@@ -79,7 +80,11 @@ const UserDashboard = () => {
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">Recent Sessions</h2>
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/sessions')}
+              >
                 <Calendar className="h-4 w-4 mr-2" />
                 View All
               </Button>
