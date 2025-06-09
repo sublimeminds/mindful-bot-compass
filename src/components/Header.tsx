@@ -20,6 +20,12 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
+  const publicNavItems = [
+    { path: "#features", label: "Features", icon: Heart },
+    { path: "#pricing", label: "Pricing", icon: Target },
+    { path: "/auth", label: "Sign In", icon: User },
+  ];
+
   const mainNavItems = [
     { path: "/", label: "Dashboard", icon: BarChart3 },
     { path: "/chat", label: "Therapy Chat", icon: MessageSquare },
@@ -42,11 +48,22 @@ const Header = () => {
     { path: "#", label: "Community", icon: MessageSquare },
   ];
 
+  const scrollToSection = (sectionId: string) => {
+    if (sectionId.startsWith('#')) {
+      const element = document.querySelector(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate(sectionId);
+    }
+  };
+
   return (
     <header className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo - matching footer design */}
+          {/* Logo */}
           <div className="flex items-center flex-shrink-0">
             <button 
               onClick={() => navigate("/")}
@@ -61,100 +78,127 @@ const Header = () => {
             </button>
           </div>
 
-          {/* Desktop Navigation - Centered with enhanced styling */}
-          {isAuthenticated && (
-            <nav className="hidden lg:flex items-center justify-center flex-1 mx-8">
-              <div className="flex items-center space-x-1 bg-muted/50 rounded-full p-1">
-                {/* Main Navigation Items */}
-                {mainNavItems.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = location.pathname === item.path;
-                  return (
-                    <Button
-                      key={item.path}
-                      variant={isActive ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => handleNavigation(item.path)}
-                      className={`flex items-center space-x-2 rounded-full transition-all duration-200 ${
-                        isActive 
-                          ? "bg-gradient-to-r from-therapy-500 to-therapy-600 text-white shadow-md" 
-                          : "hover:bg-background hover:shadow-sm"
-                      }`}
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span className="font-medium">{item.label}</span>
-                    </Button>
-                  );
-                })}
+          {/* Desktop Navigation - Show different nav based on auth state */}
+          <nav className="hidden lg:flex items-center justify-center flex-1 mx-8">
+            <div className="flex items-center space-x-1 bg-muted/50 rounded-full p-1">
+              {isAuthenticated ? (
+                <>
+                  {/* Authenticated Navigation */}
+                  {mainNavItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.path;
+                    return (
+                      <Button
+                        key={item.path}
+                        variant={isActive ? "default" : "ghost"}
+                        size="sm"
+                        onClick={() => handleNavigation(item.path)}
+                        className={`flex items-center space-x-2 rounded-full transition-all duration-200 ${
+                          isActive 
+                            ? "bg-gradient-to-r from-therapy-500 to-therapy-600 text-white shadow-md" 
+                            : "hover:bg-background hover:shadow-sm"
+                        }`}
+                      >
+                        <Icon className="h-4 w-4" />
+                        <span className="font-medium">{item.label}</span>
+                      </Button>
+                    );
+                  })}
 
-                {/* Tools Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="flex items-center space-x-2 rounded-full hover:bg-background hover:shadow-sm transition-all duration-200"
-                    >
-                      <Brain className="h-4 w-4" />
-                      <span className="font-medium">Tools</span>
-                      <ChevronDown className="h-3 w-3" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="center" className="w-52 bg-background/95 backdrop-blur border shadow-xl rounded-xl">
-                    <DropdownMenuLabel className="font-semibold text-therapy-700">Therapy Tools</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {toolsMenuItems.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <DropdownMenuItem
-                          key={item.path}
-                          onClick={() => handleNavigation(item.path)}
-                          className="cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1"
-                        >
-                          <Icon className="h-4 w-4 mr-3 text-therapy-500" />
-                          <span className="font-medium">{item.label}</span>
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                  {/* Tools Dropdown */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex items-center space-x-2 rounded-full hover:bg-background hover:shadow-sm transition-all duration-200"
+                      >
+                        <Brain className="h-4 w-4" />
+                        <span className="font-medium">Tools</span>
+                        <ChevronDown className="h-3 w-3" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="center" className="w-52 bg-background border shadow-xl rounded-xl">
+                      <DropdownMenuLabel className="font-semibold text-therapy-700">Therapy Tools</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {toolsMenuItems.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <DropdownMenuItem
+                            key={item.path}
+                            onClick={() => handleNavigation(item.path)}
+                            className="cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1"
+                          >
+                            <Icon className="h-4 w-4 mr-3 text-therapy-500" />
+                            <span className="font-medium">{item.label}</span>
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
 
-                {/* Resources Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="flex items-center space-x-2 rounded-full hover:bg-background hover:shadow-sm transition-all duration-200"
-                    >
-                      <BookOpen className="h-4 w-4" />
-                      <span className="font-medium">Resources</span>
-                      <ChevronDown className="h-3 w-3" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="center" className="w-56 bg-background/95 backdrop-blur border shadow-xl rounded-xl">
-                    <DropdownMenuLabel className="font-semibold text-therapy-700">Support & Learning</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {resourcesMenuItems.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <DropdownMenuItem
-                          key={item.label}
-                          onClick={() => item.path !== "#" && handleNavigation(item.path)}
-                          className="cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1"
-                        >
-                          <Icon className="h-4 w-4 mr-3 text-therapy-500" />
-                          <span className="font-medium">{item.label}</span>
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </nav>
-          )}
+                  {/* Resources Dropdown */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex items-center space-x-2 rounded-full hover:bg-background hover:shadow-sm transition-all duration-200"
+                      >
+                        <BookOpen className="h-4 w-4" />
+                        <span className="font-medium">Resources</span>
+                        <ChevronDown className="h-3 w-3" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="center" className="w-56 bg-background border shadow-xl rounded-xl">
+                      <DropdownMenuLabel className="font-semibold text-therapy-700">Support & Learning</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {resourcesMenuItems.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <DropdownMenuItem
+                            key={item.label}
+                            onClick={() => item.path !== "#" && handleNavigation(item.path)}
+                            className="cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1"
+                          >
+                            <Icon className="h-4 w-4 mr-3 text-therapy-500" />
+                            <span className="font-medium">{item.label}</span>
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              ) : (
+                <>
+                  {/* Public Navigation */}
+                  {publicNavItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Button
+                        key={item.path}
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          if (item.path.startsWith('#')) {
+                            scrollToSection(item.path);
+                          } else {
+                            handleNavigation(item.path);
+                          }
+                        }}
+                        className="flex items-center space-x-2 rounded-full hover:bg-background hover:shadow-sm transition-all duration-200"
+                      >
+                        <Icon className="h-4 w-4" />
+                        <span className="font-medium">{item.label}</span>
+                      </Button>
+                    );
+                  })}
+                </>
+              )}
+            </div>
+          </nav>
 
-          {/* Right side - User menu */}
+          {/* Right side - User menu or Sign In */}
           <div className="flex items-center space-x-3 flex-shrink-0">
             {isAuthenticated ? (
               <>
@@ -171,7 +215,7 @@ const Header = () => {
                       <span className="hidden sm:inline max-w-32 truncate font-medium">{user?.email}</span>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur border shadow-xl rounded-xl">
+                  <DropdownMenuContent align="end" className="w-56 bg-background border shadow-xl rounded-xl">
                     <DropdownMenuItem onClick={() => navigate("/profile")} className="hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1">
                       <User className="h-4 w-4 mr-3 text-therapy-500" />
                       <span className="font-medium">Profile</span>
@@ -187,16 +231,28 @@ const Header = () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+              </>
+            ) : (
+              <Button 
+                onClick={() => navigate("/auth")} 
+                size="sm"
+                className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-medium rounded-full px-6 shadow-lg hover:shadow-therapy-500/25 transition-all duration-300"
+              >
+                Sign In
+              </Button>
+            )}
 
-                {/* Mobile menu trigger */}
-                <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-                  <SheetTrigger asChild className="lg:hidden">
-                    <Button variant="ghost" size="sm" className="rounded-full">
-                      <Menu className="h-5 w-5" />
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="right" className="w-72 bg-background/95 backdrop-blur">
-                    <div className="flex flex-col space-y-6 mt-6">
+            {/* Mobile menu trigger */}
+            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+              <SheetTrigger asChild className="lg:hidden">
+                <Button variant="ghost" size="sm" className="rounded-full">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-72 bg-background">
+                <div className="flex flex-col space-y-6 mt-6">
+                  {isAuthenticated ? (
+                    <>
                       <div className="space-y-3">
                         <h3 className="font-semibold text-sm text-therapy-600 uppercase tracking-wide">Main Navigation</h3>
                         {mainNavItems.map((item) => {
@@ -256,19 +312,36 @@ const Header = () => {
                           );
                         })}
                       </div>
+                    </>
+                  ) : (
+                    <div className="space-y-3">
+                      <h3 className="font-semibold text-sm text-therapy-600 uppercase tracking-wide">Navigation</h3>
+                      {publicNavItems.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <Button
+                            key={item.path}
+                            variant="ghost"
+                            className="justify-start w-full rounded-xl"
+                            onClick={() => {
+                              if (item.path.startsWith('#')) {
+                                setIsMenuOpen(false);
+                                scrollToSection(item.path);
+                              } else {
+                                handleNavigation(item.path);
+                              }
+                            }}
+                          >
+                            <Icon className="h-4 w-4 mr-3" />
+                            <span className="font-medium">{item.label}</span>
+                          </Button>
+                        );
+                      })}
                     </div>
-                  </SheetContent>
-                </Sheet>
-              </>
-            ) : (
-              <Button 
-                onClick={() => navigate("/auth")} 
-                size="sm"
-                className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-medium rounded-full px-6 shadow-lg hover:shadow-therapy-500/25 transition-all duration-300"
-              >
-                Sign In
-              </Button>
-            )}
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>
