@@ -1,89 +1,89 @@
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
-
 @layer base {
   :root {
-    --background: 248 250 252;
-    --foreground: 15 23 42;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
 
-    --card: 255 255 255;
-    --card-foreground: 15 23 42;
+    /* Therapy theme colors */
+    --therapy-50: 142 76% 96%;
+    --therapy-100: 141 84% 93%;
+    --therapy-200: 141 84% 85%;
+    --therapy-300: 142 77% 73%;
+    --therapy-400: 142 69% 58%;
+    --therapy-500: 142 72% 29%;
+    --therapy-600: 142 83% 24%;
+    --therapy-700: 142 84% 20%;
+    --therapy-800: 143 88% 17%;
+    --therapy-900: 144 61% 10%;
+    --therapy-950: 144 84% 6%;
 
-    --popover: 255 255 255;
-    --popover-foreground: 15 23 42;
-
-    --primary: 14 165 233;
-    --primary-foreground: 255 255 255;
-
-    --secondary: 240 244 248;
-    --secondary-foreground: 51 65 85;
-
-    --muted: 240 244 248;
-    --muted-foreground: 100 116 139;
-
-    --accent: 236 254 255;
-    --accent-foreground: 22 78 99;
-
-    --destructive: 239 68 68;
-    --destructive-foreground: 255 255 255;
-
-    --border: 226 232 240;
-    --input: 226 232 240;
-    --ring: 14 165 233;
-
-    --radius: 0.75rem;
-
-    --sidebar-background: 248 250 252;
-    --sidebar-foreground: 51 65 85;
-    --sidebar-primary: 14 165 233;
-    --sidebar-primary-foreground: 255 255 255;
-    --sidebar-accent: 240 244 248;
-    --sidebar-accent-foreground: 51 65 85;
-    --sidebar-border: 226 232 240;
-    --sidebar-ring: 14 165 233;
+    /* Calm theme colors */
+    --calm-50: 204 100% 97%;
+    --calm-100: 204 94% 94%;
+    --calm-200: 201 94% 86%;
+    --calm-300: 199 95% 74%;
+    --calm-400: 198 93% 60%;
+    --calm-500: 198 93% 50%;
+    --calm-600: 200 98% 39%;
+    --calm-700: 201 96% 32%;
+    --calm-800: 201 90% 27%;
+    --calm-900: 202 80% 24%;
+    --calm-950: 202 80% 16%;
   }
 
   .dark {
-    --background: 2 6 23;
-    --foreground: 248 250 252;
-
-    --card: 15 23 42;
-    --card-foreground: 248 250 252;
-
-    --popover: 15 23 42;
-    --popover-foreground: 248 250 252;
-
-    --primary: 56 189 248;
-    --primary-foreground: 2 6 23;
-
-    --secondary: 30 41 59;
-    --secondary-foreground: 203 213 225;
-
-    --muted: 30 41 59;
-    --muted-foreground: 148 163 184;
-
-    --accent: 30 41 59;
-    --accent-foreground: 203 213 225;
-
-    --destructive: 239 68 68;
-    --destructive-foreground: 248 250 252;
-
-    --border: 51 65 85;
-    --input: 51 65 85;
-    --ring: 56 189 248;
-
-    --sidebar-background: 2 6 23;
-    --sidebar-foreground: 203 213 225;
-    --sidebar-primary: 56 189 248;
-    --sidebar-primary-foreground: 2 6 23;
-    --sidebar-accent: 30 41 59;
-    --sidebar-accent-foreground: 203 213 225;
-    --sidebar-border: 51 65 85;
-    --sidebar-ring: 56 189 248;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
 }
 
@@ -91,35 +91,58 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
+@layer utilities {
+  .therapy-50 { color: hsl(var(--therapy-50)); }
+  .therapy-100 { color: hsl(var(--therapy-100)); }
+  .therapy-200 { color: hsl(var(--therapy-200)); }
+  .therapy-300 { color: hsl(var(--therapy-300)); }
+  .therapy-400 { color: hsl(var(--therapy-400)); }
+  .therapy-500 { color: hsl(var(--therapy-500)); }
+  .therapy-600 { color: hsl(var(--therapy-600)); }
+  .therapy-700 { color: hsl(var(--therapy-700)); }
+  .therapy-800 { color: hsl(var(--therapy-800)); }
+  .therapy-900 { color: hsl(var(--therapy-900)); }
+  .therapy-950 { color: hsl(var(--therapy-950)); }
 
-::-webkit-scrollbar-track {
-  @apply bg-muted;
-}
+  .bg-therapy-50 { background-color: hsl(var(--therapy-50)); }
+  .bg-therapy-100 { background-color: hsl(var(--therapy-100)); }
+  .bg-therapy-200 { background-color: hsl(var(--therapy-200)); }
+  .bg-therapy-300 { background-color: hsl(var(--therapy-300)); }
+  .bg-therapy-400 { background-color: hsl(var(--therapy-400)); }
+  .bg-therapy-500 { background-color: hsl(var(--therapy-500)); }
+  .bg-therapy-600 { background-color: hsl(var(--therapy-600)); }
+  .bg-therapy-700 { background-color: hsl(var(--therapy-700)); }
+  .bg-therapy-800 { background-color: hsl(var(--therapy-800)); }
+  .bg-therapy-900 { background-color: hsl(var(--therapy-900)); }
+  .bg-therapy-950 { background-color: hsl(var(--therapy-950)); }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/30 rounded-full;
-}
+  .calm-50 { color: hsl(var(--calm-50)); }
+  .calm-100 { color: hsl(var(--calm-100)); }
+  .calm-200 { color: hsl(var(--calm-200)); }
+  .calm-300 { color: hsl(var(--calm-300)); }
+  .calm-400 { color: hsl(var(--calm-400)); }
+  .calm-500 { color: hsl(var(--calm-500)); }
+  .calm-600 { color: hsl(var(--calm-600)); }
+  .calm-700 { color: hsl(var(--calm-700)); }
+  .calm-800 { color: hsl(var(--calm-800)); }
+  .calm-900 { color: hsl(var(--calm-900)); }
+  .calm-950 { color: hsl(var(--calm-950)); }
 
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-muted-foreground/50;
-}
-
-/* Gradient backgrounds */
-.gradient-therapy {
-  background: linear-gradient(135deg, hsl(var(--background)) 0%, #e0f2fe 50%, #f0f9ff 100%);
-}
-
-.gradient-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 100%);
-  backdrop-filter: blur(10px);
+  .bg-calm-50 { background-color: hsl(var(--calm-50)); }
+  .bg-calm-100 { background-color: hsl(var(--calm-100)); }
+  .bg-calm-200 { background-color: hsl(var(--calm-200)); }
+  .bg-calm-300 { background-color: hsl(var(--calm-300)); }
+  .bg-calm-400 { background-color: hsl(var(--calm-400)); }
+  .bg-calm-500 { background-color: hsl(var(--calm-500)); }
+  .bg-calm-600 { background-color: hsl(var(--calm-600)); }
+  .bg-calm-700 { background-color: hsl(var(--calm-700)); }
+  .bg-calm-800 { background-color: hsl(var(--calm-800)); }
+  .bg-calm-900 { background-color: hsl(var(--calm-900)); }
+  .bg-calm-950 { background-color: hsl(var(--calm-950)); }
 }

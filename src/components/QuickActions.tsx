@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageCircle, Plus, TrendingUp, Calendar } from "lucide-react";
+import { MessageCircle, Plus, TrendingUp, Calendar, BarChart3 } from "lucide-react";
 import { useSession } from "@/contexts/SessionContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -58,6 +58,11 @@ const QuickActions = () => {
             Start New Session
           </Button>
         )}
+        
+        <Button variant="outline" className="w-full" onClick={() => navigate('/analytics')}>
+          <BarChart3 className="h-4 w-4 mr-2" />
+          View Progress Analytics
+        </Button>
         
         <Button variant="outline" className="w-full" onClick={() => navigate('/onboarding')}>
           <TrendingUp className="h-4 w-4 mr-2" />
