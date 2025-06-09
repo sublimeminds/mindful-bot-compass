@@ -16,6 +16,7 @@ import EnhancedSessionCard from "./session/EnhancedSessionCard";
 import SessionDetailsModal from "./session/SessionDetailsModal";
 import QuickActions from "./QuickActions";
 import SessionRecommendations from "./SessionRecommendations";
+import NotificationCenter from "./NotificationCenter";
 import { SessionSummary } from "@/services/sessionHistoryService";
 
 const UserDashboard = () => {
@@ -66,14 +67,17 @@ const UserDashboard = () => {
               <AvatarImage src="" alt={user.user_metadata?.name} />
               <AvatarFallback>{getUserInitials()}</AvatarFallback>
             </Avatar>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => navigate('/profile')}
-            >
-              <Settings className="h-4 w-4 mr-2" />
-              Profile & Settings
-            </Button>
+            <div className="flex space-x-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/profile')}
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                Profile & Settings
+              </Button>
+              <NotificationCenter />
+            </div>
           </div>
         </div>
 

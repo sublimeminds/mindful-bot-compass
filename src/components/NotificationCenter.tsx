@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Bell, Check, X, Calendar, Lightbulb, TrendingUp, Heart } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { NotificationService, Notification } from "@/services/notificationService";
+import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 
 const NotificationCenter = () => {
