@@ -1,96 +1,79 @@
-import { Button } from "@/components/ui/button";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageCircle, Plus, TrendingUp, Calendar, BarChart3, Brain, BookOpen, Target } from "lucide-react";
-import { useSession } from "@/contexts/SessionContext";
+import { Button } from "@/components/ui/button";
+import { MessageCircle, Calendar, Target, BarChart3, Settings, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
 
 const QuickActions = () => {
-  const { startSession, currentSession } = useSession();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
-  const handleStartSession = async () => {
-    try {
-      await startSession();
-      navigate('/chat');
-      toast({
-        title: "Session Started",
-        description: "Your therapy session has begun. Share what's on your mind.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to start session. Please try again.",
-        variant: "destructive",
-      });
+  const actions = [
+    {
+      title: "Start Session",
+      description: "Begin a new therapy session",
+      icon: MessageCircle,
+      onClick: () => navigate('/chat'),
+      className: "bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white"
+    },
+    {
+      title: "Set Goals",
+      description: "Create and track your progress",
+      icon: Target,
+      onClick: () => navigate('/goals'),
+      className: "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+    },
+    {
+      title: "Track Mood",
+      description: "Log your current mood",
+      icon: Brain,
+      onClick: () => navigate('/mood'),
+      className: "bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
+    },
+    {
+      title: "View Sessions",
+      description: "Review past sessions",
+      icon: Calendar,
+      onClick: () => navigate('/sessions'),
+      className: "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"
+    },
+    {
+      title: "Analytics",
+      description: "See your progress analytics",
+      icon: BarChart3,
+      onClick: () => navigate('/analytics'),
+      className: "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+    },
+    {
+      title: "Techniques",
+      description: "Learn coping techniques",
+      icon: Settings,
+      onClick: () => navigate('/techniques'),
+      className: "bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white"
     }
-  };
-
-  const handleContinueSession = () => {
-    navigate('/chat');
-  };
+  ];
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Plus className="h-5 w-5 mr-2" />
-          Quick Actions
-        </CardTitle>
+        <CardTitle>Quick Actions</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
-        {currentSession ? (
-          <Button 
-            onClick={handleContinueSession}
-            className="w-full bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
-          >
-            <MessageCircle className="h-4 w-4 mr-2" />
-            Continue Current Session
-          </Button>
-        ) : (
-          <Button 
-            onClick={handleStartSession}
-            className="w-full bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
-          >
-            <MessageCircle className="h-4 w-4 mr-2" />
-            Start New Session
-          </Button>
-        )}
-        
-        <Button variant="outline" className="w-full" onClick={() => navigate('/techniques')}>
-          <BookOpen className="h-4 w-4 mr-2" />
-          Practice Techniques
-        </Button>
-        
-        <Button variant="outline" className="w-full" onClick={() => navigate('/mood')}>
-          <Brain className="h-4 w-4 mr-2" />
-          Track Mood
-        </Button>
-        
-        <Button variant="outline" className="w-full" onClick={() => navigate('/goals')}>
-          <Target className="h-4 w-4 mr-2" />
-          Manage Goals
-        </Button>
-        
-        <Button 
-          variant="outline" 
-          className="w-full bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 border-blue-200" 
-          onClick={() => navigate('/analytics')}
-        >
-          <BarChart3 className="h-4 w-4 mr-2" />
-          View Progress Analytics
-        </Button>
-        
-        <Button variant="outline" className="w-full" onClick={() => navigate('/onboarding')}>
-          <TrendingUp className="h-4 w-4 mr-2" />
-          Update Goals & Preferences
-        </Button>
-        
-        <Button variant="outline" className="w-full" disabled>
-          <Calendar className="h-4 w-4 mr-2" />
-          Schedule Session (Coming Soon)
-        </Button>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-3">
+          {actions.map((action) => (
+            <Button
+              key={action.title}
+              variant="outline"
+              className={`h-auto p-3 flex flex-col items-center space-y-2 ${action.className}`}
+              onClick={action.onClick}
+            >
+              <action.icon className="h-5 w-5" />
+              <div className="text-center">
+                <div className="font-medium text-sm">{action.title}</div>
+                <div className="text-xs opacity-80">{action.description}</div>
+              </div>
+            </Button>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );

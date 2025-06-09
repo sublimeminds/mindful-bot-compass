@@ -9,6 +9,178 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          created_at: string
+          criteria: Json | null
+          description: string | null
+          icon: string
+          id: string
+          title: string
+          type: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          criteria?: Json | null
+          description?: string | null
+          icon: string
+          id?: string
+          title: string
+          type: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          criteria?: Json | null
+          description?: string | null
+          icon?: string
+          id?: string
+          title?: string
+          type?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      goal_milestones: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          goal_id: string
+          id: string
+          is_completed: boolean
+          reward: string | null
+          target_value: number
+          title: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          goal_id: string
+          id?: string
+          is_completed?: boolean
+          reward?: string | null
+          target_value: number
+          title: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          goal_id?: string
+          id?: string
+          is_completed?: boolean
+          reward?: string | null
+          target_value?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goal_milestones_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "goals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      goal_progress: {
+        Row: {
+          goal_id: string
+          id: string
+          note: string | null
+          recorded_at: string
+          value: number
+        }
+        Insert: {
+          goal_id: string
+          id?: string
+          note?: string | null
+          recorded_at?: string
+          value: number
+        }
+        Update: {
+          goal_id?: string
+          id?: string
+          note?: string | null
+          recorded_at?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goal_progress_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "goals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      goals: {
+        Row: {
+          category: string
+          created_at: string
+          current_progress: number
+          description: string | null
+          id: string
+          is_completed: boolean
+          notes: string | null
+          priority: string
+          start_date: string
+          tags: string[] | null
+          target_date: string
+          target_value: number
+          title: string
+          type: string
+          unit: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          current_progress?: number
+          description?: string | null
+          id?: string
+          is_completed?: boolean
+          notes?: string | null
+          priority?: string
+          start_date?: string
+          tags?: string[] | null
+          target_date: string
+          target_value?: number
+          title: string
+          type: string
+          unit?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          current_progress?: number
+          description?: string | null
+          id?: string
+          is_completed?: boolean
+          notes?: string | null
+          priority?: string
+          start_date?: string
+          tags?: string[] | null
+          target_date?: string
+          target_value?: number
+          title?: string
+          type?: string
+          unit?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

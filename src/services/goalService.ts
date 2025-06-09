@@ -1,4 +1,6 @@
 
+import { supabase } from '@/integrations/supabase/client';
+
 export interface Goal {
   id: string;
   userId: string;
@@ -8,7 +10,7 @@ export interface Goal {
   type: 'habit' | 'milestone' | 'outcome';
   targetValue: number;
   currentProgress: number;
-  unit: string; // e.g., 'sessions', 'days', 'points'
+  unit: string;
   startDate: Date;
   targetDate: Date;
   isCompleted: boolean;
@@ -67,11 +69,7 @@ export interface Achievement {
 }
 
 export class GoalService {
-  private static goals: Goal[] = [];
-  private static goalProgress: GoalProgress[] = [];
-  private static achievements: Achievement[] = [];
-
-  // Goal Templates
+  // Goal Templates (static data)
   private static goalTemplates: GoalTemplate[] = [
     {
       id: '1',
@@ -140,20 +138,79 @@ export class GoalService {
   ];
 
   static async createGoal(goalData: Omit<Goal, 'id' | 'createdAt' | 'updatedAt' | 'milestones'>, milestones?: Omit<GoalMilestone, 'id' | 'goalId'>[]): Promise<Goal> {
+    const { data: goalRecord, error: goalError } = await supabase
+      .from('goals')
+      .insert({
+        user_id: goalData.userId,
+        title: goalData.title,
+        description: goalData.description,
+        category: goalData.category,
+        type: goalData.type,
+        target_value: goalData.targetValue,
+        current_progress: goalData.currentProgress,
+        unit: goalData.unit,
+        start_date: goalData.startDate.toISOString(),
+        target_date: goalData.targetDate.toISOString(),
+        is_completed: goalData.isCompleted,
+        priority: goalData.priority,
+        tags: goalData.tags,
+        notes: goalData.notes
+      })
+      .select()
+      .single();
+
+    if (goalError) throw goalError;
+
     const goal: Goal = {
-      ...goalData,
-      id: Date.now().toString(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      milestones: milestones?.map(m => ({
-        ...m,
-        id: Date.now().toString() + Math.random(),
-        goalId: Date.now().toString(),
-        isCompleted: false
-      })) || []
+      id: goalRecord.id,
+      userId: goalRecord.user_id,
+      title: goalRecord.title,
+      description: goalRecord.description,
+      category: goalRecord.category as Goal['category'],
+      type: goalRecord.type as Goal['type'],
+      targetValue: goalRecord.target_value,
+      currentProgress: goalRecord.current_progress,
+      unit: goalRecord.unit,
+      startDate: new Date(goalRecord.start_date),
+      targetDate: new Date(goalRecord.target_date),
+      isCompleted: goalRecord.is_completed,
+      priority: goalRecord.priority as Goal['priority'],
+      tags: goalRecord.tags || [],
+      notes: goalRecord.notes || '',
+      createdAt: new Date(goalRecord.created_at),
+      updatedAt: new Date(goalRecord.updated_at),
+      milestones: []
     };
-    
-    this.goals.push(goal);
+
+    // Create milestones if provided
+    if (milestones && milestones.length > 0) {
+      const { data: milestoneRecords, error: milestoneError } = await supabase
+        .from('goal_milestones')
+        .insert(
+          milestones.map(m => ({
+            goal_id: goal.id,
+            title: m.title,
+            description: m.description,
+            target_value: m.targetValue,
+            reward: m.reward
+          }))
+        )
+        .select();
+
+      if (milestoneError) throw milestoneError;
+
+      goal.milestones = milestoneRecords.map(m => ({
+        id: m.id,
+        goalId: m.goal_id,
+        title: m.title,
+        description: m.description,
+        targetValue: m.target_value,
+        isCompleted: m.is_completed,
+        completedAt: m.completed_at ? new Date(m.completed_at) : undefined,
+        reward: m.reward
+      }));
+    }
+
     return goal;
   }
 
@@ -161,8 +218,7 @@ export class GoalService {
     const template = this.goalTemplates.find(t => t.id === templateId);
     if (!template) throw new Error('Template not found');
 
-    const goal: Goal = {
-      id: Date.now().toString(),
+    const goalData = {
       userId,
       title: customizations?.title || template.title,
       description: customizations?.description || template.description,
@@ -174,28 +230,55 @@ export class GoalService {
       startDate: customizations?.startDate || new Date(),
       targetDate: customizations?.targetDate || new Date(Date.now() + template.defaultDuration * 24 * 60 * 60 * 1000),
       isCompleted: false,
-      priority: customizations?.priority || 'medium',
+      priority: customizations?.priority || 'medium' as Goal['priority'],
       tags: [...template.tags, ...(customizations?.tags || [])],
-      notes: customizations?.notes || '',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      milestones: template.milestoneTemplates.map(mt => ({
-        id: Date.now().toString() + Math.random(),
-        goalId: Date.now().toString(),
-        title: mt.title,
-        description: mt.description,
-        targetValue: mt.targetValue,
-        isCompleted: false,
-        reward: mt.reward
-      }))
+      notes: customizations?.notes || ''
     };
 
-    this.goals.push(goal);
-    return goal;
+    return this.createGoal(goalData, template.milestoneTemplates);
   }
 
-  static getGoals(userId: string): Goal[] {
-    return this.goals.filter(goal => goal.userId === userId);
+  static async getGoals(userId: string): Promise<Goal[]> {
+    const { data: goalRecords, error } = await supabase
+      .from('goals')
+      .select(`
+        *,
+        goal_milestones (*)
+      `)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    return goalRecords.map(record => ({
+      id: record.id,
+      userId: record.user_id,
+      title: record.title,
+      description: record.description,
+      category: record.category as Goal['category'],
+      type: record.type as Goal['type'],
+      targetValue: record.target_value,
+      currentProgress: record.current_progress,
+      unit: record.unit,
+      startDate: new Date(record.start_date),
+      targetDate: new Date(record.target_date),
+      isCompleted: record.is_completed,
+      priority: record.priority as Goal['priority'],
+      tags: record.tags || [],
+      notes: record.notes || '',
+      createdAt: new Date(record.created_at),
+      updatedAt: new Date(record.updated_at),
+      milestones: record.goal_milestones.map((m: any) => ({
+        id: m.id,
+        goalId: m.goal_id,
+        title: m.title,
+        description: m.description,
+        targetValue: m.target_value,
+        isCompleted: m.is_completed,
+        completedAt: m.completed_at ? new Date(m.completed_at) : undefined,
+        reward: m.reward
+      }))
+    }));
   }
 
   static getGoalTemplates(): GoalTemplate[] {
@@ -203,52 +286,88 @@ export class GoalService {
   }
 
   static async updateGoalProgress(goalId: string, progress: number, note?: string): Promise<Goal | null> {
-    const goal = this.goals.find(g => g.id === goalId);
-    if (!goal) return null;
+    // Update goal progress
+    const { data: goalRecord, error: goalError } = await supabase
+      .from('goals')
+      .update({ 
+        current_progress: progress,
+        is_completed: progress >= 0 // We'll check target value in the next query
+      })
+      .eq('id', goalId)
+      .select()
+      .single();
 
-    const oldProgress = goal.currentProgress;
-    goal.currentProgress = progress;
-    goal.updatedAt = new Date();
+    if (goalError) throw goalError;
 
     // Record progress entry
-    this.goalProgress.push({
-      goalId,
-      date: new Date(),
-      value: progress,
-      note
-    });
-
-    // Check for milestone completions
-    goal.milestones.forEach(milestone => {
-      if (!milestone.isCompleted && progress >= milestone.targetValue) {
-        milestone.isCompleted = true;
-        milestone.completedAt = new Date();
-        this.checkAchievements(goal.userId);
-      }
-    });
+    await supabase
+      .from('goal_progress')
+      .insert({
+        goal_id: goalId,
+        value: progress,
+        note
+      });
 
     // Check if goal is completed
-    if (!goal.isCompleted && progress >= goal.targetValue) {
-      goal.isCompleted = true;
-      this.checkAchievements(goal.userId);
+    const isCompleted = progress >= goalRecord.target_value;
+    if (isCompleted && !goalRecord.is_completed) {
+      await supabase
+        .from('goals')
+        .update({ is_completed: true })
+        .eq('id', goalId);
     }
 
-    return goal;
+    // Update milestones
+    const { data: milestones } = await supabase
+      .from('goal_milestones')
+      .select('*')
+      .eq('goal_id', goalId);
+
+    if (milestones) {
+      for (const milestone of milestones) {
+        if (!milestone.is_completed && progress >= milestone.target_value) {
+          await supabase
+            .from('goal_milestones')
+            .update({ 
+              is_completed: true,
+              completed_at: new Date().toISOString()
+            })
+            .eq('id', milestone.id);
+        }
+      }
+    }
+
+    // Return updated goal
+    const updatedGoals = await this.getGoals(goalRecord.user_id);
+    return updatedGoals.find(g => g.id === goalId) || null;
   }
 
-  static getGoalProgress(goalId: string): GoalProgress[] {
-    return this.goalProgress.filter(p => p.goalId === goalId).sort((a, b) => a.date.getTime() - b.date.getTime());
+  static async getGoalProgress(goalId: string): Promise<GoalProgress[]> {
+    const { data: progressRecords, error } = await supabase
+      .from('goal_progress')
+      .select('*')
+      .eq('goal_id', goalId)
+      .order('recorded_at', { ascending: true });
+
+    if (error) throw error;
+
+    return progressRecords.map(record => ({
+      goalId: record.goal_id,
+      date: new Date(record.recorded_at),
+      value: record.value,
+      note: record.note
+    }));
   }
 
-  static getGoalInsights(userId: string) {
-    const userGoals = this.getGoals(userId);
-    const completedGoals = userGoals.filter(g => g.isCompleted);
-    const activeGoals = userGoals.filter(g => !g.isCompleted);
+  static async getGoalInsights(userId: string) {
+    const goals = await this.getGoals(userId);
+    const completedGoals = goals.filter(g => g.isCompleted);
+    const activeGoals = goals.filter(g => !g.isCompleted);
     
-    const totalMilestones = userGoals.reduce((sum, g) => sum + g.milestones.length, 0);
-    const completedMilestones = userGoals.reduce((sum, g) => sum + g.milestones.filter(m => m.isCompleted).length, 0);
+    const totalMilestones = goals.reduce((sum, g) => sum + g.milestones.length, 0);
+    const completedMilestones = goals.reduce((sum, g) => sum + g.milestones.filter(m => m.isCompleted).length, 0);
 
-    const categoryProgress = userGoals.reduce((acc, goal) => {
+    const categoryProgress = goals.reduce((acc, goal) => {
       if (!acc[goal.category]) {
         acc[goal.category] = { total: 0, completed: 0 };
       }
@@ -257,105 +376,49 @@ export class GoalService {
       return acc;
     }, {} as Record<string, { total: number; completed: number }>);
 
+    const achievements = await this.getUnlockedAchievements(userId);
+
     return {
-      totalGoals: userGoals.length,
+      totalGoals: goals.length,
       completedGoals: completedGoals.length,
       activeGoals: activeGoals.length,
-      completionRate: userGoals.length > 0 ? (completedGoals.length / userGoals.length) * 100 : 0,
+      completionRate: goals.length > 0 ? (completedGoals.length / goals.length) * 100 : 0,
       totalMilestones,
       completedMilestones,
       milestoneCompletionRate: totalMilestones > 0 ? (completedMilestones / totalMilestones) * 100 : 0,
       categoryProgress,
-      streakDays: this.calculateStreakDays(userId),
-      achievements: this.getUnlockedAchievements(userId)
+      streakDays: 0, // TODO: Implement streak calculation
+      achievements
     };
   }
 
-  private static calculateStreakDays(userId: string): number {
-    const userGoals = this.getGoals(userId);
-    const dailyGoals = userGoals.filter(g => g.tags.includes('daily') && g.type === 'habit');
-    
-    if (dailyGoals.length === 0) return 0;
+  static async getUnlockedAchievements(userId: string): Promise<Achievement[]> {
+    const { data: achievementRecords, error } = await supabase
+      .from('achievements')
+      .select('*')
+      .eq('user_id', userId)
+      .order('unlocked_at', { ascending: false });
 
-    // Simple streak calculation - in a real app, this would be more sophisticated
-    const recentProgress = this.goalProgress
-      .filter(p => dailyGoals.some(g => g.id === p.goalId))
-      .sort((a, b) => b.date.getTime() - a.date.getTime());
+    if (error) throw error;
 
-    let streak = 0;
-    let currentDate = new Date();
-    
-    for (let i = 0; i < 30; i++) { // Check last 30 days
-      const dayStart = new Date(currentDate);
-      dayStart.setHours(0, 0, 0, 0);
-      const dayEnd = new Date(currentDate);
-      dayEnd.setHours(23, 59, 59, 999);
-
-      const hasProgressToday = recentProgress.some(p => 
-        p.date >= dayStart && p.date <= dayEnd
-      );
-
-      if (hasProgressToday) {
-        streak++;
-      } else if (streak > 0) {
-        break; // Streak broken
-      }
-
-      currentDate.setDate(currentDate.getDate() - 1);
-    }
-
-    return streak;
-  }
-
-  private static checkAchievements(userId: string): void {
-    const insights = this.getGoalInsights(userId);
-    
-    // Check for new achievements
-    if (insights.completedGoals >= 1 && !this.hasAchievement(userId, 'first-goal')) {
-      this.unlockAchievement(userId, {
-        id: 'first-goal',
-        title: 'Goal Getter',
-        description: 'Complete your first goal',
-        icon: 'target',
-        type: 'goal-completion',
-        criteria: {},
-        isUnlocked: true,
-        unlockedAt: new Date()
-      });
-    }
-
-    if (insights.streakDays >= 7 && !this.hasAchievement(userId, 'week-streak')) {
-      this.unlockAchievement(userId, {
-        id: 'week-streak',
-        title: 'Week Warrior',
-        description: 'Maintain a 7-day streak',
-        icon: 'fire',
-        type: 'streak',
-        criteria: { streakDays: 7 },
-        isUnlocked: true,
-        unlockedAt: new Date()
-      });
-    }
-  }
-
-  private static hasAchievement(userId: string, achievementId: string): boolean {
-    return this.achievements.some(a => a.id === achievementId && a.isUnlocked);
-  }
-
-  private static unlockAchievement(userId: string, achievement: Achievement): void {
-    this.achievements.push(achievement);
-  }
-
-  static getUnlockedAchievements(userId: string): Achievement[] {
-    return this.achievements.filter(a => a.isUnlocked);
+    return achievementRecords.map(record => ({
+      id: record.id,
+      title: record.title,
+      description: record.description,
+      icon: record.icon,
+      type: record.type as Achievement['type'],
+      criteria: record.criteria || {},
+      unlockedAt: new Date(record.unlocked_at),
+      isUnlocked: true
+    }));
   }
 
   static async deleteGoal(goalId: string): Promise<boolean> {
-    const index = this.goals.findIndex(g => g.id === goalId);
-    if (index === -1) return false;
-    
-    this.goals.splice(index, 1);
-    this.goalProgress = this.goalProgress.filter(p => p.goalId !== goalId);
-    return true;
+    const { error } = await supabase
+      .from('goals')
+      .delete()
+      .eq('id', goalId);
+
+    return !error;
   }
 }
