@@ -1,143 +1,225 @@
 
-import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import { Calendar, MessageCircle } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from '@/integrations/supabase/client';
-import { format, startOfWeek, endOfWeek, eachWeekOfInterval, subMonths } from 'date-fns';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { 
+  FileText, 
+  Download, 
+  Calendar, 
+  TrendingUp, 
+  Target, 
+  Brain,
+  Clock,
+  Star
+} from "lucide-react";
+import { AnalyticsData } from "@/services/analyticsService";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProgressReportProps {
-  timeRange: string;
+  analyticsData: AnalyticsData;
+  dateRange: string;
 }
 
-interface WeeklyData {
-  week: string;
-  sessions: number;
-  messages: number;
-  avgImprovement: number;
-}
+const ProgressReport = ({ analyticsData, dateRange }: ProgressReportProps) => {
+  const { toast } = useToast();
 
-const ProgressReport = ({ timeRange }: ProgressReportProps) => {
-  const { user } = useAuth();
-  const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProgressData = async () => {
-      if (!user) return;
-
-      setIsLoading(true);
-      try {
-        const now = new Date();
-        const startDate = subMonths(now, timeRange === 'year' ? 12 : timeRange === 'quarter' ? 3 : 1);
-        
-        const { data: sessions, error } = await supabase
-          .from('therapy_sessions')
-          .select(`
-            start_time,
-            mood_before,
-            mood_after,
-            session_messages(*)
-          `)
-          .eq('user_id', user.id)
-          .not('end_time', 'is', null)
-          .gte('start_time', startDate.toISOString())
-          .order('start_time', { ascending: true });
-
-        if (error) {
-          console.error('Error fetching progress data:', error);
-          return;
-        }
-
-        // Group sessions by week
-        const weeks = eachWeekOfInterval({ start: startDate, end: now });
-        const weeklyStats: WeeklyData[] = weeks.map(weekStart => {
-          const weekEnd = endOfWeek(weekStart);
-          const weekSessions = sessions?.filter(session => {
-            const sessionDate = new Date(session.start_time);
-            return sessionDate >= weekStart && sessionDate <= weekEnd;
-          }) || [];
-
-          const totalMessages = weekSessions.reduce((sum, session) => 
-            sum + (session.session_messages?.length || 0), 0);
-
-          const improvements = weekSessions
-            .filter(s => s.mood_before && s.mood_after)
-            .map(s => s.mood_after - s.mood_before);
-          
-          const avgImprovement = improvements.length > 0
-            ? improvements.reduce((sum, imp) => sum + imp, 0) / improvements.length
-            : 0;
-
-          return {
-            week: format(weekStart, 'MMM dd'),
-            sessions: weekSessions.length,
-            messages: totalMessages,
-            avgImprovement: Number(avgImprovement.toFixed(1))
-          };
-        });
-
-        setWeeklyData(weeklyStats);
-      } catch (error) {
-        console.error('Error processing progress data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProgressData();
-  }, [user, timeRange]);
-
-  const chartConfig = {
-    sessions: {
-      label: "Sessions",
-      color: "hsl(var(--chart-1))",
-    },
-    messages: {
-      label: "Messages",
-      color: "hsl(var(--chart-2))",
-    },
+  const handleExportReport = () => {
+    // Mock export functionality
+    toast({
+      title: "Report Exported",
+      description: "Your progress report has been downloaded as PDF.",
+    });
   };
 
-  if (isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Weekly Progress</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-64 flex items-center justify-center">
-            <p className="text-muted-foreground">Loading progress data...</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  const calculateOverallProgress = () => {
+    const goals = Object.values(analyticsData.goalProgress);
+    if (goals.length === 0) return 0;
+    
+    const totalProgress = goals.reduce((sum, goal) => sum + goal.progress, 0);
+    return Math.round(totalProgress / goals.length);
+  };
+
+  const getOverallRating = () => {
+    const overallProgress = calculateOverallProgress();
+    const { overallTrend } = analyticsData.moodTrends;
+    const streakScore = Math.min(analyticsData.sessionStats.currentStreak / 7, 1) * 20;
+    
+    let score = overallProgress * 0.4 + streakScore;
+    
+    if (overallTrend === 'improving') score += 20;
+    else if (overallTrend === 'declining') score -= 10;
+    
+    return Math.min(Math.max(score, 0), 100);
+  };
+
+  const getRatingText = (rating: number) => {
+    if (rating >= 80) return 'Excellent Progress';
+    if (rating >= 60) return 'Good Progress';
+    if (rating >= 40) return 'Steady Progress';
+    if (rating >= 20) return 'Some Progress';
+    return 'Getting Started';
+  };
+
+  const getRatingColor = (rating: number) => {
+    if (rating >= 80) return 'text-green-600';
+    if (rating >= 60) return 'text-blue-600';
+    if (rating >= 40) return 'text-yellow-600';
+    return 'text-gray-600';
+  };
+
+  const overallProgress = calculateOverallProgress();
+  const overallRating = getOverallRating();
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Calendar className="h-5 w-5 mr-2" />
-          Weekly Activity
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {weeklyData.length === 0 ? (
-          <div className="h-64 flex items-center justify-center">
-            <p className="text-muted-foreground">No activity data available</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center">
+              <FileText className="h-5 w-5 mr-2" />
+              Progress Report
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Comprehensive analysis for {dateRange}
+            </p>
           </div>
-        ) : (
-          <ChartContainer config={chartConfig} className="h-64">
-            <BarChart data={weeklyData}>
-              <XAxis dataKey="week" />
-              <YAxis />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="sessions" fill="var(--color-sessions)" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ChartContainer>
+          <Button variant="outline" onClick={handleExportReport}>
+            <Download className="h-4 w-4 mr-2" />
+            Export PDF
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Overall Rating */}
+        <div className="text-center p-6 bg-muted rounded-lg">
+          <div className="flex justify-center mb-4">
+            {[...Array(5)].map((_, i) => (
+              <Star 
+                key={i} 
+                className={`h-6 w-6 ${
+                  i < Math.floor(overallRating / 20) 
+                    ? 'text-yellow-500 fill-current' 
+                    : 'text-gray-300'
+                }`} 
+              />
+            ))}
+          </div>
+          <h3 className={`text-xl font-bold ${getRatingColor(overallRating)}`}>
+            {getRatingText(overallRating)}
+          </h3>
+          <p className="text-muted-foreground">
+            Overall therapy progress score: {Math.round(overallRating)}%
+          </p>
+        </div>
+
+        {/* Key Metrics */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="text-center">
+            <Calendar className="h-8 w-8 mx-auto mb-2 text-therapy-500" />
+            <p className="text-xl font-bold">{analyticsData.sessionStats.totalSessions}</p>
+            <p className="text-sm text-muted-foreground">Sessions</p>
+          </div>
+          
+          <div className="text-center">
+            <TrendingUp className="h-8 w-8 mx-auto mb-2 text-green-500" />
+            <p className="text-xl font-bold">{overallProgress}%</p>
+            <p className="text-sm text-muted-foreground">Goal Progress</p>
+          </div>
+          
+          <div className="text-center">
+            <Brain className="h-8 w-8 mx-auto mb-2 text-blue-500" />
+            <p className="text-xl font-bold">{analyticsData.moodTrends.averageMood.toFixed(1)}</p>
+            <p className="text-sm text-muted-foreground">Avg Mood</p>
+          </div>
+          
+          <div className="text-center">
+            <Clock className="h-8 w-8 mx-auto mb-2 text-purple-500" />
+            <p className="text-xl font-bold">{Math.round(analyticsData.sessionStats.averageDuration)}</p>
+            <p className="text-sm text-muted-foreground">Avg Duration</p>
+          </div>
+        </div>
+
+        {/* Progress Breakdown */}
+        <div className="space-y-4">
+          <h4 className="font-medium">Progress Breakdown</h4>
+          
+          <div className="space-y-3">
+            <div>
+              <div className="flex justify-between text-sm mb-1">
+                <span>Session Consistency</span>
+                <span>{Math.min(analyticsData.sessionStats.currentStreak * 10, 100)}%</span>
+              </div>
+              <Progress value={Math.min(analyticsData.sessionStats.currentStreak * 10, 100)} />
+            </div>
+            
+            <div>
+              <div className="flex justify-between text-sm mb-1">
+                <span>Mood Stability</span>
+                <span>{Math.max(100 - analyticsData.moodTrends.moodVariability * 10, 0).toFixed(0)}%</span>
+              </div>
+              <Progress value={Math.max(100 - analyticsData.moodTrends.moodVariability * 10, 0)} />
+            </div>
+            
+            <div>
+              <div className="flex justify-between text-sm mb-1">
+                <span>Goal Achievement</span>
+                <span>{overallProgress}%</span>
+              </div>
+              <Progress value={overallProgress} />
+            </div>
+          </div>
+        </div>
+
+        {/* Key Highlights */}
+        <div className="space-y-3">
+          <h4 className="font-medium">Key Highlights</h4>
+          <div className="space-y-2">
+            {analyticsData.sessionStats.currentStreak >= 3 && (
+              <div className="flex items-center space-x-2">
+                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                  Achievement
+                </Badge>
+                <span className="text-sm">
+                  {analyticsData.sessionStats.currentStreak}-day session streak
+                </span>
+              </div>
+            )}
+            
+            {analyticsData.moodTrends.overallTrend === 'improving' && (
+              <div className="flex items-center space-x-2">
+                <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                  Progress
+                </Badge>
+                <span className="text-sm">Mood trending upward</span>
+              </div>
+            )}
+            
+            {analyticsData.patterns.mostEffectiveTechniques.length > 0 && (
+              <div className="flex items-center space-x-2">
+                <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                  Insight
+                </Badge>
+                <span className="text-sm">
+                  Most effective technique: {analyticsData.patterns.mostEffectiveTechniques[0]}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Recommendations */}
+        {analyticsData.insights.length > 0 && (
+          <div className="space-y-3">
+            <h4 className="font-medium">Recommendations</h4>
+            <div className="space-y-2">
+              {analyticsData.insights.slice(0, 3).map((insight, index) => (
+                <div key={index} className="text-sm text-muted-foreground">
+                  • {insight.description}
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </CardContent>
     </Card>

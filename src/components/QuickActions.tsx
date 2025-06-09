@@ -69,7 +69,11 @@ const QuickActions = () => {
           Track Mood
         </Button>
         
-        <Button variant="outline" className="w-full" onClick={() => navigate('/analytics')}>
+        <Button 
+          variant="outline" 
+          className="w-full bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 border-blue-200" 
+          onClick={() => navigate('/analytics')}
+        >
           <BarChart3 className="h-4 w-4 mr-2" />
           View Progress Analytics
         </Button>

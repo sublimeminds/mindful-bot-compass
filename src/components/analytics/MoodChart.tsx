@@ -1,106 +1,61 @@
 
-import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import { TrendingUp } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from '@/integrations/supabase/client';
-import { format, subDays, subWeeks, subMonths, startOfDay } from 'date-fns';
+import { Badge } from "@/components/ui/badge";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { TrendingUp, TrendingDown, Minus, Brain } from "lucide-react";
+import { AnalyticsData } from "@/services/analyticsService";
+import { MoodEntry } from "@/services/moodTrackingService";
 
 interface MoodChartProps {
-  timeRange: string;
+  moodTrends: AnalyticsData['moodTrends'];
+  moodEntries: MoodEntry[];
 }
 
-interface MoodData {
-  date: string;
-  moodBefore: number;
-  moodAfter: number;
-  improvement: number;
-}
-
-const MoodChart = ({ timeRange }: MoodChartProps) => {
-  const { user } = useAuth();
-  const [moodData, setMoodData] = useState<MoodData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const getDateRange = () => {
-    const now = new Date();
-    switch (timeRange) {
-      case 'week':
-        return subDays(now, 7);
-      case 'month':
-        return subMonths(now, 1);
-      case 'quarter':
-        return subMonths(now, 3);
-      case 'year':
-        return subMonths(now, 12);
+const MoodChart = ({ moodTrends, moodEntries }: MoodChartProps) => {
+  const getTrendIcon = (trend: 'improving' | 'stable' | 'declining') => {
+    switch (trend) {
+      case 'improving':
+        return <TrendingUp className="h-4 w-4 text-green-600" />;
+      case 'declining':
+        return <TrendingDown className="h-4 w-4 text-red-600" />;
       default:
-        return subMonths(now, 1);
+        return <Minus className="h-4 w-4 text-gray-600" />;
     }
   };
 
-  useEffect(() => {
-    const fetchMoodData = async () => {
-      if (!user) return;
-
-      setIsLoading(true);
-      try {
-        const startDate = getDateRange();
-        
-        const { data: sessions, error } = await supabase
-          .from('therapy_sessions')
-          .select('start_time, mood_before, mood_after')
-          .eq('user_id', user.id)
-          .not('end_time', 'is', null)
-          .not('mood_before', 'is', null)
-          .not('mood_after', 'is', null)
-          .gte('start_time', startDate.toISOString())
-          .order('start_time', { ascending: true });
-
-        if (error) {
-          console.error('Error fetching mood data:', error);
-          return;
-        }
-
-        const processedData: MoodData[] = sessions?.map(session => ({
-          date: format(new Date(session.start_time), 'MMM dd'),
-          moodBefore: session.mood_before,
-          moodAfter: session.mood_after,
-          improvement: session.mood_after - session.mood_before
-        })) || [];
-
-        setMoodData(processedData);
-      } catch (error) {
-        console.error('Error processing mood data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchMoodData();
-  }, [user, timeRange]);
-
-  const chartConfig = {
-    moodBefore: {
-      label: "Mood Before",
-      color: "hsl(var(--chart-1))",
-    },
-    moodAfter: {
-      label: "Mood After",
-      color: "hsl(var(--chart-2))",
-    },
+  const getTrendColor = (trend: 'improving' | 'stable' | 'declining') => {
+    switch (trend) {
+      case 'improving':
+        return 'bg-green-100 text-green-800';
+      case 'declining':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
   };
 
-  if (isLoading) {
+  // Prepare chart data from recent mood entries
+  const chartData = moodEntries.slice(-14).map((entry, index) => ({
+    day: `Day ${index + 1}`,
+    mood: entry.overall,
+    anxiety: 10 - entry.anxiety, // Invert anxiety so higher is better
+    energy: entry.energy,
+    date: entry.timestamp.toLocaleDateString()
+  }));
+
+  if (moodEntries.length === 0) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Mood Trends</CardTitle>
+          <CardTitle className="flex items-center">
+            <Brain className="h-5 w-5 mr-2" />
+            Mood Trends
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-64 flex items-center justify-center">
-            <p className="text-muted-foreground">Loading mood data...</p>
+          <div className="text-center py-6 text-muted-foreground">
+            <Brain className="h-12 w-12 mx-auto mb-4 opacity-50" />
+            <p>No mood data yet. Start tracking your mood to see trends.</p>
           </div>
         </CardContent>
       </Card>
@@ -111,38 +66,107 @@ const MoodChart = ({ timeRange }: MoodChartProps) => {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center">
-          <TrendingUp className="h-5 w-5 mr-2" />
+          <Brain className="h-5 w-5 mr-2" />
           Mood Trends
         </CardTitle>
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">
+            Last 14 days mood tracking
+          </p>
+          <Badge className={getTrendColor(moodTrends.overallTrend)}>
+            {getTrendIcon(moodTrends.overallTrend)}
+            <span className="ml-1 capitalize">{moodTrends.overallTrend}</span>
+          </Badge>
+        </div>
       </CardHeader>
       <CardContent>
-        {moodData.length === 0 ? (
-          <div className="h-64 flex items-center justify-center">
-            <p className="text-muted-foreground">No mood data available for this period</p>
+        <div className="space-y-4">
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div className="space-y-1">
+              <p className="text-2xl font-bold">{moodTrends.averageMood.toFixed(1)}</p>
+              <p className="text-xs text-muted-foreground">Average Mood</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-2xl font-bold text-green-600">
+                {moodTrends.recentChange > 0 ? '+' : ''}{moodTrends.recentChange.toFixed(1)}
+              </p>
+              <p className="text-xs text-muted-foreground">Recent Change</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-2xl font-bold">{moodTrends.moodVariability.toFixed(1)}</p>
+              <p className="text-xs text-muted-foreground">Variability</p>
+            </div>
           </div>
-        ) : (
-          <ChartContainer config={chartConfig} className="h-64">
-            <LineChart data={moodData}>
-              <XAxis dataKey="date" />
-              <YAxis domain={[1, 10]} />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Line 
-                type="monotone" 
-                dataKey="moodBefore" 
-                stroke="var(--color-moodBefore)" 
-                strokeWidth={2}
-                dot={{ r: 4 }}
-              />
-              <Line 
-                type="monotone" 
-                dataKey="moodAfter" 
-                stroke="var(--color-moodAfter)" 
-                strokeWidth={2}
-                dot={{ r: 4 }}
-              />
-            </LineChart>
-          </ChartContainer>
-        )}
+
+          {chartData.length > 0 && (
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="day" 
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis 
+                    domain={[0, 10]}
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Tooltip 
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload;
+                        return (
+                          <div className="bg-white p-3 rounded-lg shadow-lg border">
+                            <p className="font-medium">{label}</p>
+                            <p className="text-sm text-muted-foreground">{data.date}</p>
+                            <div className="space-y-1 mt-2">
+                              <p className="text-sm">
+                                <span className="text-blue-600">Overall: {data.mood}</span>
+                              </p>
+                              <p className="text-sm">
+                                <span className="text-green-600">Energy: {data.energy}</span>
+                              </p>
+                              <p className="text-sm">
+                                <span className="text-purple-600">Calm: {data.anxiety}</span>
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="mood"
+                    stroke="#3b82f6"
+                    fill="#3b82f6"
+                    fillOpacity={0.2}
+                    strokeWidth={2}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="energy"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="anxiety"
+                    stroke="#8b5cf6"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
