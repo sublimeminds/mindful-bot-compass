@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 
 export interface Notification {
@@ -64,7 +63,7 @@ export class NotificationService {
         type: notification.type as Notification['type'],
         title: notification.title,
         message: notification.message,
-        data: notification.data || {},
+        data: (notification.data as Record<string, any>) || {},
         isRead: notification.is_read,
         priority: notification.priority as Notification['priority'],
         createdAt: new Date(notification.created_at),
