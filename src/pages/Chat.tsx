@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +13,9 @@ import { sendMessage } from "@/services/aiService";
 import { Badge } from "@/components/ui/badge";
 import { useTherapist } from "@/contexts/TherapistContext";
 import SessionEndModal from "@/components/SessionEndModal";
+import { useRealtimeSession } from "@/hooks/useRealtimeSession";
+import LiveSessionIndicator from "@/components/LiveSessionIndicator";
+import NotificationCenter from "@/components/NotificationCenter";
 
 interface Message {
   id: string;
@@ -30,7 +32,8 @@ const Chat = () => {
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
-  const { currentSession, startSession, endSession, addBreakthrough } = useSession();
+  const { currentSession, startSession, endSession, addBreakthrough, addMessage } = useSession();
+  const { session: realtimeSession } = useRealtimeSession(currentSession?.id);
   const navigate = useNavigate();
   const { currentTherapist, getPersonalityPrompt } = useTherapist();
 
@@ -115,7 +118,10 @@ const Chat = () => {
     setIsLoading(true);
 
     try {
-      // Add user message
+      // Add user message to context and database
+      await addMessage(userMessage, 'user');
+      
+      // Add user message to local state for immediate UI update
       const newUserMessage: Message = {
         id: Date.now().toString(),
         content: userMessage,
@@ -133,7 +139,9 @@ const Chat = () => {
         getPersonalityPrompt()
       );
 
-      // Add AI response
+      // Add AI response to database and local state
+      await addMessage(aiResponse, 'ai');
+      
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: aiResponse,
@@ -177,6 +185,7 @@ const Chat = () => {
           </div>
           
           <div className="flex items-center space-x-2">
+            <NotificationCenter />
             {currentSession && (
               <Badge variant="secondary" className="bg-green-100 text-green-800">
                 Session Active
@@ -272,6 +281,9 @@ const Chat = () => {
           )}
         </div>
       </div>
+
+      {/* Live Session Indicator */}
+      <LiveSessionIndicator />
 
       <SessionEndModal
         isOpen={showEndModal}

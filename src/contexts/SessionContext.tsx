@@ -1,7 +1,7 @@
-
 import React, { createContext, useContext, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { NotificationService } from '@/services/notificationService';
 
 interface SessionData {
   id: string;
@@ -93,6 +93,9 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
       };
       
       setCurrentSession(newSession);
+
+      // Generate reminder notification for next session
+      await NotificationService.generateSessionReminder(user.id);
     } catch (error) {
       console.error('Error starting session:', error);
     }
@@ -127,6 +130,23 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
       
       setSessions(prev => [...prev, endedSession]);
       setCurrentSession(null);
+
+      // Generate milestone notification if applicable
+      const totalSessions = sessions.length + 1;
+      if (totalSessions % 5 === 0) {
+        await NotificationService.generateMilestoneNotification(
+          user.id, 
+          `${totalSessions} therapy sessions completed`
+        );
+      }
+
+      // Generate insight notification for mood improvement
+      if (moodAfter && currentSession.mood.before && moodAfter > currentSession.mood.before + 2) {
+        await NotificationService.generateInsightNotification(
+          user.id,
+          'Significant mood improvement detected in your recent session'
+        );
+      }
       
       console.log('Session ended successfully');
     } catch (error) {
