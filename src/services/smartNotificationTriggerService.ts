@@ -1,6 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
-import { notificationService } from "./notificationService";
+import { NotificationService } from "./notificationService";
 
 export interface TriggerCondition {
   type: 'session_gap' | 'mood_decline' | 'goal_progress' | 'streak_break' | 'milestone_reached';
@@ -50,26 +50,6 @@ class SmartNotificationTriggerService {
       isActive: true,
       priority: 'medium',
       cooldownHours: 48
-    },
-    {
-      id: 'streak-break',
-      name: 'Streak Recovery',
-      description: 'Help users get back on track after breaking a streak',
-      condition: { type: 'streak_break', threshold: 1 },
-      template: 'streak_recovery',
-      isActive: true,
-      priority: 'medium',
-      cooldownHours: 6
-    },
-    {
-      id: 'milestone-celebration',
-      name: 'Milestone Achievement',
-      description: 'Celebrate when users reach important milestones',
-      condition: { type: 'milestone_reached', threshold: 1 },
-      template: 'milestone_celebration',
-      isActive: true,
-      priority: 'low',
-      cooldownHours: 0
     }
   ];
 
@@ -103,12 +83,6 @@ class SmartNotificationTriggerService {
       case 'goal_progress':
         return await this.checkGoalStagnation(userId, condition.threshold);
       
-      case 'streak_break':
-        return await this.checkStreakBreak(userId);
-      
-      case 'milestone_reached':
-        return await this.checkMilestoneReached(userId);
-      
       default:
         return false;
     }
@@ -121,7 +95,7 @@ class SmartNotificationTriggerService {
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
     if (!lastSession) return true; // No sessions yet
 
@@ -135,7 +109,7 @@ class SmartNotificationTriggerService {
   private async checkMoodDecline(userId: string, threshold: number): Promise<boolean> {
     const { data: recentMoods } = await supabase
       .from('mood_entries')
-      .select('mood_score, created_at')
+      .select('overall, created_at')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(5);
@@ -145,7 +119,7 @@ class SmartNotificationTriggerService {
     // Check for declining trend
     let declineCount = 0;
     for (let i = 1; i < recentMoods.length; i++) {
-      if (recentMoods[i].mood_score > recentMoods[i - 1].mood_score) {
+      if (recentMoods[i].overall > recentMoods[i - 1].overall) {
         declineCount++;
       }
     }
@@ -156,9 +130,9 @@ class SmartNotificationTriggerService {
   private async checkGoalStagnation(userId: string, thresholdDays: number): Promise<boolean> {
     const { data: goals } = await supabase
       .from('goals')
-      .select('id, updated_at, progress')
+      .select('id, updated_at, current_progress')
       .eq('user_id', userId)
-      .eq('status', 'active');
+      .eq('is_completed', false);
 
     if (!goals || goals.length === 0) return false;
 
@@ -166,59 +140,30 @@ class SmartNotificationTriggerService {
       const daysSinceUpdate = Math.floor(
         (Date.now() - new Date(goal.updated_at).getTime()) / (1000 * 60 * 60 * 24)
       );
-      return daysSinceUpdate >= thresholdDays && goal.progress < 100;
+      return daysSinceUpdate >= thresholdDays && goal.current_progress < 100;
     });
 
     return stagnantGoals.length > 0;
   }
 
-  private async checkStreakBreak(userId: string): Promise<boolean> {
-    // Check if user had an active streak that was recently broken
-    const { data: streaks } = await supabase
-      .from('user_streaks')
-      .select('*')
-      .eq('user_id', userId)
-      .order('updated_at', { ascending: false })
-      .limit(1);
-
-    if (!streaks || streaks.length === 0) return false;
-
-    const latestStreak = streaks[0];
-    const hoursSinceBreak = Math.floor(
-      (Date.now() - new Date(latestStreak.updated_at).getTime()) / (1000 * 60 * 60)
-    );
-
-    return latestStreak.current_count === 0 && latestStreak.longest_streak > 0 && hoursSinceBreak <= 24;
-  }
-
-  private async checkMilestoneReached(userId: string): Promise<boolean> {
-    // Check for recent achievements or milestones
-    const { data: recentAchievements } = await supabase
-      .from('user_achievements')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('notified', false)
-      .limit(1);
-
-    return recentAchievements && recentAchievements.length > 0;
-  }
-
   private async canSendNotification(userId: string, trigger: NotificationTrigger): Promise<boolean> {
     if (trigger.cooldownHours === 0) return true;
 
+    // Check notifications table for last trigger execution
     const { data: lastExecution } = await supabase
-      .from('notification_trigger_log')
-      .select('executed_at')
+      .from('notifications')
+      .select('created_at')
       .eq('user_id', userId)
-      .eq('trigger_id', trigger.id)
-      .order('executed_at', { ascending: false })
+      .eq('type', 'trigger_execution')
+      .like('data->trigger_id', `"${trigger.id}"`)
+      .order('created_at', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
     if (!lastExecution) return true;
 
     const hoursSinceLastExecution = Math.floor(
-      (Date.now() - new Date(lastExecution.executed_at).getTime()) / (1000 * 60 * 60)
+      (Date.now() - new Date(lastExecution.created_at).getTime()) / (1000 * 60 * 60)
     );
 
     return hoursSinceLastExecution >= trigger.cooldownHours;
@@ -238,7 +183,7 @@ class SmartNotificationTriggerService {
       }
     };
 
-    await notificationService.createNotification(notificationData);
+    await NotificationService.createNotification(notificationData);
     console.log(`Triggered notification: ${trigger.name} for user: ${userId}`);
   }
 
@@ -250,10 +195,6 @@ class SmartNotificationTriggerService {
         return 'We\'re Here to Support You';
       case 'goal_progress':
         return 'Let\'s Keep Moving Forward';
-      case 'streak_break':
-        return 'Getting Back on Track';
-      case 'milestone_reached':
-        return 'Congratulations!';
       default:
         return 'MindfulAI Update';
     }
@@ -267,10 +208,6 @@ class SmartNotificationTriggerService {
         return 'I noticed your mood has been challenging lately. Would you like to talk or try a mindfulness exercise?';
       case 'goal_progress':
         return 'Your wellness goals are waiting for you. Even small steps count toward big changes.';
-      case 'streak_break':
-        return 'Every journey has ups and downs. You can start your wellness streak again today.';
-      case 'milestone_reached':
-        return 'You\'ve reached an important milestone in your wellness journey. Take a moment to celebrate this achievement!';
       default:
         return 'Your wellness journey continues with MindfulAI.';
     }
@@ -278,11 +215,18 @@ class SmartNotificationTriggerService {
 
   private async recordTriggerExecution(userId: string, triggerId: string): Promise<void> {
     await supabase
-      .from('notification_trigger_log')
+      .from('notifications')
       .insert({
         user_id: userId,
-        trigger_id: triggerId,
-        executed_at: new Date().toISOString()
+        title: 'Trigger Execution Log',
+        message: `Executed trigger: ${triggerId}`,
+        type: 'trigger_execution',
+        priority: 'low',
+        data: {
+          trigger_id: triggerId,
+          executed_at: new Date().toISOString(),
+          is_log_entry: true
+        }
       });
   }
 
@@ -298,7 +242,7 @@ class SmartNotificationTriggerService {
     const { data: activeUsers } = await supabase
       .from('profiles')
       .select('id')
-      .gte('last_sign_in_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
+      .gte('updated_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
 
     if (!activeUsers) return;
 
@@ -317,20 +261,26 @@ class SmartNotificationTriggerService {
 
   async getTriggerAnalytics(userId?: string): Promise<any> {
     let query = supabase
-      .from('notification_trigger_log')
+      .from('notifications')
       .select(`
-        trigger_id,
-        executed_at,
+        data,
+        created_at,
         profiles(email)
       `)
-      .order('executed_at', { ascending: false });
+      .eq('type', 'trigger_execution')
+      .order('created_at', { ascending: false });
 
     if (userId) {
       query = query.eq('user_id', userId);
     }
 
     const { data } = await query.limit(100);
-    return data || [];
+    
+    return (data || []).map(item => ({
+      trigger_id: item.data?.trigger_id || 'unknown',
+      executed_at: item.created_at,
+      profiles: { email: item.profiles?.email }
+    }));
   }
 }
 

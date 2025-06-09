@@ -54,7 +54,7 @@ const SmartTriggerDashboard = () => {
         </div>
         <div className="flex gap-2">
           <Button
-            onClick={runTriggerCheck}
+            onClick={() => runTriggerCheck()}
             disabled={isRunningCheck}
             variant="outline"
             size="sm"
@@ -63,7 +63,7 @@ const SmartTriggerDashboard = () => {
             Test Triggers
           </Button>
           <Button
-            onClick={runDailyCheck}
+            onClick={() => runDailyCheck()}
             disabled={isRunningCheck}
             size="sm"
           >
