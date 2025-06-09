@@ -1,310 +1,293 @@
 
-import { NotificationService } from './notificationService';
-import { SessionService, DetailedSession } from './sessionService';
 import { supabase } from '@/integrations/supabase/client';
+import { NotificationService } from './notificationService';
 
-interface NotificationRule {
-  id: string;
-  name: string;
-  condition: (data: any) => boolean;
-  generateNotification: (data: any) => {
-    type: 'session_reminder' | 'milestone_achieved' | 'insight_generated' | 'mood_check' | 'progress_update';
-    title: string;
-    message: string;
-    priority: 'low' | 'medium' | 'high';
-    data?: Record<string, any>;
-  };
+export interface SessionPattern {
+  userId: string;
+  typicalSessionTimes: number[]; // hours of day when user usually sessions
+  averageSessionLength: number; // in minutes
+  preferredTechniques: string[];
+  lastSessionDate?: Date;
+  sessionStreak: number;
+  totalSessions: number;
+}
+
+export interface UserProgress {
+  userId: string;
+  weeklySessionCount: number;
+  moodTrend: 'improving' | 'stable' | 'declining';
+  averageMoodImprovement: number;
+  consistencyScore: number; // 0-100
+  milestones: string[];
 }
 
 export class IntelligentNotificationService {
-  private static rules: NotificationRule[] = [
-    {
-      id: 'session_streak',
-      name: 'Session Streak Achievement',
-      condition: (data) => data.consecutiveDays >= 3,
-      generateNotification: (data) => ({
-        type: 'milestone_achieved',
-        title: `${data.consecutiveDays} Day Streak! 🔥`,
-        message: `Amazing! You've completed therapy sessions for ${data.consecutiveDays} consecutive days. Keep up the fantastic work!`,
-        priority: 'high',
-        data: { streak: data.consecutiveDays }
-      })
-    },
-    {
-      id: 'mood_improvement',
-      name: 'Significant Mood Improvement',
-      condition: (data) => data.moodImprovement >= 3,
-      generateNotification: (data) => ({
-        type: 'insight_generated',
-        title: 'Great Progress! 📈',
-        message: `Your mood improved by ${data.moodImprovement} points in your last session. The techniques you used are really working!`,
-        priority: 'medium',
-        data: { improvement: data.moodImprovement, techniques: data.techniques }
-      })
-    },
-    {
-      id: 'inactive_reminder',
-      name: 'Gentle Check-in Reminder',
-      condition: (data) => data.daysSinceLastSession >= 3,
-      generateNotification: (data) => ({
-        type: 'session_reminder',
-        title: 'We miss you! 💙',
-        message: `It's been ${data.daysSinceLastSession} days since your last session. Even a few minutes of self-care can make a difference.`,
-        priority: 'medium',
-        data: { daysSinceLastSession: data.daysSinceLastSession }
-      })
-    },
-    {
-      id: 'weekly_progress',
-      name: 'Weekly Progress Summary',
-      condition: (data) => data.isWeeklyReport && data.sessionsThisWeek > 0,
-      generateNotification: (data) => ({
-        type: 'progress_update',
-        title: 'Weekly Progress Report 📊',
-        message: `This week you completed ${data.sessionsThisWeek} sessions with an average mood improvement of ${data.avgMoodImprovement}. ${data.encouragement}`,
-        priority: 'low',
-        data: { 
-          sessionsThisWeek: data.sessionsThisWeek,
-          avgMoodImprovement: data.avgMoodImprovement,
-          topTechniques: data.topTechniques
-        }
-      })
-    },
-    {
-      id: 'technique_mastery',
-      name: 'Technique Mastery Achievement',
-      condition: (data) => data.techniqueUsageCount >= 10,
-      generateNotification: (data) => ({
-        type: 'milestone_achieved',
-        title: `${data.techniqueName} Master! 🎯`,
-        message: `You've successfully used ${data.techniqueName} in ${data.techniqueUsageCount} sessions. You're becoming quite skilled at this technique!`,
-        priority: 'medium',
-        data: { technique: data.techniqueName, usageCount: data.techniqueUsageCount }
-      })
-    }
-  ];
-
-  static async processSessionCompletion(userId: string, session: DetailedSession): Promise<void> {
-    console.log('Processing session completion for notifications:', session.id);
-
-    // Check for mood improvement notifications
-    if (session.moodBefore && session.moodAfter) {
-      const moodImprovement = session.moodAfter - session.moodBefore;
+  static async processSessionCompletion(userId: string, sessionDetails: any): Promise<void> {
+    try {
+      console.log('Processing session completion for intelligent notifications...', userId);
       
-      const moodRule = this.rules.find(rule => rule.id === 'mood_improvement');
-      if (moodRule && moodRule.condition({ moodImprovement })) {
-        const notification = moodRule.generateNotification({
-          moodImprovement,
-          techniques: session.techniques
-        });
-        await NotificationService.createNotification(userId, notification);
-      }
-    }
-
-    // Check for technique mastery
-    for (const technique of session.techniques) {
-      const techniqueUsage = await this.getTechniqueUsageCount(userId, technique);
+      // Analyze session patterns
+      const patterns = await this.analyzeUserPatterns(userId);
       
-      const masteryRule = this.rules.find(rule => rule.id === 'technique_mastery');
-      if (masteryRule && masteryRule.condition({ techniqueUsageCount: techniqueUsage })) {
-        const notification = masteryRule.generateNotification({
-          techniqueName: technique,
-          techniqueUsageCount: techniqueUsage
-        });
-        await NotificationService.createNotification(userId, notification);
-      }
-    }
-
-    // Check for session streaks
-    const consecutiveDays = await this.getConsecutiveSessionDays(userId);
-    const streakRule = this.rules.find(rule => rule.id === 'session_streak');
-    if (streakRule && streakRule.condition({ consecutiveDays })) {
-      const notification = streakRule.generateNotification({ consecutiveDays });
-      await NotificationService.createNotification(userId, notification);
+      // Generate insights-based notifications
+      await this.generateSessionInsights(userId, sessionDetails, patterns);
+      
+      // Check for milestone achievements
+      await this.checkMilestoneAchievements(userId, patterns);
+      
+      // Update user progress tracking
+      await this.updateProgressTracking(userId, sessionDetails);
+      
+    } catch (error) {
+      console.error('Error processing session completion:', error);
     }
   }
 
-  static async checkInactiveUsers(): Promise<void> {
-    console.log('Checking for inactive users...');
-    
+  static async analyzeUserPatterns(userId: string): Promise<SessionPattern> {
     try {
-      // Get users who haven't had a session in the last 3+ days
+      const { data: sessions, error } = await supabase
+        .from('therapy_sessions')
+        .select('start_time, end_time, techniques')
+        .eq('user_id', userId)
+        .order('start_time', { ascending: false })
+        .limit(30);
+
+      if (error || !sessions) {
+        console.error('Error fetching sessions for pattern analysis:', error);
+        return this.getDefaultPattern(userId);
+      }
+
+      // Analyze session timing patterns
+      const sessionTimes = sessions
+        .filter(session => session.start_time)
+        .map(session => new Date(session.start_time).getHours());
+
+      const typicalSessionTimes = this.findMostCommonHours(sessionTimes);
+
+      // Calculate average session length
+      const completedSessions = sessions.filter(s => s.start_time && s.end_time);
+      const averageLength = completedSessions.length > 0 
+        ? completedSessions.reduce((sum, session) => {
+            const start = new Date(session.start_time).getTime();
+            const end = new Date(session.end_time).getTime();
+            return sum + (end - start) / (1000 * 60); // minutes
+          }, 0) / completedSessions.length
+        : 25; // default 25 minutes
+
+      // Find preferred techniques
+      const allTechniques = sessions.flatMap(s => s.techniques || []);
+      const techniqueCount: Record<string, number> = {};
+      allTechniques.forEach(tech => {
+        techniqueCount[tech] = (techniqueCount[tech] || 0) + 1;
+      });
+
+      const preferredTechniques = Object.entries(techniqueCount)
+        .sort(([,a], [,b]) => b - a)
+        .slice(0, 3)
+        .map(([tech]) => tech);
+
+      // Calculate session streak
+      const sessionStreak = this.calculateSessionStreak(sessions);
+
+      return {
+        userId,
+        typicalSessionTimes,
+        averageSessionLength: Math.round(averageLength),
+        preferredTechniques,
+        lastSessionDate: sessions.length > 0 ? new Date(sessions[0].start_time) : undefined,
+        sessionStreak,
+        totalSessions: sessions.length
+      };
+    } catch (error) {
+      console.error('Error analyzing user patterns:', error);
+      return this.getDefaultPattern(userId);
+    }
+  }
+
+  private static getDefaultPattern(userId: string): SessionPattern {
+    return {
+      userId,
+      typicalSessionTimes: [9, 13, 18], // Default session times
+      averageSessionLength: 25,
+      preferredTechniques: [],
+      sessionStreak: 0,
+      totalSessions: 0
+    };
+  }
+
+  private static findMostCommonHours(hours: number[]): number[] {
+    const hourCount: Record<number, number> = {};
+    hours.forEach(hour => {
+      hourCount[hour] = (hourCount[hour] || 0) + 1;
+    });
+
+    return Object.entries(hourCount)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 3)
+      .map(([hour]) => parseInt(hour));
+  }
+
+  private static calculateSessionStreak(sessions: any[]): number {
+    if (sessions.length === 0) return 0;
+
+    let streak = 0;
+    let currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    for (const session of sessions) {
+      const sessionDate = new Date(session.start_time);
+      sessionDate.setHours(0, 0, 0, 0);
+
+      const daysDiff = Math.floor((currentDate.getTime() - sessionDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      if (daysDiff === streak) {
+        streak++;
+      } else if (daysDiff === streak + 1) {
+        // Allow for one day gap
+        streak++;
+      } else {
+        break;
+      }
+    }
+
+    return streak;
+  }
+
+  static async generateSessionInsights(userId: string, sessionDetails: any, patterns: SessionPattern): Promise<void> {
+    try {
+      const insights: Array<{type: string, title: string, message: string, priority: 'low' | 'medium' | 'high'}> = [];
+
+      // Streak achievements
+      if (patterns.sessionStreak > 0 && patterns.sessionStreak % 7 === 0) {
+        insights.push({
+          type: 'milestone_achieved',
+          title: '🔥 Amazing Streak!',
+          message: `You've maintained a ${patterns.sessionStreak}-day therapy streak! Your consistency is paying off.`,
+          priority: 'high'
+        });
+      }
+
+      // Technique recommendations
+      if (sessionDetails.techniques && sessionDetails.techniques.length > 0) {
+        const newTechniques = sessionDetails.techniques.filter((tech: string) => 
+          !patterns.preferredTechniques.includes(tech)
+        );
+        
+        if (newTechniques.length > 0) {
+          insights.push({
+            type: 'insight_generated',
+            title: '🌟 Exploring New Techniques',
+            message: `Great job trying ${newTechniques[0]}! Expanding your toolkit can lead to better outcomes.`,
+            priority: 'medium'
+          });
+        }
+      }
+
+      // Session length insights
+      if (sessionDetails.duration) {
+        const durationMinutes = sessionDetails.duration / (1000 * 60);
+        if (durationMinutes > patterns.averageSessionLength * 1.5) {
+          insights.push({
+            type: 'insight_generated',
+            title: '⏰ Extended Session',
+            message: `You spent extra time on self-care today (${Math.round(durationMinutes)} minutes). Deep work often leads to meaningful breakthroughs.`,
+            priority: 'low'
+          });
+        }
+      }
+
+      // Create notifications for insights
+      for (const insight of insights) {
+        await NotificationService.createNotification(userId, {
+          type: insight.type as any,
+          title: insight.title,
+          message: insight.message,
+          priority: insight.priority
+        });
+      }
+    } catch (error) {
+      console.error('Error generating session insights:', error);
+    }
+  }
+
+  static async checkMilestoneAchievements(userId: string, patterns: SessionPattern): Promise<void> {
+    try {
+      const milestones = [
+        { sessions: 5, title: 'First Steps', message: 'You\'ve completed 5 therapy sessions!' },
+        { sessions: 10, title: 'Building Momentum', message: 'Double digits! 10 sessions completed.' },
+        { sessions: 25, title: 'Quarter Century', message: '25 sessions - you\'re building lasting habits!' },
+        { sessions: 50, title: 'Half Century', message: '50 sessions! Your commitment to growth is inspiring.' },
+        { sessions: 100, title: 'Century Club', message: '100 sessions! You\'ve built an incredible foundation for mental wellness.' }
+      ];
+
+      const achievedMilestone = milestones.find(m => m.sessions === patterns.totalSessions);
+      
+      if (achievedMilestone) {
+        await NotificationService.createNotification(userId, {
+          type: 'milestone_achieved',
+          title: `🎉 ${achievedMilestone.title}`,
+          message: achievedMilestone.message,
+          priority: 'high',
+          data: { milestone: achievedMilestone.title, sessionCount: patterns.totalSessions }
+        });
+      }
+    } catch (error) {
+      console.error('Error checking milestone achievements:', error);
+    }
+  }
+
+  static async updateProgressTracking(userId: string, sessionDetails: any): Promise<void> {
+    try {
+      // This could be expanded to track detailed progress metrics
+      // For now, we'll just log the update
+      console.log('Progress tracking updated for user:', userId);
+    } catch (error) {
+      console.error('Error updating progress tracking:', error);
+    }
+  }
+
+  static async generateInactivityReminders(): Promise<void> {
+    try {
       const threeDaysAgo = new Date();
       threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
 
-      const { data: inactiveUsers, error } = await supabase
+      const { data: profiles, error } = await supabase
         .from('profiles')
-        .select(`
-          id,
-          name,
-          therapy_sessions!left(
-            start_time
-          )
-        `)
-        .or(`therapy_sessions.start_time.is.null,therapy_sessions.start_time.lt.${threeDaysAgo.toISOString()}`);
+        .select('id, name');
 
-      if (error) {
-        console.error('Error checking inactive users:', error);
+      if (error || !profiles) {
+        console.error('Error fetching profiles for inactivity check:', error);
         return;
       }
 
-      const inactiveRule = this.rules.find(rule => rule.id === 'inactive_reminder');
-      if (!inactiveRule) return;
+      const inactiveUsers = [];
 
-      for (const user of inactiveUsers || []) {
-        const lastSession = user.therapy_sessions?.[0];
-        const daysSinceLastSession = lastSession 
-          ? Math.floor((Date.now() - new Date(lastSession.start_time).getTime()) / (1000 * 60 * 60 * 24))
-          : 30; // Assume 30 days for new users
+      for (const profile of profiles) {
+        const { data: recentSessions } = await supabase
+          .from('therapy_sessions')
+          .select('start_time')
+          .eq('user_id', profile.id)
+          .gte('start_time', threeDaysAgo.toISOString())
+          .limit(1);
 
-        if (inactiveRule.condition({ daysSinceLastSession })) {
-          const notification = inactiveRule.generateNotification({ daysSinceLastSession });
-          await NotificationService.createNotification(user.id, notification);
+        if (!recentSessions || recentSessions.length === 0) {
+          inactiveUsers.push(profile);
         }
       }
-    } catch (error) {
-      console.error('Error in checkInactiveUsers:', error);
-    }
-  }
 
-  static async generateWeeklyReports(): Promise<void> {
-    console.log('Generating weekly progress reports...');
-    
-    try {
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-      const { data: users, error } = await supabase
-        .from('profiles')
-        .select(`
-          id,
-          name,
-          therapy_sessions!inner(
-            start_time,
-            mood_before,
-            mood_after,
-            techniques
-          )
-        `)
-        .gte('therapy_sessions.start_time', oneWeekAgo.toISOString());
-
-      if (error) {
-        console.error('Error generating weekly reports:', error);
-        return;
-      }
-
-      const weeklyRule = this.rules.find(rule => rule.id === 'weekly_progress');
-      if (!weeklyRule) return;
-
-      for (const user of users || []) {
-        const sessions = user.therapy_sessions || [];
-        const sessionsThisWeek = sessions.length;
-
-        if (sessionsThisWeek === 0) continue;
-
-        const moodImprovements = sessions
-          .filter(s => s.mood_before && s.mood_after)
-          .map(s => s.mood_after - s.mood_before);
-
-        const avgMoodImprovement = moodImprovements.length > 0
-          ? Math.round((moodImprovements.reduce((sum, imp) => sum + imp, 0) / moodImprovements.length) * 10) / 10
-          : 0;
-
-        // Get most used techniques
-        const techniqueCount: Record<string, number> = {};
-        sessions.forEach(session => {
-          session.techniques?.forEach((technique: string) => {
-            techniqueCount[technique] = (techniqueCount[technique] || 0) + 1;
-          });
+      // Create gentle reminders for inactive users
+      for (const user of inactiveUsers) {
+        await NotificationService.createNotification(user.id, {
+          type: 'session_reminder',
+          title: 'We miss you! 💙',
+          message: "It's been a few days since your last session. Even a few minutes of self-care can make a difference.",
+          priority: 'medium'
         });
-
-        const topTechniques = Object.entries(techniqueCount)
-          .sort(([,a], [,b]) => b - a)
-          .slice(0, 3)
-          .map(([technique]) => technique);
-
-        const encouragement = avgMoodImprovement >= 2 
-          ? "You're making excellent progress!" 
-          : avgMoodImprovement >= 1 
-          ? "You're on the right track, keep going!" 
-          : "Every step forward matters. Keep practicing!";
-
-        const reportData = {
-          isWeeklyReport: true,
-          sessionsThisWeek,
-          avgMoodImprovement,
-          topTechniques,
-          encouragement
-        };
-
-        if (weeklyRule.condition(reportData)) {
-          const notification = weeklyRule.generateNotification(reportData);
-          await NotificationService.createNotification(user.id, notification);
-        }
       }
+
+      console.log(`Generated reminders for ${inactiveUsers.length} inactive users`);
     } catch (error) {
-      console.error('Error in generateWeeklyReports:', error);
-    }
-  }
-
-  private static async getTechniqueUsageCount(userId: string, technique: string): Promise<number> {
-    try {
-      const { data, error } = await supabase
-        .from('therapy_sessions')
-        .select('id')
-        .eq('user_id', userId)
-        .contains('techniques', [technique]);
-
-      if (error) {
-        console.error('Error getting technique usage count:', error);
-        return 0;
-      }
-
-      return data?.length || 0;
-    } catch (error) {
-      console.error('Error in getTechniqueUsageCount:', error);
-      return 0;
-    }
-  }
-
-  private static async getConsecutiveSessionDays(userId: string): Promise<number> {
-    try {
-      const { data, error } = await supabase
-        .from('therapy_sessions')
-        .select('start_time')
-        .eq('user_id', userId)
-        .order('start_time', { ascending: false })
-        .limit(30); // Check last 30 days
-
-      if (error || !data || data.length === 0) {
-        return 0;
-      }
-
-      // Group sessions by date
-      const sessionDates = new Set(
-        data.map(session => new Date(session.start_time).toDateString())
-      );
-
-      // Count consecutive days from today backwards
-      let consecutiveDays = 0;
-      const today = new Date();
-      
-      for (let i = 0; i < 30; i++) {
-        const checkDate = new Date(today);
-        checkDate.setDate(checkDate.getDate() - i);
-        
-        if (sessionDates.has(checkDate.toDateString())) {
-          consecutiveDays++;
-        } else if (consecutiveDays > 0) {
-          // Break on first missing day after we've started counting
-          break;
-        }
-      }
-
-      return consecutiveDays;
-    } catch (error) {
-      console.error('Error in getConsecutiveSessionDays:', error);
-      return 0;
+      console.error('Error generating inactivity reminders:', error);
     }
   }
 
