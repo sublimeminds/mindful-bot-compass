@@ -9,7 +9,11 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ error: any }>;
   signup: (email: string, password: string) => Promise<{ error: any }>;
+  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, name?: string) => Promise<{ error: any }>;
   logout: () => Promise<void>;
+  signOut: () => Promise<void>;
+  updateProfile: (data: { name?: string }) => Promise<void>;
   loading: boolean;
 }
 
@@ -48,6 +52,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
+  const signIn = login; // Alias for login
+
   const signup = async (email: string, password: string) => {
     const redirectUrl = `${window.location.origin}/`;
     
@@ -61,8 +67,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
+  const signUp = async (email: string, password: string, name?: string) => {
+    const redirectUrl = `${window.location.origin}/`;
+    
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+        data: name ? { name } : undefined
+      }
+    });
+    return { error };
+  };
+
   const logout = async () => {
     await supabase.auth.signOut();
+  };
+
+  const signOut = logout; // Alias for logout
+
+  const updateProfile = async (data: { name?: string }) => {
+    if (!user) throw new Error('No user logged in');
+    
+    const { error } = await supabase.auth.updateUser({
+      data: data
+    });
+    
+    if (error) throw error;
   };
 
   const value = {
@@ -70,8 +102,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     session,
     isAuthenticated: !!user,
     login,
+    signIn,
     signup,
+    signUp,
     logout,
+    signOut,
+    updateProfile,
     loading,
   };
 

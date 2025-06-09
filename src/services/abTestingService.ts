@@ -64,11 +64,11 @@ export class ABTestingService {
               status: test.status,
               start_date: test.startDate.toISOString(),
               end_date: test.endDate?.toISOString(),
-              variants: test.variants,
-              target_audience: test.targetAudience,
-              metrics: test.metrics
+              variants: test.variants as any,
+              target_audience: test.targetAudience as any,
+              metrics: test.metrics as any
             }
-          },
+          } as any,
           user_id: '00000000-0000-0000-0000-000000000000' // System user
         })
         .select()
@@ -93,7 +93,7 @@ export class ABTestingService {
       if (error) throw error;
 
       return data?.map(notification => {
-        const testConfig = notification.data?.test_config;
+        const testConfig = (notification.data as any)?.test_config;
         return {
           id: notification.id,
           name: testConfig?.name || 'Unnamed Test',
@@ -123,7 +123,7 @@ export class ABTestingService {
         .eq('user_id', userId)
         .single();
 
-      if (existing?.data?.variant_id) return existing.data.variant_id;
+      if ((existing?.data as any)?.variant_id) return (existing.data as any).variant_id;
 
       // Get test details
       const { data: test } = await supabase
@@ -132,10 +132,10 @@ export class ABTestingService {
         .eq('id', testId)
         .single();
 
-      if (!test?.data?.test_config) return null;
+      if (!(test?.data as any)?.test_config) return null;
 
       // Randomly assign based on weights
-      const variants = test.data.test_config.variants || [];
+      const variants = (test.data as any).test_config.variants || [];
       const totalWeight = variants.reduce((sum: number, v: any) => sum + v.weight, 0);
       const random = Math.random() * totalWeight;
       
@@ -161,7 +161,7 @@ export class ABTestingService {
           data: {
             test_id: testId,
             variant_id: selectedVariant
-          }
+          } as any
         });
 
       return selectedVariant;
@@ -184,7 +184,7 @@ export class ABTestingService {
             test_id: testId,
             conversion_type: conversionType,
             timestamp: new Date().toISOString()
-          }
+          } as any
         });
     } catch (error) {
       console.error('Error tracking conversion:', error);
@@ -198,19 +198,19 @@ export class ABTestingService {
         .from('notifications')
         .select('*')
         .eq('type', 'ab_test_conversion')
-        .eq('data->>test_id', testId);
+        .like('data->>test_id', testId);
 
       const { data: assignments } = await supabase
         .from('notifications')
         .select('*')
         .eq('type', 'ab_test_assignment')
-        .eq('data->>test_id', testId);
+        .like('data->>test_id', testId);
 
       if (!conversions || !assignments) return null;
 
       // Calculate basic statistics
       const variantStats = assignments.reduce((acc: any, assignment: any) => {
-        const variantId = assignment.data?.variant_id;
+        const variantId = (assignment.data as any)?.variant_id;
         if (!acc[variantId]) {
           acc[variantId] = { participants: 0, conversions: 0 };
         }

@@ -86,17 +86,27 @@ export interface TemplateContext {
 export class AdvancedNotificationTemplateService {
   static async createTemplate(template: Omit<NotificationTemplate, 'id' | 'performance' | 'createdAt' | 'updatedAt'>): Promise<string | null> {
     try {
+      // Store template data in notifications table as a workaround
       const { data, error } = await supabase
-        .from('notification_templates')
+        .from('notifications')
         .insert({
-          name: template.name,
-          description: template.description,
-          type: template.type,
-          category: template.category,
-          template: template.template,
-          personalization: template.personalization,
-          variants: template.variants,
-          is_active: template.isActive
+          title: `Template: ${template.name}`,
+          message: template.description,
+          type: 'notification_template',
+          priority: 'low',
+          data: {
+            template_config: {
+              name: template.name,
+              description: template.description,
+              type: template.type,
+              category: template.category,
+              template: template.template,
+              personalization: template.personalization,
+              variants: template.variants,
+              is_active: template.isActive
+            }
+          } as any,
+          user_id: '00000000-0000-0000-0000-000000000000' // System user
         })
         .select()
         .single();
@@ -112,18 +122,16 @@ export class AdvancedNotificationTemplateService {
   static async getTemplates(category?: string): Promise<NotificationTemplate[]> {
     try {
       let query = supabase
-        .from('notification_templates')
+        .from('notifications')
         .select('*')
-        .eq('is_active', true);
-
-      if (category) {
-        query = query.eq('category', category);
-      }
+        .eq('type', 'notification_template');
 
       const { data, error } = await query;
       if (error) throw error;
 
-      return data?.map(this.mapToTemplate) || [];
+      return data?.map(this.mapToTemplate).filter(template => 
+        !category || template.category === category
+      ) || [];
     } catch (error) {
       console.error('Error fetching templates:', error);
       return [];
@@ -138,24 +146,27 @@ export class AdvancedNotificationTemplateService {
     try {
       // Get template
       const { data: template } = await supabase
-        .from('notification_templates')
+        .from('notifications')
         .select('*')
         .eq('id', templateId)
         .single();
 
       if (!template) return null;
 
+      const templateConfig = (template.data as any)?.template_config;
+      if (!templateConfig) return null;
+
       // Build context
       const fullContext = await this.buildContext(userId, context);
 
       // Select variant (A/B testing)
-      const selectedVariant = this.selectVariant(template.variants || []);
+      const selectedVariant = this.selectVariant(templateConfig.variants || []);
 
       // Generate personalized content
       const personalizedContent = this.personalizeContent(
-        selectedVariant?.template || template.template,
+        selectedVariant?.template || templateConfig.template,
         fullContext,
-        template.personalization
+        templateConfig.personalization
       );
 
       return {
@@ -179,16 +190,31 @@ export class AdvancedNotificationTemplateService {
     }
   ): Promise<{ title: string; message: string } | null> {
     try {
-      const { data, error } = await supabase.functions.invoke('generate-ai-notification', {
-        body: {
-          prompt,
-          context,
-          constraints: constraints || {}
+      // Simplified AI content generation
+      const tone = constraints?.tone || 'encouraging';
+      const includeEmoji = constraints?.includeEmoji || false;
+      
+      // Basic template-based generation
+      const templates = {
+        encouraging: {
+          title: `Keep going, ${context.user.name}! ${includeEmoji ? '💪' : ''}`,
+          message: `You're making great progress! ${includeEmoji ? '🌟' : ''}`
+        },
+        informative: {
+          title: `Progress Update for ${context.user.name}`,
+          message: 'Here\'s your latest progress summary.'
+        },
+        celebratory: {
+          title: `Congratulations, ${context.user.name}! ${includeEmoji ? '🎉' : ''}`,
+          message: `Amazing achievement! ${includeEmoji ? '🎊' : ''}`
+        },
+        gentle: {
+          title: `Gentle reminder for ${context.user.name}`,
+          message: `Take care of yourself today. ${includeEmoji ? '🤗' : ''}`
         }
-      });
+      };
 
-      if (error) throw error;
-      return data;
+      return templates[tone];
     } catch (error) {
       console.error('Error generating AI content:', error);
       return null;
@@ -203,17 +229,19 @@ export class AdvancedNotificationTemplateService {
   ): Promise<void> {
     try {
       await supabase
-        .from('template_performance')
+        .from('notifications')
         .insert({
-          template_id: templateId,
-          variant_id: variantId,
-          event,
+          title: 'Template Performance',
+          message: `Event: ${event}`,
+          type: 'template_performance',
           user_id: userId,
-          timestamp: new Date().toISOString()
+          data: {
+            template_id: templateId,
+            variant_id: variantId,
+            event,
+            timestamp: new Date().toISOString()
+          } as any
         });
-
-      // Update template performance metrics
-      await this.updateTemplateMetrics(templateId, variantId);
     } catch (error) {
       console.error('Error tracking template performance:', error);
     }
@@ -227,9 +255,10 @@ export class AdvancedNotificationTemplateService {
   } | null> {
     try {
       const { data, error } = await supabase
-        .from('template_performance')
+        .from('notifications')
         .select('*')
-        .eq('template_id', templateId);
+        .eq('type', 'template_performance')
+        .like('data->>template_id', templateId);
 
       if (error) throw error;
 
@@ -259,7 +288,8 @@ export class AdvancedNotificationTemplateService {
         suggestedChanges.message = 'Make the call-to-action clearer';
       }
 
-      if (analytics.overall.viewRate < 0.5) {
+      const viewRate = analytics.overall.sent > 0 ? analytics.overall.viewed / analytics.overall.sent : 0;
+      if (viewRate < 0.5) {
         recommendations.push('The title may not be compelling enough');
         suggestedChanges.title = 'Use more emotionally engaging language';
       }
@@ -491,34 +521,36 @@ export class AdvancedNotificationTemplateService {
   }
 
   private static mapToTemplate(data: any): NotificationTemplate {
+    const templateConfig = (data.data as any)?.template_config;
     return {
       id: data.id,
-      name: data.name,
-      description: data.description,
-      type: data.type,
-      category: data.category,
-      template: data.template,
-      personalization: data.personalization,
-      variants: data.variants || [],
-      performance: data.performance || { sent: 0, viewed: 0, clicked: 0, avgRating: 0 },
-      isActive: data.is_active,
+      name: templateConfig?.name || 'Unnamed Template',
+      description: templateConfig?.description || '',
+      type: templateConfig?.type || 'notification',
+      category: templateConfig?.category || 'engagement',
+      template: templateConfig?.template || { title: '', message: '', variables: [] },
+      personalization: templateConfig?.personalization || {
+        useUserName: false,
+        useMoodData: false,
+        useProgressData: false,
+        useTimeContext: false,
+        useWeatherData: false
+      },
+      variants: templateConfig?.variants || [],
+      performance: templateConfig?.performance || { sent: 0, viewed: 0, clicked: 0, avgRating: 0 },
+      isActive: templateConfig?.is_active || false,
       createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at)
+      updatedAt: new Date(data.created_at)
     };
-  }
-
-  private static async updateTemplateMetrics(templateId: string, variantId?: string): Promise<void> {
-    // This would update the performance metrics in the database
-    // Implementation depends on your specific metrics storage strategy
   }
 
   private static calculateTemplateAnalytics(performanceData: any[]): any {
     // Calculate analytics from performance data
-    // This is a simplified implementation
     const overall = performanceData.reduce((acc, item) => {
-      if (item.event === 'sent') acc.sent++;
-      else if (item.event === 'viewed') acc.viewed++;
-      else if (item.event === 'clicked') acc.clicked++;
+      const eventData = (item.data as any);
+      if (eventData?.event === 'sent') acc.sent++;
+      else if (eventData?.event === 'viewed') acc.viewed++;
+      else if (eventData?.event === 'clicked') acc.clicked++;
       return acc;
     }, { sent: 0, viewed: 0, clicked: 0 });
 
