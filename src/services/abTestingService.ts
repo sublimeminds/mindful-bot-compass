@@ -49,17 +49,27 @@ export interface ABTestResults {
 export class ABTestingService {
   static async createTest(test: Omit<ABTest, 'id'>): Promise<string | null> {
     try {
+      // Store A/B test data in notifications table as a workaround
       const { data, error } = await supabase
-        .from('ab_tests')
+        .from('notifications')
         .insert({
-          name: test.name,
-          description: test.description,
-          status: test.status,
-          start_date: test.startDate.toISOString(),
-          end_date: test.endDate?.toISOString(),
-          variants: test.variants,
-          target_audience: test.targetAudience,
-          metrics: test.metrics
+          title: `AB Test: ${test.name}`,
+          message: test.description,
+          type: 'ab_test',
+          priority: 'low',
+          data: {
+            test_config: {
+              name: test.name,
+              description: test.description,
+              status: test.status,
+              start_date: test.startDate.toISOString(),
+              end_date: test.endDate?.toISOString(),
+              variants: test.variants,
+              target_audience: test.targetAudience,
+              metrics: test.metrics
+            }
+          },
+          user_id: '00000000-0000-0000-0000-000000000000' // System user
         })
         .select()
         .single();
@@ -75,25 +85,28 @@ export class ABTestingService {
   static async getTests(userId: string): Promise<ABTest[]> {
     try {
       const { data, error } = await supabase
-        .from('ab_tests')
+        .from('notifications')
         .select('*')
-        .eq('created_by', userId)
+        .eq('type', 'ab_test')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      return data?.map(test => ({
-        id: test.id,
-        name: test.name,
-        description: test.description,
-        status: test.status,
-        startDate: new Date(test.start_date),
-        endDate: test.end_date ? new Date(test.end_date) : undefined,
-        variants: test.variants || [],
-        targetAudience: test.target_audience || { percentage: 100 },
-        metrics: test.metrics || { primary: 'click_rate', secondary: [] },
-        results: test.results
-      })) || [];
+      return data?.map(notification => {
+        const testConfig = notification.data?.test_config;
+        return {
+          id: notification.id,
+          name: testConfig?.name || 'Unnamed Test',
+          description: testConfig?.description || '',
+          status: testConfig?.status || 'draft',
+          startDate: new Date(testConfig?.start_date || notification.created_at),
+          endDate: testConfig?.end_date ? new Date(testConfig.end_date) : undefined,
+          variants: testConfig?.variants || [],
+          targetAudience: testConfig?.target_audience || { percentage: 100 },
+          metrics: testConfig?.metrics || { primary: 'click_rate', secondary: [] },
+          results: testConfig?.results
+        };
+      }) || [];
     } catch (error) {
       console.error('Error fetching A/B tests:', error);
       return [];
@@ -102,27 +115,27 @@ export class ABTestingService {
 
   static async assignUserToVariant(testId: string, userId: string): Promise<string | null> {
     try {
-      // Check if user is already assigned
+      // Check if user is already assigned (stored in user notifications)
       const { data: existing } = await supabase
-        .from('ab_test_assignments')
-        .select('variant_id')
-        .eq('test_id', testId)
+        .from('notifications')
+        .select('data')
+        .eq('id', testId)
         .eq('user_id', userId)
         .single();
 
-      if (existing) return existing.variant_id;
+      if (existing?.data?.variant_id) return existing.data.variant_id;
 
       // Get test details
       const { data: test } = await supabase
-        .from('ab_tests')
-        .select('variants')
+        .from('notifications')
+        .select('data')
         .eq('id', testId)
         .single();
 
-      if (!test) return null;
+      if (!test?.data?.test_config) return null;
 
       // Randomly assign based on weights
-      const variants = test.variants || [];
+      const variants = test.data.test_config.variants || [];
       const totalWeight = variants.reduce((sum: number, v: any) => sum + v.weight, 0);
       const random = Math.random() * totalWeight;
       
@@ -137,13 +150,18 @@ export class ABTestingService {
         }
       }
 
-      // Save assignment
+      // Save assignment as user notification
       await supabase
-        .from('ab_test_assignments')
+        .from('notifications')
         .insert({
-          test_id: testId,
+          title: 'A/B Test Assignment',
+          message: `Assigned to variant ${selectedVariant}`,
+          type: 'ab_test_assignment',
           user_id: userId,
-          variant_id: selectedVariant
+          data: {
+            test_id: testId,
+            variant_id: selectedVariant
+          }
         });
 
       return selectedVariant;
@@ -156,12 +174,17 @@ export class ABTestingService {
   static async trackConversion(testId: string, userId: string, conversionType: string): Promise<void> {
     try {
       await supabase
-        .from('ab_test_conversions')
+        .from('notifications')
         .insert({
-          test_id: testId,
+          title: 'A/B Test Conversion',
+          message: `Conversion: ${conversionType}`,
+          type: 'ab_test_conversion',
           user_id: userId,
-          conversion_type: conversionType,
-          timestamp: new Date().toISOString()
+          data: {
+            test_id: testId,
+            conversion_type: conversionType,
+            timestamp: new Date().toISOString()
+          }
         });
     } catch (error) {
       console.error('Error tracking conversion:', error);
@@ -170,23 +193,24 @@ export class ABTestingService {
 
   static async calculateResults(testId: string): Promise<ABTestResults | null> {
     try {
-      // This would involve complex statistical calculations
-      // For now, return a simplified result
+      // Get conversions and assignments from notifications
       const { data: conversions } = await supabase
-        .from('ab_test_conversions')
+        .from('notifications')
         .select('*')
-        .eq('test_id', testId);
+        .eq('type', 'ab_test_conversion')
+        .eq('data->>test_id', testId);
 
       const { data: assignments } = await supabase
-        .from('ab_test_assignments')
+        .from('notifications')
         .select('*')
-        .eq('test_id', testId);
+        .eq('type', 'ab_test_assignment')
+        .eq('data->>test_id', testId);
 
       if (!conversions || !assignments) return null;
 
       // Calculate basic statistics
       const variantStats = assignments.reduce((acc: any, assignment: any) => {
-        const variantId = assignment.variant_id;
+        const variantId = assignment.data?.variant_id;
         if (!acc[variantId]) {
           acc[variantId] = { participants: 0, conversions: 0 };
         }
