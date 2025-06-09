@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -174,7 +173,10 @@ const SessionHistory = () => {
 
         {/* Filters */}
         {showFilters && (
-          <SessionFilters onFilterChange={handleFilterChange} />
+          <SessionFilters 
+            onFilterChange={handleFilterChange}
+            onClearFilters={() => setFilteredSessions(sessionSummaries)}
+          />
         )}
 
         {/* Main Content */}

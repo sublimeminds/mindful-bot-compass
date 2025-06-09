@@ -95,7 +95,7 @@ export class SessionService {
           sessionId: session.session_analytics[0].session_id,
           effectivenessScore: session.session_analytics[0].effectiveness_score,
           moodImprovement: session.session_analytics[0].mood_improvement,
-          techniquesEffectiveness: session.session_analytics[0].techniques_effectiveness || {},
+          techniquesEffectiveness: (session.session_analytics[0].techniques_effectiveness as Record<string, number>) || {},
           keyBreakthrough: session.session_analytics[0].key_breakthrough,
           sessionRating: session.session_analytics[0].session_rating,
           createdAt: new Date(session.session_analytics[0].created_at)
@@ -215,7 +215,7 @@ export class SessionService {
           sessionId: session.session_analytics[0].session_id,
           effectivenessScore: session.session_analytics[0].effectiveness_score,
           moodImprovement: session.session_analytics[0].mood_improvement,
-          techniquesEffectiveness: session.session_analytics[0].techniques_effectiveness || {},
+          techniquesEffectiveness: (session.session_analytics[0].techniques_effectiveness as Record<string, number>) || {},
           keyBreakthrough: session.session_analytics[0].key_breakthrough,
           sessionRating: session.session_analytics[0].session_rating,
           createdAt: new Date(session.session_analytics[0].created_at)
