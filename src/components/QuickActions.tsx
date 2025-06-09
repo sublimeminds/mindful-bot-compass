@@ -1,7 +1,6 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageCircle, Plus, TrendingUp, Calendar, BarChart3, Brain, BookOpen } from "lucide-react";
+import { MessageCircle, Plus, TrendingUp, Calendar, BarChart3, Brain, BookOpen, Target } from "lucide-react";
 import { useSession } from "@/contexts/SessionContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -67,6 +66,11 @@ const QuickActions = () => {
         <Button variant="outline" className="w-full" onClick={() => navigate('/mood')}>
           <Brain className="h-4 w-4 mr-2" />
           Track Mood
+        </Button>
+        
+        <Button variant="outline" className="w-full" onClick={() => navigate('/goals')}>
+          <Target className="h-4 w-4 mr-2" />
+          Manage Goals
         </Button>
         
         <Button 

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +13,7 @@ import SessionHistory from "./pages/SessionHistory";
 import Analytics from "./pages/Analytics";
 import MoodTracking from "./pages/MoodTracking";
 import Techniques from "./pages/Techniques";
+import Goals from "./pages/Goals";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +36,7 @@ const App = () => (
                 <Route path="/mood" element={<MoodTracking />} />
                 <Route path="/techniques" element={<Techniques />} />
                 <Route path="/techniques/:techniqueId" element={<Techniques />} />
+                <Route path="/goals" element={<Goals />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
