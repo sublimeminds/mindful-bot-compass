@@ -175,7 +175,7 @@ const UserDashboard = () => {
               <Calendar className="h-4 w-4 mr-2" />
               Schedule Reminder
             </Button>
-            {user?.plan === 'free' && (
+            {profile?.plan === 'free' && (
               <Button variant="outline" className="w-full justify-start border-therapy-200 text-therapy-600">
                 <Award className="h-4 w-4 mr-2" />
                 Upgrade to Premium

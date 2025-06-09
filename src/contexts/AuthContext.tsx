@@ -52,7 +52,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      setProfile(data);
+      const profileData: UserProfile = {
+        id: data.id,
+        email: data.email,
+        name: data.name,
+        plan: data.plan as 'free' | 'premium',
+        onboarding_complete: data.onboarding_complete || false
+      };
+
+      setProfile(profileData);
     } catch (error) {
       console.error('Error fetching profile:', error);
     }
