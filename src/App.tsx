@@ -13,6 +13,7 @@ import Onboarding from "./pages/Onboarding";
 import SessionHistory from "./pages/SessionHistory";
 import Analytics from "./pages/Analytics";
 import MoodTracking from "./pages/MoodTracking";
+import Techniques from "./pages/Techniques";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,8 @@ const App = () => (
                 <Route path="/sessions" element={<SessionHistory />} />
                 <Route path="/analytics" element={<Analytics />} />
                 <Route path="/mood" element={<MoodTracking />} />
+                <Route path="/techniques" element={<Techniques />} />
+                <Route path="/techniques/:techniqueId" element={<Techniques />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
