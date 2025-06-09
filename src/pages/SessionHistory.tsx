@@ -1,95 +1,128 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Search, Filter, Calendar, MessageCircle, TrendingUp, Clock } from "lucide-react";
+import { ArrowLeft, Download, Search, BarChart3, Calendar, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { useSession } from "@/contexts/SessionContext";
-import { format, startOfWeek, startOfMonth, isAfter, isBefore } from "date-fns";
+import { SessionHistoryService, SessionSummary, SessionFilter } from "@/services/sessionHistoryService";
+import SessionFilters from "@/components/session/SessionFilters";
+import SessionCard from "@/components/session/SessionCard";
+import SessionDetailsModal from "@/components/session/SessionDetailsModal";
+import { useToast } from "@/hooks/use-toast";
 
 const SessionHistory = () => {
   const navigate = useNavigate();
-  const { getSessions, loadSessions } = useSession();
-  const [sessions, setSessions] = useState<any[]>([]);
-  const [filteredSessions, setFilteredSessions] = useState<any[]>([]);
+  const { user } = useAuth();
+  const { sessions } = useSession();
+  const { toast } = useToast();
+  
+  const [sessionSummaries, setSessionSummaries] = useState<SessionSummary[]>([]);
+  const [filteredSessions, setFilteredSessions] = useState<SessionSummary[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterPeriod, setFilterPeriod] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<string>('newest');
-  const [isLoading, setIsLoading] = useState(true);
+  const [sortBy, setSortBy] = useState<'date' | 'duration' | 'effectiveness'>('date');
+  const [selectedSession, setSelectedSession] = useState<SessionSummary | null>(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   useEffect(() => {
-    const fetchSessions = async () => {
-      await loadSessions();
-      const allSessions = getSessions();
-      setSessions(allSessions);
-      setFilteredSessions(allSessions);
-      setIsLoading(false);
-    };
-    
-    fetchSessions();
-  }, [loadSessions, getSessions]);
-
-  useEffect(() => {
-    let filtered = [...sessions];
-
-    // Apply search filter
-    if (searchTerm) {
-      filtered = filtered.filter(session => 
-        session.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        session.techniques.some((tech: string) => 
-          tech.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
+    if (sessions.length > 0) {
+      const summaries = SessionHistoryService.generateSessionSummaries(sessions);
+      setSessionSummaries(summaries);
+      setFilteredSessions(summaries);
     }
+  }, [sessions]);
 
-    // Apply period filter
-    const now = new Date();
-    if (filterPeriod === 'week') {
-      const weekStart = startOfWeek(now);
-      filtered = filtered.filter(session => isAfter(session.startTime, weekStart));
-    } else if (filterPeriod === 'month') {
-      const monthStart = startOfMonth(now);
-      filtered = filtered.filter(session => isAfter(session.startTime, monthStart));
-    }
-
-    // Apply sorting
-    if (sortBy === 'newest') {
-      filtered.sort((a, b) => b.startTime.getTime() - a.startTime.getTime());
-    } else if (sortBy === 'oldest') {
-      filtered.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
-    } else if (sortBy === 'longest') {
-      filtered.sort((a, b) => {
-        const aDuration = a.endTime ? a.endTime.getTime() - a.startTime.getTime() : 0;
-        const bDuration = b.endTime ? b.endTime.getTime() - b.startTime.getTime() : 0;
-        return bDuration - aDuration;
-      });
-    }
-
+  const handleFilterChange = (filter: SessionFilter) => {
+    const filtered = SessionHistoryService.filterSessions(sessionSummaries, filter);
     setFilteredSessions(filtered);
-  }, [sessions, searchTerm, filterPeriod, sortBy]);
-
-  const getSessionDuration = (session: any) => {
-    if (!session.endTime) return 'In Progress';
-    const duration = Math.round((session.endTime.getTime() - session.startTime.getTime()) / (1000 * 60));
-    return `${duration} min`;
   };
 
-  const getMoodChange = (session: any) => {
-    if (!session.mood.before || !session.mood.after) return null;
-    const change = session.mood.after - session.mood.before;
-    return change;
+  const handleClearFilters = () => {
+    setFilteredSessions(sessionSummaries);
   };
 
-  if (isLoading) {
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    if (!term.trim()) {
+      setFilteredSessions(sessionSummaries);
+      return;
+    }
+
+    const searchFiltered = sessionSummaries.filter(session =>
+      session.notes.toLowerCase().includes(term.toLowerCase()) ||
+      session.techniques.some(technique => 
+        technique.toLowerCase().includes(term.toLowerCase())
+      ) ||
+      session.keyInsights.some(insight =>
+        insight.toLowerCase().includes(term.toLowerCase())
+      )
+    );
+    setFilteredSessions(searchFiltered);
+  };
+
+  const handleSort = (sortType: 'date' | 'duration' | 'effectiveness') => {
+    setSortBy(sortType);
+    const sorted = [...filteredSessions].sort((a, b) => {
+      switch (sortType) {
+        case 'date':
+          return b.date.getTime() - a.date.getTime();
+        case 'duration':
+          return b.duration - a.duration;
+        case 'effectiveness':
+          const effectivenessOrder = { high: 3, medium: 2, low: 1 };
+          return effectivenessOrder[b.effectiveness] - effectivenessOrder[a.effectiveness];
+        default:
+          return 0;
+      }
+    });
+    setFilteredSessions(sorted);
+  };
+
+  const handleExportData = () => {
+    if (filteredSessions.length === 0) {
+      toast({
+        title: "No Data to Export",
+        description: "Please ensure you have sessions to export.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const csvContent = SessionHistoryService.exportSessionData(filteredSessions);
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `therapy-sessions-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: "Export Successful",
+      description: "Your session data has been downloaded as a CSV file.",
+    });
+  };
+
+  const handleViewDetails = (session: SessionSummary) => {
+    setSelectedSession(session);
+    setShowDetailsModal(true);
+  };
+
+  const stats = SessionHistoryService.getSessionStats(filteredSessions);
+
+  if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-500 mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading session history...</p>
-        </div>
+        <Card className="w-full max-w-md">
+          <CardContent className="text-center py-8">
+            <p className="text-muted-foreground">Please log in to view your session history.</p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -105,138 +138,140 @@ const SessionHistory = () => {
               Back to Dashboard
             </Button>
             <div>
-              <h1 className="text-2xl font-bold">Session History</h1>
-              <p className="text-muted-foreground">{sessions.length} total sessions</p>
+              <h1 className="text-2xl font-bold flex items-center">
+                <Calendar className="h-6 w-6 mr-2" />
+                Session History
+              </h1>
+              <p className="text-muted-foreground">
+                Review and analyze your therapy session progress
+              </p>
             </div>
           </div>
+          <Button onClick={handleExportData} disabled={filteredSessions.length === 0}>
+            <Download className="h-4 w-4 mr-2" />
+            Export Data
+          </Button>
+        </div>
+
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-2">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <div>
+                  <div className="text-2xl font-bold">{stats.totalSessions}</div>
+                  <div className="text-xs text-muted-foreground">Total Sessions</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-2">
+                <Clock className="h-4 w-4 text-muted-foreground" />
+                <div>
+                  <div className="text-2xl font-bold">{stats.averageDuration}m</div>
+                  <div className="text-xs text-muted-foreground">Avg Duration</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-2">
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                <div>
+                  <div className="text-2xl font-bold">+{stats.averageMoodImprovement}</div>
+                  <div className="text-xs text-muted-foreground">Avg Mood Boost</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-2">
+                <div className="h-4 w-4 bg-green-500 rounded-full" />
+                <div>
+                  <div className="text-2xl font-bold">{stats.effectivenessDistribution.high}</div>
+                  <div className="text-xs text-muted-foreground">High Effectiveness</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Search and Controls */}
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search sessions, techniques, or insights..."
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Select value={sortBy} onValueChange={(value: any) => handleSort(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort by..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="date">Date (Newest)</SelectItem>
+              <SelectItem value="duration">Duration</SelectItem>
+              <SelectItem value="effectiveness">Effectiveness</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Filters */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search sessions by notes or techniques..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              
-              <Select value={filterPeriod} onValueChange={setFilterPeriod}>
-                <SelectTrigger className="w-40">
-                  <Filter className="h-4 w-4 mr-2" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Time</SelectItem>
-                  <SelectItem value="week">This Week</SelectItem>
-                  <SelectItem value="month">This Month</SelectItem>
-                </SelectContent>
-              </Select>
+        <SessionFilters 
+          onFilterChange={handleFilterChange}
+          onClearFilters={handleClearFilters}
+        />
 
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="newest">Newest First</SelectItem>
-                  <SelectItem value="oldest">Oldest First</SelectItem>
-                  <SelectItem value="longest">Longest First</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Sessions Grid */}
+        {filteredSessions.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredSessions.map((session) => (
+              <SessionCard
+                key={session.id}
+                session={session}
+                onViewDetails={handleViewDetails}
+              />
+            ))}
+          </div>
+        ) : (
+          <Card>
+            <CardContent className="text-center py-8">
+              <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">
+                {sessionSummaries.length === 0 ? 'No sessions yet' : 'No sessions match your filters'}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {sessionSummaries.length === 0 
+                  ? 'Start your first therapy session to see your progress here'
+                  : 'Try adjusting your search or filter criteria'
+                }
+              </p>
+              {sessionSummaries.length === 0 && (
+                <Button onClick={() => navigate('/chat')}>
+                  Start Your First Session
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
-        {/* Sessions List */}
-        <div className="space-y-4">
-          {filteredSessions.length === 0 ? (
-            <Card className="text-center py-12">
-              <CardContent>
-                <MessageCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">No sessions found</h3>
-                <p className="text-muted-foreground">
-                  {searchTerm || filterPeriod !== 'all' 
-                    ? 'Try adjusting your search or filters' 
-                    : 'Start your first therapy session to see it here'}
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            filteredSessions.map((session) => {
-              const moodChange = getMoodChange(session);
-              return (
-                <Card key={session.id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-1">
-                        <CardTitle className="text-lg">
-                          {format(session.startTime, 'EEEE, MMMM d, yyyy')}
-                        </CardTitle>
-                        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                          <div className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-1" />
-                            {format(session.startTime, 'h:mm a')}
-                          </div>
-                          <div className="flex items-center">
-                            <Clock className="h-4 w-4 mr-1" />
-                            {getSessionDuration(session)}
-                          </div>
-                          <div className="flex items-center">
-                            <MessageCircle className="h-4 w-4 mr-1" />
-                            {session.messages.length} messages
-                          </div>
-                        </div>
-                      </div>
-                      <Badge variant={session.endTime ? 'default' : 'secondary'}>
-                        {session.endTime ? 'Completed' : 'In Progress'}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="space-y-4">
-                    {moodChange !== null && (
-                      <div className="flex items-center text-sm">
-                        <TrendingUp className="h-4 w-4 mr-2" />
-                        <span className={moodChange >= 0 ? 'text-green-600' : 'text-red-600'}>
-                          Mood {moodChange >= 0 ? 'improved' : 'declined'} by {Math.abs(moodChange)} points
-                        </span>
-                        <span className="ml-2 text-muted-foreground">
-                          ({session.mood.before} → {session.mood.after})
-                        </span>
-                      </div>
-                    )}
-
-                    {session.techniques.length > 0 && (
-                      <div>
-                        <p className="text-sm font-medium mb-2">Techniques Used:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {session.techniques.map((technique: string, index: number) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {technique}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {session.notes && (
-                      <div>
-                        <p className="text-sm font-medium mb-1">Session Notes:</p>
-                        <p className="text-sm text-muted-foreground">{session.notes}</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })
-          )}
-        </div>
+        {/* Session Details Modal */}
+        <SessionDetailsModal
+          session={selectedSession}
+          isOpen={showDetailsModal}
+          onClose={() => setShowDetailsModal(false)}
+        />
       </div>
     </div>
   );

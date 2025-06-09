@@ -29,6 +29,9 @@ const MoodTracking = () => {
           userId: user.id,
           timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
           mood: { overall: 6, anxiety: 4, depression: 3, stress: 5, energy: 7, sleep_quality: 6, social_connection: 5 },
+          overall: 6,
+          anxiety: 4,
+          energy: 7,
           activities: ['Exercise', 'Work', 'Reading'],
           triggers: ['Work Stress'],
           notes: 'Had a good workout in the morning'
@@ -38,6 +41,9 @@ const MoodTracking = () => {
           userId: user.id,
           timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
           mood: { overall: 8, anxiety: 2, depression: 2, stress: 3, energy: 8, sleep_quality: 8, social_connection: 7 },
+          overall: 8,
+          anxiety: 2,
+          energy: 8,
           activities: ['Socializing', 'Meditation', 'Cooking'],
           triggers: [],
           notes: 'Great day with friends, felt very connected'
@@ -47,6 +53,9 @@ const MoodTracking = () => {
           userId: user.id,
           timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
           mood: { overall: 4, anxiety: 7, depression: 5, stress: 8, energy: 3, sleep_quality: 4, social_connection: 3 },
+          overall: 4,
+          anxiety: 7,
+          energy: 3,
           activities: ['Work'],
           triggers: ['Work Stress', 'Lack of Sleep'],
           notes: 'Difficult day at work, stayed up too late'
@@ -71,6 +80,9 @@ const MoodTracking = () => {
         userId: user.id,
         timestamp: new Date(),
         mood,
+        overall: mood.overall,
+        anxiety: mood.anxiety,
+        energy: mood.energy,
         activities,
         triggers,
         notes
