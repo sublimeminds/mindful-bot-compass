@@ -36,13 +36,20 @@ export class NotificationAnalyticsService {
     metadata?: Record<string, any>
   ): Promise<void> {
     try {
+      // Store analytics data using the notifications table with a special type
       await supabase
-        .from('notification_analytics')
+        .from('notifications')
         .insert({
-          notification_id: notificationId,
+          title: `Analytics: ${event}`,
+          message: `User ${event} notification ${notificationId}`,
+          type: 'analytics_event',
           user_id: userId,
-          event,
-          metadata: metadata || {}
+          data: {
+            original_notification_id: notificationId,
+            event_type: event,
+            metadata: metadata || {},
+            timestamp: new Date().toISOString()
+          }
         });
     } catch (error) {
       console.error('Error tracking notification event:', error);
@@ -52,17 +59,15 @@ export class NotificationAnalyticsService {
   static async getMetrics(userId: string, dateRange?: { start: Date; end: Date }): Promise<NotificationMetrics> {
     try {
       let query = supabase
-        .from('notification_analytics')
-        .select(`
-          *,
-          notifications!inner(type, priority, created_at)
-        `)
-        .eq('user_id', userId);
+        .from('notifications')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('type', 'analytics_event');
 
       if (dateRange) {
         query = query
-          .gte('timestamp', dateRange.start.toISOString())
-          .lte('timestamp', dateRange.end.toISOString());
+          .gte('created_at', dateRange.start.toISOString())
+          .lte('created_at', dateRange.end.toISOString());
       }
 
       const { data, error } = await query;
@@ -90,9 +95,18 @@ export class NotificationAnalyticsService {
       byDayOfWeek: {} as Record<string, number>
     };
 
-    const delivered = data.filter(d => d.event === 'delivered');
-    const viewed = data.filter(d => d.event === 'viewed');
-    const clicked = data.filter(d => d.event === 'clicked');
+    const events = data.map(item => {
+      const eventData = item.data as any;
+      return {
+        event: eventData?.event_type || 'delivered',
+        timestamp: new Date(item.created_at),
+        notificationType: eventData?.notification_type || 'general'
+      };
+    });
+
+    const delivered = events.filter(e => e.event === 'delivered');
+    const viewed = events.filter(e => e.event === 'viewed');
+    const clicked = events.filter(e => e.event === 'clicked');
 
     metrics.totalSent = delivered.length;
     metrics.totalViewed = viewed.length;
@@ -103,8 +117,8 @@ export class NotificationAnalyticsService {
     metrics.clickRate = metrics.totalViewed > 0 ? (metrics.totalClicked / metrics.totalViewed) * 100 : 0;
 
     // Calculate metrics by type
-    const typeGroups = data.reduce((acc, item) => {
-      const type = item.notifications?.type || 'unknown';
+    const typeGroups = events.reduce((acc, item) => {
+      const type = item.notificationType || 'unknown';
       if (!acc[type]) acc[type] = { sent: 0, viewed: 0, clicked: 0 };
       
       if (item.event === 'delivered') acc[type].sent++;
@@ -123,8 +137,8 @@ export class NotificationAnalyticsService {
     });
 
     // Calculate metrics by time of day and day of week
-    data.forEach(item => {
-      const date = new Date(item.timestamp);
+    events.forEach(item => {
+      const date = item.timestamp;
       const hour = date.getHours();
       const day = date.toLocaleDateString('en', { weekday: 'long' });
       

@@ -12,7 +12,6 @@ export interface PushNotificationPayload {
   body: string;
   icon?: string;
   badge?: string;
-  image?: string;
   data?: Record<string, any>;
   actions?: Array<{
     action: string;
@@ -89,7 +88,6 @@ export class MobilePushService {
         body: payload.body,
         icon: payload.icon || '/favicon.ico',
         badge: payload.badge,
-        image: payload.image,
         data: payload.data,
         requireInteraction: payload.requireInteraction,
         silent: payload.silent,

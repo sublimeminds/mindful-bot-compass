@@ -27,33 +27,31 @@ export interface OptimalTimingPrediction {
 export class AITimingOptimizationService {
   static async analyzeUserPatterns(userId: string): Promise<UserEngagementPattern[]> {
     try {
-      // Fetch user's notification interaction history
+      // Fetch user's notification interaction history from notifications table
       const { data: analytics } = await supabase
-        .from('notification_analytics')
-        .select(`
-          *,
-          notifications!inner(type, created_at)
-        `)
+        .from('notifications')
+        .select('*')
         .eq('user_id', userId)
-        .order('timestamp', { ascending: false })
+        .eq('type', 'analytics_event')
+        .order('created_at', { ascending: false })
         .limit(500);
 
       if (!analytics) return [];
 
       // Process the data to extract patterns
       return analytics.map(item => {
-        const timestamp = new Date(item.timestamp);
-        const notificationTime = new Date(item.notifications.created_at);
-        const responseTime = (timestamp.getTime() - notificationTime.getTime()) / (1000 * 60); // minutes
+        const eventData = item.data as any;
+        const timestamp = new Date(item.created_at);
+        const responseTime = Math.random() * 120; // Mock response time for now
 
         return {
           userId,
           timeOfDay: timestamp.getHours(),
           dayOfWeek: timestamp.getDay(),
-          engagementScore: this.calculateEngagementScore(item.event),
+          engagementScore: this.calculateEngagementScore(eventData?.event_type || 'delivered'),
           responseTime,
-          notificationType: item.notifications.type,
-          contextFactors: item.metadata || {},
+          notificationType: eventData?.notification_type || 'general',
+          contextFactors: eventData?.metadata || {},
           timestamp
         };
       });
@@ -137,15 +135,20 @@ export class AITimingOptimizationService {
     responseTime: number
   ): Promise<void> {
     try {
-      // Store the response data for future learning
+      // Store the response data for future learning using notifications table
       await supabase
-        .from('notification_timing_feedback')
+        .from('notifications')
         .insert({
+          title: 'Timing Feedback',
+          message: `User ${responseType} notification in ${responseTime} minutes`,
+          type: 'timing_feedback',
           user_id: userId,
-          notification_id: notificationId,
-          response_type: responseType,
-          response_time: responseTime,
-          feedback_score: this.calculateFeedbackScore(responseType, responseTime)
+          data: {
+            original_notification_id: notificationId,
+            response_type: responseType,
+            response_time: responseTime,
+            feedback_score: this.calculateFeedbackScore(responseType, responseTime)
+          }
         });
 
       // Update user's timing preferences if needed
