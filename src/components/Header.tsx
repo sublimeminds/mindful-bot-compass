@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -63,27 +64,32 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 sticky top-0 z-50">
+      <header className="bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 border-b border-border/20 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center flex-shrink-0">
               <button 
                 onClick={() => navigate("/")}
-                className="flex items-center space-x-2 hover:opacity-80 transition-opacity group"
+                className="flex items-center space-x-3 hover:opacity-90 transition-all duration-300 group"
               >
-                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-therapy-500 to-calm-500 rounded-xl shadow-lg group-hover:shadow-therapy-500/20 transition-all duration-300">
+                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-therapy-500 via-therapy-600 to-calm-500 rounded-xl shadow-lg group-hover:shadow-therapy-500/30 transition-all duration-300 group-hover:scale-105">
                   <Heart className="h-6 w-6 text-white" />
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-therapy-600 to-calm-500 bg-clip-text text-transparent">
-                  MindfulAI
-                </span>
+                <div className="flex flex-col">
+                  <span className="text-xl font-bold bg-gradient-to-r from-therapy-600 via-therapy-700 to-calm-600 bg-clip-text text-transparent">
+                    MindfulAI
+                  </span>
+                  <span className="text-xs text-muted-foreground font-medium -mt-1">
+                    Therapy Platform
+                  </span>
+                </div>
               </button>
             </div>
 
-            {/* Desktop Navigation - Show different nav based on auth state */}
+            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center justify-center flex-1 mx-8">
-              <div className="flex items-center space-x-1 bg-muted/50 rounded-full p-1">
+              <div className="flex items-center space-x-2 bg-muted/30 backdrop-blur-sm rounded-full p-1.5 border border-border/30">
                 {isAuthenticated ? (
                   <>
                     {/* Authenticated Navigation */}
@@ -96,14 +102,14 @@ const Header = () => {
                           variant={isActive ? "default" : "ghost"}
                           size="sm"
                           onClick={() => handleNavigation(item.path)}
-                          className={`flex items-center space-x-2 rounded-full transition-all duration-200 ${
+                          className={`flex items-center space-x-2 rounded-full transition-all duration-300 font-medium ${
                             isActive 
-                              ? "bg-gradient-to-r from-therapy-500 to-therapy-600 text-white shadow-md" 
-                              : "hover:bg-background hover:shadow-sm"
+                              ? "bg-gradient-to-r from-therapy-500 to-therapy-600 text-white shadow-lg shadow-therapy-500/25 scale-105" 
+                              : "hover:bg-background/80 hover:shadow-sm hover:scale-105 text-foreground/80 hover:text-foreground"
                           }`}
                         >
                           <Icon className="h-4 w-4" />
-                          <span className="font-medium">{item.label}</span>
+                          <span>{item.label}</span>
                         </Button>
                       );
                     })}
@@ -114,14 +120,14 @@ const Header = () => {
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex items-center space-x-2 rounded-full hover:bg-background hover:shadow-sm transition-all duration-200"
+                          className="flex items-center space-x-2 rounded-full hover:bg-background/80 hover:shadow-sm hover:scale-105 transition-all duration-300 font-medium text-foreground/80 hover:text-foreground"
                         >
                           <Brain className="h-4 w-4" />
-                          <span className="font-medium">Tools</span>
+                          <span>Tools</span>
                           <ChevronDown className="h-3 w-3" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="center" className="w-52 bg-background border shadow-xl rounded-xl">
+                      <DropdownMenuContent align="center" className="w-52 bg-background/95 backdrop-blur-xl border border-border/30 shadow-xl rounded-xl">
                         <DropdownMenuLabel className="font-semibold text-therapy-700">Therapy Tools</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         {toolsMenuItems.map((item) => {
@@ -130,7 +136,7 @@ const Header = () => {
                             <DropdownMenuItem
                               key={item.path}
                               onClick={() => handleNavigation(item.path)}
-                              className="cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1"
+                              className="cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors"
                             >
                               <Icon className="h-4 w-4 mr-3 text-therapy-500" />
                               <span className="font-medium">{item.label}</span>
@@ -146,14 +152,14 @@ const Header = () => {
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex items-center space-x-2 rounded-full hover:bg-background hover:shadow-sm transition-all duration-200"
+                          className="flex items-center space-x-2 rounded-full hover:bg-background/80 hover:shadow-sm hover:scale-105 transition-all duration-300 font-medium text-foreground/80 hover:text-foreground"
                         >
                           <BookOpen className="h-4 w-4" />
-                          <span className="font-medium">Resources</span>
+                          <span>Resources</span>
                           <ChevronDown className="h-3 w-3" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="center" className="w-56 bg-background border shadow-xl rounded-xl">
+                      <DropdownMenuContent align="center" className="w-56 bg-background/95 backdrop-blur-xl border border-border/30 shadow-xl rounded-xl">
                         <DropdownMenuLabel className="font-semibold text-therapy-700">Support & Learning</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         {resourcesMenuItems.map((item) => {
@@ -162,7 +168,7 @@ const Header = () => {
                             <DropdownMenuItem
                               key={item.label}
                               onClick={() => item.path !== "#" && handleNavigation(item.path)}
-                              className="cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1"
+                              className="cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors"
                             >
                               <Icon className="h-4 w-4 mr-3 text-therapy-500" />
                               <span className="font-medium">{item.label}</span>
@@ -189,10 +195,10 @@ const Header = () => {
                               handleNavigation(item.path);
                             }
                           }}
-                          className="flex items-center space-x-2 rounded-full hover:bg-background hover:shadow-sm transition-all duration-200"
+                          className="flex items-center space-x-2 rounded-full hover:bg-background/80 hover:shadow-sm hover:scale-105 transition-all duration-300 font-medium text-foreground/80 hover:text-foreground"
                         >
                           <Icon className="h-4 w-4" />
-                          <span className="font-medium">{item.label}</span>
+                          <span>{item.label}</span>
                         </Button>
                       );
                     })}
@@ -201,7 +207,7 @@ const Header = () => {
               </div>
             </nav>
 
-            {/* Right side - User menu or Sign In */}
+            {/* Right side */}
             <div className="flex items-center space-x-3 flex-shrink-0">
               {isAuthenticated ? (
                 <>
@@ -209,26 +215,26 @@ const Header = () => {
                   
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="flex items-center space-x-2 hover:bg-muted rounded-full">
-                        <Avatar className="h-7 w-7">
-                          <AvatarFallback className="text-xs bg-gradient-to-br from-therapy-500 to-calm-500 text-white">
+                      <Button variant="ghost" size="sm" className="flex items-center space-x-2 hover:bg-muted/50 rounded-full transition-all duration-300 hover:scale-105">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="text-sm bg-gradient-to-br from-therapy-500 to-calm-500 text-white font-semibold">
                             {user?.email?.[0]?.toUpperCase() || "U"}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="hidden sm:inline max-w-32 truncate font-medium">{user?.email}</span>
+                        <span className="hidden sm:inline max-w-32 truncate font-medium text-foreground/80">{user?.email}</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56 bg-background border shadow-xl rounded-xl">
-                      <DropdownMenuItem onClick={() => navigate("/profile")} className="hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1">
+                    <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-xl border border-border/30 shadow-xl rounded-xl">
+                      <DropdownMenuItem onClick={() => navigate("/profile")} className="hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors">
                         <User className="h-4 w-4 mr-3 text-therapy-500" />
                         <span className="font-medium">Profile</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate("/notification-settings")} className="hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1">
+                      <DropdownMenuItem onClick={() => navigate("/notification-settings")} className="hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors">
                         <Settings className="h-4 w-4 mr-3 text-therapy-500" />
                         <span className="font-medium">Notification Settings</span>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={logout} className="text-red-600 hover:bg-red-50 focus:bg-red-50 rounded-lg mx-1">
+                      <DropdownMenuItem onClick={logout} className="text-red-600 hover:bg-red-50 focus:bg-red-50 rounded-lg mx-1 transition-colors">
                         <LogOut className="h-4 w-4 mr-3" />
                         <span className="font-medium">Sign Out</span>
                       </DropdownMenuItem>
@@ -239,8 +245,9 @@ const Header = () => {
                 <Button 
                   onClick={() => navigate("/auth")} 
                   size="sm"
-                  className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-medium rounded-full px-6 shadow-lg hover:shadow-therapy-500/25 transition-all duration-300"
+                  className="bg-gradient-to-r from-therapy-500 via-therapy-600 to-therapy-700 hover:from-therapy-600 hover:via-therapy-700 hover:to-therapy-800 text-white font-semibold rounded-full px-6 py-2 shadow-lg hover:shadow-therapy-500/30 transition-all duration-300 hover:scale-105"
                 >
+                  <User className="h-4 w-4 mr-2" />
                   Sign In
                 </Button>
               )}
@@ -248,11 +255,11 @@ const Header = () => {
               {/* Mobile menu trigger */}
               <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
                 <SheetTrigger asChild className="lg:hidden">
-                  <Button variant="ghost" size="sm" className="rounded-full">
+                  <Button variant="ghost" size="sm" className="rounded-full hover:bg-muted/50 transition-all duration-300">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-72 bg-background">
+                <SheetContent side="right" className="w-72 bg-background/95 backdrop-blur-xl border-l border-border/30">
                   <div className="flex flex-col space-y-6 mt-6">
                     {isAuthenticated ? (
                       <>
