@@ -14,9 +14,19 @@ export interface SessionDetails {
   duration?: number;
 }
 
-export interface DetailedSession extends SessionDetails {
+export interface DetailedSession {
+  id: string;
+  userId: string;
+  startTime: Date;
+  endTime?: Date;
+  moodBefore?: number;
+  moodAfter?: number;
+  summary?: string;
+  insights?: string[];
+  techniques?: string[];
+  duration?: number;
   messages?: SessionMessage[];
-  insights?: SessionInsight[];
+  detailedInsights?: SessionInsight[];
   analytics?: SessionAnalytics;
 }
 
@@ -81,7 +91,7 @@ export class SessionService {
           timestamp: new Date(msg.timestamp),
           emotion: msg.emotion
         })) || [],
-        insights: data.session_insights?.map((insight: any) => ({
+        detailedInsights: data.session_insights?.map((insight: any) => ({
           id: insight.id,
           title: insight.title,
           description: insight.description,
@@ -94,7 +104,9 @@ export class SessionService {
           effectivenessScore: data.session_analytics[0].effectiveness_score,
           sessionRating: data.session_analytics[0].session_rating,
           keyBreakthrough: data.session_analytics[0].key_breakthrough,
-          techniquesEffectiveness: data.session_analytics[0].techniques_effectiveness || {}
+          techniquesEffectiveness: typeof data.session_analytics[0].techniques_effectiveness === 'object' 
+            ? data.session_analytics[0].techniques_effectiveness as Record<string, number>
+            : {}
         } : undefined
       };
     } catch (error) {

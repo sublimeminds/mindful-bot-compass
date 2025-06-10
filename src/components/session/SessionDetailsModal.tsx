@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -190,7 +191,7 @@ const SessionDetailsModal = ({ session, isOpen, onClose }: SessionDetailsModalPr
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    {session.keyInsights.map((insight, index) => (
+                    {(session.insights || []).map((insight: string, index: number) => (
                       <div key={index} className="p-3 bg-muted rounded-lg">
                         <p className="text-sm">{insight}</p>
                       </div>
@@ -253,9 +254,9 @@ const SessionDetailsModal = ({ session, isOpen, onClose }: SessionDetailsModalPr
             </TabsContent>
 
             <TabsContent value="insights" className="space-y-4">
-              {detailedSession?.insights && detailedSession.insights.length > 0 ? (
+              {detailedSession?.detailedInsights && detailedSession.detailedInsights.length > 0 ? (
                 <div className="space-y-4">
-                  {detailedSession.insights.map((insight) => (
+                  {detailedSession.detailedInsights.map((insight) => (
                     <Card key={insight.id}>
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
