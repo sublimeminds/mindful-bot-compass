@@ -17,6 +17,7 @@ import Goals from './pages/Goals';
 import Notifications from './pages/NotificationSettings';
 import Settings from './pages/Profile';
 import Onboarding from './pages/Onboarding';
+import Auth from './pages/Auth';
 import ProtectedRoute from './components/ProtectedRoute';
 import TherapistMatching from "@/pages/TherapistMatching";
 import { TherapistProvider } from './contexts/TherapistContext';
@@ -32,6 +33,7 @@ function App() {
             <SessionProvider>
               <NotificationToastHandler />
               <Routes>
+                <Route path="/auth" element={<Auth />} />
                 <Route path="/" element={
                   <ProtectedRoute>
                     <Index />
@@ -67,13 +69,13 @@ function App() {
                     <Onboarding />
                   </ProtectedRoute>
                 } />
-                <Route path="/login" element={<Navigate to="/" />} />
-                <Route path="/register" element={<Navigate to="/" />} />
                 <Route path="/therapist-matching" element={
                   <ProtectedRoute>
                     <TherapistMatching />
                   </ProtectedRoute>
                 } />
+                <Route path="/login" element={<Navigate to="/auth" replace />} />
+                <Route path="/register" element={<Navigate to="/auth" replace />} />
               </Routes>
             </SessionProvider>
           </TherapistProvider>
