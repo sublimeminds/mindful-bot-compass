@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import { SessionProvider } from './contexts/SessionContext';
 import NotificationToastHandler from './components/NotificationToastHandler';
+import { Toaster } from './components/ui/toaster';
 import Index from './pages/Index';
 import Chat from './pages/Chat';
 import MoodTracker from './pages/MoodTracking';
@@ -73,6 +74,7 @@ function App() {
                 <Route path="/login" element={<Navigate to="/auth" replace />} />
                 <Route path="/register" element={<Navigate to="/auth" replace />} />
               </Routes>
+              <Toaster />
             </SessionProvider>
           </TherapistProvider>
         </AuthProvider>
