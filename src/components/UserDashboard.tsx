@@ -118,6 +118,15 @@ const UserDashboard = () => {
               <Button 
                 variant="outline" 
                 size="sm"
+                onClick={() => navigate('/live-session')}
+                className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white border-none"
+              >
+                <Activity className="h-4 w-4 mr-2" />
+                Live Session
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
                 onClick={() => navigate('/profile')}
               >
                 <Settings className="h-4 w-4 mr-2" />

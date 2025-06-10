@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -18,37 +17,101 @@ import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import NotificationAnalytics from "./pages/NotificationAnalytics";
 import NotificationSettings from "./pages/NotificationSettings";
+import IntelligentNotificationProvider from "./components/IntelligentNotificationProvider";
+import NotificationToastHandler from "./components/NotificationToastHandler";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
+    <Router>
+      <QueryClient client={queryClient}>
         <AuthProvider>
           <SessionProvider>
             <TherapistProvider>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/onboarding" element={<Onboarding />} />
-                <Route path="/chat" element={<Chat />} />
-                <Route path="/analytics" element={<Analytics />} />
-                <Route path="/goals" element={<Goals />} />
-                <Route path="/mood" element={<MoodTracking />} />
-                <Route path="/techniques" element={<Techniques />} />
-                <Route path="/session-history" element={<SessionHistory />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/notifications" element={<NotificationAnalytics />} />
-                <Route path="/notification-settings" element={<NotificationSettings />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Toaster />
+              <IntelligentNotificationProvider>
+                <NotificationToastHandler />
+                <div className="min-h-screen bg-background">
+                  <Header />
+                  <main className="container mx-auto px-4 py-8">
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/auth" element={<Auth />} />
+                      <Route path="/dashboard" element={
+                        <ProtectedRoute>
+                          <UserDashboard />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/onboarding" element={
+                        <ProtectedRoute>
+                          <Onboarding />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/chat" element={
+                        <ProtectedRoute>
+                          <Chat />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/live-session" element={
+                        <ProtectedRoute>
+                          <LiveSession />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/mood" element={
+                        <ProtectedRoute>
+                          <MoodTracking />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/techniques" element={
+                        <ProtectedRoute>
+                          <Techniques />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/goals" element={
+                        <ProtectedRoute>
+                          <Goals />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/profile" element={
+                        <ProtectedRoute>
+                          <Profile />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/analytics" element={
+                        <ProtectedRoute>
+                          <Analytics />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/session-history" element={
+                        <ProtectedRoute>
+                          <SessionHistory />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/notification-settings" element={
+                        <ProtectedRoute>
+                          <NotificationSettings />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/notification-analytics" element={
+                        <ProtectedRoute>
+                          <NotificationAnalytics />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </main>
+                  <Footer />
+                  <Toaster />
+                </div>
+              </IntelligentNotificationProvider>
             </TherapistProvider>
           </SessionProvider>
         </AuthProvider>
-      </Router>
-    </QueryClientProvider>
+      </QueryClient>
+    </Router>
   );
 }
 
