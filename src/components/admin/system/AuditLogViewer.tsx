@@ -53,7 +53,7 @@ const AuditLogViewer = () => {
 
       if (error) {
         console.error('Error fetching audit logs:', error);
-        // Use mock data if no logs exist
+        // Use mock data if no logs exist or there's an error
         setLogs(generateMockLogs());
       } else {
         // Transform the data to match our interface
