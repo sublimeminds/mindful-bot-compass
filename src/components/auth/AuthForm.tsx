@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 const AuthForm = () => {
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
     email: '',
@@ -54,6 +56,9 @@ const AuthForm = () => {
           title: "Welcome back!",
           description: "You've successfully signed in.",
         });
+        
+        // Redirect to main page after successful sign in
+        navigate('/');
       }
     } catch (error: any) {
       console.error('Sign in catch error:', error);
@@ -467,3 +472,5 @@ const AuthForm = () => {
 };
 
 export default AuthForm;
+
+}
