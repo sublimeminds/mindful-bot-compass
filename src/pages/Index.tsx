@@ -9,6 +9,8 @@ import UserDashboard from "@/components/UserDashboard";
 import NotificationDebugPanel from "@/components/NotificationDebugPanel";
 import NotificationToastHandler from "@/components/NotificationToastHandler";
 import IntelligentNotificationProvider from "@/components/IntelligentNotificationProvider";
+import IntelligentAssistant from "@/components/ai/IntelligentAssistant";
+import SmartOnboardingGuide from "@/components/ai/SmartOnboardingGuide";
 
 const Index = () => {
   const { isAuthenticated, user } = useAuth();
@@ -17,7 +19,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       <Header />
       
-      <main className="pt-12"> {/* Add padding-top to account for progress bar */}
+      <main className="pt-12">
         {isAuthenticated && user ? (
           <IntelligentNotificationProvider>
             <NotificationToastHandler />
@@ -27,7 +29,9 @@ const Index = () => {
                 <NotificationDebugPanel />
               )}
               
+              <SmartOnboardingGuide />
               <UserDashboard />
+              <IntelligentAssistant />
             </div>
           </IntelligentNotificationProvider>
         ) : (
