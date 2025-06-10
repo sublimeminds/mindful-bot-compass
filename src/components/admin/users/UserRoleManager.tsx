@@ -13,19 +13,21 @@ interface UserRoleManagerProps {
   onClose: () => void;
 }
 
+type AppRole = 'super_admin' | 'content_admin' | 'support_admin' | 'analytics_admin';
+
 const UserRoleManager = ({ user, isOpen, onClose }: UserRoleManagerProps) => {
   const [currentRoles, setCurrentRoles] = useState<string[]>(user.roles || []);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const availableRoles = [
-    { value: 'super_admin', label: 'Super Admin', color: 'bg-red-500' },
-    { value: 'content_admin', label: 'Content Admin', color: 'bg-blue-500' },
-    { value: 'support_admin', label: 'Support Admin', color: 'bg-green-500' },
-    { value: 'analytics_admin', label: 'Analytics Admin', color: 'bg-purple-500' },
+    { value: 'super_admin' as AppRole, label: 'Super Admin', color: 'bg-red-500' },
+    { value: 'content_admin' as AppRole, label: 'Content Admin', color: 'bg-blue-500' },
+    { value: 'support_admin' as AppRole, label: 'Support Admin', color: 'bg-green-500' },
+    { value: 'analytics_admin' as AppRole, label: 'Analytics Admin', color: 'bg-purple-500' },
   ];
 
-  const addRole = async (role: string) => {
+  const addRole = async (role: AppRole) => {
     if (currentRoles.includes(role)) return;
 
     setLoading(true);
@@ -72,7 +74,7 @@ const UserRoleManager = ({ user, isOpen, onClose }: UserRoleManagerProps) => {
         .from('user_roles')
         .update({ is_active: false })
         .eq('user_id', user.id)
-        .eq('role', role);
+        .eq('role', role as AppRole);
 
       if (error) {
         toast({
