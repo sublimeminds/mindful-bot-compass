@@ -51,7 +51,8 @@ const NotificationCenter = () => {
       isSubscribedRef.current = false;
     }
 
-    const channelName = `notification-center-${user.id}-${Date.now()}`;
+    // Create a unique channel name that differs from toast handler
+    const channelName = `center-notifications-${user.id}-${Date.now()}`;
     console.log('Creating notification center channel:', channelName);
 
     const channel = supabase
@@ -65,6 +66,7 @@ const NotificationCenter = () => {
           filter: `user_id=eq.${user.id}`
         },
         () => {
+          // Refresh the notifications list when new ones arrive
           fetchNotifications();
         }
       );

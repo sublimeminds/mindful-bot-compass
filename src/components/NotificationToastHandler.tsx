@@ -15,16 +15,16 @@ const NotificationToastHandler = () => {
 
     // Clean up any existing channel before creating a new one
     if (channelRef.current) {
-      console.log('Cleaning up existing channel');
+      console.log('Cleaning up existing toast channel');
       supabase.removeChannel(channelRef.current);
       channelRef.current = null;
       isSubscribedRef.current = false;
     }
 
-    // Create a unique channel name to avoid conflicts
-    const channelName = `notification-toasts-${user.id}-${Date.now()}`;
+    // Create a unique channel name to avoid conflicts with NotificationCenter
+    const channelName = `toast-notifications-${user.id}-${Date.now()}`;
     
-    console.log('Creating new notification channel:', channelName);
+    console.log('Creating new toast notification channel:', channelName);
     
     // Create and configure the channel
     const channel = supabase
@@ -50,16 +50,16 @@ const NotificationToastHandler = () => {
           }
           
           // Log all notifications for debugging
-          console.log('New notification received:', notification);
+          console.log('New notification received for toast:', notification);
         }
       );
 
     // Subscribe to the channel
     channel.subscribe((status) => {
-      console.log('Channel subscription status:', status);
+      console.log('Toast channel subscription status:', status);
       if (status === 'SUBSCRIBED') {
         isSubscribedRef.current = true;
-        console.log('Successfully subscribed to notifications channel');
+        console.log('Successfully subscribed to toast notifications channel');
       }
     });
 
@@ -68,7 +68,7 @@ const NotificationToastHandler = () => {
 
     // Cleanup function
     return () => {
-      console.log('Cleaning up notification channel:', channelName);
+      console.log('Cleaning up toast notification channel:', channelName);
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
         channelRef.current = null;
@@ -81,7 +81,7 @@ const NotificationToastHandler = () => {
   useEffect(() => {
     return () => {
       if (channelRef.current) {
-        console.log('Component unmounting, cleaning up channel');
+        console.log('Toast component unmounting, cleaning up channel');
         supabase.removeChannel(channelRef.current);
         channelRef.current = null;
         isSubscribedRef.current = false;
