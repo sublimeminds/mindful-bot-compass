@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAdmin } from '@/contexts/AdminContext';
@@ -32,6 +33,7 @@ interface MenuItem {
 const AdminSidebar = () => {
   const location = useLocation();
   const { hasPermission } = useAdmin();
+  const [expandedItems, setExpandedItems] = useState<string[]>(['System']);
 
   const menuItems = [
     {
@@ -73,6 +75,14 @@ const AdminSidebar = () => {
     }
   ];
 
+  const toggleExpanded = (itemLabel: string) => {
+    setExpandedItems(prev => 
+      prev.includes(itemLabel)
+        ? prev.filter(item => item !== itemLabel)
+        : [...prev, itemLabel]
+    );
+  };
+
   const renderMenuItem = (item: MenuItem, isSubmenu = false) => {
     if (item.permission && !hasPermission(item.permission.name, item.permission.resource)) {
       return null;
@@ -89,7 +99,7 @@ const AdminSidebar = () => {
           className={cn(
             'flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700',
             isActive && 'bg-gray-700 font-medium',
-            isSubmenu ? 'text-sm' : 'text-base'
+            isSubmenu ? 'text-sm pl-8' : 'text-base'
           )}
         >
           <item.icon className="h-4 w-4" />
@@ -101,41 +111,55 @@ const AdminSidebar = () => {
 
   const renderSubmenu = (item: MenuItem) => {
     if (!item.submenu || item.submenu.length === 0) {
+      return renderMenuItem(item);
+    }
+
+    if (item.permission && !hasPermission(item.permission.name, item.permission.resource)) {
       return null;
     }
 
-    const isOpen = location.pathname.startsWith(item.href) && !item.exact;
+    const isExpanded = expandedItems.includes(item.label);
+    const hasActiveSubmenu = item.submenu.some(subItem => 
+      location.pathname === subItem.href
+    );
+    const isParentActive = location.pathname === item.href;
 
     return (
       <li key={item.label} className="space-y-1">
-        <div className="flex items-center justify-between p-2 rounded-md hover:bg-gray-700 cursor-pointer">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-between">
+          <Link
+            to={item.href}
+            className={cn(
+              'flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 flex-1',
+              (isParentActive || hasActiveSubmenu) && 'bg-gray-700 font-medium'
+            )}
+          >
             <item.icon className="h-4 w-4" />
             <span>{item.label}</span>
-          </div>
-          {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </Link>
+          <button
+            onClick={() => toggleExpanded(item.label)}
+            className="p-2 hover:bg-gray-700 rounded-md"
+          >
+            {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </button>
         </div>
-        {isOpen && (
-          <ul className="pl-4">
-            {item.submenu.map(subItem => {
-              if (item.permission && !hasPermission(item.permission.name, item.permission.resource)) {
-                return null;
-              }
-              return (
-                <li key={subItem.label}>
-                  <Link
-                    to={subItem.href}
-                    className={cn(
-                      'flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 text-sm',
-                      location.pathname === subItem.href && 'bg-gray-700 font-medium'
-                    )}
-                  >
-                    <subItem.icon className="h-3 w-3" />
-                    <span>{subItem.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
+        {isExpanded && (
+          <ul className="space-y-1">
+            {item.submenu.map(subItem => (
+              <li key={subItem.label}>
+                <Link
+                  to={subItem.href}
+                  className={cn(
+                    'flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 text-sm pl-8',
+                    location.pathname === subItem.href && 'bg-gray-700 font-medium'
+                  )}
+                >
+                  <subItem.icon className="h-3 w-3" />
+                  <span>{subItem.label}</span>
+                </Link>
+              </li>
+            ))}
           </ul>
         )}
       </li>
@@ -145,7 +169,7 @@ const AdminSidebar = () => {
   return (
     <div className="w-64 bg-gray-800 h-screen py-4 px-2">
       <nav>
-        <ul>
+        <ul className="space-y-1">
           {menuItems.map(item => {
             if (item.submenu) {
               return renderSubmenu(item);

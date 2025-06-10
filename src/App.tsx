@@ -26,6 +26,7 @@ import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminOverview from './components/admin/dashboard/AdminOverview';
 import AdminNotificationDebugPanel from './components/admin/system/AdminNotificationDebugPanel';
+import AdminSystemManagement from './components/admin/system/AdminSystemManagement';
 import AdminUserManagement from './components/admin/users/AdminUserManagement';
 import AdminContentManagement from './components/admin/content/AdminContentManagement';
 import AdminAnalyticsDashboard from './components/admin/analytics/AdminAnalyticsDashboard';
@@ -101,6 +102,11 @@ function App() {
                     <Route path="analytics" element={
                       <AdminProtectedRoute requiredPermission={{ name: 'view_analytics', resource: 'analytics' }}>
                         <AdminAnalyticsDashboard />
+                      </AdminProtectedRoute>
+                    } />
+                    <Route path="system" element={
+                      <AdminProtectedRoute requiredPermission={{ name: 'manage_system', resource: 'system' }}>
+                        <AdminSystemManagement />
                       </AdminProtectedRoute>
                     } />
                     <Route path="system/debug" element={
