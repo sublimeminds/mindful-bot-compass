@@ -27,6 +27,7 @@ import AdminLayout from './components/admin/AdminLayout';
 import AdminOverview from './components/admin/dashboard/AdminOverview';
 import AdminNotificationDebugPanel from './components/admin/system/AdminNotificationDebugPanel';
 import AdminUserManagement from './components/admin/users/AdminUserManagement';
+import AdminContentManagement from './components/admin/content/AdminContentManagement';
 import TherapistMatching from "@/pages/TherapistMatching";
 
 function App() {
@@ -89,6 +90,11 @@ function App() {
                     <Route path="users" element={
                       <AdminProtectedRoute requiredPermission={{ name: 'view_users', resource: 'users' }}>
                         <AdminUserManagement />
+                      </AdminProtectedRoute>
+                    } />
+                    <Route path="content" element={
+                      <AdminProtectedRoute requiredPermission={{ name: 'manage_content', resource: 'content' }}>
+                        <AdminContentManagement />
                       </AdminProtectedRoute>
                     } />
                     <Route path="system/debug" element={
