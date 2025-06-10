@@ -31,7 +31,7 @@ export const createLazyComponent = <T extends ComponentType<any>>(
 };
 
 // Retry logic for failed imports
-const retryImport = async <T>(
+const retryImport = async <T,>(
   importFn: () => Promise<T>,
   retries: number,
   delay: number
