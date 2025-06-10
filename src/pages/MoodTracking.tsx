@@ -20,33 +20,55 @@ interface MoodEntry {
   sleep?: number;
 }
 
-// Mock functions to replace missing service imports
-const generateMoodInsights = (entries: MoodEntry[]) => {
-  return "Your mood has been stable over the past week with slight improvements on weekends.";
-};
-
-const calculateMoodTrends = (entries: MoodEntry[]) => {
-  return { trend: 'improving', percentage: 15 };
-};
-
-const analyzeMoodPatterns = (entries: MoodEntry[]) => {
-  return [
-    { pattern: 'Weekend boost', description: 'Mood tends to improve on weekends' },
-    { pattern: 'Morning clarity', description: 'Better mood in morning hours' }
-  ];
-};
-
 const MoodTracking = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Mock mood entries for demonstration
-  const mockMoodEntries: MoodEntry[] = [
-    { id: '1', mood: 7, date: '2024-01-15', notes: 'Feeling good today', energy: 8, stress: 3, sleep: 7 },
-    { id: '2', mood: 5, date: '2024-01-14', notes: 'Neutral day', energy: 6, stress: 5, sleep: 6 },
-    { id: '3', mood: 8, date: '2024-01-13', notes: 'Great mood!', energy: 9, stress: 2, sleep: 8 },
+  // Mock data for MoodInsightsDashboard
+  const mockMoodData = [
+    { date: '2024-01-01', overall: 7, anxiety: 3, energy: 8, stress: 4 },
+    { date: '2024-01-02', overall: 6, anxiety: 4, energy: 6, stress: 5 },
+    { date: '2024-01-03', overall: 8, anxiety: 2, energy: 9, stress: 3 },
+    { date: '2024-01-04', overall: 5, anxiety: 6, energy: 5, stress: 7 },
+    { date: '2024-01-05', overall: 7, anxiety: 3, energy: 7, stress: 4 },
+    { date: '2024-01-06', overall: 9, anxiety: 1, energy: 9, stress: 2 },
+    { date: '2024-01-07', overall: 8, anxiety: 2, energy: 8, stress: 3 },
   ];
+
+  const mockInsights = [
+    {
+      type: 'positive' as const,
+      title: 'Weekend Boost',
+      description: 'Your mood consistently improves on weekends, suggesting good work-life balance.',
+      confidence: 0.85
+    },
+    {
+      type: 'info' as const,
+      title: 'Sleep Pattern Connection',
+      description: 'Better sleep quality correlates with higher energy levels the next day.',
+      confidence: 0.78
+    },
+    {
+      type: 'warning' as const,
+      title: 'Stress Spike Detected',
+      description: 'Stress levels were elevated on Tuesday. Consider identifying triggers.',
+      confidence: 0.72
+    }
+  ];
+
+  const mockPatterns = {
+    bestTimeOfDay: 'Morning',
+    worstTimeOfDay: 'Evening',
+    averageMood: 7.2,
+    moodVariability: 1.8,
+    streak: 5
+  };
+
+  const handleMoodSubmit = (moodData: any) => {
+    console.log('Mood submitted:', moodData);
+    // Here you would typically save to database
+  };
 
   if (!user) {
     return (
@@ -98,7 +120,11 @@ const MoodTracking = () => {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            <MoodInsightsDashboard />
+            <MoodInsightsDashboard 
+              moodData={mockMoodData}
+              insights={mockInsights}
+              patterns={mockPatterns}
+            />
           </TabsContent>
 
           <TabsContent value="log" className="space-y-6">
@@ -107,7 +133,7 @@ const MoodTracking = () => {
                 <CardTitle>Log Your Current Mood</CardTitle>
               </CardHeader>
               <CardContent>
-                <DetailedMoodTracker />
+                <DetailedMoodTracker onMoodSubmit={handleMoodSubmit} />
               </CardContent>
             </Card>
           </TabsContent>
