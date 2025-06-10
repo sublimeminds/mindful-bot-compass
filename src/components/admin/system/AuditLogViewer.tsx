@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -57,7 +56,13 @@ const AuditLogViewer = () => {
         // Use mock data if no logs exist
         setLogs(generateMockLogs());
       } else {
-        setLogs(data || generateMockLogs());
+        // Transform the data to match our interface
+        const transformedLogs = (data || []).map(log => ({
+          ...log,
+          ip_address: log.ip_address ? String(log.ip_address) : undefined,
+          user_agent: log.user_agent || undefined
+        }));
+        setLogs(transformedLogs.length > 0 ? transformedLogs : generateMockLogs());
       }
     } catch (error) {
       console.error('Error fetching audit logs:', error);
