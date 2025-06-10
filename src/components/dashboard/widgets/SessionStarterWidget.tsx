@@ -12,7 +12,7 @@ const SessionStarterWidget = () => {
   const navigate = useNavigate();
 
   const handleStartSession = () => {
-    navigate('/chat');
+    navigate('/therapy');
   };
 
   return (
@@ -63,7 +63,7 @@ const SessionStarterWidget = () => {
           </Button>
           <Button 
             variant="outline" 
-            onClick={() => navigate('/chat')}
+            onClick={() => navigate('/therapy')}
             className="px-6 border-therapy-200 hover:bg-therapy-50"
           >
             Quick Check-in

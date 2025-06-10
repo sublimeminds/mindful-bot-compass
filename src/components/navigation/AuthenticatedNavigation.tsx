@@ -12,7 +12,7 @@ import {
 
 const AuthenticatedNavigation = () => {
   const navItems = [
-    { to: '/chat', icon: MessageCircle, label: 'Chat' },
+    { to: '/therapy', icon: MessageCircle, label: 'Therapy' },
     { to: '/analytics', icon: TrendingUp, label: 'Analytics' },
     { to: '/goals', icon: Target, label: 'Goals' },
     { to: '/mood-tracking', icon: Heart, label: 'Mood' },

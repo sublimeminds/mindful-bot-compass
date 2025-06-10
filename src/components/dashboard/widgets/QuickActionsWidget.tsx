@@ -30,7 +30,7 @@ const QuickActionsWidget = () => {
   const secondaryActions = [
     { title: "Sessions", icon: Calendar, onClick: () => navigate('/session-history') },
     { title: "Techniques", icon: Brain, onClick: () => navigate('/techniques') },
-    { title: "Settings", icon: Settings, onClick: () => navigate('/settings') }
+    { title: "Settings", icon: Settings, onClick: () => navigate('/profile') }
   ];
 
   // Add admin action if user is admin

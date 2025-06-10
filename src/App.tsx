@@ -7,6 +7,7 @@ import { Toaster } from 'sonner';
 import Index from './pages/Index';
 import Auth from './pages/Auth';
 import Chat from './pages/Chat';
+import TherapyChat from './pages/TherapyChat';
 import Onboarding from './pages/Onboarding';
 import Goals from './pages/Goals';
 import MoodTracking from './pages/MoodTracking';
@@ -26,7 +27,7 @@ import SessionAnalytics from "./pages/SessionAnalytics";
 import { AuthProvider } from './contexts/AuthContext';
 import { AdminProvider } from './contexts/AdminContext';
 import { SessionProvider } from './contexts/SessionContext';
-import { TherapistProvider } from './contexts/TherapistContext';
+import { TherapistProvider } from './contexts/TherapistProvider';
 
 function App() {
   const queryClient = new QueryClient({
@@ -52,6 +53,7 @@ function App() {
                         <Route path="/" element={<Index />} />
                         <Route path="/auth" element={<Auth />} />
                         <Route path="/chat" element={<Chat />} />
+                        <Route path="/therapy" element={<TherapyChat />} />
                         <Route path="/onboarding" element={<Onboarding />} />
                         <Route path="/goals" element={<Goals />} />
                         <Route path="/mood-tracking" element={<MoodTracking />} />

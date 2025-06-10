@@ -27,7 +27,7 @@ const DashboardNavigation = () => {
     {
       label: 'Start Session',
       icon: MessageSquare,
-      path: '/chat',
+      path: '/therapy',
       description: 'Begin therapy session',
       highlight: true
     },
