@@ -26,6 +26,7 @@ import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminOverview from './components/admin/dashboard/AdminOverview';
 import AdminNotificationDebugPanel from './components/admin/system/AdminNotificationDebugPanel';
+import AdminUserManagement from './components/admin/users/AdminUserManagement';
 import TherapistMatching from "@/pages/TherapistMatching";
 
 function App() {
@@ -85,6 +86,11 @@ function App() {
                     </AdminProtectedRoute>
                   }>
                     <Route index element={<AdminOverview />} />
+                    <Route path="users" element={
+                      <AdminProtectedRoute requiredPermission={{ name: 'view_users', resource: 'users' }}>
+                        <AdminUserManagement />
+                      </AdminProtectedRoute>
+                    } />
                     <Route path="system/debug" element={
                       <AdminProtectedRoute requiredPermission={{ name: 'manage_system', resource: 'system' }}>
                         <AdminNotificationDebugPanel />
