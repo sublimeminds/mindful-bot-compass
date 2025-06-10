@@ -45,6 +45,75 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_activity_log: {
+        Row: {
+          action: string
+          admin_user_id: string
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          admin_user_id: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          admin_user_id?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      admin_permissions: {
+        Row: {
+          can_delete: boolean | null
+          can_read: boolean | null
+          can_write: boolean | null
+          created_at: string
+          id: string
+          permission_name: string
+          resource_type: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          can_delete?: boolean | null
+          can_read?: boolean | null
+          can_write?: boolean | null
+          created_at?: string
+          id?: string
+          permission_name: string
+          resource_type: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          can_delete?: boolean | null
+          can_read?: boolean | null
+          can_write?: boolean | null
+          created_at?: string
+          id?: string
+          permission_name?: string
+          resource_type?: string
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
       goal_milestones: {
         Row: {
           completed_at: string | null
@@ -737,15 +806,63 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          granted_at: string
+          granted_by: string | null
+          id: string
+          is_active: boolean
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          is_active?: boolean
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          is_active?: boolean
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_roles: {
+        Args: { _user_id: string }
+        Returns: {
+          role: Database["public"]["Enums"]["app_role"]
+        }[]
+      }
+      has_role: {
+        Args: {
+          _user_id: string
+          _role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
+      is_admin: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role:
+        | "super_admin"
+        | "content_admin"
+        | "support_admin"
+        | "analytics_admin"
+        | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -860,6 +977,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: [
+        "super_admin",
+        "content_admin",
+        "support_admin",
+        "analytics_admin",
+        "user",
+      ],
+    },
   },
 } as const

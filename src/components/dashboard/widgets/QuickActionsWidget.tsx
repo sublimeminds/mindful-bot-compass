@@ -2,11 +2,13 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, Target, BarChart3, Settings, Brain, Calendar } from 'lucide-react';
+import { MessageCircle, Target, BarChart3, Settings, Brain, Calendar, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAdmin } from '@/contexts/AdminContext';
 
 const QuickActionsWidget = () => {
   const navigate = useNavigate();
+  const { isAdmin } = useAdmin();
 
   const primaryActions = [
     {
@@ -30,6 +32,15 @@ const QuickActionsWidget = () => {
     { title: "Techniques", icon: Brain, onClick: () => navigate('/techniques') },
     { title: "Settings", icon: Settings, onClick: () => navigate('/settings') }
   ];
+
+  // Add admin action if user is admin
+  if (isAdmin) {
+    secondaryActions.unshift({ 
+      title: "Admin", 
+      icon: Shield, 
+      onClick: () => navigate('/admin') 
+    });
+  }
 
   return (
     <Card>
@@ -65,7 +76,11 @@ const QuickActionsWidget = () => {
               variant="outline"
               size="sm"
               onClick={action.onClick}
-              className="flex flex-col items-center space-y-1 h-auto py-3 hover:bg-therapy-50"
+              className={`flex flex-col items-center space-y-1 h-auto py-3 ${
+                action.title === 'Admin' 
+                  ? 'hover:bg-red-50 border-red-200 text-red-600 hover:text-red-700' 
+                  : 'hover:bg-therapy-50'
+              }`}
             >
               <action.icon className="h-4 w-4" />
               <span className="text-xs">{action.title}</span>
