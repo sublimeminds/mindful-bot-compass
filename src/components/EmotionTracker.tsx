@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Brain, Smile, Frown, Angry, Surprised, Meh } from 'lucide-react';
+import { Heart, Brain, Smile, Frown, Angry, AlertCircle, Meh } from 'lucide-react';
 
 interface EmotionData {
   dominant_emotion: string;
@@ -32,7 +32,7 @@ const EmotionTracker = ({ emotionData, onEmotionSelect, showDetailedView = false
     { name: 'sadness', icon: Frown, color: 'bg-blue-100 text-blue-800', label: 'Sad' },
     { name: 'anger', icon: Angry, color: 'bg-red-100 text-red-800', label: 'Angry' },
     { name: 'fear', icon: Heart, color: 'bg-purple-100 text-purple-800', label: 'Anxious' },
-    { name: 'surprise', icon: Surprised, color: 'bg-yellow-100 text-yellow-800', label: 'Surprised' },
+    { name: 'surprise', icon: AlertCircle, color: 'bg-yellow-100 text-yellow-800', label: 'Surprised' },
     { name: 'neutral', icon: Meh, color: 'bg-gray-100 text-gray-800', label: 'Neutral' }
   ];
 

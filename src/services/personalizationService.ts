@@ -29,24 +29,28 @@ interface PersonalizedRecommendation {
 export class PersonalizationService {
   static async getUserProfile(userId: string): Promise<UserProfile | null> {
     try {
+      // Use raw SQL query since the types aren't updated yet
       const { data, error } = await supabase
-        .from('user_preferences')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
+        .rpc('get_user_preferences', { target_user_id: userId });
 
-      if (error || !data) return null;
+      if (error) {
+        console.error('Error fetching user profile:', error);
+        return null;
+      }
 
+      if (!data || data.length === 0) return null;
+
+      const profile = data[0];
       return {
         userId,
-        communicationStyle: data.communication_style || 'supportive',
-        preferredApproaches: data.preferred_approaches || [],
-        sessionPreferences: data.session_preferences || {
+        communicationStyle: profile.communication_style || 'supportive',
+        preferredApproaches: profile.preferred_approaches || [],
+        sessionPreferences: profile.session_preferences || {
           preferredTime: 'evening',
           sessionLength: 30,
           frequency: 'daily'
         },
-        emotionalPatterns: data.emotional_patterns || {
+        emotionalPatterns: profile.emotional_patterns || {
           dominantEmotions: [],
           triggerWords: [],
           positiveIndicators: []
@@ -60,15 +64,14 @@ export class PersonalizationService {
 
   static async updateUserProfile(profile: Partial<UserProfile>): Promise<boolean> {
     try {
+      // Use raw SQL query since the types aren't updated yet
       const { error } = await supabase
-        .from('user_preferences')
-        .upsert({
-          user_id: profile.userId,
+        .rpc('upsert_user_preferences', {
+          target_user_id: profile.userId,
           communication_style: profile.communicationStyle,
           preferred_approaches: profile.preferredApproaches,
           session_preferences: profile.sessionPreferences,
-          emotional_patterns: profile.emotionalPatterns,
-          updated_at: new Date().toISOString()
+          emotional_patterns: profile.emotionalPatterns
         });
 
       return !error;
@@ -156,12 +159,10 @@ export class PersonalizationService {
   ): Promise<void> {
     try {
       await supabase
-        .from('user_interactions')
-        .insert({
-          user_id: userId,
+        .rpc('track_user_interaction', {
+          target_user_id: userId,
           interaction_type: interactionType,
-          data: data,
-          timestamp: new Date().toISOString()
+          interaction_data: data
         });
     } catch (error) {
       console.error('Error tracking interaction:', error);
@@ -171,17 +172,13 @@ export class PersonalizationService {
   static async getOptimalSessionTime(userId: string): Promise<string> {
     try {
       const { data } = await supabase
-        .from('user_interactions')
-        .select('timestamp, data')
-        .eq('user_id', userId)
-        .eq('interaction_type', 'session_start')
-        .order('timestamp', { ascending: false })
+        .rpc('get_user_interactions', { target_user_id: userId })
         .limit(20);
 
       if (!data || data.length === 0) return 'Any time';
 
       // Analyze session start times to find patterns
-      const hours = data.map(interaction => new Date(interaction.timestamp).getHours());
+      const hours = data.map((interaction: any) => new Date(interaction.timestamp).getHours());
       const hourCounts = hours.reduce((acc, hour) => {
         acc[hour] = (acc[hour] || 0) + 1;
         return acc;

@@ -514,6 +514,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_interactions: {
+        Row: {
+          data: Json | null
+          id: string
+          interaction_type: string
+          timestamp: string
+          user_id: string
+        }
+        Insert: {
+          data?: Json | null
+          id?: string
+          interaction_type: string
+          timestamp?: string
+          user_id: string
+        }
+        Update: {
+          data?: Json | null
+          id?: string
+          interaction_type?: string
+          timestamp?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_onboarding: {
         Row: {
           concerns: string[] | null
@@ -540,6 +564,39 @@ export type Database = {
           goals?: string[] | null
           id?: string
           preferences?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_preferences: {
+        Row: {
+          communication_style: string | null
+          created_at: string
+          emotional_patterns: Json | null
+          id: string
+          preferred_approaches: string[] | null
+          session_preferences: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          communication_style?: string | null
+          created_at?: string
+          emotional_patterns?: Json | null
+          id?: string
+          preferred_approaches?: string[] | null
+          session_preferences?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          communication_style?: string | null
+          created_at?: string
+          emotional_patterns?: Json | null
+          id?: string
+          preferred_approaches?: string[] | null
+          session_preferences?: Json | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
