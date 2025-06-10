@@ -1,161 +1,157 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAdmin } from '@/contexts/AdminContext';
 import {
-  Shield,
+  LayoutDashboard,
   Users,
   FileText,
   BarChart3,
   Settings,
-  Monitor,
-  ChevronLeft,
-  ChevronRight,
-  Home,
-  Brain,
-  Bell,
-  Activity,
-  Database,
-  Lock,
-  UserCheck
+  Bug,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 
+interface MenuItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<any>;
+  exact?: boolean;
+  permission?: {
+    name: string;
+    resource: string;
+  };
+  submenu?: {
+    label: string;
+    href: string;
+    icon: React.ComponentType<any>;
+  }[];
+}
+
 const AdminSidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
-  const { hasPermission, userRoles } = useAdmin();
+  const { hasPermission } = useAdmin();
 
   const menuItems = [
     {
-      title: 'Overview',
-      icon: Home,
+      label: 'Overview',
       href: '/admin',
-      permission: null,
+      icon: LayoutDashboard,
+      exact: true
     },
     {
-      title: 'User Management',
-      icon: Users,
+      label: 'Users',
       href: '/admin/users',
-      permission: { name: 'view_users', resource: 'users' },
+      icon: Users,
+      permission: { name: 'view_users', resource: 'users' }
     },
     {
-      title: 'Content Management',
-      icon: FileText,
+      label: 'Content',
       href: '/admin/content',
-      permission: { name: 'manage_content', resource: 'content' },
-      subItems: [
-        { title: 'Therapists', href: '/admin/content/therapists', icon: Brain },
-        { title: 'Techniques', href: '/admin/content/techniques', icon: Activity },
-        { title: 'Notifications', href: '/admin/content/notifications', icon: Bell },
-      ]
+      icon: FileText,
+      permission: { name: 'manage_content', resource: 'content' }
     },
     {
-      title: 'Analytics',
-      icon: BarChart3,
+      label: 'Analytics',
       href: '/admin/analytics',
-      permission: { name: 'view_analytics', resource: 'analytics' },
+      icon: BarChart3,
+      permission: { name: 'view_analytics', resource: 'analytics' }
     },
     {
-      title: 'System',
-      icon: Monitor,
+      label: 'System',
       href: '/admin/system',
+      icon: Settings,
       permission: { name: 'manage_system', resource: 'system' },
-      subItems: [
-        { title: 'Debug Panel', href: '/admin/system/debug', icon: Settings },
-        { title: 'Database', href: '/admin/system/database', icon: Database },
-        { title: 'Logs', href: '/admin/system/logs', icon: FileText },
+      submenu: [
+        {
+          label: 'Debug Panel',
+          href: '/admin/system/debug',
+          icon: Bug
+        }
       ]
-    },
-    {
-      title: 'Security',
-      icon: Lock,
-      href: '/admin/security',
-      permission: { name: 'manage_roles', resource: 'roles' },
-      subItems: [
-        { title: 'User Roles', href: '/admin/security/roles', icon: UserCheck },
-        { title: 'Activity Log', href: '/admin/security/activity', icon: Activity },
-      ]
-    },
+    }
   ];
 
-  const isActive = (href: string) => {
-    return location.pathname === href || location.pathname.startsWith(href + '/');
+  const renderMenuItem = (item: MenuItem, isSubmenu = false) => {
+    if (item.permission && !hasPermission(item.permission.name, item.permission.resource)) {
+      return null;
+    }
+
+    const isActive = item.exact
+      ? location.pathname === item.href
+      : location.pathname.startsWith(item.href);
+
+    return (
+      <li key={item.label}>
+        <Link
+          to={item.href}
+          className={cn(
+            'flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700',
+            isActive && 'bg-gray-700 font-medium',
+            isSubmenu ? 'text-sm' : 'text-base'
+          )}
+        >
+          <item.icon className="h-4 w-4" />
+          <span>{item.label}</span>
+        </Link>
+      </li>
+    );
   };
 
-  const canAccessItem = (item: any) => {
-    if (!item.permission) return true;
-    if (userRoles.includes('super_admin')) return true;
-    return hasPermission(item.permission.name, item.permission.resource);
+  const renderSubmenu = (item: MenuItem) => {
+    if (!item.submenu || item.submenu.length === 0) {
+      return null;
+    }
+
+    const isOpen = location.pathname.startsWith(item.href) && !item.exact;
+
+    return (
+      <li key={item.label} className="space-y-1">
+        <div className="flex items-center justify-between p-2 rounded-md hover:bg-gray-700 cursor-pointer">
+          <div className="flex items-center space-x-2">
+            <item.icon className="h-4 w-4" />
+            <span>{item.label}</span>
+          </div>
+          {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+        </div>
+        {isOpen && (
+          <ul className="pl-4">
+            {item.submenu.map(subItem => {
+              if (item.permission && !hasPermission(item.permission.name, item.permission.resource)) {
+                return null;
+              }
+              return (
+                <li key={subItem.label}>
+                  <Link
+                    to={subItem.href}
+                    className={cn(
+                      'flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 text-sm',
+                      location.pathname === subItem.href && 'bg-gray-700 font-medium'
+                    )}
+                  >
+                    <subItem.icon className="h-3 w-3" />
+                    <span>{subItem.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </li>
+    );
   };
 
   return (
-    <div className={cn(
-      "bg-gray-800 border-r border-gray-700 transition-all duration-300 flex flex-col",
-      isCollapsed ? "w-16" : "w-64"
-    )}>
-      {/* Header */}
-      <div className="p-4 border-b border-gray-700 flex items-center justify-between">
-        {!isCollapsed && (
-          <div className="flex items-center space-x-2">
-            <Shield className="h-6 w-6 text-blue-400" />
-            <span className="font-bold text-lg">Admin Panel</span>
-          </div>
-        )}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-1 hover:bg-gray-700 rounded transition-colors"
-        >
-          {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </button>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 py-4">
-        <ul className="space-y-1 px-2">
-          {menuItems.map((item) => {
-            if (!canAccessItem(item)) return null;
-
-            return (
-              <li key={item.href}>
-                <Link
-                  to={item.href}
-                  className={cn(
-                    "flex items-center px-3 py-2 rounded-lg transition-colors",
-                    isActive(item.href)
-                      ? "bg-blue-600 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                  )}
-                >
-                  <item.icon className="h-5 w-5" />
-                  {!isCollapsed && (
-                    <span className="ml-3 font-medium">{item.title}</span>
-                  )}
-                </Link>
-
-                {/* Sub Items */}
-                {!isCollapsed && item.subItems && isActive(item.href) && (
-                  <ul className="ml-8 mt-2 space-y-1">
-                    {item.subItems.map((subItem) => (
-                      <li key={subItem.href}>
-                        <Link
-                          to={subItem.href}
-                          className={cn(
-                            "flex items-center px-3 py-1 rounded transition-colors text-sm",
-                            isActive(subItem.href)
-                              ? "bg-blue-500 text-white"
-                              : "text-gray-400 hover:bg-gray-700 hover:text-white"
-                          )}
-                        >
-                          <subItem.icon className="h-4 w-4 mr-2" />
-                          {subItem.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            );
+    <div className="w-64 bg-gray-800 h-screen py-4 px-2">
+      <nav>
+        <ul>
+          {menuItems.map(item => {
+            if (item.submenu) {
+              return renderSubmenu(item);
+            } else {
+              return renderMenuItem(item);
+            }
           })}
         </ul>
       </nav>
