@@ -467,5 +467,3 @@ const AuthForm = () => {
 };
 
 export default AuthForm;
-
-</edits_to_apply>
