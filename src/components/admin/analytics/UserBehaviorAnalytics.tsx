@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,8 +14,7 @@ import {
   Pie,
   Cell,
   LineChart,
-  Line,
-  HeatmapChart
+  Line
 } from 'recharts';
 import { 
   Users, 
@@ -69,14 +67,6 @@ const UserBehaviorAnalytics = ({ dateRange }: UserBehaviorAnalyticsProps) => {
     { range: '30-60 min', count: 234, percentage: 19.8 },
     { range: '60+ min', count: 56, percentage: 4.7 },
   ];
-
-  const heatmapData = Array.from({ length: 24 }, (_, hour) => 
-    Array.from({ length: 7 }, (_, day) => ({
-      hour,
-      day,
-      value: Math.floor(Math.random() * 100)
-    }))
-  ).flat();
 
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -269,27 +259,30 @@ const UserBehaviorAnalytics = ({ dateRange }: UserBehaviorAnalyticsProps) => {
             </CardContent>
           </Card>
 
-          {/* Activity Heatmap */}
+          {/* Custom Activity Heatmap */}
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
               <CardTitle className="text-white">Activity Heatmap (Hour vs Day)</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-24 gap-1">
-                {Array.from({ length: 24 }, (_, hour) => (
-                  <div key={hour} className="text-xs text-gray-400 text-center">
-                    {hour}
-                  </div>
-                ))}
+              <div className="space-y-2">
+                <div className="grid grid-cols-25 gap-1 text-xs text-gray-400">
+                  <div></div>
+                  {Array.from({ length: 24 }, (_, hour) => (
+                    <div key={hour} className="text-center">
+                      {hour % 6 === 0 ? hour : ''}
+                    </div>
+                  ))}
+                </div>
                 {dayLabels.map((day, dayIndex) => (
-                  <React.Fragment key={day}>
-                    <div className="text-xs text-gray-400 col-span-24 mt-2">{day}</div>
+                  <div key={day} className="grid grid-cols-25 gap-1">
+                    <div className="text-xs text-gray-400 text-right pr-2">{day}</div>
                     {Array.from({ length: 24 }, (_, hour) => {
                       const intensity = Math.floor(Math.random() * 100);
                       return (
                         <div
                           key={`${day}-${hour}`}
-                          className="w-3 h-3 rounded-sm"
+                          className="w-4 h-4 rounded-sm cursor-pointer hover:opacity-80"
                           style={{
                             backgroundColor: `rgba(59, 130, 246, ${intensity / 100})`
                           }}
@@ -297,7 +290,7 @@ const UserBehaviorAnalytics = ({ dateRange }: UserBehaviorAnalyticsProps) => {
                         />
                       );
                     })}
-                  </React.Fragment>
+                  </div>
                 ))}
               </div>
             </CardContent>
