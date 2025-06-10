@@ -32,6 +32,18 @@ export interface MoodPattern {
   bestTimeOfDay: string;
   worstTimeOfDay: string;
   streak: number;
+  trend: 'improving' | 'declining' | 'stable';
+  averageChange: number;
+  bestTime: string;
+  worstTime: string;
+  topTriggers: string[];
+  helpfulActivities: string[];
+}
+
+export interface MoodCorrelation {
+  activity: string;
+  impact: number;
+  occurrences: number;
 }
 
 export interface MoodInsight {
@@ -109,20 +121,67 @@ export class MoodTrackingService {
         moodVariability: 0,
         bestTimeOfDay: 'Morning',
         worstTimeOfDay: 'Evening',
-        streak: 0
+        streak: 0,
+        trend: 'stable',
+        averageChange: 0,
+        bestTime: 'Morning',
+        worstTime: 'Evening',
+        topTriggers: [],
+        helpfulActivities: []
       };
     }
 
     const moods = entries.map(e => e.overall);
     const averageMood = moods.reduce((sum, mood) => sum + mood, 0) / moods.length;
     const moodVariability = Math.sqrt(moods.reduce((sum, mood) => sum + Math.pow(mood - averageMood, 2), 0) / moods.length);
+    
+    // Calculate trend
+    const recentMoods = moods.slice(0, Math.min(5, moods.length));
+    const olderMoods = moods.slice(Math.min(5, moods.length));
+    const recentAvg = recentMoods.reduce((sum, mood) => sum + mood, 0) / recentMoods.length;
+    const olderAvg = olderMoods.length > 0 ? olderMoods.reduce((sum, mood) => sum + mood, 0) / olderMoods.length : recentAvg;
+    const averageChange = recentAvg - olderAvg;
+    
+    let trend: 'improving' | 'declining' | 'stable' = 'stable';
+    if (averageChange > 0.5) trend = 'improving';
+    else if (averageChange < -0.5) trend = 'declining';
+
+    // Extract common triggers and activities
+    const allTriggers = entries.flatMap(e => e.triggers || []);
+    const allActivities = entries.flatMap(e => e.activities || []);
+    
+    const triggerCounts = allTriggers.reduce((acc, trigger) => {
+      acc[trigger] = (acc[trigger] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const activityCounts = allActivities.reduce((acc, activity) => {
+      acc[activity] = (acc[activity] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const topTriggers = Object.entries(triggerCounts)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5)
+      .map(([trigger]) => trigger);
+      
+    const helpfulActivities = Object.entries(activityCounts)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5)
+      .map(([activity]) => activity);
 
     return {
       averageMood: Math.round(averageMood * 10) / 10,
       moodVariability: Math.round(moodVariability * 10) / 10,
       bestTimeOfDay: 'Morning',
       worstTimeOfDay: 'Evening',
-      streak: entries.length
+      streak: entries.length,
+      trend,
+      averageChange: Math.round(averageChange * 10) / 10,
+      bestTime: 'Morning',
+      worstTime: 'Evening',
+      topTriggers,
+      helpfulActivities
     };
   }
 
@@ -151,5 +210,30 @@ export class MoodTrackingService {
     }
 
     return insights;
+  }
+
+  static generateMoodCorrelations(entries: MoodEntry[]): MoodCorrelation[] {
+    const correlations: MoodCorrelation[] = [];
+    const activities = this.getCommonActivities();
+    
+    activities.forEach(activity => {
+      const entriesWithActivity = entries.filter(e => e.activities?.includes(activity));
+      const entriesWithoutActivity = entries.filter(e => !e.activities?.includes(activity));
+      
+      if (entriesWithActivity.length > 0 && entriesWithoutActivity.length > 0) {
+        const avgWithActivity = entriesWithActivity.reduce((sum, e) => sum + e.overall, 0) / entriesWithActivity.length;
+        const avgWithoutActivity = entriesWithoutActivity.reduce((sum, e) => sum + e.overall, 0) / entriesWithoutActivity.length;
+        
+        const impact = (avgWithActivity - avgWithoutActivity) / 10; // Normalize to 0-1
+        
+        correlations.push({
+          activity,
+          impact,
+          occurrences: entriesWithActivity.length
+        });
+      }
+    });
+    
+    return correlations.sort((a, b) => Math.abs(b.impact) - Math.abs(a.impact));
   }
 }

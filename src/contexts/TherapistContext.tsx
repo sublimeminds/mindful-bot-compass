@@ -15,8 +15,12 @@ interface TherapistPersonality {
 
 interface TherapistContextType {
   selectedTherapist: TherapistPersonality | null;
+  currentTherapist: TherapistPersonality | null;
   setSelectedTherapist: (therapist: TherapistPersonality | null) => void;
+  selectTherapist: (therapist: TherapistPersonality) => void;
   therapists: TherapistPersonality[];
+  getPersonalityPrompt: () => string;
+  isLoading: boolean;
 }
 
 const TherapistContext = createContext<TherapistContextType | undefined>(undefined);
@@ -49,12 +53,33 @@ const defaultTherapists: TherapistPersonality[] = [
 export const TherapistProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [selectedTherapist, setSelectedTherapist] = useState<TherapistPersonality | null>(defaultTherapists[0]);
   const [therapists] = useState<TherapistPersonality[]>(defaultTherapists);
+  const [isLoading] = useState(false);
+
+  const selectTherapist = (therapist: TherapistPersonality) => {
+    setSelectedTherapist(therapist);
+  };
+
+  const getPersonalityPrompt = () => {
+    if (!selectedTherapist) return '';
+    
+    return `You are ${selectedTherapist.name}, a ${selectedTherapist.title}. 
+    Your approach is ${selectedTherapist.approach}. 
+    Your communication style is ${selectedTherapist.communicationStyle}.
+    Your specialties include: ${selectedTherapist.specialties.join(', ')}.
+    ${selectedTherapist.description}
+    
+    Always respond in character as this therapist, maintaining their specific approach and communication style.`;
+  };
 
   return (
     <TherapistContext.Provider value={{
       selectedTherapist,
+      currentTherapist: selectedTherapist,
       setSelectedTherapist,
-      therapists
+      selectTherapist,
+      therapists,
+      getPersonalityPrompt,
+      isLoading
     }}>
       {children}
     </TherapistContext.Provider>
