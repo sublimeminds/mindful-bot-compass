@@ -84,7 +84,7 @@ const GoalsWidget = () => {
             {/* Active Goals */}
             <div className="space-y-3">
               {activeGoals.slice(0, 2).map((goal) => {
-                const progressPercentage = (goal.current_progress / goal.target_value) * 100;
+                const progressPercentage = Math.min((goal.current_progress / goal.target_value) * 100, 100);
                 const daysLeft = Math.ceil(
                   (new Date(goal.target_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
                 );

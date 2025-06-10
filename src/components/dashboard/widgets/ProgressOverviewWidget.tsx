@@ -55,7 +55,7 @@ const ProgressOverviewWidget = () => {
         averageMoodImprovement = recentAvg - olderAvg;
       }
 
-      // Calculate weekly progress
+      // Calculate weekly progress (sessions this week)
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
@@ -65,31 +65,35 @@ const ProgressOverviewWidget = () => {
         .eq('user_id', user.id)
         .gte('created_at', oneWeekAgo.toISOString());
 
-      // Calculate longest streak
+      // Calculate current streak (consecutive days with sessions)
       const { data: allSessions } = await supabase
         .from('therapy_sessions')
         .select('created_at')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: true });
+        .order('created_at', { ascending: false });
 
-      let longestStreak = 0;
+      let currentStreak = 0;
       if (allSessions && allSessions.length > 0) {
-        let currentStreak = 1;
-        let maxStreak = 1;
+        const sessionDates = allSessions.map(s => new Date(s.created_at).toDateString());
+        const uniqueDates = [...new Set(sessionDates)];
         
-        for (let i = 1; i < allSessions.length; i++) {
-          const prevDate = new Date(allSessions[i - 1].created_at).toDateString();
-          const currentDate = new Date(allSessions[i].created_at).toDateString();
-          const dayDiff = (new Date(currentDate).getTime() - new Date(prevDate).getTime()) / (1000 * 60 * 60 * 24);
+        const today = new Date().toDateString();
+        const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
+        
+        // Check if user has a session today or yesterday to start counting streak
+        if (uniqueDates.includes(today) || uniqueDates.includes(yesterday)) {
+          let currentDate = new Date();
+          if (!uniqueDates.includes(today)) {
+            // If no session today, start from yesterday
+            currentDate.setDate(currentDate.getDate() - 1);
+          }
           
-          if (dayDiff <= 1) {
+          // Count consecutive days backwards
+          while (uniqueDates.includes(currentDate.toDateString())) {
             currentStreak++;
-          } else {
-            maxStreak = Math.max(maxStreak, currentStreak);
-            currentStreak = 1;
+            currentDate.setDate(currentDate.getDate() - 1);
           }
         }
-        longestStreak = Math.max(maxStreak, currentStreak);
       }
 
       return {
@@ -98,7 +102,7 @@ const ProgressOverviewWidget = () => {
         averageMoodImprovement,
         weeklyProgress: weeklyProgress || 0,
         weeklyGoal: 3, // This could be fetched from user preferences
-        longestStreak
+        currentStreak
       };
     },
     enabled: !!user?.id,
@@ -126,7 +130,7 @@ const ProgressOverviewWidget = () => {
     );
   }
 
-  const progressPercentage = (stats.weeklyProgress / stats.weeklyGoal) * 100;
+  const progressPercentage = Math.min((stats.weeklyProgress / stats.weeklyGoal) * 100, 100);
 
   return (
     <Card>
@@ -160,7 +164,7 @@ const ProgressOverviewWidget = () => {
           
           <div className="text-center p-4 bg-purple-50 rounded-lg">
             <Award className="h-6 w-6 mx-auto mb-2 text-purple-600" />
-            <div className="text-2xl font-bold text-purple-700">{stats.longestStreak}</div>
+            <div className="text-2xl font-bold text-purple-700">{stats.currentStreak}</div>
             <div className="text-sm text-muted-foreground">Day Streak</div>
           </div>
         </div>
