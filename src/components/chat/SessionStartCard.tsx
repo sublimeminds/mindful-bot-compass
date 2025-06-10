@@ -1,111 +1,87 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
-  Brain, 
-  Clock, 
-  Target, 
-  Heart,
-  Play
-} from "lucide-react";
-import { useTherapist } from "@/contexts/TherapistContext";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Brain, MessageCircle, User } from 'lucide-react';
+import { useTherapist } from '@/contexts/TherapistContext';
 
 interface SessionStartCardProps {
   onStartSession: () => void;
-  isLoading?: boolean;
 }
 
-const SessionStartCard = ({ onStartSession, isLoading }: SessionStartCardProps) => {
-  const { currentTherapist } = useTherapist();
+const SessionStartCard: React.FC<SessionStartCardProps> = ({ onStartSession }) => {
+  const { selectedTherapist } = useTherapist();
 
-  if (!currentTherapist) {
+  if (!selectedTherapist) {
     return (
-      <Card className="max-w-md mx-auto">
+      <Card>
         <CardContent className="p-6 text-center">
-          <Brain className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <User className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
           <h3 className="text-lg font-semibold mb-2">No Therapist Selected</h3>
-          <p className="text-muted-foreground">
-            Please select an AI therapist to begin your session.
+          <p className="text-muted-foreground mb-4">
+            Please select a therapist to start your therapy session.
           </p>
+          <Button variant="outline">
+            Choose Therapist
+          </Button>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="max-w-md mx-auto">
-      <CardHeader className="text-center pb-4">
-        <div className="flex justify-center mb-4">
-          <Avatar className="h-16 w-16">
-            <AvatarImage src={`/therapist-${currentTherapist.id}.jpg`} />
-            <AvatarFallback className="bg-therapy-100 text-therapy-700 text-xl">
-              {currentTherapist.name.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-        </div>
-        <CardTitle className="text-xl">{currentTherapist.name}</CardTitle>
-        <p className="text-muted-foreground">{currentTherapist.title}</p>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <Brain className="h-5 w-5 mr-2 text-therapy-600" />
+          Ready to Start Session
+        </CardTitle>
       </CardHeader>
-      
       <CardContent className="space-y-4">
-        <div className="text-sm text-muted-foreground">
-          <p>{currentTherapist.description}</p>
+        {/* Therapist Info */}
+        <div className="flex items-center space-x-3 p-4 bg-therapy-50 rounded-lg">
+          <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${selectedTherapist.colorScheme} flex items-center justify-center text-white`}>
+            <Brain className="h-6 w-6" />
+          </div>
+          <div className="flex-1">
+            <h3 className="font-semibold">{selectedTherapist.name}</h3>
+            <p className="text-sm text-muted-foreground">{selectedTherapist.title}</p>
+          </div>
         </div>
-        
-        <div className="space-y-3">
-          <div className="flex items-center space-x-2">
-            <Brain className="h-4 w-4 text-therapy-500" />
-            <span className="text-sm font-medium">Approach:</span>
-            <span className="text-sm text-muted-foreground">{currentTherapist.approach}</span>
+
+        {/* Approach and Style */}
+        <div className="space-y-2">
+          <div>
+            <span className="text-sm font-medium">Approach: </span>
+            <Badge variant="outline" className="text-xs">
+              {selectedTherapist.approach}
+            </Badge>
           </div>
-          
-          <div className="flex items-center space-x-2">
-            <Target className="h-4 w-4 text-therapy-500" />
-            <span className="text-sm font-medium">Specialties:</span>
-          </div>
-          <div className="flex flex-wrap gap-1 ml-6">
-            {currentTherapist.specialties.map((specialty) => (
-              <Badge key={specialty} variant="secondary" className="text-xs">
-                {specialty}
-              </Badge>
-            ))}
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Heart className="h-4 w-4 text-therapy-500" />
-            <span className="text-sm font-medium">Communication Style:</span>
-            <span className="text-sm text-muted-foreground capitalize">
-              {currentTherapist.communication_style}
-            </span>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Clock className="h-4 w-4 text-therapy-500" />
+          <div>
+            <span className="text-sm font-medium">Style: </span>
             <span className="text-sm text-muted-foreground">
-              Estimated session: 30-45 minutes
+              {selectedTherapist.communicationStyle}
             </span>
           </div>
         </div>
-        
+
+        {/* Session Description */}
+        <div className="bg-gray-50 p-3 rounded-lg">
+          <p className="text-sm text-muted-foreground">
+            Your therapist is ready to help you with your mental health journey. 
+            This is a safe space to share your thoughts and feelings.
+          </p>
+        </div>
+
+        {/* Start Session Button */}
         <Button 
           onClick={onStartSession}
-          disabled={isLoading}
-          className="w-full mt-6 bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white"
+          className="w-full bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
           size="lg"
         >
-          {isLoading ? (
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              <span>Starting Session...</span>
-            </div>
-          ) : (
-            <div className="flex items-center space-x-2">
-              <Play className="h-4 w-4" />
-              <span>Begin Therapy Session</span>
-            </div>
-          )}
+          <MessageCircle className="h-4 w-4 mr-2" />
+          Start Session with {selectedTherapist.name.split(' ')[1]}
         </Button>
       </CardContent>
     </Card>

@@ -29,7 +29,7 @@ const TherapistMatcher: React.FC<TherapistMatcherProps> = ({
   const [matches, setMatches] = useState<TherapistMatch[]>([]);
   const [responses, setResponses] = useState<AssessmentResponse[]>([]);
   const { user } = useAuth();
-  const { selectTherapist } = useTherapist();
+  const { selectTherapist, therapists } = useTherapist();
   const { toast } = useToast();
 
   const handleStartAssessment = () => {
@@ -53,6 +53,18 @@ const TherapistMatcher: React.FC<TherapistMatcherProps> = ({
     }
 
     try {
+      // Find the therapist from the available therapists
+      const selectedTherapist = therapists.find(t => t.id === therapistId);
+      
+      if (!selectedTherapist) {
+        toast({
+          title: "Error",
+          description: "Selected therapist not found.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Save the full assessment with selected therapist
       await TherapistMatchingService.saveAssessment(
         user.id,
@@ -61,8 +73,8 @@ const TherapistMatcher: React.FC<TherapistMatcherProps> = ({
         therapistId
       );
 
-      // Update the therapist context
-      await selectTherapist(therapistId);
+      // Update the therapist context with the therapist object
+      selectTherapist(selectedTherapist);
 
       toast({
         title: "Therapist Selected",
@@ -135,7 +147,7 @@ const TherapistMatcher: React.FC<TherapistMatcherProps> = ({
             <div className="flex items-center space-x-3 p-4 bg-therapy-50 rounded-lg">
               <Users className="h-5 w-5 text-therapy-600" />
               <div>
-                <h4 className="font-medium">6 Specialized AI Therapists</h4>
+                <h4 className="font-medium">{therapists.length} Specialized AI Therapists</h4>
                 <p className="text-sm text-muted-foreground">Each with unique approaches and specialties</p>
               </div>
             </div>
