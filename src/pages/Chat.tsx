@@ -1,41 +1,51 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, ArrowLeft } from "lucide-react";
+import { Send, ArrowLeft, Volume2, VolumeX } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "@/contexts/SessionContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { sendMessage } from "@/services/aiService";
 import { Badge } from "@/components/ui/badge";
 import { useTherapist } from "@/contexts/TherapistContext";
 import SessionEndModal from "@/components/SessionEndModal";
 import { useRealtimeSession } from "@/hooks/useRealtimeSession";
 import LiveSessionIndicator from "@/components/LiveSessionIndicator";
 import NotificationCenter from "@/components/NotificationCenter";
-
-interface Message {
-  id: string;
-  content: string;
-  isUser: boolean;
-  timestamp: Date;
-}
+import EmotionDisplay from "@/components/emotion/EmotionDisplay";
+import VoiceInteraction from "@/components/VoiceInteraction";
+import { useEnhancedChat } from "@/hooks/useEnhancedChat";
 
 const Chat = () => {
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
-  const { currentSession, startSession, endSession, addBreakthrough, addMessage } = useSession();
+  const { currentSession, startSession, endSession, addBreakthrough } = useSession();
   const { session: realtimeSession } = useRealtimeSession(currentSession?.id);
   const navigate = useNavigate();
   const { currentTherapist, getPersonalityPrompt } = useTherapist();
+  
+  const {
+    messages,
+    setMessages,
+    isLoading,
+    isPlaying,
+    sendMessage,
+    playMessage,
+    stopPlayback,
+    loadPreferences,
+    userPreferences
+  } = useEnhancedChat();
+
+  useEffect(() => {
+    loadPreferences();
+  }, [loadPreferences]);
 
   useEffect(() => {
     // Load session messages when session changes
@@ -50,7 +60,7 @@ const Chat = () => {
     } else {
       setMessages([]);
     }
-  }, [currentSession]);
+  }, [currentSession, setMessages]);
 
   useEffect(() => {
     // Scroll to bottom on message change
@@ -115,53 +125,7 @@ const Chat = () => {
 
     const userMessage = input.trim();
     setInput('');
-    setIsLoading(true);
-
-    try {
-      // Add user message to context and database
-      await addMessage(userMessage, 'user');
-      
-      // Add user message to local state for immediate UI update
-      const newUserMessage: Message = {
-        id: Date.now().toString(),
-        content: userMessage,
-        isUser: true,
-        timestamp: new Date()
-      };
-
-      const updatedMessages = [...messages, newUserMessage];
-      setMessages(updatedMessages);
-
-      // Get AI response with personality prompt
-      const aiResponse = await sendMessage(
-        userMessage, 
-        messages,
-        getPersonalityPrompt()
-      );
-
-      // Add AI response to database and local state
-      await addMessage(aiResponse, 'ai');
-      
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: aiResponse,
-        isUser: false,
-        timestamp: new Date()
-      };
-
-      const finalMessages = [...updatedMessages, aiMessage];
-      setMessages(finalMessages);
-
-    } catch (error) {
-      console.error('Error sending message:', error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await sendMessage(userMessage);
   };
 
   return (
@@ -175,11 +139,16 @@ const Chat = () => {
               Dashboard
             </Button>
             <div>
-              <h1 className="text-xl font-semibold">Therapy Session</h1>
+              <h1 className="text-xl font-semibold">Enhanced Therapy Session</h1>
               {currentTherapist && (
                 <p className="text-sm text-muted-foreground">
                   with {currentTherapist.name} ({currentTherapist.title})
                 </p>
+              )}
+              {userPreferences && (
+                <Badge variant="outline" className="text-xs mt-1">
+                  {userPreferences.communicationStyle} style
+                </Badge>
               )}
             </div>
           </div>
@@ -206,7 +175,7 @@ const Chat = () => {
       {/* Chat Messages */}
       <div className="flex-grow overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="flex flex-col p-4 max-w-4xl mx-auto">
+          <div className="flex flex-col p-4 max-w-4xl mx-auto space-y-4">
             {messages.length === 0 && !currentSession ? (
               <div className="text-center text-muted-foreground mt-8">
                 Start a session to begin chatting with your AI therapist.
@@ -214,41 +183,69 @@ const Chat = () => {
             ) : null}
             
             {messages.map((message) => (
-              <div 
-                key={message.id}
-                className={`mb-2 flex flex-col ${message.isUser ? 'items-end' : 'items-start'}`}
-              >
-                <div className="flex items-center">
-                  {!message.isUser && (
-                    <Avatar className="mr-2 h-8 w-8">
-                      <AvatarImage src="/ai-avatar.png" alt="AI Avatar" />
-                      <AvatarFallback>AI</AvatarFallback>
-                    </Avatar>
-                  )}
-                  <Card className="w-fit max-w-[80%]">
-                    <CardContent className="py-2 px-3">
-                      <p className="text-sm">{message.content}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </CardContent>
-                  </Card>
-                  {message.isUser && (
-                    <Avatar className="ml-2 h-8 w-8">
-                      {user?.user_metadata?.avatar_url ? (
-                        <AvatarImage src={user.user_metadata.avatar_url} alt="User Avatar" />
-                      ) : (
-                        <AvatarFallback>{user?.user_metadata?.name?.charAt(0).toUpperCase() || 'U'}</AvatarFallback>
-                      )}
-                    </Avatar>
-                  )}
+              <div key={message.id} className="space-y-2">
+                <div className={`mb-2 flex flex-col ${message.isUser ? 'items-end' : 'items-start'}`}>
+                  <div className="flex items-center max-w-[80%]">
+                    {!message.isUser && (
+                      <Avatar className="mr-2 h-8 w-8">
+                        <AvatarImage src="/ai-avatar.png" alt="AI Avatar" />
+                        <AvatarFallback>AI</AvatarFallback>
+                      </Avatar>
+                    )}
+                    <Card className="w-fit">
+                      <CardContent className="py-2 px-3">
+                        <p className="text-sm">{message.content}</p>
+                        <div className="flex items-center justify-between mt-1">
+                          <p className="text-xs text-muted-foreground">
+                            {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </p>
+                          {!message.isUser && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => isPlaying ? stopPlayback() : playMessage(message.content)}
+                              className="h-6 w-6 p-0 ml-2"
+                            >
+                              {isPlaying ? <VolumeX className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />}
+                            </Button>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                    {message.isUser && (
+                      <Avatar className="ml-2 h-8 w-8">
+                        {user?.user_metadata?.avatar_url ? (
+                          <AvatarImage src={user.user_metadata.avatar_url} alt="User Avatar" />
+                        ) : (
+                          <AvatarFallback>{user?.user_metadata?.name?.charAt(0).toUpperCase() || 'U'}</AvatarFallback>
+                        )}
+                      </Avatar>
+                    )}
+                  </div>
                 </div>
+                
+                {/* Show emotion analysis for user messages */}
+                {message.isUser && message.emotion && (
+                  <div className="flex justify-end">
+                    <EmotionDisplay emotion={message.emotion} className="max-w-xs" />
+                  </div>
+                )}
               </div>
             ))}
             <div ref={chatBottomRef} />
           </div>
         </ScrollArea>
       </div>
+
+      {/* Voice Interaction */}
+      {currentSession && (
+        <div className="px-4 max-w-4xl mx-auto w-full">
+          <VoiceInteraction 
+            text={messages.length > 0 ? messages[messages.length - 1]?.content : undefined}
+            className="mb-2"
+          />
+        </div>
+      )}
 
       {/* Chat Input */}
       <div className="bg-white border-t p-4">
@@ -276,7 +273,7 @@ const Chat = () => {
             <Button onClick={handleStartSession} disabled={isLoading}
               className="w-full bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white"
             >
-              {isLoading ? "Starting Session..." : "Start New Session"}
+              {isLoading ? "Starting Session..." : "Start Enhanced Session"}
             </Button>
           )}
         </div>
