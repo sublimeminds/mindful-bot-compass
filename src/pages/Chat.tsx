@@ -1,10 +1,11 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, ArrowLeft, Volume2, VolumeX } from "lucide-react";
+import { Send, ArrowLeft, Volume2, VolumeX, Brain } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "@/contexts/SessionContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -123,8 +124,8 @@ const Chat = () => {
       // Start real-time session first
       await startRealtimeSession();
       
-      // Start regular session with real-time session ID
-      await startSession(7, sessionState.sessionId || undefined);
+      // Start regular session - fix: pass only one argument
+      await startSession(7);
       
       toast({
         title: "Session Started",

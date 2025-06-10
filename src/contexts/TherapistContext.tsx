@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
-import { TherapistPersonality, TherapistMatchingService } from '@/services/therapistMatchingService';
+import { TherapistPersonality, TherapistMatchingService, TherapistMatch } from '@/services/therapistMatchingService';
 import { useToast } from '@/hooks/use-toast';
 
 interface TherapistContextType {
@@ -95,11 +95,26 @@ export const TherapistProvider = ({ children }: { children: ReactNode }) => {
           therapistId
         );
       } else {
+        // Parse recommended therapists safely
+        let recommendedTherapists: TherapistMatch[] = [];
+        if (assessment.recommended_therapists) {
+          try {
+            if (typeof assessment.recommended_therapists === 'string') {
+              recommendedTherapists = JSON.parse(assessment.recommended_therapists);
+            } else if (Array.isArray(assessment.recommended_therapists)) {
+              recommendedTherapists = assessment.recommended_therapists as TherapistMatch[];
+            }
+          } catch (error) {
+            console.error('Error parsing recommended therapists:', error);
+            recommendedTherapists = [];
+          }
+        }
+
         // Update existing assessment with new therapist selection
         await TherapistMatchingService.saveAssessment(
           user.id,
           Object.entries(assessment.responses).map(([questionId, value]) => ({ questionId, value })),
-          assessment.recommended_therapists || [],
+          recommendedTherapists,
           therapistId
         );
       }

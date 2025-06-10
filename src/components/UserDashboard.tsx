@@ -8,6 +8,7 @@ import { MessageCircle, Target, TrendingUp, Calendar, Brain, Heart } from 'lucid
 import ProgressStats from '@/components/ProgressStats';
 import QuickActions from '@/components/QuickActions';
 import SessionRecommendations from '@/components/SessionRecommendations';
+import SmartOnboardingGuide from '@/components/ai/SmartOnboardingGuide';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTherapist } from '@/contexts/TherapistContext';
 
@@ -24,8 +25,21 @@ const UserDashboard = () => {
     navigate('/therapist-matching');
   };
 
+  // Mock stats data - in a real app this would come from your analytics service
+  const mockStats = {
+    totalSessions: 12,
+    totalMessages: 156,
+    averageMoodImprovement: 1.8,
+    weeklyGoal: 3,
+    weeklyProgress: 2,
+    longestStreak: 7
+  };
+
   return (
     <div className="space-y-6">
+      {/* Smart Onboarding Guide */}
+      <SmartOnboardingGuide />
+
       {/* Welcome Section with Therapist Info */}
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
@@ -103,7 +117,7 @@ const UserDashboard = () => {
       {/* Progress and Quick Actions */}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <ProgressStats />
+          <ProgressStats stats={mockStats} />
         </div>
         <div>
           <QuickActions />
