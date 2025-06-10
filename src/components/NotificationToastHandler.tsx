@@ -8,10 +8,10 @@ const NotificationToastHandler = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const channelRef = useRef<any>(null);
-  const subscriptionStatusRef = useRef<string>('CLOSED');
+  const isSubscribedRef = useRef(false);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || isSubscribedRef.current) return;
 
     // Clean up any existing channel before creating a new one
     if (channelRef.current) {
@@ -22,11 +22,10 @@ const NotificationToastHandler = () => {
         console.log('Error removing toast channel:', error);
       }
       channelRef.current = null;
-      subscriptionStatusRef.current = 'CLOSED';
     }
 
-    // Create a unique channel name
-    const channelName = `toast-handler-${user.id}-${Math.random().toString(36).substr(2, 9)}`;
+    // Create a unique channel name with component identifier
+    const channelName = `toast-handler-${user.id}-${Date.now()}`;
     
     console.log('Creating new toast notification channel:', channelName);
     
@@ -60,7 +59,9 @@ const NotificationToastHandler = () => {
     // Subscribe to the channel
     channel.subscribe((status) => {
       console.log('Toast channel subscription status:', status);
-      subscriptionStatusRef.current = status;
+      if (status === 'SUBSCRIBED') {
+        isSubscribedRef.current = true;
+      }
     });
 
     // Store channel reference
@@ -76,26 +77,10 @@ const NotificationToastHandler = () => {
           console.log('Error during toast cleanup:', error);
         }
         channelRef.current = null;
-        subscriptionStatusRef.current = 'CLOSED';
       }
+      isSubscribedRef.current = false;
     };
   }, [user?.id, toast]);
-
-  // Additional cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (channelRef.current) {
-        console.log('Toast component unmounting, cleaning up channel');
-        try {
-          supabase.removeChannel(channelRef.current);
-        } catch (error) {
-          console.log('Error during unmount cleanup:', error);
-        }
-        channelRef.current = null;
-        subscriptionStatusRef.current = 'CLOSED';
-      }
-    };
-  }, []);
 
   return null; // This is a utility component that doesn't render anything
 };

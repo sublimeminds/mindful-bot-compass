@@ -19,9 +19,13 @@ const Index = () => {
   // Show loading while checking auth
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
-      </div>
+      <>
+        <Header />
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
+        </div>
+        <Footer />
+      </>
     );
   }
 

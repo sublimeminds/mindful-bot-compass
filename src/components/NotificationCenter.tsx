@@ -17,7 +17,7 @@ const NotificationCenter = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const channelRef = useRef<any>(null);
-  const subscriptionStatusRef = useRef<string>('CLOSED');
+  const isSubscribedRef = useRef(false);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
@@ -35,13 +35,12 @@ const NotificationCenter = () => {
     }
   };
 
+  // Combined effect for fetching and real-time subscription
   useEffect(() => {
-    fetchNotifications();
-  }, [user]);
+    if (!user || isSubscribedRef.current) return;
 
-  // Set up real-time subscription for new notifications
-  useEffect(() => {
-    if (!user) return;
+    // Fetch initial notifications
+    fetchNotifications();
 
     // Clean up any existing channel first
     if (channelRef.current) {
@@ -52,11 +51,10 @@ const NotificationCenter = () => {
         console.log('Error removing channel:', error);
       }
       channelRef.current = null;
-      subscriptionStatusRef.current = 'CLOSED';
     }
 
-    // Create a unique channel name
-    const channelName = `notification-center-${user.id}-${Math.random().toString(36).substr(2, 9)}`;
+    // Create a unique channel name with component identifier
+    const channelName = `notification-center-${user.id}-${Date.now()}`;
     console.log('Creating notification center channel:', channelName);
 
     const channel = supabase
@@ -77,7 +75,9 @@ const NotificationCenter = () => {
 
     channel.subscribe((status) => {
       console.log('Notification center channel status:', status);
-      subscriptionStatusRef.current = status;
+      if (status === 'SUBSCRIBED') {
+        isSubscribedRef.current = true;
+      }
     });
 
     channelRef.current = channel;
@@ -91,10 +91,10 @@ const NotificationCenter = () => {
           console.log('Error during cleanup:', error);
         }
         channelRef.current = null;
-        subscriptionStatusRef.current = 'CLOSED';
       }
+      isSubscribedRef.current = false;
     };
-  }, [user?.id]);
+  }, [user?.id]); // Only depend on user.id
 
   const handleMarkAsRead = async (notificationId: string) => {
     const success = await NotificationService.markAsRead(notificationId);
