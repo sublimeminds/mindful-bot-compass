@@ -22,13 +22,107 @@ import LiveSession from "./pages/LiveSession";
 import SmartTriggers from "./pages/SmartTriggers";
 import IntelligentNotificationProvider from "./components/IntelligentNotificationProvider";
 import NotificationToastHandler from "./components/NotificationToastHandler";
+import IntelligentAssistant from "./components/ai/IntelligentAssistant";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import UserDashboard from "./components/UserDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotificationDashboard from "./pages/NotificationDashboard";
+import { useAuth } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
+
+function AppContent() {
+  const { isAuthenticated } = useAuth();
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <UserDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/onboarding" element={
+            <ProtectedRoute>
+              <Onboarding />
+            </ProtectedRoute>
+          } />
+          <Route path="/chat" element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          } />
+          <Route path="/live-session" element={
+            <ProtectedRoute>
+              <LiveSession />
+            </ProtectedRoute>
+          } />
+          <Route path="/mood" element={
+            <ProtectedRoute>
+              <MoodTracking />
+            </ProtectedRoute>
+          } />
+          <Route path="/techniques" element={
+            <ProtectedRoute>
+              <Techniques />
+            </ProtectedRoute>
+          } />
+          <Route path="/goals" element={
+            <ProtectedRoute>
+              <Goals />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/analytics" element={
+            <ProtectedRoute>
+              <Analytics />
+            </ProtectedRoute>
+          } />
+          <Route path="/session-history" element={
+            <ProtectedRoute>
+              <SessionHistory />
+            </ProtectedRoute>
+          } />
+          <Route path="/smart-triggers" element={
+            <ProtectedRoute>
+              <SmartTriggers />
+            </ProtectedRoute>
+          } />
+          <Route path="/notification-settings" element={
+            <ProtectedRoute>
+              <NotificationSettings />
+            </ProtectedRoute>
+          } />
+          <Route path="/notification-analytics" element={
+            <ProtectedRoute>
+              <NotificationAnalytics />
+            </ProtectedRoute>
+          } />
+          <Route path="/notifications" element={
+            <ProtectedRoute>
+              <NotificationDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+      <Footer />
+      <Toaster />
+      
+      {/* Show AI Assistant only for authenticated users */}
+      {isAuthenticated && <IntelligentAssistant />}
+    </div>
+  );
+}
 
 function App() {
   return (
@@ -39,88 +133,7 @@ function App() {
             <TherapistProvider>
               <IntelligentNotificationProvider>
                 <NotificationToastHandler />
-                <div className="min-h-screen bg-background flex flex-col">
-                  <Header />
-                  <main className="flex-1">
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/auth" element={<Auth />} />
-                      <Route path="/dashboard" element={
-                        <ProtectedRoute>
-                          <UserDashboard />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/onboarding" element={
-                        <ProtectedRoute>
-                          <Onboarding />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/chat" element={
-                        <ProtectedRoute>
-                          <Chat />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/live-session" element={
-                        <ProtectedRoute>
-                          <LiveSession />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/mood" element={
-                        <ProtectedRoute>
-                          <MoodTracking />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/techniques" element={
-                        <ProtectedRoute>
-                          <Techniques />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/goals" element={
-                        <ProtectedRoute>
-                          <Goals />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/profile" element={
-                        <ProtectedRoute>
-                          <Profile />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/analytics" element={
-                        <ProtectedRoute>
-                          <Analytics />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/session-history" element={
-                        <ProtectedRoute>
-                          <SessionHistory />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/smart-triggers" element={
-                        <ProtectedRoute>
-                          <SmartTriggers />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/notification-settings" element={
-                        <ProtectedRoute>
-                          <NotificationSettings />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/notification-analytics" element={
-                        <ProtectedRoute>
-                          <NotificationAnalytics />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/notifications" element={
-                        <ProtectedRoute>
-                          <NotificationDashboard />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </main>
-                  <Footer />
-                  <Toaster />
-                </div>
+                <AppContent />
               </IntelligentNotificationProvider>
             </TherapistProvider>
           </SessionProvider>

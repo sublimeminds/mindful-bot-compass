@@ -7,7 +7,6 @@ import UserDashboard from "@/components/UserDashboard";
 import NotificationDebugPanel from "@/components/NotificationDebugPanel";
 import NotificationToastHandler from "@/components/NotificationToastHandler";
 import IntelligentNotificationProvider from "@/components/IntelligentNotificationProvider";
-import IntelligentAssistant from "@/components/ai/IntelligentAssistant";
 import SmartOnboardingGuide from "@/components/ai/SmartOnboardingGuide";
 
 const Index = () => {
@@ -26,7 +25,6 @@ const Index = () => {
             
             <SmartOnboardingGuide />
             <UserDashboard />
-            <IntelligentAssistant />
           </div>
         </IntelligentNotificationProvider>
       ) : (
