@@ -26,9 +26,15 @@ const AdminPerformance = () => {
   }
 
   return (
-    <AdminLayout>
-      <PerformanceDashboard />
-    </AdminLayout>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <div className="flex">
+        <div className="flex-1 flex flex-col">
+          <main className="flex-1 p-6 overflow-auto">
+            <PerformanceDashboard />
+          </main>
+        </div>
+      </div>
+    </div>
   );
 };
 
