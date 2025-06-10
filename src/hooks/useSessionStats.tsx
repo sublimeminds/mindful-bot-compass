@@ -1,89 +1,76 @@
 
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
-import { startOfWeek, endOfWeek } from 'date-fns';
-
-interface SessionStats {
-  totalSessions: number;
-  totalMessages: number;
-  averageMoodImprovement: number;
-  weeklyGoal: number;
-  weeklyProgress: number;
-  longestStreak: number;
-}
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const useSessionStats = () => {
   const { user } = useAuth();
-  const [stats, setStats] = useState<SessionStats>({
-    totalSessions: 0,
-    totalMessages: 0,
-    averageMoodImprovement: 0,
-    weeklyGoal: 3,
-    weeklyProgress: 0,
-    longestStreak: 0
-  });
-  const [isLoading, setIsLoading] = useState(true);
 
-  const fetchStats = async () => {
-    if (!user) {
-      setIsLoading(false);
-      return;
-    }
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ['session-stats', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
 
-    try {
-      // Get all completed sessions
-      const { data: sessions, error: sessionsError } = await supabase
+      // Get total sessions
+      const { count: totalSessions } = await supabase
         .from('therapy_sessions')
-        .select('*, session_messages(*)')
-        .eq('user_id', user.id)
-        .not('end_time', 'is', null);
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
 
-      if (sessionsError) {
-        console.error('Error fetching sessions:', sessionsError);
-        setIsLoading(false);
-        return;
+      // Get sessions this week
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      const { count: weeklyProgress } = await supabase
+        .from('therapy_sessions')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gte('created_at', oneWeekAgo.toISOString());
+
+      // Get total messages
+      const { data: sessions } = await supabase
+        .from('therapy_sessions')
+        .select('id')
+        .eq('user_id', user.id);
+
+      let totalMessages = 0;
+      if (sessions) {
+        for (const session of sessions) {
+          const { count } = await supabase
+            .from('session_messages')
+            .select('*', { count: 'exact', head: true })
+            .eq('session_id', session.id);
+          totalMessages += count || 0;
+        }
       }
 
-      // Calculate stats
-      const totalSessions = sessions?.length || 0;
-      const totalMessages = sessions?.reduce((sum, session) => 
-        sum + (session.session_messages?.length || 0), 0) || 0;
-
       // Calculate mood improvement
-      const sessionsWithMood = sessions?.filter(s => 
-        s.mood_before !== null && s.mood_after !== null) || [];
-      const averageMoodImprovement = sessionsWithMood.length > 0
-        ? sessionsWithMood.reduce((sum, session) => 
-            sum + (session.mood_after - session.mood_before), 0) / sessionsWithMood.length
-        : 0;
+      const { data: moodEntries } = await supabase
+        .from('mood_entries')
+        .select('overall, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
 
-      // Calculate weekly progress
-      const weekStart = startOfWeek(new Date());
-      const weekEnd = endOfWeek(new Date());
-      const weeklyProgress = sessions?.filter(session => {
-        const sessionDate = new Date(session.start_time);
-        return sessionDate >= weekStart && sessionDate <= weekEnd;
-      }).length || 0;
+      let averageMoodImprovement = 0;
+      if (moodEntries && moodEntries.length >= 2) {
+        const recent = moodEntries.slice(0, 5);
+        const older = moodEntries.slice(5, 10);
+        const recentAvg = recent.reduce((sum, entry) => sum + entry.overall, 0) / recent.length;
+        const olderAvg = older.length > 0 ? older.reduce((sum, entry) => sum + entry.overall, 0) / older.length : recentAvg;
+        averageMoodImprovement = recentAvg - olderAvg;
+      }
 
-      setStats({
-        totalSessions,
+      return {
+        totalSessions: totalSessions || 0,
         totalMessages,
         averageMoodImprovement,
-        weeklyGoal: 3, // Default weekly goal
-        weeklyProgress,
-        longestStreak: 0 // TODO: Calculate streak
-      });
-    } catch (error) {
-      console.error('Error calculating stats:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        weeklyProgress: weeklyProgress || 0,
+        weeklyGoal: 3 // This could be user configurable
+      };
+    },
+    enabled: !!user?.id,
+  });
 
-  useEffect(() => {
-    fetchStats();
-  }, [user]);
-
-  return { stats, isLoading, refetch: fetchStats };
+  return { stats, isLoading };
 };

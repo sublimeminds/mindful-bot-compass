@@ -1,75 +1,34 @@
 
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { SessionService, DetailedSession } from '@/services/sessionService';
-import { SessionHistoryService, SessionSummary } from '@/services/sessionHistoryService';
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const useSessionHistory = () => {
   const { user } = useAuth();
-  const [sessions, setSessions] = useState<DetailedSession[]>([]);
-  const [sessionSummaries, setSessionSummaries] = useState<SessionSummary[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const loadSessions = async () => {
-    if (!user) {
-      setIsLoading(false);
-      return;
-    }
+  const { data: sessionSummaries = [], isLoading } = useQuery({
+    queryKey: ['session-history', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
 
-    try {
-      setIsLoading(true);
-      setError(null);
-      
-      const detailedSessions = await SessionService.getUserSessions(user.id, 50);
-      setSessions(detailedSessions);
-      
-      // Convert to session summaries for compatibility with existing components
-      const summaries = SessionHistoryService.generateSessionSummaries(
-        detailedSessions.map(session => ({
-          id: session.id,
-          userId: session.userId,
-          startTime: session.startTime,
-          endTime: session.endTime,
-          messages: session.messages,
-          techniques: session.techniques,
-          notes: session.notes
-        }))
-      );
-      
-      setSessionSummaries(summaries);
-    } catch (err) {
-      console.error('Error loading sessions:', err);
-      setError('Failed to load session history');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      const { data, error } = await supabase
+        .from('therapy_sessions')
+        .select(`
+          *,
+          session_messages (count)
+        `)
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
-  useEffect(() => {
-    loadSessions();
-  }, [user]);
+      if (error) {
+        console.error('Error fetching session history:', error);
+        return [];
+      }
 
-  const getSessionStats = () => {
-    return SessionHistoryService.getSessionStats(sessionSummaries);
-  };
+      return data || [];
+    },
+    enabled: !!user?.id,
+  });
 
-  const filterSessions = (filter: any) => {
-    return SessionHistoryService.filterSessions(sessionSummaries, filter);
-  };
-
-  const exportSessions = () => {
-    return SessionHistoryService.exportSessionData(sessionSummaries);
-  };
-
-  return {
-    sessions,
-    sessionSummaries,
-    isLoading,
-    error,
-    loadSessions,
-    getSessionStats,
-    filterSessions,
-    exportSessions
-  };
+  return { sessionSummaries, isLoading };
 };
