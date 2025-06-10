@@ -271,7 +271,7 @@ const NotificationTemplates = () => {
                 <div className="flex flex-wrap gap-2">
                   {formData.variables.map((variable) => (
                     <Badge key={variable} variant="secondary" className="flex items-center space-x-1">
-                      <span>{{'{{'}{variable}{'}}'}</span>
+                      <span>{`{{${variable}}}`}</span>
                       <button
                         type="button"
                         onClick={() => removeVariable(variable)}
@@ -389,7 +389,7 @@ const NotificationTemplates = () => {
                       <div className="flex flex-wrap gap-1 mt-2">
                         {template.variables.map((variable) => (
                           <Badge key={variable} variant="outline" className="text-xs">
-                            {{'{{'}{variable}{'}}'}
+                            {`{{${variable}}}`}
                           </Badge>
                         ))}
                       </div>
