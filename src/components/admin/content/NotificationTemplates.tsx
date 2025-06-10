@@ -22,18 +22,28 @@ interface NotificationTemplate {
   created_at: string;
 }
 
+type NotificationFormData = {
+  name: string;
+  type: 'email' | 'push' | 'in_app';
+  category: string;
+  subject: string;
+  content: string;
+  variables: string[];
+  is_active: boolean;
+};
+
 const NotificationTemplates = () => {
   const { toast } = useToast();
   const [templates, setTemplates] = useState<NotificationTemplate[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<NotificationTemplate | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<NotificationFormData>({
     name: '',
-    type: 'email' as const,
+    type: 'email',
     category: '',
     subject: '',
     content: '',
-    variables: [] as string[],
+    variables: [],
     is_active: true,
   });
   const [newVariable, setNewVariable] = useState('');
