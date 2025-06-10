@@ -7,6 +7,7 @@ import AdminNotificationDebugPanel from './AdminNotificationDebugPanel';
 import SystemHealthMonitor from './SystemHealthMonitor';
 import ConfigurationManager from './ConfigurationManager';
 import AuditLogViewer from './AuditLogViewer';
+import SystemAlertsNotification from './SystemAlertsNotification';
 
 const AdminSystemManagement = () => {
   return (
@@ -20,16 +21,19 @@ const AdminSystemManagement = () => {
         </div>
       </div>
 
+      {/* System Alerts Notification */}
+      <SystemAlertsNotification />
+
       {/* System Management Tabs */}
-      <Tabs defaultValue="debug" className="space-y-6">
+      <Tabs defaultValue="health" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4 bg-gray-800">
-          <TabsTrigger value="debug" className="data-[state=active]:bg-orange-600">
-            <Bug className="h-4 w-4 mr-2" />
-            Debug Panel
-          </TabsTrigger>
           <TabsTrigger value="health" className="data-[state=active]:bg-orange-600">
             <Activity className="h-4 w-4 mr-2" />
             System Health
+          </TabsTrigger>
+          <TabsTrigger value="debug" className="data-[state=active]:bg-orange-600">
+            <Bug className="h-4 w-4 mr-2" />
+            Debug Panel
           </TabsTrigger>
           <TabsTrigger value="config" className="data-[state=active]:bg-orange-600">
             <Settings className="h-4 w-4 mr-2" />
@@ -41,12 +45,12 @@ const AdminSystemManagement = () => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="debug">
-          <AdminNotificationDebugPanel />
-        </TabsContent>
-
         <TabsContent value="health">
           <SystemHealthMonitor />
+        </TabsContent>
+
+        <TabsContent value="debug">
+          <AdminNotificationDebugPanel />
         </TabsContent>
 
         <TabsContent value="config">
