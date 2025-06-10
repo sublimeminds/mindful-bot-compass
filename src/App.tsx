@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -25,6 +24,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import UserDashboard from "./components/UserDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NotificationDashboard from "./pages/NotificationDashboard";
 
 const queryClient = new QueryClient();
 
@@ -101,6 +101,11 @@ function App() {
                       <Route path="/notification-analytics" element={
                         <ProtectedRoute>
                           <NotificationAnalytics />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/notifications" element={
+                        <ProtectedRoute>
+                          <NotificationDashboard />
                         </ProtectedRoute>
                       } />
                       <Route path="*" element={<NotFound />} />

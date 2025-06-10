@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Plus, Calendar, TrendingUp, MessageCircle, Settings, User, BarChart3, Brain, Activity } from "lucide-react";
+import { Heart, Plus, Calendar, TrendingUp, MessageCircle, Settings, User, BarChart3, Brain, Activity, Bell } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSession } from "@/contexts/SessionContext";
 import { useOnboardingData } from "@/hooks/useOnboardingData";
@@ -123,6 +122,15 @@ const UserDashboard = () => {
               >
                 <Activity className="h-4 w-4 mr-2" />
                 Live Session
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/notifications')}
+                className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white border-none"
+              >
+                <Bell className="h-4 w-4 mr-2" />
+                Notifications
               </Button>
               <Button 
                 variant="outline" 
