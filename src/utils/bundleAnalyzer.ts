@@ -1,4 +1,3 @@
-
 interface BundleStats {
   totalSize: number;
   gzippedSize: number;
@@ -77,7 +76,7 @@ class BundleAnalyzer {
       loadTime,
       parseTime,
       executeTime,
-      totalTime: entry.loadEventEnd - entry.navigationStart
+      totalTime: entry.loadEventEnd - entry.startTime
     });
   }
 
