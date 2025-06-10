@@ -13,7 +13,16 @@ import {
   Square,
   Signal
 } from 'lucide-react';
-import { RealTimeSessionState } from '@/hooks/useRealTimeSession';
+
+export interface RealTimeSessionState {
+  isActive: boolean;
+  startTime: Date | null;
+  duration: number;
+  connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'reconnecting';
+  connectionQuality: 'excellent' | 'good' | 'poor';
+  participantCount: number;
+  sessionId: string | null;
+}
 
 interface SessionStatusIndicatorProps {
   sessionState: RealTimeSessionState;

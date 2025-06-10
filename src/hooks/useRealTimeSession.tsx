@@ -2,16 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-
-export interface RealTimeSessionState {
-  isActive: boolean;
-  startTime: Date | null;
-  duration: number;
-  connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'reconnecting';
-  connectionQuality: 'excellent' | 'good' | 'poor';
-  participantCount: number;
-  sessionId: string | null;
-}
+import { RealTimeSessionState } from '@/components/session/SessionStatusIndicator';
 
 export const useRealTimeSession = () => {
   const { user } = useAuth();

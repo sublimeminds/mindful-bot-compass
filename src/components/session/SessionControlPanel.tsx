@@ -13,7 +13,7 @@ import {
   Settings,
   Users
 } from 'lucide-react';
-import { RealTimeSessionState } from '@/hooks/useRealTimeSession';
+import { RealTimeSessionState } from './SessionStatusIndicator';
 
 interface SessionControlPanelProps {
   sessionState: RealTimeSessionState;
