@@ -70,8 +70,6 @@ export class NotificationSchedulerService {
     try {
       const now = new Date();
       
-      // For now, we'll use a simplified approach without joins
-      // This will be enhanced once the database types are regenerated
       const { data: pendingNotifications, error } = await supabase
         .from('scheduled_notifications')
         .select('*')
@@ -98,16 +96,16 @@ export class NotificationSchedulerService {
             {
               id: template.id,
               name: template.name,
-              type: template.type,
+              type: template.type as any,
               title: template.title,
               message: template.message,
-              priority: template.priority,
+              priority: template.priority as any,
               variables: template.variables || [],
               isActive: template.is_active,
               createdAt: new Date(template.created_at),
               updatedAt: new Date(template.updated_at)
             },
-            scheduledNotification.variables || {}
+            (scheduledNotification.variables as Record<string, any>) || {}
           );
 
           const success = await NotificationService.createNotification(
@@ -116,8 +114,8 @@ export class NotificationSchedulerService {
               type: template.type,
               title: processedContent.title,
               message: processedContent.message,
-              priority: template.priority,
-              data: scheduledNotification.variables
+              priority: template.priority as any,
+              data: (scheduledNotification.variables as Record<string, any>) || {}
             }
           );
 
@@ -155,8 +153,8 @@ export class NotificationSchedulerService {
         userId: notification.user_id,
         templateId: notification.template_id,
         scheduledFor: new Date(notification.scheduled_for),
-        variables: notification.variables || {},
-        status: notification.status,
+        variables: (notification.variables as Record<string, any>) || {},
+        status: notification.status as ScheduledNotification['status'],
         createdAt: new Date(notification.created_at)
       })) || [];
     } catch (error) {
