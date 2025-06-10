@@ -2,192 +2,129 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { TrendingUp, Target, Calendar, MessageSquare, Award, Zap } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { TrendingUp, Target, Calendar, Award } from 'lucide-react';
+import { useSessionStats } from '@/hooks/useSessionStats';
 
 const ProgressOverviewWidget = () => {
-  const { user } = useAuth();
-
-  const { data: stats, isLoading } = useQuery({
-    queryKey: ['user-stats', user?.id],
-    queryFn: async () => {
-      if (!user?.id) return null;
-
-      // Fetch total sessions
-      const { count: totalSessions } = await supabase
-        .from('therapy_sessions')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id);
-
-      // Fetch total messages
-      const { data: sessions } = await supabase
-        .from('therapy_sessions')
-        .select('id')
-        .eq('user_id', user.id);
-
-      let totalMessages = 0;
-      if (sessions) {
-        for (const session of sessions) {
-          const { count } = await supabase
-            .from('session_messages')
-            .select('*', { count: 'exact', head: true })
-            .eq('session_id', session.id);
-          totalMessages += count || 0;
-        }
-      }
-
-      // Fetch mood entries for improvement calculation
-      const { data: moodEntries } = await supabase
-        .from('mood_entries')
-        .select('overall, created_at')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      let averageMoodImprovement = 0;
-      if (moodEntries && moodEntries.length >= 2) {
-        const recent = moodEntries.slice(0, 5);
-        const older = moodEntries.slice(5, 10);
-        const recentAvg = recent.reduce((sum, entry) => sum + entry.overall, 0) / recent.length;
-        const olderAvg = older.length > 0 ? older.reduce((sum, entry) => sum + entry.overall, 0) / older.length : recentAvg;
-        averageMoodImprovement = recentAvg - olderAvg;
-      }
-
-      // Calculate weekly progress (sessions this week)
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-      const { count: weeklyProgress } = await supabase
-        .from('therapy_sessions')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id)
-        .gte('created_at', oneWeekAgo.toISOString());
-
-      // Calculate current streak (consecutive days with sessions)
-      const { data: allSessions } = await supabase
-        .from('therapy_sessions')
-        .select('created_at')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      let currentStreak = 0;
-      if (allSessions && allSessions.length > 0) {
-        const sessionDates = allSessions.map(s => new Date(s.created_at).toDateString());
-        const uniqueDates = [...new Set(sessionDates)];
-        
-        const today = new Date().toDateString();
-        const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
-        
-        // Check if user has a session today or yesterday to start counting streak
-        if (uniqueDates.includes(today) || uniqueDates.includes(yesterday)) {
-          let currentDate = new Date();
-          if (!uniqueDates.includes(today)) {
-            // If no session today, start from yesterday
-            currentDate.setDate(currentDate.getDate() - 1);
-          }
-          
-          // Count consecutive days backwards
-          while (uniqueDates.includes(currentDate.toDateString())) {
-            currentStreak++;
-            currentDate.setDate(currentDate.getDate() - 1);
-          }
-        }
-      }
-
-      return {
-        totalSessions: totalSessions || 0,
-        totalMessages,
-        averageMoodImprovement,
-        weeklyProgress: weeklyProgress || 0,
-        weeklyGoal: 3, // This could be fetched from user preferences
-        currentStreak
-      };
-    },
-    enabled: !!user?.id,
-  });
+  const { stats, isLoading } = useSessionStats();
 
   if (isLoading) {
     return (
       <Card>
         <CardContent className="p-6">
-          <div className="text-center">Loading your progress...</div>
+          <div className="text-center">Loading progress...</div>
         </CardContent>
       </Card>
     );
   }
 
-  if (!stats) {
-    return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="text-center text-muted-foreground">
-            Start your therapy journey to see your progress here
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const progressPercentage = Math.min((stats.weeklyProgress / stats.weeklyGoal) * 100, 100);
+  const weeklyProgress = stats ? (stats.weeklyProgress / stats.weeklyGoal) * 100 : 0;
+  const totalProgress = stats ? Math.min((stats.totalSessions / 20) * 100, 100) : 0;
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center">
           <TrendingUp className="h-5 w-5 mr-2 text-therapy-600" />
-          Your Progress Overview
+          Progress Overview
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="text-center p-4 bg-therapy-50 rounded-lg">
-            <Calendar className="h-6 w-6 mx-auto mb-2 text-therapy-600" />
-            <div className="text-2xl font-bold text-therapy-700">{stats.totalSessions}</div>
-            <div className="text-sm text-muted-foreground">Total Sessions</div>
-          </div>
-          
-          <div className="text-center p-4 bg-calm-50 rounded-lg">
-            <MessageSquare className="h-6 w-6 mx-auto mb-2 text-calm-600" />
-            <div className="text-2xl font-bold text-calm-700">{stats.totalMessages}</div>
-            <div className="text-sm text-muted-foreground">Messages</div>
-          </div>
-          
-          <div className="text-center p-4 bg-green-50 rounded-lg">
-            <TrendingUp className="h-6 w-6 mx-auto mb-2 text-green-600" />
-            <div className="text-2xl font-bold text-green-700">
-              {stats.averageMoodImprovement > 0 ? '+' : ''}{stats.averageMoodImprovement.toFixed(1)}
+      <CardContent className="space-y-6">
+        {stats ? (
+          <>
+            {/* Weekly Progress */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Calendar className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm font-medium">This Week</span>
+                </div>
+                <span className="text-sm text-muted-foreground">
+                  {stats.weeklyProgress}/{stats.weeklyGoal}
+                </span>
+              </div>
+              <Progress value={weeklyProgress} className="h-2" />
+              <p className="text-xs text-muted-foreground">
+                {weeklyProgress >= 100 ? 'Goal achieved! 🎉' : `${Math.round(100 - weeklyProgress)}% to weekly goal`}
+              </p>
             </div>
-            <div className="text-sm text-muted-foreground">Mood Improvement</div>
-          </div>
-          
-          <div className="text-center p-4 bg-purple-50 rounded-lg">
-            <Award className="h-6 w-6 mx-auto mb-2 text-purple-600" />
-            <div className="text-2xl font-bold text-purple-700">{stats.currentStreak}</div>
-            <div className="text-sm text-muted-foreground">Day Streak</div>
-          </div>
-        </div>
 
-        {/* Weekly Goal Progress */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Target className="h-4 w-4 text-therapy-600" />
-              <span className="text-sm font-medium">Weekly Goal Progress</span>
+            {/* Total Sessions Progress */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Target className="h-4 w-4 text-therapy-500" />
+                  <span className="text-sm font-medium">Total Sessions</span>
+                </div>
+                <span className="text-sm text-muted-foreground">
+                  {stats.totalSessions}/20
+                </span>
+              </div>
+              <Progress value={totalProgress} className="h-2" />
+              <p className="text-xs text-muted-foreground">
+                Journey to 20 sessions milestone
+              </p>
             </div>
-            <span className="text-sm text-muted-foreground">
-              {stats.weeklyProgress}/{stats.weeklyGoal} sessions
-            </span>
+
+            {/* Mood Improvement */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Award className="h-4 w-4 text-green-500" />
+                  <span className="text-sm font-medium">Avg Improvement</span>
+                </div>
+                <span className="text-sm font-bold text-green-600">
+                  +{stats.averageMoodImprovement.toFixed(1)}
+                </span>
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {stats.averageMoodImprovement > 1.5 
+                  ? 'Excellent progress! Your sessions are very effective.'
+                  : stats.averageMoodImprovement > 0.5
+                  ? 'Good progress! Keep up the consistent practice.'
+                  : 'Every session counts. Consistency is key to progress.'
+                }
+              </div>
+            </div>
+
+            {/* Achievements */}
+            <div className="pt-4 border-t">
+              <h4 className="text-sm font-medium mb-3">Recent Achievements</h4>
+              <div className="space-y-2">
+                {stats.totalSessions >= 1 && (
+                  <div className="flex items-center space-x-2 text-sm">
+                    <div className="w-2 h-2 bg-therapy-500 rounded-full"></div>
+                    <span>First session completed</span>
+                  </div>
+                )}
+                {stats.totalSessions >= 5 && (
+                  <div className="flex items-center space-x-2 text-sm">
+                    <div className="w-2 h-2 bg-therapy-500 rounded-full"></div>
+                    <span>5 sessions milestone</span>
+                  </div>
+                )}
+                {stats.weeklyProgress >= stats.weeklyGoal && (
+                  <div className="flex items-center space-x-2 text-sm">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>Weekly goal achieved</span>
+                  </div>
+                )}
+                {stats.totalSessions === 0 && (
+                  <div className="text-sm text-muted-foreground">
+                    Start your first session to unlock achievements!
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="text-center py-6">
+            <TrendingUp className="h-8 w-8 mx-auto mb-2 opacity-50" />
+            <p className="text-sm text-muted-foreground">
+              Progress will appear after your first session
+            </p>
           </div>
-          <Progress value={progressPercentage} className="h-2" />
-          {progressPercentage >= 100 && (
-            <div className="flex items-center space-x-1 text-sm text-green-600">
-              <Zap className="h-3 w-3" />
-              <span>Goal achieved! Great work!</span>
-            </div>
-          )}
-        </div>
+        )}
       </CardContent>
     </Card>
   );

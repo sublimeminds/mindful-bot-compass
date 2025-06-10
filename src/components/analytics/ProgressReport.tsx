@@ -1,20 +1,9 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { 
-  FileText, 
-  Download, 
-  Calendar, 
-  TrendingUp, 
-  Target, 
-  Brain,
-  Clock,
-  Star
-} from "lucide-react";
-import { AnalyticsData } from "@/services/analyticsService";
-import { useToast } from "@/hooks/use-toast";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { FileText, Download, TrendingUp, Target, Heart } from 'lucide-react';
+import { AnalyticsData } from '@/services/analyticsService';
 
 interface ProgressReportProps {
   analyticsData: AnalyticsData;
@@ -22,207 +11,133 @@ interface ProgressReportProps {
 }
 
 const ProgressReport = ({ analyticsData, dateRange }: ProgressReportProps) => {
-  const { toast } = useToast();
-
   const handleExportReport = () => {
-    // Mock export functionality
-    toast({
-      title: "Report Exported",
-      description: "Your progress report has been downloaded as PDF.",
-    });
-  };
+    const reportData = {
+      period: dateRange,
+      generated: new Date().toLocaleDateString(),
+      sessionStats: analyticsData.sessionStats,
+      moodTrends: analyticsData.moodTrends,
+      insights: analyticsData.insights
+    };
 
-  const calculateOverallProgress = () => {
-    const goals = Object.values(analyticsData.goalProgress);
-    if (goals.length === 0) return 0;
+    const dataStr = JSON.stringify(reportData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
     
-    const totalProgress = goals.reduce((sum, goal) => sum + goal.progress, 0);
-    return Math.round(totalProgress / goals.length);
-  };
-
-  const getOverallRating = () => {
-    const overallProgress = calculateOverallProgress();
-    const { overallTrend } = analyticsData.moodTrends;
-    const streakScore = Math.min(analyticsData.sessionStats.currentStreak / 7, 1) * 20;
+    const exportFileDefaultName = `therapy-progress-report-${new Date().toISOString().split('T')[0]}.json`;
     
-    let score = overallProgress * 0.4 + streakScore;
-    
-    if (overallTrend === 'improving') score += 20;
-    else if (overallTrend === 'declining') score -= 10;
-    
-    return Math.min(Math.max(score, 0), 100);
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
   };
 
-  const getRatingText = (rating: number) => {
-    if (rating >= 80) return 'Excellent Progress';
-    if (rating >= 60) return 'Good Progress';
-    if (rating >= 40) return 'Steady Progress';
-    if (rating >= 20) return 'Some Progress';
-    return 'Getting Started';
-  };
-
-  const getRatingColor = (rating: number) => {
-    if (rating >= 80) return 'text-green-600';
-    if (rating >= 60) return 'text-blue-600';
-    if (rating >= 40) return 'text-yellow-600';
-    return 'text-gray-600';
-  };
-
-  const overallProgress = calculateOverallProgress();
-  const overallRating = getOverallRating();
+  const { sessionStats, moodTrends, insights } = analyticsData;
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
             <CardTitle className="flex items-center">
               <FileText className="h-5 w-5 mr-2" />
-              Progress Report
+              Progress Report - {dateRange}
             </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Comprehensive analysis for {dateRange}
-            </p>
+            <Button onClick={handleExportReport} variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export Report
+            </Button>
           </div>
-          <Button variant="outline" onClick={handleExportReport}>
-            <Download className="h-4 w-4 mr-2" />
-            Export PDF
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Overall Rating */}
-        <div className="text-center p-6 bg-muted rounded-lg">
-          <div className="flex justify-center mb-4">
-            {[...Array(5)].map((_, i) => (
-              <Star 
-                key={i} 
-                className={`h-6 w-6 ${
-                  i < Math.floor(overallRating / 20) 
-                    ? 'text-yellow-500 fill-current' 
-                    : 'text-gray-300'
-                }`} 
-              />
-            ))}
-          </div>
-          <h3 className={`text-xl font-bold ${getRatingColor(overallRating)}`}>
-            {getRatingText(overallRating)}
-          </h3>
-          <p className="text-muted-foreground">
-            Overall therapy progress score: {Math.round(overallRating)}%
-          </p>
-        </div>
-
-        {/* Key Metrics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center">
-            <Calendar className="h-8 w-8 mx-auto mb-2 text-therapy-500" />
-            <p className="text-xl font-bold">{analyticsData.sessionStats.totalSessions}</p>
-            <p className="text-sm text-muted-foreground">Sessions</p>
-          </div>
-          
-          <div className="text-center">
-            <TrendingUp className="h-8 w-8 mx-auto mb-2 text-green-500" />
-            <p className="text-xl font-bold">{overallProgress}%</p>
-            <p className="text-sm text-muted-foreground">Goal Progress</p>
-          </div>
-          
-          <div className="text-center">
-            <Brain className="h-8 w-8 mx-auto mb-2 text-blue-500" />
-            <p className="text-xl font-bold">{analyticsData.moodTrends.averageMood.toFixed(1)}</p>
-            <p className="text-sm text-muted-foreground">Avg Mood</p>
-          </div>
-          
-          <div className="text-center">
-            <Clock className="h-8 w-8 mx-auto mb-2 text-purple-500" />
-            <p className="text-xl font-bold">{Math.round(analyticsData.sessionStats.averageDuration)}</p>
-            <p className="text-sm text-muted-foreground">Avg Duration</p>
-          </div>
-        </div>
-
-        {/* Progress Breakdown */}
-        <div className="space-y-4">
-          <h4 className="font-medium">Progress Breakdown</h4>
-          
-          <div className="space-y-3">
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Session Consistency</span>
-                <span>{Math.min(analyticsData.sessionStats.currentStreak * 10, 100)}%</span>
-              </div>
-              <Progress value={Math.min(analyticsData.sessionStats.currentStreak * 10, 100)} />
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center p-4 bg-gradient-to-br from-therapy-50 to-therapy-100 rounded-lg">
+              <TrendingUp className="h-8 w-8 mx-auto mb-2 text-therapy-600" />
+              <h3 className="font-semibold">Session Progress</h3>
+              <p className="text-2xl font-bold text-therapy-700">{sessionStats.totalSessions}</p>
+              <p className="text-sm text-muted-foreground">Total sessions completed</p>
             </div>
             
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Mood Stability</span>
-                <span>{Math.max(100 - analyticsData.moodTrends.moodVariability * 10, 0).toFixed(0)}%</span>
-              </div>
-              <Progress value={Math.max(100 - analyticsData.moodTrends.moodVariability * 10, 0)} />
+            <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
+              <Heart className="h-8 w-8 mx-auto mb-2 text-green-600" />
+              <h3 className="font-semibold">Mood Improvement</h3>
+              <p className="text-2xl font-bold text-green-700">+{sessionStats.averageMoodImprovement}</p>
+              <p className="text-sm text-muted-foreground">Average per session</p>
             </div>
             
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Goal Achievement</span>
-                <span>{overallProgress}%</span>
-              </div>
-              <Progress value={overallProgress} />
+            <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
+              <Target className="h-8 w-8 mx-auto mb-2 text-blue-600" />
+              <h3 className="font-semibold">Streak</h3>
+              <p className="text-2xl font-bold text-blue-700">{sessionStats.streakDays}</p>
+              <p className="text-sm text-muted-foreground">Consecutive days</p>
             </div>
           </div>
-        </div>
 
-        {/* Key Highlights */}
-        <div className="space-y-3">
-          <h4 className="font-medium">Key Highlights</h4>
-          <div className="space-y-2">
-            {analyticsData.sessionStats.currentStreak >= 3 && (
-              <div className="flex items-center space-x-2">
-                <Badge variant="secondary" className="bg-green-100 text-green-800">
-                  Achievement
-                </Badge>
-                <span className="text-sm">
-                  {analyticsData.sessionStats.currentStreak}-day session streak
-                </span>
+          {/* Detailed Analysis */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Detailed Analysis</h3>
+            
+            <div className="bg-muted/50 p-4 rounded-lg">
+              <h4 className="font-medium mb-2">Session Activity</h4>
+              <ul className="space-y-1 text-sm">
+                <li>• Total sessions: {sessionStats.totalSessions}</li>
+                <li>• Average duration: {sessionStats.averageDuration} minutes</li>
+                <li>• Total therapy time: {Math.round(sessionStats.totalMinutes / 60)}h {sessionStats.totalMinutes % 60}m</li>
+                <li>• Sessions this week: {sessionStats.sessionsThisWeek}</li>
+              </ul>
+            </div>
+
+            <div className="bg-muted/50 p-4 rounded-lg">
+              <h4 className="font-medium mb-2">Mood Trends</h4>
+              <ul className="space-y-1 text-sm">
+                <li>• Average mood: {moodTrends.averageMood}/10</li>
+                <li>• Recent change: {moodTrends.recentChange > 0 ? '+' : ''}{moodTrends.recentChange}</li>
+                <li>• Overall trend: {moodTrends.overallTrend}</li>
+                <li>• Mood stability: {moodTrends.moodVariability < 2 ? 'Stable' : 'Variable'}</li>
+              </ul>
+            </div>
+
+            {sessionStats.mostUsedTechniques.length > 0 && (
+              <div className="bg-muted/50 p-4 rounded-lg">
+                <h4 className="font-medium mb-2">Most Used Techniques</h4>
+                <ul className="space-y-1 text-sm">
+                  {sessionStats.mostUsedTechniques.map((technique, index) => (
+                    <li key={technique}>• {index + 1}. {technique}</li>
+                  ))}
+                </ul>
               </div>
             )}
-            
-            {analyticsData.moodTrends.overallTrend === 'improving' && (
-              <div className="flex items-center space-x-2">
-                <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                  Progress
-                </Badge>
-                <span className="text-sm">Mood trending upward</span>
-              </div>
-            )}
-            
-            {analyticsData.patterns.mostEffectiveTechniques.length > 0 && (
-              <div className="flex items-center space-x-2">
-                <Badge variant="secondary" className="bg-purple-100 text-purple-800">
-                  Insight
-                </Badge>
-                <span className="text-sm">
-                  Most effective technique: {analyticsData.patterns.mostEffectiveTechniques[0]}
-                </span>
+
+            {insights.length > 0 && (
+              <div className="bg-muted/50 p-4 rounded-lg">
+                <h4 className="font-medium mb-2">Key Insights</h4>
+                <ul className="space-y-2 text-sm">
+                  {insights.map((insight, index) => (
+                    <li key={index} className="flex items-start space-x-2">
+                      <span className="text-therapy-600">•</span>
+                      <div>
+                        <span className="font-medium">{insight.title}:</span> {insight.description}
+                        {insight.actionable && (
+                          <div className="text-muted-foreground mt-1">
+                            💡 {insight.actionable}
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
-        </div>
 
-        {/* Recommendations */}
-        {analyticsData.insights.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="font-medium">Recommendations</h4>
-            <div className="space-y-2">
-              {analyticsData.insights.slice(0, 3).map((insight, index) => (
-                <div key={index} className="text-sm text-muted-foreground">
-                  • {insight.description}
-                </div>
-              ))}
-            </div>
+          {/* Report Footer */}
+          <div className="text-center text-sm text-muted-foreground pt-4 border-t">
+            <p>Report generated on {new Date().toLocaleDateString()}</p>
+            <p>Keep up the great work on your mental health journey! 🌟</p>
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

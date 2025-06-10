@@ -1,187 +1,177 @@
 
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Brain } from "lucide-react";
-import { useSession } from "@/contexts/SessionContext";
-import { useTherapist } from "@/contexts/TherapistContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ArrowLeft, Send, Brain, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import TherapyChatInterface from "@/components/chat/TherapyChatInterface";
-import SessionEndModal from "@/components/SessionEndModal";
+
+interface Message {
+  id: string;
+  content: string;
+  sender: 'user' | 'assistant';
+  timestamp: Date;
+}
 
 const TherapyChat = () => {
-  const [showEndModal, setShowEndModal] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { user } = useAuth();
-  const { 
-    currentSession, 
-    startSession, 
-    endSession, 
-    addBreakthrough 
-  } = useSession();
-  const { currentTherapist, isLoading: therapistLoading } = useTherapist();
+  const { toast } = useToast();
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      content: "Hello! I'm here to support you today. How are you feeling right now?",
+      sender: 'assistant',
+      timestamp: new Date()
+    }
+  ]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Redirect if no therapist selected
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
-    if (!therapistLoading && !currentTherapist) {
-      toast({
-        title: "Select a Therapist",
-        description: "Please select an AI therapist before starting a session.",
-        variant: "destructive",
-      });
-      navigate('/therapist-matching');
-    }
-  }, [therapistLoading, currentTherapist, navigate, toast]);
+    scrollToBottom();
+  }, [messages]);
 
-  const handleStartSession = async () => {
-    if (!currentTherapist) {
-      toast({
-        title: "No Therapist Selected",
-        description: "Please select a therapist first.",
-        variant: "destructive",
-      });
-      return;
-    }
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: input,
+      sender: 'user',
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
 
     try {
-      await startSession(7); // Default mood before
-      toast({
-        title: "Session Started",
-        description: `Your therapy session with ${currentTherapist.name} has begun.`,
-      });
+      // Mock AI response - in real implementation, this would call OpenAI API
+      setTimeout(() => {
+        const responses = [
+          "I understand how you're feeling. That's a completely valid response to what you're experiencing.",
+          "Thank you for sharing that with me. Can you tell me more about what's contributing to these feelings?",
+          "It sounds like you're going through a challenging time. What do you think might help you feel more supported right now?",
+          "I hear you. It's important to acknowledge these feelings. What has helped you cope with similar situations in the past?",
+          "That's a lot to process. You're showing strength by reaching out and talking about this."
+        ];
+        
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: randomResponse,
+          sender: 'assistant',
+          timestamp: new Date()
+        };
+
+        setMessages(prev => [...prev, assistantMessage]);
+        setIsLoading(false);
+      }, 1500);
+
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to start session. Please try again.",
+        description: "Failed to send message. Please try again.",
         variant: "destructive",
       });
+      setIsLoading(false);
     }
   };
 
-  const handleEndSession = () => {
-    setShowEndModal(true);
-  };
-
-  const handleSessionEndSubmit = async (data: {
-    moodAfter: number;
-    notes: string;
-    rating: number;
-    breakthroughs: string[];
-  }) => {
-    if (!currentSession) return;
-
-    try {
-      // Add breakthroughs to session
-      data.breakthroughs.forEach(breakthrough => {
-        addBreakthrough(breakthrough);
-      });
-
-      await endSession(data.moodAfter, data.notes, data.rating);
-      
-      toast({
-        title: "Session Completed",
-        description: "Thank you for your feedback. Your progress has been saved.",
-      });
-      
-      navigate('/dashboard');
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to complete session. Please try again.",
-        variant: "destructive",
-      });
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
     }
   };
-
-  if (therapistLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
-        <div className="text-center">
-          <Brain className="h-12 w-12 text-therapy-600 mx-auto mb-4 animate-pulse" />
-          <p className="text-therapy-600">Loading your therapist...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" onClick={() => navigate('/dashboard')}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Dashboard
-              </Button>
-              <div>
-                <h1 className="text-2xl font-bold text-therapy-900">
-                  AI Therapy Session
-                </h1>
-                {currentTherapist && (
-                  <p className="text-therapy-600">
-                    with {currentTherapist.name} • {currentTherapist.title}
-                  </p>
-                )}
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Button variant="outline" onClick={() => navigate('/')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Dashboard
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold flex items-center">
+                <Brain className="h-6 w-6 mr-2" />
+                Therapy Session
+              </h1>
+              <p className="text-muted-foreground">
+                Safe space for therapeutic conversation
+              </p>
             </div>
-            
-            {currentSession ? (
-              <Button 
-                variant="outline" 
-                onClick={handleEndSession}
-                className="border-red-200 text-red-600 hover:bg-red-50"
-              >
-                End Session
-              </Button>
-            ) : (
-              <Button 
-                onClick={handleStartSession}
-                className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white"
-                disabled={!currentTherapist}
-              >
-                Start Session
-              </Button>
-            )}
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        {currentSession ? (
-          <TherapyChatInterface onEndSession={handleEndSession} />
-        ) : (
-          <div className="text-center py-16">
-            <Brain className="h-20 w-20 text-therapy-300 mx-auto mb-6" />
-            <h2 className="text-2xl font-semibold text-therapy-800 mb-4">
-              Ready to Begin Your Therapy Session?
-            </h2>
-            <p className="text-therapy-600 mb-8 max-w-md mx-auto">
-              Start a personalized AI therapy session with {currentTherapist?.name || 'your selected therapist'} 
-              to explore your thoughts and feelings in a safe, supportive environment.
-            </p>
-            <Button 
-              onClick={handleStartSession}
-              size="lg"
-              className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white"
-              disabled={!currentTherapist}
-            >
-              <Brain className="h-5 w-5 mr-2" />
-              Start Therapy Session
-            </Button>
-          </div>
-        )}
-      </div>
+        {/* Chat Interface */}
+        <Card className="h-[600px] flex flex-col">
+          <CardHeader>
+            <CardTitle>Your Therapy Session</CardTitle>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col">
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] p-3 rounded-lg ${
+                      message.sender === 'user'
+                        ? 'bg-therapy-500 text-white'
+                        : 'bg-muted'
+                    }`}
+                  >
+                    <p className="text-sm">{message.content}</p>
+                    <p className={`text-xs mt-1 ${
+                      message.sender === 'user' ? 'text-therapy-100' : 'text-muted-foreground'
+                    }`}>
+                      {message.timestamp.toLocaleTimeString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-muted p-3 rounded-lg">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
 
-      <SessionEndModal
-        isOpen={showEndModal}
-        onClose={() => setShowEndModal(false)}
-        onSubmit={handleSessionEndSubmit}
-      />
+            {/* Input */}
+            <div className="flex space-x-2">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Share your thoughts..."
+                disabled={isLoading}
+                className="flex-1"
+              />
+              <Button onClick={handleSend} disabled={isLoading || !input.trim()}>
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
