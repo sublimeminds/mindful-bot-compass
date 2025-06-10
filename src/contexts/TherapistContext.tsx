@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
@@ -95,14 +94,15 @@ export const TherapistProvider = ({ children }: { children: ReactNode }) => {
           therapistId
         );
       } else {
-        // Parse recommended therapists safely
+        // Parse recommended therapists safely with proper type handling
         let recommendedTherapists: TherapistMatch[] = [];
         if (assessment.recommended_therapists) {
           try {
             if (typeof assessment.recommended_therapists === 'string') {
               recommendedTherapists = JSON.parse(assessment.recommended_therapists);
             } else if (Array.isArray(assessment.recommended_therapists)) {
-              recommendedTherapists = assessment.recommended_therapists as TherapistMatch[];
+              // Use type assertion with proper validation
+              recommendedTherapists = assessment.recommended_therapists as unknown as TherapistMatch[];
             }
           } catch (error) {
             console.error('Error parsing recommended therapists:', error);
@@ -189,3 +189,5 @@ export const useTherapist = () => {
   }
   return context;
 };
+
+export default TherapistProvider;

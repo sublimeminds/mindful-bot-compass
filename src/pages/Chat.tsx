@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -124,7 +123,7 @@ const Chat = () => {
       // Start real-time session first
       await startRealtimeSession();
       
-      // Start regular session - fix: pass only one argument
+      // Start regular session with only the mood_before parameter
       await startSession(7);
       
       toast({
