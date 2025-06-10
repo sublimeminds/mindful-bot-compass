@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Eye, EyeOff, Mail, Lock, User, Heart } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Heart, AlertCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -70,7 +70,10 @@ const AuthForm = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Comprehensive validation
+    // Clear any previous form state
+    console.log('Starting signup process for:', formData.email);
+    
+    // Validation
     if (!formData.email || !formData.password || !formData.name || !formData.confirmPassword) {
       toast({
         title: "Missing Information",
@@ -98,7 +101,6 @@ const AuthForm = () => {
       return;
     }
 
-    // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       toast({
@@ -118,16 +120,16 @@ const AuthForm = () => {
       if (error) {
         console.error('Signup error:', error);
         
-        // Handle specific errors
+        // Handle specific Supabase errors
         if (error.message.includes("rate limit") || error.message.includes("seconds")) {
           toast({
-            title: "Too Many Attempts",
-            description: "Please wait a few minutes before trying to create an account again. This is a temporary security measure.",
+            title: "Rate Limited",
+            description: "Too many signup attempts. Please wait a few minutes before trying again.",
             variant: "destructive",
           });
         } else if (error.message.includes("already registered")) {
           toast({
-            title: "Account Already Exists",
+            title: "Account Exists",
             description: "An account with this email already exists. Try signing in instead.",
             variant: "destructive",
           });
@@ -139,15 +141,15 @@ const AuthForm = () => {
           });
         } else {
           toast({
-            title: "Sign Up Failed",
-            description: error.message || "Failed to create account. Please try again.",
+            title: "Signup Failed",
+            description: error.message || "Unable to create account. Please try again later.",
             variant: "destructive",
           });
         }
       } else {
         console.log('Signup successful');
         toast({
-          title: "Account Created!",
+          title: "Account Created Successfully!",
           description: "Please check your email to verify your account before signing in.",
         });
         
@@ -162,8 +164,8 @@ const AuthForm = () => {
     } catch (error: any) {
       console.error('Signup catch error:', error);
       toast({
-        title: "Sign Up Failed",
-        description: error.message || "Failed to create account. Please try again.",
+        title: "Signup Failed",
+        description: "An unexpected error occurred. Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -280,6 +282,15 @@ const AuthForm = () => {
             </TabsContent>
 
             <TabsContent value="signup" className="space-y-4">
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4 text-amber-600" />
+                  <p className="text-sm text-amber-800">
+                    If you're getting rate limit errors, please wait a few minutes before trying again.
+                  </p>
+                </div>
+              </div>
+              
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div>
                   <Label htmlFor="signup-name">Full Name</Label>
