@@ -478,6 +478,142 @@ export type Database = {
           },
         ]
       }
+      therapist_assessments: {
+        Row: {
+          assessment_version: number
+          completed_at: string
+          id: string
+          recommended_therapists: Json
+          responses: Json
+          selected_therapist_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assessment_version?: number
+          completed_at?: string
+          id?: string
+          recommended_therapists?: Json
+          responses?: Json
+          selected_therapist_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assessment_version?: number
+          completed_at?: string
+          id?: string
+          recommended_therapists?: Json
+          responses?: Json
+          selected_therapist_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapist_assessments_selected_therapist_id_fkey"
+            columns: ["selected_therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapist_personalities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapist_compatibility: {
+        Row: {
+          average_rating: number | null
+          compatibility_score: number
+          created_at: string
+          effectiveness_metrics: Json | null
+          id: string
+          last_interaction: string | null
+          session_count: number
+          therapist_id: string
+          user_id: string
+        }
+        Insert: {
+          average_rating?: number | null
+          compatibility_score: number
+          created_at?: string
+          effectiveness_metrics?: Json | null
+          id?: string
+          last_interaction?: string | null
+          session_count?: number
+          therapist_id: string
+          user_id: string
+        }
+        Update: {
+          average_rating?: number | null
+          compatibility_score?: number
+          created_at?: string
+          effectiveness_metrics?: Json | null
+          id?: string
+          last_interaction?: string | null
+          session_count?: number
+          therapist_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapist_compatibility_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapist_personalities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapist_personalities: {
+        Row: {
+          approach: string
+          color_scheme: string
+          communication_style: string
+          created_at: string
+          description: string
+          effectiveness_areas: Json | null
+          experience_level: string
+          icon: string
+          id: string
+          is_active: boolean
+          name: string
+          personality_traits: Json | null
+          specialties: string[]
+          title: string
+        }
+        Insert: {
+          approach: string
+          color_scheme?: string
+          communication_style: string
+          created_at?: string
+          description: string
+          effectiveness_areas?: Json | null
+          experience_level?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          personality_traits?: Json | null
+          specialties?: string[]
+          title: string
+        }
+        Update: {
+          approach?: string
+          color_scheme?: string
+          communication_style?: string
+          created_at?: string
+          description?: string
+          effectiveness_areas?: Json | null
+          experience_level?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          personality_traits?: Json | null
+          specialties?: string[]
+          title?: string
+        }
+        Relationships: []
+      }
       therapy_sessions: {
         Row: {
           created_at: string

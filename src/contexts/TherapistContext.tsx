@@ -1,57 +1,92 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useOnboardingData } from '@/hooks/useOnboardingData';
-import { therapistPersonalities } from '@/components/onboarding/TherapistPersonalityStep';
-
-interface TherapistPersonality {
-  id: string;
-  name: string;
-  title: string;
-  description: string;
-  approach: string;
-  specialties: string[];
-}
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './AuthContext';
+import { TherapistPersonality, TherapistMatchingService } from '@/services/therapistMatchingService';
 
 interface TherapistContextType {
   currentTherapist: TherapistPersonality | null;
+  availableTherapists: TherapistPersonality[];
+  setCurrentTherapist: (therapist: TherapistPersonality | null) => void;
+  loadTherapists: () => Promise<void>;
+  loadUserTherapist: () => Promise<void>;
   getPersonalityPrompt: () => string;
 }
 
 const TherapistContext = createContext<TherapistContextType | undefined>(undefined);
 
-export const TherapistProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { onboardingData } = useOnboardingData();
+export const TherapistProvider = ({ children }: { children: ReactNode }) => {
   const [currentTherapist, setCurrentTherapist] = useState<TherapistPersonality | null>(null);
+  const [availableTherapists, setAvailableTherapists] = useState<TherapistPersonality[]>([]);
+  const { user } = useAuth();
 
-  useEffect(() => {
-    // For now, always use the CBT specialist as default since therapist_personality 
-    // isn't implemented in the database yet
-    setCurrentTherapist(therapistPersonalities[0]);
-  }, [onboardingData]);
+  const loadTherapists = async () => {
+    try {
+      const therapists = await TherapistMatchingService.getAllTherapists();
+      setAvailableTherapists(therapists);
+    } catch (error) {
+      console.error('Error loading therapists:', error);
+    }
+  };
 
-  const getPersonalityPrompt = () => {
+  const loadUserTherapist = async () => {
+    if (!user) return;
+
+    try {
+      // Get user's latest assessment to find their selected therapist
+      const assessment = await TherapistMatchingService.getLatestAssessment(user.id);
+      
+      if (assessment?.selected_therapist_id) {
+        // Find the selected therapist from available therapists
+        const therapists = await TherapistMatchingService.getAllTherapists();
+        const selectedTherapist = therapists.find(t => t.id === assessment.selected_therapist_id);
+        
+        if (selectedTherapist) {
+          setCurrentTherapist(selectedTherapist);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading user therapist:', error);
+    }
+  };
+
+  const getPersonalityPrompt = (): string => {
     if (!currentTherapist) {
-      return "You are a compassionate AI therapist providing evidence-based mental health support.";
+      return "You are a helpful and empathetic AI therapist assistant.";
     }
 
-    const personality = currentTherapist;
-    return `You are ${personality.name}, a ${personality.title}. ${personality.description} 
+    return `You are ${currentTherapist.name}, a ${currentTherapist.title}. 
+    
+Your approach: ${currentTherapist.approach}
+Your specialties: ${currentTherapist.specialties.join(', ')}
+Your communication style: ${currentTherapist.communication_style}
 
-Your therapeutic approach is: ${personality.approach}
+Description: ${currentTherapist.description}
 
-Your specialties include: ${personality.specialties.join(', ')}
+Please respond in character as this therapist, maintaining their unique personality and approach while being helpful and therapeutic.`;
+  };
 
-Guidelines for your responses:
-- Embody the personality and approach described above
-- Use techniques and language consistent with your specialization
-- Maintain a warm, professional, and supportive tone
-- Adapt your communication style to match your therapeutic approach
-- Draw from evidence-based practices in your specialty area
-- Always prioritize the user's safety and well-being`;
+  useEffect(() => {
+    loadTherapists();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      loadUserTherapist();
+    }
+  }, [user]);
+
+  const value: TherapistContextType = {
+    currentTherapist,
+    availableTherapists,
+    setCurrentTherapist,
+    loadTherapists,
+    loadUserTherapist,
+    getPersonalityPrompt
   };
 
   return (
-    <TherapistContext.Provider value={{ currentTherapist, getPersonalityPrompt }}>
+    <TherapistContext.Provider value={value}>
       {children}
     </TherapistContext.Provider>
   );
