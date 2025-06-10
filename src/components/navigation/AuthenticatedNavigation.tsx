@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { BarChart3, MessageSquare, Heart, Target, Brain, BookOpen, ChevronDown } from 'lucide-react';
+import { BarChart3, MessageSquare, Heart, Target, Brain, BookOpen, ChevronDown, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
 
@@ -20,6 +20,7 @@ const AuthenticatedNavigation = () => {
     { path: "/analytics", label: "Analytics", icon: BarChart3 },
     { path: "/techniques", label: "Techniques", icon: Brain },
     { path: "/session-history", label: "Session History", icon: Brain },
+    { path: "/smart-triggers", label: "Smart Triggers", icon: Zap },
   ];
 
   const resourcesMenuItems = [

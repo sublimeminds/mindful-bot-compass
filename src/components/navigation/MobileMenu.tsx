@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Menu, BarChart3, MessageSquare, Heart, Target, Brain, BookOpen, User, Bell, Settings, HelpCircle, Shield, Calendar } from 'lucide-react';
+import { Menu, BarChart3, MessageSquare, Heart, Target, Brain, BookOpen, User, Bell, Settings, HelpCircle, Shield, Calendar, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
@@ -39,6 +39,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen, isAuthenticated, activeSection,
     { path: "/analytics", label: "Analytics", icon: BarChart3 },
     { path: "/techniques", label: "Techniques", icon: Brain },
     { path: "/session-history", label: "Session History", icon: Calendar },
+    { path: "/smart-triggers", label: "Smart Triggers", icon: Zap },
   ];
 
   const resourcesMenuItems = [

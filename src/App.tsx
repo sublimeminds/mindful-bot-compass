@@ -19,6 +19,7 @@ import Onboarding from "./pages/Onboarding";
 import NotificationAnalytics from "./pages/NotificationAnalytics";
 import NotificationSettings from "./pages/NotificationSettings";
 import LiveSession from "./pages/LiveSession";
+import SmartTriggers from "./pages/SmartTriggers";
 import IntelligentNotificationProvider from "./components/IntelligentNotificationProvider";
 import NotificationToastHandler from "./components/NotificationToastHandler";
 import Header from "./components/Header";
@@ -92,6 +93,11 @@ function App() {
                       <Route path="/session-history" element={
                         <ProtectedRoute>
                           <SessionHistory />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/smart-triggers" element={
+                        <ProtectedRoute>
+                          <SmartTriggers />
                         </ProtectedRoute>
                       } />
                       <Route path="/notification-settings" element={
