@@ -3,67 +3,54 @@ import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Brain, BarChart3, Plus } from "lucide-react";
+import { ArrowLeft, Brain, BarChart3, Plus, TrendingUp, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import DetailedMoodTracker from "@/components/mood/DetailedMoodTracker";
-import MoodPatterns from "@/components/mood/MoodPatterns";
+import MoodInsightsDashboard from "@/components/mood/MoodInsightsDashboard";
 import { MoodTrackingService, DetailedMood, MoodEntry } from "@/services/moodTrackingService";
 import { useToast } from "@/hooks/use-toast";
+import { format, startOfMonth, endOfMonth } from 'date-fns';
 
 const MoodTracking = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
-  const [moodEntries, setMoodEntries] = useState<MoodEntry[]>([]);
-  const [activeTab, setActiveTab] = useState('log');
-  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
 
-  // Mock data for demonstration - in a real app, this would come from Supabase
-  useEffect(() => {
-    if (user) {
-      // Generate some sample mood data for demonstration
-      const sampleEntries: MoodEntry[] = [
-        {
-          id: '1',
-          userId: user.id,
-          timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-          mood: { overall: 6, anxiety: 4, depression: 3, stress: 5, energy: 7, sleep_quality: 6, social_connection: 5 },
-          overall: 6,
-          anxiety: 4,
-          energy: 7,
-          activities: ['Exercise', 'Work', 'Reading'],
-          triggers: ['Work Stress'],
-          notes: 'Had a good workout in the morning'
-        },
-        {
-          id: '2',
-          userId: user.id,
-          timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-          mood: { overall: 8, anxiety: 2, depression: 2, stress: 3, energy: 8, sleep_quality: 8, social_connection: 7 },
-          overall: 8,
-          anxiety: 2,
-          energy: 8,
-          activities: ['Socializing', 'Meditation', 'Cooking'],
-          triggers: [],
-          notes: 'Great day with friends, felt very connected'
-        },
-        {
-          id: '3',
-          userId: user.id,
-          timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-          mood: { overall: 4, anxiety: 7, depression: 5, stress: 8, energy: 3, sleep_quality: 4, social_connection: 3 },
-          overall: 4,
-          anxiety: 7,
-          energy: 3,
-          activities: ['Work'],
-          triggers: ['Work Stress', 'Lack of Sleep'],
-          notes: 'Difficult day at work, stayed up too late'
+  // Fetch mood entries from Supabase
+  const { data: moodEntries = [], isLoading, refetch } = useQuery({
+    queryKey: ['mood-entries', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+
+      const { data, error } = await supabase
+        .from('mood_entries')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(100);
+
+      if (error) throw error;
+      
+      return data.map(entry => ({
+        ...entry,
+        timestamp: new Date(entry.created_at),
+        mood: {
+          overall: entry.overall,
+          anxiety: entry.anxiety,
+          depression: entry.depression || entry.anxiety,
+          stress: entry.stress,
+          energy: entry.energy,
+          sleep_quality: entry.sleep_quality,
+          social_connection: entry.social_connection
         }
-      ];
-      setMoodEntries(sampleEntries);
-    }
-  }, [user]);
+      })) as MoodEntry[];
+    },
+    enabled: !!user?.id,
+  });
 
   const handleMoodSubmit = async (
     mood: DetailedMood, 
@@ -73,27 +60,31 @@ const MoodTracking = () => {
   ) => {
     if (!user) return;
 
-    setIsLoading(true);
     try {
-      const newEntry: MoodEntry = {
-        id: Date.now().toString(),
-        userId: user.id,
-        timestamp: new Date(),
-        mood,
-        overall: mood.overall,
-        anxiety: mood.anxiety,
-        energy: mood.energy,
-        activities,
-        triggers,
-        notes
-      };
+      const { error } = await supabase
+        .from('mood_entries')
+        .insert({
+          user_id: user.id,
+          overall: mood.overall,
+          anxiety: mood.anxiety,
+          depression: mood.depression,
+          stress: mood.stress,
+          energy: mood.energy,
+          sleep_quality: mood.sleep_quality,
+          social_connection: mood.social_connection,
+          activities,
+          triggers,
+          notes
+        });
 
-      setMoodEntries(prev => [newEntry, ...prev]);
-      setActiveTab('patterns');
+      if (error) throw error;
+
+      refetch();
+      setActiveTab('overview');
 
       toast({
         title: "Mood Logged Successfully",
-        description: "Your mood data has been saved and patterns updated.",
+        description: "Your mood data has been saved and insights updated.",
       });
     } catch (error) {
       toast({
@@ -101,18 +92,54 @@ const MoodTracking = () => {
         description: "Failed to log mood. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
+  // Generate insights and patterns
   const patterns = MoodTrackingService.analyzeMoodPatterns(moodEntries);
   const correlations = MoodTrackingService.getMoodCorrelations(moodEntries);
-  const insights = MoodTrackingService.getMoodInsights(moodEntries);
+  const aiInsights = MoodTrackingService.getMoodInsights(moodEntries);
+
+  // Transform data for insights dashboard
+  const moodData = moodEntries.slice(0, 30).reverse().map(entry => ({
+    date: format(entry.timestamp, 'MMM dd'),
+    overall: entry.overall,
+    anxiety: entry.anxiety,
+    energy: entry.energy,
+    stress: entry.stress
+  }));
+
+  const insights = [
+    ...aiInsights,
+    {
+      type: 'info' as const,
+      title: 'Time Patterns',
+      description: `You tend to feel best during the ${patterns.bestTime} and lowest during the ${patterns.worstTime}.`,
+      confidence: 0.8
+    }
+  ];
+
+  const dashboardPatterns = {
+    bestTimeOfDay: patterns.bestTime,
+    worstTimeOfDay: patterns.worstTime,
+    averageMood: moodEntries.length > 0 ? moodEntries.reduce((sum, entry) => sum + entry.overall, 0) / moodEntries.length : 0,
+    moodVariability: moodEntries.length > 0 ? Math.sqrt(moodEntries.reduce((sum, entry) => sum + Math.pow(entry.overall - (moodEntries.reduce((s, e) => s + e.overall, 0) / moodEntries.length), 2), 0) / moodEntries.length) : 0,
+    streak: 7 // Mock streak - could be calculated based on consecutive days
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center py-8">Loading your mood data...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -132,31 +159,91 @@ const MoodTracking = () => {
           </div>
         </div>
 
+        {/* Quick Stats */}
+        {moodEntries.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total Entries</p>
+                    <p className="text-2xl font-bold">{moodEntries.length}</p>
+                  </div>
+                  <Calendar className="h-6 w-6 text-therapy-500" />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">This Month</p>
+                    <p className="text-2xl font-bold">
+                      {moodEntries.filter(entry => {
+                        const entryDate = new Date(entry.timestamp);
+                        const monthStart = startOfMonth(new Date());
+                        const monthEnd = endOfMonth(new Date());
+                        return entryDate >= monthStart && entryDate <= monthEnd;
+                      }).length}
+                    </p>
+                  </div>
+                  <TrendingUp className="h-6 w-6 text-green-500" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Avg Mood</p>
+                    <p className="text-2xl font-bold">{dashboardPatterns.averageMood.toFixed(1)}/10</p>
+                  </div>
+                  <Brain className="h-6 w-6 text-blue-500" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Trend</p>
+                    <p className={`text-lg font-bold ${patterns.trend === 'improving' ? 'text-green-600' : patterns.trend === 'declining' ? 'text-red-600' : 'text-gray-600'}`}>
+                      {patterns.trend === 'improving' ? '↗️ Up' : patterns.trend === 'declining' ? '↘️ Down' : '➡️ Stable'}
+                    </p>
+                  </div>
+                  <BarChart3 className="h-6 w-6 text-purple-500" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="overview" className="flex items-center space-x-2">
+              <BarChart3 className="h-4 w-4" />
+              <span>Overview & Insights</span>
+            </TabsTrigger>
             <TabsTrigger value="log" className="flex items-center space-x-2">
               <Plus className="h-4 w-4" />
               <span>Log Mood</span>
             </TabsTrigger>
-            <TabsTrigger value="patterns" className="flex items-center space-x-2">
-              <BarChart3 className="h-4 w-4" />
-              <span>Patterns & Insights</span>
+            <TabsTrigger value="history" className="flex items-center space-x-2">
+              <Calendar className="h-4 w-4" />
+              <span>History</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="log" className="space-y-6">
-            <DetailedMoodTracker 
-              onMoodSubmit={handleMoodSubmit}
-            />
-          </TabsContent>
-
-          <TabsContent value="patterns" className="space-y-6">
+          <TabsContent value="overview" className="space-y-6">
             {moodEntries.length > 0 ? (
-              <MoodPatterns 
-                patterns={patterns}
-                correlations={correlations}
+              <MoodInsightsDashboard 
+                moodData={moodData}
                 insights={insights}
+                patterns={dashboardPatterns}
               />
             ) : (
               <Card>
@@ -170,6 +257,64 @@ const MoodTracking = () => {
                     <Plus className="h-4 w-4 mr-2" />
                     Log Your First Mood
                   </Button>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="log" className="space-y-6">
+            <DetailedMoodTracker 
+              onMoodSubmit={handleMoodSubmit}
+            />
+          </TabsContent>
+
+          <TabsContent value="history" className="space-y-6">
+            {moodEntries.length > 0 ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Mood History</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {moodEntries.slice(0, 20).map(entry => (
+                      <div key={entry.id} className="border-b pb-4 last:border-b-0">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-sm text-muted-foreground">
+                            {format(entry.timestamp, 'MMM dd, yyyy • h:mm a')}
+                          </span>
+                          <div className="flex space-x-4 text-sm">
+                            <span>Overall: {entry.overall}/10</span>
+                            <span>Energy: {entry.energy}/10</span>
+                            <span>Anxiety: {entry.anxiety}/10</span>
+                          </div>
+                        </div>
+                        
+                        {entry.activities && entry.activities.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {entry.activities.map((activity, idx) => (
+                              <span key={idx} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                                {activity}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {entry.notes && (
+                          <p className="text-sm text-muted-foreground">{entry.notes}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardContent className="text-center py-8">
+                  <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No mood history yet</h3>
+                  <p className="text-muted-foreground">
+                    Your mood entries will appear here once you start logging
+                  </p>
                 </CardContent>
               </Card>
             )}

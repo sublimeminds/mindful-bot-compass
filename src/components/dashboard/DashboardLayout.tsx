@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardNavigation from '@/components/navigation/DashboardNavigation';
@@ -11,60 +10,42 @@ import InsightsWidget from './widgets/InsightsWidget';
 import TherapistWidget from './widgets/TherapistWidget';
 import SessionHistoryWidget from './widgets/SessionHistoryWidget';
 import SmartOnboardingGuide from '@/components/ai/SmartOnboardingGuide';
+import EnhancedMoodWidget from './widgets/EnhancedMoodWidget';
 
 const DashboardLayout = () => {
   const { user } = useAuth();
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50">
       {/* Dashboard Navigation */}
       <DashboardNavigation />
 
       {/* Smart Onboarding Guide */}
       <SmartOnboardingGuide />
 
-      {/* Hero Section */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <SessionStarterWidget />
-        </div>
-        <div>
-          <TherapistWidget />
-        </div>
-      </div>
+      <main className="container mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Primary Actions */}
+          <div className="space-y-6">
+            <SessionStarterWidget />
+            <QuickActionsWidget />
+          </div>
 
-      {/* Quick Stats and Actions */}
-      <div className="grid gap-6 lg:grid-cols-4">
-        <div className="lg:col-span-3">
-          <ProgressOverviewWidget />
-        </div>
-        <div>
-          <MoodTrackerWidget />
-        </div>
-      </div>
+          {/* Middle Column - Core Features */}
+          <div className="space-y-6">
+            <EnhancedMoodWidget />
+            <GoalsWidget />
+          </div>
 
-      {/* Main Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-1">
-          <QuickActionsWidget />
+          {/* Right Column - Insights & History */}
+          <div className="space-y-6">
+            <ProgressOverviewWidget />
+            <SessionHistoryWidget />
+            <InsightsWidget />
+            <TherapistWidget />
+          </div>
         </div>
-        <div className="lg:col-span-1">
-          <GoalsWidget />
-        </div>
-        <div className="lg:col-span-1">
-          <InsightsWidget />
-        </div>
-      </div>
-
-      {/* Session History Section */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div>
-          <SessionHistoryWidget />
-        </div>
-        <div>
-          {/* Placeholder for future widgets */}
-        </div>
-      </div>
+      </main>
     </div>
   );
 };
