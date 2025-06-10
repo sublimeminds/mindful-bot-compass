@@ -11,9 +11,12 @@ const NotificationToastHandler = () => {
   useEffect(() => {
     if (!user) return;
 
+    // Create a unique channel name to avoid conflicts
+    const channelName = `notification-toasts-${user.id}-${Date.now()}`;
+    
     // Listen for new notifications in real-time
     const channel = supabase
-      .channel('notification-toasts')
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -40,10 +43,12 @@ const NotificationToastHandler = () => {
       )
       .subscribe();
 
+    // Cleanup function to properly unsubscribe
     return () => {
+      console.log('Cleaning up notification channel:', channelName);
       supabase.removeChannel(channel);
     };
-  }, [user, toast]);
+  }, [user?.id, toast]); // Only depend on user.id to avoid unnecessary re-subscriptions
 
   return null; // This is a utility component that doesn't render anything
 };
