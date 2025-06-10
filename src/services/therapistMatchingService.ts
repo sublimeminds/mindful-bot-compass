@@ -109,7 +109,12 @@ export class TherapistMatchingService {
       return [];
     }
 
-    return data || [];
+    // Transform the data to ensure proper typing
+    return (data || []).map(therapist => ({
+      ...therapist,
+      effectiveness_areas: therapist.effectiveness_areas as Record<string, number> || {},
+      personality_traits: therapist.personality_traits as Record<string, number> || {}
+    }));
   }
 
   static async calculateMatches(responses: AssessmentResponse[]): Promise<TherapistMatch[]> {
@@ -306,9 +311,9 @@ export class TherapistMatchingService {
       .eq('user_id', userId)
       .order('updated_at', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code !== 'PGRST116') {
+    if (error) {
       console.error('Error fetching assessment:', error);
       return null;
     }
