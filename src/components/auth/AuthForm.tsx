@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -298,16 +297,7 @@ const AuthForm = () => {
                     </div>
                   </div>
                 </div>
-              ) : (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-amber-600" />
-                    <p className="text-sm text-amber-800">
-                      If you're getting rate limit errors, please wait a few minutes before trying again.
-                    </p>
-                  </div>
-                </div>
-              )}
+              ) : null}
               
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div>
@@ -477,3 +467,5 @@ const AuthForm = () => {
 };
 
 export default AuthForm;
+
+}
