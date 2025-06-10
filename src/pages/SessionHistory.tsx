@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Download, Filter, Calendar as CalendarIcon, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SessionDetailsModal from "@/components/session/SessionDetailsModal";
-import EnhancedSessionCard from "@/components/session/EnhancedSessionCard";
-import SessionFilters from "@/components/session/SessionFilters";
+import SessionHistoryList from "@/components/session/SessionHistoryList";
 import { useSessionHistory } from "@/hooks/useSessionHistory";
-import { SessionSummary } from "@/services/sessionHistoryService";
 import { useToast } from "@/hooks/use-toast";
+import { SessionService } from "@/services/sessionService";
 
 const SessionHistory = () => {
   const navigate = useNavigate();
@@ -19,30 +19,38 @@ const SessionHistory = () => {
     isLoading, 
     error, 
     getSessionStats, 
-    filterSessions, 
     exportSessions 
   } = useSessionHistory();
   
-  const [selectedSession, setSelectedSession] = useState<SessionSummary | null>(null);
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
+  const [selectedSessionDetails, setSelectedSessionDetails] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [filteredSessions, setFilteredSessions] = useState<SessionSummary[]>([]);
-  const [showFilters, setShowFilters] = useState(false);
   const [activeTab, setActiveTab] = useState('list');
-
-  useEffect(() => {
-    setFilteredSessions(sessionSummaries);
-  }, [sessionSummaries]);
 
   const stats = getSessionStats();
 
-  const handleViewDetails = (session: SessionSummary) => {
-    setSelectedSession(session);
-    setIsDetailsOpen(true);
-  };
-
-  const handleFilterChange = (filter: any) => {
-    const filtered = filterSessions(filter);
-    setFilteredSessions(filtered);
+  const handleViewSession = async (sessionId: string) => {
+    try {
+      const sessionDetails = await SessionService.getSessionDetails(sessionId);
+      if (sessionDetails) {
+        setSelectedSessionDetails(sessionDetails);
+        setSelectedSessionId(sessionId);
+        setIsDetailsOpen(true);
+      } else {
+        toast({
+          title: "Error",
+          description: "Could not load session details.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error loading session details:', error);
+      toast({
+        title: "Error",
+        description: "Could not load session details.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleExport = () => {
@@ -110,13 +118,6 @@ const SessionHistory = () => {
           <div className="flex items-center space-x-2">
             <Button
               variant="outline"
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-            </Button>
-            <Button
-              variant="outline"
               onClick={handleExport}
               disabled={sessionSummaries.length === 0}
             >
@@ -171,14 +172,6 @@ const SessionHistory = () => {
           </div>
         )}
 
-        {/* Filters */}
-        {showFilters && (
-          <SessionFilters 
-            onFilterChange={handleFilterChange}
-            onClearFilters={() => setFilteredSessions(sessionSummaries)}
-          />
-        )}
-
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
@@ -191,36 +184,8 @@ const SessionHistory = () => {
               <div className="text-center py-8">
                 <div className="text-muted-foreground">Loading your session history...</div>
               </div>
-            ) : filteredSessions.length > 0 ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {filteredSessions.map((session) => (
-                  <EnhancedSessionCard
-                    key={session.id}
-                    session={session}
-                    onViewDetails={handleViewDetails}
-                  />
-                ))}
-              </div>
             ) : (
-              <Card>
-                <CardContent className="text-center py-8">
-                  <CalendarIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">
-                    {sessionSummaries.length === 0 ? 'No sessions yet' : 'No sessions match your filters'}
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    {sessionSummaries.length === 0 
-                      ? 'Start your first therapy session to begin tracking your progress'
-                      : 'Try adjusting your filters to see more sessions'
-                    }
-                  </p>
-                  {sessionSummaries.length === 0 && (
-                    <Button onClick={() => navigate('/chat')}>
-                      Start Your First Session
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
+              <SessionHistoryList onViewSession={handleViewSession} />
             )}
           </TabsContent>
 
@@ -271,11 +236,12 @@ const SessionHistory = () => {
 
         {/* Session Details Modal */}
         <SessionDetailsModal
-          session={selectedSession}
+          session={selectedSessionDetails}
           isOpen={isDetailsOpen}
           onClose={() => {
             setIsDetailsOpen(false);
-            setSelectedSession(null);
+            setSelectedSessionDetails(null);
+            setSelectedSessionId(null);
           }}
         />
       </div>
