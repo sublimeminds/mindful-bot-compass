@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import NotificationCenter from "@/components/NotificationCenter";
 import EmotionDisplay from "@/components/emotion/EmotionDisplay";
 import VoiceInteraction from "@/components/VoiceInteraction";
 import { useEnhancedChat } from "@/hooks/useEnhancedChat";
+import { useRealTimeSession } from "@/hooks/useRealTimeSession";
 
 const Chat = () => {
   const [input, setInput] = useState('');
@@ -27,6 +29,13 @@ const Chat = () => {
   const { currentSession, startSession, endSession, addBreakthrough } = useSession();
   const navigate = useNavigate();
   const { currentTherapist, getPersonalityPrompt } = useTherapist();
+  
+  // Real-time session integration
+  const { 
+    sessionState, 
+    startSession: startRealtimeSession, 
+    endSession: endRealtimeSession 
+  } = useRealTimeSession();
   
   const {
     messages,
@@ -70,10 +79,13 @@ const Chat = () => {
 
   const handleStartSession = async () => {
     try {
+      // Start both regular session and real-time session
       await startSession(7); // Default mood
+      await startRealtimeSession();
+      
       toast({
         title: "Session Started",
-        description: "Your therapy session has begun. Share what's on your mind.",
+        description: "Your therapy session has begun with real-time tracking enabled.",
       });
     } catch (error) {
       toast({
@@ -102,7 +114,10 @@ const Chat = () => {
         addBreakthrough(breakthrough);
       });
 
+      // End both regular session and real-time session
       await endSession(data.moodAfter, data.notes, data.rating);
+      await endRealtimeSession();
+      
       setMessages([]);
       toast({
         title: "Session Completed",
@@ -153,9 +168,16 @@ const Chat = () => {
           <div className="flex items-center space-x-2">
             <NotificationCenter />
             {currentSession && (
-              <Badge variant="secondary" className="bg-green-100 text-green-800">
-                Session Active
-              </Badge>
+              <div className="flex items-center space-x-2">
+                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                  Session Active
+                </Badge>
+                {sessionState.sessionId && (
+                  <Badge variant="outline" className="bg-blue-100 text-blue-800">
+                    Real-time: {sessionState.connectionStatus}
+                  </Badge>
+                )}
+              </div>
             )}
             <Button 
               variant="outline" 
@@ -270,7 +292,7 @@ const Chat = () => {
             <Button onClick={handleStartSession} disabled={isLoading}
               className="w-full bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white"
             >
-              {isLoading ? "Starting Session..." : "Start Enhanced Session"}
+              {isLoading ? "Starting Session..." : "Start Enhanced Session with Real-time Tracking"}
             </Button>
           )}
         </div>
