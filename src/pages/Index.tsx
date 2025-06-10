@@ -10,7 +10,18 @@ import IntelligentNotificationProvider from "@/components/IntelligentNotificatio
 import SmartOnboardingGuide from "@/components/ai/SmartOnboardingGuide";
 
 const Index = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, loading } = useAuth();
+
+  console.log('Index page - Auth state:', { isAuthenticated, user: user?.email, loading });
+
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">

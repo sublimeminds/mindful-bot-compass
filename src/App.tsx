@@ -34,11 +34,7 @@ function App() {
               <NotificationToastHandler />
               <Routes>
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/" element={
-                  <ProtectedRoute>
-                    <Index />
-                  </ProtectedRoute>
-                } />
+                <Route path="/" element={<Index />} />
                 <Route path="/chat" element={
                   <ProtectedRoute>
                     <Chat />
