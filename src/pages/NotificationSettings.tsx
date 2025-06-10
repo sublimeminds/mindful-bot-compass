@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings, Template, Clock, BarChart3 } from "lucide-react";
+import { Settings, FileText, Clock, BarChart3 } from "lucide-react";
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedNotificationSettings from '@/components/notifications/AdvancedNotificationSettings';
 import NotificationTemplateManager from '@/components/notifications/NotificationTemplateManager';
@@ -42,7 +42,7 @@ const NotificationSettings = () => {
             Preferences
           </TabsTrigger>
           <TabsTrigger value="templates">
-            <Template className="h-4 w-4 mr-2" />
+            <FileText className="h-4 w-4 mr-2" />
             Templates
           </TabsTrigger>
           <TabsTrigger value="scheduling">

@@ -6,7 +6,6 @@ import PricingSection from "@/components/PricingSection";
 import UserDashboard from "@/components/UserDashboard";
 import NotificationToastHandler from "@/components/NotificationToastHandler";
 import IntelligentNotificationProvider from "@/components/IntelligentNotificationProvider";
-import SmartOnboardingGuide from "@/components/ai/SmartOnboardingGuide";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -36,7 +35,6 @@ const Index = () => {
           <IntelligentNotificationProvider>
             <NotificationToastHandler />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-              <SmartOnboardingGuide />
               <UserDashboard />
             </div>
           </IntelligentNotificationProvider>

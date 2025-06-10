@@ -358,6 +358,45 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_templates: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          message: string
+          name: string
+          priority: string
+          title: string
+          type: string
+          updated_at: string
+          variables: string[] | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          message: string
+          name: string
+          priority?: string
+          title: string
+          type: string
+          updated_at?: string
+          variables?: string[] | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          message?: string
+          name?: string
+          priority?: string
+          title?: string
+          type?: string
+          updated_at?: string
+          variables?: string[] | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -426,6 +465,44 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      scheduled_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          scheduled_for: string
+          status: string
+          template_id: string | null
+          user_id: string
+          variables: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          scheduled_for: string
+          status?: string
+          template_id?: string | null
+          user_id: string
+          variables?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          scheduled_for?: string
+          status?: string
+          template_id?: string | null
+          user_id?: string
+          variables?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_notifications_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "notification_templates"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       session_analytics: {
         Row: {

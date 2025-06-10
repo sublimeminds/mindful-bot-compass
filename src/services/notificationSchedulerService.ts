@@ -70,12 +70,11 @@ export class NotificationSchedulerService {
     try {
       const now = new Date();
       
+      // For now, we'll use a simplified approach without joins
+      // This will be enhanced once the database types are regenerated
       const { data: pendingNotifications, error } = await supabase
         .from('scheduled_notifications')
-        .select(`
-          *,
-          notification_templates (*)
-        `)
+        .select('*')
         .eq('status', 'pending')
         .lte('scheduled_for', now.toISOString());
 
@@ -86,11 +85,28 @@ export class NotificationSchedulerService {
 
       for (const scheduledNotification of pendingNotifications || []) {
         try {
-          const template = scheduledNotification.notification_templates;
+          // Get the template separately
+          const { data: template } = await supabase
+            .from('notification_templates')
+            .select('*')
+            .eq('id', scheduledNotification.template_id)
+            .single();
+
           if (!template) continue;
 
           const processedContent = NotificationTemplateService.processTemplate(
-            template,
+            {
+              id: template.id,
+              name: template.name,
+              type: template.type,
+              title: template.title,
+              message: template.message,
+              priority: template.priority,
+              variables: template.variables || [],
+              isActive: template.is_active,
+              createdAt: new Date(template.created_at),
+              updatedAt: new Date(template.updated_at)
+            },
             scheduledNotification.variables || {}
           );
 
