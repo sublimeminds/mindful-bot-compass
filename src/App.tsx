@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -17,10 +18,12 @@ import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import NotificationAnalytics from "./pages/NotificationAnalytics";
 import NotificationSettings from "./pages/NotificationSettings";
+import LiveSession from "./pages/LiveSession";
 import IntelligentNotificationProvider from "./components/IntelligentNotificationProvider";
 import NotificationToastHandler from "./components/NotificationToastHandler";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import UserDashboard from "./components/UserDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -28,7 +31,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <Router>
-      <QueryClient client={queryClient}>
+      <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <SessionProvider>
             <TherapistProvider>
@@ -110,7 +113,7 @@ function App() {
             </TherapistProvider>
           </SessionProvider>
         </AuthProvider>
-      </QueryClient>
+      </QueryClientProvider>
     </Router>
   );
 }
