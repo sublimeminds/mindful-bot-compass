@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Plus, Calendar, TrendingUp, MessageCircle, Settings, User, BarChart3 } from "lucide-react";
+import { Heart, Plus, Calendar, TrendingUp, MessageCircle, Settings, User, BarChart3, Brain, Activity } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSession } from "@/contexts/SessionContext";
 import { useOnboardingData } from "@/hooks/useOnboardingData";
@@ -22,6 +22,8 @@ import PersonalizationWizard from "./personalization/PersonalizationWizard";
 import SessionAnalyticsDashboard from "./analytics/SessionAnalyticsDashboard";
 import EnhancedGoalTracker from "./goals/EnhancedGoalTracker";
 import MobileOptimizedLayout from "./mobile/MobileOptimizedLayout";
+import AdvancedMoodTracker from "./mood/AdvancedMoodTracker";
+import SessionRecommendationEngine from "./ai/SessionRecommendationEngine";
 import { SessionSummary } from "@/services/sessionHistoryService";
 import { PersonalizationService } from "@/services/personalizationService";
 
@@ -141,8 +143,10 @@ const UserDashboard = () => {
 
         {/* Main Content with Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
+            <TabsTrigger value="ai-recommendations" className="text-xs sm:text-sm">AI Recs</TabsTrigger>
+            <TabsTrigger value="mood" className="text-xs sm:text-sm">Mood</TabsTrigger>
             <TabsTrigger value="analytics" className="text-xs sm:text-sm">Analytics</TabsTrigger>
             <TabsTrigger value="goals" className="text-xs sm:text-sm">Goals</TabsTrigger>
             <TabsTrigger value="sessions" className="text-xs sm:text-sm">Sessions</TabsTrigger>
@@ -245,6 +249,14 @@ const UserDashboard = () => {
                 )}
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="ai-recommendations" className="mt-6">
+            <SessionRecommendationEngine />
+          </TabsContent>
+
+          <TabsContent value="mood" className="mt-6">
+            <AdvancedMoodTracker />
           </TabsContent>
 
           <TabsContent value="analytics" className="mt-6">
