@@ -1,171 +1,186 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { 
   Target, 
   Calendar, 
-  Trophy, 
-  CheckCircle, 
-  Play,
-  Flag,
+  TrendingUp, 
+  Edit, 
+  Award,
   Clock,
-  Edit
-} from "lucide-react";
-import { Goal } from "@/services/goalService";
-import { format } from "date-fns";
+  Flag
+} from 'lucide-react';
+import { Goal } from '@/services/goalService';
+import { format, differenceInDays } from 'date-fns';
 
 interface GoalCardProps {
   goal: Goal;
-  onUpdateProgress: (goalId: string, progress: number) => void;
-  onEdit: (goal: Goal) => void;
-  onViewDetails: (goal: Goal) => void;
+  onClick: () => void;
+  onEdit: () => void;
+  onUpdateProgress: (goalId: string, progress: number, note?: string) => void;
 }
 
-const GoalCard = ({ goal, onUpdateProgress, onEdit, onViewDetails }: GoalCardProps) => {
+const GoalCard = ({ goal, onClick, onEdit, onUpdateProgress }: GoalCardProps) => {
   const progressPercentage = (goal.currentProgress / goal.targetValue) * 100;
-  const isOverdue = new Date() > goal.targetDate && !goal.isCompleted;
-  const daysRemaining = Math.ceil((goal.targetDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-  
+  const daysRemaining = differenceInDays(goal.targetDate, new Date());
+  const isOverdue = daysRemaining < 0;
+  const isCompleted = goal.isCompleted;
+
   const getCategoryColor = (category: Goal['category']) => {
     switch (category) {
-      case 'mental-health': return 'bg-blue-100 text-blue-800';
-      case 'habit-building': return 'bg-green-100 text-green-800';
-      case 'therapy-specific': return 'bg-purple-100 text-purple-800';
-      case 'personal-growth': return 'bg-orange-100 text-orange-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'mental-health':
+        return 'bg-therapy-100 text-therapy-800';
+      case 'habit-building':
+        return 'bg-calm-100 text-calm-800';
+      case 'therapy-specific':
+        return 'bg-blue-100 text-blue-800';
+      case 'personal-growth':
+        return 'bg-purple-100 text-purple-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getPriorityColor = (priority: Goal['priority']) => {
     switch (priority) {
-      case 'high': return 'border-red-200 bg-red-50';
-      case 'medium': return 'border-yellow-200 bg-yellow-50';
-      case 'low': return 'border-green-200 bg-green-50';
-      default: return 'border-gray-200 bg-gray-50';
+      case 'high':
+        return 'text-red-600';
+      case 'medium':
+        return 'text-yellow-600';
+      case 'low':
+        return 'text-green-600';
+      default:
+        return 'text-gray-600';
     }
+  };
+
+  const handleQuickProgress = () => {
+    const increment = goal.type === 'habit' ? 1 : Math.min(5, goal.targetValue - goal.currentProgress);
+    const newProgress = Math.min(goal.currentProgress + increment, goal.targetValue);
+    onUpdateProgress(goal.id, newProgress);
   };
 
   const completedMilestones = goal.milestones.filter(m => m.isCompleted).length;
 
   return (
-    <Card className={`hover:shadow-lg transition-shadow ${getPriorityColor(goal.priority)}`}>
+    <Card className={`hover:shadow-md transition-shadow cursor-pointer ${isCompleted ? 'bg-green-50 border-green-200' : ''}`}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
-          <div className="space-y-2">
-            <CardTitle className="text-lg flex items-center space-x-2">
-              {goal.isCompleted ? (
-                <CheckCircle className="h-5 w-5 text-green-600" />
-              ) : (
-                <Target className="h-5 w-5 text-therapy-500" />
-              )}
-              <span className={goal.isCompleted ? 'line-through text-muted-foreground' : ''}>
-                {goal.title}
-              </span>
-            </CardTitle>
+          <div className="space-y-2 flex-1" onClick={onClick}>
             <div className="flex items-center space-x-2">
               <Badge className={getCategoryColor(goal.category)}>
                 {goal.category.replace('-', ' ')}
               </Badge>
-              <Badge variant="outline" className="text-xs">
-                {goal.type}
-              </Badge>
-              {goal.priority === 'high' && (
-                <Flag className="h-4 w-4 text-red-500" />
-              )}
+              <Flag className={`h-3 w-3 ${getPriorityColor(goal.priority)}`} />
             </div>
+            <CardTitle className="text-lg leading-tight">{goal.title}</CardTitle>
+            {goal.description && (
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {goal.description}
+              </p>
+            )}
           </div>
-          <Button variant="ghost" size="sm" onClick={() => onEdit(goal)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit();
+            }}
+          >
             <Edit className="h-4 w-4" />
           </Button>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">{goal.description}</p>
-
-        {/* Progress */}
+        {/* Progress Section */}
         <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Progress</span>
-            <span className="text-sm text-muted-foreground">
+          <div className="flex items-center justify-between text-sm">
+            <span className="flex items-center">
+              <TrendingUp className="h-3 w-3 mr-1" />
+              Progress
+            </span>
+            <span className="font-medium">
               {goal.currentProgress} / {goal.targetValue} {goal.unit}
             </span>
           </div>
           <Progress value={Math.min(progressPercentage, 100)} className="h-2" />
-          <div className="text-right text-xs text-muted-foreground">
+          <div className="text-xs text-muted-foreground text-center">
             {Math.round(progressPercentage)}% complete
           </div>
         </div>
 
         {/* Milestones */}
         {goal.milestones.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium flex items-center">
-                <Trophy className="h-4 w-4 mr-1" />
-                Milestones
-              </span>
-              <span className="text-sm text-muted-foreground">
-                {completedMilestones} / {goal.milestones.length}
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-1">
-              {goal.milestones.slice(0, 3).map((milestone, index) => (
-                <Badge 
-                  key={milestone.id} 
-                  variant={milestone.isCompleted ? "default" : "outline"}
-                  className="text-xs"
-                >
-                  {milestone.isCompleted ? '✓' : index + 1} {milestone.title}
-                </Badge>
-              ))}
-              {goal.milestones.length > 3 && (
-                <Badge variant="outline" className="text-xs">
-                  +{goal.milestones.length - 3} more
-                </Badge>
-              )}
-            </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="flex items-center">
+              <Award className="h-3 w-3 mr-1" />
+              Milestones
+            </span>
+            <span>{completedMilestones} / {goal.milestones.length}</span>
           </div>
         )}
 
         {/* Timeline */}
         <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <div className="flex items-center space-x-1">
-            <Calendar className="h-4 w-4" />
-            <span>Due: {format(goal.targetDate, 'MMM dd, yyyy')}</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <Clock className="h-4 w-4" />
-            <span className={isOverdue ? 'text-red-600' : ''}>
-              {isOverdue ? 'Overdue' : daysRemaining > 0 ? `${daysRemaining} days left` : 'Due today'}
-            </span>
-          </div>
+          <span className="flex items-center">
+            <Calendar className="h-3 w-3 mr-1" />
+            {isCompleted ? 'Completed' : 'Due'}
+          </span>
+          <span className={isOverdue && !isCompleted ? 'text-red-600 font-medium' : ''}>
+            {isCompleted 
+              ? format(goal.updatedAt, 'MMM d, yyyy')
+              : isOverdue 
+                ? `${Math.abs(daysRemaining)} days overdue`
+                : daysRemaining === 0 
+                  ? 'Due today'
+                  : `${daysRemaining} days left`
+            }
+          </span>
         </div>
 
-        {/* Actions */}
-        <div className="flex space-x-2">
-          {!goal.isCompleted && (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => onUpdateProgress(goal.id, goal.currentProgress + 1)}
-              className="flex-1"
-            >
-              <Play className="h-4 w-4 mr-1" />
-              Update Progress
-            </Button>
-          )}
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => onViewDetails(goal)}
-            className="flex-1"
+        {/* Tags */}
+        {goal.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {goal.tags.slice(0, 3).map((tag, index) => (
+              <Badge key={index} variant="outline" className="text-xs">
+                {tag}
+              </Badge>
+            ))}
+            {goal.tags.length > 3 && (
+              <Badge variant="outline" className="text-xs">
+                +{goal.tags.length - 3}
+              </Badge>
+            )}
+          </div>
+        )}
+
+        {/* Action Button */}
+        {!isCompleted && (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleQuickProgress();
+            }}
+            className="w-full"
           >
-            View Details
+            <Target className="h-3 w-3 mr-1" />
+            Quick Progress +{goal.type === 'habit' ? '1' : '5'}
           </Button>
-        </div>
+        )}
+
+        {isCompleted && (
+          <div className="flex items-center justify-center text-green-600 text-sm font-medium">
+            <Award className="h-4 w-4 mr-1" />
+            Goal Completed!
+          </div>
+        )}
       </CardContent>
     </Card>
   );

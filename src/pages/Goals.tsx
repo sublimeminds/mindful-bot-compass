@@ -1,85 +1,63 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  ArrowLeft, 
-  Target, 
-  Plus, 
-  Search, 
-  Filter,
-  Trophy,
-  TrendingUp,
-  Calendar,
-  CheckCircle
-} from "lucide-react";
+import { ArrowLeft, Plus, Target, TrendingUp, Calendar, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
-import { useToast } from "@/hooks/use-toast";
-import { Goal, GoalService, GoalTemplate } from "@/services/goalService";
+import { GoalService, Goal, GoalTemplate } from "@/services/goalService";
 import GoalCard from "@/components/goals/GoalCard";
-import GoalTemplates from "@/components/goals/GoalTemplates";
 import GoalForm from "@/components/goals/GoalForm";
+import GoalTemplates from "@/components/goals/GoalTemplates";
 import GoalDetailsModal from "@/components/goals/GoalDetailsModal";
+import { useToast } from "@/hooks/use-toast";
 
 const Goals = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
-
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [templates, setTemplates] = useState<GoalTemplate[]>([]);
-  const [insights, setInsights] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState('overview');
-  const [showForm, setShowForm] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<GoalTemplate | undefined>();
-  const [editingGoal, setEditingGoal] = useState<Goal | undefined>();
+  const [activeTab, setActiveTab] = useState('active');
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
-  useEffect(() => {
-    if (user) {
-      loadGoals();
-      loadTemplates();
-    }
-  }, [user]);
+  const { data: goals = [], isLoading, refetch } = useQuery({
+    queryKey: ['goals', user?.id],
+    queryFn: () => user ? GoalService.getGoals(user.id) : [],
+    enabled: !!user?.id,
+  });
 
-  const loadGoals = async () => {
-    if (!user) return;
-    try {
-      const userGoals = await GoalService.getGoals(user.id);
-      const goalInsights = await GoalService.getGoalInsights(user.id);
-      setGoals(userGoals);
-      setInsights(goalInsights);
-    } catch (error) {
-      console.error('Error loading goals:', error);
-    }
+  const { data: insights } = useQuery({
+    queryKey: ['goal-insights', user?.id],
+    queryFn: () => user ? GoalService.getGoalInsights(user.id) : null,
+    enabled: !!user?.id,
+  });
+
+  const activeGoals = goals.filter(goal => !goal.isCompleted);
+  const completedGoals = goals.filter(goal => goal.isCompleted);
+
+  const handleGoalClick = (goal: Goal) => {
+    setSelectedGoal(goal);
+    setIsDetailsOpen(true);
   };
 
-  const loadTemplates = () => {
-    const goalTemplates = GoalService.getGoalTemplates();
-    setTemplates(goalTemplates);
+  const handleEditGoal = (goal: Goal) => {
+    setEditingGoal(goal);
+    setIsFormOpen(true);
   };
 
-  const handleCreateGoal = async (goalData: any, milestones: any[]) => {
+  const handleCreateFromTemplate = async (template: GoalTemplate, customizations: any) => {
     if (!user) return;
 
     try {
-      await GoalService.createGoal({ ...goalData, userId: user.id }, milestones);
-      loadGoals();
-      setShowForm(false);
-      setSelectedTemplate(undefined);
-      setEditingGoal(undefined);
-
+      await GoalService.createGoalFromTemplate(template.id, user.id, customizations);
+      refetch();
       toast({
         title: "Goal Created",
-        description: "Your new goal has been created successfully!",
+        description: `Your goal "${template.title}" has been created successfully.`,
       });
     } catch (error) {
       toast({
@@ -90,16 +68,14 @@ const Goals = () => {
     }
   };
 
-  const handleUpdateProgress = async (goalId: string, progress: number) => {
+  const handleUpdateProgress = async (goalId: string, progress: number, note?: string) => {
     try {
-      const updatedGoal = await GoalService.updateGoalProgress(goalId, progress);
-      if (updatedGoal) {
-        loadGoals();
-        toast({
-          title: "Progress Updated",
-          description: `Goal progress updated to ${progress}`,
-        });
-      }
+      await GoalService.updateGoalProgress(goalId, progress, note);
+      refetch();
+      toast({
+        title: "Progress Updated",
+        description: "Your goal progress has been updated successfully.",
+      });
     } catch (error) {
       toast({
         title: "Error",
@@ -109,48 +85,19 @@ const Goals = () => {
     }
   };
 
-  const handleSelectTemplate = (template: GoalTemplate) => {
-    setSelectedTemplate(template);
-    setActiveTab('create');
-    setShowForm(true);
-  };
-
-  const handleEditGoal = (goal: Goal) => {
-    setEditingGoal(goal);
-    setActiveTab('create');
-    setShowForm(true);
-  };
-
-  const handleViewDetails = (goal: Goal) => {
-    setSelectedGoal(goal);
-  };
-
-  const handleGoalUpdated = (updatedGoal: Goal) => {
-    setGoals(goals.map(g => g.id === updatedGoal.id ? updatedGoal : g));
-    setSelectedGoal(updatedGoal);
-    loadGoals(); // Refresh insights
-  };
-
-  const filteredGoals = goals.filter(goal => {
-    const matchesSearch = goal.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         goal.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || goal.category === categoryFilter;
-    const matchesStatus = statusFilter === 'all' || 
-                         (statusFilter === 'completed' && goal.isCompleted) ||
-                         (statusFilter === 'active' && !goal.isCompleted) ||
-                         (statusFilter === 'overdue' && !goal.isCompleted && new Date() > goal.targetDate);
-    
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
-
-  const activeGoals = goals.filter(g => !g.isCompleted);
-  const completedGoals = goals.filter(g => g.isCompleted);
-
-  if (!user) return null;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center py-8">Loading your goals...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -161,220 +108,165 @@ const Goals = () => {
             <div>
               <h1 className="text-2xl font-bold flex items-center">
                 <Target className="h-6 w-6 mr-2" />
-                Goal Setting & Progress
+                My Goals
               </h1>
               <p className="text-muted-foreground">
-                Set SMART goals and track your mental health progress
+                Track your progress and achieve your therapy objectives
               </p>
             </div>
           </div>
-          <Button 
-            onClick={() => {
-              setSelectedTemplate(undefined);
-              setEditingGoal(undefined);
-              setActiveTab('create');
-              setShowForm(true);
-            }}
-            className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
-          >
+          
+          <Button onClick={() => setIsFormOpen(true)}>
             <Plus className="h-4 w-4 mr-2" />
             Create Goal
           </Button>
         </div>
 
-        {/* Overview Stats */}
+        {/* Quick Stats */}
         {insights && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <Target className="h-8 w-8 text-therapy-500" />
-                  <div>
-                    <p className="text-2xl font-bold">{insights.totalGoals}</p>
-                    <p className="text-sm text-muted-foreground">Total Goals</p>
-                  </div>
-                </div>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm flex items-center">
+                  <Target className="h-4 w-4 mr-1" />
+                  Total Goals
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{insights.totalGoals}</div>
               </CardContent>
             </Card>
-
+            
             <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="h-8 w-8 text-green-500" />
-                  <div>
-                    <p className="text-2xl font-bold">{insights.completedGoals}</p>
-                    <p className="text-sm text-muted-foreground">Completed</p>
-                  </div>
-                </div>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm flex items-center">
+                  <Award className="h-4 w-4 mr-1" />
+                  Completed
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-green-600">{insights.completedGoals}</div>
               </CardContent>
             </Card>
-
+            
             <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <Trophy className="h-8 w-8 text-yellow-500" />
-                  <div>
-                    <p className="text-2xl font-bold">{insights.completedMilestones}</p>
-                    <p className="text-sm text-muted-foreground">Milestones</p>
-                  </div>
-                </div>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm flex items-center">
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  Completion Rate
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{Math.round(insights.completionRate)}%</div>
               </CardContent>
             </Card>
-
+            
             <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <TrendingUp className="h-8 w-8 text-blue-500" />
-                  <div>
-                    <p className="text-2xl font-bold">{Math.round(insights.completionRate)}%</p>
-                    <p className="text-sm text-muted-foreground">Success Rate</p>
-                  </div>
-                </div>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm flex items-center">
+                  <Calendar className="h-4 w-4 mr-1" />
+                  Milestones
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{insights.completedMilestones}/{insights.totalMilestones}</div>
               </CardContent>
             </Card>
           </div>
         )}
 
         {/* Main Content */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="overview">My Goals</TabsTrigger>
-            <TabsTrigger value="templates">Templates</TabsTrigger>
-            <TabsTrigger value="create">
-              {showForm ? (editingGoal ? 'Edit Goal' : 'Create Goal') : 'Create Goal'}
-            </TabsTrigger>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList>
+            <TabsTrigger value="active">Active Goals ({activeGoals.length})</TabsTrigger>
+            <TabsTrigger value="completed">Completed ({completedGoals.length})</TabsTrigger>
+            <TabsTrigger value="templates">Goal Templates</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
-            {/* Filters */}
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex space-x-4 items-center">
-                  <div className="flex-1">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Search goals..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="w-48">
-                      <Filter className="h-4 w-4 mr-2" />
-                      <SelectValue placeholder="Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      <SelectItem value="mental-health">Mental Health</SelectItem>
-                      <SelectItem value="habit-building">Habit Building</SelectItem>
-                      <SelectItem value="therapy-specific">Therapy Specific</SelectItem>
-                      <SelectItem value="personal-growth">Personal Growth</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-32">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All</SelectItem>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                      <SelectItem value="overdue">Overdue</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Goals Grid */}
-            {filteredGoals.length > 0 ? (
+          <TabsContent value="active" className="space-y-6">
+            {activeGoals.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredGoals.map(goal => (
+                {activeGoals.map((goal) => (
                   <GoalCard
                     key={goal.id}
                     goal={goal}
+                    onClick={() => handleGoalClick(goal)}
+                    onEdit={() => handleEditGoal(goal)}
                     onUpdateProgress={handleUpdateProgress}
-                    onEdit={handleEditGoal}
-                    onViewDetails={handleViewDetails}
                   />
                 ))}
               </div>
             ) : (
               <Card>
-                <CardContent className="text-center py-12">
+                <CardContent className="text-center py-8">
                   <Target className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">
-                    {goals.length === 0 ? 'No goals yet' : 'No goals match your filters'}
-                  </h3>
+                  <h3 className="text-lg font-medium mb-2">No active goals</h3>
                   <p className="text-muted-foreground mb-4">
-                    {goals.length === 0 
-                      ? 'Start setting goals to track your mental health progress'
-                      : 'Try adjusting your search or filter criteria'
-                    }
+                    Start by creating your first goal or choosing from our templates.
                   </p>
-                  {goals.length === 0 && (
-                    <Button onClick={() => setActiveTab('templates')}>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Create Your First Goal
-                    </Button>
-                  )}
+                  <Button onClick={() => setActiveTab('templates')}>
+                    Browse Templates
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="completed" className="space-y-6">
+            {completedGoals.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {completedGoals.map((goal) => (
+                  <GoalCard
+                    key={goal.id}
+                    goal={goal}
+                    onClick={() => handleGoalClick(goal)}
+                    onEdit={() => handleEditGoal(goal)}
+                    onUpdateProgress={handleUpdateProgress}
+                  />
+                ))}
+              </div>
+            ) : (
+              <Card>
+                <CardContent className="text-center py-8">
+                  <Award className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No completed goals yet</h3>
+                  <p className="text-muted-foreground">
+                    Keep working on your active goals to see them here when completed.
+                  </p>
                 </CardContent>
               </Card>
             )}
           </TabsContent>
 
           <TabsContent value="templates" className="space-y-6">
-            <GoalTemplates
-              templates={templates}
-              onSelectTemplate={handleSelectTemplate}
-            />
-          </TabsContent>
-
-          <TabsContent value="create" className="space-y-6">
-            {showForm ? (
-              <GoalForm
-                template={selectedTemplate}
-                existingGoal={editingGoal}
-                onSubmit={handleCreateGoal}
-                onCancel={() => {
-                  setShowForm(false);
-                  setSelectedTemplate(undefined);
-                  setEditingGoal(undefined);
-                  setActiveTab('overview');
-                }}
-              />
-            ) : (
-              <Card>
-                <CardContent className="text-center py-12">
-                  <Target className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">Create a New Goal</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Start with a template or create a custom goal from scratch
-                  </p>
-                  <div className="space-x-4">
-                    <Button onClick={() => setActiveTab('templates')}>
-                      Browse Templates
-                    </Button>
-                    <Button variant="outline" onClick={() => setShowForm(true)}>
-                      Create Custom Goal
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+            <GoalTemplates onCreateFromTemplate={handleCreateFromTemplate} />
           </TabsContent>
         </Tabs>
 
         {/* Goal Details Modal */}
         <GoalDetailsModal
           goal={selectedGoal}
-          isOpen={!!selectedGoal}
-          onClose={() => setSelectedGoal(null)}
-          onEdit={handleEditGoal}
-          onGoalUpdated={handleGoalUpdated}
+          isOpen={isDetailsOpen}
+          onClose={() => {
+            setIsDetailsOpen(false);
+            setSelectedGoal(null);
+          }}
+          onUpdateProgress={handleUpdateProgress}
+        />
+
+        {/* Goal Form Modal */}
+        <GoalForm
+          goal={editingGoal}
+          isOpen={isFormOpen}
+          onClose={() => {
+            setIsFormOpen(false);
+            setEditingGoal(null);
+          }}
+          onSuccess={() => {
+            refetch();
+            setIsFormOpen(false);
+            setEditingGoal(null);
+          }}
         />
       </div>
     </div>
