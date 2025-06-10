@@ -84,7 +84,7 @@ const SessionAnalyticsDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Sessions This Week</p>
-                <p className="text-2xl font-bold">{stats?.weeklyCount || 0}</p>
+                <p className="text-2xl font-bold">{stats?.weeklyProgress || 0}</p>
               </div>
               <Target className="h-8 w-8 text-therapy-500" />
             </div>
@@ -216,10 +216,10 @@ const SessionAnalyticsDashboard = () => {
               <div className="flex justify-between mb-2">
                 <span className="text-sm font-medium">Session Consistency</span>
                 <span className="text-sm text-muted-foreground">
-                  {Math.min(100, ((stats?.weeklyCount || 0) / 7) * 100).toFixed(0)}%
+                  {Math.min(100, ((stats?.weeklyProgress || 0) / 7) * 100).toFixed(0)}%
                 </span>
               </div>
-              <Progress value={Math.min(100, ((stats?.weeklyCount || 0) / 7) * 100)} />
+              <Progress value={Math.min(100, ((stats?.weeklyProgress || 0) / 7) * 100)} />
             </div>
 
             <div>
