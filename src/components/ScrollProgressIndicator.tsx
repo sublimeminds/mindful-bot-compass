@@ -51,6 +51,11 @@ const ScrollProgressIndicator = ({ sections, isAuthenticated }: ScrollProgressIn
     };
   }, [sections, isAuthenticated]);
 
+  // Don't show the progress indicator for authenticated users on dashboard
+  if (isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="fixed top-16 left-0 right-0 z-40">
       {/* Enhanced progress bar with smoother gradients */}
@@ -77,28 +82,17 @@ const ScrollProgressIndicator = ({ sections, isAuthenticated }: ScrollProgressIn
       {scrollProgress > 3 && (
         <div className="absolute top-3 right-4 animate-fade-in">
           <div className="bg-background/90 backdrop-blur-xl border border-border/40 rounded-2xl px-4 py-2 shadow-xl shadow-black/10">
-            {!isAuthenticated && activeSection && (
-              <div className="flex items-center space-x-3">
-                <div className="relative">
-                  <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500 animate-pulse" />
-                  <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500 animate-ping opacity-30" />
-                </div>
-                <span className="text-sm font-semibold text-foreground/90 tracking-wide">
-                  {activeSection === '#features' && 'Features'}
-                  {activeSection === '#pricing' && 'Pricing'}
-                  {!activeSection && 'Overview'}
-                </span>
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500 animate-pulse" />
+                <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500 animate-ping opacity-30" />
               </div>
-            )}
-            
-            {isAuthenticated && (
-              <div className="flex items-center space-x-3">
-                <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500" />
-                <span className="text-sm font-semibold text-foreground/90 tracking-wide">
-                  {Math.round(scrollProgress)}% complete
-                </span>
-              </div>
-            )}
+              <span className="text-sm font-semibold text-foreground/90 tracking-wide">
+                {activeSection === '#features' && 'Features'}
+                {activeSection === '#pricing' && 'Pricing'}
+                {!activeSection && 'Overview'}
+              </span>
+            </div>
           </div>
         </div>
       )}
