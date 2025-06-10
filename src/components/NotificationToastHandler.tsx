@@ -8,21 +8,25 @@ const NotificationToastHandler = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const channelRef = useRef<any>(null);
-  const isSubscribedRef = useRef(false);
+  const subscriptionStatusRef = useRef<string>('CLOSED');
 
   useEffect(() => {
-    if (!user || isSubscribedRef.current) return;
+    if (!user) return;
 
     // Clean up any existing channel before creating a new one
     if (channelRef.current) {
       console.log('Cleaning up existing toast channel');
-      supabase.removeChannel(channelRef.current);
+      try {
+        supabase.removeChannel(channelRef.current);
+      } catch (error) {
+        console.log('Error removing toast channel:', error);
+      }
       channelRef.current = null;
-      isSubscribedRef.current = false;
+      subscriptionStatusRef.current = 'CLOSED';
     }
 
-    // Create a unique channel name to avoid conflicts with NotificationCenter
-    const channelName = `toast-notifications-${user.id}-${Date.now()}`;
+    // Create a unique channel name
+    const channelName = `toast-handler-${user.id}-${Math.random().toString(36).substr(2, 9)}`;
     
     console.log('Creating new toast notification channel:', channelName);
     
@@ -49,7 +53,6 @@ const NotificationToastHandler = () => {
             });
           }
           
-          // Log all notifications for debugging
           console.log('New notification received for toast:', notification);
         }
       );
@@ -57,10 +60,7 @@ const NotificationToastHandler = () => {
     // Subscribe to the channel
     channel.subscribe((status) => {
       console.log('Toast channel subscription status:', status);
-      if (status === 'SUBSCRIBED') {
-        isSubscribedRef.current = true;
-        console.log('Successfully subscribed to toast notifications channel');
-      }
+      subscriptionStatusRef.current = status;
     });
 
     // Store channel reference
@@ -70,9 +70,13 @@ const NotificationToastHandler = () => {
     return () => {
       console.log('Cleaning up toast notification channel:', channelName);
       if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
+        try {
+          supabase.removeChannel(channelRef.current);
+        } catch (error) {
+          console.log('Error during toast cleanup:', error);
+        }
         channelRef.current = null;
-        isSubscribedRef.current = false;
+        subscriptionStatusRef.current = 'CLOSED';
       }
     };
   }, [user?.id, toast]);
@@ -82,9 +86,13 @@ const NotificationToastHandler = () => {
     return () => {
       if (channelRef.current) {
         console.log('Toast component unmounting, cleaning up channel');
-        supabase.removeChannel(channelRef.current);
+        try {
+          supabase.removeChannel(channelRef.current);
+        } catch (error) {
+          console.log('Error during unmount cleanup:', error);
+        }
         channelRef.current = null;
-        isSubscribedRef.current = false;
+        subscriptionStatusRef.current = 'CLOSED';
       }
     };
   }, []);

@@ -17,7 +17,7 @@ const NotificationCenter = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const channelRef = useRef<any>(null);
-  const isSubscribedRef = useRef(false);
+  const subscriptionStatusRef = useRef<string>('CLOSED');
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
@@ -41,18 +41,22 @@ const NotificationCenter = () => {
 
   // Set up real-time subscription for new notifications
   useEffect(() => {
-    if (!user || isSubscribedRef.current) return;
+    if (!user) return;
 
-    // Clean up any existing channel
+    // Clean up any existing channel first
     if (channelRef.current) {
       console.log('Cleaning up existing notification center channel');
-      supabase.removeChannel(channelRef.current);
+      try {
+        supabase.removeChannel(channelRef.current);
+      } catch (error) {
+        console.log('Error removing channel:', error);
+      }
       channelRef.current = null;
-      isSubscribedRef.current = false;
+      subscriptionStatusRef.current = 'CLOSED';
     }
 
-    // Create a unique channel name that differs from toast handler
-    const channelName = `center-notifications-${user.id}-${Date.now()}`;
+    // Create a unique channel name
+    const channelName = `notification-center-${user.id}-${Math.random().toString(36).substr(2, 9)}`;
     console.log('Creating notification center channel:', channelName);
 
     const channel = supabase
@@ -66,26 +70,28 @@ const NotificationCenter = () => {
           filter: `user_id=eq.${user.id}`
         },
         () => {
-          // Refresh the notifications list when new ones arrive
+          console.log('New notification received in center');
           fetchNotifications();
         }
       );
 
     channel.subscribe((status) => {
       console.log('Notification center channel status:', status);
-      if (status === 'SUBSCRIBED') {
-        isSubscribedRef.current = true;
-      }
+      subscriptionStatusRef.current = status;
     });
 
     channelRef.current = channel;
 
     return () => {
-      console.log('Cleaning up notification center channel');
+      console.log('Cleaning up notification center channel on unmount');
       if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
+        try {
+          supabase.removeChannel(channelRef.current);
+        } catch (error) {
+          console.log('Error during cleanup:', error);
+        }
         channelRef.current = null;
-        isSubscribedRef.current = false;
+        subscriptionStatusRef.current = 'CLOSED';
       }
     };
   }, [user?.id]);

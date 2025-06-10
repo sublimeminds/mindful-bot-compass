@@ -26,7 +26,7 @@ const AdminSystemManagement = () => {
 
       {/* System Management Tabs */}
       <Tabs defaultValue="health" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 bg-gray-800">
+        <TabsList className="grid w-full grid-cols-5 bg-gray-800">
           <TabsTrigger value="health" className="data-[state=active]:bg-orange-600">
             <Activity className="h-4 w-4 mr-2" />
             System Health
@@ -43,6 +43,10 @@ const AdminSystemManagement = () => {
             <Shield className="h-4 w-4 mr-2" />
             Audit Logs
           </TabsTrigger>
+          <TabsTrigger value="notifications" className="data-[state=active]:bg-orange-600">
+            <Bug className="h-4 w-4 mr-2" />
+            Notifications Debug
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="health">
@@ -50,7 +54,14 @@ const AdminSystemManagement = () => {
         </TabsContent>
 
         <TabsContent value="debug">
-          <AdminNotificationDebugPanel />
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white">System Debug Tools</CardTitle>
+            </CardHeader>
+            <CardContent className="text-white">
+              <p>General system debugging tools and utilities will be displayed here.</p>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="config">
@@ -59,6 +70,10 @@ const AdminSystemManagement = () => {
 
         <TabsContent value="audit">
           <AuditLogViewer />
+        </TabsContent>
+
+        <TabsContent value="notifications">
+          <AdminNotificationDebugPanel />
         </TabsContent>
       </Tabs>
     </div>
