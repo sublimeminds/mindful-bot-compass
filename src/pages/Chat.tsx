@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +18,7 @@ import EmotionDisplay from "@/components/emotion/EmotionDisplay";
 import VoiceInteraction from "@/components/VoiceInteraction";
 import { useEnhancedChat } from "@/hooks/useEnhancedChat";
 import { useRealTimeSession } from "@/hooks/useRealTimeSession";
+import ChatSessionMetrics from "@/components/session/ChatSessionMetrics";
 
 const Chat = () => {
   const [input, setInput] = useState('');
@@ -190,6 +190,17 @@ const Chat = () => {
           </div>
         </div>
       </div>
+
+      {/* Real-time Session Metrics */}
+      {currentSession && sessionState.sessionId && (
+        <div className="px-4 pt-4 max-w-4xl mx-auto w-full">
+          <ChatSessionMetrics 
+            sessionState={sessionState}
+            messageCount={messages.length}
+            className="mb-4"
+          />
+        </div>
+      )}
 
       {/* Chat Messages */}
       <div className="flex-grow overflow-hidden">
