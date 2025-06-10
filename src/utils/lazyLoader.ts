@@ -14,7 +14,7 @@ export const createLazyComponent = <T extends ComponentType<any>>(
   options: LazyComponentOptions = {}
 ) => {
   const {
-    fallback = <ComponentSkeleton />,
+    fallback = React.createElement(ComponentSkeleton),
     delay = 0,
     retries = 3
   } = options;
@@ -23,10 +23,10 @@ export const createLazyComponent = <T extends ComponentType<any>>(
     retryImport(importFn, retries, delay)
   );
 
-  return (props: React.ComponentProps<T>) => (
-    <Suspense fallback={fallback}>
-      <LazyComponent {...props} />
-    </Suspense>
+  return (props: React.ComponentProps<T>) => React.createElement(
+    Suspense,
+    { fallback },
+    React.createElement(LazyComponent, props)
   );
 };
 
@@ -51,16 +51,18 @@ const retryImport = async <T,>(
 };
 
 // Default loading skeleton
-const ComponentSkeleton = () => (
-  <div className="space-y-4 p-4">
-    <Skeleton className="h-8 w-3/4" />
-    <Skeleton className="h-4 w-1/2" />
-    <Skeleton className="h-32 w-full" />
-    <div className="flex space-x-2">
-      <Skeleton className="h-10 w-20" />
-      <Skeleton className="h-10 w-20" />
-    </div>
-  </div>
+const ComponentSkeleton = () => React.createElement(
+  'div',
+  { className: 'space-y-4 p-4' },
+  React.createElement(Skeleton, { className: 'h-8 w-3/4' }),
+  React.createElement(Skeleton, { className: 'h-4 w-1/2' }),
+  React.createElement(Skeleton, { className: 'h-32 w-full' }),
+  React.createElement(
+    'div',
+    { className: 'flex space-x-2' },
+    React.createElement(Skeleton, { className: 'h-10 w-20' }),
+    React.createElement(Skeleton, { className: 'h-10 w-20' })
+  )
 );
 
 // Preload components for better UX
@@ -102,18 +104,20 @@ export const createRouteComponent = (
   importFn: () => Promise<{ default: ComponentType<any> }>
 ) => {
   return createLazyComponent(importFn, {
-    fallback: <RouteLoadingSkeleton />
+    fallback: React.createElement(RouteLoadingSkeleton)
   });
 };
 
-const RouteLoadingSkeleton = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="space-y-4 w-full max-w-md">
-      <Skeleton className="h-12 w-full" />
-      <Skeleton className="h-8 w-3/4" />
-      <Skeleton className="h-64 w-full" />
-    </div>
-  </div>
+const RouteLoadingSkeleton = () => React.createElement(
+  'div',
+  { className: 'min-h-screen flex items-center justify-center' },
+  React.createElement(
+    'div',
+    { className: 'space-y-4 w-full max-w-md' },
+    React.createElement(Skeleton, { className: 'h-12 w-full' }),
+    React.createElement(Skeleton, { className: 'h-8 w-3/4' }),
+    React.createElement(Skeleton, { className: 'h-64 w-full' })
+  )
 );
 
 // Performance monitoring for lazy loads
