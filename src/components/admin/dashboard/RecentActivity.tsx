@@ -13,27 +13,25 @@ const RecentActivity = () => {
   useEffect(() => {
     const fetchRecentActivity = async () => {
       try {
-        // Fetch recent sessions
+        // Fetch recent sessions with user data
         const { data: sessions } = await supabase
           .from('therapy_sessions')
           .select(`
             id,
             created_at,
-            user_id,
-            profiles!therapy_sessions_user_id_fkey(name, email)
+            user_id
           `)
           .order('created_at', { ascending: false })
           .limit(5);
 
-        // Fetch recent goals
+        // Fetch recent goals with user data
         const { data: goals } = await supabase
           .from('goals')
           .select(`
             id,
             created_at,
             title,
-            user_id,
-            profiles!goals_user_id_fkey(name, email)
+            user_id
           `)
           .order('created_at', { ascending: false })
           .limit(5);
@@ -45,26 +43,48 @@ const RecentActivity = () => {
           .order('created_at', { ascending: false })
           .limit(5);
 
+        // Get user data for sessions and goals
+        const allUserIds = [
+          ...(sessions?.map(s => s.user_id) || []),
+          ...(goals?.map(g => g.user_id) || [])
+        ];
+
+        const { data: userData } = await supabase
+          .from('profiles')
+          .select('id, name, email')
+          .in('id', allUserIds);
+
+        const userMap = userData?.reduce((acc, user) => {
+          acc[user.id] = user;
+          return acc;
+        }, {} as Record<string, any>) || {};
+
         // Combine and format activities
         const allActivities = [
-          ...(sessions?.map(session => ({
-            id: `session-${session.id}`,
-            type: 'session',
-            title: 'New therapy session',
-            description: `${session.profiles?.name || session.profiles?.email || 'User'} started a session`,
-            timestamp: session.created_at,
-            icon: MessageCircle,
-            color: 'bg-blue-500',
-          })) || []),
-          ...(goals?.map(goal => ({
-            id: `goal-${goal.id}`,
-            type: 'goal',
-            title: 'New goal created',
-            description: `${goal.profiles?.name || goal.profiles?.email || 'User'} created "${goal.title}"`,
-            timestamp: goal.created_at,
-            icon: Target,
-            color: 'bg-purple-500',
-          })) || []),
+          ...(sessions?.map(session => {
+            const user = userMap[session.user_id];
+            return {
+              id: `session-${session.id}`,
+              type: 'session',
+              title: 'New therapy session',
+              description: `${user?.name || user?.email || 'User'} started a session`,
+              timestamp: session.created_at,
+              icon: MessageCircle,
+              color: 'bg-blue-500',
+            };
+          }) || []),
+          ...(goals?.map(goal => {
+            const user = userMap[goal.user_id];
+            return {
+              id: `goal-${goal.id}`,
+              type: 'goal',
+              title: 'New goal created',
+              description: `${user?.name || user?.email || 'User'} created "${goal.title}"`,
+              timestamp: goal.created_at,
+              icon: Target,
+              color: 'bg-purple-500',
+            };
+          }) || []),
           ...(profiles?.map(profile => ({
             id: `user-${profile.id}`,
             type: 'user',
