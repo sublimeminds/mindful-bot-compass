@@ -1,20 +1,139 @@
 
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp, Target, Calendar, MessageSquare } from "lucide-react";
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
-interface ProgressStatsProps {
-  stats: {
-    totalSessions: number;
-    totalMessages: number;
-    averageMoodImprovement: number;
-    weeklyGoal: number;
-    weeklyProgress: number;
-    longestStreak: number;
-  };
-}
+const ProgressStats = () => {
+  const { user } = useAuth();
 
-const ProgressStats = ({ stats }: ProgressStatsProps) => {
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ['progress-stats', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+
+      // Fetch total sessions
+      const { count: totalSessions } = await supabase
+        .from('therapy_sessions')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+
+      // Fetch total messages
+      const { data: sessions } = await supabase
+        .from('therapy_sessions')
+        .select('id')
+        .eq('user_id', user.id);
+
+      let totalMessages = 0;
+      if (sessions) {
+        for (const session of sessions) {
+          const { count } = await supabase
+            .from('session_messages')
+            .select('*', { count: 'exact', head: true })
+            .eq('session_id', session.id);
+          totalMessages += count || 0;
+        }
+      }
+
+      // Calculate mood improvement
+      const { data: moodEntries } = await supabase
+        .from('mood_entries')
+        .select('overall, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      let averageMoodImprovement = 0;
+      if (moodEntries && moodEntries.length >= 2) {
+        const recent = moodEntries.slice(0, 5);
+        const older = moodEntries.slice(5);
+        if (older.length > 0) {
+          const recentAvg = recent.reduce((sum, entry) => sum + entry.overall, 0) / recent.length;
+          const olderAvg = older.reduce((sum, entry) => sum + entry.overall, 0) / older.length;
+          averageMoodImprovement = recentAvg - olderAvg;
+        }
+      }
+
+      // Calculate weekly progress
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      const { count: weeklyProgress } = await supabase
+        .from('therapy_sessions')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gte('created_at', oneWeekAgo.toISOString());
+
+      // Calculate longest streak
+      const { data: allSessions } = await supabase
+        .from('therapy_sessions')
+        .select('created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: true });
+
+      let longestStreak = 0;
+      if (allSessions && allSessions.length > 0) {
+        const sessionDates = allSessions.map(s => new Date(s.created_at).toDateString());
+        const uniqueDates = [...new Set(sessionDates)];
+        
+        let currentStreak = 1;
+        let maxStreak = 1;
+        
+        for (let i = 1; i < uniqueDates.length; i++) {
+          const prevDate = new Date(uniqueDates[i - 1]);
+          const currentDate = new Date(uniqueDates[i]);
+          const dayDiff = (currentDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24);
+          
+          if (dayDiff <= 1) {
+            currentStreak++;
+          } else {
+            maxStreak = Math.max(maxStreak, currentStreak);
+            currentStreak = 1;
+          }
+        }
+        longestStreak = Math.max(maxStreak, currentStreak);
+      }
+
+      return {
+        totalSessions: totalSessions || 0,
+        totalMessages,
+        averageMoodImprovement,
+        weeklyGoal: 3,
+        weeklyProgress: weeklyProgress || 0,
+        longestStreak
+      };
+    },
+    enabled: !!user?.id,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <Card key={i}>
+            <CardContent className="p-4">
+              <div className="animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
+  if (!stats) {
+    return (
+      <div className="text-center py-8 text-muted-foreground">
+        Start your therapy journey to see your progress statistics
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <Card>
@@ -53,7 +172,7 @@ const ProgressStats = ({ stats }: ProgressStatsProps) => {
             {stats.averageMoodImprovement > 0 ? '+' : ''}{stats.averageMoodImprovement.toFixed(1)}
           </div>
           <p className="text-xs text-muted-foreground">
-            Average per session
+            Average improvement
           </p>
         </CardContent>
       </Card>

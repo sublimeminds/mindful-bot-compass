@@ -5,37 +5,48 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Target, Plus, CheckCircle, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 const GoalsWidget = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  // Mock goals data
-  const goals = [
-    {
-      id: 1,
-      title: "Practice mindfulness daily",
-      progress: 75,
-      dueDate: "This week",
-      status: "active"
-    },
-    {
-      id: 2,
-      title: "Complete 3 therapy sessions",
-      progress: 66,
-      dueDate: "This week",
-      status: "active"
-    },
-    {
-      id: 3,
-      title: "Exercise 4 times a week",
-      progress: 100,
-      dueDate: "Completed",
-      status: "completed"
-    }
-  ];
+  const { data: goals = [], isLoading } = useQuery({
+    queryKey: ['goals', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
 
-  const activeGoals = goals.filter(goal => goal.status === 'active');
-  const completedGoals = goals.filter(goal => goal.status === 'completed');
+      const { data, error } = await supabase
+        .from('goals')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      if (error) {
+        console.error('Error fetching goals:', error);
+        return [];
+      }
+
+      return data || [];
+    },
+    enabled: !!user?.id,
+  });
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center">Loading goals...</div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const activeGoals = goals.filter(goal => !goal.is_completed);
+  const completedGoals = goals.filter(goal => goal.is_completed);
 
   return (
     <Card>
@@ -56,46 +67,73 @@ const GoalsWidget = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Active Goals */}
-        <div className="space-y-3">
-          {activeGoals.slice(0, 2).map((goal) => (
-            <div key={goal.id} className="space-y-2">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-medium">{goal.title}</h4>
-                <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                  <Clock className="h-3 w-3" />
-                  <span>{goal.dueDate}</span>
+        {goals.length === 0 ? (
+          <div className="text-center py-4">
+            <Target className="h-8 w-8 mx-auto mb-2 opacity-50" />
+            <p className="text-sm text-muted-foreground mb-3">No goals yet</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/goals')}
+            >
+              Create Your First Goal
+            </Button>
+          </div>
+        ) : (
+          <>
+            {/* Active Goals */}
+            <div className="space-y-3">
+              {activeGoals.slice(0, 2).map((goal) => {
+                const progressPercentage = (goal.current_progress / goal.target_value) * 100;
+                const daysLeft = Math.ceil(
+                  (new Date(goal.target_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+                );
+                
+                return (
+                  <div key={goal.id} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-sm font-medium">{goal.title}</h4>
+                      <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3" />
+                        <span>
+                          {daysLeft > 0 ? `${daysLeft} days left` : 'Overdue'}
+                        </span>
+                      </div>
+                    </div>
+                    <Progress value={progressPercentage} className="h-2" />
+                    <div className="text-xs text-muted-foreground text-right">
+                      {goal.current_progress} / {goal.target_value} {goal.unit} ({progressPercentage.toFixed(1)}%)
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Completed Goals Summary */}
+            {completedGoals.length > 0 && (
+              <div className="pt-3 border-t">
+                <div className="flex items-center space-x-2 text-sm text-green-600">
+                  <CheckCircle className="h-4 w-4" />
+                  <span>
+                    {completedGoals.length} goal{completedGoals.length !== 1 ? 's' : ''} completed!
+                  </span>
                 </div>
               </div>
-              <Progress value={goal.progress} className="h-2" />
-              <div className="text-xs text-muted-foreground text-right">
-                {goal.progress}% complete
-              </div>
-            </div>
-          ))}
-        </div>
+            )}
 
-        {/* Completed Goals Summary */}
-        {completedGoals.length > 0 && (
-          <div className="pt-3 border-t">
-            <div className="flex items-center space-x-2 text-sm text-green-600">
-              <CheckCircle className="h-4 w-4" />
-              <span>{completedGoals.length} goal{completedGoals.length !== 1 ? 's' : ''} completed this week!</span>
+            {/* Actions */}
+            <div className="pt-2 space-y-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/goals')}
+                className="w-full"
+              >
+                Manage All Goals
+              </Button>
             </div>
-          </div>
+          </>
         )}
-
-        {/* Actions */}
-        <div className="pt-2 space-y-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate('/goals')}
-            className="w-full"
-          >
-            Manage All Goals
-          </Button>
-        </div>
       </CardContent>
     </Card>
   );
