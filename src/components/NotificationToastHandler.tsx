@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -7,14 +7,26 @@ import { useToast } from '@/hooks/use-toast';
 const NotificationToastHandler = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const channelRef = useRef<any>(null);
+  const isSubscribedRef = useRef(false);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || isSubscribedRef.current) return;
+
+    // Clean up any existing channel before creating a new one
+    if (channelRef.current) {
+      console.log('Cleaning up existing channel');
+      supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
+      isSubscribedRef.current = false;
+    }
 
     // Create a unique channel name to avoid conflicts
     const channelName = `notification-toasts-${user.id}-${Date.now()}`;
     
-    // Listen for new notifications in real-time
+    console.log('Creating new notification channel:', channelName);
+    
+    // Create and configure the channel
     const channel = supabase
       .channel(channelName)
       .on(
@@ -40,15 +52,42 @@ const NotificationToastHandler = () => {
           // Log all notifications for debugging
           console.log('New notification received:', notification);
         }
-      )
-      .subscribe();
+      );
 
-    // Cleanup function to properly unsubscribe
+    // Subscribe to the channel
+    channel.subscribe((status) => {
+      console.log('Channel subscription status:', status);
+      if (status === 'SUBSCRIBED') {
+        isSubscribedRef.current = true;
+        console.log('Successfully subscribed to notifications channel');
+      }
+    });
+
+    // Store channel reference
+    channelRef.current = channel;
+
+    // Cleanup function
     return () => {
       console.log('Cleaning up notification channel:', channelName);
-      supabase.removeChannel(channel);
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+        isSubscribedRef.current = false;
+      }
     };
-  }, [user?.id, toast]); // Only depend on user.id to avoid unnecessary re-subscriptions
+  }, [user?.id, toast]);
+
+  // Additional cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (channelRef.current) {
+        console.log('Component unmounting, cleaning up channel');
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+        isSubscribedRef.current = false;
+      }
+    };
+  }, []);
 
   return null; // This is a utility component that doesn't render anything
 };

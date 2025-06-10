@@ -1,11 +1,11 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Bell, Check, X, Calendar, Lightbulb, TrendingUp, Heart } from "lucide-react";
+import { Bell, Check, Calendar, Lightbulb, TrendingUp, Heart } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { NotificationService, Notification } from "@/services/notificationService";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +16,8 @@ const NotificationCenter = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const channelRef = useRef<any>(null);
+  const isSubscribedRef = useRef(false);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
@@ -39,10 +41,21 @@ const NotificationCenter = () => {
 
   // Set up real-time subscription for new notifications
   useEffect(() => {
-    if (!user) return;
+    if (!user || isSubscribedRef.current) return;
+
+    // Clean up any existing channel
+    if (channelRef.current) {
+      console.log('Cleaning up existing notification center channel');
+      supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
+      isSubscribedRef.current = false;
+    }
+
+    const channelName = `notification-center-${user.id}-${Date.now()}`;
+    console.log('Creating notification center channel:', channelName);
 
     const channel = supabase
-      .channel('user-notifications')
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -54,13 +67,26 @@ const NotificationCenter = () => {
         () => {
           fetchNotifications();
         }
-      )
-      .subscribe();
+      );
+
+    channel.subscribe((status) => {
+      console.log('Notification center channel status:', status);
+      if (status === 'SUBSCRIBED') {
+        isSubscribedRef.current = true;
+      }
+    });
+
+    channelRef.current = channel;
 
     return () => {
-      supabase.removeChannel(channel);
+      console.log('Cleaning up notification center channel');
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+        isSubscribedRef.current = false;
+      }
     };
-  }, [user]);
+  }, [user?.id]);
 
   const handleMarkAsRead = async (notificationId: string) => {
     const success = await NotificationService.markAsRead(notificationId);
