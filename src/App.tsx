@@ -24,6 +24,7 @@ import PerformanceDashboard from './pages/PerformanceDashboard';
 import SessionAnalytics from "./pages/SessionAnalytics";
 
 import { AuthProvider } from './contexts/AuthContext';
+import { AdminProvider } from './contexts/AdminContext';
 import { SessionProvider } from './contexts/SessionContext';
 import { TherapistProvider } from './contexts/TherapistContext';
 
@@ -42,35 +43,37 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AuthProvider>
-            <TherapistProvider>
-              <SessionProvider>
-                <div className="relative flex min-h-screen flex-col">
-                  <main className="flex-1">
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/auth" element={<Auth />} />
-                      <Route path="/chat" element={<Chat />} />
-                      <Route path="/onboarding" element={<Onboarding />} />
-                      <Route path="/goals" element={<Goals />} />
-                      <Route path="/mood-tracking" element={<MoodTracking />} />
-                      <Route path="/session-history" element={<SessionHistory />} />
-                      <Route path="/analytics" element={<SessionAnalytics />} />
-                      <Route path="/techniques" element={<Techniques />} />
-                      <Route path="/therapist-matching" element={<TherapistMatching />} />
-                      <Route path="/profile" element={<Profile />} />
-                      <Route path="/live-session/:sessionId" element={<LiveSession />} />
-                      <Route path="/notification-settings" element={<NotificationSettings />} />
-                      <Route path="/notification-dashboard" element={<NotificationDashboard />} />
-                      <Route path="/notification-analytics" element={<NotificationAnalytics />} />
-                      <Route path="/smart-triggers" element={<SmartTriggers />} />
-                      <Route path="/performance" element={<PerformanceDashboard />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </main>
-                </div>
-                <Toaster />
-              </SessionProvider>
-            </TherapistProvider>
+            <AdminProvider>
+              <TherapistProvider>
+                <SessionProvider>
+                  <div className="relative flex min-h-screen flex-col">
+                    <main className="flex-1">
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/auth" element={<Auth />} />
+                        <Route path="/chat" element={<Chat />} />
+                        <Route path="/onboarding" element={<Onboarding />} />
+                        <Route path="/goals" element={<Goals />} />
+                        <Route path="/mood-tracking" element={<MoodTracking />} />
+                        <Route path="/session-history" element={<SessionHistory />} />
+                        <Route path="/analytics" element={<SessionAnalytics />} />
+                        <Route path="/techniques" element={<Techniques />} />
+                        <Route path="/therapist-matching" element={<TherapistMatching />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/live-session/:sessionId" element={<LiveSession />} />
+                        <Route path="/notification-settings" element={<NotificationSettings />} />
+                        <Route path="/notification-dashboard" element={<NotificationDashboard />} />
+                        <Route path="/notification-analytics" element={<NotificationAnalytics />} />
+                        <Route path="/smart-triggers" element={<SmartTriggers />} />
+                        <Route path="/performance" element={<PerformanceDashboard />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </main>
+                  </div>
+                  <Toaster />
+                </SessionProvider>
+              </TherapistProvider>
+            </AdminProvider>
           </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
