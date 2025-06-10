@@ -44,14 +44,14 @@ export class PersonalizationService {
 
       return {
         userId,
-        communicationStyle: data.communication_style || 'supportive',
+        communicationStyle: (data.communication_style as 'supportive' | 'direct' | 'analytical' | 'encouraging') || 'supportive',
         preferredApproaches: data.preferred_approaches || [],
-        sessionPreferences: data.session_preferences || {
+        sessionPreferences: (data.session_preferences as any) || {
           preferredTime: 'evening',
           sessionLength: 30,
           frequency: 'daily'
         },
-        emotionalPatterns: data.emotional_patterns || {
+        emotionalPatterns: (data.emotional_patterns as any) || {
           dominantEmotions: [],
           triggerWords: [],
           positiveIndicators: []
