@@ -1,13 +1,87 @@
-// ... keep existing code (imports and interface)
 
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain } from 'lucide-react';
+import { 
+  Brain, 
+  MessageSquare, 
+  HeartPulse, 
+  Target, 
+  ArrowRight, 
+  ChevronRight, 
+  Star 
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { LineChart, Line, ResponsiveContainer, Tooltip } from 'recharts';
+import { useAuth } from '@/contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+
+interface Session {
+  id: string;
+  startTime: string;
+  endTime?: string;
+  mood: {
+    before?: number;
+    after?: number;
+  };
+  techniques: string[];
+}
+
+interface Goal {
+  id: string;
+  title: string;
+  category: string;
+  target_date: string;
+  current_progress: number;
+  is_completed: boolean;
+}
+
+interface UserInsights {
+  totalSessions: number;
+  averageRating: number;
+  moodTrend: number;
+  totalBreakthroughs: number;
+}
 
 const UserDashboard = () => {
-  // ... keep existing code (hooks and state)
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [currentSession, setCurrentSession] = useState<Session | null>(null);
+  const [recentSessions, setRecentSessions] = useState<Session[]>([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [insights, setInsights] = useState<UserInsights>({
+    totalSessions: 0,
+    averageRating: 0,
+    moodTrend: 0,
+    totalBreakthroughs: 0
+  });
 
-  // ... keep existing code (existing methods)
+  // Mock data for demonstration
+  useEffect(() => {
+    // This would normally fetch from your API
+    setRecentSessions([]);
+    setGoals([]);
+  }, []);
+
+  const averageMoodChange = recentSessions.length > 0 
+    ? recentSessions
+        .filter(s => s.mood.before !== undefined && s.mood.after !== undefined)
+        .reduce((acc, s) => acc + ((s.mood.after || 0) - (s.mood.before || 0)), 0) / recentSessions.length
+    : 0;
+
+  const moodChartData = recentSessions
+    .filter(s => s.mood.before !== undefined && s.mood.after !== undefined)
+    .map((session, index) => ({
+      index,
+      before: session.mood.before,
+      after: session.mood.after
+    }));
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString();
+  };
 
   return (
     <div className="space-y-6">

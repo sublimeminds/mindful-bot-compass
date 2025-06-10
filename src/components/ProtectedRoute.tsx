@@ -29,4 +29,5 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   return <>{children}</>;
 };
 
+export { ProtectedRoute };
 export default ProtectedRoute;
