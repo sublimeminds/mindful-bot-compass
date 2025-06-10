@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { useTherapist } from "@/contexts/TherapistContext";
 import SessionEndModal from "@/components/SessionEndModal";
-import { useRealtimeSession } from "@/hooks/useRealtimeSession";
 import LiveSessionIndicator from "@/components/LiveSessionIndicator";
 import NotificationCenter from "@/components/NotificationCenter";
 import EmotionDisplay from "@/components/emotion/EmotionDisplay";
@@ -27,7 +25,6 @@ const Chat = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const { currentSession, startSession, endSession, addBreakthrough } = useSession();
-  const { session: realtimeSession } = useRealtimeSession(currentSession?.id);
   const navigate = useNavigate();
   const { currentTherapist, getPersonalityPrompt } = useTherapist();
   
