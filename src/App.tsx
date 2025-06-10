@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -23,6 +22,7 @@ import SmartTriggers from "./pages/SmartTriggers";
 import IntelligentNotificationProvider from "./components/IntelligentNotificationProvider";
 import NotificationToastHandler from "./components/NotificationToastHandler";
 import IntelligentAssistant from "./components/ai/IntelligentAssistant";
+import LiveSessionIndicator from "./components/LiveSessionIndicator";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import UserDashboard from "./components/UserDashboard";
@@ -118,8 +118,13 @@ function AppContent() {
       <Footer />
       <Toaster />
       
-      {/* Show AI Assistant only for authenticated users */}
-      {isAuthenticated && <IntelligentAssistant />}
+      {/* Show components only for authenticated users */}
+      {isAuthenticated && (
+        <>
+          <IntelligentAssistant />
+          <LiveSessionIndicator />
+        </>
+      )}
     </div>
   );
 }

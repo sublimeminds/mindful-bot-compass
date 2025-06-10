@@ -7,11 +7,22 @@ import { ArrowLeft, Activity, BarChart3, Users, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import RealTimeSessionManager from '@/components/session/RealTimeSessionManager';
 import LiveSessionAnalytics from '@/components/session/LiveSessionAnalytics';
+import SessionStatusIndicator from '@/components/session/SessionStatusIndicator';
+import SessionControlPanel from '@/components/session/SessionControlPanel';
 import MobileOptimizedLayout from '@/components/mobile/MobileOptimizedLayout';
+import { useRealTimeSession } from '@/hooks/useRealTimeSession';
 
 const LiveSession = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('session');
+  
+  const {
+    sessionState,
+    startSession,
+    endSession,
+    pauseSession,
+    resumeSession
+  } = useRealTimeSession();
 
   return (
     <MobileOptimizedLayout>
@@ -35,11 +46,20 @@ const LiveSession = () => {
 
           <div className="flex items-center space-x-2">
             <div className="flex items-center space-x-2 text-sm">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span>Live</span>
+              <div className={`w-2 h-2 rounded-full ${
+                sessionState.connectionStatus === 'connected' ? 'bg-green-500 animate-pulse' : 'bg-gray-400'
+              }`} />
+              <span>{sessionState.connectionStatus === 'connected' ? 'Live' : 'Offline'}</span>
             </div>
           </div>
         </div>
+
+        {/* Session Control Panel */}
+        <SessionControlPanel
+          sessionState={sessionState}
+          onStartSession={startSession}
+          onEndSession={endSession}
+        />
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -108,6 +128,14 @@ const LiveSession = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Session Status Indicator - Shows only when session is active */}
+        <SessionStatusIndicator
+          sessionState={sessionState}
+          onPause={pauseSession}
+          onResume={resumeSession}
+          onEnd={endSession}
+        />
       </div>
     </MobileOptimizedLayout>
   );
