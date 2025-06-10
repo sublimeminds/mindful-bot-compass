@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardNavigation from '@/components/navigation/DashboardNavigation';
@@ -11,6 +12,7 @@ import TherapistWidget from './widgets/TherapistWidget';
 import SessionHistoryWidget from './widgets/SessionHistoryWidget';
 import SmartOnboardingGuide from '@/components/ai/SmartOnboardingGuide';
 import EnhancedMoodWidget from './widgets/EnhancedMoodWidget';
+import AnalyticsWidget from './widgets/AnalyticsWidget';
 
 const DashboardLayout = () => {
   const { user } = useAuth();
@@ -40,6 +42,7 @@ const DashboardLayout = () => {
           {/* Right Column - Insights & History */}
           <div className="space-y-6">
             <ProgressOverviewWidget />
+            <AnalyticsWidget />
             <SessionHistoryWidget />
             <InsightsWidget />
             <TherapistWidget />

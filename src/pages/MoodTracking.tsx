@@ -10,9 +10,26 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import DetailedMoodTracker from "@/components/mood/DetailedMoodTracker";
 import MoodInsightsDashboard from "@/components/mood/MoodInsightsDashboard";
-import { MoodTrackingService, DetailedMood, MoodEntry } from "@/services/moodTrackingService";
+import { MoodTrackingService, DetailedMood } from "@/services/moodTrackingService";
 import { useToast } from "@/hooks/use-toast";
 import { format, startOfMonth, endOfMonth } from 'date-fns';
+
+interface MoodEntry {
+  id: string;
+  userId: string;
+  timestamp: Date;
+  overall: number;
+  anxiety: number;
+  energy: number;
+  stress: number;
+  depression?: number;
+  sleep_quality?: number;
+  social_connection?: number;
+  activities?: string[];
+  triggers?: string[];
+  notes?: string;
+  weather?: string;
+}
 
 const MoodTracking = () => {
   const navigate = useNavigate();
@@ -36,17 +53,20 @@ const MoodTracking = () => {
       if (error) throw error;
       
       return data.map(entry => ({
-        ...entry,
+        id: entry.id,
+        userId: entry.user_id,
         timestamp: new Date(entry.created_at),
-        mood: {
-          overall: entry.overall,
-          anxiety: entry.anxiety,
-          depression: entry.depression || entry.anxiety,
-          stress: entry.stress,
-          energy: entry.energy,
-          sleep_quality: entry.sleep_quality,
-          social_connection: entry.social_connection
-        }
+        overall: entry.overall,
+        anxiety: entry.anxiety,
+        depression: entry.depression || entry.anxiety,
+        stress: entry.stress,
+        energy: entry.energy,
+        sleep_quality: entry.sleep_quality,
+        social_connection: entry.social_connection,
+        activities: entry.activities || [],
+        triggers: entry.triggers || [],
+        notes: entry.notes,
+        weather: entry.weather
       })) as MoodEntry[];
     },
     enabled: !!user?.id,

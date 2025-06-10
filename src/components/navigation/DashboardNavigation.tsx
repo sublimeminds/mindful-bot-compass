@@ -8,7 +8,8 @@ import {
   TrendingUp, 
   Settings,
   History,
-  Brain
+  Brain,
+  BarChart3
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -37,6 +38,12 @@ const DashboardNavigation = () => {
       description: 'View past sessions'
     },
     {
+      label: 'Analytics',
+      icon: BarChart3,
+      path: '/analytics',
+      description: 'Session insights'
+    },
+    {
       label: 'Goals',
       icon: Target,
       path: '/goals',
@@ -53,12 +60,6 @@ const DashboardNavigation = () => {
       icon: Brain,
       path: '/techniques',
       description: 'Learn coping skills'
-    },
-    {
-      label: 'Analytics',
-      icon: TrendingUp,
-      path: '/analytics',
-      description: 'Progress insights'
     },
     {
       label: 'Profile',
