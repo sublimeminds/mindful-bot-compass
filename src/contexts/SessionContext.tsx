@@ -24,12 +24,15 @@ interface SessionData {
   goalProgress?: Record<string, number>; // Track progress on specific goals
   sessionRating?: number; // How helpful was this session (1-5)
   breakthroughs?: string[]; // Key insights or breakthroughs
+  // Real-time session integration
+  realtimeSessionId?: string;
+  isRealtimeActive?: boolean;
 }
 
 interface SessionContextType {
   currentSession: SessionData | null;
   sessions: SessionData[];
-  startSession: (moodBefore?: number) => Promise<void>;
+  startSession: (moodBefore?: number, realtimeSessionId?: string) => Promise<void>;
   endSession: (moodAfter?: number, notes?: string, rating?: number) => Promise<void>;
   addMessage: (content: string, sender: 'user' | 'ai', emotion?: 'positive' | 'negative' | 'neutral') => Promise<void>;
   addTechnique: (technique: string) => void;
@@ -44,6 +47,9 @@ interface SessionContextType {
     moodTrend: number;
     totalBreakthroughs: number;
   };
+  // Real-time session methods
+  updateRealtimeStatus: (sessionId: string, isActive: boolean) => void;
+  syncWithRealtimeSession: (realtimeSessionId: string, isActive: boolean) => void;
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -61,7 +67,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   const [currentSession, setCurrentSession] = useState<SessionData | null>(null);
   const [sessions, setSessions] = useState<SessionData[]>([]);
 
-  const startSession = async (moodBefore?: number) => {
+  const startSession = async (moodBefore?: number, realtimeSessionId?: string) => {
     if (!user) return;
     
     try {
@@ -89,7 +95,9 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
         techniques: [],
         notes: '',
         goalProgress: {},
-        breakthroughs: []
+        breakthroughs: [],
+        realtimeSessionId: realtimeSessionId,
+        isRealtimeActive: !!realtimeSessionId
       };
       
       setCurrentSession(newSession);
@@ -125,7 +133,8 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
         endTime: new Date(),
         mood: { ...currentSession.mood, after: moodAfter },
         notes: notes || currentSession.notes,
-        sessionRating: rating
+        sessionRating: rating,
+        isRealtimeActive: false
       };
       
       setSessions(prev => [...prev, endedSession]);
@@ -152,6 +161,25 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
     } catch (error) {
       console.error('Error ending session:', error);
     }
+  };
+
+  const updateRealtimeStatus = (sessionId: string, isActive: boolean) => {
+    if (!currentSession || currentSession.realtimeSessionId !== sessionId) return;
+    
+    setCurrentSession(prev => prev ? {
+      ...prev,
+      isRealtimeActive: isActive
+    } : null);
+  };
+
+  const syncWithRealtimeSession = (realtimeSessionId: string, isActive: boolean) => {
+    if (!currentSession) return;
+    
+    setCurrentSession(prev => prev ? {
+      ...prev,
+      realtimeSessionId,
+      isRealtimeActive: isActive
+    } : null);
   };
 
   const addMessage = async (content: string, sender: 'user' | 'ai', emotion?: 'positive' | 'negative' | 'neutral') => {
@@ -321,7 +349,9 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
     updateGoalProgress,
     getSessions,
     loadSessions,
-    getSessionInsights
+    getSessionInsights,
+    updateRealtimeStatus,
+    syncWithRealtimeSession
   };
 
   return (
@@ -330,3 +360,5 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
     </SessionContext.Provider>
   );
 };
+
+export default SessionProvider;

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -66,7 +65,7 @@ const ChatSessionMetrics: React.FC<ChatSessionMetricsProps> = ({
             </span>
           </div>
           
-          <Badge variant="outline" size="sm" className="text-xs">
+          <Badge variant="outline" className="text-xs">
             Real-time
           </Badge>
         </div>

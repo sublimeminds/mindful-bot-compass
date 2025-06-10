@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +27,14 @@ const Chat = () => {
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
-  const { currentSession, startSession, endSession, addBreakthrough } = useSession();
+  const { 
+    currentSession, 
+    startSession, 
+    endSession, 
+    addBreakthrough,
+    syncWithRealtimeSession,
+    updateRealtimeStatus
+  } = useSession();
   const navigate = useNavigate();
   const { currentTherapist, getPersonalityPrompt } = useTherapist();
   
@@ -73,15 +81,31 @@ const Chat = () => {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Synchronize session states
+  useEffect(() => {
+    if (sessionState.sessionId && currentSession) {
+      syncWithRealtimeSession(sessionState.sessionId, sessionState.isActive);
+    }
+  }, [sessionState.sessionId, sessionState.isActive, currentSession, syncWithRealtimeSession]);
+
+  // Update realtime status when session state changes
+  useEffect(() => {
+    if (currentSession?.realtimeSessionId && sessionState.sessionId) {
+      updateRealtimeStatus(sessionState.sessionId, sessionState.isActive);
+    }
+  }, [sessionState.isActive, sessionState.sessionId, currentSession?.realtimeSessionId, updateRealtimeStatus]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
 
   const handleStartSession = async () => {
     try {
-      // Start both regular session and real-time session
-      await startSession(7); // Default mood
+      // Start real-time session first
       await startRealtimeSession();
+      
+      // Start regular session with real-time session ID
+      await startSession(7, sessionState.sessionId || undefined);
       
       toast({
         title: "Session Started",
@@ -172,7 +196,7 @@ const Chat = () => {
                 <Badge variant="secondary" className="bg-green-100 text-green-800">
                   Session Active
                 </Badge>
-                {sessionState.sessionId && (
+                {currentSession.isRealtimeActive && (
                   <Badge variant="outline" className="bg-blue-100 text-blue-800">
                     Real-time: {sessionState.connectionStatus}
                   </Badge>
@@ -192,7 +216,7 @@ const Chat = () => {
       </div>
 
       {/* Real-time Session Metrics */}
-      {currentSession && sessionState.sessionId && (
+      {currentSession && currentSession.isRealtimeActive && (
         <div className="px-4 pt-4 max-w-4xl mx-auto w-full">
           <ChatSessionMetrics 
             sessionState={sessionState}
