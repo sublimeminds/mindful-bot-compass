@@ -7,8 +7,8 @@ import { AdminProvider } from '@/contexts/AdminContext';
 import { TherapistProvider } from '@/contexts/TherapistContext';
 import { SessionProvider } from '@/contexts/SessionContext';
 import { Toaster } from '@/components/ui/sonner';
-import { IntelligentNotificationProvider } from '@/components/IntelligentNotificationProvider';
-import { NotificationToastHandler } from '@/components/NotificationToastHandler';
+import IntelligentNotificationProvider from '@/components/IntelligentNotificationProvider';
+import NotificationToastHandler from '@/components/NotificationToastHandler';
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
