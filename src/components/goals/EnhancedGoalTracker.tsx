@@ -17,13 +17,13 @@ const EnhancedGoalTracker = () => {
 
   const { data: goals = [], isLoading } = useQuery({
     queryKey: ['goals', user?.id],
-    queryFn: () => GoalService.getUserGoals(user?.id || ''),
+    queryFn: () => GoalService.getGoals(user?.id || ''),
     enabled: !!user?.id,
   });
 
   const handleQuickProgress = async (goalId: string, increment: number) => {
     try {
-      await GoalService.updateProgress(goalId, increment, `Quick update: +${increment}`);
+      await GoalService.updateGoalProgress(goalId, increment, `Quick update: +${increment}`);
       toast({
         title: "Progress Updated",
         description: `Added ${increment} points to your goal!`,
