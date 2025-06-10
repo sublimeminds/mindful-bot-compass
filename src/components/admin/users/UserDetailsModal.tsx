@@ -120,7 +120,7 @@ const UserDetailsModal = ({ user, isOpen, onClose }: UserDetailsModalProps) => {
               <div>
                 <label className="text-sm text-gray-400">Roles</label>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {user.roles.length > 0 ? (
+                  {user.roles && user.roles.length > 0 ? (
                     user.roles.map((role: string) => (
                       <Badge key={role} variant="outline">
                         {role.replace('_', ' ')}

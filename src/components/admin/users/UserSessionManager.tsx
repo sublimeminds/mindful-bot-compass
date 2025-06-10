@@ -61,32 +61,39 @@ const UserSessionManager = () => {
           id,
           user_id,
           start_time,
-          end_time,
-          profiles:user_id (
-            name,
-            email
-          )
+          end_time
         `)
         .gte('start_time', startDate.toISOString())
         .order('start_time', { ascending: false });
 
       if (error) throw error;
 
+      // Fetch user profiles separately
+      const userIds = therapySessions?.map(session => session.user_id) || [];
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, name, email')
+        .in('id', userIds);
+
       // Transform data to match our interface
-      const sessionData: UserSession[] = therapySessions?.map(session => ({
-        id: session.id,
-        user_id: session.user_id,
-        user_name: session.profiles?.name || 'Unknown User',
-        user_email: session.profiles?.email || '',
-        start_time: session.start_time,
-        end_time: session.end_time,
-        duration_minutes: session.end_time 
-          ? Math.round((new Date(session.end_time).getTime() - new Date(session.start_time).getTime()) / (1000 * 60))
-          : Math.round((new Date().getTime() - new Date(session.start_time).getTime()) / (1000 * 60)),
-        status: session.end_time ? 'completed' : 'active',
-        device_type: 'web', // Default since we don't track this yet
-        activity_score: Math.floor(Math.random() * 100), // Simulated for now
-      })) || [];
+      const sessionData: UserSession[] = therapySessions?.map(session => {
+        const userProfile = profiles?.find(p => p.id === session.user_id);
+        
+        return {
+          id: session.id,
+          user_id: session.user_id,
+          user_name: userProfile?.name || 'Unknown User',
+          user_email: userProfile?.email || '',
+          start_time: session.start_time,
+          end_time: session.end_time,
+          duration_minutes: session.end_time 
+            ? Math.round((new Date(session.end_time).getTime() - new Date(session.start_time).getTime()) / (1000 * 60))
+            : Math.round((new Date().getTime() - new Date(session.start_time).getTime()) / (1000 * 60)),
+          status: session.end_time ? 'completed' : 'active',
+          device_type: 'web', // Default since we don't track this yet
+          activity_score: Math.floor(Math.random() * 100), // Simulated for now
+        };
+      }) || [];
 
       setSessions(sessionData);
     } catch (error) {

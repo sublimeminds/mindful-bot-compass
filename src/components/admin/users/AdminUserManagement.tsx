@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -27,6 +28,7 @@ const AdminUserManagement = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showUserModal, setShowUserModal] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -66,6 +68,16 @@ const AdminUserManagement = () => {
     fetchUsers();
   };
 
+  const handleUserSelect = (user: User) => {
+    setSelectedUser(user);
+    setShowUserModal(true);
+  };
+
+  const handleRoleManagement = (user: User) => {
+    setSelectedUser(user);
+    setShowRoleModal(true);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -103,18 +115,33 @@ const AdminUserManagement = () => {
         </TabsList>
 
         <TabsContent value="overview">
-          {/* Keep existing user overview/list content */}
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
               <CardTitle className="text-white">User Overview</CardTitle>
             </CardHeader>
             <CardContent>
-              {/* User list and search functionality would go here */}
-              <div className="text-center py-8 text-gray-400">
-                <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>User overview and search functionality</p>
-                <p className="text-sm">This will show the existing user list with search and filters</p>
-              </div>
+              {isLoading ? (
+                <div className="text-center py-8 text-gray-400">
+                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Loading users...</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {users.map((user) => (
+                    <div
+                      key={user.id}
+                      className="flex items-center justify-between p-3 bg-gray-700/30 rounded border border-gray-600 hover:bg-gray-700/50 cursor-pointer"
+                      onClick={() => handleUserSelect(user)}
+                    >
+                      <div>
+                        <div className="font-medium text-white">{user.name}</div>
+                        <div className="text-sm text-gray-400">{user.email}</div>
+                      </div>
+                      <div className="text-sm text-gray-400">{user.plan}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -137,12 +164,37 @@ const AdminUserManagement = () => {
         </TabsContent>
 
         <TabsContent value="roles">
-          <UserRoleManager />
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white">Role Management</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {users.map((user) => (
+                  <div
+                    key={user.id}
+                    className="flex items-center justify-between p-3 bg-gray-700/30 rounded border border-gray-600"
+                  >
+                    <div>
+                      <div className="font-medium text-white">{user.name}</div>
+                      <div className="text-sm text-gray-400">{user.email}</div>
+                    </div>
+                    <button
+                      onClick={() => handleRoleManagement(user)}
+                      className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                    >
+                      Manage Roles
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
 
       {/* User Details Modal */}
-      {selectedUser && (
+      {selectedUser && showUserModal && (
         <UserDetailsModal
           user={selectedUser}
           isOpen={showUserModal}
@@ -150,7 +202,18 @@ const AdminUserManagement = () => {
             setShowUserModal(false);
             setSelectedUser(null);
           }}
-          onUserUpdated={refreshData}
+        />
+      )}
+
+      {/* User Role Management Modal */}
+      {selectedUser && showRoleModal && (
+        <UserRoleManager
+          user={selectedUser}
+          isOpen={showRoleModal}
+          onClose={() => {
+            setShowRoleModal(false);
+            setSelectedUser(null);
+          }}
         />
       )}
     </div>

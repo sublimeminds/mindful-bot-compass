@@ -70,11 +70,7 @@ const UserCommunicationCenter = () => {
           message,
           priority,
           is_read,
-          created_at,
-          profiles:user_id (
-            name,
-            email
-          )
+          created_at
         `)
         .eq('type', 'admin_message')
         .order('created_at', { ascending: false })
@@ -82,17 +78,28 @@ const UserCommunicationCenter = () => {
 
       if (error) throw error;
 
-      const messageData: Message[] = notifications?.map(notif => ({
-        id: notif.id,
-        recipient_id: notif.user_id,
-        recipient_name: notif.profiles?.name || 'Unknown User',
-        recipient_email: notif.profiles?.email || '',
-        subject: notif.title,
-        content: notif.message,
-        priority: notif.priority as 'low' | 'medium' | 'high',
-        status: notif.is_read ? 'read' : 'delivered',
-        sent_at: notif.created_at,
-      })) || [];
+      // Fetch user profiles separately
+      const userIds = notifications?.map(notif => notif.user_id) || [];
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, name, email')
+        .in('id', userIds);
+
+      const messageData: Message[] = notifications?.map(notif => {
+        const userProfile = profiles?.find(p => p.id === notif.user_id);
+        
+        return {
+          id: notif.id,
+          recipient_id: notif.user_id,
+          recipient_name: userProfile?.name || 'Unknown User',
+          recipient_email: userProfile?.email || '',
+          subject: notif.title,
+          content: notif.message,
+          priority: notif.priority as 'low' | 'medium' | 'high',
+          status: notif.is_read ? 'read' : 'delivered',
+          sent_at: notif.created_at,
+        };
+      }) || [];
 
       setMessages(messageData);
     } catch (error) {
