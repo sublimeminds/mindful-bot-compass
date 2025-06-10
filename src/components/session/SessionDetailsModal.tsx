@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -20,11 +19,10 @@ import {
   BarChart3
 } from "lucide-react";
 import { SessionService, DetailedSession } from "@/services/sessionService";
-import { SessionSummary } from "@/services/sessionHistoryService";
 import { format } from "date-fns";
 
 interface SessionDetailsModalProps {
-  session: SessionSummary | null;
+  session: any | null;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -56,19 +54,19 @@ const SessionDetailsModal = ({ session, isOpen, onClose }: SessionDetailsModalPr
   if (!session) return null;
 
   const getMoodTrendIcon = () => {
-    if (!session.moodChange) return <Minus className="h-4 w-4 text-gray-500" />;
-    if (session.moodChange > 0) return <TrendingUp className="h-4 w-4 text-green-500" />;
-    if (session.moodChange < 0) return <TrendingDown className="h-4 w-4 text-red-500" />;
+    const moodChange = session.mood_after && session.mood_before 
+      ? session.mood_after - session.mood_before 
+      : 0;
+    
+    if (moodChange > 0) return <TrendingUp className="h-4 w-4 text-green-500" />;
+    if (moodChange < 0) return <TrendingDown className="h-4 w-4 text-red-500" />;
     return <Minus className="h-4 w-4 text-gray-500" />;
   };
 
   const getEffectivenessValue = () => {
-    switch (session.effectiveness) {
-      case 'high': return 85;
-      case 'medium': return 60;
-      case 'low': return 30;
-      default: return 0;
-    }
+    if (!session.mood_before || !session.mood_after) return 50;
+    const improvement = session.mood_after - session.mood_before;
+    return Math.max(0, Math.min(100, 50 + (improvement * 10)));
   };
 
   const getPriorityColor = (priority: string) => {
@@ -80,13 +78,21 @@ const SessionDetailsModal = ({ session, isOpen, onClose }: SessionDetailsModalPr
     }
   };
 
+  const duration = session.end_time && session.start_time
+    ? Math.round((new Date(session.end_time).getTime() - new Date(session.start_time).getTime()) / (1000 * 60))
+    : 0;
+
+  const moodChange = session.mood_before && session.mood_after 
+    ? session.mood_after - session.mood_before 
+    : 0;
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Calendar className="h-5 w-5" />
-            <span>Session Details - {format(session.date, 'MMMM dd, yyyy')}</span>
+            <span>Session Details - {format(new Date(session.start_time), 'MMMM dd, yyyy')}</span>
           </DialogTitle>
         </DialogHeader>
 
@@ -112,7 +118,7 @@ const SessionDetailsModal = ({ session, isOpen, onClose }: SessionDetailsModalPr
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{session.duration} min</div>
+                    <div className="text-2xl font-bold">{duration} min</div>
                   </CardContent>
                 </Card>
 
@@ -124,13 +130,13 @@ const SessionDetailsModal = ({ session, isOpen, onClose }: SessionDetailsModalPr
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {session.moodBefore && session.moodAfter ? (
+                    {session.mood_before && session.mood_after ? (
                       <div className="space-y-1">
                         <div className="text-2xl font-bold">
-                          {session.moodBefore} → {session.moodAfter}
+                          {session.mood_before} → {session.mood_after}
                         </div>
-                        <div className={`text-sm ${session.moodChange && session.moodChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {session.moodChange && session.moodChange > 0 ? '+' : ''}{session.moodChange} points
+                        <div className={`text-sm ${moodChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {moodChange > 0 ? '+' : ''}{moodChange} points
                         </div>
                       </div>
                     ) : (
@@ -160,12 +166,12 @@ const SessionDetailsModal = ({ session, isOpen, onClose }: SessionDetailsModalPr
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Brain className="h-5 w-5 mr-2" />
-                    Techniques Used ({session.techniques.length})
+                    Techniques Used ({(session.techniques || []).length})
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {session.techniques.map((technique, index) => (
+                    {(session.techniques || []).map((technique: string, index: number) => (
                       <Badge key={index} variant="secondary">
                         {technique}
                       </Badge>

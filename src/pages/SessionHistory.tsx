@@ -31,7 +31,7 @@ const SessionHistory = () => {
 
   const handleViewSession = async (sessionId: string) => {
     try {
-      const sessionDetails = await SessionService.getSessionDetails(sessionId);
+      const sessionDetails = sessionSummaries.find(s => s.id === sessionId);
       if (sessionDetails) {
         setSelectedSessionDetails(sessionDetails);
         setSelectedSessionId(sessionId);

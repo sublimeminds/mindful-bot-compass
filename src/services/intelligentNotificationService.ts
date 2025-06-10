@@ -11,6 +11,8 @@ export interface SessionDetails {
   moodAfter?: number;
   summary?: string;
   insights?: string[];
+  techniques?: string[];
+  duration?: number;
 }
 
 export class IntelligentNotificationService {
@@ -47,6 +49,43 @@ export class IntelligentNotificationService {
       priority,
       data
     });
+  }
+
+  static async generateInactivityReminders(): Promise<void> {
+    console.log('Generating inactivity reminders...');
+    
+    try {
+      // Get users who haven't had sessions in the last 3 days
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
+      const { data: inactiveUsers, error } = await supabase
+        .from('profiles')
+        .select('id')
+        .not('id', 'in', `(
+          SELECT DISTINCT user_id 
+          FROM therapy_sessions 
+          WHERE start_time > '${threeDaysAgo.toISOString()}'
+        )`);
+
+      if (error) {
+        console.error('Error fetching inactive users:', error);
+        return;
+      }
+
+      // Send reminders to inactive users
+      for (const user of inactiveUsers || []) {
+        await this.createCustomNotification(
+          user.id,
+          'session_reminder',
+          '🌱 Time for Self-Care',
+          "It's been a few days since your last session. Take a moment to check in with yourself.",
+          'medium'
+        );
+      }
+    } catch (error) {
+      console.error('Error generating inactivity reminders:', error);
+    }
   }
 
   private static async analyzeSession(sessionDetails: SessionDetails): Promise<string[]> {

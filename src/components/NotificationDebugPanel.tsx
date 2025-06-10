@@ -148,10 +148,13 @@ const NotificationDebugPanel = () => {
     try {
       // Mock session data for testing
       const mockSessionDetails = {
+        id: 'mock-session-id',
+        userId: user.id,
+        startTime: new Date(Date.now() - 25 * 60 * 1000),
+        endTime: new Date(),
         techniques: ['breathing_exercises', 'mindfulness'],
-        duration: 25 * 60 * 1000, // 25 minutes
-        mood_before: 3,
-        mood_after: 7,
+        moodBefore: 3,
+        moodAfter: 7,
       };
 
       await IntelligentNotificationService.processSessionCompletion(user.id, mockSessionDetails);
