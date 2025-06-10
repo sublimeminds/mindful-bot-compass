@@ -8,6 +8,8 @@ import NotificationDebugPanel from "@/components/NotificationDebugPanel";
 import NotificationToastHandler from "@/components/NotificationToastHandler";
 import IntelligentNotificationProvider from "@/components/IntelligentNotificationProvider";
 import SmartOnboardingGuide from "@/components/ai/SmartOnboardingGuide";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   const { isAuthenticated, user, loading } = useAuth();
@@ -24,32 +26,36 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted">
-      {isAuthenticated && user ? (
-        <IntelligentNotificationProvider>
-          <NotificationToastHandler />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Debug Panel - Only show in development or for testing */}
-            {process.env.NODE_ENV === 'development' && (
-              <NotificationDebugPanel />
-            )}
-            
-            <SmartOnboardingGuide />
-            <UserDashboard />
-          </div>
-        </IntelligentNotificationProvider>
-      ) : (
-        <>
-          <HeroSection />
-          <div id="features">
-            <FeaturesSection />
-          </div>
-          <div id="pricing">
-            <PricingSection />
-          </div>
-        </>
-      )}
-    </div>
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted">
+        {isAuthenticated && user ? (
+          <IntelligentNotificationProvider>
+            <NotificationToastHandler />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              {/* Debug Panel - Only show in development or for testing */}
+              {process.env.NODE_ENV === 'development' && (
+                <NotificationDebugPanel />
+              )}
+              
+              <SmartOnboardingGuide />
+              <UserDashboard />
+            </div>
+          </IntelligentNotificationProvider>
+        ) : (
+          <>
+            <HeroSection />
+            <div id="features">
+              <FeaturesSection />
+            </div>
+            <div id="pricing">
+              <PricingSection />
+            </div>
+          </>
+        )}
+      </div>
+      <Footer />
+    </>
   );
 };
 
