@@ -111,7 +111,7 @@ export class NotificationSchedulerService {
           const success = await NotificationService.createNotification(
             scheduledNotification.user_id,
             {
-              type: template.type,
+              type: template.type as 'session_reminder' | 'milestone_achieved' | 'insight_generated' | 'mood_check' | 'progress_update',
               title: processedContent.title,
               message: processedContent.message,
               priority: template.priority as any,
