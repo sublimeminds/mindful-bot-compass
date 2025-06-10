@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -181,9 +182,8 @@ const Chat = () => {
     const userMessage = input.trim();
     setInput('');
     
-    // Use the therapist's personality in the AI response
-    const personalityPrompt = getPersonalityPrompt();
-    await sendMessage(userMessage, personalityPrompt);
+    // Send message without the personality prompt parameter
+    await sendMessage(userMessage);
   };
 
   // Show therapist selection prompt if no therapist is selected
