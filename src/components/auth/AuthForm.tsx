@@ -25,23 +25,38 @@ const AuthForm = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.email || !formData.password) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     
     try {
+      console.log('Attempting sign in for:', formData.email);
       const { error } = await signIn(formData.email, formData.password);
+      
       if (error) {
+        console.error('Sign in error:', error);
         toast({
           title: "Sign In Failed",
           description: error.message || "Please check your credentials and try again.",
           variant: "destructive",
         });
       } else {
+        console.log('Sign in successful');
         toast({
           title: "Welcome back!",
           description: "You've successfully signed in.",
         });
       }
     } catch (error: any) {
+      console.error('Sign in catch error:', error);
       toast({
         title: "Sign In Failed",
         description: error.message || "Please check your credentials and try again.",
@@ -55,6 +70,16 @@ const AuthForm = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Comprehensive validation
+    if (!formData.email || !formData.password || !formData.name || !formData.confirmPassword) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Password Mismatch",
@@ -73,16 +98,43 @@ const AuthForm = () => {
       return;
     }
 
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     
     try {
+      console.log('Attempting signup for:', formData.email);
       const { error } = await signUp(formData.email, formData.password, formData.name);
+      
       if (error) {
-        // Handle specific rate limiting error
-        if (error.message.includes("rate limit") || error.message.includes("53 seconds")) {
+        console.error('Signup error:', error);
+        
+        // Handle specific errors
+        if (error.message.includes("rate limit") || error.message.includes("seconds")) {
           toast({
-            title: "Too Many Requests",
-            description: "Please wait a minute before trying to create an account again.",
+            title: "Too Many Attempts",
+            description: "Please wait a few minutes before trying to create an account again. This is a temporary security measure.",
+            variant: "destructive",
+          });
+        } else if (error.message.includes("already registered")) {
+          toast({
+            title: "Account Already Exists",
+            description: "An account with this email already exists. Try signing in instead.",
+            variant: "destructive",
+          });
+        } else if (error.message.includes("invalid")) {
+          toast({
+            title: "Invalid Information",
+            description: "Please check your email and password format.",
             variant: "destructive",
           });
         } else {
@@ -93,12 +145,22 @@ const AuthForm = () => {
           });
         }
       } else {
+        console.log('Signup successful');
         toast({
           title: "Account Created!",
-          description: "Please check your email to verify your account.",
+          description: "Please check your email to verify your account before signing in.",
+        });
+        
+        // Clear form on success
+        setFormData({
+          email: '',
+          password: '',
+          name: '',
+          confirmPassword: ''
         });
       }
     } catch (error: any) {
+      console.error('Signup catch error:', error);
       toast({
         title: "Sign Up Failed",
         description: error.message || "Failed to create account. Please try again.",
@@ -112,6 +174,8 @@ const AuthForm = () => {
   const handleSocialLogin = async (provider: 'google' | 'facebook' | 'twitter' | 'apple') => {
     try {
       setIsLoading(true);
+      console.log(`Attempting ${provider} login`);
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
@@ -120,6 +184,7 @@ const AuthForm = () => {
       });
 
       if (error) {
+        console.error(`${provider} login error:`, error);
         toast({
           title: "Social Login Failed",
           description: error.message || `Failed to sign in with ${provider}. Please try again.`,
@@ -127,6 +192,7 @@ const AuthForm = () => {
         });
       }
     } catch (error: any) {
+      console.error(`${provider} login catch error:`, error);
       toast({
         title: "Social Login Failed",
         description: error.message || `Failed to sign in with ${provider}. Please try again.`,
@@ -171,6 +237,7 @@ const AuthForm = () => {
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="pl-10"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -187,6 +254,7 @@ const AuthForm = () => {
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       className="pl-10 pr-10"
                       required
+                      disabled={isLoading}
                     />
                     <Button
                       type="button"
@@ -194,6 +262,7 @@ const AuthForm = () => {
                       size="sm"
                       className="absolute right-0 top-0 h-full px-3"
                       onClick={() => setShowPassword(!showPassword)}
+                      disabled={isLoading}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
@@ -224,6 +293,7 @@ const AuthForm = () => {
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="pl-10"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -240,6 +310,7 @@ const AuthForm = () => {
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="pl-10"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -251,11 +322,13 @@ const AuthForm = () => {
                     <Input
                       id="signup-password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Create a password"
+                      placeholder="Create a password (min 6 characters)"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       className="pl-10 pr-10"
                       required
+                      disabled={isLoading}
+                      minLength={6}
                     />
                     <Button
                       type="button"
@@ -263,6 +336,7 @@ const AuthForm = () => {
                       size="sm"
                       className="absolute right-0 top-0 h-full px-3"
                       onClick={() => setShowPassword(!showPassword)}
+                      disabled={isLoading}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
@@ -281,6 +355,7 @@ const AuthForm = () => {
                       onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                       className="pl-10"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
