@@ -67,7 +67,7 @@ const SmartTriggerDashboard = () => {
         </div>
         <div className="flex space-x-2">
           <Button
-            onClick={runTriggerCheck}
+            onClick={() => runTriggerCheck()}
             disabled={isRunningCheck}
             variant="outline"
             size="sm"
@@ -76,7 +76,7 @@ const SmartTriggerDashboard = () => {
             Run Check
           </Button>
           <Button
-            onClick={runDailyCheck}
+            onClick={() => runDailyCheck()}
             disabled={isRunningCheck}
             size="sm"
           >
