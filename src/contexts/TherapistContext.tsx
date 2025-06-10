@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
 import { TherapistPersonality, TherapistMatchingService } from '@/services/therapistMatchingService';
+import { useToast } from '@/hooks/use-toast';
 
 interface TherapistContextType {
   currentTherapist: TherapistPersonality | null;
@@ -10,7 +11,9 @@ interface TherapistContextType {
   setCurrentTherapist: (therapist: TherapistPersonality | null) => void;
   loadTherapists: () => Promise<void>;
   loadUserTherapist: () => Promise<void>;
+  selectTherapist: (therapistId: string) => Promise<void>;
   getPersonalityPrompt: () => string;
+  isLoading: boolean;
 }
 
 const TherapistContext = createContext<TherapistContextType | undefined>(undefined);
@@ -18,7 +21,9 @@ const TherapistContext = createContext<TherapistContextType | undefined>(undefin
 export const TherapistProvider = ({ children }: { children: ReactNode }) => {
   const [currentTherapist, setCurrentTherapist] = useState<TherapistPersonality | null>(null);
   const [availableTherapists, setAvailableTherapists] = useState<TherapistPersonality[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
+  const { toast } = useToast();
 
   const loadTherapists = async () => {
     try {
@@ -30,9 +35,13 @@ export const TherapistProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const loadUserTherapist = async () => {
-    if (!user) return;
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
 
     try {
+      setIsLoading(true);
       // Get user's latest assessment to find their selected therapist
       const assessment = await TherapistMatchingService.getLatestAssessment(user.id);
       
@@ -43,10 +52,71 @@ export const TherapistProvider = ({ children }: { children: ReactNode }) => {
         
         if (selectedTherapist) {
           setCurrentTherapist(selectedTherapist);
+          console.log('Loaded user therapist:', selectedTherapist.name);
+        } else {
+          console.log('Selected therapist not found in available therapists');
         }
+      } else {
+        console.log('No therapist selected in assessment');
       }
     } catch (error) {
       console.error('Error loading user therapist:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const selectTherapist = async (therapistId: string) => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to select a therapist.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      // Find the therapist
+      const therapist = availableTherapists.find(t => t.id === therapistId);
+      if (!therapist) {
+        throw new Error('Therapist not found');
+      }
+
+      // Get the latest assessment or create a basic one
+      let assessment = await TherapistMatchingService.getLatestAssessment(user.id);
+      
+      if (!assessment) {
+        // Create a basic assessment record if none exists
+        await TherapistMatchingService.saveAssessment(
+          user.id,
+          [], // Empty responses for manual selection
+          [], // Empty matches for manual selection
+          therapistId
+        );
+      } else {
+        // Update existing assessment with new therapist selection
+        await TherapistMatchingService.saveAssessment(
+          user.id,
+          Object.entries(assessment.responses).map(([questionId, value]) => ({ questionId, value })),
+          assessment.recommended_therapists || [],
+          therapistId
+        );
+      }
+
+      setCurrentTherapist(therapist);
+      
+      toast({
+        title: "Therapist Selected",
+        description: `You've selected ${therapist.name} as your AI therapist.`,
+      });
+    } catch (error) {
+      console.error('Error selecting therapist:', error);
+      toast({
+        title: "Error",
+        description: "Failed to select therapist. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -73,6 +143,9 @@ Please respond in character as this therapist, maintaining their unique personal
   useEffect(() => {
     if (user) {
       loadUserTherapist();
+    } else {
+      setCurrentTherapist(null);
+      setIsLoading(false);
     }
   }, [user]);
 
@@ -82,7 +155,9 @@ Please respond in character as this therapist, maintaining their unique personal
     setCurrentTherapist,
     loadTherapists,
     loadUserTherapist,
-    getPersonalityPrompt
+    selectTherapist,
+    getPersonalityPrompt,
+    isLoading
   };
 
   return (

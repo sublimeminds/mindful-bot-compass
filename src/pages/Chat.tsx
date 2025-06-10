@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +23,7 @@ import ChatSessionMetrics from "@/components/session/ChatSessionMetrics";
 const Chat = () => {
   const [input, setInput] = useState('');
   const [showEndModal, setShowEndModal] = useState(false);
+  const [showTherapistNeeded, setShowTherapistNeeded] = useState(false);
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
@@ -36,7 +36,7 @@ const Chat = () => {
     updateRealtimeStatus
   } = useSession();
   const navigate = useNavigate();
-  const { currentTherapist, getPersonalityPrompt } = useTherapist();
+  const { currentTherapist, getPersonalityPrompt, isLoading: therapistLoading } = useTherapist();
   
   // Real-time session integration
   const { 
@@ -60,6 +60,15 @@ const Chat = () => {
   useEffect(() => {
     loadPreferences();
   }, [loadPreferences]);
+
+  // Check if therapist is selected
+  useEffect(() => {
+    if (!therapistLoading && !currentTherapist) {
+      setShowTherapistNeeded(true);
+    } else {
+      setShowTherapistNeeded(false);
+    }
+  }, [therapistLoading, currentTherapist]);
 
   useEffect(() => {
     // Load session messages when session changes
@@ -100,6 +109,16 @@ const Chat = () => {
   };
 
   const handleStartSession = async () => {
+    if (!currentTherapist) {
+      toast({
+        title: "Therapist Required",
+        description: "Please select a therapist before starting a session.",
+        variant: "destructive",
+      });
+      navigate('/therapist-matching');
+      return;
+    }
+
     try {
       // Start real-time session first
       await startRealtimeSession();
@@ -109,7 +128,7 @@ const Chat = () => {
       
       toast({
         title: "Session Started",
-        description: "Your therapy session has begun with real-time tracking enabled.",
+        description: `Your therapy session with ${currentTherapist.name} has begun.`,
       });
     } catch (error) {
       toast({
@@ -161,8 +180,45 @@ const Chat = () => {
 
     const userMessage = input.trim();
     setInput('');
-    await sendMessage(userMessage);
+    
+    // Use the therapist's personality in the AI response
+    const personalityPrompt = getPersonalityPrompt();
+    await sendMessage(userMessage, personalityPrompt);
   };
+
+  // Show therapist selection prompt if no therapist is selected
+  if (showTherapistNeeded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
+        <Card className="max-w-md mx-auto">
+          <CardContent className="p-6 text-center space-y-4">
+            <div className="mx-auto w-12 h-12 bg-therapy-100 rounded-full flex items-center justify-center">
+              <Brain className="h-6 w-6 text-therapy-600" />
+            </div>
+            <h3 className="text-lg font-semibold">Select Your Therapist First</h3>
+            <p className="text-muted-foreground">
+              To start a personalized therapy session, you need to select an AI therapist that matches your needs.
+            </p>
+            <div className="space-y-2">
+              <Button 
+                onClick={() => navigate('/therapist-matching')}
+                className="w-full bg-therapy-600 hover:bg-therapy-700"
+              >
+                Find My Therapist
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => navigate('/')}
+                className="w-full"
+              >
+                Back to Dashboard
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex flex-col">
@@ -243,7 +299,9 @@ const Chat = () => {
                     {!message.isUser && (
                       <Avatar className="mr-2 h-8 w-8">
                         <AvatarImage src="/ai-avatar.png" alt="AI Avatar" />
-                        <AvatarFallback>AI</AvatarFallback>
+                        <AvatarFallback>
+                          {currentTherapist?.name?.charAt(0) || 'AI'}
+                        </AvatarFallback>
                       </Avatar>
                     )}
                     <Card className="w-fit">
@@ -327,7 +385,7 @@ const Chat = () => {
             <Button onClick={handleStartSession} disabled={isLoading}
               className="w-full bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white"
             >
-              {isLoading ? "Starting Session..." : "Start Enhanced Session with Real-time Tracking"}
+              {isLoading ? "Starting Session..." : `Start Enhanced Session with ${currentTherapist?.name || 'AI Therapist'}`}
             </Button>
           )}
         </div>

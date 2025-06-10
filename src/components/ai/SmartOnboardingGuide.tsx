@@ -4,198 +4,147 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { 
-  CheckCircle2, 
-  Circle, 
-  ArrowRight, 
-  Star, 
-  Target, 
-  Brain,
-  Heart,
-  Sparkles
-} from 'lucide-react';
+import { CheckCircle, Brain, Target, MessageCircle, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-
-interface OnboardingStep {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ElementType;
-  route?: string;
-  action?: () => void;
-  completed?: boolean;
-  points: number;
-}
+import { useTherapist } from '@/contexts/TherapistContext';
+import { useOnboardingData } from '@/hooks/useOnboardingData';
+import TherapistMatcher from '@/components/therapist/TherapistMatcher';
 
 const SmartOnboardingGuide = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [completedSteps, setCompletedSteps] = useState<string[]>([]);
+  const { currentTherapist } = useTherapist();
+  const { onboardingData, isLoading } = useOnboardingData();
+  const [showTherapistMatcher, setShowTherapistMatcher] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-  const onboardingSteps: OnboardingStep[] = [
-    {
-      id: 'profile',
-      title: 'Complete Your Profile',
-      description: 'Tell us about yourself to personalize your experience',
-      icon: Heart,
-      route: '/profile',
-      points: 10
-    },
-    {
-      id: 'first-session',
-      title: 'Start Your First Session',
-      description: 'Begin your therapy journey with our AI therapist',
-      icon: Brain,
-      route: '/chat',
-      points: 20
-    },
-    {
-      id: 'mood-tracking',
-      title: 'Track Your Mood',
-      description: 'Log your first mood entry to start building insights',
-      icon: Star,
-      route: '/mood',
-      points: 15
-    },
-    {
-      id: 'set-goals',
-      title: 'Set Your Goals',
-      description: 'Define what you want to achieve in your mental health journey',
-      icon: Target,
-      route: '/goals',
-      points: 15
-    },
-    {
-      id: 'explore-techniques',
-      title: 'Explore Techniques',
-      description: 'Discover coping strategies and mindfulness exercises',
-      icon: Sparkles,
-      route: '/techniques',
-      points: 10
-    }
-  ];
+  // Determine onboarding status
+  const hasBasicInfo = onboardingData?.goals && onboardingData.goals.length > 0;
+  const hasTherapist = !!currentTherapist;
+  const isOnboardingComplete = hasBasicInfo && hasTherapist;
 
   useEffect(() => {
-    // Load completed steps from localStorage
-    const saved = localStorage.getItem(`onboarding_${user?.id}`);
-    if (saved) {
-      setCompletedSteps(JSON.parse(saved));
+    // Show guide if user is authenticated but hasn't completed onboarding
+    if (user && !isLoading && !isOnboardingComplete) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
     }
-  }, [user?.id]);
+  }, [user, isLoading, isOnboardingComplete]);
 
-  const markStepCompleted = (stepId: string) => {
-    if (!completedSteps.includes(stepId)) {
-      const updated = [...completedSteps, stepId];
-      setCompletedSteps(updated);
-      localStorage.setItem(`onboarding_${user?.id}`, JSON.stringify(updated));
-    }
+  const handleTherapistSelected = () => {
+    setShowTherapistMatcher(false);
+    setIsVisible(false);
   };
 
-  const handleStepClick = (step: OnboardingStep) => {
-    if (step.route) {
-      navigate(step.route);
-    }
-    if (step.action) {
-      step.action();
-    }
-    markStepCompleted(step.id);
+  const handleDismiss = () => {
+    setIsVisible(false);
   };
 
-  const totalPoints = onboardingSteps.reduce((sum, step) => sum + step.points, 0);
-  const earnedPoints = onboardingSteps
-    .filter(step => completedSteps.includes(step.id))
-    .reduce((sum, step) => sum + step.points, 0);
-  const progress = (earnedPoints / totalPoints) * 100;
-
-  const isCompleted = completedSteps.length === onboardingSteps.length;
-
-  if (isCompleted) {
-    return null; // Hide guide when completed
+  if (!isVisible || isLoading) {
+    return null;
   }
 
+  if (showTherapistMatcher) {
+    return (
+      <div className="mb-8">
+        <TherapistMatcher 
+          onTherapistSelected={handleTherapistSelected}
+          onClose={() => setShowTherapistMatcher(false)}
+        />
+      </div>
+    );
+  }
+
+  const progress = hasBasicInfo && hasTherapist ? 100 : hasBasicInfo ? 50 : 0;
+
   return (
-    <Card className="mb-6 bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
-      <CardHeader>
+    <Card className="mb-8 border-therapy-200 bg-gradient-to-r from-therapy-50 to-calm-50">
+      <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center space-x-2">
-              <Sparkles className="h-5 w-5 text-purple-500" />
-              <span>Welcome to MindfulAI</span>
-            </CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
-              Complete these steps to get the most out of your therapy experience
-            </p>
+          <div className="flex items-center space-x-2">
+            <Brain className="h-5 w-5 text-therapy-600" />
+            <CardTitle className="text-lg">Complete Your Personalized Setup</CardTitle>
           </div>
-          <Badge variant="secondary">
-            {earnedPoints}/{totalPoints} points
-          </Badge>
+          <Button variant="ghost" size="sm" onClick={handleDismiss}>
+            <X className="h-4 w-4" />
+          </Button>
         </div>
-        <Progress value={progress} className="mt-3" />
+        <Progress value={progress} className="mt-2" />
       </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          {onboardingSteps.map((step, index) => {
-            const isCompleted = completedSteps.includes(step.id);
-            const isCurrent = index === currentStep && !isCompleted;
-            
-            return (
-              <div
-                key={step.id}
-                className={`flex items-center space-x-3 p-3 rounded-lg transition-colors cursor-pointer ${
-                  isCurrent 
-                    ? 'bg-blue-100 border border-blue-300' 
-                    : isCompleted
-                    ? 'bg-green-50 border border-green-200'
-                    : 'bg-white border border-gray-200 hover:bg-gray-50'
-                }`}
-                onClick={() => handleStepClick(step)}
+
+      <CardContent className="space-y-4">
+        <div className="grid gap-3">
+          {/* Basic Onboarding Step */}
+          <div className="flex items-center space-x-3 p-3 rounded-lg bg-white/50">
+            {hasBasicInfo ? (
+              <CheckCircle className="h-5 w-5 text-green-600" />
+            ) : (
+              <Target className="h-5 w-5 text-therapy-600" />
+            )}
+            <div className="flex-1">
+              <h4 className="font-medium">Set Your Goals & Preferences</h4>
+              <p className="text-sm text-muted-foreground">
+                {hasBasicInfo 
+                  ? "✓ Goals and preferences configured" 
+                  : "Define what you want to achieve in therapy"
+                }
+              </p>
+            </div>
+            {hasBasicInfo && (
+              <Badge variant="secondary" className="bg-green-100 text-green-800">
+                Complete
+              </Badge>
+            )}
+          </div>
+
+          {/* Therapist Matching Step */}
+          <div className="flex items-center space-x-3 p-3 rounded-lg bg-white/50">
+            {hasTherapist ? (
+              <CheckCircle className="h-5 w-5 text-green-600" />
+            ) : (
+              <MessageCircle className="h-5 w-5 text-therapy-600" />
+            )}
+            <div className="flex-1">
+              <h4 className="font-medium">Find Your AI Therapist</h4>
+              <p className="text-sm text-muted-foreground">
+                {hasTherapist 
+                  ? `✓ Matched with ${currentTherapist.name}` 
+                  : "Take our assessment to find your perfect therapeutic match"
+                }
+              </p>
+            </div>
+            {hasTherapist ? (
+              <Badge variant="secondary" className="bg-green-100 text-green-800">
+                Complete
+              </Badge>
+            ) : (
+              <Button 
+                size="sm" 
+                onClick={() => setShowTherapistMatcher(true)}
+                className="bg-therapy-600 hover:bg-therapy-700"
               >
-                <div className={`p-2 rounded-full ${
-                  isCompleted 
-                    ? 'bg-green-500 text-white' 
-                    : isCurrent
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-200 text-gray-600'
-                }`}>
-                  {isCompleted ? (
-                    <CheckCircle2 className="h-4 w-4" />
-                  ) : (
-                    <step.icon className="h-4 w-4" />
-                  )}
-                </div>
-                
-                <div className="flex-1">
-                  <h4 className={`font-medium ${isCompleted ? 'text-green-700' : ''}`}>
-                    {step.title}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {step.description}
-                  </p>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Badge variant="outline" className="text-xs">
-                    +{step.points} pts
-                  </Badge>
-                  {!isCompleted && (
-                    <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </div>
-              </div>
-            );
-          })}
+                Start Assessment
+              </Button>
+            )}
+          </div>
         </div>
 
-        {progress > 0 && progress < 100 && (
-          <div className="mt-4 p-3 bg-blue-100 rounded-lg">
-            <p className="text-sm font-medium text-blue-900">
-              Great progress! You're {Math.round(progress)}% through your setup.
-            </p>
-            <p className="text-xs text-blue-700 mt-1">
-              Complete all steps to unlock advanced features and personalized recommendations.
-            </p>
+        {!hasTherapist && (
+          <div className="pt-4 border-t">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium">Ready to find your therapist?</p>
+                <p className="text-xs text-muted-foreground">
+                  Takes 2-3 minutes • Get personalized recommendations
+                </p>
+              </div>
+              <Button 
+                onClick={() => setShowTherapistMatcher(true)}
+                className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
+              >
+                Find My Therapist
+              </Button>
+            </div>
           </div>
         )}
       </CardContent>

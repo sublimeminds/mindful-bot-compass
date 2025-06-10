@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Brain, ArrowRight, Users } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTherapist } from '@/contexts/TherapistContext';
 import { useToast } from '@/hooks/use-toast';
 import TherapistAssessment from './TherapistAssessment';
 import TherapistMatchResults from './TherapistMatchResults';
@@ -28,6 +29,7 @@ const TherapistMatcher: React.FC<TherapistMatcherProps> = ({
   const [matches, setMatches] = useState<TherapistMatch[]>([]);
   const [responses, setResponses] = useState<AssessmentResponse[]>([]);
   const { user } = useAuth();
+  const { selectTherapist } = useTherapist();
   const { toast } = useToast();
 
   const handleStartAssessment = () => {
@@ -51,6 +53,7 @@ const TherapistMatcher: React.FC<TherapistMatcherProps> = ({
     }
 
     try {
+      // Save the full assessment with selected therapist
       await TherapistMatchingService.saveAssessment(
         user.id,
         responses,
@@ -58,9 +61,12 @@ const TherapistMatcher: React.FC<TherapistMatcherProps> = ({
         therapistId
       );
 
+      // Update the therapist context
+      await selectTherapist(therapistId);
+
       toast({
         title: "Therapist Selected",
-        description: "Your therapist preference has been saved. You can now start sessions!",
+        description: "Your therapist preference has been saved. You can now start personalized sessions!",
       });
 
       if (onTherapistSelected) {
