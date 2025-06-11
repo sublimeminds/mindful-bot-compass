@@ -7,8 +7,7 @@ import { User } from "lucide-react";
 import NotificationCenter from "./NotificationCenter";
 import ScrollProgressIndicator from "./ScrollProgressIndicator";
 import Logo from "./navigation/Logo";
-import PublicNavigation from "./navigation/PublicNavigation";
-import AuthenticatedNavigation from "./navigation/AuthenticatedNavigation";
+import UnifiedNavigation from "./navigation/UnifiedNavigation";
 import UserMenu from "./navigation/UserMenu";
 import MobileMenu from "./navigation/MobileMenu";
 
@@ -74,16 +73,9 @@ const Header = () => {
             {/* Logo */}
             <Logo />
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Now unified */}
             <nav className="hidden lg:flex items-center justify-center flex-1 mx-8">
-              {isAuthenticated ? (
-                <AuthenticatedNavigation />
-              ) : (
-                <PublicNavigation 
-                  activeSection={activeSection}
-                  scrollToSection={scrollToSection}
-                />
-              )}
+              <UnifiedNavigation />
             </nav>
 
             {/* Right side */}

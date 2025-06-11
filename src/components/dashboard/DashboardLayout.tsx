@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import DashboardNavigation from '@/components/navigation/DashboardNavigation';
 import SessionStarterWidget from './widgets/SessionStarterWidget';
 import ProgressOverviewWidget from './widgets/ProgressOverviewWidget';
 import QuickActionsWidget from './widgets/QuickActionsWidget';
@@ -19,9 +18,6 @@ const DashboardLayout = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50">
-      {/* Dashboard Navigation */}
-      <DashboardNavigation />
-
       {/* Smart Onboarding Guide */}
       <SmartOnboardingGuide />
 
