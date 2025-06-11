@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Slider } from "@/components/ui/slider";
+import SliderWithFallback from "./SliderWithFallback";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -39,8 +39,10 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
     console.log('Found technique:', foundTechnique);
     setTechnique(foundTechnique || null);
     
-    // Check if voice service has API key
-    setIsVoiceEnabled(voiceService.hasApiKey());
+    // Check if voice service is available and load voice preference
+    const hasApiKey = voiceService.hasApiKey();
+    const savedVoicePreference = localStorage.getItem('therapy_voice_enabled') === 'true';
+    setIsVoiceEnabled(hasApiKey && savedVoicePreference);
   }, [techniqueId]);
 
   useEffect(() => {
@@ -315,7 +317,7 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
           <div className="space-y-4">
             <div>
               <Label>How is your mood now? (1-10)</Label>
-              <Slider
+              <SliderWithFallback
                 value={moodAfter}
                 onValueChange={setMoodAfter}
                 max={10}
@@ -468,7 +470,7 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
 
             <div>
               <Label>How is your mood right now? (1-10)</Label>
-              <Slider
+              <SliderWithFallback
                 value={moodBefore}
                 onValueChange={setMoodBefore}
                 max={10}
