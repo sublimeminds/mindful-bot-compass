@@ -158,7 +158,7 @@ const TherapyChat = () => {
                 {/* Session Timer */}
                 {sessionStarted && currentSession && (
                   <SessionTimer 
-                    startTime={new Date(currentSession.start_time)}
+                    startTime={new Date(currentSession.startTime)}
                     onEndSession={handleEndSession}
                   />
                 )}
