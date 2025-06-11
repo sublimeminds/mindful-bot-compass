@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface ScrollProgressIndicatorProps {
   sections: string[];
@@ -7,10 +7,10 @@ interface ScrollProgressIndicatorProps {
 }
 
 const ScrollProgressIndicator = ({ sections, isAuthenticated }: ScrollProgressIndicatorProps) => {
-  const [scrollProgress, setScrollProgress] = React.useState(0);
-  const [activeSection, setActiveSection] = React.useState('');
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeSection, setActiveSection] = useState('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       // Calculate overall scroll progress
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
