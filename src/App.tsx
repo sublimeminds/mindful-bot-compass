@@ -60,6 +60,7 @@ function App() {
                         <Route path="/session-history" element={<SessionHistory />} />
                         <Route path="/analytics" element={<SessionAnalytics />} />
                         <Route path="/techniques" element={<Techniques />} />
+                        <Route path="/techniques/:techniqueId" element={<Techniques />} />
                         <Route path="/therapist-matching" element={<TherapistMatching />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/live-session/:sessionId" element={<LiveSession />} />

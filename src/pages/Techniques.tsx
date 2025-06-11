@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, BookOpen } from "lucide-react";
@@ -37,8 +38,8 @@ const Techniques = () => {
       });
 
       toast({
-        title: "Session Saved",
-        description: "Your technique session has been recorded successfully.",
+        title: "Great Job! 🎉",
+        description: "Your technique session has been recorded successfully. Keep up the excellent work!",
       });
 
       setShowLibrary(true);
@@ -65,16 +66,16 @@ const Techniques = () => {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Button variant="outline" onClick={() => navigate('/')}>
+              <Button variant="outline" onClick={() => navigate('/')} className="hover:bg-therapy-50">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Dashboard
               </Button>
               <div>
-                <h1 className="text-2xl font-bold flex items-center">
-                  <BookOpen className="h-6 w-6 mr-2" />
+                <h1 className="text-3xl font-bold flex items-center text-therapy-700">
+                  <BookOpen className="h-8 w-8 mr-3" />
                   Therapy Techniques
                 </h1>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground text-lg">
                   {techniqueId && !showLibrary 
                     ? "Follow the guided technique to practice therapeutic exercises"
                     : "Interactive guided exercises to support your mental health journey"
