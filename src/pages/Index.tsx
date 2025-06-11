@@ -7,7 +7,6 @@ import PricingSection from "@/components/PricingSection";
 import UserDashboard from "@/components/UserDashboard";
 import NotificationToastHandler from "@/components/NotificationToastHandler";
 import IntelligentNotificationProvider from "@/components/IntelligentNotificationProvider";
-import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import OfflineIndicator from "@/components/OfflineIndicator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -54,7 +53,6 @@ const Index = () => {
           </>
         )}
       </div>
-      <PWAInstallPrompt />
       <Footer />
     </>
   );
