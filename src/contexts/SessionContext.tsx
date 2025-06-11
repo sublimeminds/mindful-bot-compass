@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -431,5 +432,3 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
 };
 
 export default SessionProvider;
-
-}
