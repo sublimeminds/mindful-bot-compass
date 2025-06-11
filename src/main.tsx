@@ -4,18 +4,30 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
-// Ensure React is available globally for third-party libraries
+// Ensure React is available globally before anything else loads
 if (typeof window !== 'undefined') {
+  // Make React available globally for all libraries
   (window as any).React = React;
   (window as any).__DEV__ = true;
   
-  // Make React hooks available globally
-  (window as any).ReactHooks = React;
-  
-  // Also set up individual hooks for compatibility
-  Object.assign(window, {
-    React,
-    ReactDOM: { createRoot }
+  // Ensure all React hooks are accessible
+  Object.assign(window as any, {
+    React: React,
+    ReactDOM: { createRoot },
+    useState: React.useState,
+    useEffect: React.useEffect,
+    useContext: React.useContext,
+    useMemo: React.useMemo,
+    useCallback: React.useCallback,
+    useRef: React.useRef,
+    useReducer: React.useReducer
+  });
+
+  console.log('React setup complete:', { 
+    React: !!React, 
+    useState: !!React.useState,
+    useContext: !!React.useContext,
+    useMemo: !!React.useMemo 
   });
 }
 
@@ -32,7 +44,12 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-createRoot(document.getElementById("root")!).render(
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+  throw new Error("Root element not found");
+}
+
+createRoot(rootElement).render(
   <StrictMode>
     <App />
   </StrictMode>

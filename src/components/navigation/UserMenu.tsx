@@ -14,21 +14,32 @@ interface UserMenuProps {
 const UserMenu = ({ user, logout }: UserMenuProps) => {
   const navigate = useNavigate();
 
-  const handleProfileClick = () => {
+  const handleProfileClick = React.useCallback(() => {
     try {
+      console.log('Navigating to profile');
       navigate("/profile");
     } catch (error) {
       console.error('Navigation error:', error);
     }
-  };
+  }, [navigate]);
 
-  const handleNotificationSettingsClick = () => {
+  const handleNotificationSettingsClick = React.useCallback(() => {
     try {
+      console.log('Navigating to notification settings');
       navigate("/notification-settings");
     } catch (error) {
       console.error('Navigation error:', error);
     }
-  };
+  }, [navigate]);
+
+  const handleLogout = React.useCallback(() => {
+    try {
+      console.log('Logging out user');
+      logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  }, [logout]);
 
   return (
     <DropdownMenu>
@@ -52,7 +63,7 @@ const UserMenu = ({ user, logout }: UserMenuProps) => {
           <span className="font-medium">Notification Settings</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout} className="text-red-600 hover:bg-red-50 focus:bg-red-50 rounded-lg mx-1 transition-colors">
+        <DropdownMenuItem onClick={handleLogout} className="text-red-600 hover:bg-red-50 focus:bg-red-50 rounded-lg mx-1 transition-colors">
           <LogOut className="h-4 w-4 mr-3" />
           <span className="font-medium">Sign Out</span>
         </DropdownMenuItem>
