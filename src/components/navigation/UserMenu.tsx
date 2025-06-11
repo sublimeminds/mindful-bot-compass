@@ -14,6 +14,22 @@ interface UserMenuProps {
 const UserMenu = ({ user, logout }: UserMenuProps) => {
   const navigate = useNavigate();
 
+  const handleProfileClick = () => {
+    try {
+      navigate("/profile");
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
+  };
+
+  const handleNotificationSettingsClick = () => {
+    try {
+      navigate("/notification-settings");
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,11 +43,11 @@ const UserMenu = ({ user, logout }: UserMenuProps) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-xl border border-border/30 shadow-xl rounded-xl">
-        <DropdownMenuItem onClick={() => navigate("/profile")} className="hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors">
+        <DropdownMenuItem onClick={handleProfileClick} className="hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors">
           <User className="h-4 w-4 mr-3 text-therapy-500" />
           <span className="font-medium">Profile</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => navigate("/notification-settings")} className="hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors">
+        <DropdownMenuItem onClick={handleNotificationSettingsClick} className="hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 transition-colors">
           <Settings className="h-4 w-4 mr-3 text-therapy-500" />
           <span className="font-medium">Notification Settings</span>
         </DropdownMenuItem>
