@@ -51,9 +51,9 @@ const defaultTherapists: TherapistPersonality[] = [
 ];
 
 export const TherapistProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [selectedTherapist, setSelectedTherapist] = React.useState<TherapistPersonality | null>(defaultTherapists[0]);
-  const [therapists] = React.useState<TherapistPersonality[]>(defaultTherapists);
-  const [isLoading] = React.useState(false);
+  const [selectedTherapist, setSelectedTherapist] = useState<TherapistPersonality | null>(defaultTherapists[0]);
+  const [therapists] = useState<TherapistPersonality[]>(defaultTherapists);
+  const [isLoading] = useState(false);
 
   const selectTherapist = React.useCallback((therapist: TherapistPersonality) => {
     setSelectedTherapist(therapist);
