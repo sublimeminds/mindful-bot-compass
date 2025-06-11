@@ -30,6 +30,10 @@ import { SessionProvider } from './contexts/SessionContext';
 import { TherapistProvider } from './contexts/TherapistContext';
 
 function App() {
+  // Debug React availability
+  console.log('App rendering, React available:', !!React);
+  console.log('React hooks available:', !!React.useState, !!React.useMemo, !!React.useContext);
+
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

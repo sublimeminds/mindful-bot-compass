@@ -22,7 +22,9 @@ if (!rootElement) {
   throw new Error("Root element not found");
 }
 
-// Remove StrictMode temporarily to fix Radix UI context issues
+// Restore StrictMode with proper React setup
 createRoot(rootElement).render(
-  <App />
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
 );
