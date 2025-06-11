@@ -1,134 +1,94 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { useVoiceInteraction } from '@/hooks/useVoiceInteraction';
 import { Badge } from '@/components/ui/badge';
-import { Mic, MicOff, Volume2, VolumeX, Settings } from 'lucide-react';
-import { voiceService } from '@/services/voiceService';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 
 interface VoiceInteractionProps {
-  text?: string;
-  onVoiceSettingsChange?: (settings: any) => void;
-  className?: string;
+  onMessageReceived?: (message: string) => void;
+  onSpeechStart?: () => void;
+  onSpeechEnd?: () => void;
+  autoListen?: boolean;
+  disabled?: boolean;
 }
 
-const VoiceInteraction = ({ text, onVoiceSettingsChange, className }: VoiceInteractionProps) => {
-  const [isListening, setIsListening] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [apiKey, setApiKey] = useState('');
-  const [hasApiKey, setHasApiKey] = useState(false);
-  const [voices, setVoices] = useState<any[]>([]);
-  const [selectedVoice, setSelectedVoice] = useState('9BWtsMINqrJLrRacOk9x');
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+const VoiceInteraction: React.FC<VoiceInteractionProps> = ({
+  onMessageReceived,
+  onSpeechStart,
+  onSpeechEnd,
+  autoListen = false,
+  disabled = false
+}) => {
+  const [isMuted, setIsMuted] = useState(false);
+  const { toast } = useToast();
+  
+  const {
+    isListening,
+    isSupported,
+    transcript,
+    confidence,
+    error,
+    startListening,
+    stopListening,
+    speak,
+    clearTranscript
+  } = useVoiceInteraction();
 
   useEffect(() => {
-    setHasApiKey(voiceService.hasApiKey());
-    if (voiceService.hasApiKey()) {
-      loadVoices();
+    if (isListening && onSpeechStart) {
+      onSpeechStart();
+    } else if (!isListening && onSpeechEnd) {
+      onSpeechEnd();
     }
-  }, []);
+  }, [isListening, onSpeechStart, onSpeechEnd]);
 
-  const loadVoices = async () => {
-    const availableVoices = await voiceService.getAvailableVoices();
-    setVoices(availableVoices);
-  };
-
-  const handleApiKeySubmit = () => {
-    if (apiKey.trim()) {
-      voiceService.setApiKey(apiKey.trim());
-      setHasApiKey(true);
-      loadVoices();
-      setApiKey('');
+  useEffect(() => {
+    if (transcript && onMessageReceived) {
+      onMessageReceived(transcript);
     }
-  };
+  }, [transcript, onMessageReceived]);
 
-  const handlePlayText = async () => {
-    if (!text || !hasApiKey) return;
-
-    try {
-      setIsPlaying(true);
-      await voiceService.playText(text, { voiceId: selectedVoice });
-    } catch (error) {
-      console.error('Error playing text:', error);
-    } finally {
-      setIsPlaying(false);
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Voice Error",
+        description: error,
+        variant: "destructive"
+      });
     }
-  };
+  }, [error, toast]);
 
-  const handleStopPlayback = () => {
-    voiceService.stop();
-    setIsPlaying(false);
-  };
-
-  const startListening = () => {
-    if ('webkitSpeechRecognition' in window) {
-      const recognition = new (window as any).webkitSpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = 'en-US';
-
-      recognition.onstart = () => {
-        setIsListening(true);
-      };
-
-      recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        // Handle speech-to-text result
-        console.log('Speech recognized:', transcript);
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
-      recognition.start();
+  const handleMicClick = () => {
+    if (isListening) {
+      stopListening();
     } else {
-      console.warn('Speech recognition not supported');
+      startListening();
     }
   };
 
-  const stopListening = () => {
-    setIsListening(false);
+  const handleTestSpeech = () => {
+    if (!isMuted) {
+      speak("Voice interaction is working. I'm ready to listen to your thoughts.");
+    }
   };
 
-  if (!hasApiKey) {
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+    if (!isMuted) {
+      window.speechSynthesis.cancel();
+    }
+  };
+
+  if (!isSupported) {
     return (
-      <Card className={className}>
-        <CardContent className="p-4 space-y-4">
-          <div className="text-center">
-            <h3 className="text-lg font-medium">Enable Voice Features</h3>
-            <p className="text-sm text-muted-foreground">
-              Add your ElevenLabs API key to use voice interaction
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="apiKey">ElevenLabs API Key</Label>
-            <div className="flex space-x-2">
-              <Input
-                id="apiKey"
-                type="password"
-                placeholder="Enter your API key"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-              />
-              <Button onClick={handleApiKeySubmit}>Save</Button>
-            </div>
-          </div>
-          
-          <div className="text-xs text-muted-foreground">
-            Get your API key from{' '}
-            <a 
-              href="https://elevenlabs.io" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-therapy-600 hover:underline"
-            >
-              ElevenLabs
-            </a>
+      <Card className="border-orange-200 bg-orange-50">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-center space-x-2 text-orange-700">
+            <MicOff className="h-6 w-6" />
+            <span>Voice features not supported</span>
           </div>
         </CardContent>
       </Card>
@@ -136,90 +96,108 @@ const VoiceInteraction = ({ text, onVoiceSettingsChange, className }: VoiceInter
   }
 
   return (
-    <Card className={className}>
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between space-x-4">
+    <Card className="border-therapy-200">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center justify-between text-lg">
+          <span>Voice Interaction</span>
           <div className="flex items-center space-x-2">
-            {text && (
+            <Badge 
+              variant={isListening ? "default" : "secondary"}
+              className={isListening ? "bg-therapy-500 animate-pulse" : "bg-gray-100"}
+            >
+              {isListening ? "Listening" : "Ready"}
+            </Badge>
+            {confidence > 0.8 && (
+              <Badge variant="outline" className="text-xs bg-green-50 text-green-700">
+                High Confidence
+              </Badge>
+            )}
+          </div>
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
+        <div className="flex justify-center space-x-3">
+          <Button
+            onClick={handleMicClick}
+            disabled={disabled}
+            size="lg"
+            variant={isListening ? "destructive" : "default"}
+            className={`${isListening ? 'animate-pulse bg-red-500 hover:bg-red-600' : 'bg-therapy-600 hover:bg-therapy-700'} min-w-[140px]`}
+          >
+            {isListening ? (
               <>
-                {isPlaying ? (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleStopPlayback}
-                  >
-                    <VolumeX className="h-4 w-4 mr-2" />
-                    Stop
-                  </Button>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handlePlayText}
-                  >
-                    <Volume2 className="h-4 w-4 mr-2" />
-                    Play
-                  </Button>
-                )}
+                <MicOff className="h-5 w-5 mr-2" />
+                Stop
+              </>
+            ) : (
+              <>
+                <Mic className="h-5 w-5 mr-2" />
+                Start
               </>
             )}
+          </Button>
 
-            {isListening ? (
-              <Button
-                variant="default"
-                size="sm"
-                onClick={stopListening}
-                className="bg-red-500 hover:bg-red-600"
-              >
-                <MicOff className="h-4 w-4 mr-2" />
-                Stop
-              </Button>
+          <Button
+            onClick={handleTestSpeech}
+            disabled={disabled || isMuted}
+            variant="outline"
+            size="lg"
+          >
+            <Volume2 className="h-5 w-5 mr-2" />
+            Test
+          </Button>
+
+          <Button
+            onClick={toggleMute}
+            disabled={disabled}
+            variant="outline"
+            size="lg"
+            className={isMuted ? "bg-red-50 border-red-200" : ""}
+          >
+            {isMuted ? (
+              <VolumeX className="h-5 w-5" />
             ) : (
+              <Volume2 className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
+
+        {transcript && (
+          <div className="mt-4 p-4 bg-therapy-50 rounded-lg border border-therapy-200">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-therapy-700">
+                Transcript
+              </span>
               <Button
-                variant="outline"
+                onClick={clearTranscript}
+                variant="ghost"
                 size="sm"
-                onClick={startListening}
+                className="text-xs"
               >
-                <Mic className="h-4 w-4 mr-2" />
-                Listen
+                Clear
               </Button>
+            </div>
+            <p className="text-sm text-gray-700">{transcript}</p>
+            {confidence > 0 && (
+              <div className="mt-2">
+                <Badge variant="outline" className="text-xs">
+                  {Math.round(confidence * 100)}% confidence
+                </Badge>
+              </div>
             )}
           </div>
+        )}
 
-          <div className="flex items-center space-x-2">
-            {isPlaying && <Badge variant="secondary">Playing...</Badge>}
-            {isListening && <Badge variant="secondary">Listening...</Badge>}
-            
-            <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Voice Settings</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="voice-select">Voice</Label>
-                    <select
-                      id="voice-select"
-                      value={selectedVoice}
-                      onChange={(e) => setSelectedVoice(e.target.value)}
-                      className="w-full mt-1 p-2 border rounded-md"
-                    >
-                      {voices.map((voice) => (
-                        <option key={voice.voice_id} value={voice.voice_id}>
-                          {voice.name} - {voice.labels?.gender || 'Unknown'}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+        {error && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-700">{error}</p>
           </div>
+        )}
+
+        <div className="flex items-center justify-between pt-3 border-t border-gray-200 text-xs text-gray-500">
+          <span>Secure voice processing</span>
+          <span>Press and hold for continuous listening</span>
         </div>
       </CardContent>
     </Card>
