@@ -148,53 +148,17 @@ function App() {
         {/* Admin routes */}
         <Route path="/admin" element={
           <AdminProtectedRoute>
-            <AdminLayout>
-              <AdminDashboard />
-            </AdminLayout>
+            <AdminLayout />
           </AdminProtectedRoute>
-        } />
-        <Route path="/admin/users" element={
-          <AdminProtectedRoute>
-            <AdminLayout>
-              <AdminUsers />
-            </AdminLayout>
-          </AdminProtectedRoute>
-        } />
-        <Route path="/admin/content" element={
-          <AdminProtectedRoute>
-            <AdminLayout>
-              <AdminContent />
-            </AdminLayout>
-          </AdminProtectedRoute>
-        } />
-        <Route path="/admin/analytics" element={
-          <AdminProtectedRoute>
-            <AdminLayout>
-              <AdminAnalytics />
-            </AdminLayout>
-          </AdminProtectedRoute>
-        } />
-        <Route path="/admin/system" element={
-          <AdminProtectedRoute>
-            <AdminLayout>
-              <AdminSystem />
-            </AdminLayout>
-          </AdminProtectedRoute>
-        } />
-        <Route path="/admin/performance" element={
-          <AdminProtectedRoute>
-            <AdminLayout>
-              <AdminPerformance />
-            </AdminLayout>
-          </AdminProtectedRoute>
-        } />
-        <Route path="/admin/ai" element={
-          <AdminProtectedRoute>
-            <AdminLayout>
-              <AdminAI />
-            </AdminLayout>
-          </AdminProtectedRoute>
-        } />
+        }>
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="content" element={<AdminContent />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="system" element={<AdminSystem />} />
+          <Route path="performance" element={<AdminPerformance />} />
+          <Route path="ai" element={<AdminAI />} />
+        </Route>
 
         {/* 404 route */}
         <Route path="*" element={<NotFound />} />
