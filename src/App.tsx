@@ -27,7 +27,7 @@ import SessionAnalytics from "./pages/SessionAnalytics";
 import { AuthProvider } from './contexts/AuthContext';
 import { AdminProvider } from './contexts/AdminContext';
 import { SessionProvider } from './contexts/SessionContext';
-import { TherapistProvider } from './contexts/TherapistProvider';
+import { TherapistProvider } from './contexts/TherapistContext';
 
 function App() {
   const queryClient = new QueryClient({
