@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
 
 interface TherapistPersonality {
   id: string;
@@ -55,11 +55,11 @@ export const TherapistProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [therapists] = useState<TherapistPersonality[]>(defaultTherapists);
   const [isLoading] = useState(false);
 
-  const selectTherapist = React.useCallback((therapist: TherapistPersonality) => {
+  const selectTherapist = useCallback((therapist: TherapistPersonality) => {
     setSelectedTherapist(therapist);
   }, []);
 
-  const getPersonalityPrompt = React.useCallback(() => {
+  const getPersonalityPrompt = useCallback(() => {
     if (!selectedTherapist) return '';
     
     return `You are ${selectedTherapist.name}, a ${selectedTherapist.title}. 
@@ -71,7 +71,7 @@ export const TherapistProvider: React.FC<{ children: ReactNode }> = ({ children 
     Always respond in character as this therapist, maintaining their specific approach and communication style.`;
   }, [selectedTherapist]);
 
-  const value = React.useMemo(() => ({
+  const value = useMemo(() => ({
     selectedTherapist,
     currentTherapist: selectedTherapist,
     setSelectedTherapist,
