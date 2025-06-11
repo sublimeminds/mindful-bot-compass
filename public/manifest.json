@@ -1,0 +1,60 @@
+
+{
+  "name": "MindfulAI - AI Therapy Companion",
+  "short_name": "MindfulAI",
+  "description": "Your personalized AI therapy companion for mental wellness support",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8B5CF6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["health", "lifestyle", "medical"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Therapy Session",
+      "short_name": "Therapy",
+      "description": "Begin a new therapy session",
+      "url": "/therapy",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Track Mood",
+      "short_name": "Mood",
+      "description": "Log your current mood",
+      "url": "/mood-tracking",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}

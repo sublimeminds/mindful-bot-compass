@@ -6,6 +6,8 @@ import PricingSection from "@/components/PricingSection";
 import UserDashboard from "@/components/UserDashboard";
 import NotificationToastHandler from "@/components/NotificationToastHandler";
 import IntelligentNotificationProvider from "@/components/IntelligentNotificationProvider";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import OfflineIndicator from "@/components/OfflineIndicator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -30,6 +32,7 @@ const Index = () => {
   return (
     <>
       <Header />
+      <OfflineIndicator />
       <div className="min-h-screen bg-gradient-to-br from-background to-muted">
         {isAuthenticated && user ? (
           <IntelligentNotificationProvider>
@@ -50,6 +53,7 @@ const Index = () => {
           </>
         )}
       </div>
+      <PWAInstallPrompt />
       <Footer />
     </>
   );
