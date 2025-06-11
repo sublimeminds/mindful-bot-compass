@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,6 +15,11 @@ const Techniques = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [showLibrary, setShowLibrary] = useState(!techniqueId);
+
+  // Update showLibrary when techniqueId changes
+  useEffect(() => {
+    setShowLibrary(!techniqueId);
+  }, [techniqueId]);
 
   const handleTechniqueComplete = async (
     rating: number, 
@@ -42,7 +47,6 @@ const Techniques = () => {
         description: "Your technique session has been recorded successfully. Keep up the excellent work!",
       });
 
-      setShowLibrary(true);
       navigate('/techniques');
     } catch (error) {
       toast({
@@ -54,7 +58,6 @@ const Techniques = () => {
   };
 
   const handleExitTechnique = () => {
-    setShowLibrary(true);
     navigate('/techniques');
   };
 
