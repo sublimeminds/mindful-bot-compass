@@ -24,10 +24,20 @@ import SmartTriggers from './pages/SmartTriggers';
 import PerformanceDashboard from './pages/PerformanceDashboard';
 import SessionAnalytics from "./pages/SessionAnalytics";
 
+// Admin pages
+import AdminDashboard from './pages/AdminDashboard';
+import AdminUsers from './pages/AdminUsers';
+import AdminContent from './pages/AdminContent';
+import AdminAnalytics from './pages/AdminAnalytics';
+import AdminSystem from './pages/AdminSystem';
+import AdminPerformance from './pages/AdminPerformance';
+
 import { AuthProvider } from './contexts/AuthContext';
 import { AdminProvider } from './contexts/AdminContext';
 import { SessionProvider } from './contexts/SessionContext';
 import { TherapistProvider } from './contexts/TherapistContext';
+import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
+import AdminLayout from './components/admin/AdminLayout';
 
 // Create QueryClient outside component to avoid recreation on every render
 const queryClient = new QueryClient({
@@ -70,6 +80,41 @@ function App() {
                         <Route path="/notification-analytics" element={<NotificationAnalytics />} />
                         <Route path="/smart-triggers" element={<SmartTriggers />} />
                         <Route path="/performance" element={<PerformanceDashboard />} />
+                        
+                        {/* Admin Routes */}
+                        <Route path="/admin" element={
+                          <AdminProtectedRoute>
+                            <AdminLayout />
+                          </AdminProtectedRoute>
+                        }>
+                          <Route index element={<AdminDashboard />} />
+                          <Route path="users" element={
+                            <AdminProtectedRoute requiredPermission={{ name: 'view_users', resource: 'users' }}>
+                              <AdminUsers />
+                            </AdminProtectedRoute>
+                          } />
+                          <Route path="content" element={
+                            <AdminProtectedRoute requiredPermission={{ name: 'manage_content', resource: 'content' }}>
+                              <AdminContent />
+                            </AdminProtectedRoute>
+                          } />
+                          <Route path="analytics" element={
+                            <AdminProtectedRoute requiredPermission={{ name: 'view_analytics', resource: 'analytics' }}>
+                              <AdminAnalytics />
+                            </AdminProtectedRoute>
+                          } />
+                          <Route path="system" element={
+                            <AdminProtectedRoute requiredPermission={{ name: 'manage_system', resource: 'system' }}>
+                              <AdminSystem />
+                            </AdminProtectedRoute>
+                          } />
+                          <Route path="performance" element={
+                            <AdminProtectedRoute requiredPermission={{ name: 'view_analytics', resource: 'analytics' }}>
+                              <AdminPerformance />
+                            </AdminProtectedRoute>
+                          } />
+                        </Route>
+                        
                         <Route path="*" element={<NotFound />} />
                       </Routes>
                     </main>

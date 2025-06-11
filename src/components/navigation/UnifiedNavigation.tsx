@@ -144,7 +144,8 @@ const UnifiedNavigation = () => {
     <div className="flex items-center space-x-1 overflow-x-auto">
       {mainNavItems.map((item) => {
         const Icon = item.icon;
-        const isActive = location.pathname === item.path;
+        const isActive = location.pathname === item.path || 
+          (item.path === '/admin' && location.pathname.startsWith('/admin'));
         
         return (
           <Button
@@ -157,6 +158,7 @@ const UnifiedNavigation = () => {
               ${item.highlight && !isActive ? 'bg-therapy-50 text-therapy-700 hover:bg-therapy-100 border border-therapy-200' : ''}
               ${isActive ? 'bg-therapy-600 text-white shadow-sm' : ''}
               ${!isActive && !item.highlight ? 'hover:bg-muted/50 text-foreground/80 hover:text-foreground' : ''}
+              ${item.path === '/admin' ? 'bg-orange-500/10 text-orange-400 hover:bg-orange-500/20' : ''}
             `}
             title={item.description}
           >
