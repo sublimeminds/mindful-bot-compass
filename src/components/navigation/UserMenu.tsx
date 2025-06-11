@@ -12,7 +12,17 @@ interface UserMenuProps {
 }
 
 const UserMenu = ({ user, logout }: UserMenuProps) => {
-  const navigate = useNavigate();
+  // Use navigate hook with error boundary
+  let navigate;
+  try {
+    navigate = useNavigate();
+  } catch (error) {
+    console.error('Navigation hook error:', error);
+    // Fallback navigation function
+    navigate = (path: string) => {
+      window.location.href = path;
+    };
+  }
 
   const handleProfileClick = React.useCallback(() => {
     try {

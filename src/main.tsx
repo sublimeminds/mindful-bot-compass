@@ -4,30 +4,32 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
-// Ensure React is available globally before anything else loads
+// Critical: Set up React globally IMMEDIATELY before any imports or other code
 if (typeof window !== 'undefined') {
-  // Make React available globally for all libraries
+  // Ensure React is available on window object first
   (window as any).React = React;
+  
+  // Set up all React hooks on window
+  (window as any).useState = React.useState;
+  (window as any).useEffect = React.useEffect;
+  (window as any).useContext = React.useContext;
+  (window as any).useMemo = React.useMemo;
+  (window as any).useCallback = React.useCallback;
+  (window as any).useRef = React.useRef;
+  (window as any).useReducer = React.useReducer;
+  (window as any).createContext = React.createContext;
+  
+  // Also ensure ReactDOM is available
+  (window as any).ReactDOM = { createRoot };
+  
+  // Development flag
   (window as any).__DEV__ = true;
   
-  // Ensure all React hooks are accessible
-  Object.assign(window as any, {
-    React: React,
-    ReactDOM: { createRoot },
-    useState: React.useState,
-    useEffect: React.useEffect,
-    useContext: React.useContext,
-    useMemo: React.useMemo,
-    useCallback: React.useCallback,
-    useRef: React.useRef,
-    useReducer: React.useReducer
-  });
-
-  console.log('React setup complete:', { 
-    React: !!React, 
-    useState: !!React.useState,
-    useContext: !!React.useContext,
-    useMemo: !!React.useMemo 
+  console.log('React globals initialized:', {
+    React: !!(window as any).React,
+    useState: !!(window as any).useState,
+    useContext: !!(window as any).useContext,
+    ReactAvailable: !!React
   });
 }
 
