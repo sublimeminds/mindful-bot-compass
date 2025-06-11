@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Brain, Settings, Volume2, VolumeX } from "lucide-react";
+import { ArrowLeft, Brain, Settings, Volume2, VolumeX, Clock, MessageCircle, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -14,15 +13,17 @@ import VoiceSettings from "@/components/voice/VoiceSettings";
 import TherapistCard from "@/components/therapist/TherapistCard";
 import SessionTimer from "@/components/session/SessionTimer";
 import EmotionIndicator from "@/components/emotion/EmotionIndicator";
+import SessionEndModal from "@/components/SessionEndModal";
 import { voiceService } from "@/services/voiceService";
 
 const TherapyChat = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { currentSession, startSession, endSession } = useSession();
+  const { currentSession, startSession, endSession, canEndSession, getSessionDuration, getContentQuality } = useSession();
   const { currentTherapist } = useTherapist();
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+  const [showEndModal, setShowEndModal] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [sessionStarted, setSessionStarted] = useState(false);
 
@@ -82,15 +83,37 @@ const TherapyChat = () => {
     }
   };
 
-  const handleEndSession = async () => {
+  const handleEndSessionAttempt = () => {
+    if (!canEndSession()) {
+      const duration = getSessionDuration();
+      const content = getContentQuality();
+      
+      toast({
+        title: "Session Too Short",
+        description: `Please continue your session. You need at least 15 minutes and meaningful conversation. Current: ${duration} min, ${content.messageCount} messages.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setShowEndModal(true);
+  };
+
+  const handleSessionEnd = async (data: {
+    moodAfter: number;
+    notes: string;
+    rating: number;
+    breakthroughs: string[];
+  }) => {
     if (!currentSession) return;
     
     try {
-      await endSession(7, "Session completed", 4); // Default values
+      await endSession(data.moodAfter, data.notes, data.rating);
       setSessionStarted(false);
+      setShowEndModal(false);
       toast({
-        title: "Session Ended",
-        description: "Your therapy session has been completed.",
+        title: "Session Completed! 🎉",
+        description: "Your therapy session has been saved successfully.",
       });
     } catch (error) {
       toast({
@@ -137,6 +160,10 @@ const TherapyChat = () => {
     );
   }
 
+  const sessionDuration = getSessionDuration();
+  const contentQuality = getContentQuality();
+  const sessionCanEnd = canEndSession();
+
   return (
     <>
       <Header />
@@ -164,6 +191,26 @@ const TherapyChat = () => {
               </div>
               
               <div className="flex items-center space-x-3">
+                {/* Session Progress Indicator */}
+                {sessionStarted && currentSession && (
+                  <div className="flex items-center space-x-2 text-sm">
+                    <div className="flex items-center space-x-1">
+                      <Clock className="h-4 w-4" />
+                      <span>{sessionDuration} min</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <MessageCircle className="h-4 w-4" />
+                      <span>{contentQuality.messageCount}</span>
+                    </div>
+                    {!sessionCanEnd && (
+                      <div className="flex items-center space-x-1 text-amber-600">
+                        <AlertCircle className="h-4 w-4" />
+                        <span className="text-xs">Continue session</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
                 {/* Voice Settings Toggle */}
                 <Button
                   variant="outline"
@@ -183,7 +230,8 @@ const TherapyChat = () => {
                 {sessionStarted && currentSession && (
                   <SessionTimer 
                     startTime={new Date(currentSession.startTime)}
-                    onEndSession={handleEndSession}
+                    onEndSession={handleEndSessionAttempt}
+                    canEnd={sessionCanEnd}
                   />
                 )}
               </div>
@@ -208,6 +256,42 @@ const TherapyChat = () => {
                   isEnabled={isVoiceEnabled}
                   onToggle={handleVoiceToggle}
                 />
+              )}
+              
+              {/* Session Progress Card */}
+              {sessionStarted && (
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm">Session Progress</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span>Duration:</span>
+                      <span className="font-medium">{sessionDuration} minutes</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Messages:</span>
+                      <span className="font-medium">{contentQuality.messageCount}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Your messages:</span>
+                      <span className="font-medium">{contentQuality.userMessages}</span>
+                    </div>
+                    <div className="pt-2 border-t">
+                      {sessionCanEnd ? (
+                        <div className="text-xs text-green-600 flex items-center">
+                          <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                          Ready to complete
+                        </div>
+                      ) : (
+                        <div className="text-xs text-amber-600 flex items-center">
+                          <div className="w-2 h-2 bg-amber-500 rounded-full mr-2"></div>
+                          Continue for meaningful session
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
               )}
               
               {/* Emotion Indicator */}
@@ -246,7 +330,7 @@ const TherapyChat = () => {
                 </Card>
               ) : (
                 <TherapyChatInterface 
-                  onEndSession={handleEndSession}
+                  onEndSession={handleEndSessionAttempt}
                   voiceEnabled={isVoiceEnabled}
                   onVoiceToggle={handleVoiceToggle}
                 />
@@ -255,6 +339,13 @@ const TherapyChat = () => {
           </div>
         </div>
       </div>
+      
+      {/* Session End Modal */}
+      <SessionEndModal
+        isOpen={showEndModal}
+        onClose={() => setShowEndModal(false)}
+        onSubmit={handleSessionEnd}
+      />
     </>
   );
 };

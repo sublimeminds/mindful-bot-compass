@@ -50,6 +50,16 @@ interface SessionContextType {
   // Real-time session methods
   updateRealtimeStatus: (sessionId: string, isActive: boolean) => void;
   syncWithRealtimeSession: (realtimeSessionId: string, isActive: boolean) => void;
+  // Session validation methods
+  canEndSession: () => boolean;
+  getSessionDuration: () => number;
+  getContentQuality: () => {
+    messageCount: number;
+    userMessages: number;
+    aiMessages: number;
+    averageMessageLength: number;
+    hasSubstantialContent: boolean;
+  };
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -66,6 +76,62 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   const { user } = useAuth();
   const [currentSession, setCurrentSession] = useState<SessionData | null>(null);
   const [sessions, setSessions] = useState<SessionData[]>([]);
+
+  // Minimum requirements for a complete session
+  const MIN_SESSION_DURATION_MINUTES = 15; // Minimum 15 minutes
+  const MIN_MESSAGE_COUNT = 8; // At least 8 meaningful exchanges
+  const MIN_USER_MESSAGES = 4; // User must participate meaningfully
+  const MIN_AVERAGE_MESSAGE_LENGTH = 30; // Average message length should be substantial
+
+  const getSessionDuration = () => {
+    if (!currentSession) return 0;
+    const now = new Date();
+    const duration = Math.floor((now.getTime() - currentSession.startTime.getTime()) / 1000 / 60);
+    return duration;
+  };
+
+  const getContentQuality = () => {
+    if (!currentSession) {
+      return {
+        messageCount: 0,
+        userMessages: 0,
+        aiMessages: 0,
+        averageMessageLength: 0,
+        hasSubstantialContent: false
+      };
+    }
+
+    const userMessages = currentSession.messages.filter(m => m.sender === 'user');
+    const aiMessages = currentSession.messages.filter(m => m.sender === 'ai');
+    const totalMessages = currentSession.messages.length;
+    
+    const averageMessageLength = totalMessages > 0 
+      ? currentSession.messages.reduce((sum, msg) => sum + msg.content.length, 0) / totalMessages
+      : 0;
+
+    const hasSubstantialContent = 
+      totalMessages >= MIN_MESSAGE_COUNT &&
+      userMessages.length >= MIN_USER_MESSAGES &&
+      averageMessageLength >= MIN_AVERAGE_MESSAGE_LENGTH;
+
+    return {
+      messageCount: totalMessages,
+      userMessages: userMessages.length,
+      aiMessages: aiMessages.length,
+      averageMessageLength: Math.round(averageMessageLength),
+      hasSubstantialContent
+    };
+  };
+
+  const canEndSession = () => {
+    if (!currentSession) return false;
+    
+    const duration = getSessionDuration();
+    const contentQuality = getContentQuality();
+    
+    // Session can be ended if it meets duration AND content requirements
+    return duration >= MIN_SESSION_DURATION_MINUTES && contentQuality.hasSubstantialContent;
+  };
 
   const startSession = async (moodBefore?: number, realtimeSessionId?: string) => {
     if (!user) return;
@@ -351,7 +417,10 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
     loadSessions,
     getSessionInsights,
     updateRealtimeStatus,
-    syncWithRealtimeSession
+    syncWithRealtimeSession,
+    canEndSession,
+    getSessionDuration,
+    getContentQuality
   };
 
   return (
@@ -362,3 +431,5 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
 };
 
 export default SessionProvider;
+
+}
