@@ -2,128 +2,183 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Activity, Database, Server, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Cpu, Database, Server, Wifi, HardDrive, Activity, Zap, Clock } from 'lucide-react';
+
+interface SystemMetric {
+  name: string;
+  value: number;
+  unit: string;
+  status: 'healthy' | 'warning' | 'critical';
+  icon: any;
+  description: string;
+}
 
 const SystemMetrics = () => {
-  const [metrics, setMetrics] = useState({
-    systemHealth: 98,
-    databaseLoad: 45,
-    apiResponseTime: 120,
-    errorRate: 0.2,
-  });
+  const [metrics, setMetrics] = useState<SystemMetric[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Simulate real-time updates
   useEffect(() => {
-    const interval = setInterval(() => {
-      setMetrics(prev => ({
-        systemHealth: Math.max(90, Math.min(100, prev.systemHealth + (Math.random() - 0.5) * 2)),
-        databaseLoad: Math.max(0, Math.min(100, prev.databaseLoad + (Math.random() - 0.5) * 10)),
-        apiResponseTime: Math.max(50, Math.min(500, prev.apiResponseTime + (Math.random() - 0.5) * 20)),
-        errorRate: Math.max(0, Math.min(5, prev.errorRate + (Math.random() - 0.5) * 0.2)),
-      }));
-    }, 5000);
+    // Simulate fetching real system metrics
+    const fetchMetrics = () => {
+      const mockMetrics: SystemMetric[] = [
+        {
+          name: 'CPU Usage',
+          value: 42,
+          unit: '%',
+          status: 'healthy',
+          icon: Cpu,
+          description: 'Server CPU utilization'
+        },
+        {
+          name: 'Memory Usage',
+          value: 68,
+          unit: '%',
+          status: 'warning',
+          icon: HardDrive,
+          description: 'RAM consumption'
+        },
+        {
+          name: 'Database Load',
+          value: 35,
+          unit: '%',
+          status: 'healthy',
+          icon: Database,
+          description: 'Database connection pool'
+        },
+        {
+          name: 'API Response Time',
+          value: 120,
+          unit: 'ms',
+          status: 'healthy',
+          icon: Zap,
+          description: 'Average API response time'
+        },
+        {
+          name: 'Active Connections',
+          value: 1247,
+          unit: '',
+          status: 'healthy',
+          icon: Wifi,
+          description: 'Current active user sessions'
+        },
+        {
+          name: 'Uptime',
+          value: 99.9,
+          unit: '%',
+          status: 'healthy',
+          icon: Activity,
+          description: 'System availability'
+        },
+        {
+          name: 'Disk Usage',
+          value: 56,
+          unit: '%',
+          status: 'healthy',
+          icon: Server,
+          description: 'Storage utilization'
+        },
+        {
+          name: 'Queue Processing',
+          value: 23,
+          unit: 'jobs/min',
+          status: 'healthy',
+          icon: Clock,
+          description: 'Background job processing rate'
+        }
+      ];
 
+      setMetrics(mockMetrics);
+      setLoading(false);
+    };
+
+    fetchMetrics();
+    
+    // Update metrics every 30 seconds
+    const interval = setInterval(fetchMetrics, 30000);
     return () => clearInterval(interval);
   }, []);
 
-  const getHealthColor = (value: number, inverted = false) => {
-    if (inverted) {
-      if (value < 30) return 'text-green-400';
-      if (value < 70) return 'text-yellow-400';
-      return 'text-red-400';
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'healthy': return 'text-green-400';
+      case 'warning': return 'text-yellow-400';
+      case 'critical': return 'text-red-400';
+      default: return 'text-gray-400';
     }
-    if (value > 80) return 'text-green-400';
-    if (value > 50) return 'text-yellow-400';
-    return 'text-red-400';
   };
 
-  const getProgressColor = (value: number, inverted = false) => {
-    if (inverted) {
-      if (value < 30) return 'bg-green-500';
-      if (value < 70) return 'bg-yellow-500';
-      return 'bg-red-500';
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'healthy': return 'default';
+      case 'warning': return 'secondary';
+      case 'critical': return 'destructive';
+      default: return 'outline';
     }
-    if (value > 80) return 'bg-green-500';
-    if (value > 50) return 'bg-yellow-500';
-    return 'bg-red-500';
+  };
+
+  const getProgressColor = (status: string) => {
+    switch (status) {
+      case 'healthy': return 'bg-green-500';
+      case 'warning': return 'bg-yellow-500';
+      case 'critical': return 'bg-red-500';
+      default: return 'bg-gray-500';
+    }
   };
 
   return (
     <Card className="bg-gray-800 border-gray-700">
       <CardHeader>
-        <CardTitle className="flex items-center text-white">
-          <Activity className="h-5 w-5 mr-2 text-green-400" />
+        <CardTitle className="text-white flex items-center">
+          <Activity className="h-5 w-5 mr-2 text-blue-400" />
           System Metrics
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {/* System Health */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Server className="h-4 w-4 text-gray-400" />
-              <span className="text-sm text-gray-300">System Health</span>
-            </div>
-            <span className={`text-sm font-medium ${getHealthColor(metrics.systemHealth)}`}>
-              {metrics.systemHealth.toFixed(1)}%
-            </span>
+      <CardContent>
+        {loading ? (
+          <div className="text-center py-8 text-gray-400">
+            <Activity className="h-12 w-12 mx-auto mb-4 opacity-50 animate-pulse" />
+            <p>Loading system metrics...</p>
           </div>
-          <Progress value={metrics.systemHealth} className="h-2" />
-        </div>
-
-        {/* Database Load */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Database className="h-4 w-4 text-gray-400" />
-              <span className="text-sm text-gray-300">Database Load</span>
-            </div>
-            <span className={`text-sm font-medium ${getHealthColor(metrics.databaseLoad, true)}`}>
-              {metrics.databaseLoad.toFixed(1)}%
-            </span>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {metrics.map((metric) => {
+              const Icon = metric.icon;
+              const progressValue = metric.unit === '%' ? metric.value : Math.min((metric.value / 2000) * 100, 100);
+              
+              return (
+                <div key={metric.name} className="p-4 bg-gray-700/50 rounded-lg border border-gray-600">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <Icon className={`h-4 w-4 ${getStatusColor(metric.status)}`} />
+                      <span className="text-sm font-medium text-white">{metric.name}</span>
+                    </div>
+                    <Badge variant={getStatusBadge(metric.status) as any} className="text-xs">
+                      {metric.status}
+                    </Badge>
+                  </div>
+                  
+                  <div className="mb-2">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-lg font-bold text-white">
+                        {metric.value}{metric.unit}
+                      </span>
+                    </div>
+                    
+                    {metric.unit === '%' && (
+                      <Progress 
+                        value={progressValue} 
+                        className="h-2"
+                      />
+                    )}
+                  </div>
+                  
+                  <p className="text-xs text-gray-400">{metric.description}</p>
+                </div>
+              );
+            })}
           </div>
-          <Progress value={metrics.databaseLoad} className="h-2" />
-        </div>
-
-        {/* API Response Time */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Zap className="h-4 w-4 text-gray-400" />
-              <span className="text-sm text-gray-300">API Response Time</span>
-            </div>
-            <span className={`text-sm font-medium ${
-              metrics.apiResponseTime < 200 ? 'text-green-400' : 
-              metrics.apiResponseTime < 500 ? 'text-yellow-400' : 'text-red-400'
-            }`}>
-              {metrics.apiResponseTime.toFixed(0)}ms
-            </span>
-          </div>
-          <Progress 
-            value={Math.min(100, (metrics.apiResponseTime / 500) * 100)} 
-            className="h-2" 
-          />
-        </div>
-
-        {/* Error Rate */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Activity className="h-4 w-4 text-gray-400" />
-              <span className="text-sm text-gray-300">Error Rate</span>
-            </div>
-            <span className={`text-sm font-medium ${
-              metrics.errorRate < 1 ? 'text-green-400' : 
-              metrics.errorRate < 3 ? 'text-yellow-400' : 'text-red-400'
-            }`}>
-              {metrics.errorRate.toFixed(2)}%
-            </span>
-          </div>
-          <Progress 
-            value={Math.min(100, (metrics.errorRate / 5) * 100)} 
-            className="h-2" 
-          />
-        </div>
+        )}
       </CardContent>
     </Card>
   );

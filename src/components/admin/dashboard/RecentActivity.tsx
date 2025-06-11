@@ -2,176 +2,192 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { supabase } from '@/integrations/supabase/client';
-import { Clock, Users, MessageCircle, Target, Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { 
+  User, 
+  MessageSquare, 
+  Target, 
+  Settings, 
+  AlertTriangle, 
+  CheckCircle,
+  Clock,
+  ExternalLink
+} from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
+interface ActivityItem {
+  id: string;
+  type: 'user_action' | 'system_event' | 'admin_action' | 'session' | 'goal' | 'alert';
+  title: string;
+  description: string;
+  user?: string;
+  timestamp: Date;
+  severity: 'info' | 'warning' | 'success' | 'error';
+  metadata?: Record<string, any>;
+}
+
 const RecentActivity = () => {
-  const [activities, setActivities] = useState<any[]>([]);
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchRecentActivity = async () => {
-      try {
-        // Fetch recent sessions with user data
-        const { data: sessions } = await supabase
-          .from('therapy_sessions')
-          .select(`
-            id,
-            created_at,
-            user_id
-          `)
-          .order('created_at', { ascending: false })
-          .limit(5);
+    const fetchActivities = () => {
+      // Simulate real activity data
+      const mockActivities: ActivityItem[] = [
+        {
+          id: '1',
+          type: 'user_action',
+          title: 'New User Registration',
+          description: 'Sarah Johnson completed onboarding',
+          user: 'Sarah Johnson',
+          timestamp: new Date(Date.now() - 300000), // 5 minutes ago
+          severity: 'success'
+        },
+        {
+          id: '2',
+          type: 'session',
+          title: 'Therapy Session Completed',
+          description: 'User completed 45-minute session with AI therapist',
+          user: 'John Doe',
+          timestamp: new Date(Date.now() - 900000), // 15 minutes ago
+          severity: 'info'
+        },
+        {
+          id: '3',
+          type: 'system_event',
+          title: 'Database Backup',
+          description: 'Scheduled backup completed successfully',
+          timestamp: new Date(Date.now() - 1800000), // 30 minutes ago
+          severity: 'success'
+        },
+        {
+          id: '4',
+          type: 'alert',
+          title: 'High Memory Usage',
+          description: 'Memory usage exceeded 80% threshold',
+          timestamp: new Date(Date.now() - 2700000), // 45 minutes ago
+          severity: 'warning'
+        },
+        {
+          id: '5',
+          type: 'goal',
+          title: 'Goal Achievement',
+          description: 'Mike Chen completed daily meditation goal',
+          user: 'Mike Chen',
+          timestamp: new Date(Date.now() - 3600000), // 1 hour ago
+          severity: 'success'
+        },
+        {
+          id: '6',
+          type: 'admin_action',
+          title: 'User Role Updated',
+          description: 'Admin granted moderator role to Lisa Brown',
+          user: 'Admin User',
+          timestamp: new Date(Date.now() - 7200000), // 2 hours ago
+          severity: 'info'
+        }
+      ];
 
-        // Fetch recent goals with user data
-        const { data: goals } = await supabase
-          .from('goals')
-          .select(`
-            id,
-            created_at,
-            title,
-            user_id
-          `)
-          .order('created_at', { ascending: false })
-          .limit(5);
-
-        // Fetch recent user registrations
-        const { data: profiles } = await supabase
-          .from('profiles')
-          .select('id, created_at, name, email')
-          .order('created_at', { ascending: false })
-          .limit(5);
-
-        // Get user data for sessions and goals
-        const allUserIds = [
-          ...(sessions?.map(s => s.user_id) || []),
-          ...(goals?.map(g => g.user_id) || [])
-        ];
-
-        const { data: userData } = await supabase
-          .from('profiles')
-          .select('id, name, email')
-          .in('id', allUserIds);
-
-        const userMap = userData?.reduce((acc, user) => {
-          acc[user.id] = user;
-          return acc;
-        }, {} as Record<string, any>) || {};
-
-        // Combine and format activities
-        const allActivities = [
-          ...(sessions?.map(session => {
-            const user = userMap[session.user_id];
-            return {
-              id: `session-${session.id}`,
-              type: 'session',
-              title: 'New therapy session',
-              description: `${user?.name || user?.email || 'User'} started a session`,
-              timestamp: session.created_at,
-              icon: MessageCircle,
-              color: 'bg-blue-500',
-            };
-          }) || []),
-          ...(goals?.map(goal => {
-            const user = userMap[goal.user_id];
-            return {
-              id: `goal-${goal.id}`,
-              type: 'goal',
-              title: 'New goal created',
-              description: `${user?.name || user?.email || 'User'} created "${goal.title}"`,
-              timestamp: goal.created_at,
-              icon: Target,
-              color: 'bg-purple-500',
-            };
-          }) || []),
-          ...(profiles?.map(profile => ({
-            id: `user-${profile.id}`,
-            type: 'user',
-            title: 'New user registration',
-            description: `${profile.name || profile.email} joined the platform`,
-            timestamp: profile.created_at,
-            icon: Users,
-            color: 'bg-green-500',
-          })) || []),
-        ];
-
-        // Sort by timestamp and take the most recent 10
-        const sortedActivities = allActivities
-          .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-          .slice(0, 10);
-
-        setActivities(sortedActivities);
-      } catch (error) {
-        console.error('Error fetching recent activity:', error);
-      } finally {
-        setLoading(false);
-      }
+      setActivities(mockActivities);
+      setLoading(false);
     };
 
-    fetchRecentActivity();
+    fetchActivities();
+    
+    // Refresh every minute
+    const interval = setInterval(fetchActivities, 60000);
+    return () => clearInterval(interval);
   }, []);
 
-  const getTypeLabel = (type: string) => {
+  const getActivityIcon = (type: string) => {
     switch (type) {
-      case 'session': return 'Session';
-      case 'goal': return 'Goal';
-      case 'user': return 'User';
-      default: return type;
+      case 'user_action': return User;
+      case 'session': return MessageSquare;
+      case 'goal': return Target;
+      case 'admin_action': return Settings;
+      case 'alert': return AlertTriangle;
+      case 'system_event': return CheckCircle;
+      default: return Clock;
     }
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'session': return 'bg-blue-500';
-      case 'goal': return 'bg-purple-500';
-      case 'user': return 'bg-green-500';
-      default: return 'bg-gray-500';
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'success': return 'text-green-400';
+      case 'warning': return 'text-yellow-400';
+      case 'error': return 'text-red-400';
+      case 'info': return 'text-blue-400';
+      default: return 'text-gray-400';
+    }
+  };
+
+  const getSeverityBadge = (severity: string) => {
+    switch (severity) {
+      case 'success': return 'default';
+      case 'warning': return 'secondary';
+      case 'error': return 'destructive';
+      case 'info': return 'outline';
+      default: return 'outline';
     }
   };
 
   return (
     <Card className="bg-gray-800 border-gray-700">
       <CardHeader>
-        <CardTitle className="flex items-center text-white">
-          <Clock className="h-5 w-5 mr-2 text-blue-400" />
-          Recent Activity
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-white flex items-center">
+            <Clock className="h-5 w-5 mr-2 text-blue-400" />
+            Recent Activity
+          </CardTitle>
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+            <ExternalLink className="h-4 w-4 mr-1" />
+            View All
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="text-center text-gray-400 py-8">
-            Loading recent activity...
-          </div>
-        ) : activities.length === 0 ? (
-          <div className="text-center text-gray-400 py-8">
-            No recent activity found
+          <div className="text-center py-8 text-gray-400">
+            <Clock className="h-12 w-12 mx-auto mb-4 opacity-50 animate-pulse" />
+            <p>Loading recent activity...</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {activities.map((activity) => (
-              <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg bg-gray-700/50">
-                <div className={`p-2 rounded-lg ${activity.color}`}>
-                  <activity.icon className="h-4 w-4 text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-white truncate">
-                      {activity.title}
-                    </p>
-                    <Badge variant="secondary" className="ml-2">
-                      {getTypeLabel(activity.type)}
-                    </Badge>
+          <div className="space-y-4 max-h-96 overflow-y-auto">
+            {activities.map((activity) => {
+              const Icon = getActivityIcon(activity.type);
+              
+              return (
+                <div key={activity.id} className="flex items-start space-x-3 p-3 bg-gray-700/30 rounded-lg border border-gray-600">
+                  <div className={`p-2 rounded-lg bg-gray-600`}>
+                    <Icon className={`h-4 w-4 ${getSeverityColor(activity.severity)}`} />
                   </div>
-                  <p className="text-sm text-gray-400 mt-1">
-                    {activity.description}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
-                  </p>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm font-medium text-white truncate">
+                        {activity.title}
+                      </p>
+                      <Badge variant={getSeverityBadge(activity.severity) as any} className="text-xs ml-2">
+                        {activity.severity}
+                      </Badge>
+                    </div>
+                    
+                    <p className="text-sm text-gray-400 mb-2">
+                      {activity.description}
+                    </p>
+                    
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <span>
+                        {activity.user && `by ${activity.user}`}
+                      </span>
+                      <span>
+                        {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </CardContent>

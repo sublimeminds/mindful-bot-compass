@@ -1,432 +1,243 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Edit, Trash2, Mail, Bell, MessageSquare, Send } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { 
+  Mail, 
+  Plus, 
+  Edit, 
+  Trash2, 
+  Copy, 
+  Eye, 
+  Send,
+  Bell
+} from 'lucide-react';
 
 interface NotificationTemplate {
   id: string;
   name: string;
-  type: 'email' | 'push' | 'in_app';
-  category: string;
-  subject?: string;
-  content: string;
-  variables: string[];
-  is_active: boolean;
-  created_at: string;
-}
-
-type NotificationFormData = {
-  name: string;
-  type: 'email' | 'push' | 'in_app';
+  type: 'email' | 'push' | 'in_app' | 'sms';
   category: string;
   subject: string;
   content: string;
   variables: string[];
-  is_active: boolean;
-};
+  isActive: boolean;
+  usageCount: number;
+  lastUsed?: Date;
+}
 
 const NotificationTemplates = () => {
-  const { toast } = useToast();
-  const [templates, setTemplates] = useState<NotificationTemplate[]>([]);
-  const [showForm, setShowForm] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<NotificationTemplate | null>(null);
-  const [formData, setFormData] = useState<NotificationFormData>({
-    name: '',
-    type: 'email',
-    category: '',
-    subject: '',
-    content: '',
-    variables: [],
-    is_active: true,
-  });
-  const [newVariable, setNewVariable] = useState('');
+  const [showPreview, setShowPreview] = useState(false);
 
-  useEffect(() => {
-    // Mock data - in real app, fetch from Supabase
-    setTemplates([
-      {
-        id: '1',
-        name: 'Welcome Email',
-        type: 'email',
-        category: 'onboarding',
-        subject: 'Welcome to Mental Health Assistant, {{user_name}}!',
-        content: 'Hi {{user_name}},\n\nWelcome to our platform! We\'re excited to help you on your mental health journey.',
-        variables: ['user_name', 'platform_name'],
-        is_active: true,
-        created_at: '2024-01-01',
-      },
-      {
-        id: '2',
-        name: 'Session Reminder',
-        type: 'push',
-        category: 'reminders',
-        content: 'Don\'t forget your therapy session scheduled for {{session_time}}',
-        variables: ['session_time', 'therapist_name'],
-        is_active: true,
-        created_at: '2024-01-02',
-      },
-    ]);
-  }, []);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (selectedTemplate) {
-      // Update existing template
-      setTemplates(prev => prev.map(t => 
-        t.id === selectedTemplate.id 
-          ? { ...t, ...formData, id: selectedTemplate.id, created_at: selectedTemplate.created_at }
-          : t
-      ));
-      toast({
-        title: "Template updated",
-        description: "Notification template has been updated successfully.",
-      });
-    } else {
-      // Create new template
-      const newTemplate: NotificationTemplate = {
-        ...formData,
-        id: Date.now().toString(),
-        created_at: new Date().toISOString(),
-      };
-      setTemplates(prev => [newTemplate, ...prev]);
-      toast({
-        title: "Template created",
-        description: "New notification template has been created successfully.",
-      });
-    }
-
-    resetForm();
-  };
-
-  const resetForm = () => {
-    setFormData({
-      name: '',
+  const mockTemplates: NotificationTemplate[] = [
+    {
+      id: '1',
+      name: 'Welcome Email',
       type: 'email',
-      category: '',
-      subject: '',
-      content: '',
-      variables: [],
-      is_active: true,
-    });
-    setSelectedTemplate(null);
-    setShowForm(false);
-  };
-
-  const editTemplate = (template: NotificationTemplate) => {
-    setFormData({
-      name: template.name,
-      type: template.type,
-      category: template.category,
-      subject: template.subject || '',
-      content: template.content,
-      variables: template.variables,
-      is_active: template.is_active,
-    });
-    setSelectedTemplate(template);
-    setShowForm(true);
-  };
-
-  const deleteTemplate = (id: string) => {
-    setTemplates(prev => prev.filter(t => t.id !== id));
-    toast({
-      title: "Template deleted",
-      description: "Notification template has been deleted successfully.",
-    });
-  };
-
-  const addVariable = () => {
-    if (newVariable.trim() && !formData.variables.includes(newVariable.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        variables: [...prev.variables, newVariable.trim()]
-      }));
-      setNewVariable('');
+      category: 'Onboarding',
+      subject: 'Welcome to MindfulAI, {{user_name}}!',
+      content: 'Hi {{user_name}}, welcome to our therapy platform...',
+      variables: ['user_name', 'activation_link'],
+      isActive: true,
+      usageCount: 1247,
+      lastUsed: new Date(2024, 5, 10)
+    },
+    {
+      id: '2',
+      name: 'Session Reminder',
+      type: 'push',
+      category: 'Sessions',
+      subject: 'Your therapy session starts in 15 minutes',
+      content: 'Don\'t forget about your scheduled session with {{therapist_name}}',
+      variables: ['therapist_name', 'session_time'],
+      isActive: true,
+      usageCount: 856,
+      lastUsed: new Date(2024, 5, 11)
+    },
+    {
+      id: '3',
+      name: 'Goal Achievement',
+      type: 'in_app',
+      category: 'Achievements',
+      subject: 'Congratulations! Goal completed',
+      content: 'You\'ve successfully completed your goal: {{goal_name}}',
+      variables: ['goal_name', 'achievement_badge'],
+      isActive: true,
+      usageCount: 432,
+      lastUsed: new Date(2024, 5, 9)
+    },
+    {
+      id: '4',
+      name: 'Crisis Support',
+      type: 'sms',
+      category: 'Crisis',
+      subject: 'Immediate Support Available',
+      content: 'We\'re here for you. Call our crisis line: {{crisis_number}}',
+      variables: ['crisis_number', 'support_link'],
+      isActive: true,
+      usageCount: 23,
+      lastUsed: new Date(2024, 5, 8)
     }
-  };
-
-  const removeVariable = (variable: string) => {
-    setFormData(prev => ({
-      ...prev,
-      variables: prev.variables.filter(v => v !== variable)
-    }));
-  };
+  ];
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'email': return <Mail className="h-4 w-4" />;
-      case 'push': return <Bell className="h-4 w-4" />;
-      case 'in_app': return <MessageSquare className="h-4 w-4" />;
-      default: return <Mail className="h-4 w-4" />;
+      case 'email': return Mail;
+      case 'push': return Bell;
+      case 'in_app': return Bell;
+      case 'sms': return Send;
+      default: return Bell;
     }
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'email': return 'bg-blue-500';
-      case 'push': return 'bg-green-500';
-      case 'in_app': return 'bg-purple-500';
-      default: return 'bg-gray-500';
+      case 'email': return 'bg-blue-500/20 text-blue-400';
+      case 'push': return 'bg-green-500/20 text-green-400';
+      case 'in_app': return 'bg-purple-500/20 text-purple-400';
+      case 'sms': return 'bg-orange-500/20 text-orange-400';
+      default: return 'bg-gray-500/20 text-gray-400';
     }
   };
 
-  if (showForm) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-white">
-            {selectedTemplate ? 'Edit Template' : 'Create New Template'}
-          </h3>
-          <Button variant="outline" onClick={resetForm}>
-            Cancel
-          </Button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white">Template Details</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="name" className="text-white">Template Name</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    className="bg-gray-700 border-gray-600 text-white"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="category" className="text-white">Category</Label>
-                  <Input
-                    id="category"
-                    value={formData.category}
-                    onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                    className="bg-gray-700 border-gray-600 text-white"
-                    placeholder="e.g., onboarding, reminders"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="type" className="text-white">Notification Type</Label>
-                <Select
-                  value={formData.type}
-                  onValueChange={(value: 'email' | 'push' | 'in_app') => 
-                    setFormData(prev => ({ ...prev, type: value }))
-                  }
-                >
-                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="email">Email</SelectItem>
-                    <SelectItem value="push">Push Notification</SelectItem>
-                    <SelectItem value="in_app">In-App Notification</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {formData.type === 'email' && (
-                <div>
-                  <Label htmlFor="subject" className="text-white">Email Subject</Label>
-                  <Input
-                    id="subject"
-                    value={formData.subject}
-                    onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))}
-                    className="bg-gray-700 border-gray-600 text-white"
-                    placeholder="Email subject line"
-                  />
-                </div>
-              )}
-
-              <div>
-                <Label htmlFor="content" className="text-white">Content</Label>
-                <Textarea
-                  id="content"
-                  value={formData.content}
-                  onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                  className="bg-gray-700 border-gray-600 text-white"
-                  rows={6}
-                  placeholder="Template content with {{variables}}"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label className="text-white">Variables</Label>
-                <div className="flex space-x-2 mb-2">
-                  <Input
-                    value={newVariable}
-                    onChange={(e) => setNewVariable(e.target.value)}
-                    placeholder="Add variable name..."
-                    className="bg-gray-700 border-gray-600 text-white flex-1"
-                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addVariable())}
-                  />
-                  <Button type="button" onClick={addVariable} size="sm">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {formData.variables.map((variable) => (
-                    <Badge key={variable} variant="secondary" className="flex items-center space-x-1">
-                      <span>{`{{${variable}}}`}</span>
-                      <button
-                        type="button"
-                        onClick={() => removeVariable(variable)}
-                        className="ml-1 hover:text-red-400"
-                      >
-                        ×
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="flex justify-end space-x-4">
-            <Button type="button" variant="outline" onClick={resetForm}>
-              Cancel
-            </Button>
-            <Button type="submit" className="bg-purple-600 hover:bg-purple-700">
-              {selectedTemplate ? 'Update Template' : 'Create Template'}
-            </Button>
-          </div>
-        </form>
-      </div>
-    );
-  }
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'Onboarding': return 'bg-blue-500/20 text-blue-400';
+      case 'Sessions': return 'bg-green-500/20 text-green-400';
+      case 'Achievements': return 'bg-yellow-500/20 text-yellow-400';
+      case 'Crisis': return 'bg-red-500/20 text-red-400';
+      default: return 'bg-gray-500/20 text-gray-400';
+    }
+  };
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-white">Notification Templates</h2>
-          <p className="text-gray-400">Manage email, push, and in-app notification templates</p>
+          <p className="text-gray-400">Manage email, push, and SMS notification templates</p>
         </div>
-        <Button onClick={() => setShowForm(true)} className="bg-purple-600 hover:bg-purple-700">
+        <Button className="bg-purple-600 hover:bg-purple-700">
           <Plus className="h-4 w-4 mr-2" />
-          New Template
+          Create Template
         </Button>
+      </div>
+
+      {/* Template Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {mockTemplates.map((template) => {
+          const TypeIcon = getTypeIcon(template.type);
+          
+          return (
+            <Card key={template.id} className="bg-gray-800 border-gray-700 hover:border-purple-500 transition-colors">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <TypeIcon className="h-5 w-5 text-purple-400" />
+                    <CardTitle className="text-white text-lg">{template.name}</CardTitle>
+                  </div>
+                  <Badge variant={template.isActive ? "default" : "secondary"}>
+                    {template.isActive ? 'Active' : 'Inactive'}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex space-x-2">
+                    <Badge className={`text-xs ${getTypeColor(template.type)}`}>
+                      {template.type.toUpperCase()}
+                    </Badge>
+                    <Badge className={`text-xs ${getCategoryColor(template.category)}`}>
+                      {template.category}
+                    </Badge>
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm font-medium text-gray-300 mb-1">Subject:</p>
+                    <p className="text-sm text-gray-400 truncate">{template.subject}</p>
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm font-medium text-gray-300 mb-1">Content Preview:</p>
+                    <p className="text-sm text-gray-400 line-clamp-2">{template.content}</p>
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm font-medium text-gray-300 mb-1">Variables:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {template.variables.slice(0, 3).map((variable) => (
+                        <Badge key={variable} variant="outline" className="text-xs">
+                          {`{{${variable}}}`}
+                        </Badge>
+                      ))}
+                      {template.variables.length > 3 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{template.variables.length - 3} more
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>{template.usageCount} uses</span>
+                    {template.lastUsed && (
+                      <span>Last used: {template.lastUsed.toLocaleDateString()}</span>
+                    )}
+                  </div>
+                  
+                  <div className="flex space-x-2 pt-2">
+                    <Button variant="ghost" size="sm" className="flex-1">
+                      <Eye className="h-4 w-4 mr-1" />
+                      Preview
+                    </Button>
+                    <Button variant="ghost" size="sm" className="flex-1">
+                      <Edit className="h-4 w-4 mr-1" />
+                      Edit
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-white">{templates.length}</div>
+            <div className="text-2xl font-bold text-white">12</div>
             <p className="text-sm text-gray-400">Total Templates</p>
           </CardContent>
         </Card>
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-blue-400">
-              {templates.filter(t => t.type === 'email').length}
-            </div>
-            <p className="text-sm text-gray-400">Email Templates</p>
+            <div className="text-2xl font-bold text-green-400">10</div>
+            <p className="text-sm text-gray-400">Active</p>
           </CardContent>
         </Card>
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-green-400">
-              {templates.filter(t => t.type === 'push').length}
-            </div>
-            <p className="text-sm text-gray-400">Push Templates</p>
+            <div className="text-2xl font-bold text-blue-400">2,558</div>
+            <p className="text-sm text-gray-400">Total Sent</p>
           </CardContent>
         </Card>
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-purple-400">
-              {templates.filter(t => t.type === 'in_app').length}
-            </div>
-            <p className="text-sm text-gray-400">In-App Templates</p>
+            <div className="text-2xl font-bold text-yellow-400">94.2%</div>
+            <p className="text-sm text-gray-400">Delivery Rate</p>
           </CardContent>
         </Card>
       </div>
-
-      {/* Templates List */}
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-white">Templates</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {templates.length === 0 ? (
-            <div className="text-center py-8 text-gray-400">
-              <Mail className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No templates created yet</p>
-              <Button 
-                onClick={() => setShowForm(true)} 
-                className="mt-4 bg-purple-600 hover:bg-purple-700"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Create First Template
-              </Button>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {templates.map((template) => (
-                <div
-                  key={template.id}
-                  className="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg border border-gray-600"
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className={`p-2 rounded ${getTypeColor(template.type)}`}>
-                      {getTypeIcon(template.type)}
-                    </div>
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <h3 className="font-medium text-white">{template.name}</h3>
-                        <Badge variant="outline">{template.category}</Badge>
-                        <Badge variant={template.is_active ? "default" : "secondary"}>
-                          {template.is_active ? 'Active' : 'Inactive'}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-gray-400 mt-1">
-                        {template.content.substring(0, 100)}...
-                      </p>
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {template.variables.map((variable) => (
-                          <Badge key={variable} variant="outline" className="text-xs">
-                            {`{{${variable}}}`}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => editTemplate(template)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => deleteTemplate(template.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 };

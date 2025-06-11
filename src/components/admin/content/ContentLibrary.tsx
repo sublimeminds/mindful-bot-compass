@@ -2,325 +2,225 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   FileText, 
-  Video, 
-  Headphones, 
-  Image, 
   Plus, 
   Search, 
-  Filter,
-  Upload,
-  Edit,
-  Trash2,
-  Eye
+  Filter, 
+  Edit, 
+  Trash2, 
+  Eye,
+  Download,
+  Upload
 } from 'lucide-react';
 
 interface ContentItem {
   id: string;
   title: string;
-  type: 'article' | 'video' | 'audio' | 'image' | 'exercise';
+  type: 'technique' | 'guide' | 'exercise' | 'assessment';
   category: string;
-  tags: string[];
-  status: 'published' | 'draft' | 'archived';
-  created_at: string;
-  author: string;
   description: string;
+  status: 'published' | 'draft' | 'archived';
+  lastModified: Date;
+  author: string;
+  usageCount: number;
 }
 
 const ContentLibrary = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [content, setContent] = useState<ContentItem[]>([
+  const [selectedFilter, setSelectedFilter] = useState('all');
+
+  const mockContent: ContentItem[] = [
     {
       id: '1',
-      title: 'Understanding Anxiety',
-      type: 'article',
-      category: 'Mental Health',
-      tags: ['anxiety', 'coping', 'education'],
+      title: 'Deep Breathing Exercise',
+      type: 'technique',
+      category: 'Anxiety Management',
+      description: 'Guided breathing technique for stress relief',
       status: 'published',
-      created_at: '2024-01-15',
-      author: 'Dr. Smith',
-      description: 'A comprehensive guide to understanding anxiety disorders and symptoms.',
+      lastModified: new Date(2024, 5, 10),
+      author: 'Dr. Sarah Wilson',
+      usageCount: 245
     },
     {
       id: '2',
-      title: 'Breathing Exercise',
-      type: 'video',
-      category: 'Techniques',
-      tags: ['breathing', 'relaxation', 'guided'],
+      title: 'Cognitive Restructuring Guide',
+      type: 'guide',
+      category: 'CBT Techniques',
+      description: 'Step-by-step guide for thought challenging',
       status: 'published',
-      created_at: '2024-01-10',
-      author: 'Sarah Johnson',
-      description: 'Guided breathing exercise for stress relief and relaxation.',
+      lastModified: new Date(2024, 5, 8),
+      author: 'Dr. Michael Chen',
+      usageCount: 189
     },
     {
       id: '3',
-      title: 'Meditation Audio',
-      type: 'audio',
-      category: 'Meditation',
-      tags: ['meditation', 'mindfulness', 'sleep'],
+      title: 'Mindfulness Assessment',
+      type: 'assessment',
+      category: 'Mindfulness',
+      description: 'Self-assessment for mindfulness practice',
       status: 'draft',
-      created_at: '2024-01-08',
-      author: 'Mike Chen',
-      description: '10-minute guided meditation for better sleep.',
-    },
-  ]);
+      lastModified: new Date(2024, 5, 5),
+      author: 'Dr. Emily Rodriguez',
+      usageCount: 0
+    }
+  ];
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'article': return <FileText className="h-4 w-4" />;
-      case 'video': return <Video className="h-4 w-4" />;
-      case 'audio': return <Headphones className="h-4 w-4" />;
-      case 'image': return <Image className="h-4 w-4" />;
-      default: return <FileText className="h-4 w-4" />;
-    }
-  };
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'article': return 'bg-blue-500';
-      case 'video': return 'bg-red-500';
-      case 'audio': return 'bg-green-500';
-      case 'image': return 'bg-purple-500';
-      default: return 'bg-gray-500';
+      case 'technique': return '🧘';
+      case 'guide': return '📖';
+      case 'exercise': return '💪';
+      case 'assessment': return '📊';
+      default: return '📄';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'published': return 'bg-green-500';
-      case 'draft': return 'bg-yellow-500';
-      case 'archived': return 'bg-gray-500';
-      default: return 'bg-gray-500';
+      case 'published': return 'default';
+      case 'draft': return 'secondary';
+      case 'archived': return 'outline';
+      default: return 'outline';
     }
   };
 
-  const filteredContent = content.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const categories = ['all', ...Array.from(new Set(content.map(item => item.category)))];
-  const contentByType = content.reduce((acc, item) => {
-    acc[item.type] = (acc[item.type] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-white">Content Library</h2>
-          <p className="text-gray-400">Manage articles, videos, audio, and therapeutic content</p>
+          <p className="text-gray-400">Manage therapy content, guides, and resources</p>
         </div>
         <div className="flex space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" size="sm">
             <Upload className="h-4 w-4 mr-2" />
-            Upload
+            Import
           </Button>
           <Button className="bg-purple-600 hover:bg-purple-700">
             <Plus className="h-4 w-4 mr-2" />
-            New Content
+            Add Content
           </Button>
         </div>
       </div>
 
-      {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <Card className="bg-gray-800 border-gray-700">
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-white">{content.length}</div>
-            <p className="text-sm text-gray-400">Total Items</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-gray-800 border-gray-700">
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-blue-400">{contentByType.article || 0}</div>
-            <p className="text-sm text-gray-400">Articles</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-gray-800 border-gray-700">
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-red-400">{contentByType.video || 0}</div>
-            <p className="text-sm text-gray-400">Videos</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-gray-800 border-gray-700">
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-green-400">{contentByType.audio || 0}</div>
-            <p className="text-sm text-gray-400">Audio</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-gray-800 border-gray-700">
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-green-400">
-              {content.filter(c => c.status === 'published').length}
-            </div>
-            <p className="text-sm text-gray-400">Published</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Filters */}
+      {/* Search and Filters */}
       <Card className="bg-gray-800 border-gray-700">
         <CardContent className="pt-6">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex-1 min-w-64">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Search content..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-gray-700 border-gray-600 text-white"
-                />
-              </div>
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <input
+                type="text"
+                placeholder="Search content..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
             </div>
-            <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-gray-400" />
+            <div className="flex space-x-2">
               <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm"
+                value={selectedFilter}
+                onChange={(e) => setSelectedFilter(e.target.value)}
+                className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category === 'all' ? 'All Categories' : category}
-                  </option>
-                ))}
+                <option value="all">All Types</option>
+                <option value="technique">Techniques</option>
+                <option value="guide">Guides</option>
+                <option value="exercise">Exercises</option>
+                <option value="assessment">Assessments</option>
               </select>
+              <Button variant="outline" size="sm">
+                <Filter className="h-4 w-4 mr-2" />
+                Filters
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Content by Type */}
-      <Tabs defaultValue="all" className="space-y-4">
-        <TabsList className="bg-gray-800">
-          <TabsTrigger value="all">All Content</TabsTrigger>
-          <TabsTrigger value="article">Articles</TabsTrigger>
-          <TabsTrigger value="video">Videos</TabsTrigger>
-          <TabsTrigger value="audio">Audio</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="all">
-          <Card className="bg-gray-800 border-gray-700">
+      {/* Content Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {mockContent.map((item) => (
+          <Card key={item.id} className="bg-gray-800 border-gray-700 hover:border-purple-500 transition-colors">
             <CardHeader>
-              <CardTitle className="text-white">All Content ({filteredContent.length})</CardTitle>
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-2">
+                  <span className="text-2xl">{getTypeIcon(item.type)}</span>
+                  <div>
+                    <CardTitle className="text-white text-lg">{item.title}</CardTitle>
+                    <p className="text-sm text-gray-400">{item.category}</p>
+                  </div>
+                </div>
+                <Badge variant={getStatusColor(item.status) as any} className="text-xs">
+                  {item.status}
+                </Badge>
+              </div>
             </CardHeader>
             <CardContent>
-              {filteredContent.length === 0 ? (
-                <div className="text-center py-8 text-gray-400">
-                  <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No content found</p>
+              <p className="text-gray-300 text-sm mb-4">{item.description}</p>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>By {item.author}</span>
+                  <span>{item.usageCount} uses</span>
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredContent.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg border border-gray-600"
-                    >
-                      <div className="flex items-center space-x-4">
-                        <div className={`p-2 rounded ${getTypeColor(item.type)}`}>
-                          {getTypeIcon(item.type)}
-                        </div>
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            <h3 className="font-medium text-white">{item.title}</h3>
-                            <Badge variant="outline">{item.category}</Badge>
-                            <Badge className={getStatusColor(item.status)}>
-                              {item.status}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-gray-400 mt-1">{item.description}</p>
-                          <div className="flex items-center space-x-4 text-xs text-gray-500 mt-2">
-                            <span>By {item.author}</span>
-                            <span>{item.created_at}</span>
-                            <div className="flex space-x-1">
-                              {item.tags.map(tag => (
-                                <Badge key={tag} variant="outline" className="text-xs">
-                                  {tag}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Button variant="outline" size="sm">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>Modified: {item.lastModified.toLocaleDateString()}</span>
                 </div>
-              )}
+                
+                <div className="flex space-x-2 pt-2">
+                  <Button variant="ghost" size="sm" className="flex-1">
+                    <Eye className="h-4 w-4 mr-1" />
+                    View
+                  </Button>
+                  <Button variant="ghost" size="sm" className="flex-1">
+                    <Edit className="h-4 w-4 mr-1" />
+                    Edit
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        {['article', 'video', 'audio'].map(type => (
-          <TabsContent key={type} value={type}>
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-white capitalize">
-                  {type}s ({filteredContent.filter(item => item.type === type).length})
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {filteredContent
-                    .filter(item => item.type === type)
-                    .map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg border border-gray-600"
-                      >
-                        <div className="flex items-center space-x-4">
-                          <div className={`p-2 rounded ${getTypeColor(item.type)}`}>
-                            {getTypeIcon(item.type)}
-                          </div>
-                          <div>
-                            <div className="flex items-center space-x-2">
-                              <h3 className="font-medium text-white">{item.title}</h3>
-                              <Badge variant="outline">{item.category}</Badge>
-                              <Badge className={getStatusColor(item.status)}>
-                                {item.status}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-gray-400 mt-1">{item.description}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Button variant="outline" size="sm">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
         ))}
-      </Tabs>
+      </div>
+
+      {/* Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold text-white">24</div>
+            <p className="text-sm text-gray-400">Total Content Items</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold text-green-400">18</div>
+            <p className="text-sm text-gray-400">Published</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold text-yellow-400">4</div>
+            <p className="text-sm text-gray-400">Drafts</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold text-blue-400">1,247</div>
+            <p className="text-sm text-gray-400">Total Usage</p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
