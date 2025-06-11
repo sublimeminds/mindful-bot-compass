@@ -6,9 +6,10 @@ import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Play, Pause, SkipForward, RotateCcw, Star, Clock, Heart, Brain, Wind, Anchor, Waves, PenTool, ArrowLeft, CheckCircle, Target } from "lucide-react";
+import { Play, Pause, SkipForward, RotateCcw, Star, Clock, Heart, Brain, Wind, Anchor, Waves, PenTool, ArrowLeft, CheckCircle, Target, Volume2, VolumeX } from "lucide-react";
 import { TherapyTechniqueService, TherapyTechnique, TechniqueStep } from "@/services/therapyTechniqueService";
 import { useToast } from "@/hooks/use-toast";
+import { voiceService } from "@/services/voiceService";
 
 interface GuidedTechniqueProps {
   techniqueId: string;
@@ -28,6 +29,8 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
   const [showCompletion, setShowCompletion] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -35,6 +38,9 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
     const foundTechnique = TherapyTechniqueService.getTechniqueById(techniqueId);
     console.log('Found technique:', foundTechnique);
     setTechnique(foundTechnique || null);
+    
+    // Check if voice service has API key
+    setIsVoiceEnabled(voiceService.hasApiKey());
   }, [techniqueId]);
 
   useEffect(() => {
@@ -55,6 +61,51 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
 
     return () => clearInterval(interval);
   }, [isActive, timeRemaining]);
+
+  const speakInstruction = async (text: string) => {
+    if (!isVoiceEnabled || !voiceService.hasApiKey()) return;
+    
+    try {
+      setIsPlaying(true);
+      await voiceService.playText(text, {
+        voiceId: "pFZP5JQG7iQjIQuC4Bku", // Lily - gentle, empathetic
+        stability: 0.8,
+        similarityBoost: 0.75
+      });
+    } catch (error) {
+      console.error('Voice playback error:', error);
+    } finally {
+      setIsPlaying(false);
+    }
+  };
+
+  const getBreathingCue = (stepType: string, timeRemaining: number, duration: number) => {
+    if (stepType !== 'breathing') return '';
+    
+    const progress = ((duration - timeRemaining) / duration) * 100;
+    const cycleLength = 16; // 4 seconds in, 4 hold, 4 out, 4 hold
+    const currentInCycle = Math.floor((duration - timeRemaining) % cycleLength);
+    
+    if (currentInCycle < 4) return 'Breathe in slowly...';
+    else if (currentInCycle < 8) return 'Hold your breath...';
+    else if (currentInCycle < 12) return 'Breathe out slowly...';
+    else return 'Hold empty...';
+  };
+
+  const speakBreathingCues = async (stepType: string, timeRemaining: number, duration: number) => {
+    if (!isVoiceEnabled || stepType !== 'breathing') return;
+    
+    const cycleLength = 16;
+    const currentInCycle = Math.floor((duration - timeRemaining) % cycleLength);
+    
+    // Only speak at the beginning of each phase
+    if ((duration - timeRemaining) % 4 === 0) {
+      const cue = getBreathingCue(stepType, timeRemaining, duration);
+      if (cue) {
+        await speakInstruction(cue);
+      }
+    }
+  };
 
   const getCategoryIcon = (category: string) => {
     const icons = {
@@ -77,7 +128,7 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
     }
   };
 
-  const handleStart = () => {
+  const handleStart = async () => {
     console.log('Starting session for technique:', technique?.title);
     setHasStarted(true);
     setSessionStartTime(new Date());
@@ -88,7 +139,12 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
       if (firstStep.duration) {
         console.log('Setting up timed step with duration:', firstStep.duration);
         setTimeRemaining(firstStep.duration);
-        setIsActive(false); // Don't auto-start, wait for user to click play
+        setIsActive(false);
+      }
+      
+      // Speak welcome message
+      if (isVoiceEnabled) {
+        await speakInstruction(`Welcome to your ${technique.title} session. Let's begin with the first step. ${firstStep.instruction}`);
       }
     }
     
@@ -98,7 +154,7 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
     });
   };
 
-  const startCurrentStep = () => {
+  const startCurrentStep = async () => {
     if (!technique) return;
     
     const step = technique.steps[currentStep];
@@ -106,10 +162,15 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
     if (step.duration) {
       setTimeRemaining(step.duration);
       setIsActive(true);
+      
+      // Speak step instruction when starting
+      if (isVoiceEnabled) {
+        await speakInstruction(`Starting ${step.instruction}`);
+      }
     }
   };
 
-  const handleStepComplete = () => {
+  const handleStepComplete = async () => {
     if (!technique) return;
     
     if (currentStep < technique.steps.length - 1) {
@@ -122,12 +183,22 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
         setTimeRemaining(nextStep.duration);
       }
       
+      // Speak next step instruction
+      if (isVoiceEnabled) {
+        await speakInstruction(`Great job! Moving to the next step. ${nextStep.instruction}`);
+      }
+      
       toast({
         title: "Step Complete ✓",
         description: "Moving to next step...",
       });
     } else {
       setShowCompletion(true);
+      
+      if (isVoiceEnabled) {
+        await speakInstruction("Excellent work! You have completed this therapeutic exercise. Take a moment to notice how you feel.");
+      }
+      
       toast({
         title: "Technique Complete! 🎉",
         description: "Excellent work completing this exercise.",
@@ -158,6 +229,7 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
     setShowCompletion(false);
     setHasStarted(false);
     setSessionStartTime(null);
+    voiceService.stop();
     toast({
       title: "Session Reset",
       description: "Ready to start fresh!",
@@ -179,6 +251,23 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
     const duration = Math.floor((new Date().getTime() - sessionStartTime.getTime()) / 1000 / 60);
     return `${duration} minute${duration !== 1 ? 's' : ''}`;
   };
+
+  const toggleVoice = () => {
+    if (isVoiceEnabled && voiceService.isCurrentlyPlaying()) {
+      voiceService.stop();
+    }
+    setIsVoiceEnabled(!isVoiceEnabled);
+  };
+
+  // Voice guidance effect for breathing exercises
+  useEffect(() => {
+    if (isActive && technique && currentStep < technique.steps.length) {
+      const currentStepData = technique.steps[currentStep];
+      if (currentStepData.type === 'breathing' && isVoiceEnabled) {
+        speakBreathingCues(currentStepData.type, timeRemaining, currentStepData.duration || 0);
+      }
+    }
+  }, [timeRemaining, isActive, currentStep, technique, isVoiceEnabled]);
 
   if (!technique) {
     return (
@@ -306,9 +395,29 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
                 <CardTitle className="text-2xl text-therapy-700">{technique.title}</CardTitle>
                 <p className="text-muted-foreground text-lg mt-1">{technique.description}</p>
               </div>
+              <Button
+                onClick={toggleVoice}
+                variant="outline"
+                size="sm"
+                className={isVoiceEnabled ? "bg-therapy-50 border-therapy-200" : ""}
+              >
+                {isVoiceEnabled ? (
+                  <Volume2 className="h-4 w-4 text-therapy-600" />
+                ) : (
+                  <VolumeX className="h-4 w-4" />
+                )}
+              </Button>
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
+            {isVoiceEnabled && (
+              <div className="bg-therapy-50 p-3 rounded-lg border border-therapy-200">
+                <p className="text-sm text-therapy-700">
+                  🎵 <strong>Voice Guidance Enabled:</strong> You'll receive spoken instructions and breathing cues throughout the session.
+                </p>
+              </div>
+            )}
+
             <div className="flex flex-wrap gap-3">
               <Badge className={getDifficultyColor(technique.difficulty)} variant="outline">
                 {technique.difficulty}
@@ -353,6 +462,7 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
               <p className="text-sm text-therapy-600">
                 This guided session will take you through {technique.steps.length} steps over approximately {technique.duration} minutes. 
                 Each step includes clear instructions and, where applicable, timed breathing or meditation exercises.
+                {isVoiceEnabled && " You'll hear spoken guidance throughout the session."}
               </p>
             </div>
 
@@ -397,6 +507,18 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
         <div className="flex items-center justify-center space-x-3">
           <IconComponent className="h-6 w-6 text-therapy-600" />
           <h2 className="text-2xl font-semibold text-therapy-700">{technique.title}</h2>
+          <Button
+            onClick={toggleVoice}
+            variant="ghost"
+            size="sm"
+            className={isPlaying ? "animate-pulse" : ""}
+          >
+            {isVoiceEnabled ? (
+              <Volume2 className={`h-5 w-5 ${isPlaying ? 'text-therapy-600' : 'text-therapy-400'}`} />
+            ) : (
+              <VolumeX className="h-5 w-5 text-gray-400" />
+            )}
+          </Button>
         </div>
         <Progress value={progress} className="w-full h-2" />
         <div className="flex justify-between items-center text-sm text-muted-foreground">
@@ -409,6 +531,14 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
         <CardContent className="text-center py-8 space-y-6">
           <div className="space-y-4">
             <h3 className="text-xl font-medium text-therapy-700">{currentStepData.instruction}</h3>
+            
+            {currentStepData.type === 'breathing' && isActive && (
+              <div className="bg-calm-50 p-4 rounded-lg border border-calm-200">
+                <p className="text-lg font-medium text-calm-700">
+                  {getBreathingCue(currentStepData.type, timeRemaining, currentStepData.duration || 0)}
+                </p>
+              </div>
+            )}
             
             {currentStepData.duration && (
               <div className="space-y-4">
@@ -444,10 +574,12 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
                 onClick={() => {
                   console.log('Timer button clicked. Current state:', { isActive, timeRemaining });
                   if (!isActive && timeRemaining === 0) {
-                    // Initialize timer if not set
                     setTimeRemaining(currentStepData.duration!);
                   }
                   setIsActive(!isActive);
+                  if (!isActive) {
+                    startCurrentStep();
+                  }
                 }}
                 disabled={false}
                 className="min-w-[100px] bg-therapy-600 hover:bg-therapy-700"
@@ -468,6 +600,7 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
               <p className="text-sm text-calm-700">
                 💨 <strong>Breathing Tip:</strong> Focus on slow, controlled breaths. 
                 If you feel lightheaded, pause and breathe normally.
+                {isVoiceEnabled && " Listen to the voice guidance for timing."}
               </p>
             </div>
           )}
