@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,7 +31,9 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log('Loading technique with ID:', techniqueId);
     const foundTechnique = TherapyTechniqueService.getTechniqueById(techniqueId);
+    console.log('Found technique:', foundTechnique);
     setTechnique(foundTechnique || null);
   }, [techniqueId]);
 
@@ -77,9 +78,20 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
   };
 
   const handleStart = () => {
+    console.log('Starting session for technique:', technique?.title);
     setHasStarted(true);
     setSessionStartTime(new Date());
-    startCurrentStep();
+    
+    // Initialize the first step
+    if (technique && technique.steps.length > 0) {
+      const firstStep = technique.steps[0];
+      if (firstStep.duration) {
+        console.log('Setting up timed step with duration:', firstStep.duration);
+        setTimeRemaining(firstStep.duration);
+        setIsActive(false); // Don't auto-start, wait for user to click play
+      }
+    }
+    
     toast({
       title: "Session Started! 🎯",
       description: `Beginning your ${technique?.title} practice session.`,
@@ -90,6 +102,7 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
     if (!technique) return;
     
     const step = technique.steps[currentStep];
+    console.log('Starting step:', currentStep, 'with duration:', step.duration);
     if (step.duration) {
       setTimeRemaining(step.duration);
       setIsActive(true);
@@ -101,6 +114,14 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
     
     if (currentStep < technique.steps.length - 1) {
       setCurrentStep(prev => prev + 1);
+      setIsActive(false);
+      
+      // Set up next step
+      const nextStep = technique.steps[currentStep + 1];
+      if (nextStep.duration) {
+        setTimeRemaining(nextStep.duration);
+      }
+      
       toast({
         title: "Step Complete ✓",
         description: "Moving to next step...",
@@ -352,7 +373,11 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
               </div>
             </div>
             
-            <Button onClick={handleStart} className="w-full bg-therapy-600 hover:bg-therapy-700 text-white py-3">
+            <Button 
+              onClick={handleStart} 
+              className="w-full bg-therapy-600 hover:bg-therapy-700 text-white py-3"
+              disabled={!technique || technique.steps.length === 0}
+            >
               <Play className="h-5 w-5 mr-2" />
               Begin Practice Session
             </Button>
@@ -397,7 +422,7 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
                   />
                 )}
                 <p className="text-sm text-muted-foreground">
-                  {isActive ? 'In progress...' : 'Ready to begin'}
+                  {isActive ? 'In progress...' : timeRemaining > 0 ? 'Ready to begin' : 'Timer not set'}
                 </p>
               </div>
             )}
@@ -416,12 +441,19 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
             
             {currentStepData.duration ? (
               <Button
-                onClick={() => setIsActive(!isActive)}
-                disabled={timeRemaining === 0}
+                onClick={() => {
+                  console.log('Timer button clicked. Current state:', { isActive, timeRemaining });
+                  if (!isActive && timeRemaining === 0) {
+                    // Initialize timer if not set
+                    setTimeRemaining(currentStepData.duration!);
+                  }
+                  setIsActive(!isActive);
+                }}
+                disabled={false}
                 className="min-w-[100px] bg-therapy-600 hover:bg-therapy-700"
               >
                 {isActive ? <Pause className="h-4 w-4 mr-2" /> : <Play className="h-4 w-4 mr-2" />}
-                {isActive ? 'Pause' : 'Start'}
+                {isActive ? 'Pause' : timeRemaining > 0 ? 'Resume' : 'Start'}
               </Button>
             ) : (
               <Button onClick={handleNext} className="min-w-[100px] bg-therapy-600 hover:bg-therapy-700">
