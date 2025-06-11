@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, BookOpen } from "lucide-react";
@@ -7,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import TechniqueLibrary from "@/components/techniques/TechniqueLibrary";
 import GuidedTechnique from "@/components/techniques/GuidedTechnique";
 import { useToast } from "@/hooks/use-toast";
+import Header from "@/components/Header";
 
 const Techniques = () => {
   const navigate = useNavigate();
@@ -58,44 +58,47 @@ const Techniques = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-      <div className="max-w-6xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" onClick={() => navigate('/')}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold flex items-center">
-                <BookOpen className="h-6 w-6 mr-2" />
-                Therapy Techniques
-              </h1>
-              <p className="text-muted-foreground">
-                {techniqueId && !showLibrary 
-                  ? "Follow the guided technique to practice therapeutic exercises"
-                  : "Interactive guided exercises to support your mental health journey"
-                }
-              </p>
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
+        <div className="max-w-6xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Button variant="outline" onClick={() => navigate('/')}>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Dashboard
+              </Button>
+              <div>
+                <h1 className="text-2xl font-bold flex items-center">
+                  <BookOpen className="h-6 w-6 mr-2" />
+                  Therapy Techniques
+                </h1>
+                <p className="text-muted-foreground">
+                  {techniqueId && !showLibrary 
+                    ? "Follow the guided technique to practice therapeutic exercises"
+                    : "Interactive guided exercises to support your mental health journey"
+                  }
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Content */}
-        {showLibrary ? (
-          <TechniqueLibrary />
-        ) : techniqueId ? (
-          <GuidedTechnique
-            techniqueId={techniqueId}
-            onComplete={handleTechniqueComplete}
-            onExit={handleExitTechnique}
-          />
-        ) : (
-          <TechniqueLibrary />
-        )}
+          {/* Content */}
+          {showLibrary ? (
+            <TechniqueLibrary />
+          ) : techniqueId ? (
+            <GuidedTechnique
+              techniqueId={techniqueId}
+              onComplete={handleTechniqueComplete}
+              onExit={handleExitTechnique}
+            />
+          ) : (
+            <TechniqueLibrary />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

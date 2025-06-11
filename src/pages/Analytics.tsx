@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,6 +13,7 @@ import MoodChart from "@/components/analytics/MoodChart";
 import SessionInsights from "@/components/analytics/SessionInsights";
 import ProgressReport from "@/components/analytics/ProgressReport";
 import { useToast } from "@/hooks/use-toast";
+import Header from "@/components/Header";
 
 const Analytics = () => {
   const navigate = useNavigate();
@@ -83,104 +83,113 @@ const Analytics = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-500 mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Loading your analytics...</p>
+      <>
+        <Header />
+        <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-500 mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Loading your analytics...</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
   if (!analyticsData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center py-12">
-            <BarChart3 className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2">No Data Available</h2>
-            <p className="text-muted-foreground mb-6">
-              Start using the app to see your analytics and progress insights.
-            </p>
-            <Button onClick={() => navigate('/chat')}>
-              Start Your First Session
-            </Button>
+      <>
+        <Header />
+        <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center py-12">
+              <BarChart3 className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+              <h2 className="text-2xl font-bold mb-2">No Data Available</h2>
+              <p className="text-muted-foreground mb-6">
+                Start using the app to see your analytics and progress insights.
+              </p>
+              <Button onClick={() => navigate('/chat')}>
+                Start Your First Session
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-      <div className="max-w-6xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" onClick={() => navigate('/')}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold flex items-center">
-                <BarChart3 className="h-6 w-6 mr-2" />
-                Analytics & Progress
-              </h1>
-              <p className="text-muted-foreground">
-                Track your therapy journey and mental health progress
-              </p>
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
+        <div className="max-w-6xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Button variant="outline" onClick={() => navigate('/')}>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Dashboard
+              </Button>
+              <div>
+                <h1 className="text-2xl font-bold flex items-center">
+                  <BarChart3 className="h-6 w-6 mr-2" />
+                  Analytics & Progress
+                </h1>
+                <p className="text-muted-foreground">
+                  Track your therapy journey and mental health progress
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" onClick={handleRefresh} disabled={isLoading}>
+                <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
             </div>
           </div>
-          
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" onClick={handleRefresh} disabled={isLoading}>
-              <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
-          </div>
+
+          {/* Analytics Tabs */}
+          <Tabs defaultValue="overview" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="goals">Goals</TabsTrigger>
+              <TabsTrigger value="mood">Mood</TabsTrigger>
+              <TabsTrigger value="report">Report</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="overview" className="space-y-6">
+              <SessionInsights 
+                sessionStats={analyticsData.sessionStats}
+                insights={analyticsData.insights}
+                patterns={analyticsData.patterns}
+              />
+            </TabsContent>
+
+            <TabsContent value="goals" className="space-y-6">
+              <GoalProgress goalProgress={analyticsData.goalProgress} />
+            </TabsContent>
+
+            <TabsContent value="mood" className="space-y-6">
+              <MoodChart 
+                moodTrends={analyticsData.moodTrends}
+                moodEntries={moodEntries}
+              />
+            </TabsContent>
+
+            <TabsContent value="report" className="space-y-6">
+              <ProgressReport 
+                analyticsData={analyticsData}
+                dateRange={getTimeRangeLabel(selectedTimeRange)}
+              />
+            </TabsContent>
+          </Tabs>
         </div>
-
-        {/* Analytics Tabs */}
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="goals">Goals</TabsTrigger>
-            <TabsTrigger value="mood">Mood</TabsTrigger>
-            <TabsTrigger value="report">Report</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6">
-            <SessionInsights 
-              sessionStats={analyticsData.sessionStats}
-              insights={analyticsData.insights}
-              patterns={analyticsData.patterns}
-            />
-          </TabsContent>
-
-          <TabsContent value="goals" className="space-y-6">
-            <GoalProgress goalProgress={analyticsData.goalProgress} />
-          </TabsContent>
-
-          <TabsContent value="mood" className="space-y-6">
-            <MoodChart 
-              moodTrends={analyticsData.moodTrends}
-              moodEntries={moodEntries}
-            />
-          </TabsContent>
-
-          <TabsContent value="report" className="space-y-6">
-            <ProgressReport 
-              analyticsData={analyticsData}
-              dateRange={getTimeRangeLabel(selectedTimeRange)}
-            />
-          </TabsContent>
-        </Tabs>
       </div>
-    </div>
+    </>
   );
 };
 

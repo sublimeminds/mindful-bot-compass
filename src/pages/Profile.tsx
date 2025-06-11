@@ -1,8 +1,14 @@
 
+import Header from "@/components/Header";
 import UserProfile from "@/components/profile/UserProfile";
 
 const Profile = () => {
-  return <UserProfile />;
+  return (
+    <>
+      <Header />
+      <UserProfile />
+    </>
+  );
 };
 
 export default Profile;
