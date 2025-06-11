@@ -82,15 +82,24 @@ const SessionHistory = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <SessionFilters filters={filters} onFiltersChange={setFilters} />
+                  <SessionFilters 
+                    dateRange={filters.dateRange}
+                    moodFilter={filters.moodFilter}
+                    sortBy={filters.sortBy}
+                    onDateRangeChange={(dateRange) => setFilters(prev => ({ ...prev, dateRange }))}
+                    onMoodFilterChange={(moodFilter) => setFilters(prev => ({ ...prev, moodFilter }))}
+                    onSortByChange={(sortBy) => setFilters(prev => ({ ...prev, sortBy }))}
+                  />
                 </CardContent>
               </Card>
 
               {/* Session List */}
               <SessionHistoryList
-                sessions={sessionSummaries}
+                sessionSummaries={sessionSummaries}
                 isLoading={isLoading}
-                filters={filters}
+                dateRange={filters.dateRange}
+                moodFilter={filters.moodFilter}
+                sortBy={filters.sortBy}
               />
             </TabsContent>
 
