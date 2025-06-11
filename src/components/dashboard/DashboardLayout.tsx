@@ -27,28 +27,28 @@ const DashboardLayout = () => {
 
       <main className="container mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* First Column - Primary Actions */}
+          {/* First Column */}
           <div className="space-y-6">
             <SessionStarterWidget />
-            <QuickActionsWidget />
+            <AnalyticsWidget />
+          </div>
+
+          {/* Second Column */}
+          <div className="space-y-6">
+            <EnhancedMoodWidget />
             <TherapistWidget />
           </div>
 
-          {/* Second Column - Tracking & Progress */}
+          {/* Third Column */}
           <div className="space-y-6">
-            <EnhancedMoodWidget />
+            <QuickActionsWidget />
             <GoalsWidget />
+          </div>
+
+          {/* Fourth Column */}
+          <div className="space-y-6">
             <ProgressOverviewWidget />
-          </div>
-
-          {/* Third Column - Analytics & History */}
-          <div className="space-y-6">
-            <AnalyticsWidget />
             <SessionHistoryWidget />
-          </div>
-
-          {/* Fourth Column - Insights */}
-          <div className="space-y-6">
             <InsightsWidget />
           </div>
         </div>
