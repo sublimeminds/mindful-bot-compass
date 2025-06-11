@@ -13,58 +13,76 @@ import {
   Heart
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
 
 interface SessionHistoryListProps {
-  onViewSession: (sessionId: string) => void;
+  sessionSummaries: any[];
+  isLoading: boolean;
+  dateRange: string;
+  moodFilter: string;
+  sortBy: string;
 }
 
-const SessionHistoryList = ({ onViewSession }: SessionHistoryListProps) => {
-  const { user } = useAuth();
+const SessionHistoryList = ({ 
+  sessionSummaries, 
+  isLoading, 
+  dateRange, 
+  moodFilter, 
+  sortBy 
+}: SessionHistoryListProps) => {
   const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'all'>('all');
 
-  const { data: sessions = [], isLoading } = useQuery({
-    queryKey: ['session-history', user?.id, selectedPeriod],
-    queryFn: async () => {
-      if (!user?.id) return [];
+  const handleViewSession = (sessionId: string) => {
+    console.log('Viewing session:', sessionId);
+    // Navigate to session details
+  };
 
-      let query = supabase
-        .from('therapy_sessions')
-        .select(`
-          *,
-          session_messages (
-            id,
-            content,
-            sender,
-            timestamp,
-            emotion
-          )
-        `)
-        .eq('user_id', user.id)
-        .order('start_time', { ascending: false });
-
-      // Apply time filter
-      if (selectedPeriod === 'week') {
-        const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-        query = query.gte('start_time', oneWeekAgo.toISOString());
-      } else if (selectedPeriod === 'month') {
-        const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-        query = query.gte('start_time', oneMonthAgo.toISOString());
+  // Filter and sort sessions based on filters
+  const filteredSessions = sessionSummaries
+    .filter(session => {
+      // Apply mood filter
+      if (moodFilter !== 'all') {
+        const moodChange = session.mood_after && session.mood_before 
+          ? session.mood_after - session.mood_before 
+          : 0;
+        
+        if (moodFilter === 'improved' && moodChange <= 0) return false;
+        if (moodFilter === 'declined' && moodChange >= 0) return false;
+        if (moodFilter === 'stable' && Math.abs(moodChange) > 1) return false;
       }
 
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('Error fetching session history:', error);
-        return [];
+      // Apply date range filter
+      if (dateRange !== 'all') {
+        const sessionDate = new Date(session.start_time);
+        const now = new Date();
+        const daysDiff = (now.getTime() - sessionDate.getTime()) / (1000 * 60 * 60 * 24);
+        
+        if (dateRange === '7d' && daysDiff > 7) return false;
+        if (dateRange === '30d' && daysDiff > 30) return false;
+        if (dateRange === '90d' && daysDiff > 90) return false;
       }
 
-      return data || [];
-    },
-    enabled: !!user?.id,
-  });
+      return true;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'date-asc':
+          return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
+        case 'mood':
+          const moodChangeA = (a.mood_after || 0) - (a.mood_before || 0);
+          const moodChangeB = (b.mood_after || 0) - (b.mood_before || 0);
+          return moodChangeB - moodChangeA;
+        case 'duration':
+          const durationA = a.end_time 
+            ? (new Date(a.end_time).getTime() - new Date(a.start_time).getTime()) / (1000 * 60)
+            : 0;
+          const durationB = b.end_time 
+            ? (new Date(b.end_time).getTime() - new Date(b.start_time).getTime()) / (1000 * 60)
+            : 0;
+          return durationB - durationA;
+        default: // 'date'
+          return new Date(b.start_time).getTime() - new Date(a.start_time).getTime();
+      }
+    });
 
   if (isLoading) {
     return (
@@ -104,28 +122,10 @@ const SessionHistoryList = ({ onViewSession }: SessionHistoryListProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Period Filter */}
-      <div className="flex space-x-2">
-        {[
-          { key: 'week', label: 'This Week' },
-          { key: 'month', label: 'This Month' },
-          { key: 'all', label: 'All Time' }
-        ].map((period) => (
-          <Button
-            key={period.key}
-            variant={selectedPeriod === period.key ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setSelectedPeriod(period.key as any)}
-          >
-            {period.label}
-          </Button>
-        ))}
-      </div>
-
       {/* Sessions List */}
-      {sessions.length > 0 ? (
+      {filteredSessions.length > 0 ? (
         <div className="space-y-4">
-          {sessions.map((session) => {
+          {filteredSessions.map((session) => {
             const { messageCount, duration, moodChange, techniques } = getSessionSummary(session);
             
             return (
@@ -199,7 +199,7 @@ const SessionHistoryList = ({ onViewSession }: SessionHistoryListProps) => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => onViewSession(session.id)}
+                      onClick={() => handleViewSession(session.id)}
                       className="ml-4"
                     >
                       <Eye className="h-4 w-4 mr-1" />
@@ -232,15 +232,10 @@ const SessionHistoryList = ({ onViewSession }: SessionHistoryListProps) => {
             <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-medium mb-2">No sessions found</h3>
             <p className="text-muted-foreground mb-4">
-              {selectedPeriod === 'week' 
-                ? 'You haven\'t had any sessions this week.'
-                : selectedPeriod === 'month'
-                ? 'You haven\'t had any sessions this month.'
-                : 'You haven\'t started any therapy sessions yet.'
-              }
+              No sessions match your current filters.
             </p>
             <Button onClick={() => window.location.href = '/chat'}>
-              Start Your First Session
+              Start a New Session
             </Button>
           </CardContent>
         </Card>

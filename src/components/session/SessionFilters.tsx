@@ -9,87 +9,37 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CalendarIcon, Filter, X } from "lucide-react";
-import { SessionFilter } from "@/services/sessionHistoryService";
 import { format } from "date-fns";
 
 interface SessionFiltersProps {
-  onFilterChange: (filter: SessionFilter) => void;
-  onClearFilters: () => void;
+  dateRange: string;
+  moodFilter: string;
+  sortBy: string;
+  onDateRangeChange: (dateRange: string) => void;
+  onMoodFilterChange: (moodFilter: string) => void;
+  onSortByChange: (sortBy: string) => void;
 }
 
-const SessionFilters = ({ onFilterChange, onClearFilters }: SessionFiltersProps) => {
-  const [dateRange, setDateRange] = useState<{ start?: Date; end?: Date }>({});
-  const [selectedTechniques, setSelectedTechniques] = useState<string[]>([]);
-  const [moodRange, setMoodRange] = useState<[number, number]>([1, 10]);
-  const [selectedEffectiveness, setSelectedEffectiveness] = useState<string[]>([]);
+const SessionFilters = ({ 
+  dateRange, 
+  moodFilter, 
+  sortBy, 
+  onDateRangeChange, 
+  onMoodFilterChange, 
+  onSortByChange 
+}: SessionFiltersProps) => {
   const [showFilters, setShowFilters] = useState(false);
 
-  const availableTechniques = [
-    'Deep Breathing',
-    'Progressive Muscle Relaxation',
-    'Mindfulness Meditation',
-    'Cognitive Restructuring',
-    'Grounding Techniques',
-    'Journaling',
-    'Visualization'
-  ];
-
-  const effectivenessOptions = [
-    { value: 'high', label: 'High Effectiveness' },
-    { value: 'medium', label: 'Medium Effectiveness' },
-    { value: 'low', label: 'Low Effectiveness' }
-  ];
-
-  const applyFilters = () => {
-    const filter: SessionFilter = {};
-
-    if (dateRange.start && dateRange.end) {
-      filter.dateRange = {
-        start: dateRange.start,
-        end: dateRange.end
-      };
-    }
-
-    if (selectedTechniques.length > 0) {
-      filter.techniques = selectedTechniques;
-    }
-
-    if (moodRange[0] !== 1 || moodRange[1] !== 10) {
-      filter.moodRange = {
-        min: moodRange[0],
-        max: moodRange[1]
-      };
-    }
-
-    if (selectedEffectiveness.length > 0) {
-      filter.effectiveness = selectedEffectiveness as ('high' | 'medium' | 'low')[];
-    }
-
-    onFilterChange(filter);
-  };
-
   const clearAllFilters = () => {
-    setDateRange({});
-    setSelectedTechniques([]);
-    setMoodRange([1, 10]);
-    setSelectedEffectiveness([]);
-    onClearFilters();
-  };
-
-  const toggleTechnique = (technique: string) => {
-    setSelectedTechniques(prev =>
-      prev.includes(technique)
-        ? prev.filter(t => t !== technique)
-        : [...prev, technique]
-    );
+    onDateRangeChange('30d');
+    onMoodFilterChange('all');
+    onSortByChange('date');
   };
 
   const hasActiveFilters = 
-    dateRange.start || 
-    selectedTechniques.length > 0 || 
-    moodRange[0] !== 1 || 
-    moodRange[1] !== 10 || 
-    selectedEffectiveness.length > 0;
+    dateRange !== '30d' || 
+    moodFilter !== 'all' || 
+    sortBy !== 'date';
 
   return (
     <Card>
@@ -122,96 +72,50 @@ const SessionFilters = ({ onFilterChange, onClearFilters }: SessionFiltersProps)
           {/* Date Range */}
           <div className="space-y-2">
             <Label>Date Range</Label>
-            <div className="flex space-x-2">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="flex-1">
-                    <CalendarIcon className="h-4 w-4 mr-2" />
-                    {dateRange.start ? format(dateRange.start, 'MMM dd') : 'Start Date'}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={dateRange.start}
-                    onSelect={(date) => setDateRange(prev => ({ ...prev, start: date }))}
-                  />
-                </PopoverContent>
-              </Popover>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="flex-1">
-                    <CalendarIcon className="h-4 w-4 mr-2" />
-                    {dateRange.end ? format(dateRange.end, 'MMM dd') : 'End Date'}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={dateRange.end}
-                    onSelect={(date) => setDateRange(prev => ({ ...prev, end: date }))}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+            <Select value={dateRange} onValueChange={onDateRangeChange}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7d">Last 7 days</SelectItem>
+                <SelectItem value="30d">Last 30 days</SelectItem>
+                <SelectItem value="90d">Last 3 months</SelectItem>
+                <SelectItem value="all">All time</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Techniques */}
+          {/* Mood Filter */}
           <div className="space-y-2">
-            <Label>Techniques Used</Label>
-            <div className="flex flex-wrap gap-2">
-              {availableTechniques.map(technique => (
-                <Badge
-                  key={technique}
-                  variant={selectedTechniques.includes(technique) ? "default" : "outline"}
-                  className="cursor-pointer"
-                  onClick={() => toggleTechnique(technique)}
-                >
-                  {technique}
-                </Badge>
-              ))}
-            </div>
+            <Label>Mood Filter</Label>
+            <Select value={moodFilter} onValueChange={onMoodFilterChange}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All moods</SelectItem>
+                <SelectItem value="improved">Improved mood</SelectItem>
+                <SelectItem value="stable">Stable mood</SelectItem>
+                <SelectItem value="declined">Declined mood</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Mood Range */}
+          {/* Sort By */}
           <div className="space-y-2">
-            <Label>Mood After Session: {moodRange[0]} - {moodRange[1]}</Label>
-            <Slider
-              value={moodRange}
-              onValueChange={(value) => setMoodRange(value as [number, number])}
-              max={10}
-              min={1}
-              step={1}
-              className="w-full"
-            />
+            <Label>Sort By</Label>
+            <Select value={sortBy} onValueChange={onSortByChange}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="date">Date (newest first)</SelectItem>
+                <SelectItem value="date-asc">Date (oldest first)</SelectItem>
+                <SelectItem value="mood">Mood improvement</SelectItem>
+                <SelectItem value="duration">Session duration</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-
-          {/* Effectiveness */}
-          <div className="space-y-2">
-            <Label>Session Effectiveness</Label>
-            <div className="flex flex-wrap gap-2">
-              {effectivenessOptions.map(option => (
-                <Badge
-                  key={option.value}
-                  variant={selectedEffectiveness.includes(option.value) ? "default" : "outline"}
-                  className="cursor-pointer"
-                  onClick={() => {
-                    setSelectedEffectiveness(prev =>
-                      prev.includes(option.value)
-                        ? prev.filter(e => e !== option.value)
-                        : [...prev, option.value]
-                    );
-                  }}
-                >
-                  {option.label}
-                </Badge>
-              ))}
-            </div>
-          </div>
-
-          <Button onClick={applyFilters} className="w-full">
-            Apply Filters
-          </Button>
         </CardContent>
       )}
     </Card>
