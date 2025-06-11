@@ -25,8 +25,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('AuthProvider: Setting up auth state listener');
-    
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -49,7 +47,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
 
     return () => {
-      console.log('AuthProvider: Cleaning up auth listener');
       subscription.unsubscribe();
     };
   }, []);

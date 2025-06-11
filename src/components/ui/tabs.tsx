@@ -4,16 +4,7 @@ import * as TabsPrimitive from "@radix-ui/react-tabs"
 
 import { cn } from "@/lib/utils"
 
-// Ensure React context is available
-const TabsContext = React.createContext<any>(null);
-
-const Tabs = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
->((props, ref) => (
-  <TabsPrimitive.Root ref={ref} {...props} />
-));
-Tabs.displayName = TabsPrimitive.Root.displayName;
+const Tabs = TabsPrimitive.Root
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,

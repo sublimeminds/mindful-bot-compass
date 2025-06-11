@@ -12,44 +12,19 @@ interface UserMenuProps {
 }
 
 const UserMenu = ({ user, logout }: UserMenuProps) => {
-  // Use navigate hook with error boundary
-  let navigate;
-  try {
-    navigate = useNavigate();
-  } catch (error) {
-    console.error('Navigation hook error:', error);
-    // Fallback navigation function
-    navigate = (path: string) => {
-      window.location.href = path;
-    };
-  }
+  const navigate = useNavigate();
 
-  const handleProfileClick = React.useCallback(() => {
-    try {
-      console.log('Navigating to profile');
-      navigate("/profile");
-    } catch (error) {
-      console.error('Navigation error:', error);
-    }
-  }, [navigate]);
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
 
-  const handleNotificationSettingsClick = React.useCallback(() => {
-    try {
-      console.log('Navigating to notification settings');
-      navigate("/notification-settings");
-    } catch (error) {
-      console.error('Navigation error:', error);
-    }
-  }, [navigate]);
+  const handleNotificationSettingsClick = () => {
+    navigate("/notification-settings");
+  };
 
-  const handleLogout = React.useCallback(() => {
-    try {
-      console.log('Logging out user');
-      logout();
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  }, [logout]);
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <DropdownMenu>
