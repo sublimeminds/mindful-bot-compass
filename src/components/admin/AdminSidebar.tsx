@@ -33,7 +33,7 @@ interface MenuItem {
 const AdminSidebar = () => {
   const location = useLocation();
   const { hasPermission } = useAdmin();
-  const [expandedItems, setExpandedItems] = useState<string[]>(['System']);
+  const [expandedItems, setExpandedItems] = React.useState<string[]>(['System']);
 
   const menuItems = [
     {
