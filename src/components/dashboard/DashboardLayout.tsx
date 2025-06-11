@@ -26,29 +26,34 @@ const DashboardLayout = () => {
       <SmartOnboardingGuide />
 
       <main className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* First Column */}
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* First Row - Full Width Session Starter */}
+          <div className="lg:col-span-3">
             <SessionStarterWidget />
+          </div>
+
+          {/* Second Row - Three Columns */}
+          <div className="space-y-6">
+            <EnhancedMoodWidget />
+            <QuickActionsWidget />
+          </div>
+
+          <div className="space-y-6">
+            <TherapistWidget />
             <AnalyticsWidget />
           </div>
 
-          {/* Second Column */}
           <div className="space-y-6">
-            <EnhancedMoodWidget />
-            <TherapistWidget />
-          </div>
-
-          {/* Third Column */}
-          <div className="space-y-6">
-            <QuickActionsWidget />
             <GoalsWidget />
+            <ProgressOverviewWidget />
           </div>
 
-          {/* Fourth Column */}
-          <div className="space-y-6">
-            <ProgressOverviewWidget />
+          {/* Third Row - Two Columns */}
+          <div className="lg:col-span-2">
             <SessionHistoryWidget />
+          </div>
+
+          <div className="lg:col-span-1">
             <InsightsWidget />
           </div>
         </div>
