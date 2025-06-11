@@ -114,6 +114,182 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_ab_tests: {
+        Row: {
+          created_at: string
+          description: string
+          ended_at: string | null
+          id: string
+          model_a_id: string | null
+          model_b_id: string | null
+          name: string
+          results: Json
+          status: string
+          target_metric: string
+          user_segment: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          ended_at?: string | null
+          id?: string
+          model_a_id?: string | null
+          model_b_id?: string | null
+          name: string
+          results?: Json
+          status?: string
+          target_metric: string
+          user_segment: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          ended_at?: string | null
+          id?: string
+          model_a_id?: string | null
+          model_b_id?: string | null
+          name?: string
+          results?: Json
+          status?: string
+          target_metric?: string
+          user_segment?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_ab_tests_model_a_id_fkey"
+            columns: ["model_a_id"]
+            isOneToOne: false
+            referencedRelation: "ai_model_configs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_ab_tests_model_b_id_fkey"
+            columns: ["model_b_id"]
+            isOneToOne: false
+            referencedRelation: "ai_model_configs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_model_configs: {
+        Row: {
+          capabilities: string[]
+          cost_per_token: number
+          created_at: string
+          id: string
+          is_active: boolean
+          max_tokens: number
+          model: string
+          name: string
+          provider: string
+          system_prompt: string
+          temperature: number
+          updated_at: string
+        }
+        Insert: {
+          capabilities?: string[]
+          cost_per_token?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          max_tokens?: number
+          model: string
+          name: string
+          provider: string
+          system_prompt: string
+          temperature?: number
+          updated_at?: string
+        }
+        Update: {
+          capabilities?: string[]
+          cost_per_token?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          max_tokens?: number
+          model?: string
+          name?: string
+          provider?: string
+          system_prompt?: string
+          temperature?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ai_performance_stats: {
+        Row: {
+          cost: number
+          created_at: string
+          id: string
+          model_id: string | null
+          response_time: number
+          token_usage: number
+          user_rating: number | null
+        }
+        Insert: {
+          cost: number
+          created_at?: string
+          id?: string
+          model_id?: string | null
+          response_time: number
+          token_usage: number
+          user_rating?: number | null
+        }
+        Update: {
+          cost?: number
+          created_at?: string
+          id?: string
+          model_id?: string | null
+          response_time?: number
+          token_usage?: number
+          user_rating?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_performance_stats_model_id_fkey"
+            columns: ["model_id"]
+            isOneToOne: false
+            referencedRelation: "ai_model_configs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_quality_metrics: {
+        Row: {
+          flagged_content: boolean
+          id: string
+          response_quality: number
+          review_required: boolean
+          safety_score: number
+          session_id: string
+          therapeutic_value: number
+          timestamp: string
+          user_satisfaction: number
+        }
+        Insert: {
+          flagged_content?: boolean
+          id?: string
+          response_quality: number
+          review_required?: boolean
+          safety_score: number
+          session_id: string
+          therapeutic_value: number
+          timestamp?: string
+          user_satisfaction?: number
+        }
+        Update: {
+          flagged_content?: boolean
+          id?: string
+          response_quality?: number
+          review_required?: boolean
+          safety_score?: number
+          session_id?: string
+          therapeutic_value?: number
+          timestamp?: string
+          user_satisfaction?: number
+        }
+        Relationships: []
+      }
       goal_milestones: {
         Row: {
           completed_at: string | null
@@ -436,6 +612,90 @@ export type Database = {
         }
         Relationships: []
       }
+      personalization_configs: {
+        Row: {
+          adaptation_level: string
+          communication_style: string
+          created_at: string
+          cultural_context: string
+          emotional_sensitivity: number
+          id: string
+          is_global: boolean
+          preferred_techniques: string[]
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          adaptation_level: string
+          communication_style: string
+          created_at?: string
+          cultural_context?: string
+          emotional_sensitivity?: number
+          id?: string
+          is_global?: boolean
+          preferred_techniques?: string[]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          adaptation_level?: string
+          communication_style?: string
+          created_at?: string
+          cultural_context?: string
+          emotional_sensitivity?: number
+          id?: string
+          is_global?: boolean
+          preferred_techniques?: string[]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      personalized_recommendations: {
+        Row: {
+          acted_upon_at: string | null
+          created_at: string
+          description: string
+          estimated_impact: number
+          id: string
+          is_active: boolean
+          priority_score: number
+          reasoning: string
+          recommendation_type: string
+          shown_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          acted_upon_at?: string | null
+          created_at?: string
+          description: string
+          estimated_impact: number
+          id?: string
+          is_active?: boolean
+          priority_score: number
+          reasoning: string
+          recommendation_type: string
+          shown_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          acted_upon_at?: string | null
+          created_at?: string
+          description?: string
+          estimated_impact?: number
+          id?: string
+          is_active?: boolean
+          priority_score?: number
+          reasoning?: string
+          recommendation_type?: string
+          shown_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -624,6 +884,45 @@ export type Database = {
           },
         ]
       }
+      therapeutic_approach_configs: {
+        Row: {
+          created_at: string
+          description: string
+          effectiveness_score: number
+          id: string
+          is_active: boolean
+          name: string
+          system_prompt_addition: string
+          target_conditions: string[]
+          techniques: string[]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          effectiveness_score?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          system_prompt_addition?: string
+          target_conditions?: string[]
+          techniques?: string[]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          effectiveness_score?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          system_prompt_addition?: string
+          target_conditions?: string[]
+          techniques?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       therapist_assessments: {
         Row: {
           assessment_version: number
@@ -757,6 +1056,39 @@ export type Database = {
           personality_traits?: Json | null
           specialties?: string[]
           title?: string
+        }
+        Relationships: []
+      }
+      therapy_effectiveness_stats: {
+        Row: {
+          created_at: string
+          goal_progress: number | null
+          id: string
+          measurement_date: string
+          mood_improvement: number | null
+          session_completion_rate: number | null
+          technique_effectiveness: Json
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          goal_progress?: number | null
+          id?: string
+          measurement_date: string
+          mood_improvement?: number | null
+          session_completion_rate?: number | null
+          technique_effectiveness?: Json
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          goal_progress?: number | null
+          id?: string
+          measurement_date?: string
+          mood_improvement?: number | null
+          session_completion_rate?: number | null
+          technique_effectiveness?: Json
+          user_id?: string | null
         }
         Relationships: []
       }

@@ -44,7 +44,11 @@ const UserDashboard = () => {
 };
 
 // Create AdminProtectedRoute component since it's missing
-const AdminProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+interface AdminProtectedRouteProps {
+  children: React.ReactNode;
+}
+
+const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) => {
   // For now, just return the children - in a real app this would check admin permissions
   return <>{children}</>;
 };
