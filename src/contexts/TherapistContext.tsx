@@ -51,15 +51,15 @@ const defaultTherapists: TherapistPersonality[] = [
 ];
 
 export const TherapistProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [selectedTherapist, setSelectedTherapist] = useState<TherapistPersonality | null>(defaultTherapists[0]);
-  const [therapists] = useState<TherapistPersonality[]>(defaultTherapists);
-  const [isLoading] = useState(false);
+  const [selectedTherapist, setSelectedTherapist] = React.useState<TherapistPersonality | null>(defaultTherapists[0]);
+  const [therapists] = React.useState<TherapistPersonality[]>(defaultTherapists);
+  const [isLoading] = React.useState(false);
 
-  const selectTherapist = (therapist: TherapistPersonality) => {
+  const selectTherapist = React.useCallback((therapist: TherapistPersonality) => {
     setSelectedTherapist(therapist);
-  };
+  }, []);
 
-  const getPersonalityPrompt = () => {
+  const getPersonalityPrompt = React.useCallback(() => {
     if (!selectedTherapist) return '';
     
     return `You are ${selectedTherapist.name}, a ${selectedTherapist.title}. 
@@ -69,18 +69,20 @@ export const TherapistProvider: React.FC<{ children: ReactNode }> = ({ children 
     ${selectedTherapist.description}
     
     Always respond in character as this therapist, maintaining their specific approach and communication style.`;
-  };
+  }, [selectedTherapist]);
+
+  const value = React.useMemo(() => ({
+    selectedTherapist,
+    currentTherapist: selectedTherapist,
+    setSelectedTherapist,
+    selectTherapist,
+    therapists,
+    getPersonalityPrompt,
+    isLoading
+  }), [selectedTherapist, selectTherapist, therapists, getPersonalityPrompt, isLoading]);
 
   return (
-    <TherapistContext.Provider value={{
-      selectedTherapist,
-      currentTherapist: selectedTherapist,
-      setSelectedTherapist,
-      selectTherapist,
-      therapists,
-      getPersonalityPrompt,
-      isLoading
-    }}>
+    <TherapistContext.Provider value={value}>
       {children}
     </TherapistContext.Provider>
   );
