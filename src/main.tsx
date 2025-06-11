@@ -8,6 +8,15 @@ import "./index.css";
 if (typeof window !== 'undefined') {
   (window as any).React = React;
   (window as any).__DEV__ = true;
+  
+  // Also ensure React hooks are available globally
+  (window as any).ReactHooks = {
+    useState: React.useState,
+    useEffect: React.useEffect,
+    useContext: React.useContext,
+    useMemo: React.useMemo,
+    useCallback: React.useCallback,
+  };
 }
 
 // Register service worker for PWA functionality
