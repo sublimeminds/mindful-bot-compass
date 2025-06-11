@@ -11,54 +11,80 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { message, userId } = await req.json();
+    const { message, userId, therapistPersonality, conversationHistory } = await req.json();
 
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
     }
 
-    // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch user's onboarding data for personalization
+    // Fetch user's context
     const { data: onboardingData } = await supabase
       .from('user_onboarding')
       .select('*')
       .eq('user_id', userId)
       .single();
 
-    // Build personalized system prompt
-    let systemPrompt = `You are a compassionate AI therapy assistant. You provide supportive, empathetic responses while following ethical therapy principles. Always maintain professional boundaries and encourage users to seek professional help for serious mental health concerns.`;
+    const { data: userPreferences } = await supabase
+      .from('user_preferences')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    // Build personality-based system prompt
+    let systemPrompt = `You are a compassionate AI therapy assistant with expertise in mental health support. You provide empathetic, evidence-based responses while maintaining professional boundaries.`;
+
+    if (therapistPersonality) {
+      systemPrompt += `\n\nYour personality: You are ${therapistPersonality.name}, a ${therapistPersonality.title}.
+      Approach: ${therapistPersonality.approach}
+      Communication Style: ${therapistPersonality.communicationStyle}
+      Specialties: ${therapistPersonality.specialties?.join(', ')}
+      Description: ${therapistPersonality.description}
+      
+      Respond in character with this specific therapeutic approach and communication style.`;
+    }
 
     if (onboardingData) {
       systemPrompt += `\n\nUser's therapy context:`;
-      
       if (onboardingData.goals?.length > 0) {
         systemPrompt += `\nGoals: ${onboardingData.goals.join(', ')}`;
       }
-      
       if (onboardingData.concerns?.length > 0) {
         systemPrompt += `\nConcerns: ${onboardingData.concerns.join(', ')}`;
       }
-      
-      if (onboardingData.experience) {
-        systemPrompt += `\nTherapy experience: ${onboardingData.experience}`;
-      }
-      
       if (onboardingData.preferences?.length > 0) {
         systemPrompt += `\nPreferred approaches: ${onboardingData.preferences.join(', ')}`;
       }
-
-      systemPrompt += `\n\nUse this context to provide personalized, relevant responses that align with their goals and preferred therapeutic approaches.`;
     }
+
+    if (userPreferences) {
+      systemPrompt += `\n\nUser preferences:
+      Communication style: ${userPreferences.communication_style}
+      Preferred approaches: ${userPreferences.preferred_approaches?.join(', ')}`;
+    }
+
+    systemPrompt += `\n\nGuidelines:
+    - Provide supportive, non-judgmental responses
+    - Use active listening techniques
+    - Suggest practical coping strategies when appropriate
+    - Maintain professional boundaries
+    - Encourage professional help for serious mental health concerns
+    - Keep responses concise but meaningful (2-4 sentences)`;
+
+    // Prepare conversation context
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      ...conversationHistory.slice(-10), // Keep last 10 messages for context
+      { role: 'user', content: message }
+    ];
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -68,19 +94,33 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: message }
-        ],
+        messages: messages,
         temperature: 0.7,
         max_tokens: 500,
+        presence_penalty: 0.6,
+        frequency_penalty: 0.3,
       }),
     });
 
     const data = await response.json();
     const aiResponse = data.choices[0].message.content;
 
-    return new Response(JSON.stringify({ response: aiResponse }), {
+    // Analyze emotion and techniques (simplified for now)
+    const emotion = message.toLowerCase().includes('sad') || message.toLowerCase().includes('depressed') ? 'sad' :
+                   message.toLowerCase().includes('anxious') || message.toLowerCase().includes('worried') ? 'anxious' :
+                   message.toLowerCase().includes('angry') || message.toLowerCase().includes('mad') ? 'angry' :
+                   message.toLowerCase().includes('happy') || message.toLowerCase().includes('good') ? 'happy' : 'neutral';
+
+    const techniques = therapistPersonality?.approach === 'Cognitive Behavioral Therapy' ? ['CBT', 'Thought Restructuring'] :
+                      therapistPersonality?.approach === 'Mindfulness-Based Therapy' ? ['Mindfulness', 'Breathing Exercises'] :
+                      ['Active Listening', 'Validation'];
+
+    return new Response(JSON.stringify({ 
+      response: aiResponse,
+      emotion: emotion,
+      techniques: techniques,
+      insights: ['User engagement detected', 'Therapeutic rapport building']
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
