@@ -14,12 +14,9 @@ const Techniques = () => {
   const { techniqueId } = useParams();
   const { user } = useAuth();
   const { toast } = useToast();
-  const [showLibrary, setShowLibrary] = useState(!techniqueId);
-
-  // Update showLibrary when techniqueId changes
-  useEffect(() => {
-    setShowLibrary(!techniqueId);
-  }, [techniqueId]);
+  
+  // Show library when there's no techniqueId, show guided technique when there is
+  const showLibrary = !techniqueId;
 
   const handleTechniqueComplete = async (
     rating: number, 
@@ -91,14 +88,12 @@ const Techniques = () => {
           {/* Content */}
           {showLibrary ? (
             <TechniqueLibrary />
-          ) : techniqueId ? (
+          ) : (
             <GuidedTechnique
-              techniqueId={techniqueId}
+              techniqueId={techniqueId!}
               onComplete={handleTechniqueComplete}
               onExit={handleExitTechnique}
             />
-          ) : (
-            <TechniqueLibrary />
           )}
         </div>
       </div>
