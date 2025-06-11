@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 interface PWAStatus {
   isInstalled: boolean;
@@ -14,11 +14,14 @@ export const usePWA = () => {
     isInstalled: false,
     isStandalone: false,
     canInstall: false,
-    isOnline: navigator.onLine,
+    isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
     deferredPrompt: null
   });
 
   useEffect(() => {
+    // Ensure we're in a browser environment
+    if (typeof window === 'undefined') return;
+
     // Check if app is running in standalone mode
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
                         (window.navigator as any).standalone === true;

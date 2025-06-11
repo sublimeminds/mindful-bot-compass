@@ -29,16 +29,17 @@ import { AdminProvider } from './contexts/AdminContext';
 import { SessionProvider } from './contexts/SessionContext';
 import { TherapistProvider } from './contexts/TherapistContext';
 
-function App() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 1000 * 60 * 5,
-        retry: 1,
-      },
+// Create QueryClient outside component to avoid recreation on every render
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      retry: 1,
     },
-  });
+  },
+});
 
+function App() {
   return (
     <div className="min-h-screen bg-background font-sans antialiased">
       <QueryClientProvider client={queryClient}>
