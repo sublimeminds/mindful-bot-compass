@@ -41,44 +41,47 @@ const SessionCard = ({ session }: SessionCardProps) => {
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="flex items-center text-sm text-muted-foreground">
-          <Calendar className="h-4 w-4 mr-2" />
-          {format(session.startTime, 'MMM d, yyyy')}
-        </div>
-        
-        {duration && (
-          <div className="flex items-center text-sm text-muted-foreground">
-            <Clock className="h-4 w-4 mr-2" />
-            {duration} minutes
+        {/* Horizontal layout for session info */}
+        <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center">
+            <Calendar className="h-4 w-4 mr-2" />
+            {format(session.startTime, 'MMM d, yyyy')}
           </div>
-        )}
-        
-        <div className="flex items-center text-sm text-muted-foreground">
-          <MessageCircle className="h-4 w-4 mr-2" />
-          {session.messageCount} messages
-        </div>
+          
+          {duration && (
+            <div className="flex items-center">
+              <Clock className="h-4 w-4 mr-2" />
+              {duration} minutes
+            </div>
+          )}
+          
+          <div className="flex items-center">
+            <MessageCircle className="h-4 w-4 mr-2" />
+            {session.messageCount} messages
+          </div>
 
-        {moodImprovement !== null && (
-          <div className="flex items-center text-sm">
-            <TrendingUp className="h-4 w-4 mr-2" />
-            <span className={moodImprovement >= 0 ? 'text-green-600' : 'text-red-600'}>
-              Mood {moodImprovement >= 0 ? 'improved' : 'declined'} by {Math.abs(moodImprovement)} points
-            </span>
-          </div>
-        )}
+          {moodImprovement !== null && (
+            <div className="flex items-center text-sm">
+              <TrendingUp className="h-4 w-4 mr-2" />
+              <span className={moodImprovement >= 0 ? 'text-green-600' : 'text-red-600'}>
+                Mood {moodImprovement >= 0 ? 'improved' : 'declined'} by {Math.abs(moodImprovement)}
+              </span>
+            </div>
+          )}
+        </div>
 
         {session.techniques.length > 0 && (
           <div>
             <p className="text-xs text-muted-foreground mb-1">Techniques used:</p>
             <div className="flex flex-wrap gap-1">
-              {session.techniques.slice(0, 3).map((technique, index) => (
+              {session.techniques.slice(0, 4).map((technique, index) => (
                 <Badge key={index} variant="secondary" className="text-xs">
                   {technique}
                 </Badge>
               ))}
-              {session.techniques.length > 3 && (
+              {session.techniques.length > 4 && (
                 <Badge variant="secondary" className="text-xs">
-                  +{session.techniques.length - 3} more
+                  +{session.techniques.length - 4} more
                 </Badge>
               )}
             </div>

@@ -58,18 +58,19 @@ const QuickActions = () => {
         <CardTitle>Quick Actions</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-3">
+        {/* Grid layout optimized for wider, more square cards */}
+        <div className="grid grid-cols-3 gap-2">
           {actions.map((action) => (
             <Button
               key={action.title}
               variant="outline"
-              className={`h-auto p-3 flex flex-col items-center space-y-2 ${action.className}`}
+              className={`h-auto p-2 flex flex-col items-center space-y-1 ${action.className}`}
               onClick={action.onClick}
             >
-              <action.icon className="h-5 w-5" />
+              <action.icon className="h-4 w-4" />
               <div className="text-center">
-                <div className="font-medium text-sm">{action.title}</div>
-                <div className="text-xs opacity-80">{action.description}</div>
+                <div className="font-medium text-xs">{action.title}</div>
+                <div className="text-xs opacity-80 hidden sm:block">{action.description}</div>
               </div>
             </Button>
           ))}

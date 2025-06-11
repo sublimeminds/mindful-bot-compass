@@ -83,7 +83,8 @@ const EmotionTracker = ({ emotionData, onEmotionSelect, showDetailedView = false
         )}
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {/* Emotion buttons in a horizontal grid for wider layout */}
+        <div className="grid grid-cols-3 gap-2">
           {emotions.map((emotion) => {
             const Icon = emotion.icon;
             const percentage = getEmotionPercentage(emotion.name);
@@ -96,11 +97,11 @@ const EmotionTracker = ({ emotionData, onEmotionSelect, showDetailedView = false
                 variant={isSelected || isDominant ? "default" : "outline"}
                 size="sm"
                 onClick={() => handleEmotionClick(emotion.name)}
-                className={`flex flex-col items-center p-4 h-auto space-y-2 ${
+                className={`flex flex-col items-center p-3 h-auto space-y-1 ${
                   isDominant ? 'ring-2 ring-therapy-500' : ''
                 }`}
               >
-                <Icon className="h-6 w-6" />
+                <Icon className="h-5 w-5" />
                 <span className="text-xs font-medium">{emotion.label}</span>
                 {emotionData && (
                   <span className="text-xs opacity-70">{percentage}%</span>
@@ -113,23 +114,25 @@ const EmotionTracker = ({ emotionData, onEmotionSelect, showDetailedView = false
         {emotionData && showDetailedView && (
           <div className="space-y-2">
             <h4 className="text-sm font-medium">Emotion Breakdown:</h4>
-            {emotions.map((emotion) => {
-              const percentage = getEmotionPercentage(emotion.name);
-              return (
-                <div key={emotion.name} className="flex items-center justify-between text-sm">
-                  <span className="capitalize">{emotion.label}</span>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-16 bg-muted rounded-full h-2">
-                      <div 
-                        className="bg-therapy-500 h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${percentage}%` }}
-                      />
+            <div className="grid grid-cols-2 gap-2">
+              {emotions.map((emotion) => {
+                const percentage = getEmotionPercentage(emotion.name);
+                return (
+                  <div key={emotion.name} className="flex items-center justify-between text-sm">
+                    <span className="capitalize text-xs">{emotion.label}</span>
+                    <div className="flex items-center space-x-1">
+                      <div className="w-12 bg-muted rounded-full h-2">
+                        <div 
+                          className="bg-therapy-500 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-muted-foreground w-8">{percentage}%</span>
                     </div>
-                    <span className="text-xs text-muted-foreground w-8">{percentage}%</span>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         )}
       </CardContent>

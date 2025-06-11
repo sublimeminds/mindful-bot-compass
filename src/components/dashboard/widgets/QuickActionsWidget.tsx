@@ -51,38 +51,38 @@ const QuickActionsWidget = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Primary Actions */}
-        <div className="space-y-3">
+        {/* Primary Actions - Side by side for wider layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {primaryActions.map((action) => (
             <Button
               key={action.title}
               onClick={action.onClick}
-              className={`w-full h-auto p-4 flex items-center justify-start space-x-3 ${action.color}`}
+              className={`h-auto p-3 flex flex-col items-center justify-center space-y-2 ${action.color}`}
             >
               <action.icon className="h-5 w-5" />
-              <div className="text-left">
-                <div className="font-medium">{action.title}</div>
+              <div className="text-center">
+                <div className="font-medium text-sm">{action.title}</div>
                 <div className="text-xs opacity-90">{action.description}</div>
               </div>
             </Button>
           ))}
         </div>
 
-        {/* Secondary Actions */}
-        <div className="grid grid-cols-3 gap-2 pt-2 border-t">
+        {/* Secondary Actions - Horizontal grid */}
+        <div className="grid grid-cols-4 gap-2 pt-2 border-t">
           {secondaryActions.map((action) => (
             <Button
               key={action.title}
               variant="outline"
               size="sm"
               onClick={action.onClick}
-              className={`flex flex-col items-center space-y-1 h-auto py-3 ${
+              className={`flex flex-col items-center space-y-1 h-auto py-2 ${
                 action.title === 'Admin' 
                   ? 'hover:bg-red-50 border-red-200 text-red-600 hover:text-red-700' 
                   : 'hover:bg-therapy-50'
               }`}
             >
-              <action.icon className="h-4 w-4" />
+              <action.icon className="h-3 w-3" />
               <span className="text-xs">{action.title}</span>
             </Button>
           ))}
