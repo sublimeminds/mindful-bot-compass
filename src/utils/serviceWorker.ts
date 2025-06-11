@@ -13,6 +13,13 @@ interface PWAFeatures {
   caching: boolean;
 }
 
+// Extended ServiceWorkerRegistration interface for background sync
+interface ExtendedServiceWorkerRegistration extends ServiceWorkerRegistration {
+  sync?: {
+    register(tag: string): Promise<void>;
+  };
+}
+
 class ServiceWorkerManager {
   private registration: ServiceWorkerRegistration | null = null;
   private config: ServiceWorkerConfig = {};
@@ -104,11 +111,17 @@ class ServiceWorkerManager {
     if (!this.registration) return;
 
     try {
-      await this.registration.sync.register(tag);
-      
-      // Store data in IndexedDB for syncing later
-      await this.storeOfflineData(tag, data);
-      console.log(`Data queued for sync with tag: ${tag}`);
+      const extendedRegistration = this.registration as ExtendedServiceWorkerRegistration;
+      if (extendedRegistration.sync) {
+        await extendedRegistration.sync.register(tag);
+        
+        // Store data in IndexedDB for syncing later
+        await this.storeOfflineData(tag, data);
+        console.log(`Data queued for sync with tag: ${tag}`);
+      } else {
+        console.log('Background sync not available, storing data for manual sync');
+        await this.storeOfflineData(tag, data);
+      }
     } catch (error) {
       console.error('Failed to queue for sync:', error);
     }
