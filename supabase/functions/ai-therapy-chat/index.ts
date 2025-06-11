@@ -86,6 +86,8 @@ serve(async (req) => {
       { role: 'user', content: message }
     ];
 
+    console.log('Sending request to OpenAI with messages:', messages.length);
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -102,8 +104,16 @@ serve(async (req) => {
       }),
     });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('OpenAI API error:', errorData);
+      throw new Error(`OpenAI API error: ${response.status}`);
+    }
+
     const data = await response.json();
     const aiResponse = data.choices[0].message.content;
+
+    console.log('OpenAI response received successfully');
 
     // Analyze emotion and techniques (simplified for now)
     const emotion = message.toLowerCase().includes('sad') || message.toLowerCase().includes('depressed') ? 'sad' :

@@ -13,6 +13,7 @@ interface VoiceInteractionProps {
   onSpeechEnd?: () => void;
   autoListen?: boolean;
   disabled?: boolean;
+  className?: string;
 }
 
 const VoiceInteraction: React.FC<VoiceInteractionProps> = ({
@@ -20,7 +21,8 @@ const VoiceInteraction: React.FC<VoiceInteractionProps> = ({
   onSpeechStart,
   onSpeechEnd,
   autoListen = false,
-  disabled = false
+  disabled = false,
+  className = ""
 }) => {
   const [isMuted, setIsMuted] = useState(false);
   const { toast } = useToast();
@@ -84,7 +86,7 @@ const VoiceInteraction: React.FC<VoiceInteractionProps> = ({
 
   if (!isSupported) {
     return (
-      <Card className="border-orange-200 bg-orange-50">
+      <Card className={`border-orange-200 bg-orange-50 ${className}`}>
         <CardContent className="p-4">
           <div className="flex items-center justify-center space-x-2 text-orange-700">
             <MicOff className="h-6 w-6" />
@@ -96,7 +98,7 @@ const VoiceInteraction: React.FC<VoiceInteractionProps> = ({
   }
 
   return (
-    <Card className="border-therapy-200">
+    <Card className={`border-therapy-200 ${className}`}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center justify-between text-lg">
           <span>Voice Interaction</span>
