@@ -13,13 +13,16 @@ import {
   Volume2, 
   VolumeX,
   MessageCircle,
-  Clock
+  Clock,
+  Square
 } from "lucide-react";
 import { useSession } from "@/contexts/SessionContext";
 import { useTherapist } from "@/contexts/TherapistContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { voiceService } from "@/services/voiceService";
+import { useVoiceInteraction } from "@/hooks/useVoiceInteraction";
 import { format } from "date-fns";
 
 interface ChatMessage {
@@ -32,14 +35,20 @@ interface ChatMessage {
 
 interface TherapyChatInterfaceProps {
   onEndSession?: () => void;
+  voiceEnabled?: boolean;
+  onVoiceToggle?: (enabled: boolean) => void;
 }
 
-const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
+const TherapyChatInterface = ({ 
+  onEndSession, 
+  voiceEnabled = false,
+  onVoiceToggle 
+}: TherapyChatInterfaceProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isVoicePlaying, setIsVoicePlaying] = useState(false);
+  const [currentPlayingMessageId, setCurrentPlayingMessageId] = useState<string | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
@@ -47,10 +56,27 @@ const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
   const { currentTherapist } = useTherapist();
   const { toast } = useToast();
 
+  const {
+    isListening,
+    isSupported: voiceInputSupported,
+    transcript,
+    startListening,
+    stopListening,
+    clearTranscript
+  } = useVoiceInteraction();
+
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Auto-set transcript as input when voice input is complete
+  useEffect(() => {
+    if (transcript && !isListening) {
+      setInput(transcript);
+      clearTranscript();
+    }
+  }, [transcript, isListening, clearTranscript]);
 
   // Welcome message when session starts
   useEffect(() => {
@@ -62,8 +88,60 @@ const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
         timestamp: new Date()
       };
       setMessages([welcomeMessage]);
+      
+      // Auto-play welcome message if voice is enabled
+      if (voiceEnabled && voiceService.hasApiKey()) {
+        playVoiceMessage(welcomeMessage.content, 'welcome');
+      }
     }
-  }, [currentSession, currentTherapist, messages.length]);
+  }, [currentSession, currentTherapist, messages.length, voiceEnabled]);
+
+  const playVoiceMessage = async (text: string, messageId: string) => {
+    if (!voiceEnabled || !voiceService.hasApiKey() || isVoicePlaying) return;
+
+    try {
+      setIsVoicePlaying(true);
+      setCurrentPlayingMessageId(messageId);
+      
+      // Get the appropriate voice for the current therapist
+      const voiceId = getTherapistVoiceId(currentTherapist?.id || 'default');
+      
+      await voiceService.playText(text, {
+        voiceId,
+        model: "eleven_multilingual_v2",
+        stability: 0.75,
+        similarityBoost: 0.85
+      });
+    } catch (error) {
+      console.error('Voice playback error:', error);
+      toast({
+        title: "Voice Error",
+        description: "Unable to play voice message. Please check your settings.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsVoicePlaying(false);
+      setCurrentPlayingMessageId(null);
+    }
+  };
+
+  const stopVoiceMessage = () => {
+    if (isVoicePlaying) {
+      voiceService.stop();
+      setIsVoicePlaying(false);
+      setCurrentPlayingMessageId(null);
+    }
+  };
+
+  const getTherapistVoiceId = (therapistId: string): string => {
+    const voiceMap: Record<string, string> = {
+      'aria': '9BWtsMINqrJLrRacOk9x', // Aria - calm, therapeutic
+      'sarah': 'EXAVITQu4vr4xnSDxMaL', // Sarah - warm, supportive
+      'lily': 'pFZP5JQG7iQjIQuC4Bku', // Lily - gentle, empathetic
+      'default': '9BWtsMINqrJLrRacOk9x' // Default to Aria
+    };
+    return voiceMap[therapistId] || voiceMap.default;
+  };
 
   const handleSendMessage = async () => {
     if (!input.trim() || isLoading || !currentSession || !user) return;
@@ -113,6 +191,14 @@ const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
       setMessages(prev => [...prev, aiMessage]);
       await addMessage(aiMessage.content, 'ai');
       
+      // Auto-play AI response if voice is enabled
+      if (voiceEnabled && voiceService.hasApiKey()) {
+        // Small delay to ensure message is rendered
+        setTimeout(() => {
+          playVoiceMessage(aiMessage.content, aiMessage.id);
+        }, 300);
+      }
+      
     } catch (error) {
       console.error('Error sending message:', error);
       
@@ -144,19 +230,11 @@ const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
     }
   };
 
-  const speakMessage = (text: string) => {
-    if ('speechSynthesis' in window) {
-      setIsSpeaking(true);
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.onend = () => setIsSpeaking(false);
-      speechSynthesis.speak(utterance);
-    }
-  };
-
-  const stopSpeaking = () => {
-    if ('speechSynthesis' in window) {
-      speechSynthesis.cancel();
-      setIsSpeaking(false);
+  const handleVoiceInput = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
     }
   };
 
@@ -211,6 +289,17 @@ const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
                 <Clock className="h-3 w-3 mr-1" />
                 Session Active
               </Badge>
+              {voiceEnabled && (
+                <Badge variant="outline" className="bg-blue-50 text-blue-700">
+                  <Volume2 className="h-3 w-3 mr-1" />
+                  Voice On
+                </Badge>
+              )}
+              {isVoicePlaying && (
+                <Badge variant="outline" className="bg-green-50 text-green-700 animate-pulse">
+                  Speaking...
+                </Badge>
+              )}
               {onEndSession && (
                 <Button variant="outline" size="sm" onClick={onEndSession}>
                   End Session
@@ -262,15 +351,22 @@ const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
                       <span className="text-xs text-muted-foreground">
                         {format(message.timestamp, 'HH:mm')}
                       </span>
-                      {!message.isUser && (
+                      {!message.isUser && voiceEnabled && voiceService.hasApiKey() && (
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => isSpeaking ? stopSpeaking() : speakMessage(message.content)}
+                          onClick={() => {
+                            if (currentPlayingMessageId === message.id && isVoicePlaying) {
+                              stopVoiceMessage();
+                            } else {
+                              playVoiceMessage(message.content, message.id);
+                            }
+                          }}
                           className="h-6 w-6 p-0"
+                          disabled={isVoicePlaying && currentPlayingMessageId !== message.id}
                         >
-                          {isSpeaking ? (
-                            <VolumeX className="h-3 w-3" />
+                          {currentPlayingMessageId === message.id && isVoicePlaying ? (
+                            <Square className="h-3 w-3" />
                           ) : (
                             <Volume2 className="h-3 w-3" />
                           )}
@@ -317,19 +413,43 @@ const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
 
         {/* Chat Input */}
         <div className="border-t p-4">
+          {/* Voice transcript display */}
+          {transcript && (
+            <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded text-sm">
+              <span className="text-blue-700 font-medium">Voice input: </span>
+              <span className="text-blue-900">{transcript}</span>
+            </div>
+          )}
+          
           <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsListening(!isListening)}
-              className={isListening ? 'bg-red-100 text-red-600' : ''}
-            >
-              {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-            </Button>
+            {/* Voice Input Button */}
+            {voiceInputSupported && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleVoiceInput}
+                className={`${isListening ? 'bg-red-100 text-red-600 animate-pulse' : ''}`}
+                disabled={isLoading}
+              >
+                {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              </Button>
+            )}
+            
+            {/* Voice Control Button */}
+            {onVoiceToggle && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onVoiceToggle(!voiceEnabled)}
+                className={voiceEnabled ? 'bg-green-100 text-green-600' : ''}
+              >
+                {voiceEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+              </Button>
+            )}
             
             <Input
               type="text"
-              placeholder="Type your message..."
+              placeholder="Type your message or use voice input..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -351,7 +471,10 @@ const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
           </div>
           
           <div className="mt-2 text-xs text-muted-foreground text-center">
-            Press Enter to send • Shift+Enter for new line
+            {voiceInputSupported ? 'Press Enter to send • Click mic for voice input' : 'Press Enter to send • Shift+Enter for new line'}
+            {voiceEnabled && !voiceService.hasApiKey() && (
+              <span className="text-amber-600 ml-2">• Add ElevenLabs API key for voice responses</span>
+            )}
           </div>
         </div>
       </Card>

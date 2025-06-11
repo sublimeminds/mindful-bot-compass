@@ -27,9 +27,33 @@ const TherapyChat = () => {
   const [sessionStarted, setSessionStarted] = useState(false);
 
   useEffect(() => {
-    // Check if voice service is available
-    setIsVoiceEnabled(voiceService.hasApiKey());
+    // Check if voice service is available and load voice preference
+    const hasApiKey = voiceService.hasApiKey();
+    const savedVoicePreference = localStorage.getItem('therapy_voice_enabled') === 'true';
+    setIsVoiceEnabled(hasApiKey && savedVoicePreference);
   }, []);
+
+  const handleVoiceToggle = (enabled: boolean) => {
+    if (enabled && !voiceService.hasApiKey()) {
+      toast({
+        title: "API Key Required",
+        description: "Please add your ElevenLabs API key in voice settings to enable voice responses.",
+        variant: "destructive",
+      });
+      setShowVoiceSettings(true);
+      return;
+    }
+    
+    setIsVoiceEnabled(enabled);
+    localStorage.setItem('therapy_voice_enabled', enabled.toString());
+    
+    toast({
+      title: enabled ? "Voice Enabled" : "Voice Disabled",
+      description: enabled 
+        ? "AI responses will now be spoken aloud" 
+        : "AI responses will be text only",
+    });
+  };
 
   const handleStartSession = async () => {
     if (!currentTherapist) {
@@ -145,7 +169,7 @@ const TherapyChat = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => setShowVoiceSettings(!showVoiceSettings)}
-                  className={isVoiceEnabled ? "text-green-600" : "text-gray-400"}
+                  className={isVoiceEnabled ? "text-green-600 bg-green-50" : "text-gray-400"}
                 >
                   {isVoiceEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
                 </Button>
@@ -182,7 +206,7 @@ const TherapyChat = () => {
               {showVoiceSettings && (
                 <VoiceSettings
                   isEnabled={isVoiceEnabled}
-                  onToggle={setIsVoiceEnabled}
+                  onToggle={handleVoiceToggle}
                 />
               )}
               
@@ -204,6 +228,11 @@ const TherapyChat = () => {
                       <h3 className="text-xl font-semibold mb-2">Ready to Begin</h3>
                       <p className="text-muted-foreground mb-6">
                         Start your therapy session with {currentTherapist.name}
+                        {isVoiceEnabled && (
+                          <span className="block text-sm text-green-600 mt-1">
+                            🎤 Voice responses enabled
+                          </span>
+                        )}
                       </p>
                       <Button 
                         onClick={handleStartSession}
@@ -216,7 +245,11 @@ const TherapyChat = () => {
                   </CardContent>
                 </Card>
               ) : (
-                <TherapyChatInterface onEndSession={handleEndSession} />
+                <TherapyChatInterface 
+                  onEndSession={handleEndSession}
+                  voiceEnabled={isVoiceEnabled}
+                  onVoiceToggle={handleVoiceToggle}
+                />
               )}
             </div>
           </div>

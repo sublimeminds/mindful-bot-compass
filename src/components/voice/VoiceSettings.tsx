@@ -6,7 +6,8 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Volume2, VolumeX, Settings, Play } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Volume2, VolumeX, Settings, Play, Key } from "lucide-react";
 import { voiceService } from "@/services/voiceService";
 import { useToast } from "@/hooks/use-toast";
 
@@ -22,6 +23,8 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({ isEnabled, onToggle }) =>
   const [volume, setVolume] = useState([0.8]);
   const [availableVoices, setAvailableVoices] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
+  const [apiKey, setApiKey] = useState('');
 
   const defaultVoices = [
     { voice_id: "9BWtsMINqrJLrRacOk9x", name: "Aria", description: "Calm, therapeutic" },
@@ -34,6 +37,14 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({ isEnabled, onToggle }) =>
     if (isEnabled) {
       loadAvailableVoices();
     }
+    // Load saved preferences
+    const savedVoice = localStorage.getItem('therapy_voice_id');
+    const savedRate = localStorage.getItem('therapy_speech_rate');
+    const savedVolume = localStorage.getItem('therapy_volume');
+    
+    if (savedVoice) setSelectedVoice(savedVoice);
+    if (savedRate) setSpeechRate([parseFloat(savedRate)]);
+    if (savedVolume) setVolume([parseFloat(savedVolume)]);
   }, [isEnabled]);
 
   const loadAvailableVoices = async () => {
@@ -47,14 +58,46 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({ isEnabled, onToggle }) =>
 
   const handleToggleVoice = async (enabled: boolean) => {
     if (enabled && !voiceService.hasApiKey()) {
+      setShowApiKeyInput(true);
+      return;
+    }
+    onToggle(enabled);
+  };
+
+  const handleApiKeySubmit = () => {
+    if (!apiKey.trim()) {
       toast({
-        title: "API Key Required",
-        description: "Please add your ElevenLabs API key to enable voice features.",
+        title: "Invalid API Key",
+        description: "Please enter a valid ElevenLabs API key.",
         variant: "destructive",
       });
       return;
     }
-    onToggle(enabled);
+    
+    voiceService.setApiKey(apiKey.trim());
+    setShowApiKeyInput(false);
+    setApiKey('');
+    onToggle(true);
+    
+    toast({
+      title: "API Key Saved",
+      description: "ElevenLabs API key has been saved and voice features are now enabled.",
+    });
+  };
+
+  const handleVoiceChange = (voiceId: string) => {
+    setSelectedVoice(voiceId);
+    localStorage.setItem('therapy_voice_id', voiceId);
+  };
+
+  const handleRateChange = (rate: number[]) => {
+    setSpeechRate(rate);
+    localStorage.setItem('therapy_speech_rate', rate[0].toString());
+  };
+
+  const handleVolumeChange = (vol: number[]) => {
+    setVolume(vol);
+    localStorage.setItem('therapy_volume', vol[0].toString());
   };
 
   const testVoice = async () => {
@@ -93,7 +136,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({ isEnabled, onToggle }) =>
         {/* Voice Toggle */}
         <div className="flex items-center justify-between">
           <Label htmlFor="voice-enabled" className="text-sm font-medium">
-            Enable Voice
+            Enable Voice Responses
           </Label>
           <Switch
             id="voice-enabled"
@@ -102,12 +145,50 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({ isEnabled, onToggle }) =>
           />
         </div>
 
+        {/* API Key Input */}
+        {showApiKeyInput && (
+          <div className="space-y-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <Key className="h-4 w-4 text-blue-600" />
+              <Label className="text-sm font-medium text-blue-900">ElevenLabs API Key</Label>
+            </div>
+            <div className="space-y-2">
+              <Input
+                type="password"
+                placeholder="Enter your ElevenLabs API key"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                className="text-sm"
+              />
+              <div className="flex space-x-2">
+                <Button size="sm" onClick={handleApiKeySubmit}>
+                  Save & Enable
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setShowApiKeyInput(false)}>
+                  Cancel
+                </Button>
+              </div>
+              <p className="text-xs text-blue-700">
+                Get your API key from{' '}
+                <a 
+                  href="https://elevenlabs.io/app/settings/api-keys" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="underline hover:text-blue-800"
+                >
+                  ElevenLabs Settings
+                </a>
+              </p>
+            </div>
+          </div>
+        )}
+
         {isEnabled && (
           <>
             {/* Voice Selection */}
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Voice</Label>
-              <Select value={selectedVoice} onValueChange={setSelectedVoice}>
+              <Label className="text-sm font-medium">Therapist Voice</Label>
+              <Select value={selectedVoice} onValueChange={handleVoiceChange}>
                 <SelectTrigger className="text-sm">
                   <SelectValue />
                 </SelectTrigger>
@@ -133,7 +214,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({ isEnabled, onToggle }) =>
               </Label>
               <Slider
                 value={speechRate}
-                onValueChange={setSpeechRate}
+                onValueChange={handleRateChange}
                 min={0.5}
                 max={1.5}
                 step={0.1}
@@ -148,7 +229,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({ isEnabled, onToggle }) =>
               </Label>
               <Slider
                 value={volume}
-                onValueChange={setVolume}
+                onValueChange={handleVolumeChange}
                 min={0.1}
                 max={1.0}
                 step={0.1}
@@ -159,7 +240,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({ isEnabled, onToggle }) =>
             {/* Test Voice Button */}
             <Button
               onClick={testVoice}
-              disabled={isLoading}
+              disabled={isLoading || !voiceService.hasApiKey()}
               variant="outline"
               size="sm"
               className="w-full"
@@ -172,13 +253,31 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({ isEnabled, onToggle }) =>
               Test Voice
             </Button>
 
-            {/* API Key Notice */}
-            {!voiceService.hasApiKey() && (
-              <div className="text-xs text-amber-600 bg-amber-50 p-2 rounded">
-                Add ElevenLabs API key in settings to enable voice features
-              </div>
-            )}
+            {/* Features List */}
+            <div className="text-xs text-muted-foreground space-y-1 pt-2 border-t">
+              <p>✅ Automatic AI response playback</p>
+              <p>✅ Individual message playback</p>
+              <p>✅ Voice interruption control</p>
+              <p>✅ Therapist-matched voices</p>
+            </div>
           </>
+        )}
+
+        {/* Setup Instructions */}
+        {!voiceService.hasApiKey() && !showApiKeyInput && (
+          <div className="text-xs text-amber-700 bg-amber-50 p-3 rounded border border-amber-200">
+            <p className="font-medium mb-1">🎤 Voice Features Available</p>
+            <p>Add your ElevenLabs API key to enable high-quality therapeutic voice responses.</p>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="mt-2 text-xs h-7"
+              onClick={() => setShowApiKeyInput(true)}
+            >
+              <Key className="h-3 w-3 mr-1" />
+              Add API Key
+            </Button>
+          </div>
         )}
       </CardContent>
     </Card>
