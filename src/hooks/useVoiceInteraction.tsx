@@ -7,34 +7,6 @@ declare global {
     SpeechRecognition: any;
     webkitSpeechRecognition: any;
   }
-  
-  interface SpeechRecognitionEvent extends Event {
-    resultIndex: number;
-    results: SpeechRecognitionResultList;
-  }
-  
-  interface SpeechRecognitionErrorEvent extends Event {
-    error: string;
-    message: string;
-  }
-  
-  interface SpeechRecognitionResultList {
-    length: number;
-    item(index: number): SpeechRecognitionResult;
-    [index: number]: SpeechRecognitionResult;
-  }
-  
-  interface SpeechRecognitionResult {
-    length: number;
-    item(index: number): SpeechRecognitionAlternative;
-    [index: number]: SpeechRecognitionAlternative;
-    isFinal: boolean;
-  }
-  
-  interface SpeechRecognitionAlternative {
-    transcript: string;
-    confidence: number;
-  }
 }
 
 interface VoiceInteractionState {
@@ -73,7 +45,7 @@ export const useVoiceInteraction = (): UseVoiceInteractionReturn => {
       recognitionRef.current.interimResults = true;
       recognitionRef.current.lang = 'en-US';
 
-      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+      recognitionRef.current.onresult = (event: any) => {
         let finalTranscript = '';
         let confidence = 0;
 
@@ -95,7 +67,7 @@ export const useVoiceInteraction = (): UseVoiceInteractionReturn => {
         }
       };
 
-      recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
+      recognitionRef.current.onerror = (event: any) => {
         setState(prev => ({
           ...prev,
           error: `Speech recognition error: ${event.error}`,
