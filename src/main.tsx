@@ -5,7 +5,10 @@ import App from "./App.tsx";
 import "./index.css";
 
 // Ensure React is available globally for third-party libraries
-(window as any).React = React;
+if (typeof window !== 'undefined') {
+  (window as any).React = React;
+  (window as any).__DEV__ = true;
+}
 
 // Register service worker for PWA functionality
 if ('serviceWorker' in navigator) {
