@@ -1,5 +1,5 @@
 
-import React, { StrictMode } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
@@ -22,8 +22,7 @@ if (!rootElement) {
   throw new Error("Root element not found");
 }
 
+// Remove StrictMode temporarily to fix Radix UI context issues
 createRoot(rootElement).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+  <App />
 );
