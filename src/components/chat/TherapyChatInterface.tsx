@@ -13,14 +13,13 @@ import {
   Volume2, 
   VolumeX,
   MessageCircle,
-  Heart,
   Clock
 } from "lucide-react";
 import { useSession } from "@/contexts/SessionContext";
 import { useTherapist } from "@/contexts/TherapistContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { sendMessage } from "@/services/aiService";
+import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 
 interface ChatMessage {
@@ -45,7 +44,7 @@ const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { currentSession, addMessage } = useSession();
-  const { currentTherapist, getPersonalityPrompt } = useTherapist();
+  const { currentTherapist } = useTherapist();
   const { toast } = useToast();
 
   // Auto-scroll to bottom when new messages arrive
@@ -67,7 +66,7 @@ const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
   }, [currentSession, currentTherapist, messages.length]);
 
   const handleSendMessage = async () => {
-    if (!input.trim() || isLoading || !currentSession) return;
+    if (!input.trim() || isLoading || !currentSession || !user) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -84,32 +83,54 @@ const TherapyChatInterface = ({ onEndSession }: TherapyChatInterfaceProps) => {
     setIsLoading(true);
 
     try {
-      const personalityPrompt = getPersonalityPrompt();
+      // Convert messages to conversation history format
       const conversationHistory = messages.map(msg => ({
-        id: msg.id,
-        content: msg.content,
-        isUser: msg.isUser,
-        timestamp: msg.timestamp
+        role: msg.isUser ? 'user' : 'assistant',
+        content: msg.content
       }));
 
-      const aiResponse = await sendMessage(currentInput, conversationHistory, personalityPrompt);
+      // Call the Supabase Edge Function for AI therapy chat
+      const { data, error } = await supabase.functions.invoke('ai-therapy-chat', {
+        body: {
+          message: currentInput,
+          userId: user.id,
+          therapistPersonality: currentTherapist,
+          conversationHistory: conversationHistory
+        }
+      });
+
+      if (error) {
+        throw new Error(error.message || 'Failed to get AI response');
+      }
 
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
-        content: aiResponse,
+        content: data.response || 'I understand. Can you tell me more about that?',
         isUser: false,
         timestamp: new Date()
       };
 
       setMessages(prev => [...prev, aiMessage]);
-      await addMessage(aiResponse, 'ai');
+      await addMessage(aiMessage.content, 'ai');
       
     } catch (error) {
       console.error('Error sending message:', error);
+      
+      // Fallback response
+      const fallbackMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        content: "I'm here to listen. Can you share what's on your mind today?",
+        isUser: false,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, fallbackMessage]);
+      await addMessage(fallbackMessage.content, 'ai');
+
       toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
+        title: "Connection Issue",
+        description: "I'm still here to help. Please continue sharing your thoughts.",
+        variant: "default",
       });
     } finally {
       setIsLoading(false);
