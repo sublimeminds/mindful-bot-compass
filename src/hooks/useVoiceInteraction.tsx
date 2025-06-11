@@ -1,6 +1,14 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 
+// Extend the Window interface to include SpeechRecognition
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
+
 interface VoiceInteractionState {
   isListening: boolean;
   isSupported: boolean;
@@ -25,19 +33,19 @@ export const useVoiceInteraction = (): UseVoiceInteractionReturn => {
     error: null
   });
 
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
 
   useEffect(() => {
     if (state.isSupported) {
-      const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
       
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
       recognitionRef.current.lang = 'en-US';
 
-      recognitionRef.current.onresult = (event: any) => {
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
         let finalTranscript = '';
         let confidence = 0;
 
@@ -59,7 +67,7 @@ export const useVoiceInteraction = (): UseVoiceInteractionReturn => {
         }
       };
 
-      recognitionRef.current.onerror = (event: any) => {
+      recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
         setState(prev => ({
           ...prev,
           error: `Speech recognition error: ${event.error}`,

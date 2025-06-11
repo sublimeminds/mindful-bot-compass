@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -353,7 +352,6 @@ const Chat = () => {
       {currentSession && (
         <div className="px-4 max-w-4xl mx-auto w-full">
           <VoiceInteraction 
-            text={messages.length > 0 ? messages[messages.length - 1]?.content : undefined}
             className="mb-2"
           />
         </div>
