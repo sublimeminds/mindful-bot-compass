@@ -10,101 +10,75 @@ import { useAuth } from '@/contexts/AuthContext';
 const ProgressStats = () => {
   const { user } = useAuth();
 
-  const { data: stats, isLoading } = useQuery({
+  const { data: stats, isLoading, error } = useQuery({
     queryKey: ['progress-stats', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
 
-      // Fetch total sessions
-      const { count: totalSessions } = await supabase
-        .from('therapy_sessions')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id);
+      try {
+        // Fetch total sessions
+        const { count: totalSessions } = await supabase
+          .from('therapy_sessions')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id);
 
-      // Fetch total messages
-      const { data: sessions } = await supabase
-        .from('therapy_sessions')
-        .select('id')
-        .eq('user_id', user.id);
+        // Fetch total messages
+        const { data: sessions } = await supabase
+          .from('therapy_sessions')
+          .select('id')
+          .eq('user_id', user.id);
 
-      let totalMessages = 0;
-      if (sessions) {
-        for (const session of sessions) {
-          const { count } = await supabase
-            .from('session_messages')
-            .select('*', { count: 'exact', head: true })
-            .eq('session_id', session.id);
-          totalMessages += count || 0;
-        }
-      }
-
-      // Calculate mood improvement
-      const { data: moodEntries } = await supabase
-        .from('mood_entries')
-        .select('overall, created_at')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      let averageMoodImprovement = 0;
-      if (moodEntries && moodEntries.length >= 2) {
-        const recent = moodEntries.slice(0, 5);
-        const older = moodEntries.slice(5);
-        if (older.length > 0) {
-          const recentAvg = recent.reduce((sum, entry) => sum + entry.overall, 0) / recent.length;
-          const olderAvg = older.reduce((sum, entry) => sum + entry.overall, 0) / older.length;
-          averageMoodImprovement = recentAvg - olderAvg;
-        }
-      }
-
-      // Calculate weekly progress
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-      const { count: weeklyProgress } = await supabase
-        .from('therapy_sessions')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id)
-        .gte('created_at', oneWeekAgo.toISOString());
-
-      // Calculate longest streak
-      const { data: allSessions } = await supabase
-        .from('therapy_sessions')
-        .select('created_at')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: true });
-
-      let longestStreak = 0;
-      if (allSessions && allSessions.length > 0) {
-        const sessionDates = allSessions.map(s => new Date(s.created_at).toDateString());
-        const uniqueDates = [...new Set(sessionDates)];
-        
-        let currentStreak = 1;
-        let maxStreak = 1;
-        
-        for (let i = 1; i < uniqueDates.length; i++) {
-          const prevDate = new Date(uniqueDates[i - 1]);
-          const currentDate = new Date(uniqueDates[i]);
-          const dayDiff = (currentDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24);
-          
-          if (dayDiff <= 1) {
-            currentStreak++;
-          } else {
-            maxStreak = Math.max(maxStreak, currentStreak);
-            currentStreak = 1;
+        let totalMessages = 0;
+        if (sessions) {
+          for (const session of sessions) {
+            const { count } = await supabase
+              .from('session_messages')
+              .select('*', { count: 'exact', head: true })
+              .eq('session_id', session.id);
+            totalMessages += count || 0;
           }
         }
-        longestStreak = Math.max(maxStreak, currentStreak);
-      }
 
-      return {
-        totalSessions: totalSessions || 0,
-        totalMessages,
-        averageMoodImprovement,
-        weeklyGoal: 3,
-        weeklyProgress: weeklyProgress || 0,
-        longestStreak
-      };
+        // Calculate mood improvement
+        const { data: moodEntries } = await supabase
+          .from('mood_entries')
+          .select('overall, created_at')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        let averageMoodImprovement = 0;
+        if (moodEntries && moodEntries.length >= 2) {
+          const recent = moodEntries.slice(0, 5);
+          const older = moodEntries.slice(5);
+          if (older.length > 0) {
+            const recentAvg = recent.reduce((sum, entry) => sum + entry.overall, 0) / recent.length;
+            const olderAvg = older.reduce((sum, entry) => sum + entry.overall, 0) / older.length;
+            averageMoodImprovement = recentAvg - olderAvg;
+          }
+        }
+
+        // Calculate weekly progress
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        const { count: weeklyProgress } = await supabase
+          .from('therapy_sessions')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+          .gte('created_at', oneWeekAgo.toISOString());
+
+        return {
+          totalSessions: totalSessions || 0,
+          totalMessages,
+          averageMoodImprovement,
+          weeklyGoal: 3,
+          weeklyProgress: weeklyProgress || 0,
+        };
+      } catch (err) {
+        console.error('Error fetching progress stats:', err);
+        throw err;
+      }
     },
     enabled: !!user?.id,
   });
@@ -126,13 +100,15 @@ const ProgressStats = () => {
     );
   }
 
-  if (!stats) {
+  if (error || !stats) {
     return (
       <div className="text-center py-8 text-muted-foreground">
         Start your therapy journey to see your progress statistics
       </div>
     );
   }
+
+  const progressPercentage = Math.min((stats.weeklyProgress / stats.weeklyGoal) * 100, 100);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -184,10 +160,12 @@ const ProgressStats = () => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{stats.weeklyProgress}/{stats.weeklyGoal}</div>
-          <Progress 
-            value={(stats.weeklyProgress / stats.weeklyGoal) * 100} 
-            className="mt-2" 
-          />
+          {progressPercentage > 0 && (
+            <Progress 
+              value={progressPercentage} 
+              className="mt-2" 
+            />
+          )}
           <p className="text-xs text-muted-foreground mt-1">
             Sessions this week
           </p>
