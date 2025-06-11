@@ -1,132 +1,184 @@
-
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'sonner';
-
-import Index from './pages/Index';
-import Auth from './pages/Auth';
-import Chat from './pages/Chat';
-import TherapyChat from './pages/TherapyChat';
-import Onboarding from './pages/Onboarding';
-import Goals from './pages/Goals';
-import MoodTracking from './pages/MoodTracking';
-import SessionHistory from './pages/SessionHistory';
-import Techniques from './pages/Techniques';
-import TherapistMatching from './pages/TherapistMatching';
-import Profile from './pages/Profile';
-import LiveSession from './pages/LiveSession';
-import NotFound from './pages/NotFound';
-import NotificationSettings from './pages/NotificationSettings';
-import NotificationDashboard from './pages/NotificationDashboard';
-import NotificationAnalytics from './pages/NotificationAnalytics';
-import SmartTriggers from './pages/SmartTriggers';
-import PerformanceDashboard from './pages/PerformanceDashboard';
-import SessionAnalytics from "./pages/SessionAnalytics";
-
-// Admin pages
-import AdminDashboard from './pages/AdminDashboard';
-import AdminUsers from './pages/AdminUsers';
-import AdminContent from './pages/AdminContent';
-import AdminAnalytics from './pages/AdminAnalytics';
-import AdminSystem from './pages/AdminSystem';
-import AdminPerformance from './pages/AdminPerformance';
-
-import { AuthProvider } from './contexts/AuthContext';
-import { AdminProvider } from './contexts/AdminContext';
-import { SessionProvider } from './contexts/SessionContext';
-import { TherapistProvider } from './contexts/TherapistContext';
-import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
-import AdminLayout from './components/admin/AdminLayout';
-
-// Create QueryClient outside component to avoid recreation on every render
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5,
-      retry: 1,
-    },
-  },
-});
+import Index from '@/pages/Index';
+import Auth from '@/pages/Auth';
+import Onboarding from '@/pages/Onboarding';
+import UserDashboard from '@/pages/UserDashboard';
+import Chat from '@/pages/Chat';
+import TherapyChat from '@/pages/TherapyChat';
+import LiveSession from '@/pages/LiveSession';
+import MoodTracking from '@/pages/MoodTracking';
+import Goals from '@/pages/Goals';
+import Techniques from '@/pages/Techniques';
+import SessionHistory from '@/pages/SessionHistory';
+import Analytics from '@/pages/Analytics';
+import SessionAnalytics from '@/pages/SessionAnalytics';
+import Profile from '@/pages/Profile';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import AdminProtectedRoute from '@/components/AdminProtectedRoute';
+import AdminLayout from '@/components/admin/AdminLayout';
+import AdminDashboard from '@/pages/AdminDashboard';
+import AdminUsers from '@/pages/AdminUsers';
+import AdminContent from '@/pages/AdminContent';
+import AdminAnalytics from '@/pages/AdminAnalytics';
+import AdminSystem from '@/pages/AdminSystem';
+import AdminPerformance from '@/pages/AdminPerformance';
+import NotFound from '@/pages/NotFound';
+import TherapistMatching from '@/pages/TherapistMatching';
+import PerformanceDashboard from '@/pages/PerformanceDashboard';
+import NotificationDashboard from '@/pages/NotificationDashboard';
+import NotificationSettings from '@/pages/NotificationSettings';
+import NotificationAnalytics from '@/pages/NotificationAnalytics';
+import SmartTriggers from '@/pages/SmartTriggers';
+import AdminAI from '@/pages/AdminAI';
 
 function App() {
   return (
-    <div className="min-h-screen bg-background font-sans antialiased">
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <AuthProvider>
-            <AdminProvider>
-              <TherapistProvider>
-                <SessionProvider>
-                  <div className="relative flex min-h-screen flex-col">
-                    <main className="flex-1">
-                      <Routes>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/auth" element={<Auth />} />
-                        <Route path="/chat" element={<Chat />} />
-                        <Route path="/therapy" element={<TherapyChat />} />
-                        <Route path="/onboarding" element={<Onboarding />} />
-                        <Route path="/goals" element={<Goals />} />
-                        <Route path="/mood-tracking" element={<MoodTracking />} />
-                        <Route path="/session-history" element={<SessionHistory />} />
-                        <Route path="/analytics" element={<SessionAnalytics />} />
-                        <Route path="/techniques" element={<Techniques />} />
-                        <Route path="/techniques/:techniqueId" element={<Techniques />} />
-                        <Route path="/therapist-matching" element={<TherapistMatching />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/live-session/:sessionId" element={<LiveSession />} />
-                        <Route path="/notification-settings" element={<NotificationSettings />} />
-                        <Route path="/notification-dashboard" element={<NotificationDashboard />} />
-                        <Route path="/notification-analytics" element={<NotificationAnalytics />} />
-                        <Route path="/smart-triggers" element={<SmartTriggers />} />
-                        <Route path="/performance" element={<PerformanceDashboard />} />
-                        
-                        {/* Admin Routes */}
-                        <Route path="/admin" element={
-                          <AdminProtectedRoute>
-                            <AdminLayout />
-                          </AdminProtectedRoute>
-                        }>
-                          <Route index element={<AdminDashboard />} />
-                          <Route path="users" element={
-                            <AdminProtectedRoute requiredPermission={{ name: 'view_users', resource: 'users' }}>
-                              <AdminUsers />
-                            </AdminProtectedRoute>
-                          } />
-                          <Route path="content" element={
-                            <AdminProtectedRoute requiredPermission={{ name: 'manage_content', resource: 'content' }}>
-                              <AdminContent />
-                            </AdminProtectedRoute>
-                          } />
-                          <Route path="analytics" element={
-                            <AdminProtectedRoute requiredPermission={{ name: 'view_analytics', resource: 'analytics' }}>
-                              <AdminAnalytics />
-                            </AdminProtectedRoute>
-                          } />
-                          <Route path="system" element={
-                            <AdminProtectedRoute requiredPermission={{ name: 'manage_system', resource: 'system' }}>
-                              <AdminSystem />
-                            </AdminProtectedRoute>
-                          } />
-                          <Route path="performance" element={
-                            <AdminProtectedRoute requiredPermission={{ name: 'view_analytics', resource: 'analytics' }}>
-                              <AdminPerformance />
-                            </AdminProtectedRoute>
-                          } />
-                        </Route>
-                        
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </main>
-                  </div>
-                  <Toaster />
-                </SessionProvider>
-              </TherapistProvider>
-            </AdminProvider>
-          </AuthProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<Index />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/therapist-matching" element={<TherapistMatching />} />
+
+        {/* Protected user routes */}
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <UserDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/chat" element={
+          <ProtectedRoute>
+            <Chat />
+          </ProtectedRoute>
+        } />
+        <Route path="/therapy-chat" element={
+          <ProtectedRoute>
+            <TherapyChat />
+          </ProtectedRoute>
+        } />
+        <Route path="/live-session" element={
+          <ProtectedRoute>
+            <LiveSession />
+          </ProtectedRoute>
+        } />
+        <Route path="/mood-tracking" element={
+          <ProtectedRoute>
+            <MoodTracking />
+          </ProtectedRoute>
+        } />
+        <Route path="/goals" element={
+          <ProtectedRoute>
+            <Goals />
+          </ProtectedRoute>
+        } />
+        <Route path="/techniques" element={
+          <ProtectedRoute>
+            <Techniques />
+          </ProtectedRoute>
+        } />
+        <Route path="/session-history" element={
+          <ProtectedRoute>
+            <SessionHistory />
+          </ProtectedRoute>
+        } />
+        <Route path="/analytics" element={
+          <ProtectedRoute>
+            <Analytics />
+          </ProtectedRoute>
+        } />
+        <Route path="/session-analytics" element={
+          <ProtectedRoute>
+            <SessionAnalytics />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/performance" element={
+          <ProtectedRoute>
+            <PerformanceDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/notifications" element={
+          <ProtectedRoute>
+            <NotificationDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/notification-settings" element={
+          <ProtectedRoute>
+            <NotificationSettings />
+          </ProtectedRoute>
+        } />
+        <Route path="/notification-analytics" element={
+          <ProtectedRoute>
+            <NotificationAnalytics />
+          </ProtectedRoute>
+        } />
+        <Route path="/smart-triggers" element={
+          <ProtectedRoute>
+            <SmartTriggers />
+          </ProtectedRoute>
+        } />
+
+        {/* Admin routes */}
+        <Route path="/admin" element={
+          <AdminProtectedRoute>
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
+          </AdminProtectedRoute>
+        } />
+        <Route path="/admin/users" element={
+          <AdminProtectedRoute>
+            <AdminLayout>
+              <AdminUsers />
+            </AdminLayout>
+          </AdminProtectedRoute>
+        } />
+        <Route path="/admin/content" element={
+          <AdminProtectedRoute>
+            <AdminLayout>
+              <AdminContent />
+            </AdminLayout>
+          </AdminProtectedRoute>
+        } />
+        <Route path="/admin/analytics" element={
+          <AdminProtectedRoute>
+            <AdminLayout>
+              <AdminAnalytics />
+            </AdminLayout>
+          </AdminProtectedRoute>
+        } />
+        <Route path="/admin/system" element={
+          <AdminProtectedRoute>
+            <AdminLayout>
+              <AdminSystem />
+            </AdminLayout>
+          </AdminProtectedRoute>
+        } />
+        <Route path="/admin/performance" element={
+          <AdminProtectedRoute>
+            <AdminLayout>
+              <AdminPerformance />
+            </AdminLayout>
+          </AdminProtectedRoute>
+        } />
+        <Route path="/admin/ai" element={
+          <AdminProtectedRoute>
+            <AdminLayout>
+              <AdminAI />
+            </AdminLayout>
+          </AdminProtectedRoute>
+        } />
+
+        {/* 404 route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
