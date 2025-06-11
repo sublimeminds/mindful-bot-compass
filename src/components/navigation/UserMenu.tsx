@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { User, Settings, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 interface UserMenuProps {
   user: { email?: string } | null;
@@ -30,11 +29,9 @@ const UserMenu = ({ user, logout }: UserMenuProps) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="flex items-center space-x-2 hover:bg-muted/50 rounded-full transition-all duration-300 hover:scale-105">
-          <Avatar className="h-8 w-8">
-            <AvatarFallback className="text-sm bg-gradient-to-br from-therapy-500 to-calm-500 text-white font-semibold">
-              {user?.email?.[0]?.toUpperCase() || "U"}
-            </AvatarFallback>
-          </Avatar>
+          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-therapy-500 to-calm-500 text-white font-semibold flex items-center justify-center text-sm">
+            {user?.email?.[0]?.toUpperCase() || "U"}
+          </div>
           <span className="hidden sm:inline max-w-32 truncate font-medium text-foreground/80">{user?.email}</span>
         </Button>
       </DropdownMenuTrigger>

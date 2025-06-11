@@ -4,6 +4,11 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
+// Ensure React is globally available for all components
+if (typeof window !== 'undefined') {
+  (window as any).React = React;
+}
+
 // Register service worker for PWA functionality
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -22,9 +27,5 @@ if (!rootElement) {
   throw new Error("Root element not found");
 }
 
-// Restore StrictMode with proper React setup
-createRoot(rootElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// Simple React setup without StrictMode to avoid Radix UI conflicts
+createRoot(rootElement).render(<App />);
