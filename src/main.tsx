@@ -7,7 +7,6 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { AdminProvider } from "./contexts/AdminContext";
 import { SessionProvider } from "./contexts/SessionContext";
 import { TherapistProvider } from "./contexts/TherapistContext";
-import { Toaster } from "./components/ui/toaster";
 import ErrorBoundary from "./components/ErrorBoundary";
 import App from "./App.tsx";
 import "./index.css";
@@ -96,7 +95,6 @@ createRoot(rootElement).render(
               <SessionProvider>
                 <TherapistProvider>
                   <App />
-                  <Toaster />
                 </TherapistProvider>
               </SessionProvider>
             </AdminProvider>
