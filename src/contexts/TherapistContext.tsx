@@ -1,5 +1,6 @@
 
 import { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
+import { DebugLogger } from '@/utils/debugLogger';
 
 interface TherapistPersonality {
   id: string;
@@ -51,35 +52,93 @@ const defaultTherapists: TherapistPersonality[] = [
 ];
 
 export const TherapistProvider = ({ children }: { children: ReactNode }) => {
+  DebugLogger.debug('TherapistProvider: Initializing', { component: 'TherapistProvider' });
+  
   const [selectedTherapist, setSelectedTherapist] = useState<TherapistPersonality | null>(defaultTherapists[0]);
   const [therapists] = useState<TherapistPersonality[]>(defaultTherapists);
   const [isLoading] = useState(false);
 
+  DebugLogger.info('TherapistProvider: Default therapist selected', { 
+    component: 'TherapistProvider',
+    selectedTherapistId: defaultTherapists[0].id,
+    selectedTherapistName: defaultTherapists[0].name,
+    totalTherapists: defaultTherapists.length
+  });
+
   const selectTherapist = useCallback((therapist: TherapistPersonality) => {
+    DebugLogger.debug('TherapistProvider: Selecting therapist', { 
+      component: 'TherapistProvider', 
+      method: 'selectTherapist',
+      therapistId: therapist.id,
+      therapistName: therapist.name,
+      previousTherapistId: selectedTherapist?.id
+    });
+    
     setSelectedTherapist(therapist);
-  }, []);
+    
+    DebugLogger.info('TherapistProvider: Therapist selected successfully', { 
+      component: 'TherapistProvider', 
+      method: 'selectTherapist',
+      therapistId: therapist.id,
+      therapistName: therapist.name,
+      approach: therapist.approach
+    });
+  }, [selectedTherapist?.id]);
 
   const getPersonalityPrompt = useCallback(() => {
-    if (!selectedTherapist) return '';
+    DebugLogger.debug('TherapistProvider: Getting personality prompt', { 
+      component: 'TherapistProvider', 
+      method: 'getPersonalityPrompt',
+      therapistId: selectedTherapist?.id,
+      therapistName: selectedTherapist?.name
+    });
     
-    return `You are ${selectedTherapist.name}, a ${selectedTherapist.title}. 
+    if (!selectedTherapist) {
+      DebugLogger.warn('TherapistProvider: No therapist selected for prompt', { 
+        component: 'TherapistProvider', 
+        method: 'getPersonalityPrompt'
+      });
+      return '';
+    }
+    
+    const prompt = `You are ${selectedTherapist.name}, a ${selectedTherapist.title}. 
     Your approach is ${selectedTherapist.approach}. 
     Your communication style is ${selectedTherapist.communicationStyle}.
     Your specialties include: ${selectedTherapist.specialties.join(', ')}.
     ${selectedTherapist.description}
     
     Always respond in character as this therapist, maintaining their specific approach and communication style.`;
+    
+    DebugLogger.trace('TherapistProvider: Personality prompt generated', { 
+      component: 'TherapistProvider', 
+      method: 'getPersonalityPrompt',
+      therapistId: selectedTherapist.id,
+      promptLength: prompt.length
+    });
+    
+    return prompt;
   }, [selectedTherapist]);
 
-  const value = useMemo(() => ({
-    selectedTherapist,
-    currentTherapist: selectedTherapist,
-    setSelectedTherapist,
-    selectTherapist,
-    therapists,
-    getPersonalityPrompt,
-    isLoading
-  }), [selectedTherapist, selectTherapist, therapists, getPersonalityPrompt, isLoading]);
+  const value = useMemo(() => {
+    const contextValue = {
+      selectedTherapist,
+      currentTherapist: selectedTherapist,
+      setSelectedTherapist,
+      selectTherapist,
+      therapists,
+      getPersonalityPrompt,
+      isLoading
+    };
+    
+    DebugLogger.trace('TherapistProvider: Context value updated', { 
+      component: 'TherapistProvider',
+      hasSelectedTherapist: !!selectedTherapist,
+      therapistsCount: therapists.length,
+      isLoading
+    });
+    
+    return contextValue;
+  }, [selectedTherapist, selectTherapist, therapists, getPersonalityPrompt, isLoading]);
 
   return (
     <TherapistContext.Provider value={value}>
@@ -89,9 +148,14 @@ export const TherapistProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useTherapist = () => {
+  DebugLogger.trace('useTherapist: Hook called', { component: 'useTherapist' });
+  
   const context = useContext(TherapistContext);
   if (context === undefined) {
-    throw new Error('useTherapist must be used within a TherapistProvider');
+    const error = new Error('useTherapist must be used within a TherapistProvider');
+    DebugLogger.error('useTherapist: Context undefined', error, { component: 'useTherapist' });
+    throw error;
   }
+  
   return context;
 };

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import DetailedMoodTracker from "@/components/mood/DetailedMoodTracker";
 import MoodInsightsDashboard from "@/components/mood/MoodInsightsDashboard";
 import Header from "@/components/Header";
+import { useDebugLogger } from '@/utils/debugLogger';
 
 // Mock mood entry type
 interface MoodEntry {
@@ -21,9 +23,22 @@ interface MoodEntry {
 }
 
 const MoodTracking = () => {
+  const log = useDebugLogger('MoodTracking');
   const navigate = useNavigate();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
+
+  useEffect(() => {
+    log.info('MoodTracking component mounted', { 
+      userId: user?.id,
+      userEmail: user?.email,
+      activeTab 
+    });
+  }, []);
+
+  useEffect(() => {
+    log.debug('Active tab changed', { activeTab });
+  }, [activeTab]);
 
   // Mock data for MoodInsightsDashboard
   const mockMoodData = [
@@ -66,11 +81,25 @@ const MoodTracking = () => {
   };
 
   const handleMoodSubmit = (moodData: any) => {
-    console.log('Mood submitted:', moodData);
+    log.info('Mood data submitted', { 
+      moodData,
+      userId: user?.id 
+    });
     // Here you would typically save to database
   };
 
+  const handleTabChange = (value: string) => {
+    log.debug('Tab change requested', { from: activeTab, to: value });
+    setActiveTab(value);
+  };
+
+  const handleBackToDashboard = () => {
+    log.debug('Navigating back to dashboard', { userId: user?.id });
+    navigate('/');
+  };
+
   if (!user) {
+    log.warn('User not authenticated, showing sign-in message');
     return (
       <>
         <Header />
@@ -83,6 +112,13 @@ const MoodTracking = () => {
     );
   }
 
+  log.debug('Rendering MoodTracking for authenticated user', { 
+    userId: user.id,
+    activeTab,
+    mockDataLength: mockMoodData.length,
+    insightsCount: mockInsights.length
+  });
+
   return (
     <>
       <Header />
@@ -91,7 +127,7 @@ const MoodTracking = () => {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Button variant="outline" onClick={() => navigate('/')}>
+              <Button variant="outline" onClick={handleBackToDashboard}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Dashboard
               </Button>
@@ -108,7 +144,7 @@ const MoodTracking = () => {
           </div>
 
           {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="overview" className="flex items-center space-x-2">
                 <TrendingUp className="h-4 w-4" />
