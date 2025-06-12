@@ -1,5 +1,5 @@
-
-import React, { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react';
+import * as React from 'react';
+import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react';
 import { DebugLogger } from '@/utils/debugLogger';
 
 interface SessionContextType {
@@ -22,6 +22,12 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
   DebugLogger.debug('SessionProvider: Initializing', { component: 'SessionProvider' });
+  
+  // Check if React hooks are available
+  if (!useState) {
+    DebugLogger.error('SessionProvider: useState is not available', new Error('React hooks not found'), { component: 'SessionProvider' });
+    throw new Error('React hooks are not available. This might indicate a React version mismatch.');
+  }
   
   const [currentSession, setCurrentSession] = useState(null);
   const [sessionHistory, setSessionHistory] = useState([]);
