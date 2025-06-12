@@ -1,6 +1,7 @@
 
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { AuthProvider } from "./contexts/AuthContext";
 import App from "./App.tsx";
 import "./index.css";
 
@@ -25,6 +26,8 @@ if (!rootElement) {
 // Use StrictMode for better React development experience
 createRoot(rootElement).render(
   <React.StrictMode>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </React.StrictMode>
 );
