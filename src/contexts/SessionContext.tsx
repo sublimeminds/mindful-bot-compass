@@ -1,4 +1,5 @@
-import * as React from 'react';
+
+import React from 'react';
 import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react';
 import { DebugLogger } from '@/utils/debugLogger';
 
