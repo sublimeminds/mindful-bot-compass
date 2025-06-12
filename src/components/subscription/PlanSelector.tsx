@@ -14,7 +14,7 @@ interface PlanSelectorProps {
 }
 
 const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorProps) => {
-  const { plans, getCurrentPlan } = useSubscription();
+  const { plans, getCurrentPlan, loading } = useSubscription();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [upgradeModal, setUpgradeModal] = useState<{ isOpen: boolean; planName?: 'Basic' | 'Premium'; planPrice?: number }>({
     isOpen: false
@@ -23,8 +23,13 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
   const currentPlan = getCurrentPlan();
 
   const handleSelectPlan = (plan: any) => {
+    console.log('Selecting plan:', plan.name, 'with billing:', billingCycle);
+    
     if (plan.name === 'Free') {
       // Handle free plan selection if needed
+      if (onPlanSelect) {
+        onPlanSelect(plan.id, billingCycle);
+      }
       return;
     }
 
@@ -32,10 +37,11 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
       onPlanSelect(plan.id, billingCycle);
     } else {
       // Open upgrade modal for Basic and Premium plans
+      const price = billingCycle === 'yearly' ? plan.price_yearly : plan.price_monthly;
       setUpgradeModal({
         isOpen: true,
         planName: plan.name as 'Basic' | 'Premium',
-        planPrice: billingCycle === 'yearly' ? plan.price_yearly : plan.price_monthly
+        planPrice: price
       });
     }
   };
@@ -50,10 +56,27 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
   };
 
   const getYearlyDiscount = (monthly: number, yearly: number) => {
+    if (!monthly || !yearly) return 0;
     const yearlyMonthly = yearly / 12;
     const discount = ((monthly - yearlyMonthly) / monthly) * 100;
     return Math.round(discount);
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
+      </div>
+    );
+  }
+
+  if (!plans || plans.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground">No plans available at the moment.</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -172,7 +195,7 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
                   {/* Action Button */}
                   <Button
                     onClick={() => handleSelectPlan(plan)}
-                    disabled={isCurrentPlan || (plan.name === 'Free' && !onPlanSelect)}
+                    disabled={isCurrentPlan}
                     className={`w-full mt-6 ${
                       plan.name === 'Premium' 
                         ? 'bg-therapy-500 hover:bg-therapy-600' 
@@ -204,6 +227,7 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
         onClose={() => setUpgradeModal({ isOpen: false })}
         planName={upgradeModal.planName!}
         planPrice={upgradeModal.planPrice!}
+        billingCycle={billingCycle}
       />
     </>
   );
