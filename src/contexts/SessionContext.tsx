@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react';
+
+import React, { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react';
 import { DebugLogger } from '@/utils/debugLogger';
 
 interface SessionContextType {

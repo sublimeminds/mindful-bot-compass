@@ -1,6 +1,7 @@
+
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Bot, Heart } from "lucide-react";
-import { useState } from "react";
 import AuthModal from "./AuthModal";
 
 const HeroSection = () => {

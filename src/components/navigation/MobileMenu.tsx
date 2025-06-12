@@ -1,5 +1,5 @@
 
-import * as React from 'react';
+import React, { useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';

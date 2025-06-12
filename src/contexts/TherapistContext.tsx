@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
 import { DebugLogger } from '@/utils/debugLogger';
 
 interface TherapistPersonality {
