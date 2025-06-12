@@ -16,7 +16,7 @@ const HeroSection = () => {
   };
 
   const scrollToDemo = () => {
-    const demoElement = document.querySelector('#interactive-demo');
+    const demoElement = document.querySelector('#video-demo');
     if (demoElement) {
       demoElement.scrollIntoView({ behavior: 'smooth' });
     }

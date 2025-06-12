@@ -11,7 +11,7 @@ import OfflineIndicator from "@/components/OfflineIndicator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StatsCounter from "@/components/landing/StatsCounter";
-import InteractiveDemo from "@/components/landing/InteractiveDemo";
+import VideoEnhancedDemo from "@/components/landing/VideoEnhancedDemo";
 import AdvancedFeaturesSection from "@/components/landing/AdvancedFeaturesSection";
 import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
@@ -52,7 +52,7 @@ const Index = () => {
           <>
             <HeroSection />
             <StatsCounter />
-            <InteractiveDemo />
+            <VideoEnhancedDemo />
             <AdvancedFeaturesSection />
             <HowItWorksSection />
             <TestimonialsSection />
