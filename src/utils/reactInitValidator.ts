@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { DebugLogger } from './debugLogger';
-import ReactErrorFallback from '@/components/fallback/ReactErrorFallback';
 
 interface ReactValidationResult {
   isValid: boolean;
@@ -35,8 +34,7 @@ class ReactInitValidator {
         
         this.validationResult = {
           isValid: false,
-          error,
-          fallbackComponent: ReactErrorFallback
+          error
         };
         return this.validationResult;
       }
@@ -54,8 +52,7 @@ class ReactInitValidator {
         
         this.validationResult = {
           isValid: false,
-          error,
-          fallbackComponent: ReactErrorFallback
+          error
         };
         return this.validationResult;
       }
@@ -84,8 +81,7 @@ class ReactInitValidator {
       
       this.validationResult = {
         isValid: false,
-        error: error as Error,
-        fallbackComponent: ReactErrorFallback
+        error: error as Error
       };
       return this.validationResult;
     }
@@ -93,10 +89,6 @@ class ReactInitValidator {
 
   reset(): void {
     this.validationResult = null;
-  }
-
-  getFallbackComponent(): React.ComponentType<any> {
-    return ReactErrorFallback;
   }
 }
 
@@ -110,8 +102,16 @@ export const withReactValidation = <P extends object>(
     const validation = reactInitValidator.validateReactInit();
     
     if (!validation.isValid) {
-      const FallbackComponent = validation.fallbackComponent || ReactErrorFallback;
-      return React.createElement(FallbackComponent, { error: validation.error });
+      // Return a simple error component instead of trying to import ReactErrorFallback
+      return React.createElement('div', {
+        style: {
+          padding: '20px',
+          backgroundColor: '#fee2e2',
+          border: '1px solid #fecaca',
+          borderRadius: '6px',
+          color: '#991b1b'
+        }
+      }, `React Error: ${validation.error?.message || 'Unknown error'}`);
     }
     
     return React.createElement(WrappedComponent, props);
