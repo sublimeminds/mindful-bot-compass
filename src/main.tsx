@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AdminProvider } from "./contexts/AdminContext";
+import { SessionProvider } from "./contexts/SessionContext";
 import App from "./App.tsx";
 import "./index.css";
 
@@ -41,7 +42,9 @@ createRoot(rootElement).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <AdminProvider>
-          <App />
+          <SessionProvider>
+            <App />
+          </SessionProvider>
         </AdminProvider>
       </AuthProvider>
     </QueryClientProvider>
