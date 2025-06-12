@@ -55,7 +55,7 @@ export class ErrorBoundary extends Component<Props, State> {
     return (
       <ReactHookErrorBoundary componentName="ErrorBoundary">
         {this.props.children}
-      </ReactHoundary>
+      </ReactHookErrorBoundary>
     );
   }
 }

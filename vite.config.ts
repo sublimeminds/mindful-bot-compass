@@ -26,6 +26,7 @@ export default defineConfig(({ mode }) => ({
       "react": path.resolve(__dirname, "./node_modules/react"),
       "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
     },
+    dedupe: ['react', 'react-dom'], // Ensure single React instance
   },
   optimizeDeps: {
     // Ensure React is properly pre-bundled
@@ -37,9 +38,7 @@ export default defineConfig(({ mode }) => ({
     global: 'globalThis',
   },
   esbuild: {
-    // Configure esbuild for consistent React handling
-    jsxFactory: 'React.createElement',
-    jsxFragment: 'React.Fragment',
-    jsxInject: `import React from 'react'`
+    // Remove JSX inject to prevent conflicts
+    jsx: 'automatic',
   }
 }));

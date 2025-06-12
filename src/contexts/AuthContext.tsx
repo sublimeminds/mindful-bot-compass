@@ -1,6 +1,5 @@
 
-import React from 'react';
-import { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { DebugLogger } from '@/utils/debugLogger';
@@ -24,10 +23,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   DebugLogger.debug('AuthProvider: Initializing', { component: 'AuthProvider' });
   
-  // Check if React hooks are available
-  if (!useState) {
+  // Validate React hooks are available before using them
+  if (typeof useState === 'undefined') {
     DebugLogger.error('AuthProvider: useState is not available', new Error('React hooks not found'), { component: 'AuthProvider' });
-    throw new Error('React hooks are not available. This might indicate a React version mismatch.');
+    throw new Error('React hooks are not available. This might indicate a React import issue.');
   }
   
   const [user, setUser] = useState<User | null>(null);
