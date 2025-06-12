@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { DebugLogger } from './debugLogger';
 import ReactErrorFallback from '@/components/fallback/ReactErrorFallback';
 
@@ -25,9 +26,9 @@ class ReactInitValidator {
     }
 
     try {
-      // Check if React is available globally
-      if (typeof React === 'undefined') {
-        const error = new Error('React is not defined globally');
+      // Check if React is available and properly imported
+      if (!React || typeof React !== 'object') {
+        const error = new Error('React is not properly imported or available');
         DebugLogger.error('ReactInitValidator: React not available', error, {
           component: 'ReactInitValidator'
         });
@@ -45,7 +46,7 @@ class ReactInitValidator {
         const error = new Error('React hooks are not available');
         DebugLogger.error('ReactInitValidator: React hooks not available', error, {
           component: 'ReactInitValidator',
-          reactAvailable: typeof React !== 'undefined',
+          reactAvailable: !!React,
           useStateAvailable: !!React.useState,
           useEffectAvailable: !!React.useEffect,
           useContextAvailable: !!React.useContext
