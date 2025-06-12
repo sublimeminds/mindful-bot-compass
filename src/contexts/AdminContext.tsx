@@ -5,6 +5,9 @@ import { useAuth } from './AuthContext';
 interface AdminContextType {
   isAdmin: boolean;
   adminRole: string | null;
+  userRoles: string[];
+  hasPermission: (permission: string, resource: string) => boolean;
+  isLoading: boolean;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
@@ -16,10 +19,20 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   // In a real app, you'd check user roles from the database
   const isAdmin = false; // Simplified for now
   const adminRole = null;
+  const userRoles: string[] = [];
+  const isLoading = false;
+
+  const hasPermission = (permission: string, resource: string) => {
+    // Simplified implementation - always return false for now
+    return false;
+  };
 
   const value = {
     isAdmin,
-    adminRole
+    adminRole,
+    userRoles,
+    hasPermission,
+    isLoading
   };
 
   return (
