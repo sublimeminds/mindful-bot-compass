@@ -1,5 +1,6 @@
 
-import React, { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
+import * as React from 'react';
+import { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
 import { DebugLogger } from '@/utils/debugLogger';
 
 interface TherapistPersonality {
@@ -53,6 +54,12 @@ const defaultTherapists: TherapistPersonality[] = [
 
 export const TherapistProvider = ({ children }: { children: ReactNode }) => {
   DebugLogger.debug('TherapistProvider: Initializing', { component: 'TherapistProvider' });
+  
+  // Check if React hooks are available
+  if (!useState) {
+    DebugLogger.error('TherapistProvider: useState is not available', new Error('React hooks not found'), { component: 'TherapistProvider' });
+    throw new Error('React hooks are not available. This might indicate a React version mismatch.');
+  }
   
   const [selectedTherapist, setSelectedTherapist] = useState<TherapistPersonality | null>(defaultTherapists[0]);
   const [therapists] = useState<TherapistPersonality[]>(defaultTherapists);
