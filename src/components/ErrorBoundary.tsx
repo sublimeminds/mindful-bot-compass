@@ -35,8 +35,7 @@ export class ErrorBoundary extends Component<Props, State> {
       component: 'ErrorBoundary',
       method: 'componentDidCatch',
       errorInfo,
-      componentStack: errorInfo.componentStack,
-      errorBoundary: errorInfo.errorBoundary
+      componentStack: errorInfo.componentStack
     });
 
     this.setState({

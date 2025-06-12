@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react';
 import { DebugLogger } from '@/utils/debugLogger';
 
@@ -36,7 +35,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     
     try {
       const newSession = {
-        id: Date.now(),
+        id: Date.now().toString(),
         startTime: new Date(),
         status: 'active',
         type: 'therapy',
@@ -149,7 +148,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const message = {
-        id: Date.now(),
+        id: Date.now().toString(),
         content,
         type,
         sender: type === 'user' ? 'user' : 'ai',
