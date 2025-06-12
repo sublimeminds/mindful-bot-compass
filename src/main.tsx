@@ -7,11 +7,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AdminProvider } from "./contexts/AdminContext";
 import { SessionProvider } from "./contexts/SessionContext";
-import { TherapistProvider } from "./contexts/TherapistContext";
+import { TherapistProvider } from "./contexts/TherapistProvider";
 import ErrorBoundary from "./components/ErrorBoundary";
 import App from "./App.tsx";
 import "./index.css";
 import { DebugLogger } from "./utils/debugLogger";
+
+// Import development tools for React hook monitoring
+import { devTools } from "./utils/devTools";
 
 // Initialize debug logging
 DebugLogger.info('Application: Starting initialization', { 
@@ -82,6 +85,12 @@ window.addEventListener('unhandledrejection', (event) => {
     reason: event.reason
   });
 });
+
+// Initialize development tools
+if (import.meta.env.DEV) {
+  devTools.attachToWindow();
+  DebugLogger.info('Application: Development tools initialized', { component: 'main' });
+}
 
 DebugLogger.info('Application: Starting React render', { component: 'main' });
 
