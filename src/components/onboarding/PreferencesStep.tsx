@@ -11,11 +11,14 @@ const preferenceOptions = [
   'Talk Therapy',
   'Solution-Focused Therapy',
   'Trauma-Informed Care',
-  'Positive Psychology',
-  'Acceptance & Commitment Therapy',
-  'Dialectical Behavior Therapy (DBT)',
-  'Humanistic Approach',
-  'Psychodynamic Therapy'
+  'Positive Psychology'
+];
+
+// Preselected preferences for most users
+const defaultPreferences = [
+  'Cognitive Behavioral Therapy (CBT)',
+  'Mindfulness & Meditation',
+  'Talk Therapy'
 ];
 
 interface PreferencesStepProps {
@@ -26,12 +29,27 @@ interface PreferencesStepProps {
 }
 
 const PreferencesStep = ({ selectedPreferences, onPreferenceToggle, onNext, onBack }: PreferencesStepProps) => {
+  // Pre-select default preferences if none are selected
+  React.useEffect(() => {
+    if (selectedPreferences.length === 0) {
+      defaultPreferences.forEach(pref => {
+        onPreferenceToggle(pref);
+      });
+    }
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-2">Therapy Preferences</h2>
         <p className="text-muted-foreground">
-          Which therapeutic approaches interest you? (optional)
+          We've pre-selected the most popular approaches. You can customize anytime and change your AI therapist preferences later.
+        </p>
+      </div>
+
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <p className="text-sm text-blue-800">
+          💡 <strong>Good to know:</strong> You can change your AI therapist style and preferences anytime in your profile settings.
         </p>
       </div>
 

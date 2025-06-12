@@ -152,7 +152,7 @@ const EnhancedAuthForm = () => {
 
     try {
       const { error } = await signUp(formData.email, formData.password, {
-        name: formData.name
+        full_name: formData.name
       });
       
       if (error) {

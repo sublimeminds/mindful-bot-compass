@@ -12,12 +12,14 @@ import GoalsStep from "@/components/onboarding/GoalsStep";
 import PreferencesStep from "@/components/onboarding/PreferencesStep";
 import TherapistPersonalityStep from "@/components/onboarding/TherapistPersonalityStep";
 import PlanSelectionStep from "@/components/onboarding/PlanSelectionStep";
+import StripeCheckout from "@/components/subscription/StripeCheckout";
 
 const STEPS = [
   'Goals & Challenges',
   'Therapy Preferences', 
   'Choose Your Therapist',
   'Select Your Plan',
+  'Payment',
   'Complete Setup'
 ];
 
@@ -34,6 +36,11 @@ const Onboarding = () => {
 
   const handlePlanSelect = (planId: string, billingCycle: 'monthly' | 'yearly') => {
     setSelectedPlan({ planId, billingCycle });
+  };
+
+  const handlePaymentSuccess = () => {
+    // Move to final step after successful payment
+    setCurrentStep(5);
   };
 
   const handleComplete = async () => {
@@ -59,34 +66,6 @@ const Onboarding = () => {
         .eq('id', user.id);
 
       if (updateError) throw updateError;
-
-      // If a paid plan was selected, redirect to checkout
-      if (selectedPlan && selectedPlan.planId) {
-        const { data: plan } = await supabase
-          .from('subscription_plans')
-          .select('name')
-          .eq('id', selectedPlan.planId)
-          .single();
-        
-        if (plan && plan.name !== 'Free') {
-          const { data, error } = await supabase.functions.invoke('create-checkout', {
-            body: { 
-              planId: selectedPlan.planId, 
-              billingCycle: selectedPlan.billingCycle 
-            }
-          });
-
-          if (error) throw error;
-
-          if (data.url) {
-            window.open(data.url, '_blank');
-            toast({
-              title: "Payment window opened",
-              description: "Complete your payment in the new tab to activate your subscription.",
-            });
-          }
-        }
-      }
 
       toast({
         title: "Welcome to MindfulAI!",
@@ -118,6 +97,11 @@ const Onboarding = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
+  };
+
+  const skipPayment = () => {
+    // Skip to final step for free plan
+    setCurrentStep(5);
   };
 
   return (
@@ -198,6 +182,50 @@ const Onboarding = () => {
             )}
 
             {currentStep === 4 && (
+              <div className="space-y-6">
+                <div className="text-center">
+                  <h2 className="text-2xl font-bold mb-4">Complete Your Payment</h2>
+                  <p className="text-muted-foreground">
+                    {selectedPlan?.planId ? 'Secure your subscription and start your journey' : 'You selected the free plan - no payment needed!'}
+                  </p>
+                </div>
+
+                {selectedPlan?.planId ? (
+                  <StripeCheckout
+                    planId={selectedPlan.planId}
+                    billingCycle={selectedPlan.billingCycle}
+                    onSuccess={handlePaymentSuccess}
+                    onError={(error) => {
+                      toast({
+                        title: "Payment Error",
+                        description: error,
+                        variant: "destructive",
+                      });
+                    }}
+                  />
+                ) : (
+                  <div className="text-center space-y-4">
+                    <p className="text-lg">You're all set with the free plan!</p>
+                    <Button onClick={skipPayment} size="lg">
+                      Continue to Setup
+                    </Button>
+                  </div>
+                )}
+
+                <div className="flex justify-between">
+                  <Button variant="outline" onClick={prevStep}>
+                    Back
+                  </Button>
+                  {!selectedPlan?.planId && (
+                    <Button onClick={skipPayment}>
+                      Skip Payment
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {currentStep === 5 && (
               <div className="text-center space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold mb-4">You're All Set!</h2>
@@ -212,7 +240,7 @@ const Onboarding = () => {
                     <p><strong>Goals:</strong> {goals.length} selected</p>
                     <p><strong>Preferences:</strong> {preferences.length} selected</p>
                     <p><strong>Therapist:</strong> {selectedPersonality ? 'Selected' : 'Default'}</p>
-                    <p><strong>Plan:</strong> {selectedPlan ? 'Selected' : 'Free'}</p>
+                    <p><strong>Plan:</strong> {selectedPlan ? 'Premium' : 'Free'}</p>
                   </div>
                 </div>
 
