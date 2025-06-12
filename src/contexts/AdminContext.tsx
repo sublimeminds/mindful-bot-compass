@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import * as React from 'react';
 import { useAuth } from './AuthContext';
 
 interface AdminContextType {
@@ -10,9 +10,9 @@ interface AdminContextType {
   isLoading: boolean;
 }
 
-const AdminContext = createContext<AdminContextType | undefined>(undefined);
+const AdminContext = React.createContext<AdminContextType | undefined>(undefined);
 
-export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
   
   // For now, just provide basic admin context
@@ -43,7 +43,7 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 };
 
 export const useAdmin = () => {
-  const context = useContext(AdminContext);
+  const context = React.useContext(AdminContext);
   if (context === undefined) {
     throw new Error('useAdmin must be used within an AdminProvider');
   }
