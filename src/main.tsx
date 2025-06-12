@@ -1,6 +1,7 @@
 
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AdminProvider } from "./contexts/AdminContext";
@@ -39,14 +40,16 @@ if (!rootElement) {
 // Use StrictMode for better React development experience
 createRoot(rootElement).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <AdminProvider>
-          <SessionProvider>
-            <App />
-          </SessionProvider>
-        </AdminProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <AdminProvider>
+            <SessionProvider>
+              <App />
+            </SessionProvider>
+          </AdminProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
