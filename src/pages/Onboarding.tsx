@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +12,7 @@ import PreferencesStep from "@/components/onboarding/PreferencesStep";
 import TherapistPersonalityStep from "@/components/onboarding/TherapistPersonalityStep";
 import PlanSelectionStep from "@/components/onboarding/PlanSelectionStep";
 import StripeCheckout from "@/components/subscription/StripeCheckout";
+import { useSubscription } from "@/hooks/useSubscription";
 
 const STEPS = [
   'Goals & Challenges',
@@ -33,6 +33,7 @@ const Onboarding = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { plans } = useSubscription();
 
   // Auto-select therapist based on previous choices
   const autoSelectTherapist = () => {
@@ -55,7 +56,6 @@ const Onboarding = () => {
   };
 
   const handlePaymentSuccess = () => {
-    // Move to final step after successful payment
     setCurrentStep(5);
   };
 
@@ -64,7 +64,6 @@ const Onboarding = () => {
 
     setIsLoading(true);
     try {
-      // Insert into user_onboarding table
       const { error: insertError } = await supabase
         .from('user_onboarding')
         .insert({
@@ -76,7 +75,6 @@ const Onboarding = () => {
 
       if (insertError) throw insertError;
 
-      // Update profile to mark onboarding complete
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ onboarding_complete: true })
@@ -104,7 +102,6 @@ const Onboarding = () => {
 
   const nextStep = () => {
     if (currentStep === 2 && !selectedPersonality) {
-      // Auto-select therapist when moving from step 2 to 3
       const autoSelected = autoSelectTherapist();
       setSelectedPersonality(autoSelected);
     }
@@ -123,8 +120,21 @@ const Onboarding = () => {
   };
 
   const skipPayment = () => {
-    // Skip to final step for free plan
     setCurrentStep(5);
+  };
+
+  // Get selected plan details
+  const getSelectedPlanDetails = () => {
+    if (!selectedPlan) return null;
+    const plan = plans.find(p => p.id === selectedPlan.planId);
+    if (!plan) return null;
+    
+    const price = selectedPlan.billingCycle === 'yearly' ? plan.price_yearly : plan.price_monthly;
+    return {
+      name: plan.name,
+      price: price,
+      billingCycle: selectedPlan.billingCycle
+    };
   };
 
   return (
@@ -216,8 +226,11 @@ const Onboarding = () => {
                   </p>
                 </div>
 
-                {selectedPlan?.planId ? (
+                {selectedPlan?.planId && getSelectedPlanDetails() ? (
                   <StripeCheckout
+                    planName={getSelectedPlanDetails()!.name}
+                    planPrice={getSelectedPlanDetails()!.price}
+                    billingCycle={getSelectedPlanDetails()!.billingCycle}
                     onSuccess={handlePaymentSuccess}
                   />
                 ) : (
