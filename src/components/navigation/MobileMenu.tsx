@@ -1,5 +1,5 @@
 
-import React from 'react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -35,6 +35,20 @@ const MobileMenu = ({
 
   const sectionsToShow = isAuthenticated ? authenticatedSections : publicSections;
 
+  const handleSectionClick = React.useCallback((sectionId: string) => {
+    if (sectionId.startsWith('#')) {
+      scrollToSection(sectionId);
+    } else {
+      navigate(sectionId);
+    }
+    setIsMenuOpen(false);
+  }, [navigate, scrollToSection, setIsMenuOpen]);
+
+  const handleAuthClick = React.useCallback(() => {
+    navigate("/auth");
+    setIsMenuOpen(false);
+  }, [navigate, setIsMenuOpen]);
+
   return (
     <div className="lg:hidden">
       <Button
@@ -57,10 +71,7 @@ const MobileMenu = ({
             {sectionsToShow.map((section) => (
               <button
                 key={section.id}
-                onClick={() => {
-                  scrollToSection(section.id);
-                  setIsMenuOpen(false);
-                }}
+                onClick={() => handleSectionClick(section.id)}
                 className={`text-xl font-medium transition-colors ${
                   activeSection === section.id
                     ? 'text-therapy-600'
@@ -73,10 +84,7 @@ const MobileMenu = ({
 
             {!isAuthenticated && (
               <Button 
-                onClick={() => {
-                  navigate("/auth");
-                  setIsMenuOpen(false);
-                }} 
+                onClick={handleAuthClick}
                 size="lg"
                 className="bg-gradient-to-r from-therapy-500 via-therapy-600 to-therapy-700 hover:from-therapy-600 hover:via-therapy-700 hover:to-therapy-800 text-white font-semibold rounded-full px-8 py-3 shadow-lg hover:shadow-therapy-500/30 transition-all duration-300 hover:scale-105"
               >

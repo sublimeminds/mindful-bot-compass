@@ -1,5 +1,5 @@
 
-import React from 'react';
+import * as React from 'react';
 import { useAuth } from "@/contexts/AuthContext";
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";

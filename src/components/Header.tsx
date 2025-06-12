@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import * as React from 'react';
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -14,11 +15,11 @@ const Header = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [activeSection, setActiveSection] = React.useState('');
 
   // Track active section for public pages
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isAuthenticated && location.pathname === '/') {
       const handleScroll = () => {
         const sections = ['#features', '#pricing'];
@@ -51,7 +52,7 @@ const Header = () => {
     }
   }, [isAuthenticated, location.pathname]);
 
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = React.useCallback((sectionId: string) => {
     if (sectionId.startsWith('#')) {
       const element = document.querySelector(sectionId);
       if (element) {
@@ -60,7 +61,7 @@ const Header = () => {
     } else {
       navigate(sectionId);
     }
-  };
+  }, [navigate]);
 
   const publicSections = ['#features', '#pricing'];
 
