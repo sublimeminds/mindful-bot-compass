@@ -1,11 +1,12 @@
 
-import * as React from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AdminProvider } from "./contexts/AdminContext";
 import { SessionProvider } from "./contexts/SessionContext";
+import { TherapistProvider } from "./contexts/TherapistContext";
 import App from "./App.tsx";
 import "./index.css";
 
@@ -39,17 +40,19 @@ if (!rootElement) {
 
 // Use StrictMode for better React development experience
 createRoot(rootElement).render(
-  <React.StrictMode>
+  <StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <AdminProvider>
             <SessionProvider>
-              <App />
+              <TherapistProvider>
+                <App />
+              </TherapistProvider>
             </SessionProvider>
           </AdminProvider>
         </AuthProvider>
       </QueryClientProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  </StrictMode>
 );

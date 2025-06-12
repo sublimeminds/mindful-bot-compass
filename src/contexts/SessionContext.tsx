@@ -1,12 +1,12 @@
 
-import * as React from 'react';
+import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react';
 
 interface SessionContextType {
   currentSession: any;
   sessionHistory: any[];
   sessions: any[];
-  startSession: (moodBefore?: number) => void;
-  endSession: (moodAfter?: number, feedback?: string, rating?: number) => void;
+  startSession: (moodBefore?: number) => Promise<void>;
+  endSession: (moodAfter?: number, feedback?: string, rating?: number) => Promise<void>;
   addMessage: (content: string, type: string) => Promise<void>;
   addBreakthrough: (breakthrough: any) => void;
   syncWithRealtimeSession: (sessionId?: string, isActive?: boolean) => void;
@@ -17,14 +17,14 @@ interface SessionContextType {
   loadSessions: () => Promise<void>;
 }
 
-const SessionContext = React.createContext<SessionContextType | undefined>(undefined);
+const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
-export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentSession, setCurrentSession] = React.useState(null);
-  const [sessionHistory, setSessionHistory] = React.useState([]);
-  const [sessions, setSessions] = React.useState([]);
+export const SessionProvider = ({ children }: { children: ReactNode }) => {
+  const [currentSession, setCurrentSession] = useState(null);
+  const [sessionHistory, setSessionHistory] = useState([]);
+  const [sessions, setSessions] = useState([]);
 
-  const startSession = React.useCallback((moodBefore?: number) => {
+  const startSession = useCallback(async (moodBefore?: number) => {
     const newSession = {
       id: Date.now(),
       startTime: new Date(),
@@ -36,7 +36,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setCurrentSession(newSession);
   }, []);
 
-  const endSession = React.useCallback((moodAfter?: number, feedback?: string, rating?: number) => {
+  const endSession = useCallback(async (moodAfter?: number, feedback?: string, rating?: number) => {
     if (currentSession) {
       const endedSession = {
         ...currentSession,
@@ -51,7 +51,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [currentSession]);
 
-  const addMessage = React.useCallback(async (content: string, type: string) => {
+  const addMessage = useCallback(async (content: string, type: string) => {
     if (currentSession) {
       const message = {
         id: Date.now(),
@@ -67,7 +67,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [currentSession]);
 
-  const addBreakthrough = React.useCallback((breakthrough: any) => {
+  const addBreakthrough = useCallback((breakthrough: any) => {
     if (currentSession) {
       setCurrentSession(prev => prev ? {
         ...prev,
@@ -76,7 +76,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [currentSession]);
 
-  const syncWithRealtimeSession = React.useCallback((sessionId?: string, isActive?: boolean) => {
+  const syncWithRealtimeSession = useCallback((sessionId?: string, isActive?: boolean) => {
     if (currentSession && sessionId) {
       setCurrentSession(prev => prev ? {
         ...prev,
@@ -87,7 +87,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     console.log('Syncing with real-time session', { sessionId, isActive });
   }, [currentSession]);
 
-  const updateRealtimeStatus = React.useCallback((sessionId: string, isActive: boolean) => {
+  const updateRealtimeStatus = useCallback((sessionId: string, isActive: boolean) => {
     if (currentSession) {
       setCurrentSession(prev => prev ? {
         ...prev,
@@ -97,7 +97,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [currentSession]);
 
-  const loadSessions = React.useCallback(async () => {
+  const loadSessions = useCallback(async () => {
     try {
       console.log('Loading sessions...');
     } catch (error) {
@@ -105,14 +105,14 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
-  const getSessionDuration = React.useCallback(() => {
+  const getSessionDuration = useCallback(() => {
     if (currentSession?.startTime) {
       return Math.floor((new Date().getTime() - new Date(currentSession.startTime).getTime()) / 60000);
     }
     return 0;
   }, [currentSession]);
 
-  const getContentQuality = React.useCallback(() => {
+  const getContentQuality = useCallback(() => {
     if (currentSession?.messages) {
       const messageCount = currentSession.messages.length;
       const userMessages = currentSession.messages.filter((msg: any) => msg.sender === 'user').length;
@@ -121,14 +121,14 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return { messageCount: 0, userMessages: 0 };
   }, [currentSession]);
 
-  const canEndSession = React.useCallback(() => {
+  const canEndSession = useCallback(() => {
     if (!currentSession) return false;
     const duration = getSessionDuration();
     const quality = getContentQuality();
     return duration >= 5 && quality.messageCount >= 6 && quality.userMessages >= 3;
   }, [currentSession, getSessionDuration, getContentQuality]);
 
-  const value = React.useMemo(() => ({
+  const value = useMemo(() => ({
     currentSession,
     sessionHistory,
     sessions,
@@ -166,7 +166,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
 };
 
 export const useSession = () => {
-  const context = React.useContext(SessionContext);
+  const context = useContext(SessionContext);
   if (context === undefined) {
     throw new Error('useSession must be used within a SessionProvider');
   }
