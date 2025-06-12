@@ -51,6 +51,8 @@ const PlanUpgradeModal = ({ isOpen, onClose, planName, planPrice }: PlanUpgradeM
   };
 
   const calculatePrice = () => {
+    if (!planPrice || planPrice === 0) return 0;
+    
     if (billingCycle === 'yearly') {
       return planPrice * 12 * 0.8; // 20% discount for yearly
     }
@@ -58,11 +60,18 @@ const PlanUpgradeModal = ({ isOpen, onClose, planName, planPrice }: PlanUpgradeM
   };
 
   const calculateSavings = () => {
+    if (!planPrice || planPrice === 0) return 0;
+    
     if (billingCycle === 'yearly') {
       return planPrice * 12 * 0.2;
     }
     return 0;
   };
+
+  // Don't render if planPrice is not available
+  if (!planPrice || planPrice === 0) {
+    return null;
+  }
 
   if (showCheckout) {
     return (
