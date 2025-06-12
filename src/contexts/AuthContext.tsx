@@ -1,8 +1,9 @@
-
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { DebugLogger } from '@/utils/debugLogger';
+import { reactInitValidator } from '@/utils/reactInitValidator';
+import ReactErrorFallback from '@/components/fallback/ReactErrorFallback';
 
 interface AuthContextType {
   user: User | null;
@@ -23,14 +24,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   DebugLogger.debug('AuthProvider: Initializing', { component: 'AuthProvider' });
   
-  // Add explicit React availability check
-  if (!React || !React.useState) {
-    DebugLogger.error('AuthProvider: React or React hooks not available', new Error('React hooks not found'), { component: 'AuthProvider' });
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-red-600">React hooks are not available. Please refresh the page.</div>
-      </div>
-    );
+  // Validate React initialization before proceeding
+  const validation = reactInitValidator.validateReactInit();
+  
+  if (!validation.isValid) {
+    DebugLogger.error('AuthProvider: React validation failed', validation.error, { 
+      component: 'AuthProvider' 
+    });
+    
+    return <ReactErrorFallback error={validation.error} />;
   }
   
   const [user, setUser] = useState<User | null>(null);

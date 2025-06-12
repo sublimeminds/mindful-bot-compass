@@ -11,19 +11,50 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react(),
+    react({
+      // Ensure consistent React handling
+      jsxImportSource: 'react',
+    }),
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Explicit React aliases to prevent multiple instances
+      "react": path.resolve(__dirname, "./node_modules/react"),
+      "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
     },
+    // Dedupe to ensure single React instance
+    dedupe: ['react', 'react-dom'],
   },
   optimizeDeps: {
-    include: ['react', 'react-dom'],
+    // Include React dependencies for proper pre-bundling
+    include: [
+      'react', 
+      'react-dom', 
+      'react/jsx-runtime',
+      '@supabase/supabase-js',
+      '@tanstack/react-query'
+    ],
+    // Force rebuild to ensure clean state
+    force: mode === 'development'
   },
   define: {
     global: 'globalThis',
+    // Ensure React is available in production builds
+    'process.env.NODE_ENV': JSON.stringify(mode === 'development' ? 'development' : 'production'),
   },
+  build: {
+    // Ensure React is properly bundled
+    rollupOptions: {
+      external: [],
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          vendor: ['@supabase/supabase-js', '@tanstack/react-query']
+        }
+      }
+    }
+  }
 }));
