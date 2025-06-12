@@ -1,6 +1,5 @@
 
-import * as React from 'react';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +19,8 @@ const MobileMenu = ({
   activeSection,
   scrollToSection
 }: MobileMenuProps) => {
+  console.log('MobileMenu: Rendering with props:', { isMenuOpen, isAuthenticated, activeSection });
+  
   const navigate = useNavigate();
 
   const publicSections = [
@@ -36,18 +37,28 @@ const MobileMenu = ({
 
   const sectionsToShow = isAuthenticated ? authenticatedSections : publicSections;
 
-  const handleSectionClick = React.useCallback((sectionId: string) => {
-    if (sectionId.startsWith('#')) {
-      scrollToSection(sectionId);
-    } else {
-      navigate(sectionId);
+  const handleSectionClick = useCallback((sectionId: string) => {
+    console.log('MobileMenu: Handling section click:', sectionId);
+    try {
+      if (sectionId.startsWith('#')) {
+        scrollToSection(sectionId);
+      } else {
+        navigate(sectionId);
+      }
+      setIsMenuOpen(false);
+    } catch (error) {
+      console.error('MobileMenu: Error in handleSectionClick:', error);
     }
-    setIsMenuOpen(false);
   }, [navigate, scrollToSection, setIsMenuOpen]);
 
-  const handleAuthClick = React.useCallback(() => {
-    navigate("/auth");
-    setIsMenuOpen(false);
+  const handleAuthClick = useCallback(() => {
+    console.log('MobileMenu: Handling auth click');
+    try {
+      navigate("/auth");
+      setIsMenuOpen(false);
+    } catch (error) {
+      console.error('MobileMenu: Error in handleAuthClick:', error);
+    }
   }, [navigate, setIsMenuOpen]);
 
   return (

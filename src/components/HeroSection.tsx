@@ -5,9 +5,12 @@ import { Bot, Heart } from "lucide-react";
 import AuthModal from "./AuthModal";
 
 const HeroSection = () => {
+  console.log('HeroSection: Component rendering');
+  
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleStartSession = () => {
+    console.log('HeroSection: Starting session');
     setShowAuthModal(true);
   };
 
