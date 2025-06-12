@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
 
 interface TherapistPersonality {
   id: string;
@@ -50,7 +50,7 @@ const defaultTherapists: TherapistPersonality[] = [
   }
 ];
 
-export const TherapistProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const TherapistProvider = ({ children }: { children: ReactNode }) => {
   const [selectedTherapist, setSelectedTherapist] = useState<TherapistPersonality | null>(defaultTherapists[0]);
   const [therapists] = useState<TherapistPersonality[]>(defaultTherapists);
   const [isLoading] = useState(false);
