@@ -11,7 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import GoalsStep from "@/components/onboarding/GoalsStep";
 import PreferencesStep from "@/components/onboarding/PreferencesStep";
 import TherapistPersonalityStep from "@/components/onboarding/TherapistPersonalityStep";
-import PlanSelector from "@/components/subscription/PlanSelector";
+import PlanSelectionStep from "@/components/onboarding/PlanSelectionStep";
 
 const STEPS = [
   'Goals & Challenges',
@@ -34,7 +34,6 @@ const Onboarding = () => {
 
   const handlePlanSelect = (planId: string, billingCycle: 'monthly' | 'yearly') => {
     setSelectedPlan({ planId, billingCycle });
-    setCurrentStep(currentStep + 1);
   };
 
   const handleComplete = async () => {
@@ -80,8 +79,11 @@ const Onboarding = () => {
           if (error) throw error;
 
           if (data.url) {
-            window.location.href = data.url;
-            return;
+            window.open(data.url, '_blank');
+            toast({
+              title: "Payment window opened",
+              description: "Complete your payment in the new tab to activate your subscription.",
+            });
           }
         }
       }
@@ -187,20 +189,12 @@ const Onboarding = () => {
             )}
 
             {currentStep === 3 && (
-              <div className="space-y-6">
-                <div className="text-center mb-8">
-                  <h2 className="text-2xl font-bold mb-4">Choose Your Plan</h2>
-                  <p className="text-muted-foreground">
-                    Select the plan that best fits your mental health needs
-                  </p>
-                </div>
-                <PlanSelector onPlanSelect={handlePlanSelect} />
-                <div className="flex justify-between mt-8">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
-                </div>
-              </div>
+              <PlanSelectionStep
+                selectedPlan={selectedPlan}
+                onPlanSelect={handlePlanSelect}
+                onNext={nextStep}
+                onBack={prevStep}
+              />
             )}
 
             {currentStep === 4 && (

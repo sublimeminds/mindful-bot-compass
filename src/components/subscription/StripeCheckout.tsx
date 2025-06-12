@@ -7,7 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Badge } from '@/components/ui/badge';
-import { CreditCard, Lock, CheckCircle } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { CreditCard, Lock, CheckCircle, Smartphone, Building } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -23,6 +24,7 @@ interface StripeCheckoutProps {
 interface BillingDetails {
   name: string;
   email: string;
+  paymentMethod: 'card' | 'bank' | 'paypal';
   address: {
     line1: string;
     city: string;
@@ -40,6 +42,7 @@ const StripeCheckout = ({ planName, planPrice, billingCycle, onSuccess, onCancel
     defaultValues: {
       name: '',
       email: '',
+      paymentMethod: 'card',
       address: {
         line1: '',
         city: '',
@@ -60,7 +63,8 @@ const StripeCheckout = ({ planName, planPrice, billingCycle, onSuccess, onCancel
           planName,
           planPrice,
           billingCycle,
-          billingDetails: data
+          billingDetails: data,
+          paymentMethod: data.paymentMethod
         }
       });
 
@@ -140,6 +144,47 @@ const StripeCheckout = ({ planName, planPrice, billingCycle, onSuccess, onCancel
                 </FormItem>
               )}
             />
+
+            {/* Payment Method Selection */}
+            <FormField
+              control={form.control}
+              name="paymentMethod"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Payment Method</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select payment method" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="card">
+                        <div className="flex items-center space-x-2">
+                          <CreditCard className="h-4 w-4" />
+                          <span>Credit/Debit Card</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="bank">
+                        <div className="flex items-center space-x-2">
+                          <Building className="h-4 w-4" />
+                          <span>Bank Transfer (ACH)</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="paypal">
+                        <div className="flex items-center space-x-2">
+                          <Smartphone className="h-4 w-4" />
+                          <span>PayPal</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Separator />
 
             <div className="space-y-3">
               <Label className="text-sm font-medium">Billing Address</Label>
