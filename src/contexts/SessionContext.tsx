@@ -1,6 +1,5 @@
 
-import React from 'react';
-import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react';
 import { DebugLogger } from '@/utils/debugLogger';
 
 interface SessionContextType {
@@ -21,13 +20,24 @@ interface SessionContextType {
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
-export const SessionProvider = ({ children }: { children: ReactNode }) => {
+export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   DebugLogger.debug('SessionProvider: Initializing', { component: 'SessionProvider' });
   
-  // Check if React hooks are available
-  if (!useState) {
-    DebugLogger.error('SessionProvider: useState is not available', new Error('React hooks not found'), { component: 'SessionProvider' });
-    throw new Error('React hooks are not available. This might indicate a React version mismatch.');
+  // Validate React hooks availability before using them
+  if (!React.useState || !React.useCallback || !React.useMemo || !React.useContext) {
+    DebugLogger.error('SessionProvider: React hooks not available', new Error('React hooks not found'), { component: 'SessionProvider' });
+    
+    // Return a simple error component instead of throwing
+    return React.createElement('div', {
+      style: {
+        padding: '20px',
+        backgroundColor: '#fee2e2',
+        border: '1px solid #fecaca',
+        borderRadius: '6px',
+        color: '#991b1b',
+        textAlign: 'center'
+      }
+    }, 'React Error: Hooks not available. Please refresh the page.');
   }
   
   const [currentSession, setCurrentSession] = useState(null);
