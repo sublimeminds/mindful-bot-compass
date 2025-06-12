@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -123,7 +124,7 @@ const Chat = () => {
       // Start real-time session first
       await startRealtimeSession();
       
-      // Start regular session with only the mood_before parameter
+      // Start regular session with mood before
       await startSession(7);
       
       toast({
@@ -181,7 +182,7 @@ const Chat = () => {
     const userMessage = input.trim();
     setInput('');
     
-    // Send message without the personality prompt parameter
+    // Send message
     await sendMessage(userMessage);
   };
 

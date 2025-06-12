@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -68,7 +69,7 @@ const TherapyChat = () => {
     }
 
     try {
-      await startSession(5); // Default mood before
+      await startSession(5); // Mood before
       setSessionStarted(true);
       toast({
         title: "Session Started",
@@ -90,7 +91,7 @@ const TherapyChat = () => {
       
       toast({
         title: "Session Too Short",
-        description: `Please continue your session. You need at least 15 minutes and meaningful conversation. Current: ${duration} min, ${content.messageCount} messages.`,
+        description: `Please continue your session. You need at least 5 minutes and meaningful conversation. Current: ${duration} min, ${content.messageCount} messages.`,
         variant: "destructive",
       });
       return;
