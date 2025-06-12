@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { DebugLogger } from './debugLogger';
 
 interface HookValidationResult {

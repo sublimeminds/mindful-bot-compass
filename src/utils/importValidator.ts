@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { DebugLogger } from './debugLogger';
 
 interface ImportValidationResult {
@@ -34,7 +34,7 @@ class ImportValidator {
       // Check if React hooks are available
       if (typeof React !== 'undefined') {
         const expectedHooks = ['useState', 'useEffect', 'useContext', 'useCallback', 'useMemo', 'useRef'];
-        const missingHooks = expectedHooks.filter(hook => !React[hook]);
+        const missingHooks = expectedHooks.filter(hook => !(hook in React));
         
         if (missingHooks.length > 0) {
           issues.push(`Missing React hooks: ${missingHooks.join(', ')}`);
@@ -48,8 +48,8 @@ class ImportValidator {
         // In development, we can check for common import pattern issues
         if (import.meta.env.DEV) {
           // This would ideally be done at build time, but we can add runtime checks
-          const currentScript = document.currentScript;
-          if (currentScript) {
+          const currentScript = document.currentScript as HTMLScriptElement;
+          if (currentScript && currentScript.src) {
             DebugLogger.debug('ImportValidator: Validating current script context', {
               component: 'ImportValidator',
               src: currentScript.src
