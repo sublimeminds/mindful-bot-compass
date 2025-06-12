@@ -14,6 +14,7 @@ import SessionHistory from '@/pages/SessionHistory';
 import Analytics from '@/pages/Analytics';
 import SessionAnalytics from '@/pages/SessionAnalytics';
 import Profile from '@/pages/Profile';
+import Plans from '@/pages/Plans';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import AdminLayout from '@/components/admin/AdminLayout';
 import AdminDashboard from '@/pages/AdminDashboard';
@@ -61,6 +62,7 @@ function App() {
       <Route path="/auth" element={<Auth />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/therapist-matching" element={<TherapistMatching />} />
+      <Route path="/plans" element={<Plans />} />
 
       {/* Protected user routes */}
       <Route path="/dashboard" element={

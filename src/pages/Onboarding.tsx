@@ -11,11 +11,13 @@ import { supabase } from '@/integrations/supabase/client';
 import GoalsStep from "@/components/onboarding/GoalsStep";
 import PreferencesStep from "@/components/onboarding/PreferencesStep";
 import TherapistPersonalityStep from "@/components/onboarding/TherapistPersonalityStep";
+import PlanSelector from "@/components/subscription/PlanSelector";
 
 const STEPS = [
   'Goals & Challenges',
   'Therapy Preferences', 
   'Choose Your Therapist',
+  'Select Your Plan',
   'Complete Setup'
 ];
 
@@ -24,10 +26,16 @@ const Onboarding = () => {
   const [goals, setGoals] = useState<string[]>([]);
   const [preferences, setPreferences] = useState<string[]>([]);
   const [selectedPersonality, setSelectedPersonality] = useState<string | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<{planId: string, billingCycle: 'monthly' | 'yearly'} | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const handlePlanSelect = (planId: string, billingCycle: 'monthly' | 'yearly') => {
+    setSelectedPlan({ planId, billingCycle });
+    setCurrentStep(currentStep + 1);
+  };
 
   const handleComplete = async () => {
     if (!user) return;
@@ -52,6 +60,31 @@ const Onboarding = () => {
         .eq('id', user.id);
 
       if (updateError) throw updateError;
+
+      // If a paid plan was selected, redirect to checkout
+      if (selectedPlan && selectedPlan.planId) {
+        const { data: plan } = await supabase
+          .from('subscription_plans')
+          .select('name')
+          .eq('id', selectedPlan.planId)
+          .single();
+        
+        if (plan && plan.name !== 'Free') {
+          const { data, error } = await supabase.functions.invoke('create-checkout', {
+            body: { 
+              planId: selectedPlan.planId, 
+              billingCycle: selectedPlan.billingCycle 
+            }
+          });
+
+          if (error) throw error;
+
+          if (data.url) {
+            window.location.href = data.url;
+            return;
+          }
+        }
+      }
 
       toast({
         title: "Welcome to MindfulAI!",
@@ -154,6 +187,23 @@ const Onboarding = () => {
             )}
 
             {currentStep === 3 && (
+              <div className="space-y-6">
+                <div className="text-center mb-8">
+                  <h2 className="text-2xl font-bold mb-4">Choose Your Plan</h2>
+                  <p className="text-muted-foreground">
+                    Select the plan that best fits your mental health needs
+                  </p>
+                </div>
+                <PlanSelector onPlanSelect={handlePlanSelect} />
+                <div className="flex justify-between mt-8">
+                  <Button variant="outline" onClick={prevStep}>
+                    Back
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {currentStep === 4 && (
               <div className="text-center space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold mb-4">You're All Set!</h2>
@@ -168,6 +218,7 @@ const Onboarding = () => {
                     <p><strong>Goals:</strong> {goals.length} selected</p>
                     <p><strong>Preferences:</strong> {preferences.length} selected</p>
                     <p><strong>Therapist:</strong> {selectedPersonality ? 'Selected' : 'Default'}</p>
+                    <p><strong>Plan:</strong> {selectedPlan ? 'Selected' : 'Free'}</p>
                   </div>
                 </div>
 

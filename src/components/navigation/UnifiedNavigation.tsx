@@ -1,99 +1,26 @@
 
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { 
-  LayoutDashboard,
-  MessageSquare, 
-  TrendingUp, 
-  Target, 
-  Heart,
-  Brain,
-  Calendar,
-  BarChart3,
-  Settings,
-  History,
-  User,
-  Shield
-} from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useSubscription } from '@/hooks/useSubscription';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { 
+  MessageCircle, 
+  Target, 
+  BarChart3, 
+  Heart, 
+  BookOpen, 
+  History,
+  Crown,
+  Sparkles
+} from 'lucide-react';
 
 const UnifiedNavigation = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const { isAuthenticated } = useAuth();
-  const { isAdmin } = useAdmin();
-
-  // Public navigation items
-  const publicNavItems = [
-    { to: '#features', icon: Heart, label: 'Features' },
-    { to: '#pricing', icon: Target, label: 'Pricing' },
-    { to: '/auth', icon: User, label: 'Sign In' }
-  ];
-
-  // Authenticated navigation items
-  const mainNavItems = [
-    {
-      label: 'Dashboard',
-      icon: LayoutDashboard,
-      path: '/',
-      description: 'Overview & insights'
-    },
-    {
-      label: 'Therapy',
-      icon: MessageSquare,
-      path: '/therapy',
-      description: 'Start session',
-      highlight: true
-    },
-    {
-      label: 'Analytics',
-      icon: BarChart3,
-      path: '/analytics',
-      description: 'Progress insights'
-    },
-    {
-      label: 'Goals',
-      icon: Target,
-      path: '/goals',
-      description: 'Track progress'
-    },
-    {
-      label: 'Mood',
-      icon: Heart,
-      path: '/mood-tracking',
-      description: 'Track emotions'
-    },
-    {
-      label: 'Sessions',
-      icon: History,
-      path: '/session-history',
-      description: 'View history'
-    },
-    {
-      label: 'Techniques',
-      icon: Brain,
-      path: '/techniques',
-      description: 'Learn skills'
-    },
-    {
-      label: 'Profile',
-      icon: Settings,
-      path: '/profile',
-      description: 'Settings'
-    }
-  ];
-
-  // Add admin navigation if user is admin
-  if (isAdmin) {
-    mainNavItems.push({
-      label: 'Admin',
-      icon: Shield,
-      path: '/admin',
-      description: 'Admin panel'
-    });
-  }
+  const { isFreePlan } = useSubscription();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const scrollToSection = (sectionId: string) => {
     if (sectionId.startsWith('#')) {
@@ -106,67 +33,62 @@ const UnifiedNavigation = () => {
     }
   };
 
-  const handleNavigation = (path: string) => {
-    if (path.startsWith('#')) {
-      scrollToSection(path);
-    } else {
-      navigate(path);
-    }
-  };
+  // Public navigation items
+  const publicNavItems = [
+    { id: '#features', label: 'Features', icon: Sparkles },
+    { id: '#pricing', label: 'Pricing', icon: Crown }
+  ];
 
-  if (!isAuthenticated) {
-    return (
-      <div className="flex items-center space-x-1">
-        {publicNavItems.map(({ to, icon: Icon, label }) => {
-          const isActive = to.startsWith('#') ? false : location.pathname === to;
-          return (
-            <Button
-              key={to}
-              variant={isActive ? "default" : "ghost"}
-              size="sm"
-              onClick={() => handleNavigation(to)}
-              className={`flex items-center space-x-2 ${
-                isActive 
-                  ? 'bg-therapy-600 text-white' 
-                  : 'hover:bg-therapy-50 text-foreground/80 hover:text-foreground'
-              }`}
-            >
-              <Icon className="h-4 w-4" />
-              <span>{label}</span>
-            </Button>
-          );
-        })}
-      </div>
-    );
-  }
+  // Authenticated navigation items
+  const authNavItems = [
+    { id: '/therapy', label: 'Therapy', icon: MessageCircle },
+    { id: '/mood-tracking', label: 'Mood', icon: Heart },
+    { id: '/goals', label: 'Goals', icon: Target },
+    { id: '/techniques', label: 'Techniques', icon: BookOpen },
+    { id: '/session-history', label: 'History', icon: History },
+    { id: '/analytics', label: 'Analytics', icon: BarChart3 }
+  ];
+
+  const navItems = isAuthenticated ? authNavItems : publicNavItems;
 
   return (
-    <div className="flex items-center space-x-1 overflow-x-auto">
-      {mainNavItems.map((item) => {
+    <div className="flex items-center space-x-6">
+      {navItems.map((item) => {
         const Icon = item.icon;
-        const isActive = location.pathname === item.path || 
-          (item.path === '/admin' && location.pathname.startsWith('/admin'));
-        
+        const isActive = item.id.startsWith('#') 
+          ? false // Handle scroll-based active state elsewhere
+          : location.pathname === item.id;
+
         return (
-          <Button
-            key={item.path}
-            variant={isActive ? "default" : item.highlight ? "secondary" : "ghost"}
-            size="sm"
-            onClick={() => navigate(item.path)}
-            className={`
-              flex items-center space-x-2 whitespace-nowrap transition-all duration-200
-              ${item.highlight && !isActive ? 'bg-therapy-50 text-therapy-700 hover:bg-therapy-100 border border-therapy-200' : ''}
-              ${isActive ? 'bg-therapy-600 text-white shadow-sm' : ''}
-              ${!isActive && !item.highlight ? 'hover:bg-muted/50 text-foreground/80 hover:text-foreground' : ''}
-              ${item.path === '/admin' ? 'bg-orange-500/10 text-orange-400 hover:bg-orange-500/20' : ''}
-            `}
-            title={item.description}
+          <button
+            key={item.id}
+            onClick={() => scrollToSection(item.id)}
+            className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-muted/50 ${
+              isActive 
+                ? 'text-therapy-600 bg-therapy-50' 
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
           >
             <Icon className="h-4 w-4" />
-            <span className="hidden sm:inline">{item.label}</span>
-          </Button>
+            <span>{item.label}</span>
+          </button>
         );
       })}
+
+      {/* Upgrade button for free users */}
+      {isAuthenticated && isFreePlan() && (
+        <Button
+          onClick={() => navigate('/plans')}
+          size="sm"
+          className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-semibold rounded-full px-4 py-2 shadow-lg hover:shadow-therapy-500/30 transition-all duration-300 hover:scale-105 ml-4"
+        >
+          <Crown className="h-4 w-4 mr-2" />
+          Upgrade
+          <Badge variant="secondary" className="ml-2 bg-white/20 text-white border-none">
+            Pro
+          </Badge>
+        </Button>
+      )}
     </div>
   );
 };

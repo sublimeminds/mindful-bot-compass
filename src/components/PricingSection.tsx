@@ -1,7 +1,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart } from "lucide-react";
+import { Heart, Crown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const plans = [
   {
@@ -11,27 +12,46 @@ const plans = [
     description: "Start your healing journey with basic AI therapy support",
     features: [
       "3 AI therapy sessions per month",
-      "Basic emotional support",
+      "Basic mood tracking",
+      "Limited goal setting (3 goals max)",
       "Community access",
-      "Progress tracking",
-      "24/7 crisis resources"
+      "Basic progress reports"
     ],
     buttonText: "Get Started Free",
     popular: false
   },
   {
-    name: "Premium",
-    price: "$29",
+    name: "Basic",
+    price: "$9.99",
     period: "per month",
-    description: "Comprehensive AI therapy with advanced features and unlimited access",
+    yearlyPrice: "$99.99",
+    description: "Extended AI therapy with enhanced features and insights",
+    features: [
+      "15 AI therapy sessions per month",
+      "Advanced mood tracking with insights",
+      "Unlimited goals with basic templates",
+      "Email support",
+      "Weekly progress reports",
+      "Basic crisis detection"
+    ],
+    buttonText: "Start Basic Plan",
+    popular: false
+  },
+  {
+    name: "Premium",
+    price: "$24.99",
+    period: "per month",
+    yearlyPrice: "$249.99",
+    description: "Comprehensive AI therapy with unlimited access and advanced features",
     features: [
       "Unlimited AI therapy sessions",
-      "Advanced therapeutic techniques",
+      "Advanced therapeutic techniques (CBT, DBT, mindfulness)",
       "Personalized treatment plans",
-      "Priority support",
-      "Detailed progress analytics",
-      "Custom meditation & exercises",
-      "Export session transcripts"
+      "Priority AI responses",
+      "Advanced analytics and insights",
+      "Crisis intervention protocols",
+      "Export session transcripts",
+      "Priority support"
     ],
     buttonText: "Start Premium Trial",
     popular: true
@@ -39,6 +59,12 @@ const plans = [
 ];
 
 const PricingSection = () => {
+  const navigate = useNavigate();
+
+  const handlePlanSelect = () => {
+    navigate('/plans');
+  };
+
   return (
     <section id="pricing" className="py-20 gradient-therapy">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,12 +73,12 @@ const PricingSection = () => {
             Choose Your Healing Path
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Start with our free plan or unlock the full potential of AI therapy with Premium. 
+            Start with our free plan or unlock the full potential of AI therapy with our paid plans. 
             Your mental health journey should be accessible to everyone.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <Card 
               key={index} 
@@ -66,7 +92,7 @@ const PricingSection = () => {
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <div className="bg-gradient-to-r from-therapy-500 to-calm-500 text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center space-x-1">
-                    <Heart className="w-4 h-4" />
+                    <Crown className="w-4 h-4" />
                     <span>Most Popular</span>
                   </div>
                 </div>
@@ -79,6 +105,11 @@ const PricingSection = () => {
                 <div className="mb-4">
                   <span className="text-4xl font-bold text-foreground">{plan.price}</span>
                   <span className="text-muted-foreground">/{plan.period}</span>
+                  {plan.yearlyPrice && (
+                    <div className="text-sm text-green-600 mt-1">
+                      Save 17% with yearly billing (${plan.yearlyPrice}/year)
+                    </div>
+                  )}
                 </div>
                 <p className="text-muted-foreground">{plan.description}</p>
               </CardHeader>
@@ -94,6 +125,7 @@ const PricingSection = () => {
                 </ul>
                 
                 <Button 
+                  onClick={handlePlanSelect}
                   className={`w-full py-3 text-lg font-semibold transition-all duration-300 ${
                     plan.popular
                       ? 'bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white border-0 shadow-lg hover:shadow-xl'
