@@ -33,6 +33,22 @@ const Onboarding = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Auto-select therapist based on previous choices
+  const autoSelectTherapist = () => {
+    if (goals.includes('Reduce anxiety') || goals.includes('Manage stress')) {
+      return 'mindfulness-coach';
+    } else if (goals.includes('Manage depression') || goals.includes('Build confidence')) {
+      return 'cbt-specialist';
+    } else if (goals.includes('Work through trauma')) {
+      return 'trauma-informed';
+    } else if (goals.includes('Improve relationships') || goals.includes('Improve communication')) {
+      return 'relationship-counselor';
+    } else if (goals.includes('Find life purpose') || goals.includes('Develop coping skills')) {
+      return 'solution-focused';
+    }
+    return 'holistic-wellness';
+  };
+
   const handlePlanSelect = (planId: string, billingCycle: 'monthly' | 'yearly') => {
     setSelectedPlan({ planId, billingCycle });
   };
@@ -53,7 +69,8 @@ const Onboarding = () => {
         .insert({
           user_id: user.id,
           goals,
-          preferences
+          preferences,
+          therapist_personality: selectedPersonality
         });
 
       if (insertError) throw insertError;
@@ -85,6 +102,12 @@ const Onboarding = () => {
   };
 
   const nextStep = () => {
+    if (currentStep === 2 && !selectedPersonality) {
+      // Auto-select therapist when moving from step 2 to 3
+      const autoSelected = autoSelectTherapist();
+      setSelectedPersonality(autoSelected);
+    }
+    
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -150,6 +173,7 @@ const Onboarding = () => {
             {currentStep === 1 && (
               <PreferencesStep
                 selectedPreferences={preferences}
+                selectedGoals={goals}
                 onPreferenceToggle={(preference) => {
                   setPreferences(prev => 
                     prev.includes(preference) 
@@ -165,6 +189,8 @@ const Onboarding = () => {
             {currentStep === 2 && (
               <TherapistPersonalityStep
                 selectedPersonality={selectedPersonality}
+                selectedGoals={goals}
+                selectedPreferences={preferences}
                 onPersonalitySelect={setSelectedPersonality}
                 onNext={nextStep}
                 onBack={prevStep}
@@ -191,7 +217,7 @@ const Onboarding = () => {
 
                 {selectedPlan?.planId ? (
                   <StripeCheckout
-                    plan={selectedPlan.planId}
+                    planId={selectedPlan.planId}
                     billingCycle={selectedPlan.billingCycle}
                     onSuccess={handlePaymentSuccess}
                     onError={(error) => {
