@@ -209,12 +209,28 @@ const Onboarding = () => {
             )}
 
             {currentStep === 3 && (
-              <PlanSelectionStep
-                selectedPlan={selectedPlan}
-                onPlanSelect={handlePlanSelect}
-                onNext={nextStep}
-                onBack={prevStep}
-              />
+              <div className="space-y-6">
+                <div className="text-center">
+                  <h2 className="text-2xl font-bold mb-4">Choose Your Plan</h2>
+                  <p className="text-muted-foreground">
+                    Select the plan that best fits your mental health journey
+                  </p>
+                </div>
+
+                {plans && plans.length > 0 ? (
+                  <PlanSelectionStep
+                    selectedPlan={selectedPlan}
+                    onPlanSelect={handlePlanSelect}
+                    onNext={nextStep}
+                    onBack={prevStep}
+                  />
+                ) : (
+                  <div className="text-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500 mx-auto mb-4"></div>
+                    <p className="text-muted-foreground">Loading plans...</p>
+                  </div>
+                )}
+              </div>
             )}
 
             {currentStep === 4 && (
