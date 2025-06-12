@@ -219,13 +219,6 @@ const Onboarding = () => {
                 {selectedPlan?.planId ? (
                   <StripeCheckout
                     onSuccess={handlePaymentSuccess}
-                    onError={(error) => {
-                      toast({
-                        title: "Payment Error",
-                        description: error,
-                        variant: "destructive",
-                      });
-                    }}
                   />
                 ) : (
                   <div className="text-center space-y-4">
