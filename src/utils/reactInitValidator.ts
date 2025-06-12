@@ -110,10 +110,10 @@ export const withReactValidation = <P extends object>(
     
     if (!validation.isValid) {
       const FallbackComponent = validation.fallbackComponent || ReactErrorFallback;
-      return <FallbackComponent error={validation.error} />;
+      return React.createElement(FallbackComponent, { error: validation.error });
     }
     
-    return <WrappedComponent {...props} />;
+    return React.createElement(WrappedComponent, props);
   };
   
   ValidatedComponent.displayName = `withReactValidation(${WrappedComponent.displayName || WrappedComponent.name})`;
