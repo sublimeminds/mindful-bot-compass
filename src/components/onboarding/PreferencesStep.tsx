@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -30,13 +29,13 @@ interface PreferencesStepProps {
 
 const PreferencesStep = ({ selectedPreferences, onPreferenceToggle, onNext, onBack }: PreferencesStepProps) => {
   // Pre-select default preferences if none are selected
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectedPreferences.length === 0) {
       defaultPreferences.forEach(pref => {
         onPreferenceToggle(pref);
       });
     }
-  }, []);
+  }, [selectedPreferences.length, onPreferenceToggle]);
 
   return (
     <div className="space-y-6">

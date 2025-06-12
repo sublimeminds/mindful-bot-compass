@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -151,9 +150,7 @@ const EnhancedAuthForm = () => {
     setErrors({});
 
     try {
-      const { error } = await signUp(formData.email, formData.password, {
-        full_name: formData.name
-      });
+      const { error } = await signUp(formData.email, formData.password, formData.name);
       
       if (error) {
         if (error.message.includes('already registered')) {
