@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -84,6 +83,7 @@ const SmartOnboardingFlow = () => {
         return (
           <PreferencesStep
             selectedPreferences={onboardingData.preferences}
+            selectedGoals={onboardingData.goals}
             onPreferenceToggle={(pref) => {
               const newPrefs = onboardingData.preferences.includes(pref)
                 ? onboardingData.preferences.filter(p => p !== pref)

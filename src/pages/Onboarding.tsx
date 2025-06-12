@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -217,8 +218,6 @@ const Onboarding = () => {
 
                 {selectedPlan?.planId ? (
                   <StripeCheckout
-                    planId={selectedPlan.planId}
-                    billingCycle={selectedPlan.billingCycle}
                     onSuccess={handlePaymentSuccess}
                     onError={(error) => {
                       toast({

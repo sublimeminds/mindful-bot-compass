@@ -85,9 +85,9 @@ const GoalsStep = ({ selectedGoals, onGoalToggle, onNext, onBack }: GoalsStepPro
         </p>
       </div>
 
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
+      <div className="bg-blue-50 p-3 rounded-lg border border-blue-200 mb-4">
         <div className="flex items-start space-x-2">
-          <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+          <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
           <div className="text-sm text-blue-800">
             <p className="font-medium mb-1">Good to know:</p>
             <p>You can adjust your goals and focus areas anytime in your profile settings. Your AI therapist will adapt to your changing needs.</p>
@@ -95,32 +95,32 @@ const GoalsStep = ({ selectedGoals, onGoalToggle, onNext, onBack }: GoalsStepPro
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
         {goalOptions.map((goal) => {
           const IconComponent = goal.icon;
           return (
             <Card 
               key={goal.name}
-              className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+              className={`cursor-pointer transition-all duration-200 hover:shadow-md h-24 ${
                 selectedGoals.includes(goal.name) 
                   ? 'ring-2 ring-therapy-500 bg-therapy-50' 
                   : 'hover:bg-gray-50'
               }`}
               onClick={() => onGoalToggle(goal.name)}
             >
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-3">
+              <CardContent className="p-3 h-full flex flex-col">
+                <div className="flex items-start space-x-2 h-full">
                   <Checkbox 
                     checked={selectedGoals.includes(goal.name)}
                     onChange={() => onGoalToggle(goal.name)}
-                    className="mt-1"
+                    className="mt-0.5"
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <IconComponent className="h-4 w-4 text-therapy-600 flex-shrink-0" />
-                      <span className="font-medium text-sm">{goal.name}</span>
+                    <div className="flex items-center space-x-1 mb-1">
+                      <IconComponent className="h-3 w-3 text-therapy-600 flex-shrink-0" />
+                      <span className="font-medium text-xs leading-tight">{goal.name}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-xs text-muted-foreground leading-tight line-clamp-2">
                       {goal.description}
                     </p>
                   </div>
@@ -131,7 +131,7 @@ const GoalsStep = ({ selectedGoals, onGoalToggle, onNext, onBack }: GoalsStepPro
         })}
       </div>
 
-      <div className="flex justify-between pt-6">
+      <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={onBack} disabled>
           Back
         </Button>

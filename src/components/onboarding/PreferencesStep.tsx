@@ -8,36 +8,42 @@ import { Settings, Brain, Heart, MessageCircle, Target, Shield, Smile } from "lu
 const preferenceOptions = [
   {
     name: 'Cognitive Behavioral Therapy (CBT)',
+    shortName: 'CBT',
     description: 'Evidence-based approach focusing on changing thought patterns',
     icon: Brain,
     keywords: ['anxiety', 'depression', 'stress', 'confidence']
   },
   {
     name: 'Mindfulness & Meditation',
+    shortName: 'Mindfulness',
     description: 'Present-moment awareness and relaxation techniques',
     icon: Heart,
     keywords: ['stress', 'anxiety', 'sleep', 'anger']
   },
   {
     name: 'Talk Therapy',
+    shortName: 'Talk Therapy',
     description: 'Open conversation to explore thoughts and feelings',
     icon: MessageCircle,
     keywords: ['depression', 'relationships', 'communication', 'life purpose']
   },
   {
     name: 'Solution-Focused Therapy',
+    shortName: 'Solution-Focused',
     description: 'Goal-oriented approach building on your strengths',
     icon: Target,
     keywords: ['confidence', 'life purpose', 'coping skills']
   },
   {
     name: 'Trauma-Informed Care',
+    shortName: 'Trauma Care',
     description: 'Safe, sensitive approach for processing difficult experiences',
     icon: Shield,
     keywords: ['trauma', 'boundaries']
   },
   {
     name: 'Positive Psychology',
+    shortName: 'Positive Psychology',
     description: 'Focus on building happiness and life satisfaction',
     icon: Smile,
     keywords: ['confidence', 'life purpose', 'relationships']
@@ -87,38 +93,38 @@ const PreferencesStep = ({ selectedPreferences, selectedGoals, onPreferenceToggl
         </p>
       </div>
 
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+      <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
         <p className="text-sm text-blue-800">
           💡 <strong>Good to know:</strong> You can change your AI therapist style and preferences anytime in your profile settings.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {preferenceOptions.map((preference) => {
           const IconComponent = preference.icon;
           return (
             <Card 
               key={preference.name}
-              className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+              className={`cursor-pointer transition-all duration-200 hover:shadow-md h-20 ${
                 selectedPreferences.includes(preference.name) 
                   ? 'ring-2 ring-therapy-500 bg-therapy-50' 
                   : 'hover:bg-gray-50'
               }`}
               onClick={() => onPreferenceToggle(preference.name)}
             >
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-3">
+              <CardContent className="p-3 h-full">
+                <div className="flex items-start space-x-3 h-full">
                   <Checkbox 
                     checked={selectedPreferences.includes(preference.name)}
                     onChange={() => onPreferenceToggle(preference.name)}
                     className="mt-1"
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 mb-2">
+                    <div className="flex items-center space-x-2 mb-1">
                       <IconComponent className="h-4 w-4 text-therapy-600" />
-                      <span className="font-medium text-sm">{preference.name}</span>
+                      <span className="font-medium text-sm">{preference.shortName}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground leading-tight line-clamp-2">
                       {preference.description}
                     </p>
                   </div>
@@ -129,7 +135,7 @@ const PreferencesStep = ({ selectedPreferences, selectedGoals, onPreferenceToggl
         })}
       </div>
 
-      <div className="flex justify-between pt-6">
+      <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={onBack}>
           Back
         </Button>
