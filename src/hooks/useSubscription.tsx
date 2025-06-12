@@ -63,7 +63,25 @@ export const useSubscription = () => {
       return;
     }
 
-    setSubscription(data);
+    if (data) {
+      // Type-safe conversion from Supabase data
+      const typedSubscription: UserSubscription = {
+        id: data.id,
+        plan_id: data.plan_id,
+        status: data.status,
+        billing_cycle: data.billing_cycle,
+        current_period_end: data.current_period_end,
+        plan: {
+          id: data.plan.id,
+          name: data.plan.name,
+          price_monthly: data.plan.price_monthly,
+          price_yearly: data.plan.price_yearly,
+          features: data.plan.features as Record<string, string>,
+          limits: data.plan.limits as Record<string, number>
+        }
+      };
+      setSubscription(typedSubscription);
+    }
   };
 
   const fetchPlans = async () => {
@@ -78,7 +96,18 @@ export const useSubscription = () => {
       return;
     }
 
-    setPlans(data || []);
+    if (data) {
+      // Type-safe conversion from Supabase data
+      const typedPlans: SubscriptionPlan[] = data.map(plan => ({
+        id: plan.id,
+        name: plan.name,
+        price_monthly: plan.price_monthly,
+        price_yearly: plan.price_yearly,
+        features: plan.features as Record<string, string>,
+        limits: plan.limits as Record<string, number>
+      }));
+      setPlans(typedPlans);
+    }
     setLoading(false);
   };
 

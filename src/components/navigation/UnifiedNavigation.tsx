@@ -18,9 +18,12 @@ import {
 
 const UnifiedNavigation = () => {
   const { isAuthenticated } = useAuth();
-  const { isFreePlan } = useSubscription();
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Only call useSubscription if authenticated to avoid hook issues
+  const subscriptionData = useSubscription();
+  const isFreePlan = isAuthenticated ? subscriptionData.isFreePlan() : false;
 
   const scrollToSection = (sectionId: string) => {
     if (sectionId.startsWith('#')) {
@@ -76,7 +79,7 @@ const UnifiedNavigation = () => {
       })}
 
       {/* Upgrade button for free users */}
-      {isAuthenticated && isFreePlan() && (
+      {isAuthenticated && isFreePlan && (
         <Button
           onClick={() => navigate('/plans')}
           size="sm"
