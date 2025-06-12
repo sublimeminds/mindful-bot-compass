@@ -23,10 +23,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   DebugLogger.debug('AuthProvider: Initializing', { component: 'AuthProvider' });
   
-  // Validate React hooks are available before using them
-  if (typeof useState === 'undefined') {
-    DebugLogger.error('AuthProvider: useState is not available', new Error('React hooks not found'), { component: 'AuthProvider' });
-    throw new Error('React hooks are not available. This might indicate a React import issue.');
+  // Add explicit React availability check
+  if (!React || !React.useState) {
+    DebugLogger.error('AuthProvider: React or React hooks not available', new Error('React hooks not found'), { component: 'AuthProvider' });
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-600">React hooks are not available. Please refresh the page.</div>
+      </div>
+    );
   }
   
   const [user, setUser] = useState<User | null>(null);

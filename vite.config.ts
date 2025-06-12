@@ -11,34 +11,19 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react({
-      // Configure SWC for better React hook handling
-      jsxImportSource: 'react',
-      tsDecorators: true,
-    }),
+    react(),
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Add explicit React alias to prevent bundling conflicts
-      "react": path.resolve(__dirname, "./node_modules/react"),
-      "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
     },
-    dedupe: ['react', 'react-dom'], // Ensure single React instance
   },
   optimizeDeps: {
-    // Ensure React is properly pre-bundled
-    include: ['react', 'react-dom', 'react/jsx-runtime'],
-    force: true
+    include: ['react', 'react-dom'],
   },
   define: {
-    // Ensure React is available globally in development
     global: 'globalThis',
   },
-  esbuild: {
-    // Remove JSX inject to prevent conflicts
-    jsx: 'automatic',
-  }
 }));
