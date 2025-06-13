@@ -1,5 +1,6 @@
 
 import { Link } from "react-router-dom";
+import TreeLogo from "@/components/ui/TreeLogo";
 
 const Footer = () => {
   return (
@@ -9,10 +10,10 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <div className="flex items-center justify-center w-10 h-10 bg-white rounded-xl p-1">
-                <img 
-                  src="/lovable-uploads/3fc4b2d8-fc0a-4b0e-83a0-8c93962e00da.png" 
-                  alt="TherapySync Logo" 
-                  className="w-full h-full object-contain"
+                <TreeLogo 
+                  size="sm"
+                  animated={true}
+                  className="text-therapy-600"
                 />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-therapy-400 to-calm-400 bg-clip-text text-transparent">
@@ -53,10 +54,10 @@ const Footer = () => {
             </p>
             <div className="flex items-center space-x-4">
               <span className="text-slate-400 text-sm">Made with</span>
-              <img 
-                src="/lovable-uploads/3fc4b2d8-fc0a-4b0e-83a0-8c93962e00da.png" 
-                alt="TherapySync" 
-                className="w-4 h-4"
+              <TreeLogo 
+                size="sm"
+                animated={true}
+                className="opacity-60"
               />
               <span className="text-slate-400 text-sm">for mental wellness</span>
             </div>

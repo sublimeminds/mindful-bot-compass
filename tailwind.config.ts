@@ -137,6 +137,118 @@ export default {
 						transform: 'scale(1)',
 						opacity: '1'
 					}
+				},
+				// Tree-inspired animations
+				'tree-breathe': {
+					'0%, 100%': {
+						transform: 'scale(1)',
+						filter: 'brightness(1)'
+					},
+					'50%': {
+						transform: 'scale(1.02)',
+						filter: 'brightness(1.05)'
+					}
+				},
+				'tree-grow': {
+					'0%': {
+						transform: 'scale(1) rotate(0deg)'
+					},
+					'50%': {
+						transform: 'scale(1.1) rotate(1deg)'
+					},
+					'100%': {
+						transform: 'scale(1) rotate(0deg)'
+					}
+				},
+				'leaf-float': {
+					'0%, 100%': {
+						transform: 'translateY(0px) translateX(0px) rotate(0deg)'
+					},
+					'25%': {
+						transform: 'translateY(-5px) translateX(2px) rotate(1deg)'
+					},
+					'50%': {
+						transform: 'translateY(-8px) translateX(-1px) rotate(-1deg)'
+					},
+					'75%': {
+						transform: 'translateY(-3px) translateX(1px) rotate(0.5deg)'
+					}
+				},
+				'tree-growth': {
+					'0%': {
+						transform: 'scale(0.8)',
+						opacity: '0.6'
+					},
+					'50%': {
+						transform: 'scale(1.1)',
+						opacity: '1'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '0.9'
+					}
+				},
+				'trunk-grow': {
+					'0%': {
+						transform: 'scaleY(0.5)',
+						transformOrigin: 'bottom'
+					},
+					'100%': {
+						transform: 'scaleY(1)',
+						transformOrigin: 'bottom'
+					}
+				},
+				'leaf-grow-1': {
+					'0%': {
+						transform: 'scale(0)',
+						opacity: '0'
+					},
+					'60%': {
+						transform: 'scale(1.2)',
+						opacity: '0.8'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					}
+				},
+				'leaf-grow-2': {
+					'0%': {
+						transform: 'scale(0)',
+						opacity: '0'
+					},
+					'70%': {
+						transform: 'scale(1.15)',
+						opacity: '0.9'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					}
+				},
+				'leaf-grow-3': {
+					'0%': {
+						transform: 'scale(0)',
+						opacity: '0'
+					},
+					'80%': {
+						transform: 'scale(1.1)',
+						opacity: '1'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					}
+				},
+				'roots-grow': {
+					'0%': {
+						strokeDasharray: '0 100',
+						opacity: '0'
+					},
+					'100%': {
+						strokeDasharray: '100 0',
+						opacity: '0.7'
+					}
 				}
 			},
 			animation: {
@@ -144,7 +256,17 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.5s ease-out',
 				'float': 'float 3s ease-in-out infinite',
-				'grow': 'grow 2s ease-in-out infinite'
+				'grow': 'grow 2s ease-in-out infinite',
+				// Tree animations
+				'tree-breathe': 'tree-breathe 4s ease-in-out infinite',
+				'tree-grow': 'tree-grow 2s ease-out infinite',
+				'leaf-float': 'leaf-float 8s ease-in-out infinite',
+				'tree-growth': 'tree-growth 3s ease-out infinite',
+				'trunk-grow': 'trunk-grow 2s ease-out infinite',
+				'leaf-grow-1': 'leaf-grow-1 2.5s ease-out infinite',
+				'leaf-grow-2': 'leaf-grow-2 3s ease-out infinite',
+				'leaf-grow-3': 'leaf-grow-3 3.5s ease-out infinite',
+				'roots-grow': 'roots-grow 2s ease-out infinite'
 			}
 		}
 	},

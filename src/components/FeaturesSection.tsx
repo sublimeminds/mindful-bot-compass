@@ -31,7 +31,7 @@ const FeaturesSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Why Choose MindfulAI?
+            Why Choose TherapySync?
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Our AI therapy platform combines cutting-edge technology with proven therapeutic approaches 
@@ -43,11 +43,11 @@ const FeaturesSection = () => {
           {features.map((feature, index) => (
             <Card 
               key={index} 
-              className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in gradient-card"
+              className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in gradient-card group hover:animate-tree-grow"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <CardContent className="p-6 text-center">
-                <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-therapy-500 to-calm-500 rounded-xl mx-auto mb-4">
+                <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-therapy-500 to-calm-500 rounded-xl mx-auto mb-4 group-hover:animate-tree-breathe">
                   <feature.icon className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-foreground mb-3">

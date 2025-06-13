@@ -146,6 +146,168 @@
   .bg-calm-900 { background-color: hsl(var(--calm-900)); }
   .bg-calm-950 { background-color: hsl(var(--calm-950)); }
 
+  /* Tree-Inspired Animations */
+  
+  /* Tree breathing - gentle pulsing like a living tree */
+  .animate-tree-breathe {
+    animation: treeBreathe 4s ease-in-out infinite;
+  }
+  
+  @keyframes treeBreathe {
+    0%, 100% { 
+      transform: scale(1);
+      filter: brightness(1);
+    }
+    50% { 
+      transform: scale(1.02);
+      filter: brightness(1.05);
+    }
+  }
+
+  /* Tree growth - expanding like a growing tree */
+  .animate-tree-grow {
+    animation: treeGrow 2s ease-out infinite;
+  }
+  
+  @keyframes treeGrow {
+    0% { 
+      transform: scale(1) rotate(0deg);
+    }
+    50% { 
+      transform: scale(1.1) rotate(1deg);
+    }
+    100% { 
+      transform: scale(1) rotate(0deg);
+    }
+  }
+
+  /* Leaf floating - gentle movement like leaves in breeze */
+  .animate-leaf-float {
+    animation: leafFloat 8s ease-in-out infinite;
+  }
+  
+  @keyframes leafFloat {
+    0%, 100% { 
+      transform: translateY(0px) translateX(0px) rotate(0deg);
+    }
+    25% { 
+      transform: translateY(-5px) translateX(2px) rotate(1deg);
+    }
+    50% { 
+      transform: translateY(-8px) translateX(-1px) rotate(-1deg);
+    }
+    75% { 
+      transform: translateY(-3px) translateX(1px) rotate(0.5deg);
+    }
+  }
+
+  /* Tree Loading Animations */
+  .animate-tree-growth {
+    animation: treeGrowthSequence 3s ease-out infinite;
+  }
+  
+  @keyframes treeGrowthSequence {
+    0% { 
+      transform: scale(0.8);
+      opacity: 0.6;
+    }
+    50% { 
+      transform: scale(1.1);
+      opacity: 1;
+    }
+    100% { 
+      transform: scale(1);
+      opacity: 0.9;
+    }
+  }
+
+  .animate-trunk-grow {
+    animation: trunkGrow 2s ease-out infinite;
+  }
+  
+  @keyframes trunkGrow {
+    0% { 
+      transform: scaleY(0.5);
+      transform-origin: bottom;
+    }
+    100% { 
+      transform: scaleY(1);
+      transform-origin: bottom;
+    }
+  }
+
+  .animate-leaf-grow-1 {
+    animation: leafGrow1 2.5s ease-out infinite;
+  }
+  
+  .animate-leaf-grow-2 {
+    animation: leafGrow2 3s ease-out infinite;
+  }
+  
+  .animate-leaf-grow-3 {
+    animation: leafGrow3 3.5s ease-out infinite;
+  }
+  
+  @keyframes leafGrow1 {
+    0% { 
+      transform: scale(0);
+      opacity: 0;
+    }
+    60% { 
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
+    100% { 
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes leafGrow2 {
+    0% { 
+      transform: scale(0);
+      opacity: 0;
+    }
+    70% { 
+      transform: scale(1.15);
+      opacity: 0.9;
+    }
+    100% { 
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes leafGrow3 {
+    0% { 
+      transform: scale(0);
+      opacity: 0;
+    }
+    80% { 
+      transform: scale(1.1);
+      opacity: 1;
+    }
+    100% { 
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-roots-grow {
+    animation: rootsGrow 2s ease-out infinite;
+  }
+  
+  @keyframes rootsGrow {
+    0% { 
+      stroke-dasharray: 0 100;
+      opacity: 0;
+    }
+    100% { 
+      stroke-dasharray: 100 0;
+      opacity: 0.7;
+    }
+  }
+
   /* Enhanced animations with nature-inspired themes */
   .animate-float {
     animation: float 6s ease-in-out infinite;
@@ -229,5 +391,20 @@
 
   .shadow-calm {
     box-shadow: 0 20px 40px -12px rgba(14, 165, 233, 0.25);
+  }
+
+  /* Reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-tree-breathe,
+    .animate-tree-grow,
+    .animate-leaf-float,
+    .animate-tree-growth,
+    .animate-trunk-grow,
+    .animate-leaf-grow-1,
+    .animate-leaf-grow-2,
+    .animate-leaf-grow-3,
+    .animate-roots-grow {
+      animation: none;
+    }
   }
 }

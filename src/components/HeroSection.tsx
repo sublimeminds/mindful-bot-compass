@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import AuthModal from "./AuthModal";
 import QuickSignupWithPlan from "./subscription/QuickSignupWithPlan";
+import TreeLogo from "@/components/ui/TreeLogo";
 
 const HeroSection = () => {
   console.log('HeroSection: Component rendering');
@@ -36,11 +37,11 @@ const HeroSection = () => {
               </div>
               
               <div className="flex items-center justify-center mb-8">
-                <div className="flex items-center justify-center w-24 h-24 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy animate-grow">
-                  <img 
-                    src="/lovable-uploads/3fc4b2d8-fc0a-4b0e-83a0-8c93962e00da.png" 
-                    alt="TherapySync Tree Logo" 
-                    className="w-16 h-16 object-contain"
+                <div className="flex items-center justify-center w-24 h-24 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy animate-tree-breathe">
+                  <TreeLogo 
+                    size="lg"
+                    animated={true}
+                    className="drop-shadow-sm"
                   />
                 </div>
               </div>
@@ -66,7 +67,7 @@ const HeroSection = () => {
                 <QuickSignupWithPlan>
                   <Button 
                     size="lg" 
-                    className="gradient-nature text-white border-0 px-10 py-4 text-xl font-semibold shadow-therapy hover:shadow-3xl transition-all duration-300 hover:scale-105"
+                    className="gradient-nature text-white border-0 px-10 py-4 text-xl font-semibold shadow-therapy hover:shadow-3xl transition-all duration-300 hover:scale-105 hover:animate-tree-grow"
                   >
                     Start Your Journey
                     <ArrowRight className="h-5 w-5 ml-2" />
@@ -76,13 +77,13 @@ const HeroSection = () => {
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="border-2 border-therapy-300 text-therapy-700 hover:bg-therapy-50 px-10 py-4 text-xl font-semibold backdrop-blur-sm"
+                  className="border-2 border-therapy-300 text-therapy-700 hover:bg-therapy-50 px-10 py-4 text-xl font-semibold backdrop-blur-sm group"
                   onClick={scrollToDemo}
                 >
-                  <img 
-                    src="/lovable-uploads/3fc4b2d8-fc0a-4b0e-83a0-8c93962e00da.png" 
-                    alt="TherapySync" 
-                    className="h-5 w-5 mr-2"
+                  <TreeLogo 
+                    size="sm"
+                    animated={true}
+                    className="mr-2 group-hover:animate-tree-grow"
                   />
                   See How It Works
                 </Button>
@@ -99,11 +100,7 @@ const HeroSection = () => {
                   <span className="font-medium">256-bit Encryption</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <img 
-                    src="/lovable-uploads/3fc4b2d8-fc0a-4b0e-83a0-8c93962e00da.png" 
-                    alt="Evidence-Based" 
-                    className="w-4 h-4"
-                  />
+                  <TreeLogo size="sm" className="opacity-60" />
                   <span className="font-medium">Evidence-Based</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -116,10 +113,10 @@ const HeroSection = () => {
         </div>
         
         {/* Nature-inspired decorative elements */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-therapy-200/30 rounded-full opacity-40 animate-float"></div>
-        <div className="absolute bottom-20 right-10 w-24 h-24 bg-calm-200/30 rounded-full opacity-40 animate-float" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-5 w-16 h-16 bg-therapy-300/20 rounded-full opacity-30 animate-float" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-32 right-1/4 w-20 h-20 bg-calm-300/20 rounded-full opacity-25 animate-float" style={{ animationDelay: '3s' }}></div>
+        <div className="absolute top-20 left-10 w-32 h-32 bg-therapy-200/30 rounded-full opacity-40 animate-leaf-float"></div>
+        <div className="absolute bottom-20 right-10 w-24 h-24 bg-calm-200/30 rounded-full opacity-40 animate-leaf-float" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-5 w-16 h-16 bg-therapy-300/20 rounded-full opacity-30 animate-leaf-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-32 right-1/4 w-20 h-20 bg-calm-300/20 rounded-full opacity-25 animate-leaf-float" style={{ animationDelay: '3s' }}></div>
         
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/20 pointer-events-none"></div>

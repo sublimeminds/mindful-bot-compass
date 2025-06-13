@@ -17,6 +17,7 @@ import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import TrustSection from "@/components/landing/TrustSection";
 import CTASection from "@/components/landing/CTASection";
+import TreeLoadingSpinner from "@/components/ui/TreeLoadingSpinner";
 
 const Index = () => {
   const { isAuthenticated, user, loading } = useAuth();
@@ -29,7 +30,10 @@ const Index = () => {
       <>
         <Header />
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
+          <TreeLoadingSpinner 
+            size="lg" 
+            message="Syncing your mental wellness journey..."
+          />
         </div>
         <Footer />
       </>
