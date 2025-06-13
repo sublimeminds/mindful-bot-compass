@@ -33,7 +33,7 @@ const CTASection = () => {
   }, []);
 
   return (
-    <section className="py-20 bg-gradient-to-r from-therapy-500 via-therapy-600 to-calm-500 relative overflow-hidden">
+    <section className="py-20 gradient-nature relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-black/10"></div>
       <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
@@ -43,20 +43,20 @@ const CTASection = () => {
         <div className="max-w-4xl mx-auto text-center">
           {/* Urgency element */}
           <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-therapy-300 rounded-full animate-pulse"></div>
             <span className="text-white text-sm font-medium">
               {urgencyTimer} spots left for free assessment today
             </span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            Your Mental Health Journey
+            Your Mental Wellness Journey
             <span className="block">Starts Right Now</span>
           </h2>
           
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join thousands who've found hope, healing, and growth. 
-            Get personalized AI therapy support in under 5 minutes.
+            Sync with personalized AI therapy support in under 5 minutes.
           </p>
 
           {/* Benefits */}
@@ -77,9 +77,9 @@ const CTASection = () => {
             <QuickSignupWithPlan>
               <Button 
                 size="lg" 
-                className="bg-white text-therapy-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="bg-white text-therapy-700 hover:bg-gray-100 px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
               >
-                Start Your Free Assessment
+                Start Your Wellness Journey
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
             </QuickSignupWithPlan>

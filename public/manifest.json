@@ -1,30 +1,25 @@
 
 {
-  "name": "MindfulAI - AI Therapy Companion",
-  "short_name": "MindfulAI",
-  "description": "Your personalized AI therapy companion for mental wellness support",
+  "name": "TherapySync - AI Therapy Companion",
+  "short_name": "TherapySync",
+  "description": "Sync your mind with AI-powered therapy support for professional mental health guidance",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#8B5CF6",
+  "theme_color": "#22c55e",
   "orientation": "portrait-primary",
   "scope": "/",
-  "categories": ["health", "lifestyle", "medical"],
+  "categories": ["health", "lifestyle", "medical", "wellness"],
   "lang": "en",
   "icons": [
     {
-      "src": "/favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "/icon-192.png",
+      "src": "/lovable-uploads/3fc4b2d8-fc0a-4b0e-83a0-8c93962e00da.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/lovable-uploads/3fc4b2d8-fc0a-4b0e-83a0-8c93962e00da.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
@@ -34,11 +29,11 @@
     {
       "name": "Start Therapy Session",
       "short_name": "Therapy",
-      "description": "Begin a new therapy session",
+      "description": "Begin a new AI therapy session",
       "url": "/therapy",
       "icons": [
         {
-          "src": "/favicon.ico",
+          "src": "/lovable-uploads/3fc4b2d8-fc0a-4b0e-83a0-8c93962e00da.png",
           "sizes": "96x96"
         }
       ]
@@ -46,11 +41,11 @@
     {
       "name": "Track Mood",
       "short_name": "Mood",
-      "description": "Log your current mood",
+      "description": "Log your current mood and wellness",
       "url": "/mood-tracking",
       "icons": [
         {
-          "src": "/favicon.ico",
+          "src": "/lovable-uploads/3fc4b2d8-fc0a-4b0e-83a0-8c93962e00da.png",
           "sizes": "96x96"
         }
       ]

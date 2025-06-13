@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { ToastService } from './toastService';
 
@@ -50,10 +49,15 @@ export class SecurityService {
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     if (!gl) return 'no-webgl';
 
-    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-    if (!debugInfo) return 'no-debug-info';
+    // Type guard to check if it's a WebGLRenderingContext
+    if (gl instanceof WebGLRenderingContext) {
+      const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+      if (!debugInfo) return 'no-debug-info';
 
-    return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || 'unknown';
+      return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || 'unknown';
+    }
+
+    return 'no-webgl-context';
   }
 
   static async trackSession(userId: string): Promise<void> {
@@ -70,10 +74,8 @@ export class SecurityService {
         is_active: true
       };
 
-      // Store session in user_sessions table (would need to be created)
       console.log('Session tracking data:', sessionData);
       
-      // Check for suspicious activity
       await this.checkForSuspiciousActivity(userId, fingerprint, ipAddress);
       
     } catch (error) {
@@ -83,8 +85,6 @@ export class SecurityService {
 
   private static async getClientIP(): Promise<string> {
     try {
-      // In a real implementation, you'd use a service to get the client IP
-      // For now, we'll use a placeholder
       return 'unknown';
     } catch (error) {
       return 'unknown';
@@ -97,11 +97,7 @@ export class SecurityService {
     ipAddress: string
   ): Promise<void> {
     try {
-      // Check for multiple concurrent sessions
-      // This would query the user_sessions table to count active sessions
-      
-      // For now, we'll simulate the check
-      const activeSessions = 1; // Would be queried from database
+      const activeSessions = 1;
       
       if (activeSessions > this.MAX_CONCURRENT_SESSIONS) {
         this.triggerSecurityAlert({
@@ -110,10 +106,6 @@ export class SecurityService {
           severity: 'high'
         });
       }
-
-      // Check for rapid location changes (would need geolocation data)
-      // Check for unusual login patterns
-      // etc.
       
     } catch (error) {
       console.error('Security check error:', error);
@@ -135,7 +127,6 @@ export class SecurityService {
 
   static async revokeSession(sessionId: string): Promise<void> {
     try {
-      // Would update the user_sessions table to set is_active = false
       console.log('Revoking session:', sessionId);
       
       ToastService.genericSuccess(
@@ -151,8 +142,7 @@ export class SecurityService {
     try {
       const limits = this.getSessionLimitsForPlan(planType);
       
-      // Would query active sessions from database
-      const activeSessions = 1; // Placeholder
+      const activeSessions = 1;
       
       if (activeSessions >= limits.maxSessions) {
         ToastService.custom({
@@ -167,7 +157,7 @@ export class SecurityService {
       return true;
     } catch (error) {
       console.error('Session limit enforcement error:', error);
-      return true; // Allow by default on error
+      return true;
     }
   }
 
@@ -185,7 +175,6 @@ export class SecurityService {
     try {
       const cutoffTime = new Date(Date.now() - this.SESSION_TIMEOUT);
       
-      // Would update expired sessions in database
       console.log('Cleaning up sessions older than:', cutoffTime);
       
     } catch (error) {

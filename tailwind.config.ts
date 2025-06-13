@@ -64,6 +64,18 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				therapy: {
+					50: '#f0fdf0',
+					100: '#dcfce7',
+					200: '#bbf7d0',
+					300: '#86efac',
+					400: '#4ade80',
+					500: '#22c55e',
+					600: '#16a34a',
+					700: '#15803d',
+					800: '#166534',
+					900: '#14532d',
+				},
+				calm: {
 					50: '#f0f9ff',
 					100: '#e0f2fe',
 					200: '#bae6fd',
@@ -74,18 +86,6 @@ export default {
 					700: '#0369a1',
 					800: '#075985',
 					900: '#0c4a6e',
-				},
-				calm: {
-					50: '#f0fdf4',
-					100: '#dcfce7',
-					200: '#bbf7d0',
-					300: '#86efac',
-					400: '#4ade80',
-					500: '#22c55e',
-					600: '#16a34a',
-					700: '#15803d',
-					800: '#166534',
-					900: '#14532d',
 				}
 			},
 			borderRadius: {
@@ -127,13 +127,24 @@ export default {
 					'50%': {
 						transform: 'translateY(-10px)'
 					}
+				},
+				'grow': {
+					'0%': {
+						transform: 'scale(0.95)',
+						opacity: '0.8'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.5s ease-out',
-				'float': 'float 3s ease-in-out infinite'
+				'float': 'float 3s ease-in-out infinite',
+				'grow': 'grow 2s ease-in-out infinite'
 			}
 		}
 	},

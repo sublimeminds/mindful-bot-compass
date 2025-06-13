@@ -1,5 +1,4 @@
 
-import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -9,16 +8,20 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
-              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-therapy-500 to-calm-500 rounded-xl">
-                <Heart className="h-6 w-6 text-white" />
+              <div className="flex items-center justify-center w-10 h-10 bg-white rounded-xl p-1">
+                <img 
+                  src="/lovable-uploads/3fc4b2d8-fc0a-4b0e-83a0-8c93962e00da.png" 
+                  alt="TherapySync Logo" 
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-therapy-400 to-calm-400 bg-clip-text text-transparent">
-                MindfulAI
+                TherapySync
               </span>
             </div>
             <p className="text-slate-300 leading-relaxed max-w-md">
-              Providing accessible, AI-powered therapy support to help you heal, grow, and thrive. 
-              Your mental health matters, and we're here to support your journey.
+              Sync your mind with AI-powered therapy support to help you heal, grow, and thrive. 
+              Your mental health matters, and we're here to support your wellbeing journey.
             </p>
           </div>
           
@@ -46,11 +49,15 @@ const Footer = () => {
         <div className="border-t border-slate-700 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-slate-400 mb-4 md:mb-0">
-              © 2024 MindfulAI. All rights reserved.
+              © 2024 TherapySync. All rights reserved.
             </p>
             <div className="flex items-center space-x-4">
               <span className="text-slate-400 text-sm">Made with</span>
-              <Heart className="w-4 h-4 text-red-400" />
+              <img 
+                src="/lovable-uploads/3fc4b2d8-fc0a-4b0e-83a0-8c93962e00da.png" 
+                alt="TherapySync" 
+                className="w-4 h-4"
+              />
               <span className="text-slate-400 text-sm">for mental wellness</span>
             </div>
           </div>
