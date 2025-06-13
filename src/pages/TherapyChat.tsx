@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +14,8 @@ import TherapistCard from "@/components/therapist/TherapistCard";
 import SessionTimer from "@/components/session/SessionTimer";
 import EmotionIndicator from "@/components/emotion/EmotionIndicator";
 import SessionEndModal from "@/components/SessionEndModal";
+import TreeLogo from "@/components/ui/TreeLogo";
+import TreeLoadingSpinner from "@/components/ui/TreeLoadingSpinner";
 import { voiceService } from "@/services/voiceService";
 
 const TherapyChat = () => {
@@ -27,6 +28,7 @@ const TherapyChat = () => {
   const [showEndModal, setShowEndModal] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [sessionStarted, setSessionStarted] = useState(false);
+  const [isStartingSession, setIsStartingSession] = useState(false);
 
   useEffect(() => {
     // Check if voice service is available and load voice preference
@@ -69,13 +71,18 @@ const TherapyChat = () => {
     }
 
     try {
+      setIsStartingSession(true);
       await startSession(5); // Mood before
-      setSessionStarted(true);
-      toast({
-        title: "Session Started",
-        description: `Your therapy session with ${currentTherapist.name} has begun.`,
-      });
+      setTimeout(() => {
+        setSessionStarted(true);
+        setIsStartingSession(false);
+        toast({
+          title: "Session Started",
+          description: `Your therapy session with ${currentTherapist.name} has begun.`,
+        });
+      }, 2000); // Show tree growing animation for 2 seconds
     } catch (error) {
+      setIsStartingSession(false);
       toast({
         title: "Error",
         description: "Failed to start session. Please try again.",
@@ -133,7 +140,7 @@ const TherapyChat = () => {
           <Card className="max-w-md mx-auto">
             <CardContent className="p-6 text-center space-y-4">
               <div className="mx-auto w-12 h-12 bg-therapy-100 rounded-full flex items-center justify-center">
-                <Brain className="h-6 w-6 text-therapy-600" />
+                <TreeLogo size="sm" animated={true} variant="breathing" />
               </div>
               <h3 className="text-lg font-semibold">Select Your Therapist First</h3>
               <p className="text-muted-foreground">
@@ -180,7 +187,7 @@ const TherapyChat = () => {
                 </Button>
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-therapy-100 rounded-full flex items-center justify-center">
-                    <Brain className="h-5 w-5 text-therapy-600" />
+                    <TreeLogo size="sm" animated={true} variant="breathing" />
                   </div>
                   <div>
                     <h1 className="text-xl font-semibold">Therapy Session</h1>
@@ -303,11 +310,33 @@ const TherapyChat = () => {
 
             {/* Main Chat Area */}
             <div className="lg:col-span-3">
-              {!sessionStarted ? (
+              {isStartingSession ? (
                 <Card className="h-[600px] flex items-center justify-center">
                   <CardContent className="text-center space-y-6">
+                    <TreeLoadingSpinner 
+                      size="lg" 
+                      message="Growing your therapeutic space..."
+                    />
+                    <div>
+                      <h3 className="text-xl font-semibold mb-2">Preparing Your Session</h3>
+                      <p className="text-muted-foreground">
+                        Creating a safe space for healing and growth
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : !sessionStarted ? (
+                <Card className="h-[600px] flex items-center justify-center relative overflow-hidden">
+                  {/* Animated background particles */}
+                  <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute top-20 left-10 w-4 h-4 bg-therapy-200/30 rounded-full animate-leaf-float"></div>
+                    <div className="absolute bottom-20 right-10 w-3 h-3 bg-calm-200/30 rounded-full animate-leaf-float" style={{ animationDelay: '1s' }}></div>
+                    <div className="absolute top-1/2 left-5 w-2 h-2 bg-therapy-300/20 rounded-full animate-leaf-float" style={{ animationDelay: '2s' }}></div>
+                  </div>
+                  
+                  <CardContent className="text-center space-y-6 relative z-10">
                     <div className="w-16 h-16 bg-therapy-100 rounded-full flex items-center justify-center mx-auto">
-                      <Brain className="h-8 w-8 text-therapy-600" />
+                      <TreeLogo size="lg" animated={true} variant="breathing" />
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold mb-2">Ready to Begin</h3>
@@ -321,10 +350,17 @@ const TherapyChat = () => {
                       </p>
                       <Button 
                         onClick={handleStartSession}
-                        className="bg-therapy-600 hover:bg-therapy-700 text-white px-8 py-3"
+                        className="bg-therapy-600 hover:bg-therapy-700 text-white px-8 py-3 group relative overflow-hidden"
                         size="lg"
                       >
+                        <TreeLogo 
+                          size="sm" 
+                          className="mr-2 group-hover:animate-tree-grow filter brightness-0 invert"
+                        />
                         Start Session
+                        
+                        {/* Growing effect on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-therapy-500/20 to-calm-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </Button>
                     </div>
                   </CardContent>
