@@ -14,8 +14,8 @@ const Header = () => {
     return <MobileHeader />;
   }
 
-  // Use regular navigation for desktop
-  return user ? <AuthenticatedNavigation /> : <PublicNavigation />;
+  // Use regular navigation for desktop - provide empty props for public nav
+  return user ? <AuthenticatedNavigation /> : <PublicNavigation activeSection="" scrollToSection={() => {}} />;
 };
 
 export default Header;

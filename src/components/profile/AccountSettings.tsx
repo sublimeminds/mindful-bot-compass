@@ -4,160 +4,101 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { 
-  User, 
-  Mail, 
-  Lock, 
-  Shield, 
-  Trash2, 
-  Camera,
-  Eye,
-  EyeOff,
-  Check,
-  X,
-  AlertTriangle,
-  Link,
-  Unlink
-} from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { Eye, EyeOff, Mail, Lock, User, Trash2, ExternalLink } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import UserAvatar from '@/components/ui/UserAvatar';
 
 const AccountSettings = () => {
-  const { user, updateProfile } = useAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
-  // Form states
-  const [profileData, setProfileData] = useState({
-    name: user?.user_metadata?.name || '',
-    email: user?.email || ''
-  });
-  
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+  const [passwords, setPasswords] = useState({
+    current: '',
+    new: '',
+    confirm: ''
   });
 
-  // Connected accounts (mock data - in real app, fetch from backend)
+  const [email, setEmail] = useState(user?.email || '');
   const [connectedAccounts] = useState([
     { provider: 'google', email: user?.email, connected: true },
     { provider: 'github', email: null, connected: false },
-    { provider: 'apple', email: null, connected: false }
+    { provider: 'discord', email: null, connected: false }
   ]);
 
-  const handleProfileUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const { error } = await supabase.auth.updateUser({
-        data: { name: profileData.name }
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "Profile Updated",
-        description: "Your profile information has been updated successfully.",
-      });
-    } catch (error: any) {
+  const handlePasswordChange = async () => {
+    if (!passwords.new || passwords.new !== passwords.confirm) {
       toast({
         title: "Error",
-        description: error.message || "Failed to update profile.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEmailUpdate = async () => {
-    if (profileData.email === user?.email) return;
-    
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.updateUser({
-        email: profileData.email
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "Email Update Requested",
-        description: "Please check both your old and new email for confirmation links.",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to update email.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePasswordUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      toast({
-        title: "Error",
-        description: "New passwords don't match.",
+        description: "Passwords don't match or are empty",
         variant: "destructive",
       });
       return;
     }
 
-    if (passwordData.newPassword.length < 8) {
+    if (passwords.new.length < 6) {
       toast({
         title: "Error",
-        description: "Password must be at least 8 characters long.",
+        description: "Password must be at least 6 characters long",
         variant: "destructive",
       });
       return;
     }
 
-    setLoading(true);
+    setIsLoading(true);
     try {
       const { error } = await supabase.auth.updateUser({
-        password: passwordData.newPassword
+        password: passwords.new
       });
 
       if (error) throw error;
 
-      setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
       toast({
-        title: "Password Updated",
-        description: "Your password has been updated successfully.",
+        title: "Success",
+        description: "Password updated successfully",
+      });
+      
+      setPasswords({ current: '', new: '', confirm: '' });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update password",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEmailChange = async () => {
+    if (!email || email === user?.email) return;
+
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser({
+        email: email
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Verification Email Sent",
+        description: "Please check your new email to confirm the change",
       });
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to update password.",
+        description: error.message || "Failed to update email",
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  };
-
-  const handleAccountDeletion = async () => {
-    if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      return;
-    }
-
-    toast({
-      title: "Account Deletion",
-      description: "Please contact support to delete your account.",
-    });
   };
 
   const handleSocialConnect = async (provider: string) => {
@@ -170,12 +111,12 @@ const AccountSettings = () => {
 
       toast({
         title: "Account Connected",
-        description: `Successfully connected your ${provider} account.`,
+        description: `Successfully connected your ${provider} account`,
       });
     } catch (error: any) {
       toast({
-        title: "Connection Failed",
-        description: error.message || `Failed to connect ${provider} account.`,
+        title: "Error",
+        description: error.message || `Failed to connect ${provider} account`,
         variant: "destructive",
       });
     }
@@ -191,12 +132,12 @@ const AccountSettings = () => {
 
       toast({
         title: "Account Disconnected",
-        description: `Successfully disconnected your ${provider} account.`,
+        description: `Successfully disconnected your ${provider} account`,
       });
     } catch (error: any) {
       toast({
-        title: "Disconnection Failed",
-        description: error.message || `Failed to disconnect ${provider} account.`,
+        title: "Error",
+        description: error.message || `Failed to disconnect ${provider} account`,
         variant: "destructive",
       });
     }
@@ -204,227 +145,176 @@ const AccountSettings = () => {
 
   return (
     <div className="space-y-6">
-      {/* Profile Information */}
+      {/* Email Settings */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <User className="h-5 w-5" />
-            <span>Profile Information</span>
+          <CardTitle className="flex items-center">
+            <Mail className="h-5 w-5 mr-2" />
+            Email Address
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center space-x-4">
-            <UserAvatar user={user} size="lg" />
-            <div>
-              <Button variant="outline" size="sm">
-                <Camera className="h-4 w-4 mr-2" />
-                Change Photo
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+            />
+          </div>
+          {email !== user?.email && (
+            <Button onClick={handleEmailChange} disabled={isLoading}>
+              Update Email
+            </Button>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Password Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Lock className="h-5 w-5 mr-2" />
+            Password
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="current-password">Current Password</Label>
+            <div className="relative">
+              <Input
+                id="current-password"
+                type={showCurrentPassword ? "text" : "password"}
+                value={passwords.current}
+                onChange={(e) => setPasswords(prev => ({ ...prev, current: e.target.value }))}
+                placeholder="Enter current password"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+              >
+                {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </Button>
-              <p className="text-xs text-muted-foreground mt-1">
-                JPG, PNG up to 2MB
-              </p>
             </div>
           </div>
 
-          <form onSubmit={handleProfileUpdate} className="space-y-4">
-            <div>
-              <Label htmlFor="name">Display Name</Label>
+          <div className="space-y-2">
+            <Label htmlFor="new-password">New Password</Label>
+            <div className="relative">
               <Input
-                id="name"
-                value={profileData.name}
-                onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Enter your display name"
+                id="new-password"
+                type={showNewPassword ? "text" : "password"}
+                value={passwords.new}
+                onChange={(e) => setPasswords(prev => ({ ...prev, new: e.target.value }))}
+                placeholder="Enter new password"
               />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+              >
+                {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </Button>
             </div>
+          </div>
 
-            <div>
-              <Label htmlFor="email" className="flex items-center justify-between">
-                <span>Email Address</span>
-                {profileData.email !== user?.email && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={handleEmailUpdate}
-                    disabled={loading}
-                  >
-                    Update Email
-                  </Button>
-                )}
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                value={profileData.email}
-                onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="Enter your email address"
-              />
-              {profileData.email !== user?.email && (
-                <p className="text-xs text-amber-600 mt-1">
-                  You'll need to verify both your old and new email addresses
-                </p>
-              )}
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="confirm-password">Confirm New Password</Label>
+            <Input
+              id="confirm-password"
+              type="password"
+              value={passwords.confirm}
+              onChange={(e) => setPasswords(prev => ({ ...prev, confirm: e.target.value }))}
+              placeholder="Confirm new password"
+            />
+          </div>
 
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Updating...' : 'Update Profile'}
-            </Button>
-          </form>
+          <Button onClick={handlePasswordChange} disabled={isLoading}>
+            Update Password
+          </Button>
         </CardContent>
       </Card>
 
-      {/* Password & Security */}
+      {/* Social Login Connections */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Lock className="h-5 w-5" />
-            <span>Password & Security</span>
+          <CardTitle className="flex items-center">
+            <User className="h-5 w-5 mr-2" />
+            Connected Accounts
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handlePasswordUpdate} className="space-y-4">
-            <div>
-              <Label htmlFor="current-password">Current Password</Label>
-              <div className="relative">
-                <Input
-                  id="current-password"
-                  type={showCurrentPassword ? 'text' : 'password'}
-                  value={passwordData.currentPassword}
-                  onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                  placeholder="Enter current password"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-auto p-1"
-                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                >
-                  {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </Button>
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="new-password">New Password</Label>
-              <div className="relative">
-                <Input
-                  id="new-password"
-                  type={showNewPassword ? 'text' : 'password'}
-                  value={passwordData.newPassword}
-                  onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                  placeholder="Enter new password"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-auto p-1"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                >
-                  {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </Button>
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="confirm-password">Confirm New Password</Label>
-              <Input
-                id="confirm-password"
-                type="password"
-                value={passwordData.confirmPassword}
-                onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                placeholder="Confirm new password"
-              />
-            </div>
-
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Updating...' : 'Update Password'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      {/* Connected Accounts */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Shield className="h-5 w-5" />
-            <span>Connected Accounts</span>
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Manage your social login connections
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {connectedAccounts.map((account) => (
-            <div key={account.provider} className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-                  <span className="text-xs font-semibold uppercase">
-                    {account.provider[0]}
-                  </span>
+          <div className="space-y-4">
+            {connectedAccounts.map((account) => (
+              <div key={account.provider} className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                    {account.provider.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="font-medium capitalize">{account.provider}</p>
+                    {account.email && (
+                      <p className="text-sm text-muted-foreground">{account.email}</p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium capitalize">{account.provider}</p>
-                  {account.connected && account.email && (
-                    <p className="text-xs text-muted-foreground">{account.email}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                {account.connected ? (
-                  <>
-                    <Badge variant="default" className="bg-green-100 text-green-800">
-                      <Check className="h-3 w-3 mr-1" />
-                      Connected
-                    </Badge>
+                <div className="flex items-center space-x-2">
+                  {account.connected ? (
+                    <>
+                      <Badge variant="secondary" className="bg-green-100 text-green-800">
+                        Connected
+                      </Badge>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleSocialDisconnect(account.provider)}
+                      >
+                        Disconnect
+                      </Button>
+                    </>
+                  ) : (
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleSocialDisconnect(account.provider)}
+                      onClick={() => handleSocialConnect(account.provider)}
                     >
-                      <Unlink className="h-4 w-4 mr-1" />
-                      Disconnect
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Connect
                     </Button>
-                  </>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleSocialConnect(account.provider)}
-                  >
-                    <Link className="h-4 w-4 mr-1" />
-                    Connect
-                  </Button>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </CardContent>
       </Card>
 
       {/* Danger Zone */}
       <Card className="border-red-200">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2 text-red-600">
-            <AlertTriangle className="h-5 w-5" />
-            <span>Danger Zone</span>
+          <CardTitle className="flex items-center text-red-600">
+            <Trash2 className="h-5 w-5 mr-2" />
+            Danger Zone
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-            <h4 className="font-medium text-red-800 mb-2">Delete Account</h4>
-            <p className="text-sm text-red-700 mb-4">
-              Once you delete your account, there is no going back. This will permanently delete your account and all associated data.
-            </p>
-            <Button
-              variant="destructive"
-              onClick={handleAccountDeletion}
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete Account
-            </Button>
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-medium">Delete Account</h3>
+              <p className="text-sm text-muted-foreground mb-3">
+                Permanently delete your account and all associated data. This action cannot be undone.
+              </p>
+              <Button variant="destructive" size="sm">
+                Delete Account
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
