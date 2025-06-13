@@ -25,14 +25,18 @@ const MobileMenu = ({
 
   const publicSections = [
     { id: '#features', label: 'Features' },
-    { id: '#pricing', label: 'Pricing' }
+    { id: '#pricing', label: 'Pricing' },
+    { id: '/help', label: 'Help' },
+    { id: '/faq', label: 'FAQ' }
   ];
 
   const authenticatedSections = [
     { id: '/therapy', label: 'Therapy' },
     { id: '/mood-tracking', label: 'Mood' },
     { id: '/goals', label: 'Goals' },
-    { id: '/session-history', label: 'History' }
+    { id: '/session-history', label: 'History' },
+    { id: '/help', label: 'Help' },
+    { id: '/contact', label: 'Contact' }
   ];
 
   const sectionsToShow = isAuthenticated ? authenticatedSections : publicSections;
@@ -78,7 +82,7 @@ const MobileMenu = ({
 
       {/* Mobile menu overlay */}
       {isMenuOpen && (
-        <div className="fixed inset-0 bg-background/95 backdrop-blur-xl z-40 lg:hidden">
+        <div className="fixed inset-0 bg-gradient-to-br from-therapy-50/95 via-white/95 to-calm-50/95 backdrop-blur-xl z-40 lg:hidden">
           <div className="flex flex-col items-center justify-center h-full space-y-8">
             {sectionsToShow.map((section) => (
               <button
@@ -87,7 +91,7 @@ const MobileMenu = ({
                 className={`text-xl font-medium transition-colors ${
                   activeSection === section.id
                     ? 'text-therapy-600'
-                    : 'text-foreground hover:text-therapy-600'
+                    : 'text-therapy-900 hover:text-therapy-600'
                 }`}
               >
                 {section.label}

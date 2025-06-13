@@ -91,7 +91,7 @@ export class MemoryService {
         id: data.id,
         userId: data.user_id,
         sessionId: data.session_id,
-        memoryType: data.memory_type,
+        memoryType: data.memory_type as ConversationMemory['memoryType'],
         title: data.title,
         content: data.content,
         emotionalContext: data.emotional_context,
@@ -133,7 +133,7 @@ export class MemoryService {
         id: item.id,
         userId: item.user_id,
         sessionId: item.session_id,
-        memoryType: item.memory_type,
+        memoryType: item.memory_type as ConversationMemory['memoryType'],
         title: item.title,
         content: item.content,
         emotionalContext: item.emotional_context,
@@ -175,7 +175,7 @@ export class MemoryService {
         id: item.id,
         userId: item.user_id,
         sessionId: item.session_id,
-        memoryType: item.memory_type,
+        memoryType: item.memory_type as ConversationMemory['memoryType'],
         title: item.title,
         content: item.content,
         emotionalContext: item.emotional_context,
@@ -229,7 +229,7 @@ export class MemoryService {
           pattern_data: pattern.patternData,
           frequency_score: pattern.frequencyScore,
           effectiveness_score: pattern.effectivenessScore,
-          last_occurred: pattern.lastOccurred
+          last_occurred: pattern.lastOccurred?.toISOString()
         })
         .select()
         .single();
@@ -245,7 +245,7 @@ export class MemoryService {
       return {
         id: data.id,
         userId: data.user_id,
-        patternType: data.pattern_type,
+        patternType: data.pattern_type as EmotionalPattern['patternType'],
         patternData: data.pattern_data,
         frequencyScore: data.frequency_score,
         effectivenessScore: data.effectiveness_score,
@@ -280,7 +280,7 @@ export class MemoryService {
       return data.map(item => ({
         id: item.id,
         userId: item.user_id,
-        patternType: item.pattern_type,
+        patternType: item.pattern_type as EmotionalPattern['patternType'],
         patternData: item.pattern_data,
         frequencyScore: item.frequency_score,
         effectivenessScore: item.effectiveness_score,
@@ -324,7 +324,7 @@ export class MemoryService {
         id: data.id,
         userId: data.user_id,
         sessionId: data.session_id,
-        contextType: data.context_type,
+        contextType: data.context_type as SessionContext['contextType'],
         priorityLevel: data.priority_level,
         contextData: data.context_data,
         requiresAttention: data.requires_attention,
@@ -360,7 +360,7 @@ export class MemoryService {
         id: item.id,
         userId: item.user_id,
         sessionId: item.session_id,
-        contextType: item.context_type,
+        contextType: item.context_type as SessionContext['contextType'],
         priorityLevel: item.priority_level,
         contextData: item.context_data,
         requiresAttention: item.requires_attention,
@@ -415,7 +415,6 @@ export class MemoryService {
 
       if (error) {
         if (error.code === 'PGRST116') {
-          // No rows found, return null
           return null;
         }
         DebugLogger.error('MemoryService: Error fetching therapeutic relationship', error, { 
@@ -464,7 +463,7 @@ export class MemoryService {
           effective_techniques: updates.effectiveTechniques,
           ineffective_techniques: updates.ineffectiveTechniques,
           boundary_preferences: updates.boundaryPreferences,
-          last_interaction: new Date(),
+          last_interaction: new Date().toISOString(),
           relationship_milestones: updates.relationshipMilestones
         });
 

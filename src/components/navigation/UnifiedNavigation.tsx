@@ -13,7 +13,8 @@ import {
   BookOpen, 
   History,
   Crown,
-  Sparkles
+  Sparkles,
+  HelpCircle
 } from 'lucide-react';
 
 const UnifiedNavigation = () => {
@@ -39,7 +40,8 @@ const UnifiedNavigation = () => {
   // Public navigation items
   const publicNavItems = [
     { id: '#features', label: 'Features', icon: Sparkles },
-    { id: '#pricing', label: 'Pricing', icon: Crown }
+    { id: '#pricing', label: 'Pricing', icon: Crown },
+    { id: '/help', label: 'Help', icon: HelpCircle }
   ];
 
   // Authenticated navigation items
@@ -49,7 +51,8 @@ const UnifiedNavigation = () => {
     { id: '/goals', label: 'Goals', icon: Target },
     { id: '/techniques', label: 'Techniques', icon: BookOpen },
     { id: '/session-history', label: 'History', icon: History },
-    { id: '/analytics', label: 'Analytics', icon: BarChart3 }
+    { id: '/analytics', label: 'Analytics', icon: BarChart3 },
+    { id: '/help', label: 'Help', icon: HelpCircle }
   ];
 
   const navItems = isAuthenticated ? authNavItems : publicNavItems;

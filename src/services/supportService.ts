@@ -246,9 +246,9 @@ export class SupportService {
         userId: data.user_id,
         subject: data.subject,
         description: data.description,
-        category: data.category,
-        priority: data.priority,
-        status: data.status,
+        category: data.category as SupportTicket['category'],
+        priority: data.priority as SupportTicket['priority'],
+        status: data.status as SupportTicket['status'],
         assignedTo: data.assigned_to,
         createdAt: new Date(data.created_at),
         updatedAt: new Date(data.updated_at)
@@ -283,9 +283,9 @@ export class SupportService {
         userId: item.user_id,
         subject: item.subject,
         description: item.description,
-        category: item.category,
-        priority: item.priority,
-        status: item.status,
+        category: item.category as SupportTicket['category'],
+        priority: item.priority as SupportTicket['priority'],
+        status: item.status as SupportTicket['status'],
         assignedTo: item.assigned_to,
         createdAt: new Date(item.created_at),
         updatedAt: new Date(item.updated_at)
@@ -323,7 +323,7 @@ export class SupportService {
       return {
         id: data.id,
         ticketId: data.ticket_id,
-        senderType: data.sender_type,
+        senderType: data.sender_type as SupportMessage['senderType'],
         message: data.message,
         adminName: data.admin_name,
         createdAt: new Date(data.created_at)
@@ -356,7 +356,7 @@ export class SupportService {
       return data.map(item => ({
         id: item.id,
         ticketId: item.ticket_id,
-        senderType: item.sender_type,
+        senderType: item.sender_type as SupportMessage['senderType'],
         message: item.message,
         adminName: item.admin_name,
         createdAt: new Date(item.created_at)
