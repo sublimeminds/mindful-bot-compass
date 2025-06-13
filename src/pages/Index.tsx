@@ -19,6 +19,8 @@ import TrustSection from "@/components/landing/TrustSection";
 import CTASection from "@/components/landing/CTASection";
 import TreeLoadingSpinner from "@/components/ui/TreeLoadingSpinner";
 import TreeLogo from "@/components/ui/TreeLogo";
+import UserAvatar from "@/components/ui/UserAvatar";
+import { Heart, Sparkles } from "lucide-react";
 
 const Index = () => {
   const { isAuthenticated, user, loading } = useAuth();
@@ -34,9 +36,6 @@ const Index = () => {
           <div className="text-center space-y-6">
             <TreeLogo 
               size="xl"
-              animated={true}
-              variant="growing"
-              loading={true}
               className="mx-auto"
             />
             <TreeLoadingSpinner 
@@ -59,17 +58,18 @@ const Index = () => {
           <IntelligentNotificationProvider>
             <NotificationToastHandler />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-              {/* Welcome section with logo for authenticated users */}
+              {/* Welcome section with user avatar for authenticated users */}
               <div className="mb-8 text-center">
                 <div className="flex items-center justify-center mb-4">
-                  <TreeLogo 
-                    size="lg"
-                    animated={true}
-                    variant="celebration"
-                    className="drop-shadow-sm"
-                  />
+                  <div className="relative">
+                    <UserAvatar user={user} size="xl" />
+                    <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center">
+                      <Heart className="h-3 w-3 text-white" />
+                    </div>
+                  </div>
                 </div>
-                <h1 className="text-2xl font-bold text-therapy-700 mb-2">
+                <h1 className="text-2xl font-bold text-therapy-700 mb-2 flex items-center justify-center">
+                  <Sparkles className="h-6 w-6 mr-2 text-therapy-500" />
                   Welcome back to your wellness journey
                 </h1>
                 <p className="text-muted-foreground">

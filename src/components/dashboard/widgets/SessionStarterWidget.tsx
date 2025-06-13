@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircle, Clock, Brain, Sparkles } from 'lucide-react';
+import { MessageCircle, Clock, Brain, Sparkles, Heart } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import TreeLogo from '@/components/ui/TreeLogo';
+import UserAvatar from '@/components/ui/UserAvatar';
 
 const SessionStarterWidget = () => {
   const { user } = useAuth();
@@ -23,12 +23,7 @@ const SessionStarterWidget = () => {
       <CardHeader className="relative">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <TreeLogo 
-              size="md"
-              animated={true}
-              variant="breathing"
-              className="drop-shadow-sm"
-            />
+            <UserAvatar user={user} size="lg" />
             <div>
               <CardTitle className="text-2xl font-bold">
                 Welcome back, {user?.user_metadata?.name || 'there'}!
@@ -72,19 +67,14 @@ const SessionStarterWidget = () => {
           >
             <div className="flex items-center justify-center relative z-10">
               <div className={`mr-3 transition-transform duration-500 ${isStartHovered ? 'scale-110' : 'scale-100'}`}>
-                <TreeLogo 
-                  size="sm"
-                  variant={isStartHovered ? 'growing' : 'breathing'}
-                  className="text-white filter brightness-0 invert"
-                />
+                <Heart className="h-5 w-5" />
               </div>
               <MessageCircle className="h-5 w-5 mr-2" />
               Start Therapy Session
             </div>
             
-            {/* Growing tree background effect */}
             {isStartHovered && (
-              <div className="absolute inset-0 bg-gradient-to-r from-therapy-600/20 to-calm-600/20 animate-tree-grow" />
+              <div className="absolute inset-0 bg-gradient-to-r from-therapy-600/20 to-calm-600/20 animate-pulse" />
             )}
           </Button>
           <Button 
@@ -92,10 +82,7 @@ const SessionStarterWidget = () => {
             onClick={() => navigate('/therapy')}
             className="px-6 border-therapy-200 hover:bg-therapy-50 group"
           >
-            <TreeLogo 
-              size="sm" 
-              className="mr-2 group-hover:animate-tree-breathe opacity-60"
-            />
+            <Sparkles className="mr-2 h-4 w-4 group-hover:text-therapy-600" />
             Quick Check-in
           </Button>
         </div>

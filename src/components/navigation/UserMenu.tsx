@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { User, Settings, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import UserAvatar from '@/components/ui/UserAvatar';
 
 interface UserMenuProps {
-  user: { email?: string } | null;
+  user: { email?: string; user_metadata?: { name?: string; avatar_url?: string; }; } | null;
   logout: () => void;
 }
 
@@ -29,10 +30,10 @@ const UserMenu = ({ user, logout }: UserMenuProps) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="flex items-center space-x-2 hover:bg-muted/50 rounded-full transition-all duration-300 hover:scale-105">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-therapy-500 to-calm-500 text-white font-semibold flex items-center justify-center text-sm">
-            {user?.email?.[0]?.toUpperCase() || "U"}
-          </div>
-          <span className="hidden sm:inline max-w-32 truncate font-medium text-foreground/80">{user?.email}</span>
+          <UserAvatar user={user} size="sm" />
+          <span className="hidden sm:inline max-w-32 truncate font-medium text-foreground/80">
+            {user?.user_metadata?.name || user?.email}
+          </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-xl border border-border/30 shadow-xl rounded-xl">

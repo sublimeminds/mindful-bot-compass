@@ -1,11 +1,10 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Target } from "lucide-react";
+import { ArrowLeft, Target, Trophy, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import EnhancedGoalTracker from "@/components/goals/EnhancedGoalTracker";
 import Header from "@/components/Header";
-import TreeLogo from "@/components/ui/TreeLogo";
 
 const Goals = () => {
   const navigate = useNavigate();
@@ -15,7 +14,7 @@ const Goals = () => {
       <Header />
       <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
         <div className="max-w-6xl mx-auto space-y-6">
-          {/* Enhanced Header with Logo */}
+          {/* Enhanced Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Button variant="outline" onClick={() => navigate('/')}>
@@ -23,13 +22,8 @@ const Goals = () => {
                 Back to Dashboard
               </Button>
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-therapy-100/50 rounded-full flex items-center justify-center">
-                  <TreeLogo 
-                    size="md"
-                    animated={true}
-                    variant="breathing"
-                    className="drop-shadow-sm"
-                  />
+                <div className="w-12 h-12 bg-gradient-to-br from-therapy-500 to-calm-500 rounded-full flex items-center justify-center">
+                  <Target className="h-6 w-6 text-white" />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold flex items-center">
@@ -43,15 +37,10 @@ const Goals = () => {
               </div>
             </div>
             
-            {/* Motivational logo element */}
+            {/* Motivational element */}
             <div className="hidden md:flex items-center space-x-2 text-sm text-muted-foreground">
               <span>Growing with</span>
-              <TreeLogo 
-                size="sm"
-                animated={true}
-                variant="hovering"
-                className="opacity-70"
-              />
+              <Sparkles className="h-4 w-4 text-therapy-500" />
               <span className="font-medium text-therapy-600">TherapySync</span>
             </div>
           </div>
@@ -59,15 +48,10 @@ const Goals = () => {
           {/* Goal Tracker */}
           <EnhancedGoalTracker />
           
-          {/* Footer encouragement with logo */}
+          {/* Footer encouragement */}
           <div className="mt-12 text-center py-8 border-t border-therapy-200/30">
             <div className="flex items-center justify-center space-x-3 mb-4">
-              <TreeLogo 
-                size="lg"
-                animated={true}
-                variant="celebration"
-                className="drop-shadow-sm"
-              />
+              <Trophy className="h-8 w-8 text-therapy-500" />
             </div>
             <p className="text-therapy-700 font-medium text-lg">
               Every goal achieved is a step towards growth
