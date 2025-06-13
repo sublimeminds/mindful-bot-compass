@@ -18,6 +18,7 @@ import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import TrustSection from "@/components/landing/TrustSection";
 import CTASection from "@/components/landing/CTASection";
 import TreeLoadingSpinner from "@/components/ui/TreeLoadingSpinner";
+import TreeLogo from "@/components/ui/TreeLogo";
 
 const Index = () => {
   const { isAuthenticated, user, loading } = useAuth();
@@ -30,10 +31,19 @@ const Index = () => {
       <>
         <Header />
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
-          <TreeLoadingSpinner 
-            size="lg" 
-            message="Syncing your mental wellness journey..."
-          />
+          <div className="text-center space-y-6">
+            <TreeLogo 
+              size="xl"
+              animated={true}
+              variant="growing"
+              loading={true}
+              className="mx-auto"
+            />
+            <TreeLoadingSpinner 
+              size="lg" 
+              message="Syncing your mental wellness journey..."
+            />
+          </div>
         </div>
         <Footer />
       </>
@@ -49,6 +59,23 @@ const Index = () => {
           <IntelligentNotificationProvider>
             <NotificationToastHandler />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              {/* Welcome section with logo for authenticated users */}
+              <div className="mb-8 text-center">
+                <div className="flex items-center justify-center mb-4">
+                  <TreeLogo 
+                    size="lg"
+                    animated={true}
+                    variant="celebration"
+                    className="drop-shadow-sm"
+                  />
+                </div>
+                <h1 className="text-2xl font-bold text-therapy-700 mb-2">
+                  Welcome back to your wellness journey
+                </h1>
+                <p className="text-muted-foreground">
+                  Continue growing with TherapySync's personalized support
+                </p>
+              </div>
               <UserDashboard />
             </div>
           </IntelligentNotificationProvider>

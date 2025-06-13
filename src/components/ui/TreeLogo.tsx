@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 
 interface TreeLogoProps {
   className?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'micro' | 'sm' | 'md' | 'lg' | 'xl';
   animated?: boolean;
   loading?: boolean;
-  variant?: 'default' | 'breathing' | 'growing' | 'hovering';
+  variant?: 'default' | 'breathing' | 'growing' | 'hovering' | 'floating' | 'celebration';
 }
 
 const TreeLogo = ({ 
@@ -20,6 +20,7 @@ const TreeLogo = ({
   const [isHovered, setIsHovered] = useState(false);
   
   const sizeClasses = {
+    micro: 'w-4 h-4',
     sm: 'w-6 h-6',
     md: 'w-10 h-10',
     lg: 'w-16 h-16',
@@ -30,6 +31,8 @@ const TreeLogo = ({
     if (loading) return 'animate-tree-growth';
     if (variant === 'breathing') return 'animate-tree-breathe';
     if (variant === 'growing') return 'animate-tree-grow';
+    if (variant === 'floating') return 'animate-leaf-float';
+    if (variant === 'celebration') return 'animate-tree-grow animate-pulse';
     if (variant === 'hovering' || (animated && isHovered)) {
       return 'animate-tree-breathe hover:animate-tree-grow transition-all duration-500 hover:drop-shadow-lg hover:brightness-110';
     }
@@ -37,7 +40,7 @@ const TreeLogo = ({
     return '';
   };
 
-  // Enhanced fallback SVG that matches the circular tree logo style
+  // Enhanced fallback SVG that matches the new circular tree logo style
   const FallbackTree = () => (
     <div className={`${sizeClasses[size]} ${className} relative overflow-hidden`}>
       <svg 
@@ -47,7 +50,7 @@ const TreeLogo = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Circular background */}
+        {/* Circular background with gradient */}
         <circle 
           cx="50" 
           cy="50" 
@@ -56,18 +59,28 @@ const TreeLogo = ({
           className="drop-shadow-sm"
         />
         
-        {/* Tree trunk */}
+        {/* Root system */}
+        <path 
+          d="M46 75 Q42 80 38 85 M54 75 Q58 80 62 85 M50 75 Q50 82 50 88"
+          stroke="#8B4513"
+          strokeWidth="2"
+          fill="none"
+          className="animate-roots-grow"
+          opacity="0.7"
+        />
+        
+        {/* Tree trunk with texture */}
         <rect 
           x="46" 
           y="60" 
           width="8" 
           height="25" 
           rx="2"
-          fill="#8B4513"
+          fill="url(#trunkGradient)"
           className="animate-trunk-grow"
         />
         
-        {/* Tree canopy layers */}
+        {/* Tree canopy layers - more organic shapes */}
         <circle 
           cx="50" 
           cy="45" 
@@ -93,21 +106,28 @@ const TreeLogo = ({
           style={{ animationDelay: '1.5s' }}
         />
         
-        {/* Floating particles */}
-        {(isHovered || variant === 'hovering') && (
+        {/* Floating particles for enhanced variants */}
+        {(isHovered || variant === 'hovering' || variant === 'floating') && (
           <>
             <circle cx="25" cy="20" r="1" fill="#22c55e" className="animate-leaf-float" opacity="0.6" />
             <circle cx="75" cy="25" r="1" fill="#16a34a" className="animate-leaf-float" style={{ animationDelay: '1s' }} opacity="0.4" />
             <circle cx="30" cy="70" r="1" fill="#15803d" className="animate-leaf-float" style={{ animationDelay: '2s' }} opacity="0.5" />
+            <circle cx="70" cy="65" r="1" fill="#22c55e" className="animate-leaf-float" style={{ animationDelay: '3s' }} opacity="0.3" />
           </>
         )}
         
-        {/* Gradient definitions */}
+        {/* Enhanced gradient definitions */}
         <defs>
           <radialGradient id="treeGradient" cx="50%" cy="30%">
-            <stop offset="0%" stopColor="#dcfce7" />
+            <stop offset="0%" stopColor="#f0fdf4" />
+            <stop offset="50%" stopColor="#dcfce7" />
             <stop offset="100%" stopColor="#bbf7d0" />
           </radialGradient>
+          <linearGradient id="trunkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#a3a3a3" />
+            <stop offset="50%" stopColor="#8B4513" />
+            <stop offset="100%" stopColor="#654321" />
+          </linearGradient>
           <linearGradient id="leavesGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#22c55e" />
             <stop offset="100%" stopColor="#16a34a" />
@@ -123,8 +143,8 @@ const TreeLogo = ({
         </defs>
       </svg>
       
-      {/* Glow effect on hover */}
-      {(isHovered || variant === 'hovering') && (
+      {/* Enhanced glow effect on hover */}
+      {(isHovered || variant === 'hovering' || variant === 'celebration') && (
         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-therapy-400/30 to-calm-400/30 blur-md animate-pulse" />
       )}
     </div>
@@ -137,7 +157,7 @@ const TreeLogo = ({
   return (
     <div className="relative">
       <img 
-        src="/lovable-uploads/c8ef67d1-392c-4b65-97cf-a2b87cfc165a.png"
+        src="/lovable-uploads/9a47b7f0-6988-4b97-aa49-a9cacafcb69e.png"
         alt="TherapySync Tree Logo" 
         className={`${sizeClasses[size]} ${className} ${getAnimationClasses()} object-contain rounded-full`}
         onError={() => setImageError(true)}
@@ -146,8 +166,17 @@ const TreeLogo = ({
       />
       
       {/* Enhanced glow effect on hover */}
-      {(isHovered || variant === 'hovering') && (
+      {(isHovered || variant === 'hovering' || variant === 'celebration') && (
         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-therapy-400/40 to-calm-400/40 blur-lg animate-pulse pointer-events-none" />
+      )}
+      
+      {/* Floating particles for celebration variant */}
+      {variant === 'celebration' && (
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-2 -left-2 w-2 h-2 bg-therapy-400 rounded-full animate-leaf-float opacity-60"></div>
+          <div className="absolute -top-1 -right-2 w-1 h-1 bg-calm-400 rounded-full animate-leaf-float opacity-40" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute -bottom-2 -left-1 w-1 h-1 bg-therapy-500 rounded-full animate-leaf-float opacity-50" style={{ animationDelay: '2s' }}></div>
+        </div>
       )}
     </div>
   );
