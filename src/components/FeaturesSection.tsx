@@ -38,8 +38,6 @@ const FeaturesSection = () => {
           <div className="flex items-center justify-center mb-6">
             <TreeLogo 
               size="lg"
-              animated={true}
-              variant="breathing"
               className="drop-shadow-sm"
             />
           </div>
@@ -64,8 +62,6 @@ const FeaturesSection = () => {
                   {feature.useTreeLogo ? (
                     <TreeLogo 
                       size="md"
-                      animated={true}
-                      variant="hovering"
                       className="filter brightness-0 invert"
                     />
                   ) : (
@@ -89,8 +85,6 @@ const FeaturesSection = () => {
             <span>Powered by</span>
             <TreeLogo 
               size="sm"
-              animated={true}
-              variant="breathing"
               className="opacity-60"
             />
             <span className="font-medium text-therapy-600">TherapySync AI</span>

@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, BarChart3, RefreshCw } from "lucide-react";
+import { BarChart3, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSession } from "@/contexts/SessionContext";
@@ -128,20 +129,14 @@ const Analytics = () => {
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Header */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" onClick={() => navigate('/')}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Dashboard
-              </Button>
-              <div>
-                <h1 className="text-2xl font-bold flex items-center">
-                  <BarChart3 className="h-6 w-6 mr-2" />
-                  Analytics & Progress
-                </h1>
-                <p className="text-muted-foreground">
-                  Track your therapy journey and mental health progress
-                </p>
-              </div>
+            <div>
+              <h1 className="text-3xl font-bold flex items-center text-therapy-700">
+                <BarChart3 className="h-8 w-8 mr-3" />
+                Analytics & Progress
+              </h1>
+              <p className="text-muted-foreground text-lg mt-1">
+                Track your therapy journey and mental health progress
+              </p>
             </div>
             
             <div className="flex items-center space-x-2">

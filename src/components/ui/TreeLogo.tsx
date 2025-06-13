@@ -33,7 +33,7 @@ const TreeLogo = ({
 
   return (
     <img 
-      src="/lovable-uploads/b9129985-0ef9-4e7f-883f-21fbcd9e6f82.png"
+      src="/lovable-uploads/6a30691c-cd70-4f5c-b8f5-c67a33cab984.png"
       alt="TherapySync Logo" 
       className={`${sizeClasses[size]} ${className} object-contain rounded-full transition-all duration-300 hover:scale-110 hover:drop-shadow-lg`}
       onError={() => setImageError(true)}

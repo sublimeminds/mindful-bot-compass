@@ -15,8 +15,6 @@ const Logo = () => {
         <div className="flex items-center justify-center rounded-xl shadow-lg group-hover:shadow-therapy-500/30 transition-all duration-300 group-hover:scale-105 overflow-hidden relative">
           <TreeLogo 
             size="md"
-            animated={true}
-            variant="hovering"
             className="drop-shadow-sm"
           />
           

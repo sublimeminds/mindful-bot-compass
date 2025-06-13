@@ -40,7 +40,6 @@ const HeroSection = () => {
                 <div className="flex items-center justify-center w-24 h-24 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy animate-tree-breathe">
                   <TreeLogo 
                     size="lg"
-                    animated={true}
                     className="drop-shadow-sm"
                   />
                 </div>
@@ -82,7 +81,6 @@ const HeroSection = () => {
                 >
                   <TreeLogo 
                     size="sm"
-                    animated={true}
                     className="mr-2 group-hover:animate-tree-grow"
                   />
                   See How It Works

@@ -12,7 +12,6 @@ const Footer = () => {
               <div className="flex items-center justify-center w-10 h-10 bg-white rounded-xl p-1">
                 <TreeLogo 
                   size="sm"
-                  animated={true}
                   className="text-therapy-600"
                 />
               </div>
@@ -56,7 +55,6 @@ const Footer = () => {
               <span className="text-slate-400 text-sm">Made with</span>
               <TreeLogo 
                 size="sm"
-                animated={true}
                 className="opacity-60"
               />
               <span className="text-slate-400 text-sm">for mental wellness</span>
