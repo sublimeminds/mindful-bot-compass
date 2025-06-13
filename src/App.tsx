@@ -15,6 +15,9 @@ import Analytics from '@/pages/Analytics';
 import SessionAnalytics from '@/pages/SessionAnalytics';
 import Profile from '@/pages/Profile';
 import Plans from '@/pages/Plans';
+import FAQ from '@/pages/FAQ';
+import Help from '@/pages/Help';
+import Contact from '@/pages/Contact';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import AdminLayout from '@/components/admin/AdminLayout';
 import AdminDashboard from '@/pages/AdminDashboard';
@@ -63,6 +66,9 @@ function App() {
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/therapist-matching" element={<TherapistMatching />} />
       <Route path="/plans" element={<Plans />} />
+      <Route path="/faq" element={<FAQ />} />
+      <Route path="/help" element={<Help />} />
+      <Route path="/contact" element={<Contact />} />
 
       {/* Protected user routes */}
       <Route path="/dashboard" element={

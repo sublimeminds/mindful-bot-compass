@@ -340,6 +340,126 @@ export type Database = {
           },
         ]
       }
+      conversation_memory: {
+        Row: {
+          content: string
+          created_at: string
+          emotional_context: Json | null
+          id: string
+          importance_score: number
+          is_active: boolean
+          memory_type: string
+          session_id: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          emotional_context?: Json | null
+          id?: string
+          importance_score?: number
+          is_active?: boolean
+          memory_type: string
+          session_id?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          emotional_context?: Json | null
+          id?: string
+          importance_score?: number
+          is_active?: boolean
+          memory_type?: string
+          session_id?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      emotional_patterns: {
+        Row: {
+          effectiveness_score: number
+          first_identified: string
+          frequency_score: number
+          id: string
+          last_occurred: string | null
+          pattern_data: Json
+          pattern_type: string
+          user_id: string
+        }
+        Insert: {
+          effectiveness_score?: number
+          first_identified?: string
+          frequency_score?: number
+          id?: string
+          last_occurred?: string | null
+          pattern_data?: Json
+          pattern_type: string
+          user_id: string
+        }
+        Update: {
+          effectiveness_score?: number
+          first_identified?: string
+          frequency_score?: number
+          id?: string
+          last_occurred?: string | null
+          pattern_data?: Json
+          pattern_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      faq_items: {
+        Row: {
+          answer: string
+          category: string
+          created_at: string
+          helpful_count: number
+          id: string
+          is_active: boolean
+          priority: number
+          question: string
+          tags: string[] | null
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          answer: string
+          category: string
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          is_active?: boolean
+          priority?: number
+          question: string
+          tags?: string[] | null
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          answer?: string
+          category?: string
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          is_active?: boolean
+          priority?: number
+          question?: string
+          tags?: string[] | null
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       goal_milestones: {
         Row: {
           completed_at: string | null
@@ -473,6 +593,48 @@ export type Database = {
           unit?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      help_articles: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          helpful_count: number
+          id: string
+          is_active: boolean
+          is_featured: boolean
+          tags: string[] | null
+          title: string
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          category: string
+          content: string
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          view_count?: number
         }
         Relationships: []
       }
@@ -861,6 +1023,42 @@ export type Database = {
           },
         ]
       }
+      session_context: {
+        Row: {
+          addressed: boolean
+          context_data: Json
+          context_type: string
+          created_at: string
+          id: string
+          priority_level: number
+          requires_attention: boolean
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          addressed?: boolean
+          context_data?: Json
+          context_type: string
+          created_at?: string
+          id?: string
+          priority_level?: number
+          requires_attention?: boolean
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          addressed?: boolean
+          context_data?: Json
+          context_type?: string
+          created_at?: string
+          id?: string
+          priority_level?: number
+          requires_attention?: boolean
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       session_insights: {
         Row: {
           actionable_suggestion: string | null
@@ -976,6 +1174,80 @@ export type Database = {
         }
         Relationships: []
       }
+      support_messages: {
+        Row: {
+          admin_name: string | null
+          created_at: string
+          id: string
+          message: string
+          sender_type: string
+          ticket_id: string
+        }
+        Insert: {
+          admin_name?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          sender_type: string
+          ticket_id: string
+        }
+        Update: {
+          admin_name?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          sender_type?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          assigned_to: string | null
+          category: string
+          created_at: string
+          description: string
+          id: string
+          priority: string
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          category: string
+          created_at?: string
+          description: string
+          id?: string
+          priority?: string
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_to?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          priority?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       therapeutic_approach_configs: {
         Row: {
           created_at: string
@@ -1012,6 +1284,54 @@ export type Database = {
           target_conditions?: string[]
           techniques?: string[]
           updated_at?: string
+        }
+        Relationships: []
+      }
+      therapeutic_relationship: {
+        Row: {
+          boundary_preferences: Json | null
+          communication_preferences: Json | null
+          created_at: string
+          effective_techniques: string[] | null
+          id: string
+          ineffective_techniques: string[] | null
+          last_interaction: string | null
+          rapport_score: number
+          relationship_milestones: Json[] | null
+          therapist_id: string | null
+          trust_level: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          boundary_preferences?: Json | null
+          communication_preferences?: Json | null
+          created_at?: string
+          effective_techniques?: string[] | null
+          id?: string
+          ineffective_techniques?: string[] | null
+          last_interaction?: string | null
+          rapport_score?: number
+          relationship_milestones?: Json[] | null
+          therapist_id?: string | null
+          trust_level?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          boundary_preferences?: Json | null
+          communication_preferences?: Json | null
+          created_at?: string
+          effective_techniques?: string[] | null
+          id?: string
+          ineffective_techniques?: string[] | null
+          last_interaction?: string | null
+          rapport_score?: number
+          relationship_milestones?: Json[] | null
+          therapist_id?: string | null
+          trust_level?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
