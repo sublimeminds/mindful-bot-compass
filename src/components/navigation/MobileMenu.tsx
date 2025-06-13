@@ -26,8 +26,7 @@ const MobileMenu = ({
   const publicSections = [
     { id: '#features', label: 'Features' },
     { id: '#pricing', label: 'Pricing' },
-    { id: '/help', label: 'Help' },
-    { id: '/faq', label: 'FAQ' }
+    { id: '/help', label: 'Help' }
   ];
 
   const authenticatedSections = [

@@ -50,15 +50,20 @@ const Help = () => {
       filtered = filtered.filter(article => article.category === selectedCategory);
     }
 
-    if (searchQuery) {
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
       filtered = filtered.filter(article => 
-        article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        article.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        article.title.toLowerCase().includes(query) ||
+        article.content.toLowerCase().includes(query) ||
+        article.tags.some(tag => tag.toLowerCase().includes(query))
       );
     }
 
     setFilteredArticles(filtered);
+  };
+
+  const handleArticleClick = (articleId: string) => {
+    navigate(`/help/article/${articleId}`);
   };
 
   const categories = [...new Set(articles.map(article => article.category))];
@@ -109,12 +114,16 @@ const Help = () => {
           </Card>
 
           {/* Featured Articles */}
-          {featuredArticles.length > 0 && (
+          {featuredArticles.length > 0 && searchQuery === '' && selectedCategory === 'all' && (
             <div>
               <h2 className="text-2xl font-bold text-therapy-900 mb-4">Featured Articles</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {featuredArticles.map((article) => (
-                  <Card key={article.id} className="hover:shadow-xl transition-shadow cursor-pointer border-therapy-200 shadow-lg">
+                  <Card 
+                    key={article.id} 
+                    className="hover:shadow-xl transition-shadow cursor-pointer border-therapy-200 shadow-lg"
+                    onClick={() => handleArticleClick(article.id)}
+                  >
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <Star className="h-5 w-5 text-yellow-500 mt-1" />
@@ -188,13 +197,19 @@ const Help = () => {
                 <div className="col-span-full">
                   <Card className="border-therapy-200 shadow-lg">
                     <CardContent className="p-6 text-center">
-                      <p className="text-gray-500">No articles found matching your criteria.</p>
+                      <p className="text-gray-500">
+                        {searchQuery ? `No articles found for "${searchQuery}"` : 'No articles found matching your criteria.'}
+                      </p>
                     </CardContent>
                   </Card>
                 </div>
               ) : (
                 filteredArticles.map((article) => (
-                  <Card key={article.id} className="hover:shadow-xl transition-shadow cursor-pointer border-therapy-200 shadow-lg">
+                  <Card 
+                    key={article.id} 
+                    className="hover:shadow-xl transition-shadow cursor-pointer border-therapy-200 shadow-lg"
+                    onClick={() => handleArticleClick(article.id)}
+                  >
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <Badge variant="outline" className="text-xs border-therapy-200 text-therapy-600">
@@ -253,13 +268,6 @@ const Help = () => {
                   className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white"
                 >
                   Contact Support
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => navigate('/faq')}
-                  className="border-therapy-200 text-therapy-600 hover:bg-therapy-50"
-                >
-                  View FAQ
                 </Button>
               </div>
             </CardContent>
