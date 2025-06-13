@@ -50,96 +50,118 @@ const TreeLogo = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Circular background with gradient */}
+        {/* Circular background with gradient - matching new logo */}
         <circle 
           cx="50" 
           cy="50" 
           r="48" 
-          fill="url(#treeGradient)"
+          fill="url(#newTreeGradient)"
           className="drop-shadow-sm"
         />
         
-        {/* Root system */}
+        {/* Enhanced root system */}
         <path 
-          d="M46 75 Q42 80 38 85 M54 75 Q58 80 62 85 M50 75 Q50 82 50 88"
+          d="M46 75 Q42 80 38 85 M54 75 Q58 80 62 85 M50 75 Q50 82 50 88 M48 78 Q44 83 40 87 M52 78 Q56 83 60 87"
           stroke="#8B4513"
-          strokeWidth="2"
+          strokeWidth="1.5"
           fill="none"
           className="animate-roots-grow"
-          opacity="0.7"
+          opacity="0.6"
         />
         
-        {/* Tree trunk with texture */}
+        {/* More detailed tree trunk */}
         <rect 
           x="46" 
-          y="60" 
+          y="58" 
           width="8" 
-          height="25" 
+          height="27" 
           rx="2"
-          fill="url(#trunkGradient)"
+          fill="url(#enhancedTrunkGradient)"
           className="animate-trunk-grow"
         />
         
-        {/* Tree canopy layers - more organic shapes */}
+        {/* Enhanced tree canopy with more organic layering */}
         <circle 
           cx="50" 
           cy="45" 
-          r="20" 
-          fill="url(#leavesGradient1)"
+          r="22" 
+          fill="url(#newLeavesGradient1)"
           className="animate-leaf-grow-1"
-          style={{ animationDelay: '0.5s' }}
+          style={{ animationDelay: '0.3s' }}
+          opacity="0.9"
         />
         <circle 
           cx="50" 
-          cy="38" 
-          r="15" 
-          fill="url(#leavesGradient2)"
+          cy="40" 
+          r="18" 
+          fill="url(#newLeavesGradient2)"
           className="animate-leaf-grow-2"
-          style={{ animationDelay: '1s' }}
+          style={{ animationDelay: '0.6s' }}
+          opacity="0.95"
         />
         <circle 
           cx="50" 
-          cy="32" 
-          r="10" 
-          fill="url(#leavesGradient3)"
+          cy="35" 
+          r="14" 
+          fill="url(#newLeavesGradient3)"
           className="animate-leaf-grow-3"
-          style={{ animationDelay: '1.5s' }}
+          style={{ animationDelay: '0.9s' }}
+        />
+        <circle 
+          cx="50" 
+          cy="30" 
+          r="10" 
+          fill="url(#newLeavesGradient4)"
+          className="animate-leaf-grow-3"
+          style={{ animationDelay: '1.2s' }}
         />
         
         {/* Floating particles for enhanced variants */}
         {(isHovered || variant === 'hovering' || variant === 'floating') && (
           <>
-            <circle cx="25" cy="20" r="1" fill="#22c55e" className="animate-leaf-float" opacity="0.6" />
-            <circle cx="75" cy="25" r="1" fill="#16a34a" className="animate-leaf-float" style={{ animationDelay: '1s' }} opacity="0.4" />
-            <circle cx="30" cy="70" r="1" fill="#15803d" className="animate-leaf-float" style={{ animationDelay: '2s' }} opacity="0.5" />
-            <circle cx="70" cy="65" r="1" fill="#22c55e" className="animate-leaf-float" style={{ animationDelay: '3s' }} opacity="0.3" />
+            <circle cx="25" cy="20" r="1.5" fill="#22c55e" className="animate-leaf-float" opacity="0.7" />
+            <circle cx="75" cy="25" r="1" fill="#16a34a" className="animate-leaf-float" style={{ animationDelay: '1s' }} opacity="0.5" />
+            <circle cx="30" cy="70" r="1.2" fill="#15803d" className="animate-leaf-float" style={{ animationDelay: '2s' }} opacity="0.6" />
+            <circle cx="70" cy="65" r="1" fill="#22c55e" className="animate-leaf-float" style={{ animationDelay: '3s' }} opacity="0.4" />
+            <circle cx="20" cy="45" r="0.8" fill="#34d399" className="animate-leaf-float" style={{ animationDelay: '1.5s' }} opacity="0.5" />
+            <circle cx="80" cy="50" r="0.9" fill="#10b981" className="animate-leaf-float" style={{ animationDelay: '2.5s' }} opacity="0.4" />
           </>
         )}
         
-        {/* Enhanced gradient definitions */}
+        {/* Enhanced gradient definitions matching new logo */}
         <defs>
-          <radialGradient id="treeGradient" cx="50%" cy="30%">
+          <radialGradient id="newTreeGradient" cx="50%" cy="30%">
             <stop offset="0%" stopColor="#f0fdf4" />
-            <stop offset="50%" stopColor="#dcfce7" />
-            <stop offset="100%" stopColor="#bbf7d0" />
+            <stop offset="30%" stopColor="#dcfce7" />
+            <stop offset="70%" stopColor="#bbf7d0" />
+            <stop offset="100%" stopColor="#a7f3d0" />
           </radialGradient>
-          <linearGradient id="trunkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="enhancedTrunkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#a3a3a3" />
-            <stop offset="50%" stopColor="#8B4513" />
-            <stop offset="100%" stopColor="#654321" />
+            <stop offset="30%" stopColor="#8B4513" />
+            <stop offset="70%" stopColor="#654321" />
+            <stop offset="100%" stopColor="#4a3728" />
           </linearGradient>
-          <linearGradient id="leavesGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#22c55e" />
+          <radialGradient id="newLeavesGradient1" cx="40%" cy="40%">
+            <stop offset="0%" stopColor="#34d399" />
+            <stop offset="50%" stopColor="#22c55e" />
             <stop offset="100%" stopColor="#16a34a" />
-          </linearGradient>
-          <linearGradient id="leavesGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#16a34a" />
+          </radialGradient>
+          <radialGradient id="newLeavesGradient2" cx="45%" cy="45%">
+            <stop offset="0%" stopColor="#22c55e" />
+            <stop offset="50%" stopColor="#16a34a" />
             <stop offset="100%" stopColor="#15803d" />
-          </linearGradient>
-          <linearGradient id="leavesGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#15803d" />
+          </radialGradient>
+          <radialGradient id="newLeavesGradient3" cx="50%" cy="50%">
+            <stop offset="0%" stopColor="#16a34a" />
+            <stop offset="50%" stopColor="#15803d" />
             <stop offset="100%" stopColor="#166534" />
-          </linearGradient>
+          </radialGradient>
+          <radialGradient id="newLeavesGradient4" cx="50%" cy="50%">
+            <stop offset="0%" stopColor="#15803d" />
+            <stop offset="50%" stopColor="#166534" />
+            <stop offset="100%" stopColor="#14532d" />
+          </radialGradient>
         </defs>
       </svg>
       
@@ -157,7 +179,7 @@ const TreeLogo = ({
   return (
     <div className="relative">
       <img 
-        src="/lovable-uploads/9a47b7f0-6988-4b97-aa49-a9cacafcb69e.png"
+        src="/lovable-uploads/c7705e94-19de-4037-8030-ffe70c6bfee3.png"
         alt="TherapySync Tree Logo" 
         className={`${sizeClasses[size]} ${className} ${getAnimationClasses()} object-contain rounded-full`}
         onError={() => setImageError(true)}
