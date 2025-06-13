@@ -39,9 +39,9 @@ const UnifiedNavigation = () => {
 
   // Public navigation items
   const publicNavItems = [
-    { id: '#features', label: 'Features', icon: Sparkles },
-    { id: '#pricing', label: 'Pricing', icon: Crown },
-    { id: '/help', label: 'Help', icon: HelpCircle }
+    { id: '#features', label: 'Features', icon: Sparkles, priority: 1 },
+    { id: '#pricing', label: 'Pricing', icon: Crown, priority: 1 },
+    { id: '/help', label: 'Help', icon: HelpCircle, priority: 2 }
   ];
 
   // Authenticated navigation items - more compact for smaller screens
@@ -58,55 +58,43 @@ const UnifiedNavigation = () => {
   const navItems = isAuthenticated ? authNavItems : publicNavItems;
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center w-full">
       {/* Responsive navigation container */}
-      <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-3 lg:space-x-4 overflow-x-auto max-w-full px-2">
+      <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4 overflow-x-auto scrollbar-hide px-2 w-full max-w-4xl">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = item.id.startsWith('#') 
             ? false 
             : location.pathname === item.id;
 
-          // Check if item has priority for responsive behavior
-          const priority = 'priority' in item ? item.priority : 1;
+          // Responsive visibility based on priority
+          const getVisibilityClass = () => {
+            if (!isAuthenticated) return 'flex'; // Show all public nav items
+            
+            switch (item.priority) {
+              case 1: return 'flex'; // Always visible
+              case 2: return 'hidden sm:flex'; // Hidden on mobile
+              case 3: return 'hidden lg:flex'; // Hidden on mobile and tablet
+              default: return 'flex';
+            }
+          };
 
           return (
             <button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className={`flex items-center space-x-1 px-2 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 hover:bg-muted/50 whitespace-nowrap flex-shrink-0 ${
+              className={`${getVisibilityClass()} items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 hover:bg-muted/50 whitespace-nowrap flex-shrink-0 min-w-0 ${
                 isActive 
                   ? 'text-therapy-600 bg-therapy-50' 
                   : 'text-muted-foreground hover:text-foreground'
-              } ${
-                // Hide lower priority items on very small screens
-                isAuthenticated && priority === 3 ? 'hidden sm:flex' : 
-                isAuthenticated && priority === 2 ? 'hidden xs:flex' : 'flex'
               }`}
             >
               <Icon className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-              <span className="hidden sm:inline text-xs lg:text-sm">{item.label}</span>
+              <span className="hidden sm:inline text-xs sm:text-sm truncate">{item.label}</span>
             </button>
           );
         })}
 
         {/* Upgrade button for free users - responsive */}
-        {isAuthenticated && isFreePlan && (
-          <Button
-            onClick={() => navigate('/plans')}
-            size="sm"
-            className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-semibold rounded-full px-2 sm:px-3 py-2 shadow-lg hover:shadow-therapy-500/30 transition-all duration-300 hover:scale-105 ml-2 flex-shrink-0"
-          >
-            <Crown className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden sm:inline ml-1 text-xs">Upgrade</span>
-            <Badge variant="secondary" className="ml-1 bg-white/20 text-white border-none text-xs hidden lg:inline">
-              Pro
-            </Badge>
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default UnifiedNavigation;
+        {isAuthenticate
+/components/subscription/TrialSignup.tsx

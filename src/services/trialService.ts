@@ -24,7 +24,7 @@ export class TrialService {
           status: 'trialing',
           trial_start: new Date().toISOString(),
           trial_end: trialEndDate.toISOString(),
-          billing_cycle: 'monthly',
+          billing_cycle: 'yearly',
           current_period_start: new Date().toISOString(),
           current_period_end: trialEndDate.toISOString()
         });

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Check, Crown, Star, Zap } from 'lucide-react';
+import { Check, Crown, Star, Zap, AlertCircle } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -18,6 +18,7 @@ interface PlanSelectorProps {
 const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorProps) => {
   const { plans, getCurrentPlan, loading } = useSubscription();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  const [processingPlan, setProcessingPlan] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -33,6 +34,8 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
       }
       return;
     }
+
+    setProcessingPlan(plan.id);
 
     if (onPlanSelect) {
       onPlanSelect(plan.id, billingCycle);
@@ -64,6 +67,8 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
         });
       }
     }
+
+    setProcessingPlan(null);
   };
 
   const getPlanIcon = (planName: string) => {
@@ -93,7 +98,15 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
   if (!plans || plans.length === 0) {
     return (
       <div className="text-center py-12">
+        <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
         <p className="text-muted-foreground">No plans available at the moment.</p>
+        <Button 
+          onClick={() => window.location.reload()} 
+          variant="outline" 
+          className="mt-4"
+        >
+          Retry
+        </Button>
       </div>
     );
   }
@@ -125,6 +138,7 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
           const isCurrentPlan = showCurrentPlan && currentPlan?.id === plan.id;
           const price = billingCycle === 'yearly' ? plan.price_yearly : plan.price_monthly;
           const monthlyPrice = billingCycle === 'yearly' ? plan.price_yearly / 12 : plan.price_monthly;
+          const isProcessing = processingPlan === plan.id;
           
           return (
             <Card 
@@ -179,13 +193,18 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
                       Save {getYearlyDiscount(plan.price_monthly, plan.price_yearly)}% with yearly billing
                     </div>
                   )}
+                  {plan.name === 'Premium' && billingCycle === 'yearly' && (
+                    <div className="text-sm text-therapy-600 font-medium">
+                      🎉 Includes 7-day free trial
+                    </div>
+                  )}
                 </div>
               </CardHeader>
 
               <CardContent className="space-y-4">
                 {/* Features List */}
                 <div className="space-y-3">
-                  {Object.entries(plan.features).map(([key, value]) => (
+                  {Object.entries(plan.features).slice(0, 4).map(([key, value]) => (
                     <div key={key} className="flex items-start space-x-3">
                       <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-muted-foreground">{value}</span>
@@ -198,7 +217,7 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
                   <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                     Usage Limits
                   </div>
-                  {Object.entries(plan.limits).map(([key, value]) => {
+                  {Object.entries(plan.limits).slice(0, 2).map(([key, value]) => {
                     const displayValue = value === -1 ? 'Unlimited' : value.toString();
                     const displayKey = key.replace(/_/g, ' ').replace(/per month|per day|max/, '').trim();
                     
@@ -214,7 +233,7 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
                 {/* Action Button */}
                 <Button
                   onClick={() => handleSelectPlan(plan)}
-                  disabled={isCurrentPlan}
+                  disabled={isCurrentPlan || isProcessing}
                   className={`w-full mt-6 ${
                     plan.name === 'Premium' 
                       ? 'bg-therapy-500 hover:bg-therapy-600' 
@@ -224,7 +243,8 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
                   }`}
                   variant={plan.name === 'Free' ? 'outline' : 'default'}
                 >
-                  {isCurrentPlan ? 'Current Plan' : 
+                  {isProcessing ? 'Processing...' :
+                   isCurrentPlan ? 'Current Plan' : 
                    plan.name === 'Free' ? 'Get Started' : 
                    `Upgrade to ${plan.name}`}
                 </Button>

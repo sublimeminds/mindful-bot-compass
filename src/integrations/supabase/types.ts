@@ -1665,8 +1665,11 @@ export type Database = {
           plan_id: string
           status: string
           stripe_customer_id: string | null
+          stripe_payment_method_id: string | null
+          stripe_setup_intent_id: string | null
           stripe_subscription_id: string | null
           trial_end: string | null
+          trial_start: string | null
           updated_at: string
           user_id: string
         }
@@ -1680,8 +1683,11 @@ export type Database = {
           plan_id: string
           status?: string
           stripe_customer_id?: string | null
+          stripe_payment_method_id?: string | null
+          stripe_setup_intent_id?: string | null
           stripe_subscription_id?: string | null
           trial_end?: string | null
+          trial_start?: string | null
           updated_at?: string
           user_id: string
         }
@@ -1695,8 +1701,11 @@ export type Database = {
           plan_id?: string
           status?: string
           stripe_customer_id?: string | null
+          stripe_payment_method_id?: string | null
+          stripe_setup_intent_id?: string | null
           stripe_subscription_id?: string | null
           trial_end?: string | null
+          trial_start?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1765,6 +1774,10 @@ export type Database = {
         Returns: {
           role: Database["public"]["Enums"]["app_role"]
         }[]
+      }
+      handle_trial_expiration: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       has_role: {
         Args: {
