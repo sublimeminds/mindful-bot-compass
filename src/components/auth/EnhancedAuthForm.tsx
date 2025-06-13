@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +10,8 @@ import { Eye, EyeOff, Mail, Lock, User, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import PasswordResetForm from './PasswordResetForm';
+import SocialLogin from './SocialLogin';
 
 interface FormData {
   email: string;
@@ -29,6 +32,7 @@ const EnhancedAuthForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
@@ -180,6 +184,10 @@ const EnhancedAuthForm = () => {
     }
   };
 
+  if (showPasswordReset) {
+    return <PasswordResetForm onBackToAuth={() => setShowPasswordReset(false)} />;
+  }
+
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
@@ -245,10 +253,23 @@ const EnhancedAuthForm = () => {
                 {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
               </div>
 
+              <div className="flex justify-end">
+                <Button
+                  type="button"
+                  variant="link"
+                  className="p-0 text-sm text-therapy-600"
+                  onClick={() => setShowPasswordReset(true)}
+                >
+                  Forgot password?
+                </Button>
+              </div>
+
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? 'Signing In...' : 'Sign In'}
               </Button>
             </form>
+
+            <SocialLogin />
           </TabsContent>
 
           <TabsContent value="signup" className="space-y-4">
@@ -345,6 +366,8 @@ const EnhancedAuthForm = () => {
                 {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>
             </form>
+
+            <SocialLogin />
           </TabsContent>
         </Tabs>
       </CardContent>

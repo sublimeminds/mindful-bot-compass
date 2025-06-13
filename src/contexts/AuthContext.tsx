@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         if (!mounted) {
           DebugLogger.warn('AuthProvider: Component unmounted, skipping auth state update', { 
             component: 'AuthProvider', 
@@ -64,6 +64,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        
+        // Track security events
+        if (event === 'SIGNED_IN' && session?.user) {
+          // Import SecurityService dynamically to avoid circular dependencies
+          try {
+            const { SecurityService } = await import('@/services/securityService');
+            await SecurityService.trackSession(session.user.id);
+          } catch (error) {
+            console.error('Security tracking error:', error);
+          }
+        }
       }
     );
 
@@ -93,6 +104,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           });
           setSession(session);
           setUser(session?.user ?? null);
+          
+          // Track initial session if user is authenticated
+          if (session?.user) {
+            try {
+              const { SecurityService } = await import('@/services/securityService');
+              await SecurityService.trackSession(session.user.id);
+            } catch (error) {
+              console.error('Initial security tracking error:', error);
+            }
+          }
         }
       } catch (error) {
         DebugLogger.error('AuthProvider: Exception getting initial session', error as Error, { 

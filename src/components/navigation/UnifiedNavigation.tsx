@@ -96,5 +96,20 @@ const UnifiedNavigation = () => {
         })}
 
         {/* Upgrade button for free users - responsive */}
-        {isAuthenticate
-/components/subscription/TrialSignup.tsx
+        {isAuthenticated && isFreePlan && (
+          <Button
+            onClick={() => navigate('/plans')}
+            size="sm"
+            className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm whitespace-nowrap flex-shrink-0"
+          >
+            <Crown className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+            <span className="hidden sm:inline">Upgrade</span>
+            <span className="sm:hidden">+</span>
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default UnifiedNavigation;
