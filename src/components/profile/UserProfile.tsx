@@ -5,10 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, CreditCard, Bell, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import SubscriptionManager from '@/components/subscription/SubscriptionManager';
+import AccountSettings from './AccountSettings';
 
 const UserProfile = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('subscription');
+  const [activeTab, setActiveTab] = useState('account');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 py-8">
@@ -31,13 +32,13 @@ const UserProfile = () => {
         {/* Profile Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="subscription" className="flex items-center space-x-2">
-              <CreditCard className="h-4 w-4" />
-              <span>Subscription</span>
-            </TabsTrigger>
             <TabsTrigger value="account" className="flex items-center space-x-2">
               <User className="h-4 w-4" />
               <span>Account</span>
+            </TabsTrigger>
+            <TabsTrigger value="subscription" className="flex items-center space-x-2">
+              <CreditCard className="h-4 w-4" />
+              <span>Subscription</span>
             </TabsTrigger>
             <TabsTrigger value="notifications" className="flex items-center space-x-2">
               <Bell className="h-4 w-4" />
@@ -49,30 +50,12 @@ const UserProfile = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="subscription" className="space-y-6">
-            <SubscriptionManager />
+          <TabsContent value="account" className="space-y-6">
+            <AccountSettings />
           </TabsContent>
 
-          <TabsContent value="account" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Account Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium">Email</label>
-                    <p className="text-muted-foreground">{user?.email}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Member since</label>
-                    <p className="text-muted-foreground">
-                      {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown'}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="subscription" className="space-y-6">
+            <SubscriptionManager />
           </TabsContent>
 
           <TabsContent value="notifications" className="space-y-6">

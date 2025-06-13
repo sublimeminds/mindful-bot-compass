@@ -62,26 +62,36 @@ const SubscriptionManager = () => {
                   {currentPlan?.name || 'Free'} Plan
                 </CardTitle>
                 <p className="text-muted-foreground">
-                  {subscription?.billing_cycle === 'yearly' ? 'Annual' : 'Monthly'} billing
+                  {isFreePlan() ? 'No billing required' : 
+                   subscription?.billing_cycle === 'yearly' ? 'Annual billing' : 'Monthly billing'}
                 </p>
               </div>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold">
-                ${subscription?.billing_cycle === 'yearly' 
-                  ? (currentPlan?.price_yearly || 0) 
-                  : (currentPlan?.price_monthly || 0)
-                }
-              </div>
-              <div className="text-sm text-muted-foreground">
-                {subscription?.billing_cycle === 'yearly' ? 'per year' : 'per month'}
-              </div>
+              {!isFreePlan() && (
+                <>
+                  <div className="text-2xl font-bold">
+                    ${subscription?.billing_cycle === 'yearly' 
+                      ? (currentPlan?.price_yearly || 0) 
+                      : (currentPlan?.price_monthly || 0)
+                    }
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {subscription?.billing_cycle === 'yearly' ? 'per year' : 'per month'}
+                  </div>
+                </>
+              )}
+              {isFreePlan() && (
+                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                  Free Forever
+                </Badge>
+              )}
             </div>
           </div>
         </CardHeader>
         
         <CardContent>
-          {subscription && (
+          {subscription && !isFreePlan() && (
             <div className="flex items-center space-x-4 text-sm text-muted-foreground">
               <div className="flex items-center space-x-2">
                 <Calendar className="h-4 w-4" />
@@ -93,6 +103,11 @@ const SubscriptionManager = () => {
                 {subscription.status}
               </Badge>
             </div>
+          )}
+          {isFreePlan() && (
+            <p className="text-sm text-muted-foreground">
+              Enjoy unlimited access to basic features with no payment required.
+            </p>
           )}
         </CardContent>
       </Card>
@@ -146,10 +161,10 @@ const SubscriptionManager = () => {
 
       {/* Tabs for different sections */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className={`grid w-full ${isFreePlan() ? 'grid-cols-2' : 'grid-cols-3'}`}>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="plans">Change Plan</TabsTrigger>
-          <TabsTrigger value="billing">Billing History</TabsTrigger>
+          {!isFreePlan() && <TabsTrigger value="billing">Billing History</TabsTrigger>}
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -199,9 +214,11 @@ const SubscriptionManager = () => {
           <PlanSelector showCurrentPlan />
         </TabsContent>
 
-        <TabsContent value="billing" className="space-y-6">
-          <BillingHistory />
-        </TabsContent>
+        {!isFreePlan() && (
+          <TabsContent value="billing" className="space-y-6">
+            <BillingHistory />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );
