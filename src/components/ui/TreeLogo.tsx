@@ -27,6 +27,8 @@ const TreeLogo = ({
     </div>
   );
 
+  console.log('TreeLogo - imageError:', imageError, 'imagePath:', '/lovable-uploads/105532b4-a990-4684-939f-e3a17c36218b.png');
+
   if (imageError) {
     return <FallbackLogo />;
   }
@@ -36,7 +38,13 @@ const TreeLogo = ({
       src="/lovable-uploads/105532b4-a990-4684-939f-e3a17c36218b.png"
       alt="TherapySync Logo" 
       className={`${sizeClasses[size]} ${className} object-contain transition-all duration-300 hover:scale-105`}
-      onError={() => setImageError(true)}
+      onError={(e) => {
+        console.error('TreeLogo image failed to load:', e);
+        setImageError(true);
+      }}
+      onLoad={() => {
+        console.log('TreeLogo image loaded successfully');
+      }}
     />
   );
 };
