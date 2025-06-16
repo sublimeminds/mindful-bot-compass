@@ -22,7 +22,7 @@ const TreeLogo = ({
 
   // Simple fallback if image fails to load
   const FallbackLogo = () => (
-    <div className={`${sizeClasses[size]} ${className} bg-gradient-to-br from-therapy-500 to-calm-500 rounded-lg flex items-center justify-center`}>
+    <div className={`${sizeClasses[size]} ${className} bg-gradient-to-br from-therapy-500 to-calm-500 rounded-full flex items-center justify-center`}>
       <span className="text-white font-bold text-xs">TS</span>
     </div>
   );
@@ -33,7 +33,7 @@ const TreeLogo = ({
 
   return (
     <img 
-      src="/lovable-uploads/f4853a6a-f08e-4db2-b7cf-935d87ded004.png"
+      src="/lovable-uploads/105532b4-a990-4684-939f-e3a17c36218b.png"
       alt="TherapySync Logo" 
       className={`${sizeClasses[size]} ${className} object-contain transition-all duration-300 hover:scale-105`}
       onError={() => setImageError(true)}
