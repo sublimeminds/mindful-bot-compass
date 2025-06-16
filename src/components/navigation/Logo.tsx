@@ -14,8 +14,8 @@ const Logo = () => {
       >
         <div className="flex items-center justify-center transition-all duration-300 group-hover:scale-105">
           <TreeLogo 
-            size="md"
-            className="drop-shadow-sm"
+            size="lg"
+            className="drop-shadow-md"
           />
         </div>
         <div className="flex flex-col">

@@ -7,12 +7,9 @@ import QuickSignupWithPlan from "./subscription/QuickSignupWithPlan";
 import TreeLogo from "@/components/ui/TreeLogo";
 
 const HeroSection = () => {
-  console.log('HeroSection: Component rendering');
-  
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleStartSession = () => {
-    console.log('HeroSection: Starting session');
     setShowAuthModal(true);
   };
 
@@ -37,10 +34,10 @@ const HeroSection = () => {
               </div>
               
               <div className="flex items-center justify-center mb-8">
-                <div className="flex items-center justify-center w-24 h-24 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy animate-tree-breathe">
+                <div className="flex items-center justify-center w-32 h-32 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy animate-tree-breathe p-4">
                   <TreeLogo 
-                    size="lg"
-                    className="drop-shadow-sm"
+                    size="xxl"
+                    className="drop-shadow-lg"
                   />
                 </div>
               </div>
@@ -90,7 +87,7 @@ const HeroSection = () => {
               {/* Trust indicators */}
               <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-muted-foreground">
                 <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-therapy-500 rounded-full animate-pulse"></div>
+                  <TreeLogo size="micro" className="opacity-60" />
                   <span className="font-medium">HIPAA Compliant</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -98,7 +95,7 @@ const HeroSection = () => {
                   <span className="font-medium">256-bit Encryption</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <TreeLogo size="sm" className="opacity-60" />
+                  <TreeLogo size="micro" className="opacity-60" />
                   <span className="font-medium">Evidence-Based</span>
                 </div>
                 <div className="flex items-center space-x-2">

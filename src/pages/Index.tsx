@@ -34,10 +34,12 @@ const Index = () => {
         <Header />
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
           <div className="text-center space-y-6">
-            <TreeLogo 
-              size="xl"
-              className="mx-auto"
-            />
+            <div className="flex items-center justify-center w-24 h-24 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy p-3">
+              <TreeLogo 
+                size="xl"
+                className="drop-shadow-lg"
+              />
+            </div>
             <TreeLoadingSpinner 
               size="lg" 
               message="Syncing your mental wellness journey..."
@@ -63,14 +65,15 @@ const Index = () => {
                 <div className="flex items-center justify-center mb-4">
                   <div className="relative">
                     <UserAvatar user={user} size="xl" />
-                    <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center">
-                      <Heart className="h-3 w-3 text-white" />
+                    <div className="absolute -top-1 -right-1 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
+                      <TreeLogo size="micro" />
                     </div>
                   </div>
                 </div>
                 <h1 className="text-2xl font-bold text-therapy-700 mb-2 flex items-center justify-center">
-                  <Sparkles className="h-6 w-6 mr-2 text-therapy-500" />
+                  <TreeLogo size="sm" className="mr-3" />
                   Welcome back to your wellness journey
+                  <Sparkles className="h-6 w-6 ml-2 text-therapy-500" />
                 </h1>
                 <p className="text-muted-foreground">
                   Continue growing with TherapySync's personalized support
