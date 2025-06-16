@@ -19,6 +19,7 @@ interface TherapistContextType {
   selectedTherapist: TherapistPersonality | null;
   currentTherapist: TherapistPersonality | null;
   setSelectedTherapist: (therapist: TherapistPersonality | null) => void;
+  setCurrentTherapist: (therapist: TherapistPersonality | null) => void;
   selectTherapist: (therapist: TherapistPersonality) => void;
   therapists: TherapistPersonality[];
   getPersonalityPrompt: () => string;
@@ -92,6 +93,10 @@ export const TherapistProvider = ({ children }: { children: ReactNode }) => {
     });
   }, [selectedTherapist?.id]);
 
+  const setCurrentTherapist = useCallback((therapist: TherapistPersonality | null) => {
+    setSelectedTherapist(therapist);
+  }, []);
+
   const getPersonalityPrompt = useCallback(() => {
     DebugLogger.debug('TherapistProvider: Getting personality prompt', { 
       component: 'TherapistProvider', 
@@ -131,6 +136,7 @@ export const TherapistProvider = ({ children }: { children: ReactNode }) => {
       selectedTherapist,
       currentTherapist: selectedTherapist,
       setSelectedTherapist,
+      setCurrentTherapist,
       selectTherapist,
       therapists,
       getPersonalityPrompt,
@@ -145,7 +151,7 @@ export const TherapistProvider = ({ children }: { children: ReactNode }) => {
     });
     
     return contextValue;
-  }, [selectedTherapist, selectTherapist, therapists, getPersonalityPrompt, isLoading]);
+  }, [selectedTherapist, selectTherapist, setCurrentTherapist, therapists, getPersonalityPrompt, isLoading]);
 
   return (
     <TherapistContext.Provider value={value}>

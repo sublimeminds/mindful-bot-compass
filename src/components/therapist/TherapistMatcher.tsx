@@ -21,6 +21,43 @@ interface TherapistMatcherProps {
   onClose?: () => void;
 }
 
+// Export the therapists array for use in other components
+export const therapists = [
+  {
+    id: '1',
+    name: 'Dr. Emily Chen',
+    title: 'Cognitive Behavioral Therapist',
+    description: 'Warm and evidence-based approach focusing on practical solutions',
+    approach: 'Cognitive Behavioral Therapy',
+    specialties: ['Anxiety', 'Depression', 'Stress Management'],
+    communicationStyle: 'Supportive and Direct',
+    icon: 'Brain',
+    colorScheme: 'from-blue-500 to-blue-600'
+  },
+  {
+    id: '2',
+    name: 'Dr. Marcus Johnson',
+    title: 'Mindfulness Specialist',
+    description: 'Gentle approach emphasizing mindfulness and self-compassion',
+    approach: 'Mindfulness-Based Therapy',
+    specialties: ['Mindfulness', 'Self-Compassion', 'Emotional Regulation'],
+    communicationStyle: 'Calm and Reflective',
+    icon: 'Heart',
+    colorScheme: 'from-green-500 to-emerald-500'
+  },
+  {
+    id: '3',
+    name: 'Dr. Sarah Williams',
+    title: 'Trauma-Informed Therapist',
+    description: 'Specialized in trauma recovery and resilience building',
+    approach: 'Trauma-Informed Care',
+    specialties: ['PTSD', 'Trauma Recovery', 'Resilience Building'],
+    communicationStyle: 'Gentle and Empowering',
+    icon: 'Shield',
+    colorScheme: 'from-purple-500 to-purple-600'
+  }
+];
+
 const TherapistMatcher: React.FC<TherapistMatcherProps> = ({ 
   onTherapistSelected,
   onClose 
@@ -29,7 +66,7 @@ const TherapistMatcher: React.FC<TherapistMatcherProps> = ({
   const [matches, setMatches] = useState<TherapistMatch[]>([]);
   const [responses, setResponses] = useState<AssessmentResponse[]>([]);
   const { user } = useAuth();
-  const { selectTherapist, therapists } = useTherapist();
+  const { selectTherapist } = useTherapist();
   const { toast } = useToast();
 
   const handleStartAssessment = () => {

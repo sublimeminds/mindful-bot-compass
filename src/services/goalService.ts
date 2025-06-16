@@ -17,6 +17,18 @@ export interface Goal {
   createdAt: string;
   updatedAt: string;
   notes?: string;
+  type: string;
+}
+
+export interface GoalTemplate {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  targetValue: number;
+  unit: string;
+  tags: string[];
+  type: string;
 }
 
 export class GoalService {
@@ -37,7 +49,7 @@ export class GoalService {
       title: goal.title,
       description: goal.description || '',
       category: goal.category || 'General',
-      priority: goal.priority || 'medium',
+      priority: (goal.priority || 'medium') as 'low' | 'medium' | 'high',
       targetValue: goal.target_value || 100,
       currentProgress: goal.current_progress || 0,
       unit: goal.unit || 'points',
@@ -47,7 +59,8 @@ export class GoalService {
       userId: goal.user_id,
       createdAt: goal.created_at,
       updatedAt: goal.updated_at,
-      notes: goal.notes || ''
+      notes: goal.notes || '',
+      type: goal.type || 'personal'
     }));
   }
 
@@ -65,6 +78,7 @@ export class GoalService {
     isCompleted: boolean;
     tags: string[];
     notes: string;
+    type: string;
   }): Promise<Goal> {
     const { data, error } = await supabase
       .from('goals')
@@ -80,7 +94,8 @@ export class GoalService {
         start_date: goalData.startDate.toISOString(),
         target_date: goalData.targetDate.toISOString(),
         tags: goalData.tags,
-        notes: goalData.notes
+        notes: goalData.notes,
+        type: goalData.type
       })
       .select()
       .single();
@@ -95,7 +110,7 @@ export class GoalService {
       title: data.title,
       description: data.description || '',
       category: data.category || 'General',
-      priority: data.priority || 'medium',
+      priority: (data.priority || 'medium') as 'low' | 'medium' | 'high',
       targetValue: data.target_value || 100,
       currentProgress: data.current_progress || 0,
       unit: data.unit || 'points',
@@ -105,7 +120,8 @@ export class GoalService {
       userId: data.user_id,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
-      notes: data.notes || ''
+      notes: data.notes || '',
+      type: data.type || 'personal'
     };
   }
 
@@ -159,5 +175,41 @@ export class GoalService {
       console.error('Error deleting goal:', error);
       throw error;
     }
+  }
+
+  static async getGoalTemplates(): Promise<GoalTemplate[]> {
+    // Return static templates for now
+    return [
+      {
+        id: '1',
+        title: 'Daily Mindfulness Practice',
+        description: 'Establish a consistent mindfulness routine',
+        category: 'Mental Health',
+        targetValue: 30,
+        unit: 'days',
+        tags: ['mindfulness', 'daily habit'],
+        type: 'habit'
+      },
+      {
+        id: '2',
+        title: 'Exercise Routine',
+        description: 'Complete regular exercise sessions',
+        category: 'Physical Health',
+        targetValue: 20,
+        unit: 'sessions',
+        tags: ['exercise', 'health'],
+        type: 'habit'
+      },
+      {
+        id: '3',
+        title: 'Therapy Sessions',
+        description: 'Attend scheduled therapy sessions',
+        category: 'Mental Health',
+        targetValue: 10,
+        unit: 'sessions',
+        tags: ['therapy', 'mental health'],
+        type: 'treatment'
+      }
+    ];
   }
 }

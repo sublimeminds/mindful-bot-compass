@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,25 +9,37 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
+interface MoodEntry {
+  id: string;
+  overall: number;
+  anxiety: number;
+  stress: number;
+  created_at: string;
+}
+
 const MoodTracking = () => {
   const { user } = useAuth();
   const [showDetailedTracker, setShowDetailedTracker] = useState(false);
 
-  const { data: moodEntries, isLoading, error } = useQuery(['mood-entries'], async () => {
-    if (!user?.id) return [];
+  const { data: moodEntries, isLoading, error } = useQuery({
+    queryKey: ['mood-entries', user?.id],
+    queryFn: async (): Promise<MoodEntry[]> => {
+      if (!user?.id) return [];
 
-    const { data, error } = await supabase
-      .from('mood_entries')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+      const { data, error } = await supabase
+        .from('mood_entries')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Error fetching mood entries:', error);
-      throw error;
-    }
+      if (error) {
+        console.error('Error fetching mood entries:', error);
+        throw error;
+      }
 
-    return data;
+      return data || [];
+    },
+    enabled: !!user?.id
   });
 
   if (isLoading) {
@@ -34,7 +47,7 @@ const MoodTracking = () => {
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>Error: {(error as Error).message}</div>;
   }
 
   return (

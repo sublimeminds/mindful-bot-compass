@@ -31,7 +31,7 @@ const TherapyChat = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { currentSession, startSession, endSession } = useSession();
-  const { currentTherapist, setCurrentTherapist } = useTherapist();
+  const { currentTherapist, selectTherapist } = useTherapist();
   const [showEndModal, setShowEndModal] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [activeTab, setActiveTab] = useState('chat');
@@ -46,7 +46,7 @@ const TherapyChat = () => {
   const handleStartSession = async () => {
     if (!currentTherapist) {
       const defaultTherapist = therapists[0];
-      setCurrentTherapist(defaultTherapist);
+      selectTherapist(defaultTherapist);
     }
     await startSession();
     setActiveTab('chat');
@@ -64,7 +64,7 @@ const TherapyChat = () => {
   };
 
   const handleSelectTherapist = (therapist: typeof therapists[0]) => {
-    setCurrentTherapist(therapist);
+    selectTherapist(therapist);
     if (currentSession) {
       handleStartSession();
     }
@@ -205,7 +205,13 @@ const TherapyChat = () => {
                   <Card>
                     <CardContent className="p-6 text-center">
                       <Clock className="h-8 w-8 text-calm-500 mx-auto mb-2" />
-                      <SessionTimer />
+                      {currentSession && (
+                        <SessionTimer 
+                          startTime={currentSession.start_time ? new Date(currentSession.start_time) : new Date()} 
+                          onEndSession={handleEndSession}
+                          canEnd={true}
+                        />
+                      )}
                       <p className="text-muted-foreground">Session Duration</p>
                     </CardContent>
                   </Card>
@@ -238,9 +244,15 @@ const TherapyChat = () => {
                       <div key={therapist.id} className="relative">
                         <TherapistCard
                           therapist={therapist}
-                          onSelect={() => handleSelectTherapist(therapist)}
                           isSelected={currentTherapist?.id === therapist.id}
                         />
+                        <Button 
+                          onClick={() => handleSelectTherapist(therapist)}
+                          className="w-full mt-3"
+                          variant={currentTherapist?.id === therapist.id ? "default" : "outline"}
+                        >
+                          {currentTherapist?.id === therapist.id ? "Selected" : "Select"}
+                        </Button>
                         {currentTherapist?.id === therapist.id && (
                           <Badge className="absolute -top-2 -right-2 bg-therapy-500">
                             Selected
