@@ -33,10 +33,10 @@ const Index = () => {
       <>
         <Header />
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
-          <div className="text-center space-y-6">
-            <div className="flex items-center justify-center w-28 h-28 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy p-4">
+          <div className="text-center space-y-8">
+            <div className="flex items-center justify-center w-40 h-40 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy p-6">
               <TreeLogo 
-                size="xl"
+                size="xxl"
                 className="drop-shadow-lg"
               />
             </div>
@@ -62,20 +62,20 @@ const Index = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
               {/* Welcome section with user avatar for authenticated users */}
               <div className="mb-8 text-center">
-                <div className="flex items-center justify-center mb-4">
+                <div className="flex items-center justify-center mb-6">
                   <div className="relative">
                     <UserAvatar user={user} size="xl" />
-                    <div className="absolute -top-1 -right-1 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
-                      <TreeLogo size="sm" />
+                    <div className="absolute -top-2 -right-2 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
+                      <TreeLogo size="lg" />
                     </div>
                   </div>
                 </div>
-                <h1 className="text-2xl font-bold text-therapy-700 mb-2 flex items-center justify-center">
-                  <TreeLogo size="md" className="mr-3" />
+                <h1 className="text-3xl font-bold text-therapy-700 mb-3 flex items-center justify-center">
+                  <TreeLogo size="lg" className="mr-4" />
                   Welcome back to your wellness journey
-                  <Sparkles className="h-6 w-6 ml-2 text-therapy-500" />
+                  <Sparkles className="h-7 w-7 ml-3 text-therapy-500" />
                 </h1>
-                <p className="text-muted-foreground">
+                <p className="text-lg text-muted-foreground">
                   Continue growing with TherapySync's personalized support
                 </p>
               </div>

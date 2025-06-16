@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 interface TreeLogoProps {
   className?: string;
-  size?: 'micro' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+  size?: 'micro' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'hero';
 }
 
 const TreeLogo = ({ 
@@ -15,10 +15,11 @@ const TreeLogo = ({
   const sizeClasses = {
     micro: 'w-4 h-4',
     sm: 'w-8 h-8',
-    md: 'w-12 h-12',
-    lg: 'w-16 h-16',
-    xl: 'w-20 h-20',
-    xxl: 'w-32 h-32'
+    md: 'w-16 h-16',
+    lg: 'w-24 h-24',
+    xl: 'w-32 h-32',
+    xxl: 'w-48 h-48',
+    hero: 'w-64 h-64'
   };
 
   // Enhanced fallback with tree theme
@@ -29,8 +30,8 @@ const TreeLogo = ({
           <span className="text-xs">🌳</span>
         ) : (
           <div className="flex flex-col items-center">
-            <span className="text-lg">🌳</span>
-            <span className="text-xs font-semibold">TS</span>
+            <span className={size === 'hero' ? 'text-6xl' : size === 'xxl' ? 'text-4xl' : 'text-2xl'}>🌳</span>
+            {size !== 'hero' && <span className="text-xs font-semibold">TS</span>}
           </div>
         )}
       </div>
@@ -47,7 +48,7 @@ const TreeLogo = ({
     <img 
       src="/lovable-uploads/d0afa7e0-63e0-4951-a3b8-529fcf32b24a.png"
       alt="TherapySync Tree Logo" 
-      className={`${sizeClasses[size]} ${className} object-contain transition-all duration-300 hover:scale-105 drop-shadow-sm rounded-full`}
+      className={`${sizeClasses[size]} ${className} object-contain transition-all duration-300 hover:scale-105 drop-shadow-lg`}
       onError={(e) => {
         console.error('TreeLogo image failed to load:', e);
         setImageError(true);
