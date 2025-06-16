@@ -18,7 +18,7 @@ const TreeLogo = ({
     md: 'w-12 h-12',
     lg: 'w-16 h-16',
     xl: 'w-20 h-20',
-    xxl: 'w-30 h-30'
+    xxl: 'w-32 h-32'
   };
 
   // Enhanced fallback with tree theme
@@ -37,7 +37,7 @@ const TreeLogo = ({
     </div>
   );
 
-  console.log('TreeLogo - imageError:', imageError, 'imagePath:', '/lovable-uploads/f8d0800a-6eda-4bb4-9ee4-faad8e8c120c.png');
+  console.log('TreeLogo - imageError:', imageError, 'imagePath:', '/lovable-uploads/9c90f9f3-7d6f-4daa-862a-2ed583b977ba.png');
 
   if (imageError) {
     return <FallbackLogo />;
@@ -45,9 +45,9 @@ const TreeLogo = ({
 
   return (
     <img 
-      src="/lovable-uploads/f8d0800a-6eda-4bb4-9ee4-faad8e8c120c.png"
+      src="/lovable-uploads/9c90f9f3-7d6f-4daa-862a-2ed583b977ba.png"
       alt="TherapySync Tree Logo" 
-      className={`${sizeClasses[size]} ${className} object-contain transition-all duration-300 hover:scale-105 drop-shadow-sm`}
+      className={`${sizeClasses[size]} ${className} object-contain transition-all duration-300 hover:scale-105 drop-shadow-sm rounded-full`}
       onError={(e) => {
         console.error('TreeLogo image failed to load:', e);
         setImageError(true);
