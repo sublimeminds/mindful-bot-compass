@@ -1,7 +1,6 @@
 
 import { useAuth } from "@/contexts/AuthContext";
-import AuthenticatedNavigation from "@/components/navigation/AuthenticatedNavigation";
-import PublicNavigation from "@/components/navigation/PublicNavigation";
+import DesktopHeader from "@/components/navigation/DesktopHeader";
 import MobileHeader from "@/components/mobile/MobileHeader";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -14,8 +13,8 @@ const Header = () => {
     return <MobileHeader />;
   }
 
-  // Use regular navigation for desktop - provide empty props for public nav
-  return user ? <AuthenticatedNavigation /> : <PublicNavigation activeSection="" scrollToSection={() => {}} />;
+  // Use desktop header for larger screens
+  return <DesktopHeader />;
 };
 
 export default Header;

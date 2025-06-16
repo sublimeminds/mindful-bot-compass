@@ -12,14 +12,11 @@ const Logo = () => {
         onClick={() => navigate("/")}
         className="flex items-center space-x-3 hover:opacity-90 transition-all duration-300 group"
       >
-        <div className="flex items-center justify-center rounded-xl shadow-lg group-hover:shadow-therapy-500/30 transition-all duration-300 group-hover:scale-105 overflow-hidden relative">
+        <div className="flex items-center justify-center transition-all duration-300 group-hover:scale-105">
           <TreeLogo 
             size="md"
             className="drop-shadow-sm"
           />
-          
-          {/* Enhanced glow effect */}
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-therapy-400/0 to-calm-400/0 group-hover:from-therapy-400/20 group-hover:to-calm-400/20 transition-all duration-500 pointer-events-none" />
         </div>
         <div className="flex flex-col">
           <span className="text-xl font-bold bg-gradient-to-r from-therapy-600 via-therapy-700 to-calm-600 bg-clip-text text-transparent group-hover:from-therapy-500 group-hover:to-calm-500 transition-all duration-300">

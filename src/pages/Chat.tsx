@@ -396,7 +396,7 @@ const Chat = () => {
       <SessionEndModal
         isOpen={showEndModal}
         onClose={() => setShowEndModal(false)}
-        onSubmit={handleSessionEndSubmit}
+        onConfirm={handleSessionEndSubmit}
       />
     </div>
   );
