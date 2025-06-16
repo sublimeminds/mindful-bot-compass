@@ -34,7 +34,7 @@ const HeroSection = () => {
               </div>
               
               <div className="flex items-center justify-center mb-8">
-                <div className="flex items-center justify-center w-32 h-32 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy animate-tree-breathe p-4">
+                <div className="flex items-center justify-center w-40 h-40 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy animate-tree-breathe p-6">
                   <TreeLogo 
                     size="xxl"
                     className="drop-shadow-lg"

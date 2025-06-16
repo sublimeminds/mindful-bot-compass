@@ -34,7 +34,7 @@ const Index = () => {
         <Header />
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
           <div className="text-center space-y-6">
-            <div className="flex items-center justify-center w-24 h-24 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy p-3">
+            <div className="flex items-center justify-center w-28 h-28 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy p-4">
               <TreeLogo 
                 size="xl"
                 className="drop-shadow-lg"
@@ -65,13 +65,13 @@ const Index = () => {
                 <div className="flex items-center justify-center mb-4">
                   <div className="relative">
                     <UserAvatar user={user} size="xl" />
-                    <div className="absolute -top-1 -right-1 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
-                      <TreeLogo size="micro" />
+                    <div className="absolute -top-1 -right-1 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
+                      <TreeLogo size="sm" />
                     </div>
                   </div>
                 </div>
                 <h1 className="text-2xl font-bold text-therapy-700 mb-2 flex items-center justify-center">
-                  <TreeLogo size="sm" className="mr-3" />
+                  <TreeLogo size="md" className="mr-3" />
                   Welcome back to your wellness journey
                   <Sparkles className="h-6 w-6 ml-2 text-therapy-500" />
                 </h1>

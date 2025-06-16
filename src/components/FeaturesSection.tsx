@@ -37,7 +37,7 @@ const FeaturesSection = () => {
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-6">
             <TreeLogo 
-              size="lg"
+              size="xl"
               className="drop-shadow-sm"
             />
           </div>
