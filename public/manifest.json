@@ -13,13 +13,13 @@
   "lang": "en",
   "icons": [
     {
-      "src": "/lovable-uploads/ff2c75df-d03e-433a-948d-39f5dea7f7f3.png",
+      "src": "/lovable-uploads/d0afa7e0-63e0-4951-a3b8-529fcf32b24a.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/lovable-uploads/ff2c75df-d03e-433a-948d-39f5dea7f7f3.png",
+      "src": "/lovable-uploads/d0afa7e0-63e0-4951-a3b8-529fcf32b24a.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
@@ -33,7 +33,7 @@
       "url": "/therapy",
       "icons": [
         {
-          "src": "/lovable-uploads/ff2c75df-d03e-433a-948d-39f5dea7f7f3.png",
+          "src": "/lovable-uploads/d0afa7e0-63e0-4951-a3b8-529fcf32b24a.png",
           "sizes": "96x96"
         }
       ]
@@ -45,7 +45,7 @@
       "url": "/mood-tracking",
       "icons": [
         {
-          "src": "/lovable-uploads/ff2c75df-d03e-433a-948d-39f5dea7f7f3.png",
+          "src": "/lovable-uploads/d0afa7e0-63e0-4951-a3b8-529fcf32b24a.png",
           "sizes": "96x96"
         }
       ]

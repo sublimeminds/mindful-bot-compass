@@ -37,7 +37,7 @@ const TreeLogo = ({
     </div>
   );
 
-  console.log('TreeLogo - imageError:', imageError, 'imagePath:', '/lovable-uploads/ff2c75df-d03e-433a-948d-39f5dea7f7f3.png');
+  console.log('TreeLogo - imageError:', imageError, 'imagePath:', '/lovable-uploads/d0afa7e0-63e0-4951-a3b8-529fcf32b24a.png');
 
   if (imageError) {
     return <FallbackLogo />;
@@ -45,7 +45,7 @@ const TreeLogo = ({
 
   return (
     <img 
-      src="/lovable-uploads/ff2c75df-d03e-433a-948d-39f5dea7f7f3.png"
+      src="/lovable-uploads/d0afa7e0-63e0-4951-a3b8-529fcf32b24a.png"
       alt="TherapySync Tree Logo" 
       className={`${sizeClasses[size]} ${className} object-contain transition-all duration-300 hover:scale-105 drop-shadow-sm rounded-full`}
       onError={(e) => {
