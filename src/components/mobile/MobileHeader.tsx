@@ -30,7 +30,7 @@ const MobileHeader = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center justify-between px-4">
+      <div className="container flex h-14 items-center justify-between px-4 max-w-full">
         <Logo />
         
         {/* Desktop Navigation */}
@@ -47,10 +47,10 @@ const MobileHeader = () => {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-64 sm:w-72">
+            <SheetContent side="right" className="w-72 sm:w-80">
               <div className="flex flex-col h-full">
                 {/* Header */}
-                <div className="flex items-center justify-between p-3 border-b">
+                <div className="flex items-center justify-between p-4 border-b">
                   <Logo />
                   <Button
                     variant="ghost" 
@@ -63,20 +63,20 @@ const MobileHeader = () => {
                 </div>
 
                 {/* Navigation Links */}
-                <nav className="flex-1 py-3">
-                  <div className="space-y-1 px-3">
+                <nav className="flex-1 py-4">
+                  <div className="space-y-1 px-4">
                     {navigationItems.map((item) => (
                       <Link
                         key={item.href}
                         to={item.href}
                         onClick={() => setIsOpen(false)}
-                        className={`flex items-center space-x-2 px-2 py-2 rounded-md text-sm font-medium transition-colors ${
+                        className={`flex items-center space-x-3 px-3 py-3 rounded-md text-sm font-medium transition-colors ${
                           isActive(item.href)
                             ? 'bg-therapy-100 text-therapy-700'
                             : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                         }`}
                       >
-                        <span className="text-base">{item.icon}</span>
+                        <span className="text-lg">{item.icon}</span>
                         <span>{item.label}</span>
                       </Link>
                     ))}
@@ -85,7 +85,7 @@ const MobileHeader = () => {
 
                 {/* User Section */}
                 {user && (
-                  <div className="border-t p-3">
+                  <div className="border-t p-4">
                     <UserMenu user={user} logout={logout} />
                   </div>
                 )}

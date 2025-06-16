@@ -11,11 +11,8 @@ import {
   Target, 
   Calendar, 
   TrendingUp, 
-  Award, 
   Flag,
-  Clock,
-  Plus,
-  CheckCircle
+  Plus
 } from 'lucide-react';
 import { Goal } from '@/services/goalService';
 import { format, differenceInDays } from 'date-fns';
@@ -38,15 +35,15 @@ const GoalDetailsModal = ({ goal, isOpen, onClose, onUpdateProgress }: GoalDetai
   const isOverdue = daysRemaining < 0;
   const isCompleted = goal.isCompleted;
 
-  const getCategoryColor = (category: Goal['category']) => {
+  const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'mental-health':
+      case 'Mental Health':
         return 'bg-therapy-100 text-therapy-800';
-      case 'habit-building':
+      case 'Physical Health':
         return 'bg-calm-100 text-calm-800';
-      case 'therapy-specific':
+      case 'Relationships':
         return 'bg-blue-100 text-blue-800';
-      case 'personal-growth':
+      case 'Career':
         return 'bg-purple-100 text-purple-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -75,8 +72,6 @@ const GoalDetailsModal = ({ goal, isOpen, onClose, onUpdateProgress }: GoalDetai
     }
   };
 
-  const completedMilestones = goal.milestones.filter(m => m.isCompleted);
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -84,9 +79,8 @@ const GoalDetailsModal = ({ goal, isOpen, onClose, onUpdateProgress }: GoalDetai
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
               <Badge className={getCategoryColor(goal.category)}>
-                {goal.category.replace('-', ' ')}
+                {goal.category}
               </Badge>
-              <Badge variant="outline">{goal.type}</Badge>
               <Flag className={`h-4 w-4 ${getPriorityColor(goal.priority)}`} />
             </div>
             <DialogTitle className="text-xl">{goal.title}</DialogTitle>
@@ -119,12 +113,6 @@ const GoalDetailsModal = ({ goal, isOpen, onClose, onUpdateProgress }: GoalDetai
 
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="space-y-1">
-                <div className="font-medium">Start Date</div>
-                <div className="text-muted-foreground">
-                  {format(goal.startDate, 'MMM d, yyyy')}
-                </div>
-              </div>
-              <div className="space-y-1">
                 <div className="font-medium">Target Date</div>
                 <div className={`${isOverdue && !isCompleted ? 'text-red-600' : 'text-muted-foreground'}`}>
                   {format(goal.targetDate, 'MMM d, yyyy')}
@@ -140,48 +128,17 @@ const GoalDetailsModal = ({ goal, isOpen, onClose, onUpdateProgress }: GoalDetai
                   )}
                 </div>
               </div>
+              <div className="space-y-1">
+                <div className="font-medium">Priority</div>
+                <div className={getPriorityColor(goal.priority)}>
+                  {goal.priority.charAt(0).toUpperCase() + goal.priority.slice(1)}
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Milestones */}
-          {goal.milestones.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="font-medium flex items-center">
-                <Award className="h-4 w-4 mr-2" />
-                Milestones ({completedMilestones.length} / {goal.milestones.length})
-              </h3>
-              
-              <div className="space-y-3">
-                {goal.milestones.map((milestone) => (
-                  <div key={milestone.id} className="flex items-start space-x-3 p-3 border rounded-lg">
-                    <div className={`mt-0.5 ${milestone.isCompleted ? 'text-green-600' : 'text-muted-foreground'}`}>
-                      <CheckCircle className={`h-4 w-4 ${milestone.isCompleted ? 'fill-current' : ''}`} />
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      <div className={`font-medium ${milestone.isCompleted ? 'line-through text-muted-foreground' : ''}`}>
-                        {milestone.title}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {milestone.description}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Target: {milestone.targetValue} {goal.unit}
-                        {milestone.reward && ` • Reward: ${milestone.reward}`}
-                      </div>
-                      {milestone.completedAt && (
-                        <div className="text-xs text-green-600">
-                          Completed {format(milestone.completedAt, 'MMM d, yyyy')}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Tags */}
-          {goal.tags.length > 0 && (
+          {goal.tags && goal.tags.length > 0 && (
             <div className="space-y-2">
               <h3 className="font-medium">Tags</h3>
               <div className="flex flex-wrap gap-2">
@@ -257,11 +214,11 @@ const GoalDetailsModal = ({ goal, isOpen, onClose, onUpdateProgress }: GoalDetai
           {isCompleted && (
             <div className="text-center py-4 border-t">
               <div className="flex items-center justify-center text-green-600 text-lg font-medium">
-                <Award className="h-5 w-5 mr-2" />
+                <Target className="h-5 w-5 mr-2" />
                 Congratulations! Goal Completed!
               </div>
               <p className="text-sm text-muted-foreground mt-1">
-                Completed on {format(goal.updatedAt, 'MMMM d, yyyy')}
+                Completed on {format(new Date(goal.updatedAt), 'MMMM d, yyyy')}
               </p>
             </div>
           )}

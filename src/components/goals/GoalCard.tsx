@@ -9,7 +9,6 @@ import {
   Calendar, 
   TrendingUp, 
   Edit, 
-  Award,
   Clock,
   Flag
 } from 'lucide-react';
@@ -29,15 +28,15 @@ const GoalCard = ({ goal, onClick, onEdit, onUpdateProgress }: GoalCardProps) =>
   const isOverdue = daysRemaining < 0;
   const isCompleted = goal.isCompleted;
 
-  const getCategoryColor = (category: Goal['category']) => {
+  const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'mental-health':
+      case 'Mental Health':
         return 'bg-therapy-100 text-therapy-800';
-      case 'habit-building':
+      case 'Physical Health':
         return 'bg-calm-100 text-calm-800';
-      case 'therapy-specific':
+      case 'Relationships':
         return 'bg-blue-100 text-blue-800';
-      case 'personal-growth':
+      case 'Career':
         return 'bg-purple-100 text-purple-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -58,12 +57,10 @@ const GoalCard = ({ goal, onClick, onEdit, onUpdateProgress }: GoalCardProps) =>
   };
 
   const handleQuickProgress = () => {
-    const increment = goal.type === 'habit' ? 1 : Math.min(5, goal.targetValue - goal.currentProgress);
+    const increment = Math.min(5, goal.targetValue - goal.currentProgress);
     const newProgress = Math.min(goal.currentProgress + increment, goal.targetValue);
     onUpdateProgress(goal.id, newProgress);
   };
-
-  const completedMilestones = goal.milestones.filter(m => m.isCompleted).length;
 
   return (
     <Card className={`hover:shadow-md transition-shadow cursor-pointer ${isCompleted ? 'bg-green-50 border-green-200' : ''}`}>
@@ -72,7 +69,7 @@ const GoalCard = ({ goal, onClick, onEdit, onUpdateProgress }: GoalCardProps) =>
           <div className="space-y-2 flex-1" onClick={onClick}>
             <div className="flex items-center space-x-2">
               <Badge className={getCategoryColor(goal.category)}>
-                {goal.category.replace('-', ' ')}
+                {goal.category}
               </Badge>
               <Flag className={`h-3 w-3 ${getPriorityColor(goal.priority)}`} />
             </div>
@@ -114,17 +111,6 @@ const GoalCard = ({ goal, onClick, onEdit, onUpdateProgress }: GoalCardProps) =>
           </div>
         </div>
 
-        {/* Milestones */}
-        {goal.milestones.length > 0 && (
-          <div className="flex items-center justify-between text-sm">
-            <span className="flex items-center">
-              <Award className="h-3 w-3 mr-1" />
-              Milestones
-            </span>
-            <span>{completedMilestones} / {goal.milestones.length}</span>
-          </div>
-        )}
-
         {/* Timeline */}
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span className="flex items-center">
@@ -133,7 +119,7 @@ const GoalCard = ({ goal, onClick, onEdit, onUpdateProgress }: GoalCardProps) =>
           </span>
           <span className={isOverdue && !isCompleted ? 'text-red-600 font-medium' : ''}>
             {isCompleted 
-              ? format(goal.updatedAt, 'MMM d, yyyy')
+              ? format(new Date(goal.updatedAt), 'MMM d, yyyy')
               : isOverdue 
                 ? `${Math.abs(daysRemaining)} days overdue`
                 : daysRemaining === 0 
@@ -144,7 +130,7 @@ const GoalCard = ({ goal, onClick, onEdit, onUpdateProgress }: GoalCardProps) =>
         </div>
 
         {/* Tags */}
-        {goal.tags.length > 0 && (
+        {goal.tags && goal.tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {goal.tags.slice(0, 3).map((tag, index) => (
               <Badge key={index} variant="outline" className="text-xs">
@@ -171,13 +157,13 @@ const GoalCard = ({ goal, onClick, onEdit, onUpdateProgress }: GoalCardProps) =>
             className="w-full"
           >
             <Target className="h-3 w-3 mr-1" />
-            Quick Progress +{goal.type === 'habit' ? '1' : '5'}
+            Quick Progress +5
           </Button>
         )}
 
         {isCompleted && (
           <div className="flex items-center justify-center text-green-600 text-sm font-medium">
-            <Award className="h-4 w-4 mr-1" />
+            <Target className="h-4 w-4 mr-1" />
             Goal Completed!
           </div>
         )}

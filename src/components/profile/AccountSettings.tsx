@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -103,7 +102,7 @@ const AccountSettings = () => {
 
   const handleSocialConnect = async (provider: string) => {
     try {
-      const { error } = await supabase.auth.linkIdentity({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: provider as any
       });
 
@@ -124,15 +123,11 @@ const AccountSettings = () => {
 
   const handleSocialDisconnect = async (provider: string) => {
     try {
-      const { error } = await supabase.auth.unlinkIdentity({
-        provider: provider as any
-      });
-
-      if (error) throw error;
-
+      // Note: unlinkIdentity is not available in the current Supabase JS client
+      // This would need to be implemented via admin API or custom function
       toast({
-        title: "Account Disconnected",
-        description: `Successfully disconnected your ${provider} account`,
+        title: "Feature Coming Soon",
+        description: "Social account disconnection will be available soon",
       });
     } catch (error: any) {
       toast({

@@ -44,7 +44,25 @@ const CreateGoalDialog = ({ children }: CreateGoalDialogProps) => {
   const units = ['points', 'days', 'times', 'hours', 'sessions', 'exercises', 'books', 'habits'];
 
   const createGoalMutation = useMutation({
-    mutationFn: (data: typeof goalData) => GoalService.createGoal(user!.id, data),
+    mutationFn: async (data: typeof goalData) => {
+      if (!user?.id) throw new Error('User not authenticated');
+      
+      return GoalService.createGoal({
+        userId: user.id,
+        title: data.title,
+        description: data.description,
+        category: data.category,
+        priority: data.priority,
+        targetValue: data.targetValue,
+        currentProgress: 0,
+        unit: data.unit,
+        startDate: new Date(),
+        targetDate: new Date(data.targetDate),
+        isCompleted: false,
+        tags: data.tags,
+        notes: ''
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['goals'] });
       toast({

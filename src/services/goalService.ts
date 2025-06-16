@@ -10,12 +10,13 @@ export interface Goal {
   targetValue: number;
   currentProgress: number;
   unit: string;
-  targetDate: string;
+  targetDate: Date;
   isCompleted: boolean;
   tags?: string[];
   userId: string;
   createdAt: string;
   updatedAt: string;
+  notes?: string;
 }
 
 export class GoalService {
@@ -40,20 +41,35 @@ export class GoalService {
       targetValue: goal.target_value || 100,
       currentProgress: goal.current_progress || 0,
       unit: goal.unit || 'points',
-      targetDate: goal.target_date || new Date().toISOString(),
+      targetDate: new Date(goal.target_date || new Date()),
       isCompleted: goal.is_completed || false,
       tags: goal.tags || [],
       userId: goal.user_id,
       createdAt: goal.created_at,
-      updatedAt: goal.updated_at
+      updatedAt: goal.updated_at,
+      notes: goal.notes || ''
     }));
   }
 
-  static async createGoal(userId: string, goalData: Partial<Goal>): Promise<Goal> {
+  static async createGoal(goalData: {
+    userId: string;
+    title: string;
+    description: string;
+    category: string;
+    priority: 'low' | 'medium' | 'high';
+    targetValue: number;
+    currentProgress: number;
+    unit: string;
+    startDate: Date;
+    targetDate: Date;
+    isCompleted: boolean;
+    tags: string[];
+    notes: string;
+  }): Promise<Goal> {
     const { data, error } = await supabase
       .from('goals')
       .insert({
-        user_id: userId,
+        user_id: goalData.userId,
         title: goalData.title,
         description: goalData.description,
         category: goalData.category,
@@ -61,8 +77,10 @@ export class GoalService {
         target_value: goalData.targetValue,
         current_progress: goalData.currentProgress || 0,
         unit: goalData.unit,
-        target_date: goalData.targetDate,
-        tags: goalData.tags
+        start_date: goalData.startDate.toISOString(),
+        target_date: goalData.targetDate.toISOString(),
+        tags: goalData.tags,
+        notes: goalData.notes
       })
       .select()
       .single();
@@ -81,12 +99,13 @@ export class GoalService {
       targetValue: data.target_value || 100,
       currentProgress: data.current_progress || 0,
       unit: data.unit || 'points',
-      targetDate: data.target_date || new Date().toISOString(),
+      targetDate: new Date(data.target_date || new Date()),
       isCompleted: data.is_completed || false,
       tags: data.tags || [],
       userId: data.user_id,
       createdAt: data.created_at,
-      updatedAt: data.updated_at
+      updatedAt: data.updated_at,
+      notes: data.notes || ''
     };
   }
 
@@ -120,13 +139,12 @@ export class GoalService {
       throw error;
     }
 
-    // Log the progress update
+    // Log the progress update in goal_progress table
     if (note) {
-      await supabase.from('goal_progress_logs').insert({
+      await supabase.from('goal_progress').insert({
         goal_id: goalId,
-        progress_change: increment,
-        notes: note,
-        created_at: new Date().toISOString()
+        value: newProgress,
+        note: note
       });
     }
   }

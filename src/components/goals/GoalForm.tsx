@@ -30,12 +30,11 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    category: 'mental-health' as Goal['category'],
-    type: 'habit' as Goal['type'],
+    category: 'Mental Health',
     targetValue: 1,
     unit: 'days',
     targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-    priority: 'medium' as Goal['priority'],
+    priority: 'medium' as 'low' | 'medium' | 'high',
     tags: [] as string[],
     notes: ''
   });
@@ -48,21 +47,19 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
         title: goal.title,
         description: goal.description,
         category: goal.category,
-        type: goal.type,
         targetValue: goal.targetValue,
         unit: goal.unit,
         targetDate: goal.targetDate,
         priority: goal.priority,
-        tags: goal.tags,
-        notes: goal.notes
+        tags: goal.tags || [],
+        notes: goal.notes || ''
       });
     } else {
       // Reset form for new goal
       setFormData({
         title: '',
         description: '',
-        category: 'mental-health',
-        type: 'habit',
+        category: 'Mental Health',
         targetValue: 1,
         unit: 'days',
         targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
@@ -92,7 +89,6 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
           title: formData.title,
           description: formData.description,
           category: formData.category,
-          type: formData.type,
           targetValue: formData.targetValue,
           currentProgress: 0,
           unit: formData.unit,
@@ -139,6 +135,11 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
     }));
   };
 
+  const categories = [
+    'Mental Health', 'Physical Health', 'Relationships', 'Career', 'Personal Growth',
+    'Habits', 'Skills', 'Creativity', 'Spirituality', 'Other'
+  ];
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -173,13 +174,13 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
             />
           </div>
 
-          {/* Category and Type */}
+          {/* Category and Priority */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Category</Label>
               <Select
                 value={formData.category}
-                onValueChange={(value: Goal['category']) => 
+                onValueChange={(value) => 
                   setFormData(prev => ({ ...prev, category: value }))
                 }
               >
@@ -187,29 +188,28 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="mental-health">Mental Health</SelectItem>
-                  <SelectItem value="habit-building">Habit Building</SelectItem>
-                  <SelectItem value="therapy-specific">Therapy Specific</SelectItem>
-                  <SelectItem value="personal-growth">Personal Growth</SelectItem>
+                  {categories.map(category => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label>Type</Label>
+              <Label>Priority</Label>
               <Select
-                value={formData.type}
-                onValueChange={(value: Goal['type']) => 
-                  setFormData(prev => ({ ...prev, type: value }))
+                value={formData.priority}
+                onValueChange={(value: 'low' | 'medium' | 'high') => 
+                  setFormData(prev => ({ ...prev, priority: value }))
                 }
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="habit">Habit</SelectItem>
-                  <SelectItem value="milestone">Milestone</SelectItem>
-                  <SelectItem value="outcome">Outcome</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -244,46 +244,25 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
             </div>
           </div>
 
-          {/* Target Date and Priority */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Target Date</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full justify-start text-left">
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {format(formData.targetDate, 'PPP')}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={formData.targetDate}
-                    onSelect={(date) => date && setFormData(prev => ({ ...prev, targetDate: date }))}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Priority</Label>
-              <Select
-                value={formData.priority}
-                onValueChange={(value: Goal['priority']) => 
-                  setFormData(prev => ({ ...prev, priority: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          {/* Target Date */}
+          <div className="space-y-2">
+            <Label>Target Date</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-full justify-start text-left">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {format(formData.targetDate, 'PPP')}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={formData.targetDate}
+                  onSelect={(date) => date && setFormData(prev => ({ ...prev, targetDate: date }))}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
 
           {/* Tags */}
