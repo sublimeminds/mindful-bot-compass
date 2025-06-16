@@ -31,7 +31,8 @@ const CreateGoalDialog = ({ children }: CreateGoalDialogProps) => {
     targetValue: 100,
     unit: 'points',
     targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
-    tags: [] as string[]
+    tags: [] as string[],
+    type: 'personal'
   });
 
   const [newTag, setNewTag] = useState('');
@@ -60,7 +61,8 @@ const CreateGoalDialog = ({ children }: CreateGoalDialogProps) => {
         targetDate: new Date(data.targetDate),
         isCompleted: false,
         tags: data.tags,
-        notes: ''
+        notes: '',
+        type: data.type
       });
     },
     onSuccess: () => {
@@ -90,7 +92,8 @@ const CreateGoalDialog = ({ children }: CreateGoalDialogProps) => {
       targetValue: 100,
       unit: 'points',
       targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      tags: []
+      tags: [],
+      type: 'personal'
     });
     setNewTag('');
   };
@@ -235,6 +238,22 @@ const CreateGoalDialog = ({ children }: CreateGoalDialogProps) => {
               value={goalData.targetDate}
               onChange={(e) => setGoalData(prev => ({ ...prev, targetDate: e.target.value }))}
             />
+          </div>
+
+          {/* Type */}
+          <div className="space-y-2">
+            <Label>Goal Type</Label>
+            <Select value={goalData.type} onValueChange={(value) => setGoalData(prev => ({ ...prev, type: value }))}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="personal">Personal</SelectItem>
+                <SelectItem value="therapy">Therapy</SelectItem>
+                <SelectItem value="habit">Habit</SelectItem>
+                <SelectItem value="treatment">Treatment</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Tags */}

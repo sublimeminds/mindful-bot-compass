@@ -11,7 +11,7 @@ import { Star, Heart, MessageCircle } from "lucide-react";
 interface SessionEndModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: {
+  onConfirm: (data: {
     moodAfter: number;
     notes: string;
     rating: number;
@@ -19,7 +19,7 @@ interface SessionEndModalProps {
   }) => void;
 }
 
-const SessionEndModal = ({ isOpen, onClose, onSubmit }: SessionEndModalProps) => {
+const SessionEndModal = ({ isOpen, onClose, onConfirm }: SessionEndModalProps) => {
   const [moodAfter, setMoodAfter] = useState([7]);
   const [notes, setNotes] = useState('');
   const [rating, setRating] = useState(0);
@@ -27,7 +27,7 @@ const SessionEndModal = ({ isOpen, onClose, onSubmit }: SessionEndModalProps) =>
   const [breakthroughs, setBreakthroughs] = useState<string[]>([]);
 
   const handleSubmit = () => {
-    onSubmit({
+    onConfirm({
       moodAfter: moodAfter[0],
       notes,
       rating,

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -36,7 +35,8 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
     targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
     priority: 'medium' as 'low' | 'medium' | 'high',
     tags: [] as string[],
-    notes: ''
+    notes: '',
+    type: 'personal'
   });
 
   const [newTag, setNewTag] = useState('');
@@ -52,7 +52,8 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
         targetDate: goal.targetDate,
         priority: goal.priority,
         tags: goal.tags || [],
-        notes: goal.notes || ''
+        notes: goal.notes || '',
+        type: goal.type
       });
     } else {
       // Reset form for new goal
@@ -65,7 +66,8 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
         targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         priority: 'medium',
         tags: [],
-        notes: ''
+        notes: '',
+        type: 'personal'
       });
     }
   }, [goal, isOpen]);
@@ -97,7 +99,8 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
           isCompleted: false,
           priority: formData.priority,
           tags: formData.tags,
-          notes: formData.notes
+          notes: formData.notes,
+          type: formData.type
         });
 
         toast({
@@ -263,6 +266,27 @@ const GoalForm = ({ goal, isOpen, onClose, onSuccess }: GoalFormProps) => {
                 />
               </PopoverContent>
             </Popover>
+          </div>
+
+          {/* Type */}
+          <div className="space-y-2">
+            <Label>Goal Type</Label>
+            <Select
+              value={formData.type}
+              onValueChange={(value) => 
+                setFormData(prev => ({ ...prev, type: value }))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="personal">Personal</SelectItem>
+                <SelectItem value="therapy">Therapy</SelectItem>
+                <SelectItem value="habit">Habit</SelectItem>
+                <SelectItem value="treatment">Treatment</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Tags */}

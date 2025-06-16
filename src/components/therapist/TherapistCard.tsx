@@ -1,118 +1,81 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Brain, Heart, RefreshCw, Clock } from "lucide-react";
-
-interface Therapist {
-  id: string;
-  name: string;
-  title: string;
-  description: string;
-  approach: string;
-  specialties: string[];
-  communicationStyle: string;
-  icon: string;
-  colorScheme: string;
-}
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Brain, Heart, Shield } from 'lucide-react';
 
 interface TherapistCardProps {
-  therapist: Therapist;
-  isActive?: boolean;
-  onSwitch?: () => void;
+  therapist: {
+    id: string;
+    name: string;
+    title: string;
+    description: string;
+    approach: string;
+    specialties: string[];
+    communicationStyle: string;
+    icon: string;
+    colorScheme: string;
+  };
+  isSelected?: boolean;
 }
 
-const TherapistCard: React.FC<TherapistCardProps> = ({ 
-  therapist, 
-  isActive = false, 
-  onSwitch 
-}) => {
+const TherapistCard = ({ therapist, isSelected = false }: TherapistCardProps) => {
   const getIcon = (iconName: string) => {
     switch (iconName) {
-      case 'Heart':
-        return <Heart className="h-5 w-5" />;
       case 'Brain':
+        return <Brain className="h-6 w-6" />;
+      case 'Heart':
+        return <Heart className="h-6 w-6" />;
+      case 'Shield':
+        return <Shield className="h-6 w-6" />;
       default:
-        return <Brain className="h-5 w-5" />;
+        return <Brain className="h-6 w-6" />;
     }
   };
 
   return (
-    <Card className={`relative ${isActive ? 'ring-2 ring-therapy-500' : ''}`}>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={`/therapist-${therapist.id}.jpg`} />
-              <AvatarFallback className="bg-therapy-100 text-therapy-700">
-                {getIcon(therapist.icon)}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h3 className="font-semibold text-sm">{therapist.name}</h3>
-              <p className="text-xs text-muted-foreground">{therapist.title}</p>
-            </div>
+    <Card className={`transition-all duration-300 hover:shadow-lg ${
+      isSelected ? 'ring-2 ring-therapy-500 bg-therapy-50' : ''
+    }`}>
+      <CardHeader>
+        <div className="flex items-center space-x-3">
+          <div className={`p-3 rounded-lg bg-gradient-to-r ${therapist.colorScheme} text-white`}>
+            {getIcon(therapist.icon)}
           </div>
-          {isActive && (
-            <div className="flex items-center space-x-1 text-green-600">
-              <Clock className="h-3 w-3" />
-              <span className="text-xs font-medium">Active</span>
-            </div>
-          )}
+          <div>
+            <CardTitle className="text-lg">{therapist.name}</CardTitle>
+            <p className="text-sm text-muted-foreground">{therapist.title}</p>
+          </div>
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-3">
-        {/* Approach */}
-        <div>
-          <p className="text-xs font-medium text-muted-foreground mb-1">Approach</p>
-          <Badge variant="secondary" className="text-xs">
-            {therapist.approach}
-          </Badge>
-        </div>
-
-        {/* Communication Style */}
-        <div>
-          <p className="text-xs font-medium text-muted-foreground mb-1">Style</p>
-          <p className="text-xs">{therapist.communicationStyle}</p>
-        </div>
-
-        {/* Specialties */}
-        <div>
-          <p className="text-xs font-medium text-muted-foreground mb-1">Specialties</p>
-          <div className="flex flex-wrap gap-1">
-            {therapist.specialties.slice(0, 3).map((specialty, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
-                {specialty}
-              </Badge>
-            ))}
-            {therapist.specialties.length > 3 && (
-              <Badge variant="outline" className="text-xs">
-                +{therapist.specialties.length - 3}
-              </Badge>
-            )}
+      <CardContent className="space-y-4">
+        <p className="text-sm">{therapist.description}</p>
+        
+        <div className="space-y-2">
+          <div>
+            <span className="text-sm font-medium">Approach:</span>
+            <Badge variant="outline" className="ml-2">
+              {therapist.approach}
+            </Badge>
+          </div>
+          
+          <div>
+            <span className="text-sm font-medium">Communication Style:</span>
+            <p className="text-sm text-muted-foreground">{therapist.communicationStyle}</p>
+          </div>
+          
+          <div>
+            <span className="text-sm font-medium">Specialties:</span>
+            <div className="flex flex-wrap gap-1 mt-1">
+              {therapist.specialties.map((specialty, index) => (
+                <Badge key={index} variant="secondary" className="text-xs">
+                  {specialty}
+                </Badge>
+              ))}
+            </div>
           </div>
         </div>
-
-        {/* Description */}
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          {therapist.description}
-        </p>
-
-        {/* Switch Therapist Button */}
-        {onSwitch && (
-          <Button
-            onClick={onSwitch}
-            variant="outline"
-            size="sm"
-            className="w-full text-xs"
-          >
-            <RefreshCw className="h-3 w-3 mr-1" />
-            Switch Therapist
-          </Button>
-        )}
       </CardContent>
     </Card>
   );

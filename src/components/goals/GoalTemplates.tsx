@@ -4,20 +4,52 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Target, Clock, Award, Brain, Heart, Calendar, TrendingUp } from 'lucide-react';
-import { GoalService, GoalTemplate } from '@/services/goalService';
+import { GoalTemplate } from '@/services/goalService';
 
 interface GoalTemplatesProps {
   onCreateFromTemplate: (template: GoalTemplate, customizations: any) => void;
 }
 
 const GoalTemplates = ({ onCreateFromTemplate }: GoalTemplatesProps) => {
-  const templates = GoalService.getGoalTemplates();
+  // Static templates for now since GoalService.getGoalTemplates() returns a promise
+  const templates: GoalTemplate[] = [
+    {
+      id: '1',
+      title: 'Daily Mindfulness Practice',
+      description: 'Establish a consistent mindfulness routine',
+      category: 'Mental Health',
+      targetValue: 30,
+      unit: 'days',
+      tags: ['mindfulness', 'daily habit'],
+      type: 'habit'
+    },
+    {
+      id: '2',
+      title: 'Exercise Routine',
+      description: 'Complete regular exercise sessions',
+      category: 'Physical Health',
+      targetValue: 20,
+      unit: 'sessions',
+      tags: ['exercise', 'health'],
+      type: 'habit'
+    },
+    {
+      id: '3',
+      title: 'Therapy Sessions',
+      description: 'Attend scheduled therapy sessions',
+      category: 'Mental Health',
+      targetValue: 10,
+      unit: 'sessions',
+      tags: ['therapy', 'mental health'],
+      type: 'treatment'
+    }
+  ];
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'mental-health':
+      case 'Mental Health':
         return <Brain className="h-5 w-5" />;
-      case 'habit-building':
+      case 'Physical Health':
         return <Calendar className="h-5 w-5" />;
       case 'therapy-specific':
         return <Heart className="h-5 w-5" />;
@@ -30,9 +62,9 @@ const GoalTemplates = ({ onCreateFromTemplate }: GoalTemplatesProps) => {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'mental-health':
+      case 'Mental Health':
         return 'bg-therapy-100 text-therapy-800';
-      case 'habit-building':
+      case 'Physical Health':
         return 'bg-calm-100 text-calm-800';
       case 'therapy-specific':
         return 'bg-blue-100 text-blue-800';
@@ -47,7 +79,7 @@ const GoalTemplates = ({ onCreateFromTemplate }: GoalTemplatesProps) => {
     // For now, use template as-is with minimal customization
     const customizations = {
       startDate: new Date(),
-      targetDate: new Date(Date.now() + template.defaultDuration * 24 * 60 * 60 * 1000)
+      targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
     };
     
     onCreateFromTemplate(template, customizations);
@@ -71,7 +103,7 @@ const GoalTemplates = ({ onCreateFromTemplate }: GoalTemplatesProps) => {
                   <div className="flex items-center space-x-2">
                     {getCategoryIcon(template.category)}
                     <Badge className={getCategoryColor(template.category)}>
-                      {template.category.replace('-', ' ')}
+                      {template.category}
                     </Badge>
                     <Badge variant="outline">
                       {template.type}
@@ -90,36 +122,13 @@ const GoalTemplates = ({ onCreateFromTemplate }: GoalTemplatesProps) => {
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="flex items-center space-x-2">
                   <Target className="h-4 w-4 text-muted-foreground" />
-                  <span>{template.defaultTargetValue} {template.defaultUnit}</span>
+                  <span>{template.targetValue} {template.unit}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span>{template.defaultDuration} days</span>
+                  <span>30 days</span>
                 </div>
               </div>
-
-              {/* Milestones Preview */}
-              {template.milestoneTemplates.length > 0 && (
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2 text-sm font-medium">
-                    <Award className="h-4 w-4" />
-                    <span>Milestones ({template.milestoneTemplates.length})</span>
-                  </div>
-                  <div className="space-y-1">
-                    {template.milestoneTemplates.slice(0, 2).map((milestone, index) => (
-                      <div key={index} className="text-xs text-muted-foreground flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-muted rounded-full" />
-                        <span>{milestone.title}</span>
-                      </div>
-                    ))}
-                    {template.milestoneTemplates.length > 2 && (
-                      <div className="text-xs text-muted-foreground">
-                        +{template.milestoneTemplates.length - 2} more milestones
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
 
               {/* Tags */}
               {template.tags.length > 0 && (

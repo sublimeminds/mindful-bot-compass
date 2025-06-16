@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,7 +55,12 @@ const TherapyChat = () => {
     setShowEndModal(true);
   };
 
-  const confirmEndSession = async () => {
+  const confirmEndSession = async (data: {
+    moodAfter: number;
+    notes: string;
+    rating: number;
+    breakthroughs: string[];
+  }) => {
     await endSession();
     setShowEndModal(false);
     setActiveTab('overview');
