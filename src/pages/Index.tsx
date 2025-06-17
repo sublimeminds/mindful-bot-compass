@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAuth } from "@/contexts/AuthContext";
 import HeroSection from "@/components/HeroSection";
@@ -17,8 +16,8 @@ import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import TrustSection from "@/components/landing/TrustSection";
 import CTASection from "@/components/landing/CTASection";
-import TreeLoadingSpinner from "@/components/ui/TreeLoadingSpinner";
-import TreeLogo from "@/components/ui/TreeLogo";
+import GradientLoadingSpinner from "@/components/ui/GradientLoadingSpinner";
+import GradientLogo from "@/components/ui/GradientLogo";
 import UserAvatar from "@/components/ui/UserAvatar";
 import { Heart, Sparkles } from "lucide-react";
 
@@ -35,12 +34,12 @@ const Index = () => {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-harmony-50 via-balance-50 to-flow-100">
           <div className="text-center space-y-8">
             <div className="flex items-center justify-center w-40 h-40 bg-white/90 backdrop-blur-sm rounded-full shadow-xl p-6">
-              <TreeLogo 
+              <GradientLogo 
                 size="xxl"
                 className="drop-shadow-lg"
               />
             </div>
-            <TreeLoadingSpinner 
+            <GradientLoadingSpinner 
               size="lg" 
               message="Syncing your mental wellness journey..."
             />
@@ -66,19 +65,19 @@ const Index = () => {
                   <div className="relative">
                     <UserAvatar user={user} size="xl" />
                     <div className="absolute -top-2 -right-2 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
-                      <TreeLogo size="lg" />
+                      <GradientLogo size="lg" />
                     </div>
                   </div>
                 </div>
                 <h1 className="text-3xl font-bold mb-3 flex items-center justify-center">
-                  <TreeLogo size="lg" className="mr-4" />
+                  <GradientLogo size="lg" className="mr-4" />
                   <span className="bg-gradient-to-r from-harmony-600 via-balance-600 to-flow-600 bg-clip-text text-transparent">
                     Welcome back to your wellness journey
                   </span>
                   <Sparkles className="h-7 w-7 ml-3 text-harmony-500" />
                 </h1>
                 <p className="text-lg text-muted-foreground">
-                  Continue growing with TherapySync's personalized support
+                  Continue flowing with TherapySync's personalized support
                 </p>
               </div>
               <UserDashboard />

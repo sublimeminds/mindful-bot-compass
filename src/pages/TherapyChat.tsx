@@ -24,7 +24,7 @@ import SessionEndModal from "@/components/SessionEndModal";
 import TherapistCard from "@/components/therapist/TherapistCard";
 import { therapists } from "@/components/therapist/TherapistMatcher";
 import Header from "@/components/Header";
-import TreeLogo from "@/components/ui/TreeLogo";
+import GradientLogo from "@/components/ui/GradientLogo";
 
 const TherapyChat = () => {
   const navigate = useNavigate();
@@ -104,20 +104,20 @@ const TherapyChat = () => {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50">
+      <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50">
         <div className="container mx-auto px-4 py-8">
           {/* Header Section */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
               <div className="flex items-center justify-center w-16 h-16 bg-white rounded-full shadow-lg mr-4">
-                <TreeLogo size="sm" />
+                <GradientLogo size="sm" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-harmony-600 to-flow-600 bg-clip-text text-transparent">
                   AI Therapy Sessions
                 </h1>
                 <p className="text-lg text-muted-foreground mt-2">
-                  Your personal space for healing and growth
+                  Your personal space for healing and harmony
                 </p>
               </div>
             </div>
@@ -144,7 +144,7 @@ const TherapyChat = () => {
                 {features.map((feature, index) => (
                   <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                     <CardContent className="p-6 text-center">
-                      <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-therapy-500 to-calm-500 rounded-lg mx-auto mb-4">
+                      <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-harmony-500 to-flow-500 rounded-lg mx-auto mb-4">
                         <feature.icon className="h-6 w-6 text-white" />
                       </div>
                       <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
@@ -155,16 +155,16 @@ const TherapyChat = () => {
               </div>
 
               {/* Welcome Section */}
-              <Card className="border-0 bg-gradient-to-r from-therapy-500 to-calm-500 text-white">
+              <Card className="border-0 bg-gradient-to-r from-harmony-500 to-flow-500 text-white">
                 <CardContent className="p-8">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center mb-4">
-                        <TreeLogo size="sm" />
+                        <GradientLogo size="sm" />
                         <Sparkles className="h-6 w-6 ml-3" />
                       </div>
                       <h2 className="text-2xl font-bold mb-2">Welcome to Your Therapy Space</h2>
-                      <p className="text-therapy-100 mb-6">
+                      <p className="text-harmony-100 mb-6">
                         Take the first step towards better mental health. Our AI therapists are here to support you 24/7.
                       </p>
                       <div className="flex flex-col sm:flex-row gap-4">
@@ -172,7 +172,7 @@ const TherapyChat = () => {
                           onClick={handleStartSession}
                           variant="secondary"
                           size="lg"
-                          className="bg-white text-therapy-700 hover:bg-therapy-50"
+                          className="bg-white text-harmony-700 hover:bg-harmony-50"
                         >
                           Start Therapy Session
                           <ArrowRight className="h-5 w-5 ml-2" />
@@ -189,7 +189,7 @@ const TherapyChat = () => {
                     </div>
                     <div className="hidden lg:block">
                       <div className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
-                        <TreeLogo size="lg" />
+                        <GradientLogo size="lg" />
                       </div>
                     </div>
                   </div>
@@ -201,14 +201,14 @@ const TherapyChat = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <Target className="h-8 w-8 text-therapy-500 mx-auto mb-2" />
+                      <Target className="h-8 w-8 text-harmony-500 mx-auto mb-2" />
                       <h3 className="font-semibold text-2xl">Active</h3>
                       <p className="text-muted-foreground">Current Session</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <Clock className="h-8 w-8 text-calm-500 mx-auto mb-2" />
+                      <Clock className="h-8 w-8 text-flow-500 mx-auto mb-2" />
                       {currentSession && (
                         <SessionTimer 
                           startTime={currentSession.start_time ? new Date(currentSession.start_time) : new Date()} 
@@ -222,7 +222,7 @@ const TherapyChat = () => {
                   <Card>
                     <CardContent className="p-6 text-center">
                       <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                      <h3 className="font-semibold text-2xl">Growing</h3>
+                      <h3 className="font-semibold text-2xl">Flowing</h3>
                       <p className="text-muted-foreground">Your Progress</p>
                     </CardContent>
                   </Card>

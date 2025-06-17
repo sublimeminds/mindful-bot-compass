@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import TreeLogo from '@/components/ui/TreeLogo';
+import GradientLogo from '@/components/ui/GradientLogo';
 
 const Logo = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const Logo = () => {
         className="flex items-center space-x-4 hover:opacity-90 transition-all duration-300 group"
       >
         <div className="flex items-center justify-center transition-all duration-300 group-hover:scale-105">
-          <TreeLogo 
+          <GradientLogo 
             size="xl"
             className="drop-shadow-lg animate-swirl-breathe"
           />

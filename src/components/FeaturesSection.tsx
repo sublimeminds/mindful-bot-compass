@@ -1,32 +1,32 @@
 
 import { Bot, Heart, User, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import TreeLogo from "@/components/ui/TreeLogo";
+import GradientLogo from "@/components/ui/GradientLogo";
 
 const features = [
   {
     icon: Bot,
     title: "AI-Powered Therapy",
     description: "Advanced AI trained on therapeutic techniques to provide personalized support and guidance.",
-    useTreeLogo: true
+    useGradientLogo: true
   },
   {
     icon: Heart,
     title: "Emotional Support",
     description: "Get help with anxiety, depression, trauma, and other emotional challenges in a safe space.",
-    useTreeLogo: false
+    useGradientLogo: false
   },
   {
     icon: User,
     title: "Personalized Sessions",
-    description: "Tailored therapy sessions that adapt to your unique needs and progress over time.",
-    useTreeLogo: true
+    description: "Tailored therapy sessions that adapt to your unique needs and sync with your progress over time.",
+    useGradientLogo: true
   },
   {
     icon: Users,
     title: "Community Support",
-    description: "Connect with others on similar journeys through our supportive community features.",
-    useTreeLogo: false
+    description: "Connect with others on similar wellness journeys through our supportive community features.",
+    useGradientLogo: false
   }
 ];
 
@@ -36,7 +36,7 @@ const FeaturesSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-6">
-            <TreeLogo 
+            <GradientLogo 
               size="xl"
               className="drop-shadow-sm"
             />
@@ -59,8 +59,8 @@ const FeaturesSection = () => {
             >
               <CardContent className="p-6 text-center">
                 <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-harmony-500 via-balance-500 to-flow-500 rounded-xl mx-auto mb-4 group-hover:animate-swirl-breathe shadow-lg">
-                  {feature.useTreeLogo ? (
-                    <TreeLogo 
+                  {feature.useGradientLogo ? (
+                    <GradientLogo 
                       size="md"
                       className="filter brightness-0 invert"
                     />
@@ -83,7 +83,7 @@ const FeaturesSection = () => {
         <div className="mt-16 text-center">
           <div className="flex items-center justify-center space-x-2 text-sm text-muted-foreground">
             <span>Powered by</span>
-            <TreeLogo 
+            <GradientLogo 
               size="sm"
               className="opacity-60"
             />

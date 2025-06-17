@@ -51,11 +51,11 @@ const CTASection = () => {
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             Your Mental Wellness Journey
-            <span className="block">Starts Right Now</span>
+            <span className="block">Flows in Perfect Harmony</span>
           </h2>
           
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join thousands who've found hope, healing, and growth. 
+            Join thousands who've found hope, healing, and harmony. 
             Sync with personalized AI therapy support in under 5 minutes.
           </p>
 

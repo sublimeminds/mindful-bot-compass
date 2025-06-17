@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import AuthModal from "./AuthModal";
 import QuickSignupWithPlan from "./subscription/QuickSignupWithPlan";
-import TreeLogo from "@/components/ui/TreeLogo";
+import GradientLogo from "@/components/ui/GradientLogo";
 
 const HeroSection = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -35,7 +35,7 @@ const HeroSection = () => {
               
               <div className="flex items-center justify-center mb-12">
                 <div className="flex items-center justify-center w-80 h-80 bg-white/95 backdrop-blur-sm rounded-full shadow-2xl animate-swirl-breathe p-8">
-                  <TreeLogo 
+                  <GradientLogo 
                     size="hero"
                     className="drop-shadow-xl"
                   />
@@ -55,7 +55,7 @@ const HeroSection = () => {
               <p className="text-2xl sm:text-3xl text-muted-foreground mb-16 max-w-4xl mx-auto leading-relaxed">
                 Experience personalized mental health support powered by AI. 
                 <span className="block mt-3 font-semibold text-harmony-700">
-                  Find balance, grow stronger, and sync with your wellbeing journey.
+                  Find balance, flow in harmony, and sync with your wellbeing journey.
                 </span>
               </p>
               
@@ -76,7 +76,7 @@ const HeroSection = () => {
                   className="border-2 border-harmony-300 text-harmony-700 hover:bg-white/80 px-12 py-6 text-2xl font-semibold backdrop-blur-sm group shadow-lg"
                   onClick={scrollToDemo}
                 >
-                  <TreeLogo 
+                  <GradientLogo 
                     size="md"
                     className="mr-3 group-hover:animate-swirl-grow"
                   />
@@ -87,7 +87,7 @@ const HeroSection = () => {
               {/* Trust indicators */}
               <div className="flex flex-wrap items-center justify-center gap-12 text-base text-muted-foreground">
                 <div className="flex items-center space-x-3">
-                  <TreeLogo size="sm" className="opacity-60" />
+                  <GradientLogo size="sm" className="opacity-60" />
                   <span className="font-medium">HIPAA Compliant</span>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -95,7 +95,7 @@ const HeroSection = () => {
                   <span className="font-medium">256-bit Encryption</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <TreeLogo size="sm" className="opacity-60" />
+                  <GradientLogo size="sm" className="opacity-60" />
                   <span className="font-medium">Evidence-Based</span>
                 </div>
                 <div className="flex items-center space-x-3">
