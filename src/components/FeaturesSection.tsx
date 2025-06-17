@@ -54,11 +54,11 @@ const FeaturesSection = () => {
           {features.map((feature, index) => (
             <Card 
               key={index} 
-              className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in gradient-card group hover:animate-tree-grow"
+              className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in bg-gradient-to-br from-white to-gray-50/50 group hover:scale-105"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <CardContent className="p-6 text-center">
-                <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-therapy-500 to-calm-500 rounded-xl mx-auto mb-4 group-hover:animate-tree-breathe">
+                <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-harmony-500 via-balance-500 to-flow-500 rounded-xl mx-auto mb-4 group-hover:animate-swirl-breathe shadow-lg">
                   {feature.useTreeLogo ? (
                     <TreeLogo 
                       size="md"
@@ -87,7 +87,7 @@ const FeaturesSection = () => {
               size="sm"
               className="opacity-60"
             />
-            <span className="font-medium text-therapy-600">TherapySync AI</span>
+            <span className="font-medium bg-gradient-to-r from-harmony-600 to-flow-600 bg-clip-text text-transparent">TherapySync AI</span>
           </div>
         </div>
       </div>

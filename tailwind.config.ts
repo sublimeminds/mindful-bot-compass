@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -62,29 +63,45 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				therapy: {
-					50: '#f0fdf0',
-					100: '#dcfce7',
-					200: '#bbf7d0',
-					300: '#86efac',
-					400: '#4ade80',
-					500: '#22c55e',
-					600: '#16a34a',
-					700: '#15803d',
-					800: '#166534',
-					900: '#14532d',
+				// TherapySync brand colors - gradient swirl inspired
+				harmony: {
+					50: 'hsl(var(--harmony-50))',
+					100: 'hsl(var(--harmony-100))',
+					200: 'hsl(var(--harmony-200))',
+					300: 'hsl(var(--harmony-300))',
+					400: 'hsl(var(--harmony-400))',
+					500: 'hsl(var(--harmony-500))',
+					600: 'hsl(var(--harmony-600))',
+					700: 'hsl(var(--harmony-700))',
+					800: 'hsl(var(--harmony-800))',
+					900: 'hsl(var(--harmony-900))',
+					950: 'hsl(var(--harmony-950))',
 				},
-				calm: {
-					50: '#f0f9ff',
-					100: '#e0f2fe',
-					200: '#bae6fd',
-					300: '#7dd3fc',
-					400: '#38bdf8',
-					500: '#0ea5e9',
-					600: '#0284c7',
-					700: '#0369a1',
-					800: '#075985',
-					900: '#0c4a6e',
+				flow: {
+					50: 'hsl(var(--flow-50))',
+					100: 'hsl(var(--flow-100))',
+					200: 'hsl(var(--flow-200))',
+					300: 'hsl(var(--flow-300))',
+					400: 'hsl(var(--flow-400))',
+					500: 'hsl(var(--flow-500))',
+					600: 'hsl(var(--flow-600))',
+					700: 'hsl(var(--flow-700))',
+					800: 'hsl(var(--flow-800))',
+					900: 'hsl(var(--flow-900))',
+					950: 'hsl(var(--flow-950))',
+				},
+				balance: {
+					50: 'hsl(var(--balance-50))',
+					100: 'hsl(var(--balance-100))',
+					200: 'hsl(var(--balance-200))',
+					300: 'hsl(var(--balance-300))',
+					400: 'hsl(var(--balance-400))',
+					500: 'hsl(var(--balance-500))',
+					600: 'hsl(var(--balance-600))',
+					700: 'hsl(var(--balance-700))',
+					800: 'hsl(var(--balance-800))',
+					900: 'hsl(var(--balance-900))',
+					950: 'hsl(var(--balance-950))',
 				}
 			},
 			borderRadius: {
@@ -137,116 +154,34 @@ export default {
 						opacity: '1'
 					}
 				},
-				// Tree-inspired animations
-				'tree-breathe': {
+				// Swirl-inspired animations
+				'swirl-breathe': {
 					'0%, 100%': {
-						transform: 'scale(1)',
+						transform: 'scale(1) rotate(0deg)',
 						filter: 'brightness(1)'
 					},
 					'50%': {
-						transform: 'scale(1.02)',
-						filter: 'brightness(1.05)'
+						transform: 'scale(1.03) rotate(5deg)',
+						filter: 'brightness(1.08)'
 					}
 				},
-				'tree-grow': {
+				'swirl-grow': {
 					'0%': {
 						transform: 'scale(1) rotate(0deg)'
 					},
 					'50%': {
-						transform: 'scale(1.1) rotate(1deg)'
+						transform: 'scale(1.15) rotate(10deg)'
 					},
 					'100%': {
 						transform: 'scale(1) rotate(0deg)'
 					}
 				},
-				'leaf-float': {
+				'gradient-flow': {
 					'0%, 100%': {
-						transform: 'translateY(0px) translateX(0px) rotate(0deg)'
-					},
-					'25%': {
-						transform: 'translateY(-5px) translateX(2px) rotate(1deg)'
+						'background-position': '0% 50%'
 					},
 					'50%': {
-						transform: 'translateY(-8px) translateX(-1px) rotate(-1deg)'
-					},
-					'75%': {
-						transform: 'translateY(-3px) translateX(1px) rotate(0.5deg)'
-					}
-				},
-				'tree-growth': {
-					'0%': {
-						transform: 'scale(0.8)',
-						opacity: '0.6'
-					},
-					'50%': {
-						transform: 'scale(1.1)',
-						opacity: '1'
-					},
-					'100%': {
-						transform: 'scale(1)',
-						opacity: '0.9'
-					}
-				},
-				'trunk-grow': {
-					'0%': {
-						transform: 'scaleY(0.5)',
-						transformOrigin: 'bottom'
-					},
-					'100%': {
-						transform: 'scaleY(1)',
-						transformOrigin: 'bottom'
-					}
-				},
-				'leaf-grow-1': {
-					'0%': {
-						transform: 'scale(0)',
-						opacity: '0'
-					},
-					'60%': {
-						transform: 'scale(1.2)',
-						opacity: '0.8'
-					},
-					'100%': {
-						transform: 'scale(1)',
-						opacity: '1'
-					}
-				},
-				'leaf-grow-2': {
-					'0%': {
-						transform: 'scale(0)',
-						opacity: '0'
-					},
-					'70%': {
-						transform: 'scale(1.15)',
-						opacity: '0.9'
-					},
-					'100%': {
-						transform: 'scale(1)',
-						opacity: '1'
-					}
-				},
-				'leaf-grow-3': {
-					'0%': {
-						transform: 'scale(0)',
-						opacity: '0'
-					},
-					'80%': {
-						transform: 'scale(1.1)',
-						opacity: '1'
-					},
-					'100%': {
-						transform: 'scale(1)',
-						opacity: '1'
-					}
-				},
-				'roots-grow': {
-					'0%': {
-						strokeDasharray: '0 100',
-						opacity: '0'
-					},
-					'100%': {
-						strokeDasharray: '100 0',
-						opacity: '0.7'
+						'background-position': '100% 50%'
 					}
 				}
 			},
@@ -256,16 +191,9 @@ export default {
 				'fade-in': 'fade-in 0.5s ease-out',
 				'float': 'float 3s ease-in-out infinite',
 				'grow': 'grow 2s ease-in-out infinite',
-				// Tree animations
-				'tree-breathe': 'tree-breathe 4s ease-in-out infinite',
-				'tree-grow': 'tree-grow 2s ease-out infinite',
-				'leaf-float': 'leaf-float 8s ease-in-out infinite',
-				'tree-growth': 'tree-growth 3s ease-out infinite',
-				'trunk-grow': 'trunk-grow 2s ease-out infinite',
-				'leaf-grow-1': 'leaf-grow-1 2.5s ease-out infinite',
-				'leaf-grow-2': 'leaf-grow-2 3s ease-out infinite',
-				'leaf-grow-3': 'leaf-grow-3 3.5s ease-out infinite',
-				'roots-grow': 'roots-grow 2s ease-out infinite'
+				'swirl-breathe': 'swirl-breathe 4s ease-in-out infinite',
+				'swirl-grow': 'swirl-grow 2s ease-out infinite',
+				'gradient-flow': 'gradient-flow 8s ease-in-out infinite'
 			}
 		}
 	},

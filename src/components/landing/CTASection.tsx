@@ -33,7 +33,7 @@ const CTASection = () => {
   }, []);
 
   return (
-    <section className="py-20 gradient-flow animate-gradient-flow bg-[length:400%_400%] relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-br from-harmony-500 via-balance-500 to-flow-600 animate-gradient-flow bg-[length:400%_400%] relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-black/10"></div>
       <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-swirl-breathe"></div>

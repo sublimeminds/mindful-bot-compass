@@ -27,14 +27,14 @@ const Index = () => {
 
   console.log('Index page - Auth state:', { isAuthenticated, user: user?.email, loading });
 
-  // Show loading while checking auth
+  // Show loading with new branding while checking auth
   if (loading) {
     return (
       <>
         <Header />
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-harmony-50 via-balance-50 to-flow-100">
           <div className="text-center space-y-8">
-            <div className="flex items-center justify-center w-40 h-40 bg-white/90 backdrop-blur-sm rounded-full shadow-therapy p-6">
+            <div className="flex items-center justify-center w-40 h-40 bg-white/90 backdrop-blur-sm rounded-full shadow-xl p-6">
               <TreeLogo 
                 size="xxl"
                 className="drop-shadow-lg"
@@ -70,10 +70,12 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-                <h1 className="text-3xl font-bold text-therapy-700 mb-3 flex items-center justify-center">
+                <h1 className="text-3xl font-bold mb-3 flex items-center justify-center">
                   <TreeLogo size="lg" className="mr-4" />
-                  Welcome back to your wellness journey
-                  <Sparkles className="h-7 w-7 ml-3 text-therapy-500" />
+                  <span className="bg-gradient-to-r from-harmony-600 via-balance-600 to-flow-600 bg-clip-text text-transparent">
+                    Welcome back to your wellness journey
+                  </span>
+                  <Sparkles className="h-7 w-7 ml-3 text-harmony-500" />
                 </h1>
                 <p className="text-lg text-muted-foreground">
                   Continue growing with TherapySync's personalized support

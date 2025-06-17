@@ -22,19 +22,19 @@ const HeroSection = () => {
 
   return (
     <>
-      <section className="relative py-24 lg:py-40 overflow-hidden gradient-harmony animate-gradient-flow bg-[length:400%_400%] min-h-screen flex items-center">
+      <section className="relative py-24 lg:py-40 overflow-hidden bg-gradient-to-br from-harmony-50 via-balance-50 to-flow-100 animate-gradient-flow bg-[length:400%_400%] min-h-screen flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-6xl mx-auto">
             <div className="animate-fade-in">
               {/* Hero badge */}
-              <div className="inline-flex items-center space-x-3 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8">
+              <div className="inline-flex items-center space-x-3 bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 mb-8 shadow-lg">
                 <Sparkles className="h-5 w-5 text-harmony-600" />
                 <span className="text-harmony-800 text-base font-medium">AI-Powered Mental Health Support</span>
                 <div className="w-3 h-3 bg-harmony-500 rounded-full animate-pulse"></div>
               </div>
               
               <div className="flex items-center justify-center mb-12">
-                <div className="flex items-center justify-center w-80 h-80 bg-white/95 backdrop-blur-sm rounded-full shadow-harmony animate-swirl-breathe p-8">
+                <div className="flex items-center justify-center w-80 h-80 bg-white/95 backdrop-blur-sm rounded-full shadow-2xl animate-swirl-breathe p-8">
                   <TreeLogo 
                     size="hero"
                     className="drop-shadow-xl"
@@ -63,7 +63,7 @@ const HeroSection = () => {
                 <QuickSignupWithPlan>
                   <Button 
                     size="lg" 
-                    className="gradient-flow text-white border-0 px-12 py-6 text-2xl font-semibold shadow-harmony hover:shadow-3xl transition-all duration-300 hover:scale-105 hover:animate-swirl-grow"
+                    className="bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-600 hover:from-harmony-600 hover:via-balance-600 hover:to-flow-700 text-white border-0 px-12 py-6 text-2xl font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:animate-swirl-grow"
                   >
                     Start Your Journey
                     <ArrowRight className="h-6 w-6 ml-3" />
@@ -73,7 +73,7 @@ const HeroSection = () => {
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="border-3 border-harmony-300 text-harmony-700 hover:bg-harmony-50 px-12 py-6 text-2xl font-semibold backdrop-blur-sm group"
+                  className="border-2 border-harmony-300 text-harmony-700 hover:bg-white/80 px-12 py-6 text-2xl font-semibold backdrop-blur-sm group shadow-lg"
                   onClick={scrollToDemo}
                 >
                   <TreeLogo 
@@ -114,7 +114,7 @@ const HeroSection = () => {
         <div className="absolute top-48 right-1/4 w-28 h-28 bg-harmony-300/20 rounded-full opacity-25 animate-swirl-breathe" style={{ animationDelay: '3s' }}></div>
         
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/20 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/10 pointer-events-none"></div>
       </section>
 
       <AuthModal 
