@@ -14,12 +14,12 @@ const DesktopHeader = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Logo />
         
         {/* Navigation */}
-        <div className="hidden md:flex items-center flex-1 justify-center">
+        <div className="hidden md:flex items-center flex-1 justify-center px-8">
           <UnifiedNavigation />
         </div>
         
@@ -31,9 +31,9 @@ const DesktopHeader = () => {
             <Button 
               onClick={() => navigate('/auth')}
               size="lg"
-              className="bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-600 hover:from-harmony-600 hover:via-balance-600 hover:to-flow-700 text-white font-semibold rounded-full px-8 py-3 shadow-lg hover:shadow-harmony/30 transition-all duration-300 hover:scale-105"
+              className="bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-600 hover:from-harmony-600 hover:via-balance-600 hover:to-flow-700 text-white font-semibold rounded-full px-6 py-2 shadow-lg hover:shadow-harmony/30 transition-all duration-300 hover:scale-105"
             >
-              <User className="h-5 w-5 mr-2" />
+              <User className="h-4 w-4 mr-2" />
               Sign In
             </Button>
           )}

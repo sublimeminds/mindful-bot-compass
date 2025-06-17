@@ -8,13 +8,11 @@ const Footer = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="flex items-center justify-center w-10 h-10 bg-white rounded-xl p-1">
-                <GradientLogo 
-                  size="sm"
-                  className="text-harmony-600"
-                />
-              </div>
+            <div className="flex items-center space-x-3 mb-4">
+              <GradientLogo 
+                size="md"
+                className="opacity-90"
+              />
               <span className="text-xl font-bold bg-gradient-to-r from-harmony-400 to-flow-400 bg-clip-text text-transparent">
                 TherapySync
               </span>

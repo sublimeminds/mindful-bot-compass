@@ -14,7 +14,10 @@ import {
   History,
   Crown,
   Sparkles,
-  HelpCircle
+  HelpCircle,
+  Users,
+  Star,
+  Info
 } from 'lucide-react';
 
 const UnifiedNavigation = () => {
@@ -37,9 +40,11 @@ const UnifiedNavigation = () => {
     }
   };
 
-  // Public navigation items
+  // Enhanced public navigation items
   const publicNavItems = [
+    { id: '#how-it-works', label: 'How It Works', icon: Info, priority: 1 },
     { id: '#features', label: 'Features', icon: Sparkles, priority: 1 },
+    { id: '#testimonials', label: 'Reviews', icon: Star, priority: 2 },
     { id: '#pricing', label: 'Pricing', icon: Crown, priority: 1 },
     { id: '/help', label: 'Help', icon: HelpCircle, priority: 2 }
   ];
@@ -60,7 +65,7 @@ const UnifiedNavigation = () => {
   return (
     <div className="flex items-center justify-center w-full">
       {/* Responsive navigation container */}
-      <div className="flex items-center space-x-2 lg:space-x-6 overflow-x-auto scrollbar-hide px-2 w-full max-w-4xl">
+      <div className="flex items-center space-x-1 lg:space-x-4 overflow-x-auto scrollbar-hide px-2 w-full max-w-5xl">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = item.id.startsWith('#') 

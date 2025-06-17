@@ -9,6 +9,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import TrialSignup from './subscription/TrialSignup';
+import GradientLogo from '@/components/ui/GradientLogo';
 
 const PricingSection = () => {
   const { plans, loading } = useSubscription();
@@ -48,9 +49,9 @@ const PricingSection = () => {
 
   if (loading) {
     return (
-      <section id="pricing" className="py-20 bg-gradient-to-br from-therapy-50 to-calm-50">
+      <section id="pricing" className="py-20 bg-gradient-to-br from-harmony-50 via-balance-50 to-flow-100">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-harmony-500 mx-auto"></div>
         </div>
       </section>
     );
@@ -58,31 +59,37 @@ const PricingSection = () => {
 
   return (
     <>
-      <section id="pricing" className="py-20 bg-gradient-to-br from-therapy-50 to-calm-50">
+      <section id="pricing" className="py-20 bg-gradient-to-br from-harmony-50 via-balance-50 to-flow-100">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <div className="flex items-center justify-center mb-6">
+              <GradientLogo 
+                size="xl"
+                className="drop-shadow-sm"
+              />
+            </div>
+            <h2 className="text-4xl font-bold text-slate-800 mb-4">
               Choose Your Mental Health Journey
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
               From free basic support to premium unlimited access, find the perfect plan 
               to support your mental wellness goals.
             </p>
             
             {/* Billing Cycle Toggle */}
             <div className="flex items-center justify-center space-x-4 mb-8">
-              <span className={`font-medium ${billingCycle === 'monthly' ? 'text-foreground' : 'text-muted-foreground'}`}>
+              <span className={`font-medium ${billingCycle === 'monthly' ? 'text-slate-800' : 'text-slate-500'}`}>
                 Monthly
               </span>
               <Switch
                 checked={billingCycle === 'yearly'}
                 onCheckedChange={(checked) => setBillingCycle(checked ? 'yearly' : 'monthly')}
               />
-              <span className={`font-medium ${billingCycle === 'yearly' ? 'text-foreground' : 'text-muted-foreground'}`}>
+              <span className={`font-medium ${billingCycle === 'yearly' ? 'text-slate-800' : 'text-slate-500'}`}>
                 Yearly
               </span>
               {billingCycle === 'yearly' && (
-                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                <Badge variant="secondary" className="bg-harmony-100 text-harmony-800">
                   Save up to 20%
                 </Badge>
               )}
@@ -100,13 +107,13 @@ const PricingSection = () => {
               return (
                 <Card 
                   key={plan.id} 
-                  className={`relative transition-all duration-300 hover:shadow-xl ${
-                    isPopular ? 'ring-2 ring-therapy-500 scale-105' : ''
+                  className={`relative transition-all duration-300 hover:shadow-xl bg-white/90 backdrop-blur-sm ${
+                    isPopular ? 'ring-2 ring-harmony-500 scale-105' : ''
                   }`}
                 >
                   {isPopular && (
                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                      <Badge className="bg-therapy-500 text-white px-4 py-1">
+                      <Badge className="bg-harmony-500 text-white px-4 py-1">
                         Most Popular
                       </Badge>
                     </div>
@@ -115,29 +122,29 @@ const PricingSection = () => {
                   <CardHeader className="text-center pb-4">
                     <div className="flex items-center justify-center mb-2">
                       <div className={`p-3 rounded-full ${
-                        plan.name === 'Free' ? 'bg-gray-100 text-gray-600' :
-                        plan.name === 'Basic' ? 'bg-blue-100 text-blue-600' :
-                        'bg-therapy-100 text-therapy-600'
+                        plan.name === 'Free' ? 'bg-slate-100 text-slate-600' :
+                        plan.name === 'Basic' ? 'bg-balance-100 text-balance-600' :
+                        'bg-harmony-100 text-harmony-600'
                       }`}>
                         {getPlanIcon(plan.name)}
                       </div>
                     </div>
                     
-                    <CardTitle className="text-2xl font-bold">
+                    <CardTitle className="text-2xl font-bold text-slate-800">
                       {plan.name}
                     </CardTitle>
                     
                     <div className="space-y-1">
-                      <div className="text-3xl font-bold">
+                      <div className="text-3xl font-bold text-slate-800">
                         ${monthlyPrice.toFixed(2)}
-                        <span className="text-lg font-normal text-muted-foreground">/month</span>
+                        <span className="text-lg font-normal text-slate-600">/month</span>
                       </div>
                       {billingCycle === 'yearly' && plan.price_yearly > 0 && (
                         <>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-sm text-slate-500">
                             Billed annually (${plan.price_yearly}/year)
                           </div>
-                          <div className="text-sm text-green-600 font-medium">
+                          <div className="text-sm text-harmony-600 font-medium">
                             Save {getYearlyDiscount(plan.price_monthly, plan.price_yearly)}% with yearly billing
                           </div>
                         </>
@@ -150,8 +157,8 @@ const PricingSection = () => {
                     <div className="space-y-3">
                       {Object.entries(plan.features).slice(0, 5).map(([key, value]) => (
                         <div key={key} className="flex items-start space-x-3">
-                          <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm text-muted-foreground">{value}</span>
+                          <Check className="h-5 w-5 text-harmony-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-sm text-slate-600">{value}</span>
                         </div>
                       ))}
                     </div>
@@ -161,7 +168,7 @@ const PricingSection = () => {
                       {showTrial ? (
                         <Button
                           onClick={() => handlePlanSelect(plan)}
-                          className="w-full bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-semibold py-3 text-lg"
+                          className="w-full bg-gradient-to-r from-harmony-500 to-flow-600 hover:from-harmony-600 hover:to-flow-700 text-white font-semibold py-3 text-lg"
                         >
                           Start 7-Day Free Trial
                         </Button>
@@ -170,10 +177,10 @@ const PricingSection = () => {
                           onClick={() => handlePlanSelect(plan)}
                           className={`w-full ${
                             isPopular 
-                              ? 'bg-therapy-500 hover:bg-therapy-600' 
+                              ? 'bg-gradient-to-r from-harmony-500 to-flow-600 hover:from-harmony-600 hover:to-flow-700 text-white' 
                               : plan.name === 'Basic'
-                              ? 'bg-blue-500 hover:bg-blue-600'
-                              : ''
+                              ? 'bg-gradient-to-r from-balance-500 to-balance-600 hover:from-balance-600 hover:to-balance-700 text-white'
+                              : 'border-2 border-slate-300 bg-white hover:bg-slate-50 text-slate-700'
                           }`}
                           variant={plan.name === 'Free' ? 'outline' : 'default'}
                         >
@@ -183,7 +190,7 @@ const PricingSection = () => {
                     </div>
 
                     {showTrial && (
-                      <p className="text-xs text-center text-muted-foreground">
+                      <p className="text-xs text-center text-slate-500">
                         No credit card required for trial
                       </p>
                     )}
@@ -194,7 +201,7 @@ const PricingSection = () => {
           </div>
 
           <div className="text-center mt-12">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-slate-500">
               All plans include secure, confidential therapy sessions and 24/7 crisis resources
             </p>
           </div>
