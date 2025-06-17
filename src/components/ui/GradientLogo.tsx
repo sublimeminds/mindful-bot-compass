@@ -25,7 +25,7 @@ const GradientLogo = ({
   return (
     <div className={`${sizeClasses[size]} ${className} relative flex items-center justify-center`}>
       <img 
-        src="/lovable-uploads/9f505cce-5575-4689-9532-eb2a4529f167.png"
+        src="/lovable-uploads/0f6712b9-1cec-4e69-a394-e7db1674499e.png"
         alt="TherapySync - AI Therapy Companion"
         className="w-full h-full object-contain animate-swirl-breathe drop-shadow-lg"
       />

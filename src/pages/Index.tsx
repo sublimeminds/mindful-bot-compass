@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useAuth } from "@/contexts/AuthContext";
 import HeroSection from "@/components/HeroSection";
@@ -69,14 +70,14 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-                <h1 className="text-3xl font-bold mb-3 flex items-center justify-center">
+                <h1 className="text-3xl font-bold mb-3 flex items-center justify-center text-slate-800">
                   <GradientLogo size="lg" className="mr-4" />
                   <span className="bg-gradient-to-r from-harmony-600 via-balance-600 to-flow-600 bg-clip-text text-transparent">
                     Welcome back to your wellness journey
                   </span>
                   <Sparkles className="h-7 w-7 ml-3 text-harmony-500" />
                 </h1>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-lg text-slate-600">
                   Continue flowing with TherapySync's personalized support
                 </p>
               </div>

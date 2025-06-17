@@ -42,17 +42,17 @@ const HeroSection = () => {
                 </div>
               </div>
               
-              <h1 className="text-5xl sm:text-6xl lg:text-8xl font-bold text-foreground mb-10 leading-tight">
+              <h1 className="text-5xl sm:text-6xl lg:text-8xl font-bold text-slate-800 mb-10 leading-tight">
                 Sync Your Mind
                 <span className="block bg-gradient-to-r from-harmony-600 via-balance-600 to-flow-600 bg-clip-text text-transparent">
                   With AI Therapy
                 </span>
-                <span className="block text-4xl sm:text-5xl lg:text-6xl mt-4 text-muted-foreground">
+                <span className="block text-4xl sm:text-5xl lg:text-6xl mt-4 text-slate-600">
                   Available 24/7
                 </span>
               </h1>
               
-              <p className="text-2xl sm:text-3xl text-muted-foreground mb-16 max-w-4xl mx-auto leading-relaxed">
+              <p className="text-2xl sm:text-3xl text-slate-700 mb-16 max-w-4xl mx-auto leading-relaxed">
                 Experience personalized mental health support powered by AI. 
                 <span className="block mt-3 font-semibold text-harmony-700">
                   Find balance, flow in harmony, and sync with your wellbeing journey.
@@ -73,7 +73,7 @@ const HeroSection = () => {
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="border-2 border-harmony-300 text-harmony-700 hover:bg-white/80 px-12 py-6 text-2xl font-semibold backdrop-blur-sm group shadow-lg"
+                  className="border-2 border-harmony-300 text-harmony-700 hover:bg-white/80 px-12 py-6 text-2xl font-semibold backdrop-blur-sm group shadow-lg bg-white/60"
                   onClick={scrollToDemo}
                 >
                   <GradientLogo 
@@ -85,7 +85,7 @@ const HeroSection = () => {
               </div>
               
               {/* Trust indicators */}
-              <div className="flex flex-wrap items-center justify-center gap-12 text-base text-muted-foreground">
+              <div className="flex flex-wrap items-center justify-center gap-12 text-base text-slate-600">
                 <div className="flex items-center space-x-3">
                   <GradientLogo size="sm" className="opacity-60" />
                   <span className="font-medium">HIPAA Compliant</span>
