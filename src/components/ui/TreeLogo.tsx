@@ -22,15 +22,15 @@ const TreeLogo = ({
     hero: 'w-64 h-64'
   };
 
-  // Enhanced fallback with tree theme
+  // Enhanced fallback with gradient swirl theme
   const FallbackLogo = () => (
-    <div className={`${sizeClasses[size]} ${className} bg-gradient-to-br from-therapy-500 to-calm-500 rounded-full flex items-center justify-center shadow-lg`}>
+    <div className={`${sizeClasses[size]} ${className} bg-gradient-to-br from-harmony-500 to-flow-500 rounded-full flex items-center justify-center shadow-lg`}>
       <div className="text-white font-bold text-center leading-none">
         {size === 'micro' || size === 'sm' ? (
-          <span className="text-xs">🌳</span>
+          <span className="text-xs">🌀</span>
         ) : (
           <div className="flex flex-col items-center">
-            <span className={size === 'hero' ? 'text-6xl' : size === 'xxl' ? 'text-4xl' : 'text-2xl'}>🌳</span>
+            <span className={size === 'hero' ? 'text-6xl' : size === 'xxl' ? 'text-4xl' : 'text-2xl'}>🌀</span>
             {size !== 'hero' && <span className="text-xs font-semibold">TS</span>}
           </div>
         )}
@@ -47,8 +47,8 @@ const TreeLogo = ({
   return (
     <img 
       src="/lovable-uploads/d0afa7e0-63e0-4951-a3b8-529fcf32b24a.png"
-      alt="TherapySync Tree Logo" 
-      className={`${sizeClasses[size]} ${className} object-contain transition-all duration-300 hover:scale-105 drop-shadow-lg`}
+      alt="TherapySync Gradient Logo" 
+      className={`${sizeClasses[size]} ${className} object-contain transition-all duration-300 hover:scale-105 drop-shadow-lg rounded-full`}
       onError={(e) => {
         console.error('TreeLogo image failed to load:', e);
         setImageError(true);

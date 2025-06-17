@@ -31,7 +31,7 @@ const DesktopHeader = () => {
             <Button 
               onClick={() => navigate('/auth')}
               size="lg"
-              className="bg-gradient-to-r from-therapy-500 via-therapy-600 to-therapy-700 hover:from-therapy-600 hover:via-therapy-700 hover:to-therapy-800 text-white font-semibold rounded-full px-8 py-3 shadow-lg hover:shadow-therapy-500/30 transition-all duration-300 hover:scale-105"
+              className="bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-600 hover:from-harmony-600 hover:via-balance-600 hover:to-flow-700 text-white font-semibold rounded-full px-8 py-3 shadow-lg hover:shadow-harmony/30 transition-all duration-300 hover:scale-105"
             >
               <User className="h-5 w-5 mr-2" />
               Sign In

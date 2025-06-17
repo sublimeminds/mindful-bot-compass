@@ -85,7 +85,7 @@ const UnifiedNavigation = () => {
               onClick={() => scrollToSection(item.id)}
               className={`${getVisibilityClass()} items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-muted/50 whitespace-nowrap flex-shrink-0 min-w-0 ${
                 isActive 
-                  ? 'text-therapy-600 bg-therapy-50' 
+                  ? 'text-harmony-600 bg-harmony-50' 
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -100,7 +100,7 @@ const UnifiedNavigation = () => {
           <Button
             onClick={() => navigate('/plans')}
             size="sm"
-            className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white px-4 py-2 text-sm whitespace-nowrap flex-shrink-0"
+            className="bg-gradient-to-r from-harmony-500 to-flow-600 hover:from-harmony-600 hover:to-flow-700 text-white px-4 py-2 text-sm whitespace-nowrap flex-shrink-0"
           >
             <Crown className="h-4 w-4 mr-2" />
             Upgrade

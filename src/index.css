@@ -31,31 +31,44 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
 
-    /* TherapySync brand colors - nature-inspired therapy palette */
-    --therapy-50: 120 60% 97%;
-    --therapy-100: 120 60% 94%;
-    --therapy-200: 120 61% 86%;
-    --therapy-300: 120 62% 74%;
-    --therapy-400: 120 57% 60%;
-    --therapy-500: 120 61% 45%;
-    --therapy-600: 120 67% 35%;
-    --therapy-700: 120 74% 28%;
-    --therapy-800: 120 84% 22%;
-    --therapy-900: 120 87% 15%;
-    --therapy-950: 120 84% 8%;
+    /* TherapySync brand colors - gradient swirl inspired */
+    --harmony-50: 14 100% 97%;
+    --harmony-100: 13 100% 93%;
+    --harmony-200: 13 100% 87%;
+    --harmony-300: 12 100% 78%;
+    --harmony-400: 11 100% 67%;
+    --harmony-500: 11 100% 59%;
+    --harmony-600: 9 100% 52%;
+    --harmony-700: 7 93% 44%;
+    --harmony-800: 6 84% 37%;
+    --harmony-900: 5 78% 30%;
+    --harmony-950: 4 85% 16%;
 
-    /* Calm theme colors - sky and water inspired */
-    --calm-50: 200 100% 97%;
-    --calm-100: 204 94% 94%;
-    --calm-200: 201 94% 86%;
-    --calm-300: 199 95% 74%;
-    --calm-400: 198 93% 60%;
-    --calm-500: 198 93% 50%;
-    --calm-600: 200 98% 39%;
-    --calm-700: 201 96% 32%;
-    --calm-800: 201 90% 27%;
-    --calm-900: 202 80% 24%;
-    --calm-950: 202 80% 16%;
+    /* Flow theme colors - deep blue/purple inspired */
+    --flow-50: 231 48% 97%;
+    --flow-100: 232 59% 94%;
+    --flow-200: 232 60% 87%;
+    --flow-300: 232 57% 77%;
+    --flow-400: 232 57% 65%;
+    --flow-500: 232 57% 53%;
+    --flow-600: 232 67% 42%;
+    --flow-700: 232 74% 34%;
+    --flow-800: 232 84% 27%;
+    --flow-900: 232 87% 23%;
+    --flow-950: 232 84% 15%;
+
+    /* Balance theme colors - transition pink/purple */
+    --balance-50: 320 43% 97%;
+    --balance-100: 322 44% 94%;
+    --balance-200: 322 47% 87%;
+    --balance-300: 322 47% 77%;
+    --balance-400: 322 44% 65%;
+    --balance-500: 322 44% 53%;
+    --balance-600: 322 54% 42%;
+    --balance-700: 322 61% 34%;
+    --balance-800: 322 74% 27%;
+    --balance-900: 322 78% 23%;
+    --balance-950: 322 84% 15%;
   }
 
   .dark {
@@ -97,54 +110,164 @@
 }
 
 @layer utilities {
-  .therapy-50 { color: hsl(var(--therapy-50)); }
-  .therapy-100 { color: hsl(var(--therapy-100)); }
-  .therapy-200 { color: hsl(var(--therapy-200)); }
-  .therapy-300 { color: hsl(var(--therapy-300)); }
-  .therapy-400 { color: hsl(var(--therapy-400)); }
-  .therapy-500 { color: hsl(var(--therapy-500)); }
-  .therapy-600 { color: hsl(var(--therapy-600)); }
-  .therapy-700 { color: hsl(var(--therapy-700)); }
-  .therapy-800 { color: hsl(var(--therapy-800)); }
-  .therapy-900 { color: hsl(var(--therapy-900)); }
-  .therapy-950 { color: hsl(var(--therapy-950)); }
+  /* Harmony colors (warm coral/orange) */
+  .harmony-50 { color: hsl(var(--harmony-50)); }
+  .harmony-100 { color: hsl(var(--harmony-100)); }
+  .harmony-200 { color: hsl(var(--harmony-200)); }
+  .harmony-300 { color: hsl(var(--harmony-300)); }
+  .harmony-400 { color: hsl(var(--harmony-400)); }
+  .harmony-500 { color: hsl(var(--harmony-500)); }
+  .harmony-600 { color: hsl(var(--harmony-600)); }
+  .harmony-700 { color: hsl(var(--harmony-700)); }
+  .harmony-800 { color: hsl(var(--harmony-800)); }
+  .harmony-900 { color: hsl(var(--harmony-900)); }
+  .harmony-950 { color: hsl(var(--harmony-950)); }
 
-  .bg-therapy-50 { background-color: hsl(var(--therapy-50)); }
-  .bg-therapy-100 { background-color: hsl(var(--therapy-100)); }
-  .bg-therapy-200 { background-color: hsl(var(--therapy-200)); }
-  .bg-therapy-300 { background-color: hsl(var(--therapy-300)); }
-  .bg-therapy-400 { background-color: hsl(var(--therapy-400)); }
-  .bg-therapy-500 { background-color: hsl(var(--therapy-500)); }
-  .bg-therapy-600 { background-color: hsl(var(--therapy-600)); }
-  .bg-therapy-700 { background-color: hsl(var(--therapy-700)); }
-  .bg-therapy-800 { background-color: hsl(var(--therapy-800)); }
-  .bg-therapy-900 { background-color: hsl(var(--therapy-900)); }
-  .bg-therapy-950 { background-color: hsl(var(--therapy-950)); }
+  .bg-harmony-50 { background-color: hsl(var(--harmony-50)); }
+  .bg-harmony-100 { background-color: hsl(var(--harmony-100)); }
+  .bg-harmony-200 { background-color: hsl(var(--harmony-200)); }
+  .bg-harmony-300 { background-color: hsl(var(--harmony-300)); }
+  .bg-harmony-400 { background-color: hsl(var(--harmony-400)); }
+  .bg-harmony-500 { background-color: hsl(var(--harmony-500)); }
+  .bg-harmony-600 { background-color: hsl(var(--harmony-600)); }
+  .bg-harmony-700 { background-color: hsl(var(--harmony-700)); }
+  .bg-harmony-800 { background-color: hsl(var(--harmony-800)); }
+  .bg-harmony-900 { background-color: hsl(var(--harmony-900)); }
+  .bg-harmony-950 { background-color: hsl(var(--harmony-950)); }
 
-  .calm-50 { color: hsl(var(--calm-50)); }
-  .calm-100 { color: hsl(var(--calm-100)); }
-  .calm-200 { color: hsl(var(--calm-200)); }
-  .calm-300 { color: hsl(var(--calm-300)); }
-  .calm-400 { color: hsl(var(--calm-400)); }
-  .calm-500 { color: hsl(var(--calm-500)); }
-  .calm-600 { color: hsl(var(--calm-600)); }
-  .calm-700 { color: hsl(var(--calm-700)); }
-  .calm-800 { color: hsl(var(--calm-800)); }
-  .calm-900 { color: hsl(var(--calm-900)); }
-  .calm-950 { color: hsl(var(--calm-950)); }
+  /* Flow colors (deep blue/purple) */
+  .flow-50 { color: hsl(var(--flow-50)); }
+  .flow-100 { color: hsl(var(--flow-100)); }
+  .flow-200 { color: hsl(var(--flow-200)); }
+  .flow-300 { color: hsl(var(--flow-300)); }
+  .flow-400 { color: hsl(var(--flow-400)); }
+  .flow-500 { color: hsl(var(--flow-500)); }
+  .flow-600 { color: hsl(var(--flow-600)); }
+  .flow-700 { color: hsl(var(--flow-700)); }
+  .flow-800 { color: hsl(var(--flow-800)); }
+  .flow-900 { color: hsl(var(--flow-900)); }
+  .flow-950 { color: hsl(var(--flow-950)); }
 
-  .bg-calm-50 { background-color: hsl(var(--calm-50)); }
-  .bg-calm-100 { background-color: hsl(var(--calm-100)); }
-  .bg-calm-200 { background-color: hsl(var(--calm-200)); }
-  .bg-calm-300 { background-color: hsl(var(--calm-300)); }
-  .bg-calm-400 { background-color: hsl(var(--calm-400)); }
-  .bg-calm-500 { background-color: hsl(var(--calm-500)); }
-  .bg-calm-600 { background-color: hsl(var(--calm-600)); }
-  .bg-calm-700 { background-color: hsl(var(--calm-700)); }
-  .bg-calm-800 { background-color: hsl(var(--calm-800)); }
-  .bg-calm-900 { background-color: hsl(var(--calm-900)); }
-  .bg-calm-950 { background-color: hsl(var(--calm-950)); }
+  .bg-flow-50 { background-color: hsl(var(--flow-50)); }
+  .bg-flow-100 { background-color: hsl(var(--flow-100)); }
+  .bg-flow-200 { background-color: hsl(var(--flow-200)); }
+  .bg-flow-300 { background-color: hsl(var(--flow-300)); }
+  .bg-flow-400 { background-color: hsl(var(--flow-400)); }
+  .bg-flow-500 { background-color: hsl(var(--flow-500)); }
+  .bg-flow-600 { background-color: hsl(var(--flow-600)); }
+  .bg-flow-700 { background-color: hsl(var(--flow-700)); }
+  .bg-flow-800 { background-color: hsl(var(--flow-800)); }
+  .bg-flow-900 { background-color: hsl(var(--flow-900)); }
+  .bg-flow-950 { background-color: hsl(var(--flow-950)); }
 
+  /* Balance colors (transition pink/purple) */
+  .balance-50 { color: hsl(var(--balance-50)); }
+  .balance-100 { color: hsl(var(--balance-100)); }
+  .balance-200 { color: hsl(var(--balance-200)); }
+  .balance-300 { color: hsl(var(--balance-300)); }
+  .balance-400 { color: hsl(var(--balance-400)); }
+  .balance-500 { color: hsl(var(--balance-500)); }
+  .balance-600 { color: hsl(var(--balance-600)); }
+  .balance-700 { color: hsl(var(--balance-700)); }
+  .balance-800 { color: hsl(var(--balance-800)); }
+  .balance-900 { color: hsl(var(--balance-900)); }
+  .balance-950 { color: hsl(var(--balance-950)); }
+
+  .bg-balance-50 { background-color: hsl(var(--balance-50)); }
+  .bg-balance-100 { background-color: hsl(var(--balance-100)); }
+  .bg-balance-200 { background-color: hsl(var(--balance-200)); }
+  .bg-balance-300 { background-color: hsl(var(--balance-300)); }
+  .bg-balance-400 { background-color: hsl(var(--balance-400)); }
+  .bg-balance-500 { background-color: hsl(var(--balance-500)); }
+  .bg-balance-600 { background-color: hsl(var(--balance-600)); }
+  .bg-balance-700 { background-color: hsl(var(--balance-700)); }
+  .bg-balance-800 { background-color: hsl(var(--balance-800)); }
+  .bg-balance-900 { background-color: hsl(var(--balance-900)); }
+  .bg-balance-950 { background-color: hsl(var(--balance-950)); }
+
+  /* Swirl-Inspired Animations */
+  
+  .animate-swirl-breathe {
+    animation: swirlBreathe 4s ease-in-out infinite;
+  }
+  
+  @keyframes swirlBreathe {
+    0%, 100% { 
+      transform: scale(1) rotate(0deg);
+      filter: brightness(1);
+    }
+    50% { 
+      transform: scale(1.03) rotate(5deg);
+      filter: brightness(1.08);
+    }
+  }
+
+  .animate-swirl-grow {
+    animation: swirlGrow 2s ease-out infinite;
+  }
+  
+  @keyframes swirlGrow {
+    0% { 
+      transform: scale(1) rotate(0deg);
+    }
+    50% { 
+      transform: scale(1.15) rotate(10deg);
+    }
+    100% { 
+      transform: scale(1) rotate(0deg);
+    }
+  }
+
+  .animate-gradient-flow {
+    animation: gradientFlow 8s ease-in-out infinite;
+  }
+  
+  @keyframes gradientFlow {
+    0%, 100% { 
+      background-position: 0% 50%;
+    }
+    50% { 
+      background-position: 100% 50%;
+    }
+  }
+
+  .gradient-harmony {
+    background: linear-gradient(135deg, 
+      hsl(var(--harmony-50)) 0%, 
+      hsl(var(--balance-50)) 25%,
+      hsl(var(--harmony-100)) 50%,
+      hsl(var(--flow-100)) 75%,
+      hsl(var(--harmony-50)) 100%);
+  }
+
+  .gradient-flow {
+    background: linear-gradient(135deg, 
+      hsl(var(--harmony-500)) 0%, 
+      hsl(var(--balance-500)) 25%,
+      hsl(var(--flow-600)) 75%,
+      hsl(var(--flow-700)) 100%);
+  }
+
+  .gradient-balance {
+    background: linear-gradient(145deg, 
+      rgba(255, 255, 255, 0.9) 0%, 
+      rgba(255, 255, 255, 0.7) 100%);
+    backdrop-filter: blur(10px);
+  }
+
+  .shadow-harmony {
+    box-shadow: 0 20px 40px -12px rgba(255, 107, 71, 0.25);
+  }
+
+  .shadow-flow {
+    box-shadow: 0 20px 40px -12px rgba(63, 81, 181, 0.25);
+  }
+
+  .shadow-3xl {
+    box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Keep existing compatibility */
   /* Tree-Inspired Animations */
   
   /* Tree breathing - gentle pulsing like a living tree */

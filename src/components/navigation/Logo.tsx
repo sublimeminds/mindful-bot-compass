@@ -15,14 +15,14 @@ const Logo = () => {
         <div className="flex items-center justify-center transition-all duration-300 group-hover:scale-105">
           <TreeLogo 
             size="xl"
-            className="drop-shadow-lg"
+            className="drop-shadow-lg animate-swirl-breathe"
           />
         </div>
         <div className="flex flex-col">
-          <span className="text-2xl font-bold bg-gradient-to-r from-therapy-600 via-therapy-700 to-calm-600 bg-clip-text text-transparent group-hover:from-therapy-500 group-hover:to-calm-500 transition-all duration-300">
+          <span className="text-2xl font-bold bg-gradient-to-r from-harmony-600 via-balance-600 to-flow-600 bg-clip-text text-transparent group-hover:from-harmony-500 group-hover:to-flow-500 transition-all duration-300">
             TherapySync
           </span>
-          <span className="text-sm text-muted-foreground font-medium -mt-1 group-hover:text-therapy-600 transition-colors duration-300">
+          <span className="text-sm text-muted-foreground font-medium -mt-1 group-hover:text-harmony-600 transition-colors duration-300">
             AI Therapy Companion
           </span>
         </div>

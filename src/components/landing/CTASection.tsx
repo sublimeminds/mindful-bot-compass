@@ -33,17 +33,17 @@ const CTASection = () => {
   }, []);
 
   return (
-    <section className="py-20 gradient-nature relative overflow-hidden">
+    <section className="py-20 gradient-flow animate-gradient-flow bg-[length:400%_400%] relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-black/10"></div>
-      <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
-      <div className="absolute bottom-10 right-10 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+      <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-swirl-breathe"></div>
+      <div className="absolute bottom-10 right-10 w-24 h-24 bg-white/10 rounded-full blur-xl animate-swirl-breathe" style={{ animationDelay: '2s' }}></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Urgency element */}
           <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-            <div className="w-2 h-2 bg-therapy-300 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-harmony-300 rounded-full animate-pulse"></div>
             <span className="text-white text-sm font-medium">
               {urgencyTimer} spots left for free assessment today
             </span>
@@ -77,7 +77,7 @@ const CTASection = () => {
             <QuickSignupWithPlan>
               <Button 
                 size="lg" 
-                className="bg-white text-therapy-700 hover:bg-gray-100 px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="bg-white text-harmony-700 hover:bg-gray-100 px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:animate-swirl-grow"
               >
                 Start Your Wellness Journey
                 <ArrowRight className="h-5 w-5 ml-2" />
