@@ -8,7 +8,7 @@ const Auth = () => {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           <EnhancedAuthForm />
         </div>

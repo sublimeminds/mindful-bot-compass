@@ -206,7 +206,7 @@ const PricingSection = () => {
                       {Object.entries(plan.features).slice(0, 5).map(([key, value]) => (
                         <div key={key} className="flex items-start space-x-3">
                           <Check className="h-5 w-5 text-harmony-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm text-slate-600">{value}</span>
+                          <span className="text-sm text-slate-600">{String(value)}</span>
                         </div>
                       ))}
                     </div>

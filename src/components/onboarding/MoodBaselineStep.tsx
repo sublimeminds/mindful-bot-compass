@@ -59,7 +59,7 @@ const MoodBaselineStep: React.FC<MoodBaselineStepProps> = ({ onMoodSet, onBack }
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <Label className="flex items-center space-x-3">
-                    <IconComponent className="h-5 w-5 text-therapy-600" />
+                    <IconComponent className="h-5 w-5 text-harmony-600" />
                     <div>
                       <span className="font-medium">{category.label}</span>
                       <p className="text-sm text-muted-foreground">{category.description}</p>
@@ -92,7 +92,7 @@ const MoodBaselineStep: React.FC<MoodBaselineStepProps> = ({ onMoodSet, onBack }
         <Button variant="outline" onClick={onBack}>
           Back
         </Button>
-        <Button onClick={handleSubmit} className="bg-gradient-to-r from-therapy-500 to-calm-500">
+        <Button onClick={handleSubmit} className="bg-gradient-to-r from-harmony-500 to-flow-500">
           Continue
         </Button>
       </div>

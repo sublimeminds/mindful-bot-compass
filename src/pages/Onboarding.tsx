@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -83,8 +84,8 @@ const Onboarding = () => {
       if (updateError) throw updateError;
 
       toast({
-        title: "Welcome to MindfulAI!",
-        description: "Your profile has been set up successfully. Let's begin your therapy journey.",
+        title: "Welcome to TherapySync!",
+        description: "Your profile has been set up successfully. Let's begin your wellness journey.",
       });
 
       navigate('/');
@@ -138,17 +139,17 @@ const Onboarding = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50 p-6">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center">
           <div className="flex items-center justify-center mb-4">
-            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-therapy-500 to-calm-500 rounded-xl">
+            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-harmony-500 to-flow-500 rounded-xl">
               <Heart className="h-8 w-8 text-white" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Welcome to MindfulAI</h1>
-          <p className="text-muted-foreground">Let's personalize your therapy experience</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Welcome to TherapySync</h1>
+          <p className="text-muted-foreground">Let's personalize your wellness experience</p>
         </div>
 
         {/* Progress */}
@@ -158,7 +159,7 @@ const Onboarding = () => {
             <span>{Math.round(((currentStep + 1) / STEPS.length) * 100)}% complete</span>
           </div>
           <Progress value={((currentStep + 1) / STEPS.length) * 100} className="h-2" />
-          <p className="text-center text-sm font-medium text-therapy-600">
+          <p className="text-center text-sm font-medium text-harmony-600">
             {STEPS[currentStep]}
           </p>
         </div>
@@ -213,7 +214,7 @@ const Onboarding = () => {
                 <div className="text-center">
                   <h2 className="text-2xl font-bold mb-4">Choose Your Plan</h2>
                   <p className="text-muted-foreground">
-                    Select the plan that best fits your mental health journey
+                    Select the plan that best fits your mental wellness journey
                   </p>
                 </div>
 
@@ -226,7 +227,7 @@ const Onboarding = () => {
                   />
                 ) : (
                   <div className="text-center py-12">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-harmony-500 mx-auto mb-4"></div>
                     <p className="text-muted-foreground">Loading plans...</p>
                   </div>
                 )}
@@ -276,11 +277,11 @@ const Onboarding = () => {
                 <div>
                   <h2 className="text-2xl font-bold mb-4">You're All Set!</h2>
                   <p className="text-muted-foreground mb-6">
-                    Your personalized therapy experience is ready. Let's start your journey toward better mental health.
+                    Your personalized wellness experience is ready. Let's start your journey toward better mental health.
                   </p>
                 </div>
 
-                <div className="bg-therapy-50 p-6 rounded-lg border border-therapy-200">
+                <div className="bg-harmony-50 p-6 rounded-lg border border-harmony-200">
                   <h3 className="font-semibold mb-4">Your Setup Summary:</h3>
                   <div className="space-y-2 text-sm">
                     <p><strong>Goals:</strong> {goals.length} selected</p>
@@ -297,7 +298,7 @@ const Onboarding = () => {
                   <Button 
                     onClick={handleComplete}
                     disabled={isLoading}
-                    className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
+                    className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
                   >
                     {isLoading ? "Setting up..." : "Complete Setup"}
                   </Button>

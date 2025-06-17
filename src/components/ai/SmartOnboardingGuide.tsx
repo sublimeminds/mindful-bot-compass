@@ -16,8 +16,8 @@ const SmartOnboardingGuide = () => {
   const onboardingSteps = [
     {
       id: 'welcome',
-      title: 'Welcome to MindfulAI',
-      description: 'Your AI-powered therapy companion is here to support your mental wellness journey.',
+      title: 'Welcome to TherapySync',
+      description: 'Your AI-powered wellness companion is here to support your mental wellness journey.',
       icon: Brain,
       action: 'Get Started',
       path: null
@@ -33,7 +33,7 @@ const SmartOnboardingGuide = () => {
     {
       id: 'set-goals',
       title: 'Set Your Goals',
-      description: 'Define what you want to achieve in your therapy journey.',
+      description: 'Define what you want to achieve in your wellness journey.',
       icon: Target,
       action: 'Set Goals',
       path: '/goals'
@@ -46,7 +46,8 @@ const SmartOnboardingGuide = () => {
     if (!hasSeenOnboarding && user) {
       setIsVisible(true);
     }
-  }, [user]);
+  },
+[user]);
 
   const handleNext = () => {
     if (currentStep < onboardingSteps.length - 1) {
@@ -85,7 +86,7 @@ const SmartOnboardingGuide = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center">
-              <Icon className="h-5 w-5 mr-2 text-therapy-600" />
+              <Icon className="h-5 w-5 mr-2 text-harmony-600" />
               {currentStepData.title}
             </CardTitle>
             <Button
