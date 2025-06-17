@@ -31,9 +31,17 @@ const UnifiedNavigation = () => {
 
   const scrollToSection = (sectionId: string) => {
     if (sectionId.startsWith('#')) {
-      const element = document.querySelector(sectionId);
+      // If we're not on the home page, navigate there first
+      if (location.pathname !== '/') {
+        navigate('/', { state: { scrollTo: sectionId } });
+        return;
+      }
+      
+      // Remove the # and find the element
+      const elementId = sectionId.substring(1);
+      const element = document.getElementById(elementId);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     } else {
       navigate(sectionId);
@@ -61,6 +69,20 @@ const UnifiedNavigation = () => {
   ];
 
   const navItems = isAuthenticated ? authNavItems : publicNavItems;
+
+  // Handle scroll on page load if coming from navigation
+  React.useEffect(() => {
+    const state = location.state as { scrollTo?: string };
+    if (state?.scrollTo && state.scrollTo.startsWith('#')) {
+      setTimeout(() => {
+        const elementId = state.scrollTo.substring(1);
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [location]);
 
   return (
     <div className="flex items-center justify-center w-full">

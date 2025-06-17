@@ -11,12 +11,59 @@ import { useNavigate } from 'react-router-dom';
 import TrialSignup from './subscription/TrialSignup';
 import GradientLogo from '@/components/ui/GradientLogo';
 
+// Default plans if hook fails
+const defaultPlans = [
+  {
+    id: 'free',
+    name: 'Free',
+    price_monthly: 0,
+    price_yearly: 0,
+    features: {
+      'Basic AI therapy sessions': '3 sessions per month',
+      'Mood tracking': 'Daily mood logging',
+      'Basic goal setting': 'Up to 3 goals',
+      'Crisis resources': '24/7 crisis hotline',
+      'Community support': 'Access to support groups'
+    }
+  },
+  {
+    id: 'basic',
+    name: 'Basic',
+    price_monthly: 19,
+    price_yearly: 190,
+    features: {
+      'Unlimited AI therapy sessions': 'Chat and voice support',
+      'Advanced mood tracking': 'Detailed analytics and insights',
+      'Goal management': 'Unlimited goals with progress tracking',
+      'Technique library': 'Access to 50+ therapeutic techniques',
+      'Session history': 'Complete session archive'
+    }
+  },
+  {
+    id: 'premium',
+    name: 'Premium',
+    price_monthly: 39,
+    price_yearly: 390,
+    features: {
+      'Everything in Basic': 'All Basic plan features',
+      'Priority AI responses': 'Faster response times',
+      'Advanced analytics': 'Comprehensive progress reports',
+      'Personal therapist matching': 'Connect with human therapists',
+      'Custom technique creation': 'Personalized therapeutic approaches'
+    }
+  }
+];
+
 const PricingSection = () => {
-  const { plans, loading } = useSubscription();
+  const subscriptionHook = useSubscription();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [showTrialModal, setShowTrialModal] = useState(false);
+
+  // Use hook data if available, otherwise fall back to default plans
+  const plans = subscriptionHook?.plans?.length > 0 ? subscriptionHook.plans : defaultPlans;
+  const loading = subscriptionHook?.loading || false;
 
   const handlePlanSelect = (plan: any) => {
     if (plan.name === 'Premium' && billingCycle === 'yearly' && !isAuthenticated) {
@@ -52,6 +99,7 @@ const PricingSection = () => {
       <section id="pricing" className="py-20 bg-gradient-to-br from-harmony-50 via-balance-50 to-flow-100">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-harmony-500 mx-auto"></div>
+          <p className="mt-4 text-slate-600">Loading pricing plans...</p>
         </div>
       </section>
     );

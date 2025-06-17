@@ -90,8 +90,12 @@ const Index = () => {
             <StatsCounter />
             <VideoEnhancedDemo />
             <AdvancedFeaturesSection />
-            <HowItWorksSection />
-            <TestimonialsSection />
+            <div id="how-it-works">
+              <HowItWorksSection />
+            </div>
+            <div id="testimonials">
+              <TestimonialsSection />
+            </div>
             <TrustSection />
             <div id="features">
               <FeaturesSection />
