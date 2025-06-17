@@ -1,9 +1,8 @@
+
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { DebugLogger } from '@/utils/debugLogger';
-import { reactInitValidator } from '@/utils/reactInitValidator';
-import ReactErrorFallback from '@/components/fallback/ReactErrorFallback';
 
 interface AuthContextType {
   user: User | null;
@@ -24,15 +23,20 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   DebugLogger.debug('AuthProvider: Initializing', { component: 'AuthProvider' });
   
-  // Validate React initialization before proceeding
-  const validation = reactInitValidator.validateReactInit();
-  
-  if (!validation.isValid) {
-    DebugLogger.error('AuthProvider: React validation failed', validation.error, { 
-      component: 'AuthProvider' 
-    });
-    
-    return <ReactErrorFallback error={validation.error} />;
+  // Simple error boundary check - if React hooks aren't available, show a basic error
+  if (!React || !React.useState || !React.useEffect) {
+    console.error('React hooks are not available');
+    return React.createElement('div', {
+      style: {
+        padding: '20px',
+        backgroundColor: '#fee2e2',
+        border: '1px solid #fecaca',
+        borderRadius: '6px',
+        color: '#991b1b',
+        textAlign: 'center',
+        margin: '20px'
+      }
+    }, 'Application Error: React is not properly initialized. Please refresh the page.');
   }
   
   const [user, setUser] = useState<User | null>(null);
