@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,7 +31,7 @@ export const therapists = [
     specialties: ['Anxiety', 'Depression', 'Stress Management'],
     communicationStyle: 'Supportive and Direct',
     icon: 'Brain',
-    colorScheme: 'from-blue-500 to-blue-600'
+    colorScheme: 'from-harmony-500 to-flow-500'
   },
   {
     id: '2',
@@ -43,7 +42,7 @@ export const therapists = [
     specialties: ['Mindfulness', 'Self-Compassion', 'Emotional Regulation'],
     communicationStyle: 'Calm and Reflective',
     icon: 'Heart',
-    colorScheme: 'from-green-500 to-emerald-500'
+    colorScheme: 'from-balance-500 to-harmony-500'
   },
   {
     id: '3',
@@ -54,7 +53,7 @@ export const therapists = [
     specialties: ['PTSD', 'Trauma Recovery', 'Resilience Building'],
     communicationStyle: 'Gentle and Empowering',
     icon: 'Shield',
-    colorScheme: 'from-purple-500 to-purple-600'
+    colorScheme: 'from-flow-500 to-balance-500'
   }
 ];
 
@@ -170,7 +169,7 @@ const TherapistMatcher: React.FC<TherapistMatcherProps> = ({
     <div className="max-w-2xl mx-auto">
       <Card>
         <CardHeader className="text-center">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mb-4">
+          <div className="mx-auto w-16 h-16 bg-gradient-to-r from-harmony-500 to-flow-500 rounded-full flex items-center justify-center mb-4">
             <Brain className="h-8 w-8 text-white" />
           </div>
           <CardTitle className="text-2xl">Find Your Perfect AI Therapist</CardTitle>
@@ -181,24 +180,24 @@ const TherapistMatcher: React.FC<TherapistMatcherProps> = ({
 
         <CardContent className="space-y-6">
           <div className="grid gap-4">
-            <div className="flex items-center space-x-3 p-4 bg-therapy-50 rounded-lg">
-              <Users className="h-5 w-5 text-therapy-600" />
+            <div className="flex items-center space-x-3 p-4 bg-harmony-50 rounded-lg">
+              <Users className="h-5 w-5 text-harmony-600" />
               <div>
                 <h4 className="font-medium">{therapists.length} Specialized AI Therapists</h4>
                 <p className="text-sm text-muted-foreground">Each with unique approaches and specialties</p>
               </div>
             </div>
             
-            <div className="flex items-center space-x-3 p-4 bg-calm-50 rounded-lg">
-              <Brain className="h-5 w-5 text-calm-600" />
+            <div className="flex items-center space-x-3 p-4 bg-balance-50 rounded-lg">
+              <Brain className="h-5 w-5 text-balance-600" />
               <div>
                 <h4 className="font-medium">Smart Matching Algorithm</h4>
                 <p className="text-sm text-muted-foreground">Analyzes your needs, preferences, and goals</p>
               </div>
             </div>
             
-            <div className="flex items-center space-x-3 p-4 bg-green-50 rounded-lg">
-              <ArrowRight className="h-5 w-5 text-green-600" />
+            <div className="flex items-center space-x-3 p-4 bg-flow-50 rounded-lg">
+              <ArrowRight className="h-5 w-5 text-flow-600" />
               <div>
                 <h4 className="font-medium">Personalized Experience</h4>
                 <p className="text-sm text-muted-foreground">Get therapy tailored to your communication style</p>
@@ -218,7 +217,7 @@ const TherapistMatcher: React.FC<TherapistMatcherProps> = ({
 
           <Button 
             onClick={handleStartAssessment}
-            className="w-full bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
+            className="w-full bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
             size="lg"
           >
             Start Assessment
