@@ -290,6 +290,63 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_therapy_analysis: {
+        Row: {
+          analysis_version: string
+          communication_adaptations: Json | null
+          computed_risk_level: string | null
+          confidence_score: number | null
+          created_at: string
+          estimated_therapy_duration: number | null
+          id: string
+          intervention_priorities: string[] | null
+          personality_profile: Json | null
+          predicted_outcomes: Json | null
+          protective_factors: string[] | null
+          risk_factors: string[] | null
+          therapist_match_scores: Json | null
+          treatment_recommendations: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          analysis_version?: string
+          communication_adaptations?: Json | null
+          computed_risk_level?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          estimated_therapy_duration?: number | null
+          id?: string
+          intervention_priorities?: string[] | null
+          personality_profile?: Json | null
+          predicted_outcomes?: Json | null
+          protective_factors?: string[] | null
+          risk_factors?: string[] | null
+          therapist_match_scores?: Json | null
+          treatment_recommendations?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          analysis_version?: string
+          communication_adaptations?: Json | null
+          computed_risk_level?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          estimated_therapy_duration?: number | null
+          id?: string
+          intervention_priorities?: string[] | null
+          personality_profile?: Json | null
+          predicted_outcomes?: Json | null
+          protective_factors?: string[] | null
+          risk_factors?: string[] | null
+          therapist_match_scores?: Json | null
+          treatment_recommendations?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       billing_history: {
         Row: {
           amount: number
@@ -414,6 +471,69 @@ export type Database = {
           last_occurred?: string | null
           pattern_data?: Json
           pattern_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      enhanced_therapy_preferences: {
+        Row: {
+          communication_style: string | null
+          created_at: string
+          cultural_competency_needs: string[] | null
+          experience_level_preference: string | null
+          feedback_preference: string | null
+          group_therapy_interest: boolean | null
+          homework_comfort_level: number | null
+          id: string
+          learning_style: string | null
+          preferred_days: string[] | null
+          preferred_time_of_day: string | null
+          session_duration: number | null
+          session_frequency: string | null
+          specialty_requirements: string[] | null
+          therapist_gender_preference: string | null
+          therapy_modalities: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          communication_style?: string | null
+          created_at?: string
+          cultural_competency_needs?: string[] | null
+          experience_level_preference?: string | null
+          feedback_preference?: string | null
+          group_therapy_interest?: boolean | null
+          homework_comfort_level?: number | null
+          id?: string
+          learning_style?: string | null
+          preferred_days?: string[] | null
+          preferred_time_of_day?: string | null
+          session_duration?: number | null
+          session_frequency?: string | null
+          specialty_requirements?: string[] | null
+          therapist_gender_preference?: string | null
+          therapy_modalities?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          communication_style?: string | null
+          created_at?: string
+          cultural_competency_needs?: string[] | null
+          experience_level_preference?: string | null
+          feedback_preference?: string | null
+          group_therapy_interest?: boolean | null
+          homework_comfort_level?: number | null
+          id?: string
+          learning_style?: string | null
+          preferred_days?: string[] | null
+          preferred_time_of_day?: string | null
+          session_duration?: number | null
+          session_frequency?: string | null
+          specialty_requirements?: string[] | null
+          therapist_gender_preference?: string | null
+          therapy_modalities?: string[] | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -635,6 +755,45 @@ export type Database = {
           title?: string
           updated_at?: string
           view_count?: number
+        }
+        Relationships: []
+      }
+      mental_health_assessments: {
+        Row: {
+          assessment_type: string
+          completed_at: string
+          created_at: string
+          id: string
+          interpretation: string | null
+          recommendations: string[] | null
+          responses: Json
+          severity_level: string | null
+          total_score: number | null
+          user_id: string
+        }
+        Insert: {
+          assessment_type: string
+          completed_at?: string
+          created_at?: string
+          id?: string
+          interpretation?: string | null
+          recommendations?: string[] | null
+          responses?: Json
+          severity_level?: string | null
+          total_score?: number | null
+          user_id: string
+        }
+        Update: {
+          assessment_type?: string
+          completed_at?: string
+          created_at?: string
+          id?: string
+          interpretation?: string | null
+          recommendations?: string[] | null
+          responses?: Json
+          severity_level?: string | null
+          total_score?: number | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -941,6 +1100,63 @@ export type Database = {
           subscription_plan?: string | null
           subscription_status?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      risk_assessments: {
+        Row: {
+          alcohol_use_frequency: string | null
+          assessed_at: string
+          created_at: string
+          drug_use_frequency: string | null
+          id: string
+          intervention_notes: string | null
+          previous_attempts: boolean | null
+          requires_immediate_intervention: boolean | null
+          risk_level: string
+          safety_plan: Json | null
+          self_harm_frequency: string | null
+          self_harm_history: boolean | null
+          substance_abuse_concern: boolean | null
+          suicidal_ideation_level: number | null
+          suicide_plan: boolean | null
+          user_id: string
+        }
+        Insert: {
+          alcohol_use_frequency?: string | null
+          assessed_at?: string
+          created_at?: string
+          drug_use_frequency?: string | null
+          id?: string
+          intervention_notes?: string | null
+          previous_attempts?: boolean | null
+          requires_immediate_intervention?: boolean | null
+          risk_level?: string
+          safety_plan?: Json | null
+          self_harm_frequency?: string | null
+          self_harm_history?: boolean | null
+          substance_abuse_concern?: boolean | null
+          suicidal_ideation_level?: number | null
+          suicide_plan?: boolean | null
+          user_id: string
+        }
+        Update: {
+          alcohol_use_frequency?: string | null
+          assessed_at?: string
+          created_at?: string
+          drug_use_frequency?: string | null
+          id?: string
+          intervention_notes?: string | null
+          previous_attempts?: boolean | null
+          requires_immediate_intervention?: boolean | null
+          risk_level?: string
+          safety_plan?: Json | null
+          self_harm_frequency?: string | null
+          self_harm_history?: boolean | null
+          substance_abuse_concern?: boolean | null
+          suicidal_ideation_level?: number | null
+          suicide_plan?: boolean | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -1536,6 +1752,150 @@ export type Database = {
           notes?: string | null
           start_time?: string
           techniques?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      trauma_history: {
+        Row: {
+          ace_responses: Json | null
+          ace_score: number | null
+          adult_trauma: boolean | null
+          childhood_trauma: boolean | null
+          coping_mechanisms: string[] | null
+          created_at: string
+          id: string
+          ptsd_severity: string | null
+          ptsd_symptoms: Json | null
+          trauma_details: string | null
+          trauma_types: string[] | null
+          triggers: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ace_responses?: Json | null
+          ace_score?: number | null
+          adult_trauma?: boolean | null
+          childhood_trauma?: boolean | null
+          coping_mechanisms?: string[] | null
+          created_at?: string
+          id?: string
+          ptsd_severity?: string | null
+          ptsd_symptoms?: Json | null
+          trauma_details?: string | null
+          trauma_types?: string[] | null
+          triggers?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ace_responses?: Json | null
+          ace_score?: number | null
+          adult_trauma?: boolean | null
+          childhood_trauma?: boolean | null
+          coping_mechanisms?: string[] | null
+          created_at?: string
+          id?: string
+          ptsd_severity?: string | null
+          ptsd_symptoms?: Json | null
+          trauma_details?: string | null
+          trauma_types?: string[] | null
+          triggers?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_intake_data: {
+        Row: {
+          age: number | null
+          created_at: string
+          crisis_contacts: Json | null
+          cultural_background: string | null
+          current_medications: string[] | null
+          diet_quality: string | null
+          employment_status: string | null
+          exercise_frequency: string | null
+          family_mental_health_history: string | null
+          financial_stress_level: number | null
+          gender: string | null
+          hospitalization_history: boolean | null
+          id: string
+          living_situation: string | null
+          location: string | null
+          medical_conditions: string[] | null
+          mental_health_diagnoses: string[] | null
+          preferred_communication_style: string | null
+          previous_therapy: boolean | null
+          previous_therapy_details: string | null
+          primary_concerns: string[] | null
+          relationship_status: string | null
+          session_frequency_preference: string | null
+          sleep_hours_avg: number | null
+          social_support_level: number | null
+          therapy_goals: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age?: number | null
+          created_at?: string
+          crisis_contacts?: Json | null
+          cultural_background?: string | null
+          current_medications?: string[] | null
+          diet_quality?: string | null
+          employment_status?: string | null
+          exercise_frequency?: string | null
+          family_mental_health_history?: string | null
+          financial_stress_level?: number | null
+          gender?: string | null
+          hospitalization_history?: boolean | null
+          id?: string
+          living_situation?: string | null
+          location?: string | null
+          medical_conditions?: string[] | null
+          mental_health_diagnoses?: string[] | null
+          preferred_communication_style?: string | null
+          previous_therapy?: boolean | null
+          previous_therapy_details?: string | null
+          primary_concerns?: string[] | null
+          relationship_status?: string | null
+          session_frequency_preference?: string | null
+          sleep_hours_avg?: number | null
+          social_support_level?: number | null
+          therapy_goals?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age?: number | null
+          created_at?: string
+          crisis_contacts?: Json | null
+          cultural_background?: string | null
+          current_medications?: string[] | null
+          diet_quality?: string | null
+          employment_status?: string | null
+          exercise_frequency?: string | null
+          family_mental_health_history?: string | null
+          financial_stress_level?: number | null
+          gender?: string | null
+          hospitalization_history?: boolean | null
+          id?: string
+          living_situation?: string | null
+          location?: string | null
+          medical_conditions?: string[] | null
+          mental_health_diagnoses?: string[] | null
+          preferred_communication_style?: string | null
+          previous_therapy?: boolean | null
+          previous_therapy_details?: string | null
+          primary_concerns?: string[] | null
+          relationship_status?: string | null
+          session_frequency_preference?: string | null
+          sleep_hours_avg?: number | null
+          social_support_level?: number | null
+          therapy_goals?: string[] | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
