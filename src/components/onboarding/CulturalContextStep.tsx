@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,7 @@ import { Globe, Users, MessageCircle, Heart, BookOpen } from 'lucide-react';
 import { CulturalContext } from '@/services/culturallyAwareAiService';
 
 interface CulturalContextStepProps {
-  onNext: (data: { culturalContext: CulturalContext }) => void;
+  onNext: (data: { culturalContext: CulturalContext, considerTraditionalHealing: boolean, preferCulturalMatching: boolean }) => void;
   onBack: () => void;
   onboardingData: any;
 }
@@ -74,6 +73,14 @@ const CulturalContextStep = ({ onNext, onBack }: CulturalContextStepProps) => {
       considerTraditionalHealing,
       preferCulturalMatching
     });
+  };
+
+  const handleTraditionalHealingChange = (checked: boolean | 'indeterminate') => {
+    setConsiderTraditionalHealing(checked === true);
+  };
+
+  const handleCulturalMatchingChange = (checked: boolean | 'indeterminate') => {
+    setPreferCulturalMatching(checked === true);
   };
 
   return (
@@ -206,7 +213,7 @@ const CulturalContextStep = ({ onNext, onBack }: CulturalContextStepProps) => {
             <Checkbox
               id="traditional-healing"
               checked={considerTraditionalHealing}
-              onCheckedChange={setConsiderTraditionalHealing}
+              onCheckedChange={handleTraditionalHealingChange}
             />
             <label htmlFor="traditional-healing" className="text-sm">
               {t('onboarding.cultural.traditional', 'Consider traditional healing practices alongside modern therapy')}
@@ -217,7 +224,7 @@ const CulturalContextStep = ({ onNext, onBack }: CulturalContextStepProps) => {
             <Checkbox
               id="cultural-matching"
               checked={preferCulturalMatching}
-              onCheckedChange={setPreferCulturalMatching}
+              onCheckedChange={handleCulturalMatchingChange}
             />
             <label htmlFor="cultural-matching" className="text-sm">
               {t('onboarding.cultural.matching', 'Prefer culturally-matched AI responses when possible')}
