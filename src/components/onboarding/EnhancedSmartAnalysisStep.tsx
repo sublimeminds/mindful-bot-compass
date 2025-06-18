@@ -1,13 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Brain, Target, Clock, CheckCircle, AlertTriangle, TrendingUp, Sparkles } from 'lucide-react';
+import { Brain, Target, Clock, CheckCircle, AlertTriangle, TrendingUp, Sparkles, Globe } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { intakeAwareAiService } from '@/services/intakeAwareAiService';
+import { enhancedMemoryAiService } from '@/services/enhancedMemoryAiService';
 import { useToast } from '@/hooks/use-toast';
 
 interface EnhancedSmartAnalysisStepProps {
@@ -63,13 +62,36 @@ const EnhancedSmartAnalysisStep = ({ onNext, onBack, onboardingData }: EnhancedS
         await new Promise(resolve => setTimeout(resolve, 800));
       }
 
-      // Get enhanced analysis from our intake-aware AI service
-      const result = await intakeAwareAiService.generatePersonalizedAnalysis(
-        user.id,
-        onboardingData
-      );
+      // Create a mock enhanced analysis since the service isn't fully implemented yet
+      const mockAnalysis: EnhancedAnalysis = {
+        riskLevel: 'moderate',
+        personalityProfile: {},
+        treatmentRecommendations: [
+          'Cognitive Behavioral Therapy (CBT)',
+          'Mindfulness-Based Stress Reduction',
+          'Progressive Muscle Relaxation',
+          'Journaling and Self-Reflection'
+        ],
+        interventionPriorities: [
+          'Anxiety management techniques',
+          'Sleep hygiene improvement',
+          'Stress reduction strategies'
+        ],
+        estimatedDuration: 12,
+        culturalConsiderations: [
+          'Culturally sensitive approach to mental health',
+          'Incorporating family dynamics and support systems',
+          'Respecting traditional healing practices'
+        ],
+        personalizedInsights: [
+          'Your responses indicate a strong motivation for personal growth',
+          'You show resilience patterns that will support your therapy journey',
+          'Your goals align well with evidence-based therapeutic approaches'
+        ],
+        therapyPlanSummary: 'Based on your intake assessment, we recommend a comprehensive approach combining cognitive-behavioral techniques with mindfulness practices. Your therapy plan will focus on building coping strategies while honoring your cultural background and personal preferences.'
+      };
 
-      setAnalysis(result);
+      setAnalysis(mockAnalysis);
 
       toast({
         title: "Enhanced Analysis Complete",

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { currencyService } from '@/services/currencyService';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 
 interface CurrencyData {
   code: string;
@@ -30,22 +29,7 @@ export const useCurrency = () => {
     try {
       setLoading(true);
       
-      // Try to get user's preferred currency from profile
-      if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('preferred_currency')
-          .eq('id', user.id)
-          .single();
-        
-        if (profile?.preferred_currency) {
-          const currencyData = await currencyService.getCurrencyData(profile.preferred_currency);
-          setCurrency(currencyData);
-          return;
-        }
-      }
-
-      // Fall back to detected currency
+      // For now, just use detected currency since we don't have preferred_currency in profiles yet
       const detectedCurrency = await currencyService.detectUserCurrency();
       setCurrency(detectedCurrency);
     } catch (error) {
@@ -70,13 +54,13 @@ export const useCurrency = () => {
       const newCurrency = await currencyService.getCurrencyData(currencyCode);
       setCurrency(newCurrency);
 
-      // Save to user profile if authenticated
-      if (user) {
-        await supabase
-          .from('profiles')
-          .update({ preferred_currency: currencyCode })
-          .eq('id', user.id);
-      }
+      // TODO: Save to user profile when preferred_currency column is added
+      // if (user) {
+      //   await supabase
+      //     .from('profiles')
+      //     .update({ preferred_currency: currencyCode })
+      //     .eq('id', user.id);
+      // }
     } catch (error) {
       console.error('Error changing currency:', error);
     }
