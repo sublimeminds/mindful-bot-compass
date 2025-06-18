@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check, Crown, Star, Zap } from 'lucide-react';
+import { Check, Crown, Star, Zap, Gift } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
 import GradientLogo from '@/components/ui/GradientLogo';
+import TrialSignup from '@/components/subscription/TrialSignup';
 
 interface PlanSelectionStepProps {
   selectedPlan?: { planId: string; billingCycle: 'monthly' | 'yearly' } | null;
@@ -18,6 +19,7 @@ interface PlanSelectionStepProps {
 const PlanSelectionStep = ({ selectedPlan, onPlanSelect, onNext, onBack }: PlanSelectionStepProps) => {
   const { plans } = useSubscription();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  const [showTrialSignup, setShowTrialSignup] = useState(false);
 
   const getPlanIcon = (planName: string) => {
     switch (planName.toLowerCase()) {
@@ -29,12 +31,67 @@ const PlanSelectionStep = ({ selectedPlan, onPlanSelect, onNext, onBack }: PlanS
   };
 
   const handlePlanSelect = (planId: string) => {
+    const plan = plans.find(p => p.id === planId);
+    
+    // If Premium plan is selected, show trial signup instead of direct payment
+    if (plan?.name === 'Premium') {
+      setShowTrialSignup(true);
+      return;
+    }
+    
     onPlanSelect(planId, billingCycle);
+  };
+
+  const handleTrialStart = () => {
+    // Find Premium plan and select it
+    const premiumPlan = plans.find(p => p.name === 'Premium');
+    if (premiumPlan) {
+      onPlanSelect(premiumPlan.id, 'yearly'); // Default to yearly for trial
+    }
+    setShowTrialSignup(false);
+    onNext();
   };
 
   const isSelected = (planId: string) => {
     return selectedPlan?.planId === planId && selectedPlan?.billingCycle === billingCycle;
   };
+
+  if (showTrialSignup) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <div className="flex items-center justify-center mb-4">
+            <GradientLogo 
+              size="md"
+              className="drop-shadow-lg"
+            />
+          </div>
+          <h2 className="text-2xl font-bold mb-4">Start Your Free Trial</h2>
+          <p className="text-muted-foreground">
+            Experience all Premium features with a 7-day free trial
+          </p>
+        </div>
+
+        <TrialSignup onClose={() => setShowTrialSignup(false)} />
+
+        <div className="text-center">
+          <Button 
+            variant="outline" 
+            onClick={() => setShowTrialSignup(false)}
+            className="mr-4"
+          >
+            Back to Plans
+          </Button>
+          <Button 
+            onClick={handleTrialStart}
+            className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
+          >
+            Continue with Trial
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -76,19 +133,21 @@ const PlanSelectionStep = ({ selectedPlan, onPlanSelect, onNext, onBack }: PlanS
           const price = billingCycle === 'yearly' ? plan.price_yearly : plan.price_monthly;
           const monthlyPrice = billingCycle === 'yearly' ? plan.price_yearly / 12 : plan.price_monthly;
           const selected = isSelected(plan.id);
+          const isPremium = plan.name === 'Premium';
           
           return (
             <Card 
               key={plan.id} 
               className={`relative cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                plan.name === 'Premium' ? 'ring-2 ring-harmony-500 scale-105' : ''
+                isPremium ? 'ring-2 ring-harmony-500 scale-105' : ''
               } ${selected ? 'ring-2 ring-blue-500 bg-blue-50' : ''}`}
               onClick={() => handlePlanSelect(plan.id)}
             >
-              {plan.name === 'Premium' && (
+              {isPremium && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-harmony-500 text-white px-4 py-1">
-                    Most Popular
+                  <Badge className="bg-harmony-500 text-white px-4 py-1 flex items-center space-x-1">
+                    <Gift className="h-3 w-3" />
+                    <span>7-Day Free Trial</span>
                   </Badge>
                 </div>
               )}
@@ -117,11 +176,22 @@ const PlanSelectionStep = ({ selectedPlan, onPlanSelect, onNext, onBack }: PlanS
                 </CardTitle>
                 
                 <div className="space-y-1">
-                  <div className="text-2xl font-bold">
-                    ${monthlyPrice.toFixed(2)}
-                    <span className="text-sm font-normal text-muted-foreground">/month</span>
-                  </div>
-                  {billingCycle === 'yearly' && plan.price_yearly > 0 && (
+                  {isPremium ? (
+                    <div className="space-y-1">
+                      <div className="text-lg font-bold text-green-600">
+                        Free for 7 days
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Then ${monthlyPrice.toFixed(2)}/month
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-2xl font-bold">
+                      ${monthlyPrice.toFixed(2)}
+                      <span className="text-sm font-normal text-muted-foreground">/month</span>
+                    </div>
+                  )}
+                  {billingCycle === 'yearly' && plan.price_yearly > 0 && !isPremium && (
                     <div className="text-xs text-muted-foreground">
                       Billed annually (${plan.price_yearly}/year)
                     </div>
@@ -139,6 +209,14 @@ const PlanSelectionStep = ({ selectedPlan, onPlanSelect, onNext, onBack }: PlanS
                     </div>
                   ))}
                 </div>
+
+                {isPremium && (
+                  <div className="pt-2 border-t border-harmony-200">
+                    <p className="text-xs text-harmony-600 font-medium text-center">
+                      🎁 Start your wellness journey risk-free!
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           );

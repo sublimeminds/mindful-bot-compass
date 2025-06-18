@@ -66,7 +66,7 @@ const TrialSignup = ({ onClose }: TrialSignupProps) => {
   if (!premiumPlan) return null;
 
   return (
-    <Card className="max-w-md mx-auto border-therapy-200 shadow-xl">
+    <Card className="max-w-md mx-auto border-harmony-200 shadow-xl">
       <CardHeader className="text-center pb-4 relative">
         {onClose && (
           <Button
@@ -80,7 +80,7 @@ const TrialSignup = ({ onClose }: TrialSignupProps) => {
         )}
         
         <div className="flex items-center justify-center mb-4">
-          <div className="p-4 rounded-full bg-gradient-to-br from-therapy-500 to-therapy-600">
+          <div className="p-4 rounded-full bg-gradient-to-br from-harmony-500 to-harmony-600">
             <Crown className="h-8 w-8 text-white" />
           </div>
         </div>
@@ -96,7 +96,7 @@ const TrialSignup = ({ onClose }: TrialSignupProps) => {
 
       <CardContent className="space-y-6">
         <div className="text-center">
-          <div className="text-3xl font-bold text-therapy-600 mb-2">
+          <div className="text-3xl font-bold text-harmony-600 mb-2">
             ${(premiumPlan.price_monthly).toFixed(2)}/month
           </div>
           <p className="text-sm text-gray-600">
@@ -123,12 +123,12 @@ const TrialSignup = ({ onClose }: TrialSignupProps) => {
           </div>
         </div>
 
-        <div className="bg-therapy-50 p-4 rounded-lg border border-therapy-200">
-          <h4 className="font-semibold text-therapy-800 mb-2">Premium Features Include:</h4>
-          <ul className="text-sm text-therapy-700 space-y-1">
+        <div className="bg-harmony-50 p-4 rounded-lg border border-harmony-200">
+          <h4 className="font-semibold text-harmony-800 mb-2">Premium Features Include:</h4>
+          <ul className="text-sm text-harmony-700 space-y-1">
             {Object.values(premiumPlan.features).slice(0, 4).map((feature, index) => (
               <li key={index} className="flex items-center space-x-2">
-                <div className="w-1.5 h-1.5 bg-therapy-500 rounded-full"></div>
+                <div className="w-1.5 h-1.5 bg-harmony-500 rounded-full"></div>
                 <span>{feature}</span>
               </li>
             ))}
@@ -138,7 +138,7 @@ const TrialSignup = ({ onClose }: TrialSignupProps) => {
         <Button
           onClick={handleStartTrial}
           disabled={isProcessing}
-          className="w-full bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-semibold py-3 text-lg"
+          className="w-full bg-gradient-to-r from-harmony-500 to-harmony-600 hover:from-harmony-600 hover:to-harmony-700 text-white font-semibold py-3 text-lg"
         >
           {isProcessing ? 'Starting Trial...' : 'Start Free Trial'}
         </Button>

@@ -12,6 +12,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import PasswordResetForm from './PasswordResetForm';
 import SocialLogin from './SocialLogin';
+import GradientLogo from '@/components/ui/GradientLogo';
 
 interface FormData {
   email: string;
@@ -125,7 +126,7 @@ const EnhancedAuthForm = () => {
 
       toast({
         title: "Welcome back!",
-        description: "You have successfully signed in.",
+        description: "You have successfully signed in to TherapySync.",
       });
 
       // Redirect based on location state or default to home
@@ -168,8 +169,8 @@ const EnhancedAuthForm = () => {
       }
 
       toast({
-        title: "Account created successfully!",
-        description: "Please check your email for a verification link.",
+        title: "Welcome to TherapySync!",
+        description: "Please check your email for a verification link, then return to complete your setup.",
       });
 
       // Switch to sign in tab after successful signup
@@ -189,9 +190,20 @@ const EnhancedAuthForm = () => {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">Welcome to MindfulAI</CardTitle>
+    <Card className="w-full max-w-md mx-auto shadow-xl border-harmony-200">
+      <CardHeader className="text-center pb-4">
+        <div className="flex items-center justify-center mb-4">
+          <GradientLogo 
+            size="md"
+            className="drop-shadow-lg"
+          />
+        </div>
+        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-harmony-600 to-flow-600 bg-clip-text text-transparent">
+          Welcome to TherapySync
+        </CardTitle>
+        <p className="text-muted-foreground text-sm">
+          Your AI-powered wellness companion
+        </p>
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -257,14 +269,18 @@ const EnhancedAuthForm = () => {
                 <Button
                   type="button"
                   variant="link"
-                  className="p-0 text-sm text-therapy-600"
+                  className="p-0 text-sm text-harmony-600 hover:text-harmony-700"
                   onClick={() => setShowPasswordReset(true)}
                 >
                   Forgot password?
                 </Button>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button 
+                type="submit" 
+                className="w-full bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600" 
+                disabled={isLoading}
+              >
                 {isLoading ? 'Signing In...' : 'Sign In'}
               </Button>
             </form>
@@ -362,7 +378,11 @@ const EnhancedAuthForm = () => {
                 {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword}</p>}
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button 
+                type="submit" 
+                className="w-full bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600" 
+                disabled={isLoading}
+              >
                 {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>
             </form>
