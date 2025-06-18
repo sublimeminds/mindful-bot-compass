@@ -8,6 +8,7 @@ interface VoiceConfig {
 class VoiceService {
   private apiKey: string | null = null;
   private isPlaying: boolean = false;
+  private currentAudio: HTMLAudioElement | null = null;
 
   constructor() {
     // Load API key from localStorage if available
@@ -21,6 +22,10 @@ class VoiceService {
 
   hasApiKey(): boolean {
     return !!this.apiKey;
+  }
+
+  get isCurrentlyPlaying(): boolean {
+    return this.isPlaying;
   }
 
   async getAvailableVoices(): Promise<any[]> {
@@ -90,10 +95,12 @@ class VoiceService {
       const audioBlob = await response.blob();
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
+      this.currentAudio = audio;
 
       await new Promise((resolve, reject) => {
         audio.onended = () => {
           URL.revokeObjectURL(audioUrl);
+          this.currentAudio = null;
           resolve(void 0);
         };
         audio.onerror = reject;
@@ -107,9 +114,17 @@ class VoiceService {
     }
   }
 
-  stopPlayback(): void {
-    // Simple implementation - in a real app you'd track active audio elements
+  stop(): void {
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio.currentTime = 0;
+      this.currentAudio = null;
+    }
     this.isPlaying = false;
+  }
+
+  stopPlayback(): void {
+    this.stop();
   }
 }
 

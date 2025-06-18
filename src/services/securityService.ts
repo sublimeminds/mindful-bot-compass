@@ -46,6 +46,49 @@ export class SecurityService {
     }
   }
 
+  static async revokeSession(sessionId: string): Promise<void> {
+    try {
+      // In a real app, you'd revoke the session on the backend
+      console.log('Session revoked:', sessionId);
+      
+      // Track the security event
+      const event: SecurityEvent = {
+        userId: 'system',
+        event: 'session_revoked',
+        timestamp: new Date(),
+        metadata: { sessionId }
+      };
+      
+      this.events.push(event);
+    } catch (error) {
+      console.error('Error revoking session:', error);
+    }
+  }
+
+  static async cleanupExpiredSessions(): Promise<void> {
+    try {
+      // In a real app, you'd cleanup expired sessions on the backend
+      const cutoffTime = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
+      
+      // Filter out old events as a simple cleanup
+      this.events = this.events.filter(event => event.timestamp > cutoffTime);
+      
+      console.log('Expired sessions cleaned up');
+      
+      // Track the cleanup event
+      const event: SecurityEvent = {
+        userId: 'system',
+        event: 'sessions_cleanup',
+        timestamp: new Date(),
+        metadata: { cutoffTime }
+      };
+      
+      this.events.push(event);
+    } catch (error) {
+      console.error('Error cleaning up expired sessions:', error);
+    }
+  }
+
   static getRecentEvents(userId?: string): SecurityEvent[] {
     if (userId) {
       return this.events.filter(event => event.userId === userId);
