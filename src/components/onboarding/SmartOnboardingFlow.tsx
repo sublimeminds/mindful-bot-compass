@@ -46,6 +46,13 @@ const SmartOnboardingFlow = ({ onComplete }: SmartOnboardingFlowProps) => {
 
   const CurrentStepComponent = steps[currentStep].component;
 
+  // Create props object with common interface
+  const stepProps = {
+    onNext: handleNext,
+    onBack: handleBack,
+    onboardingData
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50 p-4">
       <div className="max-w-4xl mx-auto">
@@ -66,11 +73,7 @@ const SmartOnboardingFlow = ({ onComplete }: SmartOnboardingFlowProps) => {
         </div>
 
         {/* Step Content */}
-        <CurrentStepComponent
-          onNext={handleNext}
-          onBack={handleBack}
-          onboardingData={onboardingData}
-        />
+        <CurrentStepComponent {...stepProps} />
       </div>
     </div>
   );
