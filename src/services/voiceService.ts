@@ -1,8 +1,8 @@
-
 interface VoiceConfig {
   voiceId?: string;
   stability?: number;
   similarityBoost?: number;
+  model?: string;
 }
 
 class VoiceService {
@@ -80,7 +80,7 @@ class VoiceService {
         },
         body: JSON.stringify({
           text,
-          model_id: 'eleven_multilingual_v1',
+          model_id: config.model || 'eleven_multilingual_v1',
           voice_settings: {
             stability: config.stability || 0.75,
             similarity_boost: config.similarityBoost || 0.85,

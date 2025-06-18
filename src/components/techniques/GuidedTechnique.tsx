@@ -255,7 +255,7 @@ const GuidedTechnique = ({ techniqueId, onComplete, onExit }: GuidedTechniquePro
   };
 
   const toggleVoice = () => {
-    if (isVoiceEnabled && voiceService.isCurrentlyPlaying()) {
+    if (isVoiceEnabled && voiceService.isCurrentlyPlaying) {
       voiceService.stop();
     }
     setIsVoiceEnabled(!isVoiceEnabled);
