@@ -13,7 +13,7 @@ const Register = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <EnhancedAuthForm mode="register" />
+          <EnhancedAuthForm />
         </CardContent>
       </Card>
     </div>

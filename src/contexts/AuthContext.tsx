@@ -15,6 +15,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (data: { name?: string }) => Promise<void>;
+  updateUser: (data: any) => Promise<void>;
   loading: boolean;
 }
 
@@ -337,6 +338,52 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user]);
 
+  const updateUser = useCallback(async (data: any) => {
+    DebugLogger.debug('AuthProvider: Update user attempt', { 
+      component: 'AuthProvider', 
+      method: 'updateUser',
+      userId: user?.id,
+      updateData: data
+    });
+    
+    if (!user) {
+      const error = new Error('No user logged in');
+      DebugLogger.error('AuthProvider: Update user failed - no user', error, { 
+        component: 'AuthProvider', 
+        method: 'updateUser'
+      });
+      throw error;
+    }
+    
+    try {
+      const { error } = await supabase.auth.updateUser({
+        data: data
+      });
+      
+      if (error) {
+        DebugLogger.error('AuthProvider: Update user failed', error, { 
+          component: 'AuthProvider', 
+          method: 'updateUser',
+          userId: user.id
+        });
+        throw error;
+      }
+      
+      DebugLogger.info('AuthProvider: Update user successful', { 
+        component: 'AuthProvider', 
+        method: 'updateUser',
+        userId: user.id
+      });
+    } catch (error) {
+      DebugLogger.error('AuthProvider: Update user exception', error as Error, { 
+        component: 'AuthProvider', 
+        method: 'updateUser',
+        userId: user?.id
+      });
+      throw error;
+    }
+  }, [user]);
+
   const value = useMemo(() => {
     const contextValue = {
       user,
@@ -349,6 +396,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       logout,
       signOut,
       updateProfile,
+      updateUser,
       loading,
     };
     
@@ -361,7 +409,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
     
     return contextValue;
-  }, [user, session, loading, login, signup, signUp, logout, updateProfile]);
+  }, [user, session, loading, login, signup, signUp, logout, updateProfile, updateUser]);
 
   return (
     <AuthContext.Provider value={value}>

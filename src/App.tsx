@@ -7,7 +7,7 @@ import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { SessionProvider } from '@/contexts/SessionContext';
 import { TherapistProvider } from '@/contexts/TherapistContext';
 import { Toaster } from '@/components/ui/toaster';
-import AccessibleErrorBoundary from '@/components/enhanced/AccessibleErrorBoundary';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import AccessibilityPanel from '@/components/accessibility/AccessibilityPanel';
 import PerformanceDashboard from '@/components/performance/PerformanceDashboard';
 import Dashboard from '@/pages/Dashboard';
@@ -72,8 +72,12 @@ function AppContent() {
       </Suspense>
       
       {/* Accessibility and Performance Tools */}
-      <AccessibilityPanel />
-      <PerformanceDashboard />
+      <ErrorBoundary>
+        <AccessibilityPanel />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <PerformanceDashboard />
+      </ErrorBoundary>
       
       <Toaster />
     </div>
@@ -82,7 +86,7 @@ function AppContent() {
 
 function App() {
   return (
-    <AccessibleErrorBoundary>
+    <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AccessibilityProvider>
           <AuthProvider>
@@ -96,7 +100,7 @@ function App() {
           </AuthProvider>
         </AccessibilityProvider>
       </QueryClientProvider>
-    </AccessibleErrorBoundary>
+    </ErrorBoundary>
   );
 }
 

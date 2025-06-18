@@ -13,7 +13,7 @@ const Login = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <EnhancedAuthForm mode="login" />
+          <EnhancedAuthForm />
         </CardContent>
       </Card>
     </div>
