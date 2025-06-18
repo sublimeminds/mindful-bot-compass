@@ -1,48 +1,58 @@
-
-import React, { Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import Dashboard from '@/pages/Dashboard';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Index from '@/pages/Index';
+import AuthForm from '@/components/auth/AuthForm';
 import OnboardingPage from '@/pages/OnboardingPage';
-import SessionPage from '@/pages/SessionPage';
-import SettingsPage from '@/pages/SettingsPage';
-import SubscriptionPage from '@/pages/SubscriptionPage';
-import VoiceSettingsPage from '@/pages/VoiceSettingsPage';
-import Techniques from '@/pages/Techniques';
-import NotFound from '@/pages/NotFound';
+import Dashboard from '@/pages/Dashboard';
+import Profile from '@/pages/Profile';
+import { useAuth } from '@/contexts/AuthContext';
+import NotebookPage from '@/pages/NotebookPage';
+import EnhancedProfilePage from '@/pages/EnhancedProfilePage';
 
-const LoadingSpinner = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-  </div>
-);
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuth();
+  if (!user) {
+    return <Navigate to="/auth" />;
+  }
+  return <>{children}</>;
+};
 
 const AppRouter = () => {
-  const { isAuthenticated, loading } = useAuth();
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  const { user } = useAuth();
 
   return (
-    <Suspense fallback={<LoadingSpinner />}>
+    <Router>
       <Routes>
-        <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-        <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-        <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
-        <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" />} />
-        <Route path="/onboarding" element={isAuthenticated ? <OnboardingPage /> : <Navigate to="/login" />} />
-        <Route path="/session" element={isAuthenticated ? <SessionPage /> : <Navigate to="/login" />} />
-        <Route path="/settings" element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" />} />
-        <Route path="/subscription" element={isAuthenticated ? <SubscriptionPage /> : <Navigate to="/login" />} />
-        <Route path="/voice-settings" element={isAuthenticated ? <VoiceSettingsPage /> : <Navigate to="/login" />} />
-        <Route path="/techniques" element={isAuthenticated ? <Techniques /> : <Navigate to="/login" />} />
-        <Route path="/techniques/:techniqueId" element={isAuthenticated ? <Techniques /> : <Navigate to="/login" />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/auth" element={<AuthForm />} />
+        <Route path="/onboarding" element={
+          <ProtectedRoute>
+            <OnboardingPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/enhanced-profile" element={
+          <ProtectedRoute>
+            <EnhancedProfilePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/notebook" element={
+          <ProtectedRoute>
+            <NotebookPage />
+          </ProtectedRoute>
+        } />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </Suspense>
+    </Router>
   );
 };
 
