@@ -13,14 +13,22 @@ import PreferencesStep from "@/components/onboarding/PreferencesStep";
 import TherapistPersonalityStep from "@/components/onboarding/TherapistPersonalityStep";
 import PlanSelectionStep from "@/components/onboarding/PlanSelectionStep";
 import StripeCheckout from "@/components/subscription/StripeCheckout";
+import NotificationPreferencesStep from "@/components/onboarding/NotificationPreferencesStep";
+import ProfileSetupStep from "@/components/onboarding/ProfileSetupStep";
+import WelcomeStep from "@/components/onboarding/WelcomeStep";
+import MoodBaselineStep from "@/components/onboarding/MoodBaselineStep";
 import { useSubscription } from "@/hooks/useSubscription";
 
 const STEPS = [
+  'Welcome',
   'Goals & Challenges',
   'Therapy Preferences', 
+  'Mood Baseline',
   'Choose Your Therapist',
+  'Notification Preferences',
   'Select Your Plan',
   'Payment',
+  'Profile Setup',
   'Complete Setup'
 ];
 
@@ -28,6 +36,7 @@ const Onboarding = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [goals, setGoals] = useState<string[]>([]);
   const [preferences, setPreferences] = useState<string[]>([]);
+  const [moodBaseline, setMoodBaseline] = useState<any>(null);
   const [selectedPersonality, setSelectedPersonality] = useState<string | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<{planId: string, billingCycle: 'monthly' | 'yearly'} | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +44,30 @@ const Onboarding = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { plans } = useSubscription();
+
+  // Check if user has already completed onboarding
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      if (!user) return;
+
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('onboarding_complete')
+          .eq('id', user.id)
+          .single();
+
+        if (profile?.onboarding_complete) {
+          navigate('/');
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking onboarding status:', error);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, [user, navigate]);
 
   // Auto-select therapist based on previous choices
   const autoSelectTherapist = () => {
@@ -57,7 +90,7 @@ const Onboarding = () => {
   };
 
   const handlePaymentSuccess = () => {
-    setCurrentStep(5);
+    setCurrentStep(8);
   };
 
   const handleComplete = async () => {
@@ -70,8 +103,7 @@ const Onboarding = () => {
         .insert({
           user_id: user.id,
           goals,
-          preferences,
-          therapist_personality: selectedPersonality
+          preferences
         });
 
       if (insertError) throw insertError;
@@ -102,7 +134,7 @@ const Onboarding = () => {
   };
 
   const nextStep = () => {
-    if (currentStep === 2 && !selectedPersonality) {
+    if (currentStep === 4 && !selectedPersonality) {
       const autoSelected = autoSelectTherapist();
       setSelectedPersonality(autoSelected);
     }
@@ -121,7 +153,7 @@ const Onboarding = () => {
   };
 
   const skipPayment = () => {
-    setCurrentStep(5);
+    setCurrentStep(8);
   };
 
   // Get selected plan details
@@ -168,6 +200,10 @@ const Onboarding = () => {
         <Card className="min-h-[500px]">
           <CardContent className="p-8">
             {currentStep === 0 && (
+              <WelcomeStep onNext={nextStep} />
+            )}
+
+            {currentStep === 1 && (
               <GoalsStep
                 selectedGoals={goals}
                 onGoalToggle={(goal) => {
@@ -182,7 +218,7 @@ const Onboarding = () => {
               />
             )}
 
-            {currentStep === 1 && (
+            {currentStep === 2 && (
               <PreferencesStep
                 selectedPreferences={preferences}
                 selectedGoals={goals}
@@ -198,7 +234,17 @@ const Onboarding = () => {
               />
             )}
 
-            {currentStep === 2 && (
+            {currentStep === 3 && (
+              <MoodBaselineStep
+                onMoodSet={(mood) => {
+                  setMoodBaseline(mood);
+                  nextStep();
+                }}
+                onBack={prevStep}
+              />
+            )}
+
+            {currentStep === 4 && (
               <TherapistPersonalityStep
                 selectedPersonality={selectedPersonality}
                 selectedGoals={goals}
@@ -209,7 +255,14 @@ const Onboarding = () => {
               />
             )}
 
-            {currentStep === 3 && (
+            {currentStep === 5 && (
+              <NotificationPreferencesStep
+                onNext={nextStep}
+                onBack={prevStep}
+              />
+            )}
+
+            {currentStep === 6 && (
               <div className="space-y-6">
                 <div className="text-center">
                   <h2 className="text-2xl font-bold mb-4">Choose Your Plan</h2>
@@ -234,7 +287,7 @@ const Onboarding = () => {
               </div>
             )}
 
-            {currentStep === 4 && (
+            {currentStep === 7 && (
               <div className="space-y-6">
                 <div className="text-center">
                   <h2 className="text-2xl font-bold mb-4">Complete Your Payment</h2>
@@ -272,7 +325,14 @@ const Onboarding = () => {
               </div>
             )}
 
-            {currentStep === 5 && (
+            {currentStep === 8 && (
+              <ProfileSetupStep
+                onNext={nextStep}
+                onBack={prevStep}
+              />
+            )}
+
+            {currentStep === 9 && (
               <div className="text-center space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold mb-4">You're All Set!</h2>
@@ -286,6 +346,7 @@ const Onboarding = () => {
                   <div className="space-y-2 text-sm">
                     <p><strong>Goals:</strong> {goals.length} selected</p>
                     <p><strong>Preferences:</strong> {preferences.length} selected</p>
+                    <p><strong>Mood Baseline:</strong> {moodBaseline ? 'Recorded' : 'Skipped'}</p>
                     <p><strong>Therapist:</strong> {selectedPersonality ? 'Selected' : 'Default'}</p>
                     <p><strong>Plan:</strong> {selectedPlan ? 'Premium' : 'Free'}</p>
                   </div>
