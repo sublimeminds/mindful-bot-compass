@@ -6,7 +6,6 @@ import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Brain, Target, Clock, CheckCircle, AlertTriangle, TrendingUp, Sparkles, Globe } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { enhancedMemoryAiService } from '@/services/enhancedMemoryAiService';
 import { useToast } from '@/hooks/use-toast';
 
 interface EnhancedSmartAnalysisStepProps {
@@ -62,33 +61,16 @@ const EnhancedSmartAnalysisStep = ({ onNext, onBack, onboardingData }: EnhancedS
         await new Promise(resolve => setTimeout(resolve, 800));
       }
 
-      // Create a mock enhanced analysis since the service isn't fully implemented yet
+      // Enhanced analysis based on onboarding data
       const mockAnalysis: EnhancedAnalysis = {
-        riskLevel: 'moderate',
+        riskLevel: determineRiskLevel(onboardingData),
         personalityProfile: {},
-        treatmentRecommendations: [
-          'Cognitive Behavioral Therapy (CBT)',
-          'Mindfulness-Based Stress Reduction',
-          'Progressive Muscle Relaxation',
-          'Journaling and Self-Reflection'
-        ],
-        interventionPriorities: [
-          'Anxiety management techniques',
-          'Sleep hygiene improvement',
-          'Stress reduction strategies'
-        ],
-        estimatedDuration: 12,
-        culturalConsiderations: [
-          'Culturally sensitive approach to mental health',
-          'Incorporating family dynamics and support systems',
-          'Respecting traditional healing practices'
-        ],
-        personalizedInsights: [
-          'Your responses indicate a strong motivation for personal growth',
-          'You show resilience patterns that will support your therapy journey',
-          'Your goals align well with evidence-based therapeutic approaches'
-        ],
-        therapyPlanSummary: 'Based on your intake assessment, we recommend a comprehensive approach combining cognitive-behavioral techniques with mindfulness practices. Your therapy plan will focus on building coping strategies while honoring your cultural background and personal preferences.'
+        treatmentRecommendations: generateTreatmentRecommendations(onboardingData),
+        interventionPriorities: generateInterventionPriorities(onboardingData),
+        estimatedDuration: estimateTherapyDuration(onboardingData),
+        culturalConsiderations: generateCulturalConsiderations(onboardingData),
+        personalizedInsights: generatePersonalizedInsights(onboardingData),
+        therapyPlanSummary: generateTherapyPlanSummary(onboardingData)
       };
 
       setAnalysis(mockAnalysis);
@@ -108,6 +90,113 @@ const EnhancedSmartAnalysisStep = ({ onNext, onBack, onboardingData }: EnhancedS
     } finally {
       setIsAnalyzing(false);
     }
+  };
+
+  const determineRiskLevel = (data: any): string => {
+    // Simple risk assessment based on onboarding data
+    if (data?.goals?.some((goal: string) => goal.toLowerCase().includes('crisis') || goal.toLowerCase().includes('suicide'))) {
+      return 'high';
+    }
+    if (data?.goals?.some((goal: string) => goal.toLowerCase().includes('depression') || goal.toLowerCase().includes('anxiety'))) {
+      return 'moderate';
+    }
+    return 'low';
+  };
+
+  const generateTreatmentRecommendations = (data: any): string[] => {
+    const recommendations = ['Cognitive Behavioral Therapy (CBT)'];
+    
+    if (data?.goals?.some((goal: string) => goal.toLowerCase().includes('anxiety'))) {
+      recommendations.push('Mindfulness-Based Stress Reduction', 'Progressive Muscle Relaxation');
+    }
+    if (data?.goals?.some((goal: string) => goal.toLowerCase().includes('trauma'))) {
+      recommendations.push('Trauma-Informed Therapy', 'EMDR Therapy');
+    }
+    if (data?.preferences?.some((pref: string) => pref.toLowerCase().includes('mindfulness'))) {
+      recommendations.push('Mindfulness Meditation', 'Body Scan Techniques');
+    }
+    
+    recommendations.push('Journaling and Self-Reflection');
+    return recommendations;
+  };
+
+  const generateInterventionPriorities = (data: any): string[] => {
+    const priorities = [];
+    
+    if (data?.goals?.some((goal: string) => goal.toLowerCase().includes('anxiety'))) {
+      priorities.push('Anxiety management techniques');
+    }
+    if (data?.goals?.some((goal: string) => goal.toLowerCase().includes('sleep'))) {
+      priorities.push('Sleep hygiene improvement');
+    }
+    if (data?.goals?.some((goal: string) => goal.toLowerCase().includes('stress'))) {
+      priorities.push('Stress reduction strategies');
+    }
+    if (data?.goals?.some((goal: string) => goal.toLowerCase().includes('relationship'))) {
+      priorities.push('Communication skills development');
+    }
+    
+    if (priorities.length === 0) {
+      priorities.push('Stress reduction strategies', 'Emotional regulation', 'Self-awareness building');
+    }
+    
+    return priorities.slice(0, 3); // Limit to top 3 priorities
+  };
+
+  const estimateTherapyDuration = (data: any): number => {
+    let baseWeeks = 8;
+    
+    if (data?.goals?.length > 3) baseWeeks += 4;
+    if (data?.goals?.some((goal: string) => goal.toLowerCase().includes('trauma'))) baseWeeks += 8;
+    if (data?.preferences?.some((pref: string) => pref.toLowerCase().includes('intensive'))) baseWeeks += 4;
+    
+    return Math.min(baseWeeks, 24); // Cap at 24 weeks
+  };
+
+  const generateCulturalConsiderations = (data: any): string[] => {
+    return [
+      'Culturally sensitive approach to mental health',
+      'Incorporating family dynamics and support systems',
+      'Respecting traditional healing practices',
+      'Understanding cultural context of symptoms'
+    ];
+  };
+
+  const generatePersonalizedInsights = (data: any): string[] => {
+    const insights = [];
+    
+    if (data?.goals?.length > 2) {
+      insights.push('Your comprehensive goals indicate strong motivation for personal growth');
+    }
+    if (data?.preferences?.some((pref: string) => pref.toLowerCase().includes('cbt'))) {
+      insights.push('Your preference for structured approaches aligns well with evidence-based therapies');
+    }
+    if (data?.goals?.some((goal: string) => goal.toLowerCase().includes('relationship'))) {
+      insights.push('Your focus on relationships shows emotional intelligence and self-awareness');
+    }
+    
+    insights.push('You show resilience patterns that will support your therapy journey');
+    return insights;
+  };
+
+  const generateTherapyPlanSummary = (data: any): string => {
+    const goalCount = data?.goals?.length || 0;
+    const hasAnxietyGoals = data?.goals?.some((goal: string) => goal.toLowerCase().includes('anxiety'));
+    const hasTraumaGoals = data?.goals?.some((goal: string) => goal.toLowerCase().includes('trauma'));
+    
+    let summary = 'Based on your intake assessment, we recommend a comprehensive approach ';
+    
+    if (hasTraumaGoals) {
+      summary += 'combining trauma-informed therapy with evidence-based healing techniques. ';
+    } else if (hasAnxietyGoals) {
+      summary += 'combining cognitive-behavioral techniques with mindfulness practices. ';
+    } else {
+      summary += 'tailored to your specific goals and preferences. ';
+    }
+    
+    summary += `Your therapy plan will focus on ${goalCount > 2 ? 'multiple interconnected areas' : 'targeted goals'} while honoring your cultural background and personal preferences.`;
+    
+    return summary;
   };
 
   const getRiskLevelColor = (level: string) => {
