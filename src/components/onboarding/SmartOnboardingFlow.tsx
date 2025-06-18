@@ -69,7 +69,7 @@ const SmartOnboardingFlow = ({ onComplete }: SmartOnboardingFlowProps) => {
         <CurrentStepComponent
           onNext={handleNext}
           onBack={handleBack}
-          data={onboardingData}
+          onboardingData={onboardingData}
         />
       </div>
     </div>
