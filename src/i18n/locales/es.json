@@ -1,0 +1,45 @@
+
+{
+  "common": {
+    "welcome": "Bienvenido",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "continue": "Continuar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito"
+  },
+  "onboarding": {
+    "title": "Bienvenido a TherapySync",
+    "subtitle": "Personalicemos tu experiencia de bienestar",
+    "steps": {
+      "welcome": "Bienvenida",
+      "goals": "Objetivos y Desafíos",
+      "preferences": "Preferencias de Terapia",
+      "mood": "Línea Base del Estado de Ánimo",
+      "therapist": "Elige tu Terapeuta",
+      "notifications": "Preferencias de Notificación",
+      "plan": "Selecciona tu Plan",
+      "payment": "Pago",
+      "profile": "Configuración del Perfil",
+      "complete": "Completar Configuración"
+    },
+    "smartAnalysis": {
+      "title": "Tu Análisis Personalizado Mejorado",
+      "subtitle": "Perspectivas impulsadas por IA con inteligencia cultural y recomendaciones personalizadas",
+      "analyzing": "Análisis de IA Mejorado en Progreso",
+      "analyzingSubtext": "Nuestra IA avanzada está creando tu plan de terapia personalizado con consideraciones culturales...",
+      "planTitle": "Tu Plan de Terapia Personalizado",
+      "riskAssessment": "Evaluación de Riesgo y Duración",
+      "insights": "Perspectivas Personalizadas",
+      "cultural": "Consideraciones Culturales",
+      "recommendations": "Intervenciones Recomendadas",
+      "continueToMatching": "Continuar al Emparejamiento de Terapeutas"
+    }
+  },
+  "currency": {
+    "pricesIn": "Precios en {{currency}}"
+  }
+}

@@ -1,0 +1,45 @@
+
+{
+  "common": {
+    "welcome": "Welcome",
+    "next": "Next",
+    "back": "Back",
+    "continue": "Continue",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "onboarding": {
+    "title": "Welcome to TherapySync",
+    "subtitle": "Let's personalize your wellness experience",
+    "steps": {
+      "welcome": "Welcome",
+      "goals": "Goals & Challenges",
+      "preferences": "Therapy Preferences",
+      "mood": "Mood Baseline",
+      "therapist": "Choose Your Therapist",
+      "notifications": "Notification Preferences",
+      "plan": "Select Your Plan",
+      "payment": "Payment",
+      "profile": "Profile Setup",
+      "complete": "Complete Setup"
+    },
+    "smartAnalysis": {
+      "title": "Your Enhanced Personalized Analysis",
+      "subtitle": "AI-powered insights with cultural intelligence and personalized recommendations",
+      "analyzing": "Enhanced AI Analysis in Progress",
+      "analyzingSubtext": "Our advanced AI is creating your personalized therapy plan with cultural considerations...",
+      "planTitle": "Your Personalized Therapy Plan",
+      "riskAssessment": "Risk Assessment & Duration",
+      "insights": "Personalized Insights",
+      "cultural": "Cultural Considerations",
+      "recommendations": "Recommended Interventions",
+      "continueToMatching": "Continue to Therapist Matching"
+    }
+  },
+  "currency": {
+    "pricesIn": "Prices in {{currency}}"
+  }
+}

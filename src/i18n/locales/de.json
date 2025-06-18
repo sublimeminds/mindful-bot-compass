@@ -1,0 +1,45 @@
+
+{
+  "common": {
+    "welcome": "Willkommen",
+    "next": "Weiter",
+    "back": "Zurück",
+    "continue": "Fortfahren",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg"
+  },
+  "onboarding": {
+    "title": "Willkommen bei TherapySync",
+    "subtitle": "Lassen Sie uns Ihre Wellness-Erfahrung personalisieren",
+    "steps": {
+      "welcome": "Willkommen",
+      "goals": "Ziele & Herausforderungen",
+      "preferences": "Therapie-Präferenzen",
+      "mood": "Stimmungs-Baseline",
+      "therapist": "Wählen Sie Ihren Therapeuten",
+      "notifications": "Benachrichtigungseinstellungen",
+      "plan": "Wählen Sie Ihren Plan",
+      "payment": "Zahlung",
+      "profile": "Profil-Setup",
+      "complete": "Setup Abschließen"
+    },
+    "smartAnalysis": {
+      "title": "Ihre Erweiterte Personalisierte Analyse",
+      "subtitle": "KI-gestützte Einblicke mit kultureller Intelligenz und personalisierten Empfehlungen",
+      "analyzing": "Erweiterte KI-Analyse läuft",
+      "analyzingSubtext": "Unsere fortschrittliche KI erstellt Ihren personalisierten Therapieplan mit kulturellen Überlegungen...",
+      "planTitle": "Ihr Personalisierter Therapieplan",
+      "riskAssessment": "Risikobewertung & Dauer",
+      "insights": "Personalisierte Einblicke",
+      "cultural": "Kulturelle Überlegungen",
+      "recommendations": "Empfohlene Interventionen",
+      "continueToMatching": "Weiter zum Therapeuten-Matching"
+    }
+  },
+  "currency": {
+    "pricesIn": "Preise in {{currency}}"
+  }
+}

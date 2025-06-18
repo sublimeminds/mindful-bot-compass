@@ -1,29 +1,33 @@
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import WelcomeStep from './WelcomeStep';
 import IntakeAssessmentStep from './IntakeAssessmentStep';
 import MentalHealthScreeningStep from './MentalHealthScreeningStep';
-import SmartAnalysisStep from './SmartAnalysisStep';
+import InternationalizedEnhancedSmartAnalysisStep from './InternationalizedEnhancedSmartAnalysisStep';
 import TherapistPersonalityStep from './TherapistPersonalityStep';
 import PlanSelectionStep from './PlanSelectionStep';
 import NotificationPreferencesStep from './NotificationPreferencesStep';
+import LanguageSelector from '@/components/ui/LanguageSelector';
+import CurrencySelector from '@/components/ui/CurrencySelector';
 
 interface SmartOnboardingFlowProps {
   onComplete: (data: any) => void;
 }
 
 const SmartOnboardingFlow = ({ onComplete }: SmartOnboardingFlowProps) => {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
   const [onboardingData, setOnboardingData] = useState<any>({});
 
   const steps = [
-    { component: WelcomeStep, title: 'Welcome' },
-    { component: IntakeAssessmentStep, title: 'Intake Assessment' },
-    { component: MentalHealthScreeningStep, title: 'Mental Health Screening' },
-    { component: SmartAnalysisStep, title: 'AI Analysis' },
-    { component: TherapistPersonalityStep, title: 'Therapist Matching' },
-    { component: PlanSelectionStep, title: 'Plan Selection' },
-    { component: NotificationPreferencesStep, title: 'Preferences' }
+    { component: WelcomeStep, titleKey: 'onboarding.steps.welcome' },
+    { component: IntakeAssessmentStep, titleKey: 'onboarding.steps.goals' },
+    { component: MentalHealthScreeningStep, titleKey: 'onboarding.steps.preferences' },
+    { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'onboarding.steps.therapist' },
+    { component: TherapistPersonalityStep, titleKey: 'onboarding.steps.therapist' },
+    { component: PlanSelectionStep, titleKey: 'onboarding.steps.plan' },
+    { component: NotificationPreferencesStep, titleKey: 'onboarding.steps.notifications' }
   ];
 
   const handleNext = (stepData?: any) => {
@@ -46,7 +50,6 @@ const SmartOnboardingFlow = ({ onComplete }: SmartOnboardingFlowProps) => {
 
   const CurrentStepComponent = steps[currentStep].component;
 
-  // Create props object with common interface
   const stepProps = {
     onNext: handleNext,
     onBack: handleBack,
@@ -56,10 +59,18 @@ const SmartOnboardingFlow = ({ onComplete }: SmartOnboardingFlowProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50 p-4">
       <div className="max-w-4xl mx-auto">
+        {/* Header with Language and Currency Selectors */}
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center space-x-4">
+            <LanguageSelector />
+            <CurrencySelector />
+          </div>
+        </div>
+
         {/* Progress Indicator */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-lg font-semibold text-harmony-600">TherapySync Setup</h1>
+            <h1 className="text-lg font-semibold text-harmony-600">{t('onboarding.title')}</h1>
             <span className="text-sm text-muted-foreground">
               Step {currentStep + 1} of {steps.length}
             </span>
@@ -70,6 +81,9 @@ const SmartOnboardingFlow = ({ onComplete }: SmartOnboardingFlowProps) => {
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             />
           </div>
+          <p className="text-center text-sm font-medium text-harmony-600 mt-2">
+            {t(steps[currentStep].titleKey)}
+          </p>
         </div>
 
         {/* Step Content */}

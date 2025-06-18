@@ -1,0 +1,45 @@
+
+{
+  "common": {
+    "welcome": "Bienvenue",
+    "next": "Suivant",
+    "back": "Retour",
+    "continue": "Continuer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès"
+  },
+  "onboarding": {
+    "title": "Bienvenue sur TherapySync",
+    "subtitle": "Personnalisons votre expérience de bien-être",
+    "steps": {
+      "welcome": "Bienvenue",
+      "goals": "Objectifs et Défis",
+      "preferences": "Préférences de Thérapie",
+      "mood": "Base d'Humeur",
+      "therapist": "Choisissez votre Thérapeute",
+      "notifications": "Préférences de Notification",
+      "plan": "Sélectionnez votre Plan",
+      "payment": "Paiement",
+      "profile": "Configuration du Profil",
+      "complete": "Terminer la Configuration"
+    },
+    "smartAnalysis": {
+      "title": "Votre Analyse Personnalisée Améliorée",
+      "subtitle": "Insights alimentés par l'IA avec intelligence culturelle et recommandations personnalisées",
+      "analyzing": "Analyse IA Améliorée en Cours",
+      "analyzingSubtext": "Notre IA avancée crée votre plan de thérapie personnalisé avec des considérations culturelles...",
+      "planTitle": "Votre Plan de Thérapie Personnalisé",
+      "riskAssessment": "Évaluation des Risques et Durée",
+      "insights": "Perspectives Personnalisées",
+      "cultural": "Considérations Culturelles",
+      "recommendations": "Interventions Recommandées",
+      "continueToMatching": "Continuer vers l'Appariement de Thérapeutes"
+    }
+  },
+  "currency": {
+    "pricesIn": "Prix en {{currency}}"
+  }
+}
