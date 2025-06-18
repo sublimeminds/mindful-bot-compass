@@ -192,37 +192,10 @@ export const useNetworkResilience = () => {
     });
   }, [toast]);
 
-  const debouncedRequest = useCallback(<T>(
-    operation: () => Promise<T>,
-    key: string,
-    delay: number = 300
-  ): Promise<T> => {
-    return new Promise((resolve, reject) => {
-      const timeoutKey = `debounce_${key}`;
-      const existingTimeout = (window as any)[timeoutKey];
-      
-      if (existingTimeout) {
-        clearTimeout(existingTimeout);
-      }
-      
-      (window as any)[timeoutKey] = setTimeout(async () => {
-        try {
-          const result = await operation();
-          resolve(result);
-        } catch (error) {
-          reject(error);
-        } finally {
-          delete (window as any)[timeoutKey];
-        }
-      }, delay);
-    });
-  }, []);
-
   return {
     networkState,
     withRetry,
     withCircuitBreaker,
-    debouncedRequest,
     isOnline: networkState.isOnline,
     isSlowConnection: networkState.isSlowConnection
   };
