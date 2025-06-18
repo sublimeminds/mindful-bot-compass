@@ -1,6 +1,8 @@
-
 import { Message } from "@/types";
 import { SessionRecommendationService } from "./sessionRecommendationService";
+import { CulturallyAwareAIService, CulturalContext } from "./culturallyAwareAiService";
+import { MultiLanguageAIService } from "./multiLanguageAiService";
+import { CrisisDetectionService } from "./crisisDetectionService";
 
 const API_URL = import.meta.env.VITE_OPENAI_API_URL || "https://api.openai.com/v1/chat/completions";
 const API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
@@ -16,10 +18,40 @@ interface EmotionAnalysis {
     surprise: number;
     neutral: number;
   };
+  culturalContext?: string;
+  culturalNuances?: string[];
 }
 
-export const analyzeEmotion = async (text: string): Promise<EmotionAnalysis> => {
+interface EnhancedUserPreferences {
+  communicationStyle?: string;
+  preferredApproaches?: string[];
+  emotionalState?: string;
+  culturalContext?: CulturalContext;
+  language?: string;
+  crisisProtocol?: boolean;
+}
+
+export const analyzeEmotion = async (text: string, culturalContext?: CulturalContext): Promise<EmotionAnalysis> => {
   try {
+    if (culturalContext) {
+      const culturalEmotion = await CulturallyAwareAIService.analyzeEmotionWithCulture(text, culturalContext);
+      return {
+        dominant_emotion: culturalEmotion.primary,
+        confidence: 0.9,
+        emotions: {
+          joy: culturalEmotion.primary === 'joy' ? 0.8 : 0.2,
+          sadness: culturalEmotion.primary === 'sadness' ? 0.8 : 0.2,
+          anger: culturalEmotion.primary === 'anger' ? 0.8 : 0.2,
+          fear: culturalEmotion.primary === 'fear' ? 0.8 : 0.2,
+          surprise: culturalEmotion.primary === 'surprise' ? 0.8 : 0.2,
+          neutral: culturalEmotion.primary === 'neutral' ? 0.8 : 0.2
+        },
+        culturalContext: culturalEmotion.culturalContext,
+        culturalNuances: culturalEmotion.culturalNuances
+      };
+    }
+
+    // Fallback to basic emotion analysis
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -27,7 +59,7 @@ export const analyzeEmotion = async (text: string): Promise<EmotionAnalysis> => 
         "Authorization": `Bearer ${API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-4.1-2025-04-14",
+        model: "gpt-4-turbo-preview",
         messages: [
           {
             role: "system",
@@ -67,30 +99,131 @@ export const sendEnhancedMessage = async (
   message: string, 
   conversationHistory: Message[] = [],
   therapistPrompt?: string,
-  userPreferences?: {
-    communicationStyle?: string;
-    preferredApproaches?: string[];
-    emotionalState?: string;
-  }
+  userPreferences?: EnhancedUserPreferences
 ): Promise<{ response: string; emotion: EmotionAnalysis }> => {
-  // Analyze user's emotion
-  const emotion = await analyzeEmotion(message);
+  try {
+    // First, check for crisis indicators
+    const crisisIndicator = CrisisDetectionService.analyzeCrisisLevel(message);
+    if (crisisIndicator && crisisIndicator.type === 'severe') {
+      const crisisResponse = await handleCrisisResponse(message, userPreferences?.culturalContext);
+      const emotion = await analyzeEmotion(message, userPreferences?.culturalContext);
+      return { response: crisisResponse, emotion };
+    }
+
+    // Detect language if not provided
+    let targetLanguage = userPreferences?.language || 'en';
+    if (!userPreferences?.language) {
+      const detection = await MultiLanguageAIService.detectLanguage(message);
+      targetLanguage = detection.language;
+    }
+
+    // Analyze emotion with cultural context
+    const emotion = await analyzeEmotion(message, userPreferences?.culturalContext);
+    
+    // Generate culturally-aware response
+    if (userPreferences?.culturalContext) {
+      const culturalResponse = await CulturallyAwareAIService.generateCulturallyAdaptedResponse(
+        message,
+        userPreferences.culturalContext,
+        {
+          primary: emotion.dominant_emotion,
+          secondary: [],
+          intensity: emotion.confidence,
+          culturalContext: emotion.culturalContext || 'unknown',
+          culturalNuances: emotion.culturalNuances || []
+        },
+        conversationHistory
+      );
+      
+      return { response: culturalResponse, emotion };
+    }
+
+    // Multi-language response generation
+    if (targetLanguage !== 'en') {
+      const multiLangResponse = await MultiLanguageAIService.generateMultiLanguageResponse(
+        message,
+        targetLanguage,
+        userPreferences?.culturalContext || { language: targetLanguage, region: 'unknown' }
+      );
+      
+      return { response: multiLangResponse, emotion };
+    }
+
+    // Fallback to original enhanced logic
+    return await generateStandardResponse(message, conversationHistory, therapistPrompt, userPreferences, emotion);
+
+  } catch (error: any) {
+    console.error("Error in enhanced message processing:", error);
+    const fallbackEmotion = await analyzeEmotion(message);
+    return { 
+      response: "I'm having trouble processing your request right now. Please try again later.",
+      emotion: fallbackEmotion
+    };
+  }
+};
+
+async function handleCrisisResponse(message: string, culturalContext?: CulturalContext): Promise<string> {
+  const crisisIndicator = CrisisDetectionService.analyzeCrisisLevel(message);
+  if (!crisisIndicator) return "I'm here to support you.";
+
+  let response = CrisisDetectionService.generateCrisisResponse(crisisIndicator);
+  
+  // Add cultural adaptations for crisis response
+  if (culturalContext) {
+    if (culturalContext.familyStructure === 'collective') {
+      response += "\n\nPlease also consider reaching out to trusted family members or community leaders who care about you.";
+    }
+    
+    if (culturalContext.religiousBeliefs) {
+      response += "\n\nYour spiritual community and religious leaders may also provide comfort and guidance during this difficult time.";
+    }
+  }
+  
+  // Add crisis resources
+  const resources = CrisisDetectionService.getCrisisResources(crisisIndicator.type);
+  response += "\n\nImmediate help is available:";
+  resources.forEach(resource => {
+    response += `\n• ${resource.name}: ${resource.phone} (${resource.availability})`;
+  });
+  
+  return response;
+}
+
+async function generateStandardResponse(
+  message: string,
+  conversationHistory: Message[],
+  therapistPrompt?: string,
+  userPreferences?: EnhancedUserPreferences,
+  emotion?: EmotionAnalysis
+): Promise<{ response: string; emotion: EmotionAnalysis }> {
+  const finalEmotion = emotion || await analyzeEmotion(message);
   
   // Build enhanced prompt based on emotion and preferences
-  let enhancedPrompt = therapistPrompt || `You are MindfulAI, an advanced AI therapist with emotional intelligence. Adapt your communication style based on the user's emotional state and preferences.`;
+  let enhancedPrompt = therapistPrompt || `You are MindfulAI, an advanced AI therapist with emotional intelligence and cultural awareness.`;
 
   if (userPreferences) {
     enhancedPrompt += `\n\nUser Preferences:
     - Communication Style: ${userPreferences.communicationStyle || 'supportive'}
     - Preferred Approaches: ${userPreferences.preferredApproaches?.join(', ') || 'CBT, mindfulness'}
-    - Current Emotional State: ${emotion.dominant_emotion} (confidence: ${emotion.confidence})`;
+    - Current Emotional State: ${finalEmotion.dominant_emotion} (confidence: ${finalEmotion.confidence})`;
+    
+    if (userPreferences.culturalContext) {
+      enhancedPrompt += `\n- Cultural Background: ${userPreferences.culturalContext.culturalBackground}
+      - Family Structure: ${userPreferences.culturalContext.familyStructure}
+      - Communication Style: ${userPreferences.culturalContext.communicationStyle}`;
+    }
   }
 
   enhancedPrompt += `\n\nCurrent User Emotion Analysis:
-  - Dominant Emotion: ${emotion.dominant_emotion}
-  - Confidence: ${(emotion.confidence * 100).toFixed(1)}%
+  - Dominant Emotion: ${finalEmotion.dominant_emotion}
+  - Confidence: ${(finalEmotion.confidence * 100).toFixed(1)}%`;
   
-  Please respond with empathy and adjust your therapeutic approach accordingly. If the user seems distressed (sadness, anger, fear), provide more supportive and validating responses. If they seem positive, encourage continued progress.`;
+  if (finalEmotion.culturalContext) {
+    enhancedPrompt += `\n- Cultural Context: ${finalEmotion.culturalContext}
+    - Cultural Nuances: ${finalEmotion.culturalNuances?.join(', ')}`;
+  }
+  
+  enhancedPrompt += `\n\nPlease respond with empathy and adjust your therapeutic approach accordingly.`;
 
   // Check for stored session recommendation
   const storedRecommendation = sessionStorage.getItem('sessionRecommendation');
@@ -125,7 +258,7 @@ export const sendEnhancedMessage = async (
         "Authorization": `Bearer ${API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-4.1-2025-04-14",
+        model: "gpt-4-turbo-preview",
         messages: messages,
         max_tokens: 300,
         temperature: 0.7,
@@ -145,16 +278,16 @@ export const sendEnhancedMessage = async (
       sessionStorage.removeItem('sessionRecommendation');
     }
     
-    return { response: aiMessage, emotion };
+    return { response: aiMessage, emotion: finalEmotion };
 
   } catch (error: any) {
-    console.error("Error sending enhanced message:", error);
+    console.error("Error in standard response generation:", error);
     return { 
       response: "I'm having trouble processing your request right now. Please try again later.",
-      emotion
+      emotion: finalEmotion
     };
   }
-};
+}
 
 export const generatePersonalizedInsight = async (
   userHistory: Message[],
@@ -169,7 +302,7 @@ export const generatePersonalizedInsight = async (
         "Authorization": `Bearer ${API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-4.1-2025-04-14",
+        model: "gpt-4-turbo-preview",
         messages: [
           {
             role: "system",

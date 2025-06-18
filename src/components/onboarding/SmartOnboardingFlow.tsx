@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import WelcomeStep from './WelcomeStep';
 import IntakeAssessmentStep from './IntakeAssessmentStep';
 import MentalHealthScreeningStep from './MentalHealthScreeningStep';
+import CulturalContextStep from './CulturalContextStep';
 import InternationalizedEnhancedSmartAnalysisStep from './InternationalizedEnhancedSmartAnalysisStep';
 import TherapistPersonalityStep from './TherapistPersonalityStep';
 import PlanSelectionStep from './PlanSelectionStep';
@@ -24,7 +25,8 @@ const SmartOnboardingFlow = ({ onComplete }: SmartOnboardingFlowProps) => {
     { component: WelcomeStep, titleKey: 'onboarding.steps.welcome' },
     { component: IntakeAssessmentStep, titleKey: 'onboarding.steps.goals' },
     { component: MentalHealthScreeningStep, titleKey: 'onboarding.steps.preferences' },
-    { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'onboarding.steps.therapist' },
+    { component: CulturalContextStep, titleKey: 'onboarding.steps.cultural' },
+    { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'onboarding.steps.analysis' },
     { component: TherapistPersonalityStep, titleKey: 'onboarding.steps.therapist' },
     { component: PlanSelectionStep, titleKey: 'onboarding.steps.plan' },
     { component: NotificationPreferencesStep, titleKey: 'onboarding.steps.notifications' }
