@@ -5,10 +5,21 @@ interface VoiceConfig {
   model?: string;
 }
 
+interface EnhancedVoiceConfig extends VoiceConfig {
+  multiLanguage?: boolean;
+  emotionAnalysis?: boolean;
+  culturalAdaptation?: boolean;
+  textRecognition?: boolean;
+}
+
 class VoiceService {
   private apiKey: string | null = null;
   private isPlaying: boolean = false;
   private currentAudio: HTMLAudioElement | null = null;
+  private supportedLanguages: string[] = [
+    'en-US', 'es-ES', 'fr-FR', 'de-DE', 'it-IT', 'pt-PT', 'ru-RU', 
+    'ar-SA', 'zh-CN', 'ja-JP', 'ko-KR', 'hi-IN', 'tr-TR', 'he-IL'
+  ];
 
   constructor() {
     // Load API key from localStorage if available
@@ -26,6 +37,10 @@ class VoiceService {
 
   get isCurrentlyPlaying(): boolean {
     return this.isPlaying;
+  }
+
+  getSupportedLanguages(): string[] {
+    return this.supportedLanguages;
   }
 
   async getAvailableVoices(): Promise<any[]> {
@@ -58,7 +73,7 @@ class VoiceService {
     }
   }
 
-  async playText(text: string, config: VoiceConfig = {}): Promise<void> {
+  async playText(text: string, config: EnhancedVoiceConfig = {}): Promise<void> {
     if (!this.hasApiKey()) {
       throw new Error('API key not configured');
     }
@@ -70,7 +85,15 @@ class VoiceService {
     try {
       this.isPlaying = true;
 
+      // Apply cultural adaptation if requested
+      let adaptedText = text;
+      if (config.culturalAdaptation) {
+        adaptedText = await this.applyCulturalAdaptation(text, config);
+      }
+
       const voiceId = config.voiceId || "9BWtsMINqrJLrRacOk9x";
+      const model = config.multiLanguage ? 'eleven_multilingual_v2' : 'eleven_turbo_v2_5';
+
       const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
         method: 'POST',
         headers: {
@@ -79,11 +102,13 @@ class VoiceService {
           'xi-api-key': this.apiKey!,
         },
         body: JSON.stringify({
-          text,
-          model_id: config.model || 'eleven_multilingual_v1',
+          text: adaptedText,
+          model_id: model,
           voice_settings: {
             stability: config.stability || 0.75,
             similarity_boost: config.similarityBoost || 0.85,
+            style: config.emotionAnalysis ? 0.8 : 0.5,
+            use_speaker_boost: true
           },
         }),
       });
@@ -112,6 +137,39 @@ class VoiceService {
     } finally {
       this.isPlaying = false;
     }
+  }
+
+  private async applyCulturalAdaptation(text: string, config: EnhancedVoiceConfig): Promise<string> {
+    // Simple cultural adaptation - in production would use more sophisticated methods
+    if (config.voiceId?.includes('multilingual')) {
+      // Add pauses for better cross-cultural communication
+      return text.replace(/\. /g, '. ... ').replace(/\? /g, '? ... ');
+    }
+    return text;
+  }
+
+  async playTextWithEmotion(
+    text: string, 
+    emotion: string, 
+    intensity: number = 0.5,
+    config: EnhancedVoiceConfig = {}
+  ): Promise<void> {
+    const emotionalConfig: EnhancedVoiceConfig = {
+      ...config,
+      stability: emotion === 'calm' ? 0.8 : 0.6,
+      similarityBoost: 0.8,
+      emotionAnalysis: true
+    };
+
+    // Adjust text for emotional delivery
+    let emotionalText = text;
+    if (emotion === 'excited' || emotion === 'happy') {
+      emotionalText = text.replace(/\./g, '!');
+    } else if (emotion === 'sad' || emotion === 'melancholy') {
+      emotionalText = text.replace(/!/g, '.');
+    }
+
+    await this.playText(emotionalText, emotionalConfig);
   }
 
   stop(): void {

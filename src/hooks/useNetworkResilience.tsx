@@ -52,14 +52,13 @@ export const useNetworkResilience = () => {
       }
     };
 
-    // Set up event listeners
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     
     const connection = (navigator as any).connection;
     if (connection) {
       connection.addEventListener('change', updateConnectionInfo);
-      updateConnectionInfo(); // Initial call
+      updateConnectionInfo();
     }
 
     return () => {
@@ -81,7 +80,6 @@ export const useNetworkResilience = () => {
       delay += Math.random() * 1000;
     }
 
-    // Adjust for slow connections
     if (networkState.isSlowConnection) {
       delay *= 1.5;
     }
@@ -100,14 +98,12 @@ export const useNetworkResilience = () => {
       try {
         setNetworkState(prev => ({ ...prev, retryCount: attempt }));
         
-        // Check if we're offline
         if (!networkState.isOnline) {
           throw new Error('Network unavailable');
         }
         
         const result = await operation();
         
-        // Reset retry count on success
         if (attempt > 0) {
           setNetworkState(prev => ({ ...prev, retryCount: 0 }));
           toast({
@@ -121,7 +117,6 @@ export const useNetworkResilience = () => {
       } catch (error) {
         lastError = error as Error;
         
-        // Don't retry for certain error types
         if (error instanceof Error) {
           const errorMessage = error.message.toLowerCase();
           if (errorMessage.includes('unauthorized') || 
@@ -131,7 +126,6 @@ export const useNetworkResilience = () => {
           }
         }
         
-        // Last attempt failed
         if (attempt === finalConfig.maxAttempts - 1) {
           setNetworkState(prev => ({ ...prev, retryCount: 0 }));
           
@@ -152,7 +146,6 @@ export const useNetworkResilience = () => {
           throw lastError;
         }
         
-        // Wait before retry
         const delay = calculateDelay(attempt, finalConfig);
         await new Promise(resolve => setTimeout(resolve, delay));
         
@@ -170,22 +163,19 @@ export const useNetworkResilience = () => {
   ): Promise<T> => {
     const failures = parseInt(localStorage.getItem(`cb_failures_${key}`) || '0');
     const lastFailureTime = parseInt(localStorage.getItem(`cb_last_failure_${key}`) || '0');
-    const circuitOpenTime = 30000; // 30 seconds
+    const circuitOpenTime = 30000;
 
-    // Check if circuit is open
     if (failures >= threshold) {
       const timeSinceLastFailure = Date.now() - lastFailureTime;
       if (timeSinceLastFailure < circuitOpenTime) {
         return Promise.reject(new Error(`Circuit breaker open for ${key}. Try again later.`));
       } else {
-        // Reset circuit breaker (half-open state)
         localStorage.removeItem(`cb_failures_${key}`);
         localStorage.removeItem(`cb_last_failure_${key}`);
       }
     }
 
     return operation().catch(error => {
-      // Record failure
       const newFailures = failures + 1;
       localStorage.setItem(`cb_failures_${key}`, newFailures.toString());
       localStorage.setItem(`cb_last_failure_${key}`, Date.now().toString());
