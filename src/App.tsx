@@ -1,6 +1,6 @@
 
-import { useState, useEffect, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
@@ -10,17 +10,7 @@ import { Toaster } from '@/components/ui/toaster';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import AccessibilityPanel from '@/components/accessibility/AccessibilityPanel';
 import PerformanceDashboard from '@/components/performance/PerformanceDashboard';
-import Dashboard from '@/pages/Dashboard';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
-import OnboardingPage from '@/pages/OnboardingPage';
-import SessionPage from '@/pages/SessionPage';
-import SettingsPage from '@/pages/SettingsPage';
-import SubscriptionPage from '@/pages/SubscriptionPage';
-import VoiceSettingsPage from '@/pages/VoiceSettingsPage';
-import Techniques from '@/pages/Techniques';
-import NotFound from '@/pages/NotFound';
-import { useAuth } from '@/contexts/AuthContext';
+import AppRouter from '@/components/AppRouter';
 
 import './App.css';
 
@@ -34,9 +24,8 @@ const queryClient = new QueryClient({
   },
 });
 
-function AppContent() {
+function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -52,43 +41,6 @@ function AppContent() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Suspense fallback={
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-        </div>
-      }>
-        <Routes>
-          <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-          <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-          <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
-          <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" />} />
-          <Route path="/onboarding" element={isAuthenticated ? <OnboardingPage /> : <Navigate to="/login" />} />
-          <Route path="/session" element={isAuthenticated ? <SessionPage /> : <Navigate to="/login" />} />
-          <Route path="/settings" element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" />} />
-          <Route path="/subscription" element={isAuthenticated ? <SubscriptionPage /> : <Navigate to="/login" />} />
-          <Route path="/voice-settings" element={isAuthenticated ? <VoiceSettingsPage /> : <Navigate to="/login" />} />
-          <Route path="/techniques" element={isAuthenticated ? <Techniques /> : <Navigate to="/login" />} />
-          <Route path="/techniques/:techniqueId" element={isAuthenticated ? <Techniques /> : <Navigate to="/login" />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-      
-      {/* Accessibility and Performance Tools */}
-      <ErrorBoundary>
-        <AccessibilityPanel />
-      </ErrorBoundary>
-      <ErrorBoundary>
-        <PerformanceDashboard />
-      </ErrorBoundary>
-      
-      <Toaster />
-    </div>
-  );
-}
-
-function App() {
-  return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AccessibilityProvider>
@@ -96,7 +48,19 @@ function App() {
             <SessionProvider>
               <TherapistProvider>
                 <Router>
-                  <AppContent />
+                  <div className="min-h-screen bg-background">
+                    <AppRouter />
+                    
+                    {/* Accessibility and Performance Tools */}
+                    <ErrorBoundary>
+                      <AccessibilityPanel />
+                    </ErrorBoundary>
+                    <ErrorBoundary>
+                      <PerformanceDashboard />
+                    </ErrorBoundary>
+                    
+                    <Toaster />
+                  </div>
                 </Router>
               </TherapistProvider>
             </SessionProvider>
