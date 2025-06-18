@@ -97,7 +97,7 @@ export const useEnhancedMutation = <T, TVariables = void>(
       );
     },
     onMutate: async (variables: TVariables) => {
-      let context: any = {};
+      let context: Record<string, any> = {};
       
       if (optimisticUpdate) {
         // Cancel outgoing refetches
@@ -107,7 +107,8 @@ export const useEnhancedMutation = <T, TVariables = void>(
         context = optimisticUpdate(variables);
       }
       
-      return { ...context, ...(await mutationOptions.onMutate?.(variables) || {}) };
+      const originalContext = await mutationOptions.onMutate?.(variables);
+      return { ...context, ...(originalContext || {}) };
     },
     onError: (error, variables, context) => {
       // Rollback optimistic update

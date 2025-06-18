@@ -44,7 +44,7 @@ const SUPPORTED_LANGUAGES = {
   'he': { name: 'Hebrew', regions: ['IL'] }
 };
 
-const THERAPY_TERMINOLOGY = {
+const THERAPY_TERMINOLOGY: Record<string, Record<string, string>> = {
   'en': {
     'anxiety': 'anxiety',
     'depression': 'depression',
@@ -225,7 +225,8 @@ export class MultiLanguageAIService {
   }
 
   private static inferRegion(language: string): string | undefined {
-    const regions = SUPPORTED_LANGUAGES[language]?.regions;
+    const languageKey = language as keyof typeof SUPPORTED_LANGUAGES;
+    const regions = SUPPORTED_LANGUAGES[languageKey]?.regions;
     return regions?.[0]; // Return primary region
   }
 
@@ -282,10 +283,13 @@ export class MultiLanguageAIService {
     fromLang: string,
     toLang: string
   ): string {
-    const transitions = {
-      'en': `I'll continue our conversation in ${SUPPORTED_LANGUAGES[toLang]?.name || toLang}.`,
-      'es': `Continuaré nuestra conversación en ${SUPPORTED_LANGUAGES[toLang]?.name || toLang}.`,
-      'ar': `سأواصل محادثتنا باللغة ${SUPPORTED_LANGUAGES[toLang]?.name || toLang}.`
+    const languageKey = toLang as keyof typeof SUPPORTED_LANGUAGES;
+    const languageName = SUPPORTED_LANGUAGES[languageKey]?.name || toLang;
+    
+    const transitions: Record<string, string> = {
+      'en': `I'll continue our conversation in ${languageName}.`,
+      'es': `Continuaré nuestra conversación en ${languageName}.`,
+      'ar': `سأواصل محادثتنا باللغة ${languageName}.`
     };
     
     const transition = transitions[fromLang] || transitions['en'];
@@ -311,7 +315,7 @@ export class MultiLanguageAIService {
   }
 
   private static addFamilyContext(content: string, language: string): string {
-    const familyContexts = {
+    const familyContexts: Record<string, string> = {
       'es': ' Considera también el impacto en tu familia.',
       'ar': ' ضع في اعتبارك أيضاً تأثير ذلك على عائلتك.',
       'zh': ' 也要考虑对家庭的影响。'
@@ -321,7 +325,7 @@ export class MultiLanguageAIService {
   }
 
   private static addReligiousContext(content: string, language: string): string {
-    const religiousContexts = {
+    const religiousContexts: Record<string, string> = {
       'ar': ' مع مراعاة معتقداتك الدينية.',
       'es': ' considerando tus creencias religiosas.'
     };
@@ -330,7 +334,7 @@ export class MultiLanguageAIService {
   }
 
   private static addCollectivistContext(content: string, language: string): string {
-    const collectivistContexts = {
+    const collectivistContexts: Record<string, string> = {
       'zh': ' 从集体和谐的角度考虑。',
       'ar': ' من منظور الانسجام الجماعي.'
     };
@@ -349,7 +353,7 @@ export class MultiLanguageAIService {
   }
 
   private static getFallbackResponse(language: string): string {
-    const fallbacks = {
+    const fallbacks: Record<string, string> = {
       'en': 'I want to make sure I understand you correctly. Could you tell me more?',
       'es': 'Quiero asegurarme de entenderte correctamente. ¿Podrías contarme más?',
       'fr': 'Je veux m\'assurer de bien vous comprendre. Pouvez-vous m\'en dire plus?',

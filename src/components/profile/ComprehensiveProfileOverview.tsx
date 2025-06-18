@@ -109,6 +109,16 @@ const ComprehensiveProfileOverview = () => {
     setLoading(false);
   }, []);
 
+  const renderValue = (value: unknown): React.ReactNode => {
+    if (typeof value === 'string' || typeof value === 'number') {
+      return value;
+    }
+    if (Array.isArray(value)) {
+      return value.join(', ');
+    }
+    return String(value);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -243,7 +253,7 @@ const ComprehensiveProfileOverview = () => {
                 {Object.entries(onboardingData.personalInfo).map(([key, value]) => (
                   <div key={key} className="space-y-1">
                     <p className="text-sm font-medium text-muted-foreground capitalize">{key.replace(/([A-Z])/g, ' $1')}</p>
-                    <p className="font-medium">{value}</p>
+                    <p className="font-medium">{renderValue(value)}</p>
                   </div>
                 ))}
               </div>
@@ -299,12 +309,12 @@ const ComprehensiveProfileOverview = () => {
                     <p className="text-sm font-medium text-muted-foreground capitalize">{key.replace(/([A-Z])/g, ' $1')}</p>
                     {Array.isArray(value) ? (
                       <div className="flex flex-wrap gap-1">
-                        {value.map((item: string, index: number) => (
+                        {(value as string[]).map((item: string, index: number) => (
                           <Badge key={index} variant="secondary" className="text-xs">{item}</Badge>
                         ))}
                       </div>
                     ) : (
-                      <p className="font-medium">{value}</p>
+                      <p className="font-medium">{renderValue(value)}</p>
                     )}
                   </div>
                 ))}
@@ -328,7 +338,7 @@ const ComprehensiveProfileOverview = () => {
                   <div key={trait} className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="font-medium capitalize">{trait}</span>
-                      <span className="font-bold text-therapy-600">{score}%</span>
+                      <span className="font-bold text-therapy-600">{score as number}%</span>
                     </div>
                     <Progress value={score as number} className="h-2" />
                   </div>
@@ -413,12 +423,12 @@ const ComprehensiveProfileOverview = () => {
                     <p className="text-sm font-medium text-muted-foreground capitalize">{key.replace(/([A-Z])/g, ' $1')}</p>
                     {Array.isArray(value) ? (
                       <div className="space-y-1">
-                        {value.map((item: string, index: number) => (
+                        {(value as string[]).map((item: string, index: number) => (
                           <p key={index} className="text-sm">• {item}</p>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-sm">{value}</p>
+                      <p className="text-sm">{renderValue(value)}</p>
                     )}
                   </div>
                 ))}
