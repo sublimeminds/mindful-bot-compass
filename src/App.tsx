@@ -1,3 +1,4 @@
+
 import { useState, useEffect, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -27,14 +28,14 @@ const queryClient = new QueryClient({
     queries: {
       retry: 3,
       staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
     },
   },
 });
 
-function App() {
+function AppContent() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const { isLoggedIn } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -50,6 +51,37 @@ function App() {
   }, []);
 
   return (
+    <div className="min-h-screen bg-background">
+      <Suspense fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+        </div>
+      }>
+        <Routes>
+          <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+          <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+          <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
+          <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" />} />
+          <Route path="/onboarding" element={isAuthenticated ? <OnboardingPage /> : <Navigate to="/login" />} />
+          <Route path="/session" element={isAuthenticated ? <SessionPage /> : <Navigate to="/login" />} />
+          <Route path="/settings" element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" />} />
+          <Route path="/subscription" element={isAuthenticated ? <SubscriptionPage /> : <Navigate to="/login" />} />
+          <Route path="/voice-settings" element={isAuthenticated ? <VoiceSettingsPage /> : <Navigate to="/login" />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+      
+      {/* Accessibility and Performance Tools */}
+      <AccessibilityPanel />
+      <PerformanceDashboard />
+      
+      <Toaster />
+    </div>
+  );
+}
+
+function App() {
+  return (
     <AccessibleErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AccessibilityProvider>
@@ -57,32 +89,7 @@ function App() {
             <SessionProvider>
               <TherapistProvider>
                 <Router>
-                  <div className="min-h-screen bg-background">
-                    <Suspense fallback={
-                      <div className="flex items-center justify-center min-h-screen">
-                        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-                      </div>
-                    }>
-                      <Routes>
-                        <Route path="/" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} />
-                        <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} />
-                        <Route path="/login" element={!isLoggedIn ? <Login /> : <Navigate to="/dashboard" />} />
-                        <Route path="/register" element={!isLoggedIn ? <Register /> : <Navigate to="/dashboard" />} />
-                        <Route path="/onboarding" element={isLoggedIn ? <OnboardingPage /> : <Navigate to="/login" />} />
-                        <Route path="/session" element={isLoggedIn ? <SessionPage /> : <Navigate to="/login" />} />
-                        <Route path="/settings" element={isLoggedIn ? <SettingsPage /> : <Navigate to="/login" />} />
-                        <Route path="/subscription" element={isLoggedIn ? <SubscriptionPage /> : <Navigate to="/login" />} />
-                        <Route path="/voice-settings" element={isLoggedIn ? <VoiceSettingsPage /> : <Navigate to="/login" />} />
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </Suspense>
-                    
-                    {/* Accessibility and Performance Tools */}
-                    <AccessibilityPanel />
-                    <PerformanceDashboard />
-                    
-                    <Toaster />
-                  </div>
+                  <AppContent />
                 </Router>
               </TherapistProvider>
             </SessionProvider>

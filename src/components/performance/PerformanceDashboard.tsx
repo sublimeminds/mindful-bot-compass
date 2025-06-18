@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { 
   Activity, 
   Clock, 
-  Memory, 
+  HardDrive, 
   Zap, 
   AlertTriangle, 
   CheckCircle,
@@ -161,7 +161,7 @@ const PerformanceDashboard = () => {
                       {metrics.memoryUsage.toFixed(1)}%
                     </p>
                   </div>
-                  <Memory className="h-8 w-8 text-purple-500" />
+                  <HardDrive className="h-8 w-8 text-purple-500" />
                 </div>
                 <Progress 
                   value={metrics.memoryUsage} 
