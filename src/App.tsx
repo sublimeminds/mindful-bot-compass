@@ -1,175 +1,95 @@
-
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Index from '@/pages/Index';
-import Auth from '@/pages/Auth';
-import Onboarding from '@/pages/Onboarding';
-import Chat from '@/pages/Chat';
-import TherapyChat from '@/pages/TherapyChat';
-import LiveSession from '@/pages/LiveSession';
-import MoodTracking from '@/pages/MoodTracking';
-import Goals from '@/pages/Goals';
-import Techniques from '@/pages/Techniques';
-import SessionHistory from '@/pages/SessionHistory';
-import Analytics from '@/pages/Analytics';
-import SessionAnalytics from '@/pages/SessionAnalytics';
-import Profile from '@/pages/Profile';
-import Plans from '@/pages/Plans';
-import FAQ from '@/pages/FAQ';
-import Help from '@/pages/Help';
-import Contact from '@/pages/Contact';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import AdminLayout from '@/components/admin/AdminLayout';
-import AdminDashboard from '@/pages/AdminDashboard';
-import AdminUsers from '@/pages/AdminUsers';
-import AdminContent from '@/pages/AdminContent';
-import AdminAnalytics from '@/pages/AdminAnalytics';
-import AdminSystem from '@/pages/AdminSystem';
-import AdminPerformance from '@/pages/AdminPerformance';
+import { useState, useEffect, Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
+import { SessionProvider } from '@/contexts/SessionContext';
+import { TherapistProvider } from '@/contexts/TherapistContext';
+import { Toaster } from '@/components/ui/toaster';
+import AccessibleErrorBoundary from '@/components/enhanced/AccessibleErrorBoundary';
+import AccessibilityPanel from '@/components/accessibility/AccessibilityPanel';
+import PerformanceDashboard from '@/components/performance/PerformanceDashboard';
+import Dashboard from '@/pages/Dashboard';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
+import OnboardingPage from '@/pages/OnboardingPage';
+import SessionPage from '@/pages/SessionPage';
+import SettingsPage from '@/pages/SettingsPage';
+import SubscriptionPage from '@/pages/SubscriptionPage';
+import VoiceSettingsPage from '@/pages/VoiceSettingsPage';
 import NotFound from '@/pages/NotFound';
-import TherapistMatching from '@/pages/TherapistMatching';
-import PerformanceDashboard from '@/pages/PerformanceDashboard';
-import NotificationDashboard from '@/pages/NotificationDashboard';
-import NotificationSettings from '@/pages/NotificationSettings';
-import NotificationAnalytics from '@/pages/NotificationAnalytics';
-import SmartTriggers from '@/pages/SmartTriggers';
-import AdminAI from '@/pages/AdminAI';
+import { useAuth } from '@/contexts/AuthContext';
 
-// Create a simple UserDashboard component since it's missing
-const UserDashboard = () => {
-  return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">User Dashboard</h1>
-        <p className="text-gray-600">Welcome to your therapy dashboard.</p>
-      </div>
-    </div>
-  );
-};
+import './App.css';
 
-// Create AdminProtectedRoute component since it's missing
-interface AdminProtectedRouteProps {
-  children: React.ReactNode;
-}
-
-const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) => {
-  // For now, just return the children - in a real app this would check admin permissions
-  return <>{children}</>;
-};
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
+    },
+  },
+});
 
 function App() {
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const { isLoggedIn } = useAuth();
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
   return (
-    <Routes>
-      {/* Public routes */}
-      <Route path="/" element={<Index />} />
-      <Route path="/auth" element={<Auth />} />
-      <Route path="/onboarding" element={<Onboarding />} />
-      <Route path="/therapist-matching" element={<TherapistMatching />} />
-      <Route path="/plans" element={<Plans />} />
-      <Route path="/faq" element={<FAQ />} />
-      <Route path="/help" element={<Help />} />
-      <Route path="/contact" element={<Contact />} />
-
-      {/* Protected user routes */}
-      <Route path="/dashboard" element={
-        <ProtectedRoute>
-          <UserDashboard />
-        </ProtectedRoute>
-      } />
-      <Route path="/chat" element={
-        <ProtectedRoute>
-          <Chat />
-        </ProtectedRoute>
-      } />
-      <Route path="/therapy" element={
-        <ProtectedRoute>
-          <TherapyChat />
-        </ProtectedRoute>
-      } />
-      <Route path="/live-session" element={
-        <ProtectedRoute>
-          <LiveSession />
-        </ProtectedRoute>
-      } />
-      <Route path="/mood-tracking" element={
-        <ProtectedRoute>
-          <MoodTracking />
-        </ProtectedRoute>
-      } />
-      <Route path="/goals" element={
-        <ProtectedRoute>
-          <Goals />
-        </ProtectedRoute>
-      } />
-      <Route path="/techniques" element={
-        <ProtectedRoute>
-          <Techniques />
-        </ProtectedRoute>
-      } />
-      <Route path="/session-history" element={
-        <ProtectedRoute>
-          <SessionHistory />
-        </ProtectedRoute>
-      } />
-      <Route path="/analytics" element={
-        <ProtectedRoute>
-          <Analytics />
-        </ProtectedRoute>
-      } />
-      <Route path="/session-analytics" element={
-        <ProtectedRoute>
-          <SessionAnalytics />
-        </ProtectedRoute>
-      } />
-      <Route path="/profile" element={
-        <ProtectedRoute>
-          <Profile />
-        </ProtectedRoute>
-      } />
-      <Route path="/performance" element={
-        <ProtectedRoute>
-          <PerformanceDashboard />
-        </ProtectedRoute>
-      } />
-      <Route path="/notifications" element={
-        <ProtectedRoute>
-          <NotificationDashboard />
-        </ProtectedRoute>
-      } />
-      <Route path="/notification-settings" element={
-        <ProtectedRoute>
-          <NotificationSettings />
-        </ProtectedRoute>
-      } />
-      <Route path="/notification-analytics" element={
-        <ProtectedRoute>
-          <NotificationAnalytics />
-        </ProtectedRoute>
-      } />
-      <Route path="/smart-triggers" element={
-        <ProtectedRoute>
-          <SmartTriggers />
-        </ProtectedRoute>
-      } />
-
-      {/* Admin routes */}
-      <Route path="/admin" element={
-        <AdminProtectedRoute>
-          <AdminLayout />
-        </AdminProtectedRoute>
-      }>
-        <Route index element={<AdminDashboard />} />
-        <Route path="users" element={<AdminUsers />} />
-        <Route path="content" element={<AdminContent />} />
-        <Route path="analytics" element={<AdminAnalytics />} />
-        <Route path="system" element={<AdminSystem />} />
-        <Route path="performance" element={<AdminPerformance />} />
-        <Route path="ai" element={<AdminAI />} />
-      </Route>
-
-      {/* 404 route */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <AccessibleErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AccessibilityProvider>
+          <AuthProvider>
+            <SessionProvider>
+              <TherapistProvider>
+                <Router>
+                  <div className="min-h-screen bg-background">
+                    <Suspense fallback={
+                      <div className="flex items-center justify-center min-h-screen">
+                        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+                      </div>
+                    }>
+                      <Routes>
+                        <Route path="/" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} />
+                        <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} />
+                        <Route path="/login" element={!isLoggedIn ? <Login /> : <Navigate to="/dashboard" />} />
+                        <Route path="/register" element={!isLoggedIn ? <Register /> : <Navigate to="/dashboard" />} />
+                        <Route path="/onboarding" element={isLoggedIn ? <OnboardingPage /> : <Navigate to="/login" />} />
+                        <Route path="/session" element={isLoggedIn ? <SessionPage /> : <Navigate to="/login" />} />
+                        <Route path="/settings" element={isLoggedIn ? <SettingsPage /> : <Navigate to="/login" />} />
+                        <Route path="/subscription" element={isLoggedIn ? <SubscriptionPage /> : <Navigate to="/login" />} />
+                        <Route path="/voice-settings" element={isLoggedIn ? <VoiceSettingsPage /> : <Navigate to="/login" />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </Suspense>
+                    
+                    {/* Accessibility and Performance Tools */}
+                    <AccessibilityPanel />
+                    <PerformanceDashboard />
+                    
+                    <Toaster />
+                  </div>
+                </Router>
+              </TherapistProvider>
+            </SessionProvider>
+          </AuthProvider>
+        </AccessibilityProvider>
+      </QueryClientProvider>
+    </AccessibleErrorBoundary>
   );
 }
 
