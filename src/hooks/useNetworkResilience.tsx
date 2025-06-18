@@ -87,10 +87,10 @@ export const useNetworkResilience = () => {
     return delay;
   }, [networkState.isSlowConnection]);
 
-  const withRetry = useCallback(async <T>(
-    operation: () => Promise<T>,
+  const withRetry = useCallback(async (
+    operation: () => Promise<any>,
     config: Partial<RetryConfig> = {}
-  ): Promise<T> => {
+  ): Promise<any> => {
     const finalConfig = { ...DEFAULT_RETRY_CONFIG, ...config };
     let lastError: Error;
     
@@ -156,11 +156,11 @@ export const useNetworkResilience = () => {
     throw lastError!;
   }, [networkState, calculateDelay, toast]);
 
-  const withCircuitBreaker = useCallback(<T>(
-    operation: () => Promise<T>,
+  const withCircuitBreaker = useCallback((
+    operation: () => Promise<any>,
     key: string,
     threshold: number = 5
-  ): Promise<T> => {
+  ): Promise<any> => {
     const failures = parseInt(localStorage.getItem(`cb_failures_${key}`) || '0');
     const lastFailureTime = parseInt(localStorage.getItem(`cb_last_failure_${key}`) || '0');
     const circuitOpenTime = 30000;
