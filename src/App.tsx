@@ -18,6 +18,7 @@ import SessionPage from '@/pages/SessionPage';
 import SettingsPage from '@/pages/SettingsPage';
 import SubscriptionPage from '@/pages/SubscriptionPage';
 import VoiceSettingsPage from '@/pages/VoiceSettingsPage';
+import Techniques from '@/pages/Techniques';
 import NotFound from '@/pages/NotFound';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -67,6 +68,8 @@ function AppContent() {
           <Route path="/settings" element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" />} />
           <Route path="/subscription" element={isAuthenticated ? <SubscriptionPage /> : <Navigate to="/login" />} />
           <Route path="/voice-settings" element={isAuthenticated ? <VoiceSettingsPage /> : <Navigate to="/login" />} />
+          <Route path="/techniques" element={isAuthenticated ? <Techniques /> : <Navigate to="/login" />} />
+          <Route path="/techniques/:techniqueId" element={isAuthenticated ? <Techniques /> : <Navigate to="/login" />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
