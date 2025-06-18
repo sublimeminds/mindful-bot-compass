@@ -6,6 +6,7 @@ import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Crown, Star, Zap } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
+import GradientLogo from '@/components/ui/GradientLogo';
 
 interface PlanSelectionStepProps {
   selectedPlan?: { planId: string; billingCycle: 'monthly' | 'yearly' } | null;
@@ -38,6 +39,12 @@ const PlanSelectionStep = ({ selectedPlan, onPlanSelect, onNext, onBack }: PlanS
   return (
     <div className="space-y-6">
       <div className="text-center">
+        <div className="flex items-center justify-center mb-4">
+          <GradientLogo 
+            size="md"
+            className="drop-shadow-lg"
+          />
+        </div>
         <h2 className="text-2xl font-bold mb-4">Choose Your Plan</h2>
         <p className="text-muted-foreground">
           Select the plan that best fits your mental health journey
@@ -74,13 +81,13 @@ const PlanSelectionStep = ({ selectedPlan, onPlanSelect, onNext, onBack }: PlanS
             <Card 
               key={plan.id} 
               className={`relative cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                plan.name === 'Premium' ? 'ring-2 ring-therapy-500 scale-105' : ''
+                plan.name === 'Premium' ? 'ring-2 ring-harmony-500 scale-105' : ''
               } ${selected ? 'ring-2 ring-blue-500 bg-blue-50' : ''}`}
               onClick={() => handlePlanSelect(plan.id)}
             >
               {plan.name === 'Premium' && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-therapy-500 text-white px-4 py-1">
+                  <Badge className="bg-harmony-500 text-white px-4 py-1">
                     Most Popular
                   </Badge>
                 </div>
@@ -99,7 +106,7 @@ const PlanSelectionStep = ({ selectedPlan, onPlanSelect, onNext, onBack }: PlanS
                   <div className={`p-3 rounded-full ${
                     plan.name === 'Free' ? 'bg-gray-100 text-gray-600' :
                     plan.name === 'Basic' ? 'bg-blue-100 text-blue-600' :
-                    'bg-therapy-100 text-therapy-600'
+                    'bg-harmony-100 text-harmony-600'
                   }`}>
                     {getPlanIcon(plan.name)}
                   </div>
@@ -145,7 +152,7 @@ const PlanSelectionStep = ({ selectedPlan, onPlanSelect, onNext, onBack }: PlanS
         <Button 
           onClick={onNext}
           disabled={!selectedPlan}
-          className="bg-therapy-500 hover:bg-therapy-600"
+          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
         >
           Continue
         </Button>

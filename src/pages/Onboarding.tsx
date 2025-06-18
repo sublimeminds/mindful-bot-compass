@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +17,7 @@ import ProfileSetupStep from "@/components/onboarding/ProfileSetupStep";
 import WelcomeStep from "@/components/onboarding/WelcomeStep";
 import MoodBaselineStep from "@/components/onboarding/MoodBaselineStep";
 import { useSubscription } from "@/hooks/useSubscription";
+import GradientLogo from "@/components/ui/GradientLogo";
 
 const STEPS = [
   'Welcome',
@@ -185,9 +185,10 @@ const Onboarding = () => {
         {/* Header */}
         <div className="text-center">
           <div className="flex items-center justify-center mb-4">
-            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-harmony-500 to-flow-500 rounded-xl">
-              <Heart className="h-8 w-8 text-white" />
-            </div>
+            <GradientLogo 
+              size="lg"
+              className="drop-shadow-lg animate-swirl-breathe"
+            />
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Welcome to TherapySync</h1>
           <p className="text-muted-foreground">Let's personalize your wellness experience</p>
@@ -273,13 +274,6 @@ const Onboarding = () => {
 
             {currentStep === 6 && (
               <div className="space-y-6">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold mb-4">Choose Your Plan</h2>
-                  <p className="text-muted-foreground">
-                    Select the plan that best fits your mental wellness journey
-                  </p>
-                </div>
-
                 {plans && plans.length > 0 ? (
                   <PlanSelectionStep
                     selectedPlan={selectedPlan}

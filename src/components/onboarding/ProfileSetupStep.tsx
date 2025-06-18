@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Camera, Sparkles } from "lucide-react";
+import { User, Camera } from "lucide-react";
+import GradientLogo from "@/components/ui/GradientLogo";
 
 interface ProfileSetupStepProps {
   onNext: () => void;
@@ -37,9 +38,10 @@ const ProfileSetupStep: React.FC<ProfileSetupStepProps> = ({ onNext, onBack }) =
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="text-center">
         <div className="flex items-center justify-center mb-4">
-          <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-harmony-500 to-flow-500 rounded-full">
-            <Sparkles className="h-8 w-8 text-white" />
-          </div>
+          <GradientLogo 
+            size="lg"
+            className="drop-shadow-lg animate-swirl-breathe"
+          />
         </div>
         <h2 className="text-2xl font-bold mb-2">Personalize Your Profile</h2>
         <p className="text-muted-foreground">
