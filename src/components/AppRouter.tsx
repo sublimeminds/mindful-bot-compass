@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -8,6 +9,7 @@ import Profile from '@/pages/Profile';
 import { useAuth } from '@/contexts/AuthContext';
 import NotebookPage from '@/pages/NotebookPage';
 import EnhancedProfilePage from '@/pages/EnhancedProfilePage';
+import CrisisManagement from '@/pages/CrisisManagement';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
@@ -48,6 +50,11 @@ const AppRouter = () => {
         <Route path="/notebook" element={
           <ProtectedRoute>
             <NotebookPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/crisis-management" element={
+          <ProtectedRoute>
+            <CrisisManagement />
           </ProtectedRoute>
         } />
         <Route path="*" element={<Navigate to="/" />} />
