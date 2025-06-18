@@ -155,14 +155,14 @@ const TherapistPersonalityStep = ({
               key={personality.id}
               className={`cursor-pointer transition-all duration-200 hover:shadow-lg relative ${
                 isSelected 
-                  ? 'ring-2 ring-therapy-500 bg-therapy-50' 
+                  ? 'ring-2 ring-harmony-500 bg-harmony-50' 
                   : 'hover:bg-gray-50'
               }`}
               onClick={() => onPersonalitySelect(personality.id)}
             >
               {isBestMatch && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                  <Badge className="bg-gradient-to-r from-therapy-500 to-calm-500 text-white px-3 py-1 flex items-center space-x-1">
+                  <Badge className="bg-gradient-to-r from-harmony-500 to-flow-500 text-white px-3 py-1 flex items-center space-x-1">
                     <Sparkles className="h-3 w-3" />
                     <span>Best Match</span>
                   </Badge>
@@ -176,7 +176,7 @@ const TherapistPersonalityStep = ({
                   </div>
                   <div>
                     <CardTitle className="text-lg">{personality.name}</CardTitle>
-                    <p className="text-sm text-therapy-600 font-medium">
+                    <p className="text-sm text-harmony-600 font-medium">
                       {personality.title}
                     </p>
                   </div>
@@ -204,7 +204,7 @@ const TherapistPersonalityStep = ({
 
                 {matchScore > 0 && (
                   <div className="pt-2 border-t">
-                    <p className="text-xs text-therapy-600 font-medium">
+                    <p className="text-xs text-harmony-600 font-medium">
                       ✨ Matches {matchScore} of your preferences
                     </p>
                   </div>
@@ -228,7 +228,7 @@ const TherapistPersonalityStep = ({
         <Button 
           onClick={onNext}
           disabled={!selectedPersonality}
-          className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
+          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
         >
           Continue with {selectedPersonality ? sortedTherapists.find(t => t.id === selectedPersonality)?.name : 'Therapist'}
         </Button>

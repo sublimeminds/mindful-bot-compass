@@ -69,20 +69,28 @@ const Onboarding = () => {
     checkOnboardingStatus();
   }, [user, navigate]);
 
-  // Auto-select therapist based on previous choices
+  // Enhanced auto-select therapist based on goals and preferences
   const autoSelectTherapist = () => {
-    if (goals.includes('Reduce anxiety') || goals.includes('Manage stress')) {
-      return 'mindfulness-coach';
-    } else if (goals.includes('Manage depression') || goals.includes('Build confidence')) {
-      return 'cbt-specialist';
-    } else if (goals.includes('Work through trauma')) {
+    const goalKeywords = goals.map(g => g.toLowerCase());
+    const prefKeywords = preferences.map(p => p.toLowerCase());
+    
+    // More sophisticated matching logic
+    if (goalKeywords.some(g => g.includes('trauma')) || prefKeywords.some(p => p.includes('trauma'))) {
       return 'trauma-informed';
-    } else if (goals.includes('Improve relationships') || goals.includes('Improve communication')) {
+    } else if (goalKeywords.some(g => g.includes('anxiety') || g.includes('stress')) || 
+               prefKeywords.some(p => p.includes('mindfulness'))) {
+      return 'mindfulness-coach';
+    } else if (goalKeywords.some(g => g.includes('depression') || g.includes('confidence')) || 
+               prefKeywords.some(p => p.includes('cbt') || p.includes('cognitive'))) {
+      return 'cbt-specialist';
+    } else if (goalKeywords.some(g => g.includes('relationship') || g.includes('communication')) || 
+               prefKeywords.some(p => p.includes('talk therapy'))) {
       return 'relationship-counselor';
-    } else if (goals.includes('Find life purpose') || goals.includes('Develop coping skills')) {
+    } else if (goalKeywords.some(g => g.includes('purpose') || g.includes('coping')) || 
+               prefKeywords.some(p => p.includes('solution') || p.includes('positive'))) {
       return 'solution-focused';
     }
-    return 'holistic-wellness';
+    return 'holistic-wellness'; // Default fallback
   };
 
   const handlePlanSelect = (planId: string, billingCycle: 'monthly' | 'yearly') => {
@@ -134,6 +142,7 @@ const Onboarding = () => {
   };
 
   const nextStep = () => {
+    // Auto-select therapist when reaching therapist selection step
     if (currentStep === 4 && !selectedPersonality) {
       const autoSelected = autoSelectTherapist();
       setSelectedPersonality(autoSelected);

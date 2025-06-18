@@ -53,7 +53,11 @@ const WelcomeStep: React.FC<WelcomeStepProps> = ({ onNext }) => {
         <p className="text-sm text-muted-foreground">
           This setup will take about 5 minutes and will help us personalize your wellness experience.
         </p>
-        <Button onClick={onNext} size="lg" className="w-full max-w-md">
+        <Button 
+          onClick={onNext} 
+          size="lg" 
+          className="w-full max-w-md bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
+        >
           Get Started
         </Button>
       </div>
