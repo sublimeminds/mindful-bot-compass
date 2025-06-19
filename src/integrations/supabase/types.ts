@@ -442,6 +442,167 @@ export type Database = {
         }
         Relationships: []
       }
+      crisis_assessments: {
+        Row: {
+          assessment_type: string
+          counselor_notes: string | null
+          created_at: string
+          emergency_services_contacted: boolean | null
+          follow_up_date: string | null
+          follow_up_scheduled: boolean | null
+          id: string
+          immediate_actions_taken: string[] | null
+          professional_contact_made: boolean | null
+          responses: Json
+          risk_level: string
+          severity_indicators: string[] | null
+          status: string
+          total_score: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assessment_type?: string
+          counselor_notes?: string | null
+          created_at?: string
+          emergency_services_contacted?: boolean | null
+          follow_up_date?: string | null
+          follow_up_scheduled?: boolean | null
+          id?: string
+          immediate_actions_taken?: string[] | null
+          professional_contact_made?: boolean | null
+          responses?: Json
+          risk_level?: string
+          severity_indicators?: string[] | null
+          status?: string
+          total_score?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assessment_type?: string
+          counselor_notes?: string | null
+          created_at?: string
+          emergency_services_contacted?: boolean | null
+          follow_up_date?: string | null
+          follow_up_scheduled?: boolean | null
+          id?: string
+          immediate_actions_taken?: string[] | null
+          professional_contact_made?: boolean | null
+          responses?: Json
+          risk_level?: string
+          severity_indicators?: string[] | null
+          status?: string
+          total_score?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      crisis_interventions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          crisis_assessment_id: string | null
+          follow_up_required: boolean | null
+          id: string
+          intervention_data: Json
+          intervention_type: string
+          outcome: string | null
+          response_time_minutes: number | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          crisis_assessment_id?: string | null
+          follow_up_required?: boolean | null
+          id?: string
+          intervention_data?: Json
+          intervention_type: string
+          outcome?: string | null
+          response_time_minutes?: number | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          crisis_assessment_id?: string | null
+          follow_up_required?: boolean | null
+          id?: string
+          intervention_data?: Json
+          intervention_type?: string
+          outcome?: string | null
+          response_time_minutes?: number | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crisis_interventions_crisis_assessment_id_fkey"
+            columns: ["crisis_assessment_id"]
+            isOneToOne: false
+            referencedRelation: "crisis_assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crisis_resources: {
+        Row: {
+          availability: string | null
+          created_at: string
+          description: string | null
+          geographic_coverage: string | null
+          id: string
+          is_active: boolean | null
+          language_support: string[] | null
+          name: string
+          phone_number: string | null
+          priority_order: number | null
+          resource_type: string
+          specialties: string[] | null
+          target_demographics: string[] | null
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          availability?: string | null
+          created_at?: string
+          description?: string | null
+          geographic_coverage?: string | null
+          id?: string
+          is_active?: boolean | null
+          language_support?: string[] | null
+          name: string
+          phone_number?: string | null
+          priority_order?: number | null
+          resource_type: string
+          specialties?: string[] | null
+          target_demographics?: string[] | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          availability?: string | null
+          created_at?: string
+          description?: string | null
+          geographic_coverage?: string | null
+          id?: string
+          is_active?: boolean | null
+          language_support?: string[] | null
+          name?: string
+          phone_number?: string | null
+          priority_order?: number | null
+          resource_type?: string
+          specialties?: string[] | null
+          target_demographics?: string[] | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       discussion_replies: {
         Row: {
           author_id: string
@@ -482,6 +643,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      emergency_contacts: {
+        Row: {
+          contact_type: string
+          created_at: string
+          email: string | null
+          id: string
+          is_active: boolean | null
+          is_primary: boolean | null
+          name: string
+          notes: string | null
+          phone_number: string | null
+          relationship: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          contact_type?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          name: string
+          notes?: string | null
+          phone_number?: string | null
+          relationship?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          contact_type?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          name?: string
+          notes?: string | null
+          phone_number?: string | null
+          relationship?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       emotional_patterns: {
         Row: {
@@ -1391,6 +1597,54 @@ export type Database = {
           suicidal_ideation_level?: number | null
           suicide_plan?: boolean | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      safety_plans: {
+        Row: {
+          coping_strategies: string[] | null
+          created_at: string
+          environment_safety: string[] | null
+          id: string
+          is_active: boolean | null
+          last_reviewed: string | null
+          plan_name: string
+          professional_contacts: Json | null
+          reasons_to_live: string[] | null
+          social_contacts: Json | null
+          updated_at: string
+          user_id: string
+          warning_signs: string[] | null
+        }
+        Insert: {
+          coping_strategies?: string[] | null
+          created_at?: string
+          environment_safety?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          last_reviewed?: string | null
+          plan_name?: string
+          professional_contacts?: Json | null
+          reasons_to_live?: string[] | null
+          social_contacts?: Json | null
+          updated_at?: string
+          user_id: string
+          warning_signs?: string[] | null
+        }
+        Update: {
+          coping_strategies?: string[] | null
+          created_at?: string
+          environment_safety?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          last_reviewed?: string | null
+          plan_name?: string
+          professional_contacts?: Json | null
+          reasons_to_live?: string[] | null
+          social_contacts?: Json | null
+          updated_at?: string
+          user_id?: string
+          warning_signs?: string[] | null
         }
         Relationships: []
       }
