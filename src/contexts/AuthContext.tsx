@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -22,11 +21,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  DebugLogger.debug('AuthProvider: Initializing', { component: 'AuthProvider' });
-  
-  // Simple error boundary check - if React hooks aren't available, show a basic error
-  if (!React || !React.useState || !React.useEffect) {
-    console.error('React hooks are not available');
+  // CRITICAL: Guard against React hooks being called when React is null
+  if (!React || !React.useState || !React.useEffect || !React.useContext) {
+    console.error('AuthProvider: React hooks are not available, returning fallback');
     return React.createElement('div', {
       style: {
         padding: '20px',
@@ -37,8 +34,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         textAlign: 'center',
         margin: '20px'
       }
-    }, 'Application Error: React is not properly initialized. Please refresh the page.');
+    }, 'React Error: Hooks are not available. Please refresh the page.');
   }
+
+  DebugLogger.debug('AuthProvider: Initializing with React hooks available', { component: 'AuthProvider' });
   
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -141,262 +140,252 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    DebugLogger.debug('AuthProvider: Login attempt', { 
-      component: 'AuthProvider', 
-      method: 'login',
-      email 
-    });
-    
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      
-      if (error) {
-        DebugLogger.error('AuthProvider: Login failed', error, { 
-          component: 'AuthProvider', 
-          method: 'login',
-          email 
-        });
-      } else {
-        DebugLogger.info('AuthProvider: Login successful', { 
-          component: 'AuthProvider', 
-          method: 'login',
-          email 
-        });
-      }
-      
-      return { error };
-    } catch (error) {
-      DebugLogger.error('AuthProvider: Login exception', error as Error, { 
-        component: 'AuthProvider', 
-        method: 'login',
-        email 
-      });
-      return { error };
-    }
-  }, []);
-
-  const signIn = login; // Alias for login
-
-  const signup = useCallback(async (email: string, password: string) => {
-    DebugLogger.debug('AuthProvider: Signup attempt', { 
-      component: 'AuthProvider', 
-      method: 'signup',
-      email 
-    });
-    
-    try {
-      const redirectUrl = `${window.location.origin}/`;
-      
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: redirectUrl
-        }
-      });
-      
-      if (error) {
-        DebugLogger.error('AuthProvider: Signup failed', error, { 
-          component: 'AuthProvider', 
-          method: 'signup',
-          email 
-        });
-      } else {
-        DebugLogger.info('AuthProvider: Signup successful', { 
-          component: 'AuthProvider', 
-          method: 'signup',
-          email 
-        });
-      }
-      
-      return { error };
-    } catch (error) {
-      DebugLogger.error('AuthProvider: Signup exception', error as Error, { 
-        component: 'AuthProvider', 
-        method: 'signup',
-        email 
-      });
-      return { error };
-    }
-  }, []);
-
-  const signUp = useCallback(async (email: string, password: string, name?: string) => {
-    DebugLogger.debug('AuthProvider: SignUp attempt', { 
-      component: 'AuthProvider', 
-      method: 'signUp',
-      email,
-      hasName: !!name
-    });
-    
-    try {
-      const redirectUrl = `${window.location.origin}/`;
-      
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: redirectUrl,
-          data: name ? { name } : undefined
-        }
-      });
-      
-      if (error) {
-        DebugLogger.error('AuthProvider: SignUp failed', error, { 
-          component: 'AuthProvider', 
-          method: 'signUp',
-          email 
-        });
-      } else {
-        DebugLogger.info('AuthProvider: SignUp successful', { 
-          component: 'AuthProvider', 
-          method: 'signUp',
-          email 
-        });
-      }
-      
-      return { error };
-    } catch (error) {
-      DebugLogger.error('AuthProvider: SignUp exception', error as Error, { 
-        component: 'AuthProvider', 
-        method: 'signUp',
-        email 
-      });
-      return { error };
-    }
-  }, []);
-
-  const logout = useCallback(async () => {
-    DebugLogger.debug('AuthProvider: Logout attempt', { 
-      component: 'AuthProvider', 
-      method: 'logout',
-      userId: user?.id
-    });
-    
-    try {
-      await supabase.auth.signOut();
-      DebugLogger.info('AuthProvider: Logout successful', { 
-        component: 'AuthProvider', 
-        method: 'logout'
-      });
-    } catch (error) {
-      DebugLogger.error('AuthProvider: Logout exception', error as Error, { 
-        component: 'AuthProvider', 
-        method: 'logout'
-      });
-    }
-  }, [user?.id]);
-
-  const signOut = logout; // Alias for logout
-
-  const updateProfile = useCallback(async (data: { name?: string }) => {
-    DebugLogger.debug('AuthProvider: Update profile attempt', { 
-      component: 'AuthProvider', 
-      method: 'updateProfile',
-      userId: user?.id,
-      updateData: data
-    });
-    
-    if (!user) {
-      const error = new Error('No user logged in');
-      DebugLogger.error('AuthProvider: Update profile failed - no user', error, { 
-        component: 'AuthProvider', 
-        method: 'updateProfile'
-      });
-      throw error;
-    }
-    
-    try {
-      const { error } = await supabase.auth.updateUser({
-        data: data
-      });
-      
-      if (error) {
-        DebugLogger.error('AuthProvider: Update profile failed', error, { 
-          component: 'AuthProvider', 
-          method: 'updateProfile',
-          userId: user.id
-        });
-        throw error;
-      }
-      
-      DebugLogger.info('AuthProvider: Update profile successful', { 
-        component: 'AuthProvider', 
-        method: 'updateProfile',
-        userId: user.id
-      });
-    } catch (error) {
-      DebugLogger.error('AuthProvider: Update profile exception', error as Error, { 
-        component: 'AuthProvider', 
-        method: 'updateProfile',
-        userId: user?.id
-      });
-      throw error;
-    }
-  }, [user]);
-
-  const updateUser = useCallback(async (data: any) => {
-    DebugLogger.debug('AuthProvider: Update user attempt', { 
-      component: 'AuthProvider', 
-      method: 'updateUser',
-      userId: user?.id,
-      updateData: data
-    });
-    
-    if (!user) {
-      const error = new Error('No user logged in');
-      DebugLogger.error('AuthProvider: Update user failed - no user', error, { 
-        component: 'AuthProvider', 
-        method: 'updateUser'
-      });
-      throw error;
-    }
-    
-    try {
-      const { error } = await supabase.auth.updateUser({
-        data: data
-      });
-      
-      if (error) {
-        DebugLogger.error('AuthProvider: Update user failed', error, { 
-          component: 'AuthProvider', 
-          method: 'updateUser',
-          userId: user.id
-        });
-        throw error;
-      }
-      
-      DebugLogger.info('AuthProvider: Update user successful', { 
-        component: 'AuthProvider', 
-        method: 'updateUser',
-        userId: user.id
-      });
-    } catch (error) {
-      DebugLogger.error('AuthProvider: Update user exception', error as Error, { 
-        component: 'AuthProvider', 
-        method: 'updateUser',
-        userId: user?.id
-      });
-      throw error;
-    }
-  }, [user]);
-
   const value = useMemo(() => {
     const contextValue = {
       user,
       session,
       isAuthenticated: !!user,
-      login,
-      signIn,
-      signup,
-      signUp,
-      logout,
-      signOut,
-      updateProfile,
-      updateUser,
+      login: useCallback(async (email: string, password: string) => {
+        DebugLogger.debug('AuthProvider: Login attempt', { 
+          component: 'AuthProvider', 
+          method: 'login',
+          email 
+        });
+        
+        try {
+          const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+          
+          if (error) {
+            DebugLogger.error('AuthProvider: Login failed', error, { 
+              component: 'AuthProvider', 
+              method: 'login',
+              email 
+            });
+          } else {
+            DebugLogger.info('AuthProvider: Login successful', { 
+              component: 'AuthProvider', 
+              method: 'login',
+              email 
+            });
+          }
+          
+          return { error };
+        } catch (error) {
+          DebugLogger.error('AuthProvider: Login exception', error as Error, { 
+            component: 'AuthProvider', 
+            method: 'login',
+            email 
+          });
+          return { error };
+        }
+      }, []),
+      signIn: useCallback(async (email: string, password: string) => {
+        // Alias for login
+        return await contextValue.login(email, password);
+      }, []),
+      signup: useCallback(async (email: string, password: string) => {
+        DebugLogger.debug('AuthProvider: Signup attempt', { 
+          component: 'AuthProvider', 
+          method: 'signup',
+          email 
+        });
+        
+        try {
+          const redirectUrl = `${window.location.origin}/`;
+          
+          const { error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              emailRedirectTo: redirectUrl
+            }
+          });
+          
+          if (error) {
+            DebugLogger.error('AuthProvider: Signup failed', error, { 
+              component: 'AuthProvider', 
+              method: 'signup',
+              email 
+            });
+          } else {
+            DebugLogger.info('AuthProvider: Signup successful', { 
+              component: 'AuthProvider', 
+              method: 'signup',
+              email 
+            });
+          }
+          
+          return { error };
+        } catch (error) {
+          DebugLogger.error('AuthProvider: Signup exception', error as Error, { 
+            component: 'AuthProvider', 
+            method: 'signup',
+            email 
+          });
+          return { error };
+        }
+      }, []),
+      signUp: useCallback(async (email: string, password: string, name?: string) => {
+        DebugLogger.debug('AuthProvider: SignUp attempt', { 
+          component: 'AuthProvider', 
+          method: 'signUp',
+          email,
+          hasName: !!name
+        });
+        
+        try {
+          const redirectUrl = `${window.location.origin}/`;
+          
+          const { error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              emailRedirectTo: redirectUrl,
+              data: name ? { name } : undefined
+            }
+          });
+          
+          if (error) {
+            DebugLogger.error('AuthProvider: SignUp failed', error, { 
+              component: 'AuthProvider', 
+              method: 'signUp',
+              email 
+            });
+          } else {
+            DebugLogger.info('AuthProvider: SignUp successful', { 
+              component: 'AuthProvider', 
+              method: 'signUp',
+              email 
+            });
+          }
+          
+          return { error };
+        } catch (error) {
+          DebugLogger.error('AuthProvider: SignUp exception', error as Error, { 
+            component: 'AuthProvider', 
+            method: 'signUp',
+            email 
+          });
+          return { error };
+        }
+      }, []),
+      logout: useCallback(async () => {
+        DebugLogger.debug('AuthProvider: Logout attempt', { 
+          component: 'AuthProvider', 
+          method: 'logout',
+          userId: user?.id
+        });
+        
+        try {
+          await supabase.auth.signOut();
+          DebugLogger.info('AuthProvider: Logout successful', { 
+            component: 'AuthProvider', 
+            method: 'logout'
+          });
+        } catch (error) {
+          DebugLogger.error('AuthProvider: Logout exception', error as Error, { 
+            component: 'AuthProvider', 
+            method: 'logout'
+          });
+        }
+      }, [user?.id]),
+      signOut: useCallback(async () => {
+        // Alias for logout
+        return await contextValue.logout();
+      }, []),
+      updateProfile: useCallback(async (data: { name?: string }) => {
+        DebugLogger.debug('AuthProvider: Update profile attempt', { 
+          component: 'AuthProvider', 
+          method: 'updateProfile',
+          userId: user?.id,
+          updateData: data
+        });
+        
+        if (!user) {
+          const error = new Error('No user logged in');
+          DebugLogger.error('AuthProvider: Update profile failed - no user', error, { 
+            component: 'AuthProvider', 
+            method: 'updateProfile'
+          });
+          throw error;
+        }
+        
+        try {
+          const { error } = await supabase.auth.updateUser({
+            data: data
+          });
+          
+          if (error) {
+            DebugLogger.error('AuthProvider: Update profile failed', error, { 
+              component: 'AuthProvider', 
+              method: 'updateProfile',
+              userId: user.id
+            });
+            throw error;
+          }
+          
+          DebugLogger.info('AuthProvider: Update profile successful', { 
+            component: 'AuthProvider', 
+            method: 'updateProfile',
+            userId: user.id
+          });
+        } catch (error) {
+          DebugLogger.error('AuthProvider: Update profile exception', error as Error, { 
+            component: 'AuthProvider', 
+            method: 'updateProfile',
+            userId: user?.id
+          });
+          throw error;
+        }
+      }, [user]),
+      updateUser: useCallback(async (data: any) => {
+        DebugLogger.debug('AuthProvider: Update user attempt', { 
+          component: 'AuthProvider', 
+          method: 'updateUser',
+          userId: user?.id,
+          updateData: data
+        });
+        
+        if (!user) {
+          const error = new Error('No user logged in');
+          DebugLogger.error('AuthProvider: Update user failed - no user', error, { 
+            component: 'AuthProvider', 
+            method: 'updateUser'
+          });
+          throw error;
+        }
+        
+        try {
+          const { error } = await supabase.auth.updateUser({
+            data: data
+          });
+          
+          if (error) {
+            DebugLogger.error('AuthProvider: Update user failed', error, { 
+              component: 'AuthProvider', 
+              method: 'updateUser',
+              userId: user.id
+            });
+            throw error;
+          }
+          
+          DebugLogger.info('AuthProvider: Update user successful', { 
+            component: 'AuthProvider', 
+            method: 'updateUser',
+            userId: user.id
+          });
+        } catch (error) {
+          DebugLogger.error('AuthProvider: Update user exception', error as Error, { 
+            component: 'AuthProvider', 
+            method: 'updateUser',
+            userId: user?.id
+          });
+          throw error;
+        }
+      }, [user]),
       loading,
     };
     
@@ -409,7 +398,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
     
     return contextValue;
-  }, [user, session, loading, login, signup, signUp, logout, updateProfile, updateUser]);
+  }, [user, session, loading]);
 
   return (
     <AuthContext.Provider value={value}>
