@@ -4,12 +4,12 @@ import { supabase } from '@/integrations/supabase/client';
 export interface SupportGroup {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   category: string;
-  group_type: 'open' | 'closed' | 'moderated';
-  max_members: number;
-  current_members: number;
-  moderator_id: string;
+  group_type: string;
+  max_members: number | null;
+  current_members: number | null;
+  moderator_id: string | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -19,7 +19,7 @@ export interface GroupMembership {
   id: string;
   user_id: string;
   group_id: string;
-  role: 'member' | 'moderator' | 'admin';
+  role: string;
   joined_at: string;
   is_active: boolean;
 }
@@ -32,8 +32,8 @@ export interface GroupDiscussion {
   content: string;
   is_anonymous: boolean;
   is_pinned: boolean;
-  reply_count: number;
-  like_count: number;
+  reply_count: number | null;
+  like_count: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -44,7 +44,7 @@ export interface DiscussionReply {
   author_id: string;
   content: string;
   is_anonymous: boolean;
-  like_count: number;
+  like_count: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -53,8 +53,8 @@ export interface PeerConnection {
   id: string;
   requester_id: string;
   requested_id: string;
-  status: 'pending' | 'accepted' | 'declined' | 'blocked';
-  connection_type: 'support' | 'accountability' | 'friendship';
+  status: string;
+  connection_type: string;
   created_at: string;
   updated_at: string;
 }
@@ -62,12 +62,12 @@ export interface PeerConnection {
 export interface SharedMilestone {
   id: string;
   user_id: string;
-  milestone_type: 'goal_completed' | 'streak_achieved' | 'therapy_milestone';
+  milestone_type: string;
   title: string;
-  description: string;
+  description: string | null;
   is_public: boolean;
-  celebration_count: number;
-  support_count: number;
+  celebration_count: number | null;
+  support_count: number | null;
   created_at: string;
 }
 
@@ -91,11 +91,18 @@ export class CommunityService {
 
   static async createSupportGroup(groupData: Partial<SupportGroup>): Promise<SupportGroup | null> {
     try {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) return null;
+
       const { data, error } = await supabase
         .from('support_groups')
         .insert({
-          ...groupData,
-          moderator_id: (await supabase.auth.getUser()).data.user?.id
+          name: groupData.name || '',
+          description: groupData.description,
+          category: groupData.category || '',
+          group_type: groupData.group_type || 'open',
+          max_members: groupData.max_members || 50,
+          moderator_id: user.user.id
         })
         .select()
         .single();
@@ -123,8 +130,19 @@ export class CommunityService {
 
       if (error) throw error;
 
-      // Update group member count
-      await supabase.rpc('increment_group_members', { group_id: groupId });
+      // Update group member count manually
+      const { data: group } = await supabase
+        .from('support_groups')
+        .select('current_members')
+        .eq('id', groupId)
+        .single();
+
+      if (group) {
+        await supabase
+          .from('support_groups')
+          .update({ current_members: (group.current_members || 0) + 1 })
+          .eq('id', groupId);
+      }
 
       return true;
     } catch (error) {
@@ -144,7 +162,7 @@ export class CommunityService {
         .eq('is_active', true);
 
       if (error) throw error;
-      return data?.map(item => item.support_groups).filter(Boolean) || [];
+      return data?.map((item: any) => item.support_groups).filter(Boolean) || [];
     } catch (error) {
       console.error('Error fetching user groups:', error);
       return [];
@@ -177,8 +195,11 @@ export class CommunityService {
       const { data, error } = await supabase
         .from('group_discussions')
         .insert({
-          ...discussionData,
-          author_id: user.user.id
+          group_id: discussionData.group_id || '',
+          title: discussionData.title || '',
+          content: discussionData.content || '',
+          author_id: user.user.id,
+          is_anonymous: discussionData.is_anonymous || false
         })
         .select()
         .single();
@@ -215,18 +236,29 @@ export class CommunityService {
       const { data, error } = await supabase
         .from('discussion_replies')
         .insert({
-          ...replyData,
-          author_id: user.user.id
+          discussion_id: replyData.discussion_id || '',
+          content: replyData.content || '',
+          author_id: user.user.id,
+          is_anonymous: replyData.is_anonymous || false
         })
         .select()
         .single();
 
       if (error) throw error;
 
-      // Update reply count
-      await supabase.rpc('increment_discussion_replies', { 
-        discussion_id: replyData.discussion_id 
-      });
+      // Update reply count manually
+      const { data: discussion } = await supabase
+        .from('group_discussions')
+        .select('reply_count')
+        .eq('id', replyData.discussion_id)
+        .single();
+
+      if (discussion) {
+        await supabase
+          .from('group_discussions')
+          .update({ reply_count: (discussion.reply_count || 0) + 1 })
+          .eq('id', replyData.discussion_id);
+      }
 
       return data;
     } catch (error) {
@@ -315,8 +347,11 @@ export class CommunityService {
       const { data, error } = await supabase
         .from('shared_milestones')
         .insert({
-          ...milestoneData,
-          user_id: user.user.id
+          user_id: user.user.id,
+          milestone_type: milestoneData.milestone_type || 'goal_completed',
+          title: milestoneData.title || '',
+          description: milestoneData.description,
+          is_public: milestoneData.is_public !== false
         })
         .select()
         .single();
@@ -331,11 +366,22 @@ export class CommunityService {
 
   static async celebrateMilestone(milestoneId: string): Promise<boolean> {
     try {
-      const { error } = await supabase.rpc('increment_milestone_celebration', { 
-        milestone_id: milestoneId 
-      });
+      // Update celebration count manually
+      const { data: milestone } = await supabase
+        .from('shared_milestones')
+        .select('celebration_count')
+        .eq('id', milestoneId)
+        .single();
 
-      if (error) throw error;
+      if (milestone) {
+        const { error } = await supabase
+          .from('shared_milestones')
+          .update({ celebration_count: (milestone.celebration_count || 0) + 1 })
+          .eq('id', milestoneId);
+
+        if (error) throw error;
+      }
+
       return true;
     } catch (error) {
       console.error('Error celebrating milestone:', error);

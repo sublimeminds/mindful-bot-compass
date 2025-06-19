@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -13,6 +12,7 @@ import SmartScheduling from '@/pages/SmartScheduling';
 import MonitoringPage from '@/pages/MonitoringPage';
 import AdminPerformance from '@/pages/AdminPerformance';
 import AdminOnlyWrapper from '@/components/admin/AdminOnlyWrapper';
+import Community from '@/pages/Community';
 
 const SafeProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   try {
@@ -54,6 +54,11 @@ const AppRouter = () => {
       <Route path="/dashboard" element={
         <SafeProtectedRoute>
           <Dashboard />
+        </SafeProtectedRoute>
+      } />
+      <Route path="/community" element={
+        <SafeProtectedRoute>
+          <Community />
         </SafeProtectedRoute>
       } />
       <Route path="/profile" element={
