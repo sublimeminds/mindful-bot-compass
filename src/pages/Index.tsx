@@ -6,27 +6,25 @@ import HeroSection from '@/components/HeroSection';
 import FeaturesSection from '@/components/FeaturesSection';
 import PricingSection from '@/components/PricingSection';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
-  // Safe auth context access
-  let user = null;
-  let authContextAvailable = false;
-  
-  try {
-    const { useAuth } = require('@/contexts/AuthContext');
-    const auth = useAuth();
-    user = auth.user;
-    authContextAvailable = true;
-  } catch (error) {
-    // Context not available, continue without user
-    console.debug('AuthContext not available in Index, showing public view');
+  const { user, loading } = useAuth();
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (
     <>
       <Header />
       <div className="min-h-screen">
-        {authContextAvailable && user ? (
+        {user ? (
           <DashboardLayout />
         ) : (
           <>

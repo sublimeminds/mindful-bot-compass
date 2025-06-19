@@ -16,8 +16,8 @@ const MainAppContent: React.FC = () => {
   return (
     <BulletproofErrorBoundary>
       <AuthProvider>
-        <SimpleSessionProvider>
-          <SimpleTherapistProvider>
+        <SimpleTherapistProvider>
+          <SimpleSessionProvider>
             {/* Main application router */}
             <AppRouter />
             
@@ -36,8 +36,8 @@ const MainAppContent: React.FC = () => {
             
             {/* Toast notifications */}
             <Toaster />
-          </SimpleTherapistProvider>
-        </SimpleSessionProvider>
+          </SimpleSessionProvider>
+        </SimpleTherapistProvider>
       </AuthProvider>
     </BulletproofErrorBoundary>
   );
