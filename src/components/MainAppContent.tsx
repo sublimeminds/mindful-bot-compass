@@ -7,10 +7,10 @@ import BulletproofErrorBoundary from '@/components/BulletproofErrorBoundary';
 import SimpleSessionProvider from '@/components/SimpleSessionProvider';
 import SimpleTherapistProvider from '@/components/SimpleTherapistProvider';
 
-// Lazy load non-critical components
-const AccessibilityPanel = React.lazy(() => import('@/components/accessibility/AccessibilityPanel'));
-const NetworkStatusIndicator = React.lazy(() => import('@/components/performance/NetworkStatusIndicator'));
-const OfflineIndicator = React.lazy(() => import('@/components/OfflineIndicator'));
+// Direct imports instead of lazy loading to avoid React context issues
+import AccessibilityPanel from '@/components/accessibility/AccessibilityPanel';
+import NetworkStatusIndicator from '@/components/performance/NetworkStatusIndicator';
+import OfflineIndicator from '@/components/OfflineIndicator';
 
 const MainAppContent: React.FC = () => {
   return (
@@ -20,17 +20,9 @@ const MainAppContent: React.FC = () => {
           <SimpleSessionProvider>
             <AppRouter />
             
-            <React.Suspense fallback={null}>
-              <NetworkStatusIndicator />
-            </React.Suspense>
-            
-            <React.Suspense fallback={null}>
-              <OfflineIndicator />
-            </React.Suspense>
-            
-            <React.Suspense fallback={null}>
-              <AccessibilityPanel />
-            </React.Suspense>
+            <NetworkStatusIndicator />
+            <OfflineIndicator />
+            <AccessibilityPanel />
             
             <Toaster />
           </SimpleSessionProvider>
