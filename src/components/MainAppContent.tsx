@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { AdminProvider } from '@/contexts/AdminContext';
 import { Toaster } from '@/components/ui/toaster';
 import AppRouter from '@/components/AppRouter';
 import BulletproofErrorBoundary from '@/components/BulletproofErrorBoundary';
@@ -16,17 +17,19 @@ const MainAppContent: React.FC = () => {
   return (
     <BulletproofErrorBoundary>
       <AuthProvider>
-        <SimpleTherapistProvider>
-          <SimpleSessionProvider>
-            <AppRouter />
-            
-            <NetworkStatusIndicator />
-            <OfflineIndicator />
-            <AccessibilityPanel />
-            
-            <Toaster />
-          </SimpleSessionProvider>
-        </SimpleTherapistProvider>
+        <AdminProvider>
+          <SimpleTherapistProvider>
+            <SimpleSessionProvider>
+              <AppRouter />
+              
+              <NetworkStatusIndicator />
+              <OfflineIndicator />
+              <AccessibilityPanel />
+              
+              <Toaster />
+            </SimpleSessionProvider>
+          </SimpleTherapistProvider>
+        </AdminProvider>
       </AuthProvider>
     </BulletproofErrorBoundary>
   );

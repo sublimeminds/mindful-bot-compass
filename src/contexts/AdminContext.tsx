@@ -1,38 +1,19 @@
 
-import React from 'react';
-import { useAuth } from './AuthContext';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface AdminContextType {
   isAdmin: boolean;
-  adminRole: string | null;
-  userRoles: string[];
-  hasPermission: (permission: string, resource: string) => boolean;
-  isLoading: boolean;
+  setIsAdmin: (value: boolean) => void;
 }
 
-const AdminContext = React.createContext<AdminContextType | undefined>(undefined);
+const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
-export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
-  
-  // For now, just provide basic admin context
-  // In a real app, you'd check user roles from the database
-  const isAdmin = false; // Simplified for now
-  const adminRole = null;
-  const userRoles: string[] = [];
-  const isLoading = false;
-
-  const hasPermission = (permission: string, resource: string) => {
-    // Simplified implementation - always return false for now
-    return false;
-  };
+export const AdminProvider = ({ children }: { children: ReactNode }) => {
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const value = {
     isAdmin,
-    adminRole,
-    userRoles,
-    hasPermission,
-    isLoading
+    setIsAdmin
   };
 
   return (
@@ -43,7 +24,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 };
 
 export const useAdmin = () => {
-  const context = React.useContext(AdminContext);
+  const context = useContext(AdminContext);
   if (context === undefined) {
     throw new Error('useAdmin must be used within an AdminProvider');
   }
