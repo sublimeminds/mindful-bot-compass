@@ -8,8 +8,15 @@ interface SecurityEvent {
 
 export class SecurityService {
   private static events: SecurityEvent[] = [];
+  private static isInitialized = false;
 
   static async trackSession(userId: string): Promise<void> {
+    // Non-blocking initialization
+    if (!this.isInitialized) {
+      this.isInitialized = true;
+      console.log('SecurityService: Initialized');
+    }
+
     try {
       const event: SecurityEvent = {
         userId,
@@ -26,7 +33,8 @@ export class SecurityService {
       // In a real app, you'd send this to your backend
       console.log('Security event tracked:', event);
     } catch (error) {
-      console.error('Error tracking security event:', error);
+      // Don't throw errors - just log them to prevent blocking auth flow
+      console.warn('SecurityService: Error tracking security event (non-critical):', error);
     }
   }
 
@@ -42,7 +50,7 @@ export class SecurityService {
       this.events.push(securityEvent);
       console.log('Auth event tracked:', securityEvent);
     } catch (error) {
-      console.error('Error tracking auth event:', error);
+      console.warn('SecurityService: Error tracking auth event (non-critical):', error);
     }
   }
 
@@ -61,7 +69,7 @@ export class SecurityService {
       
       this.events.push(event);
     } catch (error) {
-      console.error('Error revoking session:', error);
+      console.warn('SecurityService: Error revoking session (non-critical):', error);
     }
   }
 
@@ -85,14 +93,19 @@ export class SecurityService {
       
       this.events.push(event);
     } catch (error) {
-      console.error('Error cleaning up expired sessions:', error);
+      console.warn('SecurityService: Error cleaning up expired sessions (non-critical):', error);
     }
   }
 
   static getRecentEvents(userId?: string): SecurityEvent[] {
-    if (userId) {
-      return this.events.filter(event => event.userId === userId);
+    try {
+      if (userId) {
+        return this.events.filter(event => event.userId === userId);
+      }
+      return this.events;
+    } catch (error) {
+      console.warn('SecurityService: Error getting recent events:', error);
+      return [];
     }
-    return this.events;
   }
 }

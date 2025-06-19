@@ -1,6 +1,6 @@
 
 import React from 'react';
-import ClassBasedAuthProvider from '@/components/providers/ClassBasedAuthProvider';
+import { AuthProvider } from '@/contexts/AuthContext';
 import ClassBasedSessionProvider from '@/components/providers/ClassBasedSessionProvider';
 import ClassBasedTherapistProvider from '@/components/providers/ClassBasedTherapistProvider';
 import { Toaster } from '@/components/ui/toaster';
@@ -16,7 +16,7 @@ const OfflineIndicator = React.lazy(() => import('@/components/OfflineIndicator'
 const MainAppContent: React.FC = () => {
   return (
     <ReactSafeErrorBoundary>
-      <ClassBasedAuthProvider>
+      <AuthProvider>
         <ClassBasedSessionProvider>
           <ClassBasedTherapistProvider>
             {/* Main application router - now inside all contexts */}
@@ -48,7 +48,7 @@ const MainAppContent: React.FC = () => {
             </SafeHookWrapper>
           </ClassBasedTherapistProvider>
         </ClassBasedSessionProvider>
-      </ClassBasedAuthProvider>
+      </AuthProvider>
     </ReactSafeErrorBoundary>
   );
 };

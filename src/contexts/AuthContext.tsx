@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -46,6 +47,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     DebugLogger.debug('AuthProvider: Setting up auth state listener', { component: 'AuthProvider' });
     let mounted = true;
+    let timeoutId: NodeJS.Timeout;
+
+    // Add timeout to prevent infinite loading
+    const authTimeout = setTimeout(() => {
+      if (mounted && loading) {
+        DebugLogger.warn('AuthProvider: Auth initialization timeout, forcing completion', { component: 'AuthProvider' });
+        setLoading(false);
+      }
+    }, 5000); // 5 second timeout
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -69,15 +79,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(session?.user ?? null);
         setLoading(false);
         
-        // Track security events
+        // Clear timeout since auth loaded successfully
+        clearTimeout(authTimeout);
+        
+        // Track security events asynchronously without blocking
         if (event === 'SIGNED_IN' && session?.user) {
-          // Import SecurityService dynamically to avoid circular dependencies
-          try {
-            const { SecurityService } = await import('@/services/securityService');
-            await SecurityService.trackSession(session.user.id);
-          } catch (error) {
-            console.error('Security tracking error:', error);
-          }
+          // Non-blocking security tracking
+          setTimeout(async () => {
+            try {
+              const { SecurityService } = await import('@/services/securityService');
+              await SecurityService.trackSession(session.user.id);
+            } catch (error) {
+              console.warn('Security tracking failed (non-critical):', error);
+            }
+          }, 0);
         }
       }
     );
@@ -109,14 +124,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setSession(session);
           setUser(session?.user ?? null);
           
-          // Track initial session if user is authenticated
+          // Track initial session asynchronously without blocking
           if (session?.user) {
-            try {
-              const { SecurityService } = await import('@/services/securityService');
-              await SecurityService.trackSession(session.user.id);
-            } catch (error) {
-              console.error('Initial security tracking error:', error);
-            }
+            setTimeout(async () => {
+              try {
+                const { SecurityService } = await import('@/services/securityService');
+                await SecurityService.trackSession(session.user.id);
+              } catch (error) {
+                console.warn('Initial security tracking failed (non-critical):', error);
+              }
+            }, 0);
           }
         }
       } catch (error) {
@@ -126,6 +143,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } finally {
         if (mounted) {
           setLoading(false);
+          clearTimeout(authTimeout);
           DebugLogger.debug('AuthProvider: Loading complete', { component: 'AuthProvider' });
         }
       }
@@ -136,6 +154,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       DebugLogger.debug('AuthProvider: Cleaning up', { component: 'AuthProvider' });
       mounted = false;
+      clearTimeout(authTimeout);
       subscription.unsubscribe();
     };
   }, []);
