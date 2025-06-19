@@ -6,13 +6,14 @@ interface Therapist {
   id: string;
   name: string;
   title: string;
-  specialty: string;
+  specialty?: string;
   approach: string;
-  personality: string;
+  personality?: string;
   description: string;
   specialties: string[];
   communicationStyle: string;
   colorScheme: string;
+  icon?: string;
 }
 
 interface TherapistContextType {
