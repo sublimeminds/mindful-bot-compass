@@ -1,7 +1,5 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { reactHookValidator } from '@/utils/reactHookValidator';
-import { DebugLogger } from '@/utils/debugLogger';
 
 interface AccessibilitySettings {
   reducedMotion: boolean;
@@ -34,26 +32,13 @@ const defaultSettings: AccessibilitySettings = {
 const SafeAccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
 export const SafeAccessibilityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Check if React is available and hooks can be used safely
-  if (typeof React === 'undefined' || typeof React.useState === 'undefined') {
-    console.error('React is not available, returning children without context');
-    return React.createElement(React.Fragment, {}, children);
-  }
-
-  // Validate React hooks before using them
+  // Defensive check - if React hooks aren't available, return children without context
   try {
-    const reactValidation = reactHookValidator.validateReactInit();
-    
-    if (!reactValidation.isValid) {
-      console.error('React hooks not available, returning children without context:', reactValidation.error);
+    if (typeof React === 'undefined' || !React.useState || !React.useEffect || !React.useContext) {
+      console.warn('SafeAccessibilityProvider: React hooks not available, returning plain children');
       return React.createElement(React.Fragment, {}, children);
     }
-  } catch (error) {
-    console.error('Error validating React:', error);
-    return React.createElement(React.Fragment, {}, children);
-  }
 
-  try {
     const [settings, setSettings] = useState<AccessibilitySettings>(defaultSettings);
     const [lastFocusedElement, setLastFocusedElement] = useState<HTMLElement | null>(null);
 
@@ -183,7 +168,7 @@ export const useSafeAccessibility = () => {
   try {
     // Double-check React availability
     if (typeof React === 'undefined' || typeof React.useContext === 'undefined') {
-      console.warn('React.useContext not available, returning defaults');
+      console.warn('useSafeAccessibility: React.useContext not available, returning defaults');
       return {
         settings: defaultSettings,
         updateSetting: () => {},
