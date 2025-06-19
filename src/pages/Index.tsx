@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import FeaturesSection from '@/components/FeaturesSection';
 import PricingSection from '@/components/PricingSection';
-import UserDashboard from '@/components/UserDashboard';
+import DashboardLayout from '@/components/dashboard/DashboardLayout';
 
 const Index = () => {
   // Try to access auth context safely
@@ -24,7 +24,7 @@ const Index = () => {
       <Header />
       <div className="min-h-screen">
         {user ? (
-          <UserDashboard />
+          <DashboardLayout />
         ) : (
           <>
             <HeroSection />

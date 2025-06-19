@@ -17,7 +17,8 @@ import {
   HelpCircle,
   Users,
   Star,
-  Info
+  Info,
+  Shield
 } from 'lucide-react';
 
 const UnifiedNavigation = () => {
@@ -57,15 +58,14 @@ const UnifiedNavigation = () => {
     { id: '/help', label: 'Help', icon: HelpCircle, priority: 2 }
   ];
 
-  // Authenticated navigation items - more compact for smaller screens
+  // Authenticated navigation items - now includes Crisis Management
   const authNavItems = [
-    { id: '/therapy', label: 'Therapy', icon: MessageCircle, priority: 1 },
-    { id: '/mood-tracking', label: 'Mood', icon: Heart, priority: 1 },
-    { id: '/goals', label: 'Goals', icon: Target, priority: 2 },
-    { id: '/techniques', label: 'Techniques', icon: BookOpen, priority: 2 },
-    { id: '/session-history', label: 'History', icon: History, priority: 3 },
-    { id: '/analytics', label: 'Analytics', icon: BarChart3, priority: 3 },
-    { id: '/help', label: 'Help', icon: HelpCircle, priority: 2 }
+    { id: '/dashboard', label: 'Dashboard', icon: BarChart3, priority: 1 },
+    { id: '/crisis-management', label: 'Crisis', icon: Shield, priority: 1 },
+    { id: '/community', label: 'Community', icon: Users, priority: 1 },
+    { id: '/notebook', label: 'Journal', icon: BookOpen, priority: 2 },
+    { id: '/smart-scheduling', label: 'Schedule', icon: Target, priority: 2 },
+    { id: '/help', label: 'Help', icon: HelpCircle, priority: 3 }
   ];
 
   const navItems = isAuthenticated ? authNavItems : publicNavItems;

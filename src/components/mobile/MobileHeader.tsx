@@ -15,13 +15,11 @@ const MobileHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navigationItems = [
-    { label: 'Dashboard', href: '/', icon: '🏠' },
-    { label: 'Therapy Chat', href: '/chat', icon: '💬' },
-    { label: 'Goals', href: '/goals', icon: '🎯' },
-    { label: 'Mood Tracking', href: '/mood-tracking', icon: '😊' },
-    { label: 'Analytics', href: '/analytics', icon: '📊' },
-    { label: 'Session History', href: '/session-history', icon: '📋' },
-    { label: 'Techniques', href: '/techniques', icon: '🧘' },
+    { label: 'Dashboard', href: '/dashboard', icon: '🏠' },
+    { label: 'Crisis Management', href: '/crisis-management', icon: '🛡️' },
+    { label: 'Community', href: '/community', icon: '👥' },
+    { label: 'Digital Notebook', href: '/notebook', icon: '📝' },
+    { label: 'Smart Scheduling', href: '/smart-scheduling', icon: '📅' },
   ];
 
   const publicNavigationItems = [

@@ -84,6 +84,29 @@ export interface CrisisIntervention {
 }
 
 export class CrisisManagementService {
+  // Helper methods to transform data
+  private static transformCrisisAssessment(data: any): CrisisAssessment {
+    return {
+      ...data,
+      responses: typeof data.responses === 'string' ? JSON.parse(data.responses) : data.responses || {}
+    };
+  }
+
+  private static transformSafetyPlan(data: any): SafetyPlan {
+    return {
+      ...data,
+      social_contacts: typeof data.social_contacts === 'string' ? JSON.parse(data.social_contacts) : data.social_contacts || {},
+      professional_contacts: typeof data.professional_contacts === 'string' ? JSON.parse(data.professional_contacts) : data.professional_contacts || {}
+    };
+  }
+
+  private static transformCrisisIntervention(data: any): CrisisIntervention {
+    return {
+      ...data,
+      intervention_data: typeof data.intervention_data === 'string' ? JSON.parse(data.intervention_data) : data.intervention_data || {}
+    };
+  }
+
   // Crisis Assessments
   static async createCrisisAssessment(assessmentData: Partial<CrisisAssessment>): Promise<CrisisAssessment | null> {
     try {
@@ -378,29 +401,6 @@ export class CrisisManagementService {
       console.error('Error updating crisis intervention:', error);
       return false;
     }
-  }
-
-  // Helper methods to transform data
-  private static transformCrisisAssessment(data: any): CrisisAssessment {
-    return {
-      ...data,
-      responses: typeof data.responses === 'string' ? JSON.parse(data.responses) : data.responses || {}
-    };
-  }
-
-  private static transformSafetyPlan(data: any): SafetyPlan {
-    return {
-      ...data,
-      social_contacts: typeof data.social_contacts === 'string' ? JSON.parse(data.social_contacts) : data.social_contacts || {},
-      professional_contacts: typeof data.professional_contacts === 'string' ? JSON.parse(data.professional_contacts) : data.professional_contacts || {}
-    };
-  }
-
-  private static transformCrisisIntervention(data: any): CrisisIntervention {
-    return {
-      ...data,
-      intervention_data: typeof data.intervention_data === 'string' ? JSON.parse(data.intervention_data) : data.intervention_data || {}
-    };
   }
 
   // Risk Assessment and Crisis Detection
