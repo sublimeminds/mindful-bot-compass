@@ -14,6 +14,8 @@ interface State {
 
 // Helper component for staged loading of different app phases
 export class StageLoadingProvider extends Component<Props, State> {
+  private stageTimer?: NodeJS.Timeout;
+  
   public state: State = {
     isStageReady: false
   };
@@ -22,8 +24,16 @@ export class StageLoadingProvider extends Component<Props, State> {
     this.initializeStage();
   }
 
+  public componentWillUnmount() {
+    if (this.stageTimer) {
+      clearTimeout(this.stageTimer);
+    }
+  }
+
   private initializeStage = async () => {
     try {
+      console.log(`StageLoadingProvider: Initializing ${this.props.stage} stage`);
+      
       switch (this.props.stage) {
         case 'validation':
           // React validation already done by SimpleSafeReactProvider
@@ -32,14 +42,16 @@ export class StageLoadingProvider extends Component<Props, State> {
           
         case 'contexts':
           // Small delay to ensure providers are ready
-          await new Promise(resolve => setTimeout(resolve, 50));
-          this.setState({ isStageReady: true });
+          this.stageTimer = setTimeout(() => {
+            this.setState({ isStageReady: true });
+          }, 100);
           break;
           
         case 'application':
-          // Ensure DOM is fully ready
-          await new Promise(resolve => setTimeout(resolve, 100));
-          this.setState({ isStageReady: true });
+          // Ensure DOM and all contexts are fully ready
+          this.stageTimer = setTimeout(() => {
+            this.setState({ isStageReady: true });
+          }, 150);
           break;
           
         default:

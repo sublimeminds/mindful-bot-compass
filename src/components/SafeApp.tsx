@@ -1,11 +1,12 @@
 
-import React from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import SimpleSafeReactProvider from '@/components/SimpleSafeReactProvider';
-import SafeHookWrapper from '@/components/SafeHookWrapper';
+import StageLoadingProvider from '@/components/StageLoadingProvider';
 import SimpleOfflineIndicator from '@/components/fallback/SimpleOfflineIndicator';
+import { automatedHealthService } from '@/services/automatedHealthService';
 
 // Enhanced Query Client with better defaults
 const queryClient = new QueryClient({
@@ -35,81 +36,125 @@ const queryClient = new QueryClient({
   },
 });
 
-// Lazy load the main app content that requires contexts
+// Lazy load the main app content - this will only load AFTER React is validated
 const MainAppContent = React.lazy(() => import('@/components/MainAppContent'));
 
-// This component now only renders AFTER React hooks are validated
-const SafeAppWithHooks = () => {
-  const [isContextsReady, setIsContextsReady] = React.useState(false);
+interface ValidatedAppState {
+  isContextsReady: boolean;
+  healthMonitoringStarted: boolean;
+}
 
-  React.useEffect(() => {
-    // Small delay to ensure all contexts are properly initialized
-    const timer = setTimeout(() => {
-      setIsContextsReady(true);
-    }, 100);
+// This class component handles post-validation loading - only renders after React is safe
+class ValidatedApp extends Component<{}, ValidatedAppState> {
+  private contextTimer?: NodeJS.Timeout;
 
-    return () => clearTimeout(timer);
-  }, []);
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      isContextsReady: false,
+      healthMonitoringStarted: false
+    };
+  }
 
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Basic offline indicator that doesn't use hooks */}
-      <SimpleOfflineIndicator />
+  componentDidMount() {
+    console.log('ValidatedApp: React hooks are now safe to use');
+    
+    // Start automated health monitoring now that React is validated
+    this.startHealthMonitoring();
+    
+    // Initialize contexts with a small delay to ensure everything is ready
+    this.contextTimer = setTimeout(() => {
+      this.setState({ isContextsReady: true });
+    }, 150);
+  }
+
+  componentWillUnmount() {
+    if (this.contextTimer) {
+      clearTimeout(this.contextTimer);
+    }
+    
+    // Stop health monitoring
+    if (this.state.healthMonitoringStarted) {
+      automatedHealthService.stopMonitoring();
+    }
+  }
+
+  private startHealthMonitoring = async () => {
+    try {
+      console.log('ValidatedApp: Starting automated health monitoring...');
+      await automatedHealthService.startMonitoring();
+      this.setState({ healthMonitoringStarted: true });
+      console.log('ValidatedApp: Health monitoring started successfully');
+    } catch (error) {
+      console.error('ValidatedApp: Failed to start health monitoring', error);
+    }
+  };
+
+  render() {
+    const { isContextsReady } = this.state;
+
+    return React.createElement('div', { className: 'min-h-screen bg-background' }, [
+      // Basic offline indicator that doesn't use hooks
+      React.createElement(SimpleOfflineIndicator, { key: 'offline-indicator' }),
       
-      {/* Show loading until contexts are ready */}
-      {!isContextsReady ? (
-        <div className="min-h-screen bg-background flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p>Loading application...</p>
-          </div>
-        </div>
-      ) : (
-        <SafeHookWrapper 
-          componentName="Main Application Content"
-          fallback={
-            <div className="min-h-screen bg-background flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-red-600 mb-4">Unable to load application</p>
-                <button 
-                  onClick={() => window.location.reload()}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Reload
-                </button>
-              </div>
-            </div>
-          }
-        >
-          <React.Suspense fallback={
-            <div className="min-h-screen bg-background flex items-center justify-center">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                <p>Loading...</p>
-              </div>
-            </div>
-          }>
-            <MainAppContent />
-          </React.Suspense>
-        </SafeHookWrapper>
-      )}
-    </div>
-  );
-};
+      // Show loading until contexts are ready
+      !isContextsReady ? 
+        React.createElement('div', {
+          key: 'loading',
+          className: 'min-h-screen bg-background flex items-center justify-center'
+        }, React.createElement('div', { className: 'text-center' }, [
+          React.createElement('div', {
+            key: 'spinner',
+            className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'
+          }),
+          React.createElement('p', { key: 'text' }, 'Loading application contexts...')
+        ])) :
+        
+        // Render main app content with Suspense
+        React.createElement(React.Suspense, {
+          key: 'main-content',
+          fallback: React.createElement('div', {
+            className: 'min-h-screen bg-background flex items-center justify-center'
+          }, React.createElement('div', { className: 'text-center' }, [
+            React.createElement('div', {
+              key: 'spinner',
+              className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'
+            }),
+            React.createElement('p', { key: 'text' }, 'Loading...')
+          ]))
+        }, React.createElement(MainAppContent))
+    ]);
+  }
+}
 
-// This is now completely hook-free and safe to render immediately
-const SafeApp = () => {
-  return (
-    <SimpleErrorBoundary>
-      <SimpleSafeReactProvider>
-        <QueryClientProvider client={queryClient}>
-          <Router>
-            <SafeAppWithHooks />
-          </Router>
-        </QueryClientProvider>
-      </SimpleSafeReactProvider>
-    </SimpleErrorBoundary>
-  );
-};
+// Main SafeApp component - completely hook-free until validation passes
+class SafeApp extends Component {
+  render() {
+    return React.createElement(SimpleErrorBoundary, {}, 
+      React.createElement(SimpleSafeReactProvider, {},
+        React.createElement(StageLoadingProvider, { 
+          stage: 'validation',
+          onStageComplete: () => console.log('Validation stage complete')
+        },
+          React.createElement(QueryClientProvider, { client: queryClient },
+            React.createElement(StageLoadingProvider, { 
+              stage: 'contexts',
+              onStageComplete: () => console.log('Contexts stage complete')
+            },
+              React.createElement(Router, {},
+                React.createElement(StageLoadingProvider, { 
+                  stage: 'application',
+                  onStageComplete: () => console.log('Application stage complete')
+                },
+                  React.createElement(ValidatedApp)
+                )
+              )
+            )
+          )
+        )
+      )
+    );
+  }
+}
 
 export default SafeApp;

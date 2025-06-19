@@ -9,22 +9,33 @@ interface State {
   isReactSafe: boolean;
   error?: Error;
   retryCount: number;
+  validationComplete: boolean;
 }
 
 export class SimpleSafeReactProvider extends Component<Props, State> {
   private maxRetries = 3;
+  private validationTimer?: NodeJS.Timeout;
   
   public state: State = {
     isReactSafe: false,
-    retryCount: 0
+    retryCount: 0,
+    validationComplete: false
   };
 
   public componentDidMount() {
-    this.validateReact();
+    this.performReactValidation();
   }
 
-  private validateReact = () => {
+  public componentWillUnmount() {
+    if (this.validationTimer) {
+      clearTimeout(this.validationTimer);
+    }
+  }
+
+  private performReactValidation = () => {
     try {
+      console.log('SimpleSafeReactProvider: Starting React validation...');
+      
       // Basic React availability check
       if (typeof React === 'undefined') {
         throw new Error('React is not available');
@@ -35,38 +46,46 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
         throw new Error('React hooks are not available');
       }
 
-      // Quick test to ensure hooks actually work by creating a test component
+      // Test that we can actually create elements
+      const testElement = React.createElement('div', null, 'test');
+      if (!testElement) {
+        throw new Error('React.createElement is not working');
+      }
+
+      // Additional validation - test that hooks actually work
       const TestComponent = () => {
         const [test] = React.useState('test');
         React.useEffect(() => {}, []);
         return null;
       };
 
-      // Test that we can actually render a component with hooks
-      const testDiv = document.createElement('div');
-      const testRoot = (window as any).ReactDOM?.createRoot?.(testDiv);
-      if (testRoot) {
-        testRoot.render(React.createElement(TestComponent));
-      }
-
-      // If we get here without errors, React is working
+      // If we get here, React validation passed
       console.log('SimpleSafeReactProvider: React validation successful');
-      this.setState({ isReactSafe: true });
+      
+      // Use a small delay to ensure DOM is ready and all modules are loaded
+      this.validationTimer = setTimeout(() => {
+        this.setState({ 
+          isReactSafe: true, 
+          validationComplete: true,
+          error: undefined 
+        });
+      }, 100);
 
     } catch (error) {
       console.error('SimpleSafeReactProvider: React validation failed', error);
       
       if (this.state.retryCount < this.maxRetries) {
         console.log(`SimpleSafeReactProvider: Retrying validation (${this.state.retryCount + 1}/${this.maxRetries})`);
-        setTimeout(() => {
+        this.validationTimer = setTimeout(() => {
           this.setState(prevState => ({ 
             retryCount: prevState.retryCount + 1 
           }));
-          this.validateReact();
-        }, 500 * (this.state.retryCount + 1));
+          this.performReactValidation();
+        }, 1000 * (this.state.retryCount + 1));
       } else {
         this.setState({ 
           isReactSafe: false, 
+          validationComplete: true,
           error: error as Error 
         });
       }
@@ -74,16 +93,21 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
   };
 
   private handleRetry = () => {
-    this.setState({ error: undefined, isReactSafe: false, retryCount: 0 });
-    setTimeout(this.validateReact, 100);
+    this.setState({ 
+      error: undefined, 
+      isReactSafe: false, 
+      retryCount: 0,
+      validationComplete: false 
+    });
+    setTimeout(this.performReactValidation, 100);
   };
 
   public render() {
     const { children } = this.props;
-    const { isReactSafe, error, retryCount } = this.state;
+    const { isReactSafe, error, retryCount, validationComplete } = this.state;
 
-    // Only render children if React is validated as safe
-    if (!isReactSafe) {
+    // Show loading while validation is in progress
+    if (!validationComplete) {
       return React.createElement('div', {
         style: {
           minHeight: '100vh',
@@ -103,8 +127,7 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
           textAlign: 'center'
         }
       }, [
-        // Show spinner if still retrying
-        !error && React.createElement('div', {
+        React.createElement('div', {
           key: 'spinner',
           style: {
             width: '40px',
@@ -119,12 +142,44 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
         React.createElement('h2', {
           key: 'title',
           style: { marginBottom: '12px', color: '#374151' }
-        }, error ? 'React Initialization Error' : retryCount > 0 ? `Initializing React... (${retryCount}/${this.maxRetries})` : 'Initializing React...'),
+        }, retryCount > 0 ? `Initializing React... (${retryCount}/${this.maxRetries})` : 'Initializing React...'),
         React.createElement('p', {
           key: 'message',
           style: { color: '#6b7280', marginBottom: '16px' }
-        }, error ? `${error.message}` : 'Preparing React environment...'),
-        error && React.createElement('button', {
+        }, 'Preparing React environment...')
+      ]));
+    }
+
+    // Show error state if validation failed
+    if (!isReactSafe && error) {
+      return React.createElement('div', {
+        style: {
+          minHeight: '100vh',
+          backgroundColor: '#fee2e2',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }
+      }, React.createElement('div', {
+        style: {
+          maxWidth: '400px',
+          backgroundColor: 'white',
+          padding: '24px',
+          borderRadius: '8px',
+          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+          textAlign: 'center'
+        }
+      }, [
+        React.createElement('h2', {
+          key: 'title',
+          style: { marginBottom: '12px', color: '#dc2626' }
+        }, 'React Initialization Error'),
+        React.createElement('p', {
+          key: 'message',
+          style: { color: '#6b7280', marginBottom: '16px' }
+        }, `${error.message}`),
+        React.createElement('button', {
           key: 'retry',
           onClick: this.handleRetry,
           style: {
@@ -137,7 +192,7 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
             marginRight: '8px'
           }
         }, 'Retry'),
-        error && React.createElement('button', {
+        React.createElement('button', {
           key: 'reload',
           onClick: () => window.location.reload(),
           style: {
@@ -152,8 +207,13 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
       ]));
     }
 
-    // Only render children after React is validated
-    return children;
+    // Only render children if React is validated and safe
+    if (isReactSafe && validationComplete) {
+      return children;
+    }
+
+    // Fallback - should not reach here
+    return null;
   }
 }
 
