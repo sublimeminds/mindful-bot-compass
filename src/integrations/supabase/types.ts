@@ -442,6 +442,47 @@ export type Database = {
         }
         Relationships: []
       }
+      discussion_replies: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          discussion_id: string
+          id: string
+          is_anonymous: boolean
+          like_count: number | null
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          discussion_id: string
+          id?: string
+          is_anonymous?: boolean
+          like_count?: number | null
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          discussion_id?: string
+          id?: string
+          is_anonymous?: boolean
+          like_count?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discussion_replies_discussion_id_fkey"
+            columns: ["discussion_id"]
+            isOneToOne: false
+            referencedRelation: "group_discussions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       emotional_patterns: {
         Row: {
           effectiveness_score: number
@@ -752,6 +793,91 @@ export type Database = {
         }
         Relationships: []
       }
+      group_discussions: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          group_id: string
+          id: string
+          is_anonymous: boolean
+          is_pinned: boolean
+          like_count: number | null
+          reply_count: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          group_id: string
+          id?: string
+          is_anonymous?: boolean
+          is_pinned?: boolean
+          like_count?: number | null
+          reply_count?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          group_id?: string
+          id?: string
+          is_anonymous?: boolean
+          is_pinned?: boolean
+          like_count?: number | null
+          reply_count?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_discussions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "support_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_memberships: {
+        Row: {
+          group_id: string
+          id: string
+          is_active: boolean
+          joined_at: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          group_id: string
+          id?: string
+          is_active?: boolean
+          joined_at?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          group_id?: string
+          id?: string
+          is_active?: boolean
+          joined_at?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_memberships_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "support_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       help_articles: {
         Row: {
           category: string
@@ -1016,6 +1142,36 @@ export type Database = {
           title?: string
           type?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      peer_connections: {
+        Row: {
+          connection_type: string
+          created_at: string
+          id: string
+          requested_id: string
+          requester_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          connection_type?: string
+          created_at?: string
+          id?: string
+          requested_id: string
+          requester_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          connection_type?: string
+          created_at?: string
+          id?: string
+          requested_id?: string
+          requester_id?: string
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1432,6 +1588,42 @@ export type Database = {
           },
         ]
       }
+      shared_milestones: {
+        Row: {
+          celebration_count: number | null
+          created_at: string
+          description: string | null
+          id: string
+          is_public: boolean
+          milestone_type: string
+          support_count: number | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          celebration_count?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          milestone_type: string
+          support_count?: number | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          celebration_count?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          milestone_type?: string
+          support_count?: number | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       subscription_plans: {
         Row: {
           created_at: string
@@ -1464,6 +1656,48 @@ export type Database = {
           name?: string
           price_monthly?: number
           price_yearly?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      support_groups: {
+        Row: {
+          category: string
+          created_at: string
+          current_members: number | null
+          description: string | null
+          group_type: string
+          id: string
+          is_active: boolean
+          max_members: number | null
+          moderator_id: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          current_members?: number | null
+          description?: string | null
+          group_type?: string
+          id?: string
+          is_active?: boolean
+          max_members?: number | null
+          moderator_id?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          current_members?: number | null
+          description?: string | null
+          group_type?: string
+          id?: string
+          is_active?: boolean
+          max_members?: number | null
+          moderator_id?: string | null
+          name?: string
           updated_at?: string
         }
         Relationships: []
