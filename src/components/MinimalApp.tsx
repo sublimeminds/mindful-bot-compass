@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from '@/pages/Index';
 import MinimalLoginPage from '@/components/MinimalLoginPage';
-import { MinimalAuthContext } from '@/components/MinimalAuthProvider';
+import { SimpleAppContext } from '@/components/SimpleAppProvider';
 import MinimalErrorBoundary from '@/components/MinimalErrorBoundary';
 
 class MinimalApp extends Component {
-  static contextType = MinimalAuthContext;
-  declare context: React.ContextType<typeof MinimalAuthContext>;
+  static contextType = SimpleAppContext;
+  declare context: React.ContextType<typeof SimpleAppContext>;
 
   render() {
     const { user, loading } = this.context;

@@ -15,10 +15,10 @@ import VideoEnhancedDemo from '@/components/landing/VideoEnhancedDemo';
 import CTASection from '@/components/landing/CTASection';
 import PricingSection from '@/components/PricingSection';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 const Index = () => {
-  const { user, loading } = useAuth();
+  const { user, loading } = useSimpleApp();
 
   // Show loading while checking authentication
   if (loading) {

@@ -1,60 +1,44 @@
 
-import React, { Component } from 'react';
-import { Navigate } from 'react-router-dom';
-import { MinimalAuthContext } from '@/components/MinimalAuthProvider';
+import React, { Component, FormEvent } from 'react';
+import { SimpleAppContext } from '@/components/SimpleAppProvider';
 
 interface State {
   email: string;
   password: string;
+  loading: boolean;
   error: string;
-  isLoading: boolean;
 }
 
 class MinimalLoginPage extends Component<{}, State> {
-  static contextType = MinimalAuthContext;
-  declare context: React.ContextType<typeof MinimalAuthContext>;
+  static contextType = SimpleAppContext;
+  declare context: React.ContextType<typeof SimpleAppContext>;
 
   constructor(props: {}) {
     super(props);
     this.state = {
       email: '',
       password: '',
+      loading: false,
       error: '',
-      isLoading: false,
     };
   }
 
-  private handleSubmit = async (e: React.FormEvent) => {
+  private handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const { email, password } = this.state;
-    const { login } = this.context;
-
-    if (!email || !password) {
-      this.setState({ error: 'Please fill in all fields' });
-      return;
-    }
-
-    this.setState({ isLoading: true, error: '' });
+    this.setState({ loading: true, error: '' });
 
     try {
-      await login(email, password);
+      await this.context.login(this.state.email, this.state.password);
+      // Navigation will be handled by the app state change
     } catch (error) {
       this.setState({ 
         error: 'Login failed. Please try again.',
-        isLoading: false 
+        loading: false 
       });
     }
   };
 
   render() {
-    const { user } = this.context;
-    const { email, password, error, isLoading } = this.state;
-
-    // Redirect if already logged in
-    if (user) {
-      return <Navigate to="/dashboard" replace />;
-    }
-
     return (
       <div style={{
         minHeight: '100vh',
@@ -65,110 +49,113 @@ class MinimalLoginPage extends Component<{}, State> {
         padding: '20px'
       }}>
         <div style={{
+          maxWidth: '400px',
+          width: '100%',
           backgroundColor: 'white',
           padding: '40px',
           borderRadius: '8px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-          width: '100%',
-          maxWidth: '400px'
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
         }}>
-          <h2 style={{
-            fontSize: '24px',
+          <h1 style={{
+            fontSize: '28px',
             fontWeight: 'bold',
             textAlign: 'center',
             marginBottom: '30px',
             color: '#1f2937'
           }}>
-            Sign In to TherapySync
-          </h2>
+            Welcome to TherapySync
+          </h1>
 
           <form onSubmit={this.handleSubmit}>
             <div style={{ marginBottom: '20px' }}>
               <label style={{
                 display: 'block',
-                marginBottom: '5px',
-                color: '#374151',
-                fontSize: '14px'
+                fontSize: '14px',
+                fontWeight: '500',
+                marginBottom: '8px',
+                color: '#374151'
               }}>
                 Email
               </label>
               <input
                 type="email"
-                value={email}
+                value={this.state.email}
                 onChange={(e) => this.setState({ email: e.target.value })}
+                required
                 style={{
                   width: '100%',
-                  padding: '10px',
+                  padding: '12px',
                   border: '1px solid #d1d5db',
                   borderRadius: '6px',
                   fontSize: '16px'
                 }}
-                placeholder="Enter your email"
               />
             </div>
 
             <div style={{ marginBottom: '20px' }}>
               <label style={{
                 display: 'block',
-                marginBottom: '5px',
-                color: '#374151',
-                fontSize: '14px'
+                fontSize: '14px',
+                fontWeight: '500',
+                marginBottom: '8px',
+                color: '#374151'
               }}>
                 Password
               </label>
               <input
                 type="password"
-                value={password}
+                value={this.state.password}
                 onChange={(e) => this.setState({ password: e.target.value })}
+                required
                 style={{
                   width: '100%',
-                  padding: '10px',
+                  padding: '12px',
                   border: '1px solid #d1d5db',
                   borderRadius: '6px',
                   fontSize: '16px'
                 }}
-                placeholder="Enter your password"
               />
             </div>
 
-            {error && (
+            {this.state.error && (
               <div style={{
                 backgroundColor: '#fee2e2',
                 color: '#dc2626',
-                padding: '10px',
+                padding: '12px',
                 borderRadius: '6px',
                 marginBottom: '20px',
                 fontSize: '14px'
               }}>
-                {error}
+                {this.state.error}
               </div>
             )}
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={this.state.loading}
               style={{
                 width: '100%',
-                backgroundColor: isLoading ? '#9ca3af' : '#3b82f6',
+                backgroundColor: this.state.loading ? '#9ca3af' : '#3b82f6',
                 color: 'white',
                 padding: '12px',
                 border: 'none',
                 borderRadius: '6px',
                 fontSize: '16px',
-                cursor: isLoading ? 'not-allowed' : 'pointer'
+                fontWeight: '500',
+                cursor: this.state.loading ? 'not-allowed' : 'pointer'
               }}
             >
-              {isLoading ? 'Signing In...' : 'Sign In'}
+              {this.state.loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
           <p style={{
             textAlign: 'center',
             marginTop: '20px',
-            color: '#6b7280',
-            fontSize: '14px'
+            fontSize: '14px',
+            color: '#6b7280'
           }}>
-            Demo: Use any email and password to sign in
+            Use any email and password to sign in
           </p>
         </div>
       </div>
