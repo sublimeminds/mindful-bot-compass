@@ -9,7 +9,6 @@ import { Toaster } from '@/components/ui/toaster';
 import EnhancedErrorBoundary from '@/components/enhanced/EnhancedErrorBoundary';
 import AutoRecoveryProvider from '@/components/enhanced/AutoRecoveryProvider';
 import AccessibilityPanel from '@/components/accessibility/AccessibilityPanel';
-import AdminPerformanceDashboard from '@/components/performance/AdminPerformanceDashboard';
 import NetworkStatusIndicator from '@/components/performance/NetworkStatusIndicator';
 import OfflineIndicator from '@/components/OfflineIndicator';
 import AppRouter from '@/components/AppRouter';
@@ -152,11 +151,6 @@ function App() {
                         {/* Accessibility Tools - Available to all users */}
                         <EnhancedErrorBoundary level="component">
                           <AccessibilityPanel />
-                        </EnhancedErrorBoundary>
-                        
-                        {/* Admin-Only Performance Tools */}
-                        <EnhancedErrorBoundary level="component">
-                          <AdminPerformanceDashboard />
                         </EnhancedErrorBoundary>
                         
                         <Toaster />

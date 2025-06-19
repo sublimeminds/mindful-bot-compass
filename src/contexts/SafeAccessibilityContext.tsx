@@ -34,34 +34,30 @@ const defaultSettings: AccessibilitySettings = {
 const SafeAccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
 export const SafeAccessibilityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  // Check if React is available and hooks can be used safely
+  if (typeof React === 'undefined' || typeof React.useState === 'undefined') {
+    console.error('React is not available, returning children without context');
+    return React.createElement(React.Fragment, {}, children);
+  }
+
   // Validate React hooks before using them
-  const reactValidation = reactHookValidator.validateReactInit();
-  
-  if (!reactValidation.isValid) {
-    DebugLogger.error('SafeAccessibilityProvider: React hooks not available', reactValidation.error!, {
-      component: 'SafeAccessibilityProvider'
-    });
+  try {
+    const reactValidation = reactHookValidator.validateReactInit();
     
-    // Return children without context if React hooks aren't working
+    if (!reactValidation.isValid) {
+      console.error('React hooks not available, returning children without context:', reactValidation.error);
+      return React.createElement(React.Fragment, {}, children);
+    }
+  } catch (error) {
+    console.error('Error validating React:', error);
     return React.createElement(React.Fragment, {}, children);
   }
 
   try {
-    reactHookValidator.trackComponentRender('SafeAccessibilityProvider');
-    
-    const [settings, setSettings] = useState<AccessibilitySettings>(() => {
-      reactHookValidator.trackHookCall('useState', ['AccessibilitySettings']);
-      return defaultSettings;
-    });
-    
-    const [lastFocusedElement, setLastFocusedElement] = useState<HTMLElement | null>(() => {
-      reactHookValidator.trackHookCall('useState', ['lastFocusedElement']);
-      return null;
-    });
+    const [settings, setSettings] = useState<AccessibilitySettings>(defaultSettings);
+    const [lastFocusedElement, setLastFocusedElement] = useState<HTMLElement | null>(null);
 
     useEffect(() => {
-      reactHookValidator.trackHookCall('useEffect', ['settings']);
-      
       try {
         // Check for system preferences
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -74,14 +70,14 @@ export const SafeAccessibilityProvider: React.FC<{ children: ReactNode }> = ({ c
         }));
 
         // Apply CSS classes based on settings
-        document.documentElement.classList.toggle('reduce-motion', settings.reducedMotion);
-        document.documentElement.classList.toggle('high-contrast', settings.highContrast);
-        document.documentElement.classList.toggle('large-text', settings.largeText);
-        document.documentElement.classList.toggle('screen-reader-optimized', settings.screenReaderOptimized);
+        if (document?.documentElement) {
+          document.documentElement.classList.toggle('reduce-motion', settings.reducedMotion);
+          document.documentElement.classList.toggle('high-contrast', settings.highContrast);
+          document.documentElement.classList.toggle('large-text', settings.largeText);
+          document.documentElement.classList.toggle('screen-reader-optimized', settings.screenReaderOptimized);
+        }
       } catch (error) {
-        DebugLogger.error('SafeAccessibilityProvider: useEffect error', error as Error, {
-          component: 'SafeAccessibilityProvider'
-        });
+        console.error('SafeAccessibilityProvider: useEffect error', error);
       }
     }, [settings]);
 
@@ -89,16 +85,14 @@ export const SafeAccessibilityProvider: React.FC<{ children: ReactNode }> = ({ c
       try {
         setSettings(prev => ({ ...prev, [key]: value }));
       } catch (error) {
-        DebugLogger.error('SafeAccessibilityProvider: updateSetting error', error as Error, {
-          component: 'SafeAccessibilityProvider',
-          key,
-          value
-        });
+        console.error('SafeAccessibilityProvider: updateSetting error', error);
       }
     };
 
     const announceToScreenReader = (message: string) => {
       try {
+        if (!document?.body) return;
+        
         const announcement = document.createElement('div');
         announcement.setAttribute('aria-live', 'polite');
         announcement.setAttribute('aria-atomic', 'true');
@@ -108,13 +102,12 @@ export const SafeAccessibilityProvider: React.FC<{ children: ReactNode }> = ({ c
         document.body.appendChild(announcement);
         
         setTimeout(() => {
-          document.body.removeChild(announcement);
+          if (document.body.contains(announcement)) {
+            document.body.removeChild(announcement);
+          }
         }, 1000);
       } catch (error) {
-        DebugLogger.error('SafeAccessibilityProvider: announceToScreenReader error', error as Error, {
-          component: 'SafeAccessibilityProvider',
-          message
-        });
+        console.error('SafeAccessibilityProvider: announceToScreenReader error', error);
       }
     };
 
@@ -149,9 +142,7 @@ export const SafeAccessibilityProvider: React.FC<{ children: ReactNode }> = ({ c
           element.removeEventListener('keydown', handleTabKey);
         };
       } catch (error) {
-        DebugLogger.error('SafeAccessibilityProvider: trapFocus error', error as Error, {
-          component: 'SafeAccessibilityProvider'
-        });
+        console.error('SafeAccessibilityProvider: trapFocus error', error);
         return () => {};
       }
     };
@@ -164,9 +155,7 @@ export const SafeAccessibilityProvider: React.FC<{ children: ReactNode }> = ({ c
           setLastFocusedElement(null);
         }
       } catch (error) {
-        DebugLogger.error('SafeAccessibilityProvider: restoreFocus error', error as Error, {
-          component: 'SafeAccessibilityProvider'
-        });
+        console.error('SafeAccessibilityProvider: restoreFocus error', error);
       }
     };
 
@@ -185,26 +174,31 @@ export const SafeAccessibilityProvider: React.FC<{ children: ReactNode }> = ({ c
     }, children);
 
   } catch (error) {
-    DebugLogger.error('SafeAccessibilityProvider: Component render error', error as Error, {
-      component: 'SafeAccessibilityProvider'
-    });
-    
-    // Return children without context if there's an error
+    console.error('SafeAccessibilityProvider: Component render error', error);
     return React.createElement(React.Fragment, {}, children);
   }
 };
 
 export const useSafeAccessibility = () => {
   try {
-    reactHookValidator.trackHookCall('useContext', ['SafeAccessibilityContext']);
+    // Double-check React availability
+    if (typeof React === 'undefined' || typeof React.useContext === 'undefined') {
+      console.warn('React.useContext not available, returning defaults');
+      return {
+        settings: defaultSettings,
+        updateSetting: () => {},
+        announceToScreenReader: () => {},
+        focusManagement: {
+          trapFocus: () => () => {},
+          restoreFocus: () => {},
+        },
+      };
+    }
+
     const context = useContext(SafeAccessibilityContext);
     
     if (!context) {
-      DebugLogger.warn('useSafeAccessibility: Context not available, returning defaults', {
-        component: 'useSafeAccessibility'
-      });
-      
-      // Return safe defaults if context is not available
+      console.warn('useSafeAccessibility: Context not available, returning defaults');
       return {
         settings: defaultSettings,
         updateSetting: () => {},
@@ -218,11 +212,7 @@ export const useSafeAccessibility = () => {
     
     return context;
   } catch (error) {
-    DebugLogger.error('useSafeAccessibility: Hook error', error as Error, {
-      component: 'useSafeAccessibility'
-    });
-    
-    // Return safe defaults on error
+    console.error('useSafeAccessibility: Hook error', error);
     return {
       settings: defaultSettings,
       updateSetting: () => {},
