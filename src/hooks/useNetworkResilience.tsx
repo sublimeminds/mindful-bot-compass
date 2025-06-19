@@ -1,11 +1,16 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface NetworkState {
   isOnline: boolean;
   effectiveType: string | null;
   isSlowConnection: boolean;
   retryCount: number;
+}
+
+interface RetryOptions {
+  maxAttempts?: number;
+  baseDelay?: number;
 }
 
 export const useNetworkResilience = () => {
@@ -46,5 +51,32 @@ export const useNetworkResilience = () => {
     };
   }, []);
 
-  return { networkState };
+  const withRetry = useCallback(async <T,>(
+    fn: () => Promise<T>,
+    options: RetryOptions = {}
+  ): Promise<T> => {
+    const { maxAttempts = 3, baseDelay = 1000 } = options;
+    let lastError: Error;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        setNetworkState(prev => ({ ...prev, retryCount: attempt - 1 }));
+        return await fn();
+      } catch (error) {
+        lastError = error as Error;
+        
+        if (attempt === maxAttempts) {
+          break;
+        }
+        
+        // Exponential backoff
+        const delay = baseDelay * Math.pow(2, attempt - 1);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+    
+    throw lastError!;
+  }, []);
+
+  return { networkState, withRetry };
 };
