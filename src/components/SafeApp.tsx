@@ -7,6 +7,7 @@ import SimpleSafeReactProvider from '@/components/SimpleSafeReactProvider';
 import StageLoadingProvider from '@/components/StageLoadingProvider';
 import SimpleOfflineIndicator from '@/components/fallback/SimpleOfflineIndicator';
 import { automatedHealthService } from '@/services/automatedHealthService';
+import { advancedReactValidator } from '@/utils/advancedReactValidator';
 
 // Enhanced Query Client with better defaults
 const queryClient = new QueryClient({
@@ -42,6 +43,7 @@ const MainAppContent = React.lazy(() => import('@/components/MainAppContent'));
 interface ValidatedAppState {
   isContextsReady: boolean;
   healthMonitoringStarted: boolean;
+  reactValidationReport: any;
 }
 
 // This class component handles post-validation loading - only renders after React is safe
@@ -52,12 +54,19 @@ class ValidatedApp extends Component<{}, ValidatedAppState> {
     super(props);
     this.state = {
       isContextsReady: false,
-      healthMonitoringStarted: false
+      healthMonitoringStarted: false,
+      reactValidationReport: null
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     console.log('ValidatedApp: React hooks are now safe to use');
+    
+    // Get validation report for diagnostics
+    const report = advancedReactValidator.getCachedValidation();
+    if (report) {
+      this.setState({ reactValidationReport: report });
+    }
     
     // Start automated health monitoring now that React is validated
     this.startHealthMonitoring();
@@ -65,7 +74,7 @@ class ValidatedApp extends Component<{}, ValidatedAppState> {
     // Initialize contexts with a small delay to ensure everything is ready
     this.contextTimer = setTimeout(() => {
       this.setState({ isContextsReady: true });
-    }, 150);
+    }, 200);
   }
 
   componentWillUnmount() {
@@ -102,12 +111,19 @@ class ValidatedApp extends Component<{}, ValidatedAppState> {
         React.createElement('div', {
           key: 'loading',
           className: 'min-h-screen bg-background flex items-center justify-center'
-        }, React.createElement('div', { className: 'text-center' }, [
+        }, React.createElement('div', { className: 'text-center space-y-4' }, [
           React.createElement('div', {
             key: 'spinner',
-            className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'
+            className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto'
           }),
-          React.createElement('p', { key: 'text' }, 'Loading application contexts...')
+          React.createElement('p', { 
+            key: 'text',
+            className: 'text-muted-foreground'
+          }, 'Loading application contexts...'),
+          React.createElement('p', { 
+            key: 'subtext',
+            className: 'text-sm text-muted-foreground/70'
+          }, 'React framework validated successfully')
         ])) :
         
         // Render main app content with Suspense
@@ -115,12 +131,15 @@ class ValidatedApp extends Component<{}, ValidatedAppState> {
           key: 'main-content',
           fallback: React.createElement('div', {
             className: 'min-h-screen bg-background flex items-center justify-center'
-          }, React.createElement('div', { className: 'text-center' }, [
+          }, React.createElement('div', { className: 'text-center space-y-4' }, [
             React.createElement('div', {
               key: 'spinner',
-              className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'
+              className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto'
             }),
-            React.createElement('p', { key: 'text' }, 'Loading...')
+            React.createElement('p', { 
+              key: 'text',
+              className: 'text-muted-foreground'
+            }, 'Loading application...')
           ]))
         }, React.createElement(MainAppContent))
     ]);

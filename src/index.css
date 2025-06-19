@@ -1,7 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom animations for loading states */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
 
 @layer base {
   :root {
@@ -11,7 +22,7 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
+    --primary: 240 9% 9%;
     --primary-foreground: 0 0% 98%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -24,51 +35,12 @@
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 10% 3.9%;
-    --radius: 0.5rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-
-    /* TherapySync brand colors - gradient swirl inspired */
-    --harmony-50: 14 100% 97%;
-    --harmony-100: 13 100% 93%;
-    --harmony-200: 13 100% 87%;
-    --harmony-300: 12 100% 78%;
-    --harmony-400: 11 100% 67%;
-    --harmony-500: 11 100% 59%;
-    --harmony-600: 9 100% 52%;
-    --harmony-700: 7 93% 44%;
-    --harmony-800: 6 84% 37%;
-    --harmony-900: 5 78% 30%;
-    --harmony-950: 4 85% 16%;
-
-    /* Flow theme colors - deep blue/purple inspired */
-    --flow-50: 231 48% 97%;
-    --flow-100: 232 59% 94%;
-    --flow-200: 232 60% 87%;
-    --flow-300: 232 57% 77%;
-    --flow-400: 232 57% 65%;
-    --flow-500: 232 57% 53%;
-    --flow-600: 232 67% 42%;
-    --flow-700: 232 74% 34%;
-    --flow-800: 232 84% 27%;
-    --flow-900: 232 87% 23%;
-    --flow-950: 232 84% 15%;
-
-    /* Balance theme colors - transition pink/purple */
-    --balance-50: 320 43% 97%;
-    --balance-100: 322 44% 94%;
-    --balance-200: 322 47% 87%;
-    --balance-300: 322 47% 77%;
-    --balance-400: 322 44% 65%;
-    --balance-500: 322 44% 53%;
-    --balance-600: 322 54% 42%;
-    --balance-700: 322 61% 34%;
-    --balance-800: 322 74% 27%;
-    --balance-900: 322 78% 23%;
-    --balance-950: 322 84% 15%;
+    --radius: 0.5rem;
   }
 
   .dark {
@@ -105,474 +77,34 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
   }
 }
 
-@layer utilities {
-  /* Harmony colors (warm coral/orange) */
-  .harmony-50 { color: hsl(var(--harmony-50)); }
-  .harmony-100 { color: hsl(var(--harmony-100)); }
-  .harmony-200 { color: hsl(var(--harmony-200)); }
-  .harmony-300 { color: hsl(var(--harmony-300)); }
-  .harmony-400 { color: hsl(var(--harmony-400)); }
-  .harmony-500 { color: hsl(var(--harmony-500)); }
-  .harmony-600 { color: hsl(var(--harmony-600)); }
-  .harmony-700 { color: hsl(var(--harmony-700)); }
-  .harmony-800 { color: hsl(var(--harmony-800)); }
-  .harmony-900 { color: hsl(var(--harmony-900)); }
-  .harmony-950 { color: hsl(var(--harmony-950)); }
+/* Custom styles for React error states */
+.react-error-boundary {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
 
-  .bg-harmony-50 { background-color: hsl(var(--harmony-50)); }
-  .bg-harmony-100 { background-color: hsl(var(--harmony-100)); }
-  .bg-harmony-200 { background-color: hsl(var(--harmony-200)); }
-  .bg-harmony-300 { background-color: hsl(var(--harmony-300)); }
-  .bg-harmony-400 { background-color: hsl(var(--harmony-400)); }
-  .bg-harmony-500 { background-color: hsl(var(--harmony-500)); }
-  .bg-harmony-600 { background-color: hsl(var(--harmony-600)); }
-  .bg-harmony-700 { background-color: hsl(var(--harmony-700)); }
-  .bg-harmony-800 { background-color: hsl(var(--harmony-800)); }
-  .bg-harmony-900 { background-color: hsl(var(--harmony-900)); }
-  .bg-harmony-950 { background-color: hsl(var(--harmony-950)); }
+.react-error-content {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 600px;
+  width: 100%;
+}
 
-  /* Flow colors (deep blue/purple) */
-  .flow-50 { color: hsl(var(--flow-50)); }
-  .flow-100 { color: hsl(var(--flow-100)); }
-  .flow-200 { color: hsl(var(--flow-200)); }
-  .flow-300 { color: hsl(var(--flow-300)); }
-  .flow-400 { color: hsl(var(--flow-400)); }
-  .flow-500 { color: hsl(var(--flow-500)); }
-  .flow-600 { color: hsl(var(--flow-600)); }
-  .flow-700 { color: hsl(var(--flow-700)); }
-  .flow-800 { color: hsl(var(--flow-800)); }
-  .flow-900 { color: hsl(var(--flow-900)); }
-  .flow-950 { color: hsl(var(--flow-950)); }
-
-  .bg-flow-50 { background-color: hsl(var(--flow-50)); }
-  .bg-flow-100 { background-color: hsl(var(--flow-100)); }
-  .bg-flow-200 { background-color: hsl(var(--flow-200)); }
-  .bg-flow-300 { background-color: hsl(var(--flow-300)); }
-  .bg-flow-400 { background-color: hsl(var(--flow-400)); }
-  .bg-flow-500 { background-color: hsl(var(--flow-500)); }
-  .bg-flow-600 { background-color: hsl(var(--flow-600)); }
-  .bg-flow-700 { background-color: hsl(var(--flow-700)); }
-  .bg-flow-800 { background-color: hsl(var(--flow-800)); }
-  .bg-flow-900 { background-color: hsl(var(--flow-900)); }
-  .bg-flow-950 { background-color: hsl(var(--flow-950)); }
-
-  /* Balance colors (transition pink/purple) */
-  .balance-50 { color: hsl(var(--balance-50)); }
-  .balance-100 { color: hsl(var(--balance-100)); }
-  .balance-200 { color: hsl(var(--balance-200)); }
-  .balance-300 { color: hsl(var(--balance-300)); }
-  .balance-400 { color: hsl(var(--balance-400)); }
-  .balance-500 { color: hsl(var(--balance-500)); }
-  .balance-600 { color: hsl(var(--balance-600)); }
-  .balance-700 { color: hsl(var(--balance-700)); }
-  .balance-800 { color: hsl(var(--balance-800)); }
-  .balance-900 { color: hsl(var(--balance-900)); }
-  .balance-950 { color: hsl(var(--balance-950)); }
-
-  .bg-balance-50 { background-color: hsl(var(--balance-50)); }
-  .bg-balance-100 { background-color: hsl(var(--balance-100)); }
-  .bg-balance-200 { background-color: hsl(var(--balance-200)); }
-  .bg-balance-300 { background-color: hsl(var(--balance-300)); }
-  .bg-balance-400 { background-color: hsl(var(--balance-400)); }
-  .bg-balance-500 { background-color: hsl(var(--balance-500)); }
-  .bg-balance-600 { background-color: hsl(var(--balance-600)); }
-  .bg-balance-700 { background-color: hsl(var(--balance-700)); }
-  .bg-balance-800 { background-color: hsl(var(--balance-800)); }
-  .bg-balance-900 { background-color: hsl(var(--balance-900)); }
-  .bg-balance-950 { background-color: hsl(var(--balance-950)); }
-
-  /* Swirl-Inspired Animations */
-  
-  .animate-swirl-breathe {
-    animation: swirlBreathe 4s ease-in-out infinite;
-  }
-  
-  @keyframes swirlBreathe {
-    0%, 100% { 
-      transform: scale(1) rotate(0deg);
-      filter: brightness(1);
-    }
-    50% { 
-      transform: scale(1.03) rotate(5deg);
-      filter: brightness(1.08);
-    }
-  }
-
-  .animate-swirl-grow {
-    animation: swirlGrow 2s ease-out infinite;
-  }
-  
-  @keyframes swirlGrow {
-    0% { 
-      transform: scale(1) rotate(0deg);
-    }
-    50% { 
-      transform: scale(1.15) rotate(10deg);
-    }
-    100% { 
-      transform: scale(1) rotate(0deg);
-    }
-  }
-
-  .animate-gradient-flow {
-    animation: gradientFlow 8s ease-in-out infinite;
-  }
-  
-  @keyframes gradientFlow {
-    0%, 100% { 
-      background-position: 0% 50%;
-    }
-    50% { 
-      background-position: 100% 50%;
-    }
-  }
-
-  .gradient-harmony {
-    background: linear-gradient(135deg, 
-      hsl(var(--harmony-50)) 0%, 
-      hsl(var(--balance-50)) 25%,
-      hsl(var(--harmony-100)) 50%,
-      hsl(var(--flow-100)) 75%,
-      hsl(var(--harmony-50)) 100%);
-  }
-
-  .gradient-flow {
-    background: linear-gradient(135deg, 
-      hsl(var(--harmony-500)) 0%, 
-      hsl(var(--balance-500)) 25%,
-      hsl(var(--flow-600)) 75%,
-      hsl(var(--flow-700)) 100%);
-  }
-
-  .gradient-balance {
-    background: linear-gradient(145deg, 
-      rgba(255, 255, 255, 0.9) 0%, 
-      rgba(255, 255, 255, 0.7) 100%);
-    backdrop-filter: blur(10px);
-  }
-
-  .shadow-harmony {
-    box-shadow: 0 20px 40px -12px rgba(255, 107, 71, 0.25);
-  }
-
-  .shadow-flow {
-    box-shadow: 0 20px 40px -12px rgba(63, 81, 181, 0.25);
-  }
-
-  .shadow-3xl {
-    box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
-  }
-
-  /* Keep existing compatibility */
-  /* Tree-Inspired Animations */
-  
-  /* Tree breathing - gentle pulsing like a living tree */
-  .animate-tree-breathe {
-    animation: treeBreathe 4s ease-in-out infinite;
-  }
-  
-  @keyframes treeBreathe {
-    0%, 100% { 
-      transform: scale(1);
-      filter: brightness(1);
-    }
-    50% { 
-      transform: scale(1.03);
-      filter: brightness(1.08);
-    }
-  }
-
-  /* Tree growth - expanding like a growing tree */
-  .animate-tree-grow {
-    animation: treeGrow 2s ease-out infinite;
-  }
-  
-  @keyframes treeGrow {
-    0% { 
-      transform: scale(1) rotate(0deg);
-    }
-    50% { 
-      transform: scale(1.15) rotate(1deg);
-    }
-    100% { 
-      transform: scale(1) rotate(0deg);
-    }
-  }
-
-  /* Enhanced leaf floating - like leaves in gentle breeze */
-  .animate-leaf-float {
-    animation: leafFloat 12s ease-in-out infinite;
-  }
-  
-  @keyframes leafFloat {
-    0%, 100% { 
-      transform: translateY(0px) translateX(0px) rotate(0deg);
-      opacity: 0.6;
-    }
-    25% { 
-      transform: translateY(-8px) translateX(3px) rotate(2deg);
-      opacity: 0.8;
-    }
-    50% { 
-      transform: translateY(-12px) translateX(-2px) rotate(-2deg);
-      opacity: 1;
-    }
-    75% { 
-      transform: translateY(-5px) translateX(2px) rotate(1deg);
-      opacity: 0.7;
-    }
-  }
-
-  /* Tree Loading Animations */
-  .animate-tree-growth {
-    animation: treeGrowthSequence 3s ease-out infinite;
-  }
-  
-  @keyframes treeGrowthSequence {
-    0% { 
-      transform: scale(0.8);
-      opacity: 0.6;
-    }
-    50% { 
-      transform: scale(1.2);
-      opacity: 1;
-    }
-    100% { 
-      transform: scale(1);
-      opacity: 0.9;
-    }
-  }
-
-  .animate-trunk-grow {
-    animation: trunkGrow 2s ease-out infinite;
-  }
-  
-  @keyframes trunkGrow {
-    0% { 
-      transform: scaleY(0.5);
-      transform-origin: bottom;
-    }
-    100% { 
-      transform: scaleY(1);
-      transform-origin: bottom;
-    }
-  }
-
-  .animate-leaf-grow-1 {
-    animation: leafGrow1 2.5s ease-out infinite;
-  }
-  
-  .animate-leaf-grow-2 {
-    animation: leafGrow2 3s ease-out infinite;
-  }
-  
-  .animate-leaf-grow-3 {
-    animation: leafGrow3 3.5s ease-out infinite;
-  }
-  
-  @keyframes leafGrow1 {
-    0% { 
-      transform: scale(0);
-      opacity: 0;
-    }
-    60% { 
-      transform: scale(1.3);
-      opacity: 0.8;
-    }
-    100% { 
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes leafGrow2 {
-    0% { 
-      transform: scale(0);
-      opacity: 0;
-    }
-    70% { 
-      transform: scale(1.2);
-      opacity: 0.9;
-    }
-    100% { 
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes leafGrow3 {
-    0% { 
-      transform: scale(0);
-      opacity: 0;
-    }
-    80% { 
-      transform: scale(1.15);
-      opacity: 1;
-    }
-    100% { 
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  .animate-roots-grow {
-    animation: rootsGrow 2s ease-out infinite;
-  }
-  
-  @keyframes rootsGrow {
-    0% { 
-      stroke-dasharray: 0 100;
-      opacity: 0;
-    }
-    100% { 
-      stroke-dasharray: 100 0;
-      opacity: 0.7;
-    }
-  }
-
-  /* Button interaction animations */
-  .animate-button-tree-grow {
-    animation: buttonTreeGrow 0.6s ease-out forwards;
-  }
-  
-  @keyframes buttonTreeGrow {
-    0% { 
-      transform: scale(1);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-    50% { 
-      transform: scale(1.05);
-      box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.3);
-    }
-    100% { 
-      transform: scale(1.02);
-      box-shadow: 0 8px 12px -2px rgba(34, 197, 94, 0.25);
-    }
-  }
-
-  /* Session transition animations */
-  .animate-session-start {
-    animation: sessionStart 2s ease-out forwards;
-  }
-  
-  @keyframes sessionStart {
-    0% { 
-      opacity: 0.8;
-      transform: scale(0.95);
-    }
-    50% { 
-      opacity: 1;
-      transform: scale(1.02);
-    }
-    100% { 
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  /* Enhanced animations with nature-inspired themes */
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-grow {
-    animation: grow 2s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { 
-      transform: translateY(0px) rotate(0deg);
-    }
-    50% { 
-      transform: translateY(-20px) rotate(1deg);
-    }
-  }
-
-  @keyframes grow {
-    0%, 100% { 
-      transform: scale(1);
-    }
-    50% { 
-      transform: scale(1.05);
-    }
-  }
-
-  .animate-fade-in {
-    animation: fadeIn 0.8s ease-out forwards;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .gradient-therapy {
-    background: linear-gradient(135deg, 
-      hsl(var(--therapy-50)) 0%, 
-      hsl(var(--calm-50)) 25%,
-      hsl(var(--therapy-100)) 50%,
-      hsl(var(--calm-100)) 75%,
-      hsl(var(--therapy-50)) 100%);
-  }
-
-  .gradient-nature {
-    background: linear-gradient(135deg, 
-      hsl(var(--therapy-500)) 0%, 
-      hsl(var(--therapy-600)) 25%,
-      hsl(var(--calm-600)) 75%,
-      hsl(var(--calm-700)) 100%);
-  }
-
-  .gradient-card {
-    background: linear-gradient(145deg, 
-      rgba(255, 255, 255, 0.9) 0%, 
-      rgba(255, 255, 255, 0.7) 100%);
-    backdrop-filter: blur(10px);
-  }
-
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .shadow-3xl {
-    box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
-  }
-
-  .shadow-therapy {
-    box-shadow: 0 20px 40px -12px rgba(34, 197, 94, 0.25);
-  }
-
-  .shadow-calm {
-    box-shadow: 0 20px 40px -12px rgba(14, 165, 233, 0.25);
-  }
-
-  /* Reduced motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    .animate-tree-breathe,
-    .animate-tree-grow,
-    .animate-leaf-float,
-    .animate-tree-growth,
-    .animate-trunk-grow,
-    .animate-leaf-grow-1,
-    .animate-leaf-grow-2,
-    .animate-leaf-grow-3,
-    .animate-roots-grow,
-    .animate-button-tree-grow,
-    .animate-session-start {
-      animation: none;
-    }
-  }
+.react-loading-state {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }

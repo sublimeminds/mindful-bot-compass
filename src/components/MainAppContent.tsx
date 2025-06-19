@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { SessionProvider } from '@/contexts/SessionContext';
-import { TherapistProvider } from '@/contexts/TherapistContext';
+import ClassBasedAuthProvider from '@/components/providers/ClassBasedAuthProvider';
+import ClassBasedSessionProvider from '@/components/providers/ClassBasedSessionProvider';
+import ClassBasedTherapistProvider from '@/components/providers/ClassBasedTherapistProvider';
 import { Toaster } from '@/components/ui/toaster';
 import SafeHookWrapper from '@/components/SafeHookWrapper';
 import ReactSafeErrorBoundary from '@/components/ReactSafeErrorBoundary';
@@ -16,9 +16,9 @@ const OfflineIndicator = React.lazy(() => import('@/components/OfflineIndicator'
 const MainAppContent: React.FC = () => {
   return (
     <ReactSafeErrorBoundary>
-      <AuthProvider>
-        <SessionProvider>
-          <TherapistProvider>
+      <ClassBasedAuthProvider>
+        <ClassBasedSessionProvider>
+          <ClassBasedTherapistProvider>
             {/* Main application router - now inside all contexts */}
             <AppRouter />
             
@@ -46,9 +46,9 @@ const MainAppContent: React.FC = () => {
             <SafeHookWrapper componentName="Toaster">
               <Toaster />
             </SafeHookWrapper>
-          </TherapistProvider>
-        </SessionProvider>
-      </AuthProvider>
+          </ClassBasedTherapistProvider>
+        </ClassBasedSessionProvider>
+      </ClassBasedAuthProvider>
     </ReactSafeErrorBoundary>
   );
 };
