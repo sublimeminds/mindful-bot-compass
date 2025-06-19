@@ -76,6 +76,19 @@ export class EmotionalIntelligenceService {
       
       this.emotionCache.set(userId, userEmotions);
 
+      // Store in emotional_states table
+      await supabase
+        .from('emotional_states')
+        .insert({
+          user_id: userId,
+          primary_emotion: emotion.primary,
+          secondary_emotion: emotion.secondary,
+          intensity: emotion.intensity,
+          valence: emotion.valence,
+          arousal: emotion.arousal,
+          confidence: emotion.confidence
+        });
+
       // Store in mood_entries table as a fallback
       await supabase
         .from('mood_entries')
@@ -185,12 +198,22 @@ export class EmotionalIntelligenceService {
 
       if (error || !data) return null;
 
+      // Safe type checking for emotional_patterns
+      const emotionalPatterns = data.emotional_patterns as any;
+      
       const pattern: EmotionalPattern = {
         userId,
-        dominantEmotions: data.emotional_patterns?.dominantEmotions || [],
-        triggerWords: data.emotional_patterns?.triggerWords || [],
-        positiveIndicators: data.emotional_patterns?.positiveIndicators || [],
-        emotionalBaseline: data.emotional_patterns?.baseline || { primary: 'neutral', intensity: 0.5, valence: 0, arousal: 0.5, confidence: 0.8, timestamp: new Date() },
+        dominantEmotions: (emotionalPatterns?.dominantEmotions as string[]) || [],
+        triggerWords: (emotionalPatterns?.triggerWords as string[]) || [],
+        positiveIndicators: (emotionalPatterns?.positiveIndicators as string[]) || [],
+        emotionalBaseline: (emotionalPatterns?.baseline as EmotionalState) || { 
+          primary: 'neutral', 
+          intensity: 0.5, 
+          valence: 0, 
+          arousal: 0.5, 
+          confidence: 0.8, 
+          timestamp: new Date() 
+        },
         adaptationRules: []
       };
 
@@ -212,6 +235,16 @@ export class EmotionalIntelligenceService {
       const dominantEmotions = this.findDominantEmotions(recentEmotions);
       const baseline = this.calculateEmotionalBaseline(recentEmotions);
 
+      // Convert baseline to plain object for JSON storage
+      const baselineObj = {
+        primary: baseline.primary,
+        intensity: baseline.intensity,
+        valence: baseline.valence,
+        arousal: baseline.arousal,
+        confidence: baseline.confidence,
+        timestamp: baseline.timestamp.toISOString()
+      };
+
       // Update user_preferences table
       await supabase
         .from('user_preferences')
@@ -219,7 +252,7 @@ export class EmotionalIntelligenceService {
           user_id: userId,
           emotional_patterns: {
             dominantEmotions,
-            baseline,
+            baseline: baselineObj,
             lastUpdated: new Date().toISOString()
           },
           updated_at: new Date().toISOString()

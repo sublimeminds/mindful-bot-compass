@@ -51,7 +51,7 @@ export class AdvancedPersonalizationService {
   // Initialize or update personalization profile using existing tables
   static async initializeProfile(userId: string, initialData?: Partial<PersonalizationProfile>): Promise<PersonalizationProfile> {
     try {
-      // Check if profile exists in user_preferences
+      // Check if profile exists in personalization_profiles
       let profile = await this.getProfile(userId);
       
       if (!profile) {
@@ -77,15 +77,18 @@ export class AdvancedPersonalizationService {
           ...initialData
         };
 
-        // Save to user_preferences table
+        // Save to personalization_profiles table
         await supabase
-          .from('user_preferences')
-          .upsert({
+          .from('personalization_profiles')
+          .insert({
             user_id: userId,
+            learning_style: profile.learningStyle,
+            therapy_preferences: profile.therapyPreferences,
             communication_style: profile.communicationStyle,
-            preferred_approaches: profile.therapyPreferences.approach,
-            session_preferences: profile.therapyPreferences,
-            updated_at: new Date().toISOString()
+            motivation_factors: profile.motivationFactors,
+            avoidance_triggers: profile.avoidanceTriggers,
+            progress_patterns: profile.progressPatterns,
+            adaptive_rules: profile.adaptiveRules
           });
       }
 
@@ -244,6 +247,39 @@ export class AdvancedPersonalizationService {
         return this.profiles.get(userId)!;
       }
 
+      // Try personalization_profiles table first
+      const { data: profileData, error: profileError } = await supabase
+        .from('personalization_profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      if (profileData && !profileError) {
+        const profile: PersonalizationProfile = {
+          userId,
+          learningStyle: (profileData.learning_style as 'visual' | 'auditory' | 'kinesthetic' | 'reading') || 'visual',
+          therapyPreferences: (profileData.therapy_preferences as any) || {
+            approach: ['CBT'],
+            sessionLength: 30,
+            frequency: 'weekly',
+            timeOfDay: 'evening'
+          },
+          communicationStyle: (profileData.communication_style as 'direct' | 'gentle' | 'encouraging' | 'analytical') || 'gentle',
+          motivationFactors: profileData.motivation_factors || [],
+          avoidanceTriggers: profileData.avoidance_triggers || [],
+          progressPatterns: (profileData.progress_patterns as any) || {
+            bestResponseTimes: [],
+            effectiveTechniques: [],
+            challengingAreas: []
+          },
+          adaptiveRules: []
+        };
+
+        this.profiles.set(userId, profile);
+        return profile;
+      }
+
+      // Fallback to user_preferences table
       const { data, error } = await supabase
         .from('user_preferences')
         .select('*')
@@ -252,16 +288,19 @@ export class AdvancedPersonalizationService {
 
       if (error || !data) return null;
 
+      // Safe type checking for session_preferences
+      const sessionPrefs = data.session_preferences as any;
+      
       const profile: PersonalizationProfile = {
         userId,
         learningStyle: 'visual',
-        therapyPreferences: data.session_preferences || {
+        therapyPreferences: {
           approach: data.preferred_approaches || ['CBT'],
-          sessionLength: 30,
-          frequency: 'weekly',
-          timeOfDay: 'evening'
+          sessionLength: sessionPrefs?.sessionLength || 30,
+          frequency: sessionPrefs?.frequency || 'weekly',
+          timeOfDay: sessionPrefs?.timeOfDay || 'evening'
         },
-        communicationStyle: data.communication_style || 'gentle',
+        communicationStyle: (data.communication_style as 'direct' | 'gentle' | 'encouraging' | 'analytical') || 'gentle',
         motivationFactors: [],
         avoidanceTriggers: [],
         progressPatterns: {
@@ -335,8 +374,7 @@ export class AdvancedPersonalizationService {
         description: rec.description,
         reasoning: rec.reasoning,
         priority_score: rec.confidence,
-        estimated_impact: rec.estimatedImpact,
-        created_at: new Date().toISOString()
+        estimated_impact: rec.estimatedImpact
       }));
 
       await supabase
