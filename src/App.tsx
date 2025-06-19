@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -17,6 +16,8 @@ import { initializePWA } from '@/utils/serviceWorker';
 import { enhancedCacheService } from '@/services/enhancedCachingService';
 
 import './App.css';
+import SafeReactProvider from '@/components/SafeReactProvider';
+import { SafeAccessibilityProvider } from '@/contexts/SafeAccessibilityContext';
 
 // Enhanced Query Client with better defaults
 const queryClient = new QueryClient({
@@ -115,39 +116,41 @@ function App() {
   }
 
   return (
-    <EnhancedErrorBoundary level="critical">
-      <QueryClientProvider client={queryClient}>
-        <AccessibilityProvider>
-          <AuthProvider>
-            <SessionProvider>
-              <TherapistProvider>
-                <Router>
-                  <div className="min-h-screen bg-background">
-                    <EnhancedErrorBoundary level="page">
-                      <AppRouter />
-                    </EnhancedErrorBoundary>
-                    
-                    {/* Status Indicators */}
-                    <NetworkStatusIndicator />
-                    <OfflineIndicator />
-                    
-                    {/* Accessibility and Performance Tools */}
-                    <EnhancedErrorBoundary level="component">
-                      <AccessibilityPanel />
-                    </EnhancedErrorBoundary>
-                    <EnhancedErrorBoundary level="component">
-                      <PerformanceDashboard />
-                    </EnhancedErrorBoundary>
-                    
-                    <Toaster />
-                  </div>
-                </Router>
-              </TherapistProvider>
-            </SessionProvider>
-          </AuthProvider>
-        </AccessibilityProvider>
-      </QueryClientProvider>
-    </EnhancedErrorBoundary>
+    <SafeReactProvider>
+      <EnhancedErrorBoundary level="critical">
+        <QueryClientProvider client={queryClient}>
+          <SafeAccessibilityProvider>
+            <AuthProvider>
+              <SessionProvider>
+                <TherapistProvider>
+                  <Router>
+                    <div className="min-h-screen bg-background">
+                      <EnhancedErrorBoundary level="page">
+                        <AppRouter />
+                      </EnhancedErrorBoundary>
+                      
+                      {/* Status Indicators */}
+                      <NetworkStatusIndicator />
+                      <OfflineIndicator />
+                      
+                      {/* Accessibility and Performance Tools */}
+                      <EnhancedErrorBoundary level="component">
+                        <AccessibilityPanel />
+                      </EnhancedErrorBoundary>
+                      <EnhancedErrorBoundary level="component">
+                        <PerformanceDashboard />
+                      </EnhancedErrorBoundary>
+                      
+                      <Toaster />
+                    </div>
+                  </Router>
+                </TherapistProvider>
+              </SessionProvider>
+            </AuthProvider>
+          </SafeAccessibilityProvider>
+        </QueryClientProvider>
+      </EnhancedErrorBoundary>
+    </SafeReactProvider>
   );
 }
 

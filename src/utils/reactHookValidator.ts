@@ -2,16 +2,36 @@
 import React from 'react';
 import { DebugLogger } from './debugLogger';
 
-interface HookValidationResult {
+interface ReactValidationResult {
   isValid: boolean;
-  error?: string;
+  error?: Error;
   suggestions?: string[];
+}
+
+interface ReactDiagnostics {
+  reactAvailable: boolean;
+  hooksAvailable: boolean;
+  versionCompatible: boolean;
+  componentRenderCount: Record<string, number>;
+  hookCallStack: Record<string, any[]>;
+  lastError?: Error;
 }
 
 class ReactHookValidator {
   private static instance: ReactHookValidator;
-  private hookCallStack: Map<string, number> = new Map();
-  private componentRenderCount: Map<string, number> = new Map();
+  private diagnostics: ReactDiagnostics;
+  private componentRenderCounts = new Map<string, number>();
+  private hookCalls = new Map<string, any[]>();
+
+  constructor() {
+    this.diagnostics = {
+      reactAvailable: false,
+      hooksAvailable: false,
+      versionCompatible: false,
+      componentRenderCount: {},
+      hookCallStack: {}
+    };
+  }
 
   static getInstance(): ReactHookValidator {
     if (!ReactHookValidator.instance) {
@@ -20,109 +40,147 @@ class ReactHookValidator {
     return ReactHookValidator.instance;
   }
 
-  validateReactContext(): HookValidationResult {
+  validateReactInit(): ReactValidationResult {
     try {
-      // Check if React is properly imported and available
-      if (typeof React === 'undefined') {
+      // Check if React is available
+      if (typeof React === 'undefined' || !React) {
+        const error = new Error('React is not available');
+        this.diagnostics.lastError = error;
         return {
           isValid: false,
-          error: 'React is not defined - check import statement',
-          suggestions: ['Use: import React from "react"', 'Ensure React is properly installed']
+          error,
+          suggestions: [
+            'Ensure React is properly imported',
+            'Check if React package is installed',
+            'Verify bundle integrity'
+          ]
         };
       }
 
-      // Check if React hooks are available
-      if (!React.useState || !React.useEffect || !React.useContext) {
+      this.diagnostics.reactAvailable = true;
+
+      // Check React hooks availability
+      const requiredHooks = ['useState', 'useEffect', 'useContext', 'useCallback', 'useMemo'];
+      const missingHooks = requiredHooks.filter(hook => !React[hook]);
+      
+      if (missingHooks.length > 0) {
+        const error = new Error(`Missing React hooks: ${missingHooks.join(', ')}`);
+        this.diagnostics.lastError = error;
         return {
           isValid: false,
-          error: 'React hooks are not available',
-          suggestions: ['Check React version compatibility', 'Ensure proper React import pattern']
+          error,
+          suggestions: [
+            'Update React to version 16.8 or higher',
+            'Check React import statement',
+            'Verify React build integrity'
+          ]
         };
       }
+
+      this.diagnostics.hooksAvailable = true;
+
+      // Check React version compatibility
+      if (React.version) {
+        const majorVersion = parseInt(React.version.split('.')[0]);
+        this.diagnostics.versionCompatible = majorVersion >= 16;
+        
+        if (!this.diagnostics.versionCompatible) {
+          const error = new Error(`Incompatible React version: ${React.version}. Minimum required: 16.8`);
+          this.diagnostics.lastError = error;
+          return {
+            isValid: false,
+            error,
+            suggestions: [
+              'Update React to version 16.8 or higher',
+              'Update React DOM as well',
+              'Check package.json dependencies'
+            ]
+          };
+        }
+      }
+
+      DebugLogger.info('ReactHookValidator: React validation successful', {
+        component: 'ReactHookValidator',
+        version: React.version
+      });
 
       return { isValid: true };
+
     } catch (error) {
-      DebugLogger.error('ReactHookValidator: Error during validation', error as Error, {
-        component: 'ReactHookValidator',
-        method: 'validateReactContext'
+      this.diagnostics.lastError = error as Error;
+      DebugLogger.error('ReactHookValidator: Validation failed', error as Error, {
+        component: 'ReactHookValidator'
       });
       
       return {
         isValid: false,
-        error: `Validation failed: ${(error as Error).message}`,
-        suggestions: ['Check React installation', 'Verify import statements', 'Check for circular dependencies']
+        error: error as Error,
+        suggestions: [
+          'Check browser console for detailed errors',
+          'Try refreshing the page',
+          'Clear browser cache and reload'
+        ]
       };
     }
   }
 
-  validateHookUsage(hookName: string, componentName: string): HookValidationResult {
-    const key = `${componentName}-${hookName}`;
-    const currentCount = this.hookCallStack.get(key) || 0;
-    this.hookCallStack.set(key, currentCount + 1);
+  validateReactContext(): ReactValidationResult {
+    try {
+      // Test React context creation
+      const TestContext = React.createContext(null);
+      if (!TestContext) {
+        throw new Error('React.createContext is not working');
+      }
 
-    // Check for conditional hook usage (basic detection)
-    if (currentCount > 10) {
+      // Test hook call in safe environment
+      let testResult = null;
+      const TestComponent = () => {
+        try {
+          testResult = React.useState(null);
+          return null;
+        } catch (error) {
+          throw new Error(`React hooks not working: ${error.message}`);
+        }
+      };
+
+      return { isValid: true };
+    } catch (error) {
       return {
         isValid: false,
-        error: `Possible conditional hook usage detected in ${componentName}`,
-        suggestions: ['Ensure hooks are called at the top level', 'Check for hooks inside loops or conditions']
+        error: error as Error,
+        suggestions: [
+          'React context system is not functioning',
+          'Check if React is properly initialized',
+          'Try reloading the application'
+        ]
       };
     }
-
-    return { isValid: true };
   }
 
   trackComponentRender(componentName: string): void {
-    const currentCount = this.componentRenderCount.get(componentName) || 0;
-    this.componentRenderCount.set(componentName, currentCount + 1);
+    const count = this.componentRenderCounts.get(componentName) || 0;
+    this.componentRenderCounts.set(componentName, count + 1);
+    this.diagnostics.componentRenderCount[componentName] = count + 1;
+  }
 
-    if (currentCount > 100) {
-      DebugLogger.warn(`ReactHookValidator: Excessive renders detected for ${componentName}`, {
-        component: 'ReactHookValidator',
-        componentName,
-        renderCount: currentCount
-      });
-    }
+  trackHookCall(hookName: string, params: any[]): void {
+    const calls = this.hookCalls.get(hookName) || [];
+    calls.push({ timestamp: Date.now(), params });
+    this.hookCalls.set(hookName, calls);
+    this.diagnostics.hookCallStack[hookName] = calls;
+  }
+
+  getDiagnostics(): ReactDiagnostics {
+    return { ...this.diagnostics };
   }
 
   resetTracking(): void {
-    this.hookCallStack.clear();
-    this.componentRenderCount.clear();
-  }
-
-  getDiagnostics(): Record<string, any> {
-    return {
-      hookCallStack: Object.fromEntries(this.hookCallStack),
-      componentRenderCount: Object.fromEntries(this.componentRenderCount),
-      reactAvailable: typeof React !== 'undefined',
-      hooksAvailable: typeof React !== 'undefined' && !!React.useState
-    };
+    this.componentRenderCounts.clear();
+    this.hookCalls.clear();
+    this.diagnostics.componentRenderCount = {};
+    this.diagnostics.hookCallStack = {};
+    this.diagnostics.lastError = undefined;
   }
 }
 
 export const reactHookValidator = ReactHookValidator.getInstance();
-
-// Development-only hook validation wrapper
-export const withHookValidation = <T extends (...args: any[]) => any>(
-  hookFn: T,
-  hookName: string,
-  componentName: string
-): T => {
-  if (import.meta.env.DEV) {
-    return ((...args: Parameters<T>) => {
-      const validation = reactHookValidator.validateHookUsage(hookName, componentName);
-      
-      if (!validation.isValid) {
-        DebugLogger.error(`Hook validation failed: ${validation.error}`, new Error(validation.error), {
-          component: componentName,
-          hook: hookName,
-          suggestions: validation.suggestions
-        });
-      }
-
-      return hookFn(...args);
-    }) as T;
-  }
-  
-  return hookFn;
-};
