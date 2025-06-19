@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { EmotionalIntelligenceService } from './emotionalIntelligenceService';
 
@@ -77,6 +76,16 @@ export class AdvancedPersonalizationService {
           ...initialData
         };
 
+        // Convert adaptive rules to plain objects for JSON storage
+        const adaptiveRulesJson = profile.adaptiveRules.map(rule => ({
+          id: rule.id,
+          condition: rule.condition,
+          action: rule.action,
+          priority: rule.priority,
+          effectiveness: rule.effectiveness,
+          createdAt: rule.createdAt.toISOString()
+        }));
+
         // Save to personalization_profiles table
         await supabase
           .from('personalization_profiles')
@@ -88,7 +97,7 @@ export class AdvancedPersonalizationService {
             motivation_factors: profile.motivationFactors,
             avoidance_triggers: profile.avoidanceTriggers,
             progress_patterns: profile.progressPatterns,
-            adaptive_rules: profile.adaptiveRules
+            adaptive_rules: adaptiveRulesJson
           });
       }
 
