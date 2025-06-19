@@ -22,23 +22,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  // CRITICAL: Guard against React hooks being called when React is null
-  if (!React || !React.useState || !React.useEffect || !React.useContext) {
-    console.error('AuthProvider: React hooks are not available, returning fallback');
-    return React.createElement('div', {
-      style: {
-        padding: '20px',
-        backgroundColor: '#fee2e2',
-        border: '1px solid #fecaca',
-        borderRadius: '6px',
-        color: '#991b1b',
-        textAlign: 'center',
-        margin: '20px'
-      }
-    }, 'React Error: Hooks are not available. Please refresh the page.');
-  }
-
-  DebugLogger.debug('AuthProvider: Initializing with React hooks available', { component: 'AuthProvider' });
+  DebugLogger.debug('AuthProvider: Initializing', { component: 'AuthProvider' });
   
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -47,7 +31,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     DebugLogger.debug('AuthProvider: Setting up auth state listener', { component: 'AuthProvider' });
     let mounted = true;
-    let timeoutId: NodeJS.Timeout;
 
     // Add timeout to prevent infinite loading
     const authTimeout = setTimeout(() => {
@@ -55,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         DebugLogger.warn('AuthProvider: Auth initialization timeout, forcing completion', { component: 'AuthProvider' });
         setLoading(false);
       }
-    }, 5000); // 5 second timeout
+    }, 5000);
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -79,12 +62,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(session?.user ?? null);
         setLoading(false);
         
-        // Clear timeout since auth loaded successfully
         clearTimeout(authTimeout);
         
         // Track security events asynchronously without blocking
         if (event === 'SIGNED_IN' && session?.user) {
-          // Non-blocking security tracking
           setTimeout(async () => {
             try {
               const { SecurityService } = await import('@/services/securityService');
@@ -124,7 +105,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setSession(session);
           setUser(session?.user ?? null);
           
-          // Track initial session asynchronously without blocking
           if (session?.user) {
             setTimeout(async () => {
               try {
@@ -202,7 +182,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       }, []),
       signIn: useCallback(async (email: string, password: string) => {
-        // Alias for login
         return await contextValue.login(email, password);
       }, []),
       signup: useCallback(async (email: string, password: string) => {
@@ -312,7 +291,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       }, [user?.id]),
       signOut: useCallback(async () => {
-        // Alias for logout
         return await contextValue.logout();
       }, []),
       updateProfile: useCallback(async (data: { name?: string }) => {

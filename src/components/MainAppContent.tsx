@@ -18,10 +18,8 @@ const MainAppContent: React.FC = () => {
       <AuthProvider>
         <SimpleTherapistProvider>
           <SimpleSessionProvider>
-            {/* Main application router */}
             <AppRouter />
             
-            {/* Non-critical status indicators */}
             <React.Suspense fallback={null}>
               <NetworkStatusIndicator />
             </React.Suspense>
@@ -34,7 +32,6 @@ const MainAppContent: React.FC = () => {
               <AccessibilityPanel />
             </React.Suspense>
             
-            {/* Toast notifications */}
             <Toaster />
           </SimpleSessionProvider>
         </SimpleTherapistProvider>
