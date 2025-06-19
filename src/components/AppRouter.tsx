@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -10,6 +11,7 @@ import NotebookPage from '@/pages/NotebookPage';
 import EnhancedProfilePage from '@/pages/EnhancedProfilePage';
 import CrisisManagement from '@/pages/CrisisManagement';
 import SmartScheduling from '@/pages/SmartScheduling';
+import MonitoringPage from '@/pages/MonitoringPage';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
@@ -27,6 +29,7 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<AuthForm />} />
+        <Route path="/monitoring" element={<MonitoringPage />} />
         <Route path="/onboarding" element={
           <ProtectedRoute>
             <OnboardingPage />
