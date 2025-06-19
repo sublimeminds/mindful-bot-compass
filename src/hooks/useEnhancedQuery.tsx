@@ -108,7 +108,11 @@ export const useEnhancedMutation = <T, TVariables = void>(
       }
       
       const originalContext = await mutationOptions.onMutate?.(variables);
-      return { ...context, ...(originalContext || {}) };
+      // Safely merge contexts - ensure originalContext is an object
+      return { 
+        ...context, 
+        ...(originalContext && typeof originalContext === 'object' ? originalContext : {}) 
+      };
     },
     onError: (error, variables, context) => {
       // Rollback optimistic update
