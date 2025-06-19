@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 interface HealthCheck {
   name: string;
   status: 'pass' | 'warn' | 'fail';

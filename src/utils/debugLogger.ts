@@ -5,8 +5,20 @@ interface LogContext {
   [key: string]: any;
 }
 
-class DebugLogger {
+class DebugLoggerClass {
   private isDevelopment = import.meta.env.DEV;
+
+  debug(message: string, context?: LogContext): void {
+    if (this.isDevelopment) {
+      console.log(`[DEBUG] ${message}`, context || '');
+    }
+  }
+
+  trace(message: string, context?: LogContext): void {
+    if (this.isDevelopment) {
+      console.log(`[TRACE] ${message}`, context || '');
+    }
+  }
 
   info(message: string, context?: LogContext): void {
     if (this.isDevelopment) {
@@ -27,4 +39,4 @@ class DebugLogger {
   }
 }
 
-export const DebugLogger = new DebugLogger();
+export const DebugLogger = new DebugLoggerClass();

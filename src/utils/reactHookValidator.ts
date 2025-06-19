@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 interface ReactValidationResult {
   isValid: boolean;
   error?: Error;
