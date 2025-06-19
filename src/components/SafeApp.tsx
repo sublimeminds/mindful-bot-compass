@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
-import SafeReactGuard from '@/components/SafeReactGuard';
+import SimpleSafeReactProvider from '@/components/SimpleSafeReactProvider';
 import StageLoadingProvider from '@/components/StageLoadingProvider';
 import SimpleOfflineIndicator from '@/components/fallback/SimpleOfflineIndicator';
 import { automatedHealthService } from '@/services/automatedHealthService';
@@ -131,7 +131,7 @@ class ValidatedApp extends Component<{}, ValidatedAppState> {
 class SafeApp extends Component {
   render() {
     return React.createElement(SimpleErrorBoundary, { children: 
-      React.createElement(SafeReactGuard, { children:
+      React.createElement(SimpleSafeReactProvider, { children:
         React.createElement(StageLoadingProvider, { 
           stage: 'validation',
           onStageComplete: () => console.log('Validation stage complete'),
