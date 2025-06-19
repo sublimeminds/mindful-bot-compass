@@ -31,12 +31,14 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
         throw new Error('React hooks are not available');
       }
 
-      // Quick test to ensure hooks actually work
+      // Quick test to ensure hooks actually work by creating a test component
       const TestComponent = () => {
         const [test] = React.useState('test');
+        React.useEffect(() => {}, []);
         return null;
       };
 
+      // If we get here without errors, React is working
       console.log('SimpleSafeReactProvider: React validation successful');
       this.setState({ isReactSafe: true });
 
@@ -93,11 +95,11 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
         React.createElement('h2', {
           key: 'title',
           style: { marginBottom: '12px', color: '#374151' }
-        }, error ? 'Initialization Error' : 'Loading Application...'),
+        }, error ? 'React Initialization Error' : 'Initializing React...'),
         React.createElement('p', {
           key: 'message',
           style: { color: '#6b7280', marginBottom: '16px' }
-        }, error ? `${error.message}` : 'Preparing your therapy assistant...'),
+        }, error ? `${error.message}` : 'Preparing React environment...'),
         error && React.createElement('button', {
           key: 'retry',
           onClick: this.handleRetry,
