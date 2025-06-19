@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -23,6 +22,15 @@ interface MetricData {
   trend: 'up' | 'down' | 'stable';
 }
 
+// Extend Performance interface to include memory property
+interface PerformanceWithMemory extends Performance {
+  memory?: {
+    usedJSHeapSize: number;
+    totalJSHeapSize: number;
+    jsHeapSizeLimit: number;
+  };
+}
+
 const RuntimeMonitor = () => {
   const [metrics, setMetrics] = useState<MetricData[]>([]);
   const [isMonitoring, setIsMonitoring] = useState(true);
@@ -32,8 +40,9 @@ const RuntimeMonitor = () => {
     const newMetrics: MetricData[] = [];
 
     // Performance metrics
-    if ('performance' in window && window.performance.memory) {
-      const memory = (window.performance as any).memory;
+    const performance = window.performance as PerformanceWithMemory;
+    if (performance.memory) {
+      const memory = performance.memory;
       newMetrics.push({
         name: 'Memory Usage',
         value: Math.round((memory.usedJSHeapSize / memory.totalJSHeapSize) * 100),

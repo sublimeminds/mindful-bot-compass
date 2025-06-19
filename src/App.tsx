@@ -7,6 +7,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 import { TherapistProvider } from '@/contexts/TherapistContext';
 import { Toaster } from '@/components/ui/toaster';
 import EnhancedErrorBoundary from '@/components/enhanced/EnhancedErrorBoundary';
+import AutoRecoveryProvider from '@/components/enhanced/AutoRecoveryProvider';
 import AccessibilityPanel from '@/components/accessibility/AccessibilityPanel';
 import PerformanceDashboard from '@/components/performance/PerformanceDashboard';
 import NetworkStatusIndicator from '@/components/performance/NetworkStatusIndicator';
@@ -117,39 +118,45 @@ function App() {
 
   return (
     <SafeReactProvider>
-      <EnhancedErrorBoundary level="critical">
-        <QueryClientProvider client={queryClient}>
-          <SafeAccessibilityProvider>
-            <AuthProvider>
-              <SessionProvider>
-                <TherapistProvider>
-                  <Router>
-                    <div className="min-h-screen bg-background">
-                      <EnhancedErrorBoundary level="page">
-                        <AppRouter />
-                      </EnhancedErrorBoundary>
-                      
-                      {/* Status Indicators */}
-                      <NetworkStatusIndicator />
-                      <OfflineIndicator />
-                      
-                      {/* Accessibility and Performance Tools */}
-                      <EnhancedErrorBoundary level="component">
-                        <AccessibilityPanel />
-                      </EnhancedErrorBoundary>
-                      <EnhancedErrorBoundary level="component">
-                        <PerformanceDashboard />
-                      </EnhancedErrorBoundary>
-                      
-                      <Toaster />
-                    </div>
-                  </Router>
-                </TherapistProvider>
-              </SessionProvider>
-            </AuthProvider>
-          </SafeAccessibilityProvider>
-        </QueryClientProvider>
-      </EnhancedErrorBoundary>
+      <AutoRecoveryProvider 
+        recoveryLevel="conservative"
+        enableModuleReloading={true}
+        enableContextRecovery={true}
+      >
+        <EnhancedErrorBoundary level="critical">
+          <QueryClientProvider client={queryClient}>
+            <SafeAccessibilityProvider>
+              <AuthProvider>
+                <SessionProvider>
+                  <TherapistProvider>
+                    <Router>
+                      <div className="min-h-screen bg-background">
+                        <EnhancedErrorBoundary level="page">
+                          <AppRouter />
+                        </EnhancedErrorBoundary>
+                        
+                        {/* Status Indicators */}
+                        <NetworkStatusIndicator />
+                        <OfflineIndicator />
+                        
+                        {/* Accessibility and Performance Tools */}
+                        <EnhancedErrorBoundary level="component">
+                          <AccessibilityPanel />
+                        </EnhancedErrorBoundary>
+                        <EnhancedErrorBoundary level="component">
+                          <PerformanceDashboard />
+                        </EnhancedErrorBoundary>
+                        
+                        <Toaster />
+                      </div>
+                    </Router>
+                  </TherapistProvider>
+                </SessionProvider>
+              </AuthProvider>
+            </SafeAccessibilityProvider>
+          </QueryClientProvider>
+        </EnhancedErrorBoundary>
+      </AutoRecoveryProvider>
     </SafeReactProvider>
   );
 }
