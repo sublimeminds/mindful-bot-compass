@@ -12,6 +12,8 @@ import EnhancedProfilePage from '@/pages/EnhancedProfilePage';
 import CrisisManagement from '@/pages/CrisisManagement';
 import SmartScheduling from '@/pages/SmartScheduling';
 import MonitoringPage from '@/pages/MonitoringPage';
+import AdminPerformance from '@/pages/AdminPerformance';
+import AdminOnlyWrapper from '@/components/admin/AdminOnlyWrapper';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
@@ -25,49 +27,56 @@ const AppRouter = () => {
   const { user } = useAuth();
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/auth" element={<AuthForm />} />
-        <Route path="/monitoring" element={<MonitoringPage />} />
-        <Route path="/onboarding" element={
-          <ProtectedRoute>
-            <OnboardingPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        } />
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        } />
-        <Route path="/enhanced-profile" element={
-          <ProtectedRoute>
-            <EnhancedProfilePage />
-          </ProtectedRoute>
-        } />
-        <Route path="/notebook" element={
-          <ProtectedRoute>
-            <NotebookPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/crisis-management" element={
-          <ProtectedRoute>
-            <CrisisManagement />
-          </ProtectedRoute>
-        } />
-        <Route path="/smart-scheduling" element={
-          <ProtectedRoute>
-            <SmartScheduling />
-          </ProtectedRoute>
-        } />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/auth" element={<AuthForm />} />
+      <Route path="/monitoring" element={
+        <AdminOnlyWrapper fallback={<Navigate to="/" />}>
+          <MonitoringPage />
+        </AdminOnlyWrapper>
+      } />
+      <Route path="/admin/performance" element={
+        <AdminOnlyWrapper fallback={<Navigate to="/" />}>
+          <AdminPerformance />
+        </AdminOnlyWrapper>
+      } />
+      <Route path="/onboarding" element={
+        <ProtectedRoute>
+          <OnboardingPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      } />
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      } />
+      <Route path="/enhanced-profile" element={
+        <ProtectedRoute>
+          <EnhancedProfilePage />
+        </ProtectedRoute>
+      } />
+      <Route path="/notebook" element={
+        <ProtectedRoute>
+          <NotebookPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/crisis-management" element={
+        <ProtectedRoute>
+          <CrisisManagement />
+        </ProtectedRoute>
+      } />
+      <Route path="/smart-scheduling" element={
+        <ProtectedRoute>
+          <SmartScheduling />
+        </ProtectedRoute>
+      } />
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   );
 };
 

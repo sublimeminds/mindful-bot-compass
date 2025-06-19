@@ -1,15 +1,15 @@
+
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/contexts/AuthContext';
-import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { SessionProvider } from '@/contexts/SessionContext';
 import { TherapistProvider } from '@/contexts/TherapistContext';
 import { Toaster } from '@/components/ui/toaster';
 import EnhancedErrorBoundary from '@/components/enhanced/EnhancedErrorBoundary';
 import AutoRecoveryProvider from '@/components/enhanced/AutoRecoveryProvider';
 import AccessibilityPanel from '@/components/accessibility/AccessibilityPanel';
-import PerformanceDashboard from '@/components/performance/PerformanceDashboard';
+import AdminPerformanceDashboard from '@/components/performance/AdminPerformanceDashboard';
 import NetworkStatusIndicator from '@/components/performance/NetworkStatusIndicator';
 import OfflineIndicator from '@/components/OfflineIndicator';
 import AppRouter from '@/components/AppRouter';
@@ -149,12 +149,14 @@ function App() {
                         <NetworkStatusIndicator />
                         <OfflineIndicator />
                         
-                        {/* Accessibility and Performance Tools */}
+                        {/* Accessibility Tools - Available to all users */}
                         <EnhancedErrorBoundary level="component">
                           <AccessibilityPanel />
                         </EnhancedErrorBoundary>
+                        
+                        {/* Admin-Only Performance Tools */}
                         <EnhancedErrorBoundary level="component">
-                          <PerformanceDashboard />
+                          <AdminPerformanceDashboard />
                         </EnhancedErrorBoundary>
                         
                         <Toaster />
