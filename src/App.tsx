@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import MinimalErrorBoundary from '@/components/MinimalErrorBoundary';
-import MinimalAuthProvider from '@/components/MinimalAuthProvider';
-import MinimalApp from '@/components/MinimalApp';
+import MainAppContent from '@/components/MainAppContent';
 import './App.css';
 
 // Create a simple QueryClient with minimal configuration
@@ -18,16 +17,14 @@ const queryClient = new QueryClient({
   },
 });
 
-// Ultra-simple class component for maximum reliability
+// Ultra-simple class component for maximum reliability with rich UI
 class App extends Component {
   render() {
     return (
       <MinimalErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <Router>
-            <MinimalAuthProvider>
-              <MinimalApp />
-            </MinimalAuthProvider>
+            <MainAppContent />
           </Router>
         </QueryClientProvider>
       </MinimalErrorBoundary>

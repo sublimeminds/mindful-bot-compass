@@ -1,10 +1,10 @@
 
 import React, { Component } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import MinimalHomePage from '@/components/MinimalHomePage';
-import MinimalDashboard from '@/components/MinimalDashboard';
+import Index from '@/pages/Index';
 import MinimalLoginPage from '@/components/MinimalLoginPage';
 import { MinimalAuthContext } from '@/components/MinimalAuthProvider';
+import MinimalErrorBoundary from '@/components/MinimalErrorBoundary';
 
 class MinimalApp extends Component {
   static contextType = MinimalAuthContext;
@@ -34,24 +34,30 @@ class MinimalApp extends Component {
     }
 
     return (
-      <Routes>
-        <Route 
-          path="/" 
-          element={user ? <MinimalDashboard /> : <MinimalHomePage />} 
-        />
-        <Route 
-          path="/login" 
-          element={<MinimalLoginPage />} 
-        />
-        <Route 
-          path="/dashboard" 
-          element={user ? <MinimalDashboard /> : <MinimalLoginPage />} 
-        />
-        <Route 
-          path="*" 
-          element={user ? <MinimalDashboard /> : <MinimalHomePage />} 
-        />
-      </Routes>
+      <MinimalErrorBoundary>
+        <Routes>
+          <Route 
+            path="/" 
+            element={<Index />} 
+          />
+          <Route 
+            path="/login" 
+            element={<MinimalLoginPage />} 
+          />
+          <Route 
+            path="/auth" 
+            element={<MinimalLoginPage />} 
+          />
+          <Route 
+            path="/dashboard" 
+            element={<Index />} 
+          />
+          <Route 
+            path="*" 
+            element={<Index />} 
+          />
+        </Routes>
+      </MinimalErrorBoundary>
     );
   }
 }

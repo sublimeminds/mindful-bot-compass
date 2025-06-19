@@ -1,11 +1,12 @@
 
 import React from 'react';
-import { AuthProvider } from '@/contexts/AuthContext';
 import { AdminProvider } from '@/contexts/AdminContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { Toaster } from '@/components/ui/toaster';
 import AppRouter from '@/components/AppRouter';
-import BulletproofErrorBoundary from '@/components/BulletproofErrorBoundary';
+import MinimalErrorBoundary from '@/components/MinimalErrorBoundary';
+import MinimalAuthProvider from '@/components/MinimalAuthProvider';
+import ReliableUIProvider from '@/components/ReliableUIProvider';
 import SimpleSessionProvider from '@/components/SimpleSessionProvider';
 import SimpleTherapistProvider from '@/components/SimpleTherapistProvider';
 
@@ -15,24 +16,28 @@ import SimpleOfflineIndicator from '@/components/fallback/SimpleOfflineIndicator
 
 const MainAppContent: React.FC = () => {
   return (
-    <BulletproofErrorBoundary>
-      <AuthProvider>
-        <AdminProvider>
-          <AccessibilityProvider>
-            <SimpleTherapistProvider>
-              <SimpleSessionProvider>
-                <AppRouter />
-                
-                <SimpleOfflineIndicator />
-                <AccessibilityPanel />
-                
-                <Toaster />
-              </SimpleSessionProvider>
-            </SimpleTherapistProvider>
-          </AccessibilityProvider>
-        </AdminProvider>
-      </AuthProvider>
-    </BulletproofErrorBoundary>
+    <MinimalErrorBoundary>
+      <MinimalAuthProvider>
+        <ReliableUIProvider>
+          <MinimalErrorBoundary>
+            <AdminProvider>
+              <AccessibilityProvider>
+                <SimpleTherapistProvider>
+                  <SimpleSessionProvider>
+                    <AppRouter />
+                    
+                    <SimpleOfflineIndicator />
+                    <AccessibilityPanel />
+                    
+                    <Toaster />
+                  </SimpleSessionProvider>
+                </SimpleTherapistProvider>
+              </AccessibilityProvider>
+            </AdminProvider>
+          </MinimalErrorBoundary>
+        </ReliableUIProvider>
+      </MinimalAuthProvider>
+    </MinimalErrorBoundary>
   );
 };
 
