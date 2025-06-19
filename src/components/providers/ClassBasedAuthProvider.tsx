@@ -1,52 +1,44 @@
 
 import React, { Component, ReactNode } from 'react';
-import { advancedReactValidator } from '@/utils/advancedReactValidator';
 
 interface Props {
   children: ReactNode;
 }
 
 interface State {
-  isReactReady: boolean;
-  validationReport: any;
+  isProviderReady: boolean;
   error?: Error;
 }
 
-// Class-based wrapper that only renders AuthProvider when React is truly ready
+// Class-based wrapper that safely loads AuthProvider
 export class ClassBasedAuthProvider extends Component<Props, State> {
   private AuthProvider: any = null;
   private mounted = true;
 
   state: State = {
-    isReactReady: false,
-    validationReport: null
+    isProviderReady: false
   };
 
   async componentDidMount() {
     try {
-      console.log('ClassBasedAuthProvider: Starting React validation...');
+      console.log('ClassBasedAuthProvider: Loading AuthProvider...');
       
-      // Wait for React to be fully ready
-      const report = await advancedReactValidator.waitForReactReady();
+      // Simple delay to ensure React is stable
+      await new Promise(resolve => setTimeout(resolve, 100));
       
       if (!this.mounted) return;
 
-      if (report.isReady) {
-        // Dynamically import AuthProvider only when React is ready
-        const { AuthProvider } = await import('@/contexts/AuthContext');
-        this.AuthProvider = AuthProvider;
-        
-        this.setState({
-          isReactReady: true,
-          validationReport: report
-        });
-        
-        console.log('ClassBasedAuthProvider: React ready, AuthProvider loaded');
-      } else {
-        throw new Error('React failed to initialize properly');
-      }
+      // Dynamically import AuthProvider
+      const { AuthProvider } = await import('@/contexts/AuthContext');
+      this.AuthProvider = AuthProvider;
+      
+      this.setState({
+        isProviderReady: true
+      });
+      
+      console.log('ClassBasedAuthProvider: AuthProvider loaded successfully');
     } catch (error) {
-      console.error('ClassBasedAuthProvider: Failed to initialize', error);
+      console.error('ClassBasedAuthProvider: Failed to load AuthProvider', error);
       if (this.mounted) {
         this.setState({ error: error as Error });
       }
@@ -59,7 +51,7 @@ export class ClassBasedAuthProvider extends Component<Props, State> {
 
   render() {
     const { children } = this.props;
-    const { isReactReady, error } = this.state;
+    const { isProviderReady, error } = this.state;
 
     if (error) {
       return React.createElement('div', {
@@ -90,17 +82,17 @@ export class ClassBasedAuthProvider extends Component<Props, State> {
       ]);
     }
 
-    if (!isReactReady) {
+    if (!isProviderReady) {
       return React.createElement('div', {
         style: {
           padding: '20px',
           textAlign: 'center',
           color: '#6b7280'
         }
-      }, 'Initializing authentication...');
+      }, 'Loading authentication...');
     }
 
-    // Only render AuthProvider when React is confirmed ready
+    // Only render AuthProvider when it's loaded
     return React.createElement(this.AuthProvider, {}, children);
   }
 }
