@@ -38,12 +38,12 @@ const queryClient = new QueryClient({
 // Lazy load the main app content that requires contexts
 const MainAppContent = React.lazy(() => import('@/components/MainAppContent'));
 
-// Component that uses hooks - only rendered after React validation
+// This component now only renders AFTER React hooks are validated
 const SafeAppWithHooks = () => {
-  // Simple delay to ensure React is fully initialized
   const [isContextsReady, setIsContextsReady] = React.useState(false);
 
   React.useEffect(() => {
+    // Small delay to ensure all contexts are properly initialized
     const timer = setTimeout(() => {
       setIsContextsReady(true);
     }, 100);
@@ -97,6 +97,7 @@ const SafeAppWithHooks = () => {
   );
 };
 
+// This is now completely hook-free and safe to render immediately
 const SafeApp = () => {
   return (
     <SimpleErrorBoundary>
