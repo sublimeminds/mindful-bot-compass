@@ -5,7 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Brain, Heart, MessageCircle, TrendingUp, Mic, Shield, 
-  Clock, Smartphone, Users, Target, Activity, Zap 
+  Clock, Smartphone, Users, Target, Activity, Zap,
+  AlertTriangle, Globe, BarChart3, Bell
 } from 'lucide-react';
 
 const featureCategories = [
@@ -16,58 +17,58 @@ const featureCategories = [
     features: [
       {
         icon: Brain,
-        title: 'Cognitive Behavioral Therapy (CBT)',
-        description: 'Evidence-based CBT techniques adapted for AI delivery',
+        title: 'Advanced CBT & DBT Techniques',
+        description: 'Evidence-based cognitive and dialectical behavioral therapy adapted for AI delivery',
         badge: 'Most Popular'
       },
       {
+        icon: Globe,
+        title: 'Cultural Awareness',
+        description: 'AI that understands and adapts to different cultural contexts and communication styles',
+        badge: 'Inclusive'
+      },
+      {
+        icon: AlertTriangle,
+        title: 'Crisis Detection & Response',
+        description: 'Real-time monitoring with immediate crisis intervention and safety planning',
+        badge: 'Safety First'
+      },
+      {
         icon: Heart,
-        title: 'Mindfulness & Meditation',
-        description: 'Guided mindfulness exercises and breathing techniques',
-        badge: 'Stress Relief'
-      },
-      {
-        icon: MessageCircle,
-        title: 'Conversational Therapy',
-        description: 'Natural, empathetic conversations that adapt to your needs',
-        badge: 'Real-time'
-      },
-      {
-        icon: Shield,
         title: 'Trauma-Informed Care',
-        description: 'Specialized approaches for processing difficult experiences',
+        description: 'Specialized approaches for processing trauma with sensitivity and expertise',
         badge: 'Specialized'
       }
     ]
   },
   {
-    id: 'tracking',
-    label: 'Progress Tracking',
-    icon: TrendingUp,
+    id: 'analytics',
+    label: 'Smart Analytics',
+    icon: BarChart3,
     features: [
       {
         icon: Activity,
-        title: 'Advanced Mood Tracking',
-        description: 'Track emotional patterns with detailed analytics and insights',
-        badge: 'AI Insights'
+        title: 'Predictive Mental Health Analytics',
+        description: 'AI-powered insights that predict potential mental health challenges before they occur',
+        badge: 'Predictive'
       },
       {
         icon: Target,
-        title: 'Goal Setting & Progress',
-        description: 'Set personalized goals and track your mental health journey',
-        badge: 'Personalized'
+        title: 'Personalized Goal Tracking',
+        description: 'Dynamic goal setting with adaptive recommendations based on your progress patterns',
+        badge: 'Adaptive'
       },
       {
         icon: TrendingUp,
-        title: 'Progress Analytics',
-        description: 'Comprehensive reports on your therapeutic progress',
+        title: 'Comprehensive Progress Reports',
+        description: 'Detailed analytics showing mood patterns, therapy effectiveness, and growth metrics',
         badge: 'Data-Driven'
       },
       {
-        icon: Clock,
-        title: 'Session History',
-        description: 'Complete transcripts and insights from all your sessions',
-        badge: 'Searchable'
+        icon: BarChart3,
+        title: 'Real-Time Insights Dashboard',
+        description: 'Live monitoring of your mental health metrics with actionable recommendations',
+        badge: 'Real-time'
       }
     ]
   },
@@ -78,26 +79,26 @@ const featureCategories = [
     features: [
       {
         icon: Mic,
-        title: 'Voice Interaction',
-        description: 'Natural voice conversations with advanced speech recognition',
-        badge: 'Hands-free'
+        title: 'Advanced Voice Interaction',
+        description: 'Natural voice conversations with emotion recognition and speech analysis',
+        badge: 'Voice AI'
       },
       {
-        icon: Zap,
-        title: 'Crisis Detection',
-        description: 'AI-powered safety monitoring with immediate support resources',
-        badge: 'Safety First'
+        icon: Bell,
+        title: 'Intelligent Notifications',
+        description: 'Smart reminders and check-ins that adapt to your schedule and mental state',
+        badge: 'Smart Timing'
       },
       {
         icon: Users,
-        title: 'Multiple Therapist Personalities',
-        description: 'Choose from different AI therapist styles that match your preferences',
-        badge: 'Customizable'
+        title: 'Community Integration',
+        description: 'Safe peer support groups with moderated discussions and shared experiences',
+        badge: 'Social Support'
       },
       {
         icon: Smartphone,
-        title: 'Mobile & Offline Support',
-        description: 'Full mobile experience with offline mode for uninterrupted care',
+        title: 'Offline-Ready Mobile App',
+        description: 'Full mobile experience with offline mode and seamless sync across devices',
         badge: '24/7 Access'
       }
     ]
@@ -112,11 +113,11 @@ const AdvancedFeaturesSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-            Comprehensive Mental Health Support
+            Next-Generation Mental Health Technology
           </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Our AI-powered platform combines proven therapeutic approaches with cutting-edge technology 
-            to provide personalized mental health care that adapts to your unique needs.
+          <p className="text-lg text-muted-foreground max-w-4xl mx-auto">
+            Our platform integrates advanced AI therapy, predictive analytics, cultural awareness, 
+            crisis management, and community support to provide the most comprehensive mental health care available.
           </p>
         </div>
 
@@ -150,7 +151,7 @@ const AdvancedFeaturesSection = () => {
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div className="flex items-center space-x-3">
-                            <div className="p-2 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-lg">
+                            <div className="p-2 bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-600 rounded-lg">
                               <IconComponent className="h-5 w-5 text-white" />
                             </div>
                             <CardTitle className="text-lg">{feature.title}</CardTitle>
@@ -170,6 +171,42 @@ const AdvancedFeaturesSection = () => {
             </TabsContent>
           ))}
         </Tabs>
+
+        {/* New features highlight */}
+        <div className="mt-16 bg-gradient-to-r from-harmony-50 via-balance-50 to-flow-100 rounded-2xl p-8">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold mb-4">Recently Added Features</h3>
+            <p className="text-muted-foreground">
+              We continuously enhance our platform with cutting-edge capabilities
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-harmony-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <AlertTriangle className="h-6 w-6 text-white" />
+              </div>
+              <h4 className="font-semibold mb-2">Enhanced Crisis Detection</h4>
+              <p className="text-sm text-muted-foreground">AI-powered safety monitoring with immediate intervention capabilities</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-12 h-12 bg-balance-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Globe className="h-6 w-6 text-white" />
+              </div>
+              <h4 className="font-semibold mb-2">Cultural Intelligence</h4>
+              <p className="text-sm text-muted-foreground">Culturally-aware AI that adapts to diverse backgrounds and contexts</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-12 h-12 bg-flow-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <BarChart3 className="h-6 w-6 text-white" />
+              </div>
+              <h4 className="font-semibold mb-2">Predictive Analytics</h4>
+              <p className="text-sm text-muted-foreground">Advanced insights that anticipate and prevent mental health challenges</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
