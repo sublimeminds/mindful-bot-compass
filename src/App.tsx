@@ -90,6 +90,11 @@ function App() {
           enhancedCacheService.cleanup();
         }, 10 * 60 * 1000); // Every 10 minutes
 
+        // Start automated health monitoring
+        const { automatedHealthService } = await import('@/services/automatedHealthService');
+        await automatedHealthService.startMonitoring();
+        console.log('Automated health monitoring started');
+
         setIsInitialized(true);
       } catch (error) {
         console.error('App initialization failed:', error);
@@ -102,6 +107,11 @@ function App() {
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+      
+      // Stop health monitoring on cleanup
+      import('@/services/automatedHealthService').then(({ automatedHealthService }) => {
+        automatedHealthService.stopMonitoring();
+      });
     };
   }, []);
 

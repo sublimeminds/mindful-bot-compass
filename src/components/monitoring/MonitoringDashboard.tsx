@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import RuntimeMonitor from './RuntimeMonitor';
 import ErrorTracker from './ErrorTracker';
 import NetworkMonitor from './NetworkMonitor';
+import AutomatedHealthDashboard from './AutomatedHealthDashboard';
 import SystemHealthMonitor from '../system/SystemHealthMonitor';
 
 const MonitoringDashboard = () => {
@@ -16,13 +17,18 @@ const MonitoringDashboard = () => {
         </p>
       </div>
 
-      <Tabs defaultValue="runtime" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+      <Tabs defaultValue="automated" className="w-full">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="automated">Automated</TabsTrigger>
           <TabsTrigger value="runtime">Runtime</TabsTrigger>
           <TabsTrigger value="errors">Errors</TabsTrigger>
           <TabsTrigger value="network">Network</TabsTrigger>
           <TabsTrigger value="system">System</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="automated" className="space-y-6">
+          <AutomatedHealthDashboard />
+        </TabsContent>
 
         <TabsContent value="runtime" className="space-y-6">
           <RuntimeMonitor />
