@@ -8,22 +8,25 @@ import PricingSection from '@/components/PricingSection';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 
 const Index = () => {
-  // Try to access auth context safely
+  // Safe auth context access
   let user = null;
+  let authContextAvailable = false;
+  
   try {
     const { useAuth } = require('@/contexts/AuthContext');
     const auth = useAuth();
     user = auth.user;
+    authContextAvailable = true;
   } catch (error) {
     // Context not available, continue without user
-    console.warn('AuthContext not available in Index');
+    console.debug('AuthContext not available in Index, showing public view');
   }
 
   return (
     <>
       <Header />
       <div className="min-h-screen">
-        {user ? (
+        {authContextAvailable && user ? (
           <DashboardLayout />
         ) : (
           <>

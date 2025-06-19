@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -13,23 +14,7 @@ import MonitoringPage from '@/pages/MonitoringPage';
 import AdminPerformance from '@/pages/AdminPerformance';
 import AdminOnlyWrapper from '@/components/admin/AdminOnlyWrapper';
 import Community from '@/pages/Community';
-
-const SafeProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  try {
-    // Try to access useAuth only if we're in a context
-    const { useAuth } = require('@/contexts/AuthContext');
-    const { user } = useAuth();
-    
-    if (!user) {
-      return <Navigate to="/auth" />;
-    }
-    return <>{children}</>;
-  } catch (error) {
-    // If context is not available, redirect to auth
-    console.warn('AuthContext not available, redirecting to auth');
-    return <Navigate to="/auth" />;
-  }
-};
+import SimpleProtectedRoute from '@/components/SimpleProtectedRoute';
 
 const AppRouter = () => {
   return (
@@ -47,44 +32,44 @@ const AppRouter = () => {
         </AdminOnlyWrapper>
       } />
       <Route path="/onboarding" element={
-        <SafeProtectedRoute>
+        <SimpleProtectedRoute>
           <Onboarding />
-        </SafeProtectedRoute>
+        </SimpleProtectedRoute>
       } />
       <Route path="/dashboard" element={
-        <SafeProtectedRoute>
+        <SimpleProtectedRoute>
           <Dashboard />
-        </SafeProtectedRoute>
+        </SimpleProtectedRoute>
       } />
       <Route path="/community" element={
-        <SafeProtectedRoute>
+        <SimpleProtectedRoute>
           <Community />
-        </SafeProtectedRoute>
+        </SimpleProtectedRoute>
       } />
       <Route path="/profile" element={
-        <SafeProtectedRoute>
+        <SimpleProtectedRoute>
           <Profile />
-        </SafeProtectedRoute>
+        </SimpleProtectedRoute>
       } />
       <Route path="/enhanced-profile" element={
-        <SafeProtectedRoute>
+        <SimpleProtectedRoute>
           <EnhancedProfilePage />
-        </SafeProtectedRoute>
+        </SimpleProtectedRoute>
       } />
       <Route path="/notebook" element={
-        <SafeProtectedRoute>
+        <SimpleProtectedRoute>
           <NotebookPage />
-        </SafeProtectedRoute>
+        </SimpleProtectedRoute>
       } />
       <Route path="/crisis-management" element={
-        <SafeProtectedRoute>
+        <SimpleProtectedRoute>
           <CrisisManagement />
-        </SafeProtectedRoute>
+        </SimpleProtectedRoute>
       } />
       <Route path="/smart-scheduling" element={
-        <SafeProtectedRoute>
+        <SimpleProtectedRoute>
           <SmartScheduling />
-        </SafeProtectedRoute>
+        </SimpleProtectedRoute>
       } />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

@@ -1,55 +1,45 @@
 
 import React from 'react';
 import { AuthProvider } from '@/contexts/AuthContext';
-import ClassBasedSessionProvider from '@/components/providers/ClassBasedSessionProvider';
-import ClassBasedTherapistProvider from '@/components/providers/ClassBasedTherapistProvider';
 import { Toaster } from '@/components/ui/toaster';
-import SafeHookWrapper from '@/components/SafeHookWrapper';
-import ReactSafeErrorBoundary from '@/components/ReactSafeErrorBoundary';
 import AppRouter from '@/components/AppRouter';
+import BulletproofErrorBoundary from '@/components/BulletproofErrorBoundary';
+import SimpleSessionProvider from '@/components/SimpleSessionProvider';
+import SimpleTherapistProvider from '@/components/SimpleTherapistProvider';
 
-// Lazy load components that use hooks
+// Lazy load non-critical components
 const AccessibilityPanel = React.lazy(() => import('@/components/accessibility/AccessibilityPanel'));
 const NetworkStatusIndicator = React.lazy(() => import('@/components/performance/NetworkStatusIndicator'));
 const OfflineIndicator = React.lazy(() => import('@/components/OfflineIndicator'));
 
 const MainAppContent: React.FC = () => {
   return (
-    <ReactSafeErrorBoundary>
+    <BulletproofErrorBoundary>
       <AuthProvider>
-        <ClassBasedSessionProvider>
-          <ClassBasedTherapistProvider>
-            {/* Main application router - now inside all contexts */}
+        <SimpleSessionProvider>
+          <SimpleTherapistProvider>
+            {/* Main application router */}
             <AppRouter />
             
-            {/* Status Indicators with fallbacks */}
-            <SafeHookWrapper componentName="NetworkStatusIndicator">
-              <React.Suspense fallback={null}>
-                <NetworkStatusIndicator />
-              </React.Suspense>
-            </SafeHookWrapper>
+            {/* Non-critical status indicators */}
+            <React.Suspense fallback={null}>
+              <NetworkStatusIndicator />
+            </React.Suspense>
             
-            <SafeHookWrapper componentName="OfflineIndicator">
-              <React.Suspense fallback={null}>
-                <OfflineIndicator />
-              </React.Suspense>
-            </SafeHookWrapper>
+            <React.Suspense fallback={null}>
+              <OfflineIndicator />
+            </React.Suspense>
             
-            {/* Accessibility Tools */}
-            <SafeHookWrapper componentName="AccessibilityPanel">
-              <React.Suspense fallback={null}>
-                <AccessibilityPanel />
-              </React.Suspense>
-            </SafeHookWrapper>
+            <React.Suspense fallback={null}>
+              <AccessibilityPanel />
+            </React.Suspense>
             
             {/* Toast notifications */}
-            <SafeHookWrapper componentName="Toaster">
-              <Toaster />
-            </SafeHookWrapper>
-          </ClassBasedTherapistProvider>
-        </ClassBasedSessionProvider>
+            <Toaster />
+          </SimpleTherapistProvider>
+        </SimpleSessionProvider>
       </AuthProvider>
-    </ReactSafeErrorBoundary>
+    </BulletproofErrorBoundary>
   );
 };
 
