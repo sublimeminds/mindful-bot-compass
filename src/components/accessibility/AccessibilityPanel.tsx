@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,10 +15,10 @@ import {
   MousePointer,
   Zap
 } from 'lucide-react';
-import { useSafeAccessibility } from '@/contexts/SafeAccessibilityContext';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
 
 const AccessibilityPanel = () => {
-  const { settings, updateSetting, announceToScreenReader } = useSafeAccessibility();
+  const { settings, updateSetting, announceToScreenReader } = useAccessibility();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSettingChange = (key: keyof typeof settings, value: boolean) => {
