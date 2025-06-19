@@ -14,14 +14,20 @@ interface RetryOptions {
 }
 
 export const useNetworkResilience = () => {
+  // Initialize with safe defaults
   const [networkState, setNetworkState] = useState<NetworkState>({
-    isOnline: navigator.onLine,
-    effectiveType: null,
+    isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
+    effectiveType: '4g',
     isSlowConnection: false,
     retryCount: 0
   });
 
   useEffect(() => {
+    // Only run if we're in a browser environment
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+      return;
+    }
+
     const updateOnlineStatus = () => {
       setNetworkState(prev => ({
         ...prev,
@@ -29,20 +35,25 @@ export const useNetworkResilience = () => {
       }));
     };
 
-    // Simple network detection without complex dependencies
+    // Add event listeners
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
 
-    // Try to detect connection type if available
-    if ('connection' in navigator) {
-      const connection = (navigator as any).connection;
-      if (connection) {
-        setNetworkState(prev => ({
-          ...prev,
-          effectiveType: connection.effectiveType || '4g',
-          isSlowConnection: connection.effectiveType === '2g' || connection.effectiveType === 'slow-2g'
-        }));
+    // Try to detect connection type safely
+    try {
+      if ('connection' in navigator) {
+        const connection = (navigator as any).connection;
+        if (connection && connection.effectiveType) {
+          setNetworkState(prev => ({
+            ...prev,
+            effectiveType: connection.effectiveType || '4g',
+            isSlowConnection: connection.effectiveType === '2g' || connection.effectiveType === 'slow-2g'
+          }));
+        }
       }
+    } catch (error) {
+      // Silently fail if connection API is not available
+      console.warn('Network connection API not available');
     }
 
     return () => {
@@ -75,6 +86,7 @@ export const useNetworkResilience = () => {
       }
     }
     
+    setNetworkState(prev => ({ ...prev, retryCount: 0 }));
     throw lastError!;
   }, []);
 

@@ -9,10 +9,9 @@ import BulletproofErrorBoundary from '@/components/BulletproofErrorBoundary';
 import SimpleSessionProvider from '@/components/SimpleSessionProvider';
 import SimpleTherapistProvider from '@/components/SimpleTherapistProvider';
 
-// Direct imports instead of lazy loading to avoid React context issues
+// Direct imports to avoid lazy loading issues
 import AccessibilityPanel from '@/components/accessibility/AccessibilityPanel';
-import NetworkStatusIndicator from '@/components/performance/NetworkStatusIndicator';
-import OfflineIndicator from '@/components/OfflineIndicator';
+import SimpleOfflineIndicator from '@/components/fallback/SimpleOfflineIndicator';
 
 const MainAppContent: React.FC = () => {
   return (
@@ -24,8 +23,7 @@ const MainAppContent: React.FC = () => {
               <SimpleSessionProvider>
                 <AppRouter />
                 
-                <NetworkStatusIndicator />
-                <OfflineIndicator />
+                <SimpleOfflineIndicator />
                 <AccessibilityPanel />
                 
                 <Toaster />

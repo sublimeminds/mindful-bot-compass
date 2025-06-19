@@ -17,12 +17,12 @@ export class SimpleErrorBoundary extends Component<Props, State> {
   };
 
   public static getDerivedStateFromError(error: Error): State {
-    console.error('SimpleErrorBoundary: Critical error caught', error);
+    console.error('SimpleErrorBoundary: Error caught', error);
     return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: any) {
-    console.error('SimpleErrorBoundary: Component error details', {
+    console.error('SimpleErrorBoundary: Error details', {
       error: error.message,
       stack: error.stack,
       componentStack: errorInfo.componentStack
