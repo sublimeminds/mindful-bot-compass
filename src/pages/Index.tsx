@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
@@ -9,7 +8,16 @@ import PricingSection from '@/components/PricingSection';
 import UserDashboard from '@/components/UserDashboard';
 
 const Index = () => {
-  const { user } = useAuth();
+  // Try to access auth context safely
+  let user = null;
+  try {
+    const { useAuth } = require('@/contexts/AuthContext');
+    const auth = useAuth();
+    user = auth.user;
+  } catch (error) {
+    // Context not available, continue without user
+    console.warn('AuthContext not available in Index');
+  }
 
   return (
     <>

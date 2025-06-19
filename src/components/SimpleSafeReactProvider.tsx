@@ -31,6 +31,12 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
         throw new Error('React hooks are not available');
       }
 
+      // Quick test to ensure hooks actually work
+      const TestComponent = () => {
+        const [test] = React.useState('test');
+        return null;
+      };
+
       console.log('SimpleSafeReactProvider: React validation successful');
       this.setState({ isReactSafe: true });
 
@@ -44,7 +50,7 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
   };
 
   private handleRetry = () => {
-    this.setState({ error: undefined });
+    this.setState({ error: undefined, isReactSafe: false });
     setTimeout(this.validateReact, 100);
   };
 
@@ -91,7 +97,7 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
         React.createElement('p', {
           key: 'message',
           style: { color: '#6b7280', marginBottom: '16px' }
-        }, error ? error.message : 'Preparing your therapy assistant...'),
+        }, error ? `${error.message}` : 'Preparing your therapy assistant...'),
         error && React.createElement('button', {
           key: 'retry',
           onClick: this.handleRetry,
@@ -101,9 +107,22 @@ export class SimpleSafeReactProvider extends Component<Props, State> {
             border: 'none',
             padding: '8px 16px',
             borderRadius: '4px',
+            cursor: 'pointer',
+            marginRight: '8px'
+          }
+        }, 'Retry'),
+        error && React.createElement('button', {
+          key: 'reload',
+          onClick: () => window.location.reload(),
+          style: {
+            backgroundColor: '#dc2626',
+            color: 'white',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '4px',
             cursor: 'pointer'
           }
-        }, 'Retry')
+        }, 'Full Reload')
       ]));
     }
 

@@ -1,12 +1,11 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import Index from '@/pages/Index';
 import AuthForm from '@/components/auth/AuthForm';
-import OnboardingPage from '@/pages/OnboardingPage';
+import Onboarding from '@/pages/Onboarding';
 import Dashboard from '@/pages/Dashboard';
 import Profile from '@/pages/Profile';
-import { useAuth } from '@/contexts/AuthContext';
 import NotebookPage from '@/pages/NotebookPage';
 import EnhancedProfilePage from '@/pages/EnhancedProfilePage';
 import CrisisManagement from '@/pages/CrisisManagement';
@@ -15,17 +14,24 @@ import MonitoringPage from '@/pages/MonitoringPage';
 import AdminPerformance from '@/pages/AdminPerformance';
 import AdminOnlyWrapper from '@/components/admin/AdminOnlyWrapper';
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
-  if (!user) {
+const SafeProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  try {
+    // Try to access useAuth only if we're in a context
+    const { useAuth } = require('@/contexts/AuthContext');
+    const { user } = useAuth();
+    
+    if (!user) {
+      return <Navigate to="/auth" />;
+    }
+    return <>{children}</>;
+  } catch (error) {
+    // If context is not available, redirect to auth
+    console.warn('AuthContext not available, redirecting to auth');
     return <Navigate to="/auth" />;
   }
-  return <>{children}</>;
 };
 
 const AppRouter = () => {
-  const { user } = useAuth();
-
   return (
     <Routes>
       <Route path="/" element={<Index />} />
@@ -41,39 +47,39 @@ const AppRouter = () => {
         </AdminOnlyWrapper>
       } />
       <Route path="/onboarding" element={
-        <ProtectedRoute>
-          <OnboardingPage />
-        </ProtectedRoute>
+        <SafeProtectedRoute>
+          <Onboarding />
+        </SafeProtectedRoute>
       } />
       <Route path="/dashboard" element={
-        <ProtectedRoute>
+        <SafeProtectedRoute>
           <Dashboard />
-        </ProtectedRoute>
+        </SafeProtectedRoute>
       } />
       <Route path="/profile" element={
-        <ProtectedRoute>
+        <SafeProtectedRoute>
           <Profile />
-        </ProtectedRoute>
+        </SafeProtectedRoute>
       } />
       <Route path="/enhanced-profile" element={
-        <ProtectedRoute>
+        <SafeProtectedRoute>
           <EnhancedProfilePage />
-        </ProtectedRoute>
+        </SafeProtectedRoute>
       } />
       <Route path="/notebook" element={
-        <ProtectedRoute>
+        <SafeProtectedRoute>
           <NotebookPage />
-        </ProtectedRoute>
+        </SafeProtectedRoute>
       } />
       <Route path="/crisis-management" element={
-        <ProtectedRoute>
+        <SafeProtectedRoute>
           <CrisisManagement />
-        </ProtectedRoute>
+        </SafeProtectedRoute>
       } />
       <Route path="/smart-scheduling" element={
-        <ProtectedRoute>
+        <SafeProtectedRoute>
           <SmartScheduling />
-        </ProtectedRoute>
+        </SafeProtectedRoute>
       } />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

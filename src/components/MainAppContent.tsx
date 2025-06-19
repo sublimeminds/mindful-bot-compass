@@ -5,17 +5,21 @@ import { SessionProvider } from '@/contexts/SessionContext';
 import { TherapistProvider } from '@/contexts/TherapistContext';
 import { Toaster } from '@/components/ui/toaster';
 import SafeHookWrapper from '@/components/SafeHookWrapper';
+import AppRouter from '@/components/AppRouter';
 
 // Lazy load components that use hooks
 const AccessibilityPanel = React.lazy(() => import('@/components/accessibility/AccessibilityPanel'));
 const NetworkStatusIndicator = React.lazy(() => import('@/components/performance/NetworkStatusIndicator'));
 const OfflineIndicator = React.lazy(() => import('@/components/OfflineIndicator'));
 
-const HookDependentComponents: React.FC = () => {
+const MainAppContent: React.FC = () => {
   return (
     <AuthProvider>
       <SessionProvider>
         <TherapistProvider>
+          {/* Main application router - now inside all contexts */}
+          <AppRouter />
+          
           {/* Status Indicators with fallbacks */}
           <SafeHookWrapper componentName="NetworkStatusIndicator">
             <React.Suspense fallback={null}>
@@ -46,4 +50,4 @@ const HookDependentComponents: React.FC = () => {
   );
 };
 
-export default HookDependentComponents;
+export default MainAppContent;
