@@ -130,30 +130,28 @@ class ValidatedApp extends Component<{}, ValidatedAppState> {
 // Main SafeApp component - completely hook-free until validation passes
 class SafeApp extends Component {
   render() {
-    return React.createElement(SimpleErrorBoundary, {}, 
-      React.createElement(SimpleSafeReactProvider, {},
+    return React.createElement(SimpleErrorBoundary, { children: 
+      React.createElement(SimpleSafeReactProvider, { children:
         React.createElement(StageLoadingProvider, { 
           stage: 'validation',
-          onStageComplete: () => console.log('Validation stage complete')
-        },
-          React.createElement(QueryClientProvider, { client: queryClient },
-            React.createElement(StageLoadingProvider, { 
+          onStageComplete: () => console.log('Validation stage complete'),
+          children: React.createElement(QueryClientProvider, { 
+            client: queryClient,
+            children: React.createElement(StageLoadingProvider, { 
               stage: 'contexts',
-              onStageComplete: () => console.log('Contexts stage complete')
-            },
-              React.createElement(Router, {},
+              onStageComplete: () => console.log('Contexts stage complete'),
+              children: React.createElement(Router, { children:
                 React.createElement(StageLoadingProvider, { 
                   stage: 'application',
-                  onStageComplete: () => console.log('Application stage complete')
-                },
-                  React.createElement(ValidatedApp)
-                )
-              )
-            )
-          )
-        )
-      )
-    );
+                  onStageComplete: () => console.log('Application stage complete'),
+                  children: React.createElement(ValidatedApp)
+                })
+              })
+            })
+          })
+        })
+      })
+    });
   }
 }
 
