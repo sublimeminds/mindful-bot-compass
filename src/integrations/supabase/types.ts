@@ -475,6 +475,42 @@ export type Database = {
         }
         Relationships: []
       }
+      emotional_states: {
+        Row: {
+          arousal: number
+          confidence: number
+          id: string
+          intensity: number
+          primary_emotion: string
+          secondary_emotion: string | null
+          timestamp: string
+          user_id: string
+          valence: number
+        }
+        Insert: {
+          arousal?: number
+          confidence?: number
+          id?: string
+          intensity?: number
+          primary_emotion: string
+          secondary_emotion?: string | null
+          timestamp?: string
+          user_id: string
+          valence?: number
+        }
+        Update: {
+          arousal?: number
+          confidence?: number
+          id?: string
+          intensity?: number
+          primary_emotion?: string
+          secondary_emotion?: string | null
+          timestamp?: string
+          user_id?: string
+          valence?: number
+        }
+        Relationships: []
+      }
       enhanced_therapy_preferences: {
         Row: {
           communication_style: string | null
@@ -1019,6 +1055,48 @@ export type Database = {
           preferred_techniques?: string[]
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      personalization_profiles: {
+        Row: {
+          adaptive_rules: Json | null
+          avoidance_triggers: string[] | null
+          communication_style: string | null
+          created_at: string
+          id: string
+          learning_style: string | null
+          motivation_factors: string[] | null
+          progress_patterns: Json | null
+          therapy_preferences: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          adaptive_rules?: Json | null
+          avoidance_triggers?: string[] | null
+          communication_style?: string | null
+          created_at?: string
+          id?: string
+          learning_style?: string | null
+          motivation_factors?: string[] | null
+          progress_patterns?: Json | null
+          therapy_preferences?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          adaptive_rules?: Json | null
+          avoidance_triggers?: string[] | null
+          communication_style?: string | null
+          created_at?: string
+          id?: string
+          learning_style?: string | null
+          motivation_factors?: string[] | null
+          progress_patterns?: Json | null
+          therapy_preferences?: Json | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1982,6 +2060,30 @@ export type Database = {
           id?: string
           preferred_approaches?: string[] | null
           session_preferences?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_progress: {
+        Row: {
+          created_at: string
+          id: string
+          progress_data: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          progress_data?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          progress_data?: Json | null
           updated_at?: string
           user_id?: string
         }

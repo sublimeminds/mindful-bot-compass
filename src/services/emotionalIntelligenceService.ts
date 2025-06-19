@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 
 export interface EmotionalState {
@@ -75,18 +76,17 @@ export class EmotionalIntelligenceService {
       
       this.emotionCache.set(userId, userEmotions);
 
-      // Persist to database
+      // Store in mood_entries table as a fallback
       await supabase
-        .from('emotional_states')
+        .from('mood_entries')
         .insert({
           user_id: userId,
-          primary_emotion: emotion.primary,
-          secondary_emotion: emotion.secondary,
-          intensity: emotion.intensity,
-          valence: emotion.valence,
-          arousal: emotion.arousal,
-          confidence: emotion.confidence,
-          timestamp: emotion.timestamp.toISOString()
+          overall: Math.round(emotion.intensity * 10),
+          energy: Math.round(emotion.arousal * 10),
+          anxiety: emotion.primary === 'anxiety' ? Math.round(emotion.intensity * 10) : 5,
+          depression: emotion.primary === 'sadness' ? Math.round(emotion.intensity * 10) : 5,
+          stress: emotion.valence < 0 ? Math.round(Math.abs(emotion.valence) * 10) : 3,
+          notes: `Primary emotion: ${emotion.primary}${emotion.secondary ? `, Secondary: ${emotion.secondary}` : ''}`
         });
 
       // Check for emotional pattern updates
@@ -169,15 +169,16 @@ export class EmotionalIntelligenceService {
     }
   }
 
-  // Get emotional patterns for a user
+  // Get emotional patterns for a user using existing tables
   private static async getEmotionalPatterns(userId: string): Promise<EmotionalPattern | null> {
     try {
       if (this.patterns.has(userId)) {
         return this.patterns.get(userId)!;
       }
 
+      // Use user_preferences table as fallback
       const { data, error } = await supabase
-        .from('emotional_patterns')
+        .from('user_preferences')
         .select('*')
         .eq('user_id', userId)
         .single();
@@ -186,11 +187,11 @@ export class EmotionalIntelligenceService {
 
       const pattern: EmotionalPattern = {
         userId,
-        dominantEmotions: data.dominant_emotions || [],
-        triggerWords: data.trigger_words || [],
-        positiveIndicators: data.positive_indicators || [],
-        emotionalBaseline: data.emotional_baseline || { primary: 'neutral', intensity: 0.5, valence: 0, arousal: 0.5, confidence: 0.8, timestamp: new Date() },
-        adaptationRules: data.adaptation_rules || []
+        dominantEmotions: data.emotional_patterns?.dominantEmotions || [],
+        triggerWords: data.emotional_patterns?.triggerWords || [],
+        positiveIndicators: data.emotional_patterns?.positiveIndicators || [],
+        emotionalBaseline: data.emotional_patterns?.baseline || { primary: 'neutral', intensity: 0.5, valence: 0, arousal: 0.5, confidence: 0.8, timestamp: new Date() },
+        adaptationRules: []
       };
 
       this.patterns.set(userId, pattern);
@@ -211,12 +212,16 @@ export class EmotionalIntelligenceService {
       const dominantEmotions = this.findDominantEmotions(recentEmotions);
       const baseline = this.calculateEmotionalBaseline(recentEmotions);
 
+      // Update user_preferences table
       await supabase
-        .from('emotional_patterns')
+        .from('user_preferences')
         .upsert({
           user_id: userId,
-          dominant_emotions: dominantEmotions,
-          emotional_baseline: baseline,
+          emotional_patterns: {
+            dominantEmotions,
+            baseline,
+            lastUpdated: new Date().toISOString()
+          },
           updated_at: new Date().toISOString()
         });
 

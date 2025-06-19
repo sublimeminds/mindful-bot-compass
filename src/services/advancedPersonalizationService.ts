@@ -48,10 +48,10 @@ export class AdvancedPersonalizationService {
   private static profiles = new Map<string, PersonalizationProfile>();
   private static recommendations = new Map<string, PersonalizedRecommendation[]>();
 
-  // Initialize or update personalization profile
+  // Initialize or update personalization profile using existing tables
   static async initializeProfile(userId: string, initialData?: Partial<PersonalizationProfile>): Promise<PersonalizationProfile> {
     try {
-      // Check if profile exists
+      // Check if profile exists in user_preferences
       let profile = await this.getProfile(userId);
       
       if (!profile) {
@@ -77,18 +77,15 @@ export class AdvancedPersonalizationService {
           ...initialData
         };
 
-        // Save to database
+        // Save to user_preferences table
         await supabase
-          .from('personalization_profiles')
-          .insert({
+          .from('user_preferences')
+          .upsert({
             user_id: userId,
-            learning_style: profile.learningStyle,
-            therapy_preferences: profile.therapyPreferences,
             communication_style: profile.communicationStyle,
-            motivation_factors: profile.motivationFactors,
-            avoidance_triggers: profile.avoidanceTriggers,
-            progress_patterns: profile.progressPatterns,
-            adaptive_rules: profile.adaptiveRules
+            preferred_approaches: profile.therapyPreferences.approach,
+            session_preferences: profile.therapyPreferences,
+            updated_at: new Date().toISOString()
           });
       }
 
@@ -145,7 +142,7 @@ export class AdvancedPersonalizationService {
       // Cache recommendations
       this.recommendations.set(userId, recommendations);
 
-      // Store in database for tracking
+      // Store in personalized_recommendations table
       await this.storeRecommendations(userId, recommendations);
 
       return recommendations;
@@ -170,9 +167,11 @@ export class AdvancedPersonalizationService {
         .insert({
           user_id: userId,
           interaction_type: interaction.type,
-          content: interaction.content,
-          outcome: interaction.outcome,
-          feedback: interaction.feedback,
+          data: {
+            content: interaction.content,
+            outcome: interaction.outcome,
+            feedback: interaction.feedback
+          },
           timestamp: interaction.timestamp.toISOString()
         });
 
@@ -246,7 +245,7 @@ export class AdvancedPersonalizationService {
       }
 
       const { data, error } = await supabase
-        .from('personalization_profiles')
+        .from('user_preferences')
         .select('*')
         .eq('user_id', userId)
         .single();
@@ -255,17 +254,22 @@ export class AdvancedPersonalizationService {
 
       const profile: PersonalizationProfile = {
         userId,
-        learningStyle: data.learning_style,
-        therapyPreferences: data.therapy_preferences,
-        communicationStyle: data.communication_style,
-        motivationFactors: data.motivation_factors || [],
-        avoidanceTriggers: data.avoidance_triggers || [],
-        progressPatterns: data.progress_patterns || {
+        learningStyle: 'visual',
+        therapyPreferences: data.session_preferences || {
+          approach: data.preferred_approaches || ['CBT'],
+          sessionLength: 30,
+          frequency: 'weekly',
+          timeOfDay: 'evening'
+        },
+        communicationStyle: data.communication_style || 'gentle',
+        motivationFactors: [],
+        avoidanceTriggers: [],
+        progressPatterns: {
           bestResponseTimes: [],
           effectiveTechniques: [],
           challengingAreas: []
         },
-        adaptiveRules: data.adaptive_rules || []
+        adaptiveRules: []
       };
 
       this.profiles.set(userId, profile);
@@ -279,7 +283,7 @@ export class AdvancedPersonalizationService {
   private static async getRecentEmotionalData(userId: string): Promise<any[]> {
     try {
       const { data, error } = await supabase
-        .from('emotional_states')
+        .from('mood_entries')
         .select('*')
         .eq('user_id', userId)
         .order('timestamp', { ascending: false })
@@ -311,12 +315,11 @@ export class AdvancedPersonalizationService {
   private static async getProgressData(userId: string): Promise<any> {
     try {
       const { data, error } = await supabase
-        .from('user_progress')
+        .from('goals')
         .select('*')
-        .eq('user_id', userId)
-        .single();
+        .eq('user_id', userId);
 
-      return data || {};
+      return { goals: data || [] };
     } catch (error) {
       console.error('Error getting progress data:', error);
       return {};
@@ -327,16 +330,12 @@ export class AdvancedPersonalizationService {
     try {
       const records = recommendations.map(rec => ({
         user_id: userId,
-        recommendation_id: rec.id,
-        type: rec.type,
+        recommendation_type: rec.type,
         title: rec.title,
         description: rec.description,
         reasoning: rec.reasoning,
-        confidence: rec.confidence,
-        priority: rec.priority,
+        priority_score: rec.confidence,
         estimated_impact: rec.estimatedImpact,
-        valid_until: rec.validUntil.toISOString(),
-        metadata: rec.metadata,
         created_at: new Date().toISOString()
       }));
 
