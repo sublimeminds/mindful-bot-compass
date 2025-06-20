@@ -15,9 +15,21 @@ interface AuthModalProps {
 }
 
 const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
-  // Ensure React hooks are available before rendering Dialog
-  if (!React || !React.useRef || !React.useState) {
-    console.warn('AuthModal: React hooks not available, not rendering dialog');
+  // More comprehensive React validation
+  const isReactReady = React && 
+    typeof React === 'object' && 
+    React.useRef && 
+    React.useState && 
+    React.useEffect &&
+    React.createElement;
+
+  if (!isReactReady) {
+    console.warn('AuthModal: React not fully initialized, skipping render');
+    return null;
+  }
+
+  // Don't render dialog if not open to avoid unnecessary mounting
+  if (!isOpen) {
     return null;
   }
 

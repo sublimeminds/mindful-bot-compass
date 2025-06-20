@@ -66,7 +66,18 @@ const plans = [
 const PricingSection = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
+  // Validate React before allowing modal interactions
+  const isReactReady = React && 
+    typeof React === 'object' && 
+    React.useState && 
+    React.useRef &&
+    React.createElement;
+
   const handleGetStarted = () => {
+    if (!isReactReady) {
+      console.warn('PricingSection: React not ready, cannot open modal');
+      return;
+    }
     setShowAuthModal(true);
   };
 
@@ -160,10 +171,12 @@ const PricingSection = () => {
         </div>
       </div>
 
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-      />
+      {isReactReady && (
+        <AuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+        />
+      )}
     </section>
   );
 };
