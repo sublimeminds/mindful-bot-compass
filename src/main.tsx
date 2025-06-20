@@ -46,20 +46,28 @@ const createErrorDisplay = (error: Error) => {
   `;
 };
 
-// Initialize the app with proper error handling
-try {
-  console.log('main.tsx: Creating React root...');
-  const root = ReactDOM.createRoot(rootElement);
-  
-  console.log('main.tsx: Rendering App...');
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-  
-  console.log('main.tsx: App successfully rendered');
-} catch (error) {
-  console.error('main.tsx: Failed to render app:', error);
-  createErrorDisplay(error as Error);
+// Wait for full DOM and React readiness
+const initializeApp = () => {
+  try {
+    console.log('main.tsx: Creating React root...');
+    const root = ReactDOM.createRoot(rootElement);
+    
+    console.log('main.tsx: Rendering App with ReactReadyWrapper...');
+    root.render(
+      React.createElement(React.StrictMode, {}, React.createElement(App, {}))
+    );
+    
+    console.log('main.tsx: App successfully rendered');
+  } catch (error) {
+    console.error('main.tsx: Failed to render app:', error);
+    createErrorDisplay(error as Error);
+  }
+};
+
+// Ensure DOM is ready and React is stable before initialization
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+  // DOM is already ready, but add a small delay to ensure React is stable
+  setTimeout(initializeApp, 10);
 }
