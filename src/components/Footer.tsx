@@ -9,11 +9,11 @@ const Footer = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="bg-gradient-to-br from-therapy-600 via-harmony-600 to-balance-600 text-white">
+    <footer className="bg-gradient-to-br from-therapy-700 to-harmony-700 text-white">
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="space-y-6">
             <div className="flex items-center space-x-3">
               <GradientLogo size="sm" />
               <h3 className="text-xl font-bold">TherapySync</h3>
