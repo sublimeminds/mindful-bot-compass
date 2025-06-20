@@ -14,6 +14,8 @@ import Help from '@/pages/Help';
 import Plans from '@/pages/Plans';
 import TherapySyncAI from '@/pages/TherapySyncAI';
 import NotFound from '@/pages/NotFound';
+import HelpArticles from '@/pages/HelpArticles';
+import HelpArticleDetail from '@/pages/HelpArticleDetail';
 
 const AppRouter = () => {
   return (
@@ -28,6 +30,8 @@ const AppRouter = () => {
       <Route path="/notebook" element={<NotebookPage />} />
       <Route path="/smart-scheduling" element={<SmartScheduling />} />
       <Route path="/help" element={<Help />} />
+      <Route path="/help/articles" element={<HelpArticles />} />
+      <Route path="/help/articles/:id" element={<HelpArticleDetail />} />
       <Route path="/plans" element={<Plans />} />
       <Route path="/therapysync-ai" element={<TherapySyncAI />} />
       <Route path="*" element={<NotFound />} />
