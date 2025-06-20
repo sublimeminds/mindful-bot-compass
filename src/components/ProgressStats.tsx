@@ -5,10 +5,10 @@ import { Progress } from "@/components/ui/progress";
 import { TrendingUp, Target, Calendar, MessageSquare } from "lucide-react";
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 const ProgressStats = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
 
   const { data: stats, isLoading, error } = useQuery({
     queryKey: ['progress-stats', user?.id],

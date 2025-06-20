@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { currencyService } from '@/services/currencyService';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface CurrencyData {
   code: string;
@@ -10,7 +11,7 @@ interface CurrencyData {
 }
 
 export const useCurrency = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [currency, setCurrency] = useState<CurrencyData>({
     code: 'USD',
     symbol: '$',

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Heart, Mail, Lock, User } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -25,7 +25,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp } = useSimpleApp();
 
   if (!isOpen) return null;
 
@@ -82,37 +82,28 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex items-center justify-center mb-4">
-            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-therapy-500 to-calm-500 rounded-xl">
-              <Heart className="h-6 w-6 text-white" />
-            </div>
+        <CardHeader className="text-center space-y-2">
+          <div className="mx-auto w-12 h-12 bg-gradient-to-br from-therapy-500 to-calm-500 rounded-full flex items-center justify-center">
+            <Heart className="h-6 w-6 text-white" />
           </div>
           <CardTitle className="text-2xl">
-            {mode === 'signin' ? 'Welcome Back' : 'Join MindfulAI'}
+            {mode === 'signin' ? 'Welcome back' : 'Get started'}
           </CardTitle>
-          <p className="text-muted-foreground">
-            {mode === 'signin' 
-              ? 'Continue your therapy journey' 
-              : 'Start your path to mental wellness'
-            }
-          </p>
         </CardHeader>
-        
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'signup' && (
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">Name</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="name"
                     name="name"
                     type="text"
-                    placeholder="Enter your name"
+                    placeholder="Your full name"
                     value={formData.name}
                     onChange={handleInputChange}
                     className="pl-10"
@@ -121,7 +112,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
                 </div>
               </div>
             )}
-            
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
@@ -130,7 +121,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="your.email@example.com"
                   value={formData.email}
                   onChange={handleInputChange}
                   className="pl-10"
@@ -138,7 +129,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
@@ -147,7 +138,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="••••••••"
                   value={formData.password}
                   onChange={handleInputChange}
                   className="pl-10"
@@ -155,38 +146,36 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
                 />
               </div>
             </div>
-            
-            <Button
-              type="submit"
+
+            <Button 
+              type="submit" 
               className="w-full bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
               disabled={isLoading}
             >
-              {isLoading ? 'Please wait...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
+              {isLoading ? 'Loading...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
             </Button>
-          </form>
-          
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              {mode === 'signin' ? "Don't have an account?" : "Already have an account?"}
-              <Button
-                variant="link"
-                className="p-0 ml-1 text-therapy-600"
+
+            <div className="text-center space-y-2">
+              <button
+                type="button"
                 onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                {mode === 'signin' ? 'Sign up' : 'Sign in'}
-              </Button>
-            </p>
-          </div>
-          
-          <div className="mt-4 text-center">
-            <Button
-              variant="ghost"
-              onClick={onClose}
-              className="text-muted-foreground"
-            >
-              Cancel
-            </Button>
-          </div>
+                {mode === 'signin' 
+                  ? "Don't have an account? Sign up" 
+                  : "Already have an account? Sign in"
+                }
+              </button>
+              
+              <button
+                type="button"
+                onClick={onClose}
+                className="block text-sm text-muted-foreground hover:text-foreground transition-colors mx-auto"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </CardContent>
       </Card>
     </div>
