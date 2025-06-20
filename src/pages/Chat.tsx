@@ -1,219 +1,90 @@
-
-import { useState, useEffect, useRef } from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, ArrowLeft, Volume2, VolumeX, Brain } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { useSession } from "@/contexts/SessionContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
-import { useTherapist } from "@/contexts/TherapistContext";
-import SessionEndModal from "@/components/SessionEndModal";
-import LiveSessionIndicator from "@/components/LiveSessionIndicator";
-import NotificationCenter from "@/components/NotificationCenter";
-import EmotionDisplay from "@/components/emotion/EmotionDisplay";
-import VoiceInteraction from "@/components/VoiceInteraction";
-import { useEnhancedChat } from "@/hooks/useEnhancedChat";
-import { useRealTimeSession } from "@/hooks/useRealTimeSession";
-import ChatSessionMetrics from "@/components/session/ChatSessionMetrics";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
+import { MessageCircle, Send, Mic, MicOff, Brain, Heart } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { chatService } from '@/services/chatService';
+import { Message } from '@/types/chat';
 
 const Chat = () => {
-  const [input, setInput] = useState('');
-  const [showEndModal, setShowEndModal] = useState(false);
-  const [showTherapistNeeded, setShowTherapistNeeded] = useState(false);
-  const chatBottomRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
-  const { user } = useAuth();
-  const { 
-    currentSession, 
-    startSession, 
-    endSession, 
-    addBreakthrough,
-    syncWithRealtimeSession,
-    updateRealtimeStatus
-  } = useSession();
+  const { user } = useSimpleApp();
   const navigate = useNavigate();
-  const { currentTherapist, getPersonalityPrompt, isLoading: therapistLoading } = useTherapist();
-  
-  // Real-time session integration
-  const { 
-    sessionState, 
-    startSession: startRealtimeSession, 
-    endSession: endRealtimeSession 
-  } = useRealTimeSession();
-  
-  const {
-    messages,
-    setMessages,
-    isLoading,
-    isPlaying,
-    sendMessage,
-    playMessage,
-    stopPlayback,
-    loadPreferences,
-    userPreferences
-  } = useEnhancedChat();
+  const { toast } = useToast();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    loadPreferences();
-  }, [loadPreferences]);
-
-  // Check if therapist is selected
-  useEffect(() => {
-    if (!therapistLoading && !currentTherapist) {
-      setShowTherapistNeeded(true);
+    if (!user) {
+      navigate('/auth');
     } else {
-      setShowTherapistNeeded(false);
+      loadInitialMessages();
     }
-  }, [therapistLoading, currentTherapist]);
+  }, [user, navigate]);
 
-  useEffect(() => {
-    // Load session messages when session changes
-    if (currentSession && currentSession.messages) {
-      const transformedMessages = currentSession.messages.map(msg => ({
-        id: msg.id,
-        content: msg.content,
-        isUser: msg.sender === 'user',
-        timestamp: new Date(msg.timestamp)
-      }));
-      setMessages(transformedMessages);
-    } else {
-      setMessages([]);
-    }
-  }, [currentSession, setMessages]);
-
-  useEffect(() => {
-    // Scroll to bottom on message change
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  // Synchronize session states
-  useEffect(() => {
-    if (sessionState.sessionId && currentSession) {
-      syncWithRealtimeSession(sessionState.sessionId, sessionState.isActive);
-    }
-  }, [sessionState.sessionId, sessionState.isActive, currentSession, syncWithRealtimeSession]);
-
-  // Update realtime status when session state changes
-  useEffect(() => {
-    if (currentSession?.realtimeSessionId && sessionState.sessionId) {
-      updateRealtimeStatus(sessionState.sessionId, sessionState.isActive);
-    }
-  }, [sessionState.isActive, sessionState.sessionId, currentSession?.realtimeSessionId, updateRealtimeStatus]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
-
-  const handleStartSession = async () => {
-    if (!currentTherapist) {
-      toast({
-        title: "Therapist Required",
-        description: "Please select a therapist before starting a session.",
-        variant: "destructive",
-      });
-      navigate('/therapist-matching');
-      return;
-    }
-
+  const loadInitialMessages = async () => {
+    setIsLoading(true);
     try {
-      // Start real-time session first
-      await startRealtimeSession();
-      
-      // Start regular session with mood before
-      await startSession(7);
-      
-      toast({
-        title: "Session Started",
-        description: `Your therapy session with ${currentTherapist.name} has begun.`,
-      });
+      const initialMessages = await chatService.getInitialMessages(user!.id);
+      setMessages(initialMessages);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to start session. Please try again.",
-        variant: "destructive",
+        title: 'Error loading messages',
+        description: 'Failed to load initial messages. Please try again.',
+        variant: 'destructive',
       });
-    }
-  };
-
-  const handleEndSession = () => {
-    setShowEndModal(true);
-  };
-
-  const handleSessionEndSubmit = async (data: {
-    moodAfter: number;
-    notes: string;
-    rating: number;
-    breakthroughs: string[];
-  }) => {
-    if (!currentSession) return;
-
-    try {
-      // Add breakthroughs to session
-      data.breakthroughs.forEach(breakthrough => {
-        addBreakthrough(breakthrough);
-      });
-
-      // End both regular session and real-time session
-      await endSession(data.moodAfter, data.notes, data.rating);
-      await endRealtimeSession();
-      
-      setMessages([]);
-      toast({
-        title: "Session Completed",
-        description: "Thank you for your feedback. Your progress has been saved.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to complete session. Please try again.",
-        variant: "destructive",
-      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSendMessage = async () => {
-    if (!input.trim() || isLoading || !currentSession) return;
+    if (newMessage.trim() === '') return;
 
-    const userMessage = input.trim();
-    setInput('');
-    
-    // Send message
-    await sendMessage(userMessage);
+    const messageToSend: Message = {
+      text: newMessage,
+      sender: 'user',
+      timestamp: new Date().toISOString(),
+      userId: user!.id,
+    };
+
+    setMessages(prevMessages => [...prevMessages, messageToSend]);
+    setNewMessage('');
+
+    try {
+      await chatService.sendMessage(messageToSend);
+    } catch (error) {
+      toast({
+        title: 'Error sending message',
+        description: 'Failed to send message. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
-  // Show therapist selection prompt if no therapist is selected
-  if (showTherapistNeeded) {
+  const handleStartRecording = () => {
+    setIsRecording(true);
+    // Implement voice recording logic here
+  };
+
+  const handleStopRecording = () => {
+    setIsRecording(false);
+    // Implement stop recording and send voice message logic here
+  };
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
-        <Card className="max-w-md mx-auto">
-          <CardContent className="p-6 text-center space-y-4">
-            <div className="mx-auto w-12 h-12 bg-therapy-100 rounded-full flex items-center justify-center">
-              <Brain className="h-6 w-6 text-therapy-600" />
-            </div>
-            <h3 className="text-lg font-semibold">Select Your Therapist First</h3>
-            <p className="text-muted-foreground">
-              To start a personalized therapy session, you need to select an AI therapist that matches your needs.
-            </p>
-            <div className="space-y-2">
-              <Button 
-                onClick={() => navigate('/therapist-matching')}
-                className="w-full bg-therapy-600 hover:bg-therapy-700"
-              >
-                Find My Therapist
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => navigate('/')}
-                className="w-full"
-              >
-                Back to Dashboard
-              </Button>
-            </div>
+      <div className="flex items-center justify-center h-screen">
+        <Card>
+          <CardContent className="p-6">
+            <Brain className="h-10 w-10 animate-spin text-blue-500 mx-auto mb-4" />
+            <p className="text-center text-lg font-medium">Loading messages...</p>
           </CardContent>
         </Card>
       </div>
@@ -221,183 +92,68 @@ const Chat = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex flex-col">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" onClick={() => navigate('/')}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Dashboard
-            </Button>
-            <div>
-              <h1 className="text-xl font-semibold">Enhanced Therapy Session</h1>
-              {currentTherapist && (
-                <p className="text-sm text-muted-foreground">
-                  with {currentTherapist.name} ({currentTherapist.title})
-                </p>
-              )}
-              {userPreferences && (
-                <Badge variant="outline" className="text-xs mt-1">
-                  {userPreferences.communicationStyle} style
-                </Badge>
-              )}
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <NotificationCenter />
-            {currentSession && (
-              <div className="flex items-center space-x-2">
-                <Badge variant="secondary" className="bg-green-100 text-green-800">
-                  Session Active
-                </Badge>
-                {currentSession.isRealtimeActive && (
-                  <Badge variant="outline" className="bg-blue-100 text-blue-800">
-                    Real-time: {sessionState.connectionStatus}
-                  </Badge>
-                )}
-              </div>
-            )}
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={handleEndSession}
-              disabled={!currentSession}
-            >
-              End Session
-            </Button>
-          </div>
-        </div>
-      </div>
+    <div className="flex flex-col h-screen bg-gradient-to-br from-therapy-50 to-calm-50">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 pt-4">
+        <CardTitle className="text-2xl font-bold">
+          <MessageCircle className="mr-2 h-5 w-5 inline-block align-middle" />
+          Therapy Chat
+        </CardTitle>
+        <Badge variant="secondary">AI Powered</Badge>
+      </CardHeader>
 
-      {/* Real-time Session Metrics */}
-      {currentSession && currentSession.isRealtimeActive && (
-        <div className="px-4 pt-4 max-w-4xl mx-auto w-full">
-          <ChatSessionMetrics 
-            sessionState={sessionState}
-            messageCount={messages.length}
-            className="mb-4"
-          />
-        </div>
-      )}
-
-      {/* Chat Messages */}
-      <div className="flex-grow overflow-hidden">
+      <CardContent className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="flex flex-col p-4 max-w-4xl mx-auto space-y-4">
-            {messages.length === 0 && !currentSession ? (
-              <div className="text-center text-muted-foreground mt-8">
-                Start a session to begin chatting with your AI therapist.
-              </div>
-            ) : null}
-            
-            {messages.map((message) => (
-              <div key={message.id} className="space-y-2">
-                <div className={`mb-2 flex flex-col ${message.isUser ? 'items-end' : 'items-start'}`}>
-                  <div className="flex items-center max-w-[80%]">
-                    {!message.isUser && (
-                      <Avatar className="mr-2 h-8 w-8">
-                        <AvatarImage src="/ai-avatar.png" alt="AI Avatar" />
-                        <AvatarFallback>
-                          {currentTherapist?.name?.charAt(0) || 'AI'}
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
-                    <Card className="w-fit">
-                      <CardContent className="py-2 px-3">
-                        <p className="text-sm">{message.content}</p>
-                        <div className="flex items-center justify-between mt-1">
-                          <p className="text-xs text-muted-foreground">
-                            {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </p>
-                          {!message.isUser && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => isPlaying ? stopPlayback() : playMessage(message.content)}
-                              className="h-6 w-6 p-0 ml-2"
-                            >
-                              {isPlaying ? <VolumeX className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />}
-                            </Button>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                    {message.isUser && (
-                      <Avatar className="ml-2 h-8 w-8">
-                        {user?.user_metadata?.avatar_url ? (
-                          <AvatarImage src={user.user_metadata.avatar_url} alt="User Avatar" />
-                        ) : (
-                          <AvatarFallback>{user?.user_metadata?.name?.charAt(0).toUpperCase() || 'U'}</AvatarFallback>
-                        )}
-                      </Avatar>
-                    )}
-                  </div>
+          <div className="flex flex-col space-y-4 p-4">
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`flex flex-col ${message.sender === 'user' ? 'items-end' : 'items-start'}`}
+              >
+                <div
+                  className={`rounded-lg px-4 py-2 max-w-2/3 ${message.sender === 'user'
+                    ? 'bg-blue-100 text-blue-800'
+                    : 'bg-gray-100 text-gray-800'
+                    }`}
+                >
+                  {message.text}
                 </div>
-                
-                {/* Show emotion analysis for user messages */}
-                {message.isUser && message.emotion && (
-                  <div className="flex justify-end">
-                    <EmotionDisplay emotion={message.emotion} className="max-w-xs" />
-                  </div>
-                )}
+                <span className="text-xs text-gray-500 mt-1">
+                  {new Date(message.timestamp).toLocaleTimeString()}
+                </span>
               </div>
             ))}
-            <div ref={chatBottomRef} />
           </div>
         </ScrollArea>
-      </div>
+      </CardContent>
 
-      {/* Voice Interaction */}
-      {currentSession && (
-        <div className="px-4 max-w-4xl mx-auto w-full">
-          <VoiceInteraction 
-            className="mb-2"
+      <div className="border-t border-gray-200 p-4">
+        <div className="flex items-center space-x-2">
+          <Input
+            type="text"
+            placeholder="Type your message..."
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSendMessage();
+              }
+            }}
+            className="flex-1 rounded-full"
           />
-        </div>
-      )}
-
-      {/* Chat Input */}
-      <div className="bg-white border-t p-4">
-        <div className="max-w-4xl mx-auto flex items-center">
-          {currentSession ? (
-            <>
-              <Input
-                type="text"
-                placeholder="Type your message..."
-                value={input}
-                onChange={handleInputChange}
-                className="flex-grow mr-2"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSendMessage();
-                  }
-                }}
-              />
-              <Button onClick={handleSendMessage} disabled={isLoading}>
-                {isLoading ? "Sending..." : <Send className="h-4 w-4 mr-2" />}
-                Send
-              </Button>
-            </>
+          <Button onClick={handleSendMessage} aria-label="Send message">
+            <Send className="h-4 w-4" />
+          </Button>
+          {isRecording ? (
+            <Button variant="destructive" onClick={handleStopRecording} aria-label="Stop recording">
+              <MicOff className="h-4 w-4" />
+            </Button>
           ) : (
-            <Button onClick={handleStartSession} disabled={isLoading}
-              className="w-full bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white"
-            >
-              {isLoading ? "Starting Session..." : `Start Enhanced Session with ${currentTherapist?.name || 'AI Therapist'}`}
+            <Button onClick={handleStartRecording} aria-label="Start recording">
+              <Mic className="h-4 w-4" />
             </Button>
           )}
         </div>
       </div>
-
-      {/* Live Session Indicator */}
-      <LiveSessionIndicator />
-
-      <SessionEndModal
-        isOpen={showEndModal}
-        onClose={() => setShowEndModal(false)}
-        onConfirm={handleSessionEndSubmit}
-      />
     </div>
   );
 };

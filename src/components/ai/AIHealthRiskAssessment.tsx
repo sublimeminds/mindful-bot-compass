@@ -1,309 +1,156 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-import { Shield, AlertTriangle, CheckCircle, Activity, Phone } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Shield, AlertTriangle, CheckCircle, Brain, Heart, Activity } from 'lucide-react';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 
-interface RiskFactor {
-  name: string;
-  level: 'low' | 'medium' | 'high';
-  score: number;
-  description: string;
-  trending: 'improving' | 'stable' | 'worsening';
-}
-
-interface InterventionRecommendation {
-  priority: 'immediate' | 'urgent' | 'routine';
-  title: string;
-  description: string;
-  actions: string[];
+interface RiskAssessment {
+  overallRisk: 'low' | 'medium' | 'high' | 'critical';
+  riskFactors: Array<{
+    category: string;
+    level: 'low' | 'medium' | 'high';
+    description: string;
+    recommendation: string;
+  }>;
+  confidence: number;
+  lastUpdated: Date;
 }
 
 const AIHealthRiskAssessment = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
-  const [overallRiskScore, setOverallRiskScore] = useState<number>(0);
-  const [riskFactors, setRiskFactors] = useState<RiskFactor[]>([]);
-  const [recommendations, setRecommendations] = useState<InterventionRecommendation[]>([]);
-  const [isAssessing, setIsAssessing] = useState(false);
-  const [lastAssessment, setLastAssessment] = useState<Date | null>(null);
+  const [assessment, setAssessment] = useState<RiskAssessment | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    runRiskAssessment();
+    runAssessment();
   }, [user]);
 
-  const runRiskAssessment = async () => {
-    setIsAssessing(true);
-    
-    await new Promise(resolve => setTimeout(resolve, 3000));
+  const runAssessment = async () => {
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Simulate AI risk assessment
-    const mockRiskFactors: RiskFactor[] = [
-      {
-        name: 'Session Engagement',
-        level: 'low',
-        score: 15,
-        description: 'Consistent session attendance and active participation',
-        trending: 'stable'
-      },
-      {
-        name: 'Mood Stability',
-        level: 'medium',
-        score: 35,
-        description: 'Some mood fluctuations but within manageable range',
-        trending: 'improving'
-      },
-      {
-        name: 'Crisis Indicators',
-        level: 'low',
-        score: 8,
-        description: 'No immediate crisis indicators detected',
-        trending: 'stable'
-      },
-      {
-        name: 'Support System',
-        level: 'low',
-        score: 12,
-        description: 'Strong social support network identified',
-        trending: 'stable'
-      }
-    ];
+    // Simulate AI assessment
+    const mockAssessment: RiskAssessment = {
+      overallRisk: 'medium',
+      riskFactors: [
+        {
+          category: 'Session Engagement',
+          level: 'low',
+          description: 'Consistent session attendance',
+          recommendation: 'Continue current engagement level'
+        },
+        {
+          category: 'Mood Stability',
+          level: 'medium',
+          description: 'Some mood fluctuations',
+          recommendation: 'Monitor mood and adjust therapy as needed'
+        }
+      ],
+      confidence: 75,
+      lastUpdated: new Date()
+    };
 
-    const mockRecommendations: InterventionRecommendation[] = [
-      {
-        priority: 'routine',
-        title: 'Continue Current Therapy Plan',
-        description: 'Current therapeutic approach is showing positive results',
-        actions: [
-          'Maintain weekly session schedule',
-          'Continue mood tracking',
-          'Practice learned coping strategies'
-        ]
-      },
-      {
-        priority: 'urgent',
-        title: 'Enhanced Mood Monitoring',
-        description: 'Increase frequency of mood check-ins due to recent fluctuations',
-        actions: [
-          'Daily mood logging for 2 weeks',
-          'Trigger-based intervention alerts',
-          'Weekly therapist check-ins'
-        ]
-      }
-    ];
+    setAssessment(mockAssessment);
+    setIsLoading(false);
 
-    const overallScore = Math.round(mockRiskFactors.reduce((sum, factor) => sum + factor.score, 0) / mockRiskFactors.length);
-
-    setRiskFactors(mockRiskFactors);
-    setRecommendations(mockRecommendations);
-    setOverallRiskScore(overallScore);
-    setLastAssessment(new Date());
-    setIsAssessing(false);
-
-    // Show notification based on risk level
-    if (overallScore > 60) {
+    if (mockAssessment.overallRisk === 'high') {
       toast({
-        title: "Risk Assessment Alert",
-        description: "Elevated risk detected. Additional support recommended.",
+        title: "High Risk Alert",
+        description: "Immediate action is required. Contact support.",
         variant: "destructive",
       });
     }
   };
 
-  const getRiskLevelInfo = (score: number) => {
-    if (score < 30) {
-      return {
-        level: 'Low Risk',
-        color: 'text-green-600',
-        bg: 'bg-green-100',
-        icon: CheckCircle,
-        description: 'Minimal intervention needed'
-      };
-    } else if (score < 60) {
-      return {
-        level: 'Medium Risk',
-        color: 'text-yellow-600',
-        bg: 'bg-yellow-100',
-        icon: AlertTriangle,
-        description: 'Enhanced monitoring recommended'
-      };
-    } else {
-      return {
-        level: 'High Risk',
-        color: 'text-red-600',
-        bg: 'bg-red-100',
-        icon: AlertTriangle,
-        description: 'Immediate intervention required'
-      };
-    }
-  };
-
-  const riskInfo = getRiskLevelInfo(overallRiskScore);
-  const RiskIcon = riskInfo.icon;
-
-  const getLevelColor = (level: string) => {
+  const getRiskColor = (level: string) => {
     switch (level) {
       case 'low': return 'bg-green-100 text-green-800';
       case 'medium': return 'bg-yellow-100 text-yellow-800';
       case 'high': return 'bg-red-100 text-red-800';
+      case 'critical': return 'bg-red-500 text-white';
       default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'immediate': return 'border-red-500 bg-red-50';
-      case 'urgent': return 'border-yellow-500 bg-yellow-50';
-      case 'routine': return 'border-green-500 bg-green-50';
-      default: return 'border-gray-500 bg-gray-50';
-    }
-  };
-
-  const getTrendingIcon = (trending: string) => {
-    switch (trending) {
-      case 'improving': return '📈';
-      case 'worsening': return '📉';
-      default: return '➡️';
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Shield className="h-6 w-6 text-blue-500" />
-              <CardTitle>AI Health Risk Assessment</CardTitle>
-            </div>
-            <Button 
-              variant="outline" 
-              onClick={runRiskAssessment}
-              disabled={isAssessing}
-            >
-              {isAssessing ? 'Assessing...' : 'Run Assessment'}
+            <CardTitle className="flex items-center">
+              <Shield className="h-5 w-5 mr-2" />
+              AI Health Risk Assessment
+            </CardTitle>
+            <Button variant="outline" onClick={runAssessment} disabled={isLoading}>
+              {isLoading ? 'Assessing...' : 'Run Assessment'}
             </Button>
           </div>
         </CardHeader>
         <CardContent>
-          {isAssessing ? (
-            <div className="text-center py-8">
-              <Shield className="h-12 w-12 text-blue-500 mx-auto mb-4 animate-pulse" />
-              <p className="text-muted-foreground">Analyzing mental health indicators and risk factors...</p>
+          {isLoading ? (
+            <div className="text-center">
+              <Brain className="h-12 w-12 text-blue-500 animate-spin mx-auto mb-4" />
+              <p className="text-muted-foreground">Analyzing your data...</p>
+            </div>
+          ) : assessment ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Overall Risk:</h3>
+                <Badge className={getRiskColor(assessment.overallRisk)}>
+                  {assessment.overallRisk}
+                </Badge>
+              </div>
+              <Progress value={assessment.confidence} />
+              <p className="text-sm text-muted-foreground">
+                Last updated: {assessment.lastUpdated.toLocaleDateString()}
+              </p>
             </div>
           ) : (
-            <div className="space-y-6">
-              {/* Overall Risk Score */}
-              <div className="text-center space-y-4">
-                <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full ${riskInfo.bg}`}>
-                  <RiskIcon className={`h-5 w-5 ${riskInfo.color}`} />
-                  <span className={`font-semibold ${riskInfo.color}`}>{riskInfo.level}</span>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold mb-2">{overallRiskScore}/100</div>
-                  <Progress value={overallRiskScore} className="h-3 w-48 mx-auto" />
-                  <p className="text-sm text-muted-foreground mt-2">{riskInfo.description}</p>
-                </div>
-              </div>
-
-              {lastAssessment && (
-                <div className="text-center text-sm text-muted-foreground">
-                  Last assessment: {lastAssessment.toLocaleString()}
-                </div>
-              )}
+            <div className="text-center">
+              <Heart className="h-12 w-12 text-red-500 mx-auto mb-4" />
+              <p className="text-muted-foreground">No assessment data available.</p>
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* High Risk Alert */}
-      {overallRiskScore > 60 && (
-        <Alert className="border-red-500 bg-red-50">
+      {assessment?.overallRisk === 'high' && (
+        <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
-          <AlertDescription className="flex items-center justify-between">
-            <span>
-              <strong>Elevated risk detected.</strong> Additional support and monitoring recommended.
-            </span>
-            <Button size="sm" className="ml-4">
-              <Phone className="h-4 w-4 mr-2" />
-              Contact Support
-            </Button>
+          <AlertDescription>
+            High risk detected. Please contact support immediately.
           </AlertDescription>
         </Alert>
       )}
 
-      {/* Risk Factors */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Activity className="h-5 w-5" />
-            <span>Risk Factor Analysis</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {riskFactors.map((factor, index) => (
-              <div key={index} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <h4 className="font-medium">{factor.name}</h4>
-                    <Badge className={getLevelColor(factor.level)}>
-                      {factor.level}
-                    </Badge>
-                    <span className="text-sm">{getTrendingIcon(factor.trending)}</span>
+      {assessment && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Risk Factors</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {assessment.riskFactors.map((factor, index) => (
+                <div key={index} className="p-4 rounded-md border">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-medium">{factor.category}</h4>
+                      <p className="text-xs text-muted-foreground">{factor.description}</p>
+                    </div>
+                    <Badge className={getRiskColor(factor.level)}>{factor.level}</Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">{factor.description}</p>
+                  <p className="text-xs text-blue-500 mt-2">Recommendation: {factor.recommendation}</p>
                 </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold">{factor.score}</div>
-                  <div className="text-xs text-muted-foreground">Risk Score</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Intervention Recommendations */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Intervention Recommendations</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {recommendations.map((rec, index) => (
-              <div key={index} className={`p-4 border-l-4 rounded-lg ${getPriorityColor(rec.priority)}`}>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <h4 className="font-semibold">{rec.title}</h4>
-                    <Badge variant="outline" className="capitalize">
-                      {rec.priority}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{rec.description}</p>
-                  <div className="space-y-1">
-                    <h5 className="text-sm font-medium">Recommended Actions:</h5>
-                    <ul className="text-sm space-y-1">
-                      {rec.actions.map((action, actionIndex) => (
-                        <li key={actionIndex} className="flex items-start space-x-2">
-                          <span className="text-muted-foreground">•</span>
-                          <span>{action}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

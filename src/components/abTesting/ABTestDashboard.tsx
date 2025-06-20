@@ -1,21 +1,17 @@
-
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Plus, Play, Pause, Square, TrendingUp, Users, Target, Award } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { ABTestingService, ABTest, ABTestVariant } from '@/services/abTestingService';
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { TrendingUp, Users, Target, Activity, Play, Pause, RotateCcw } from 'lucide-react';
+import { abTestingService, ABTest, ABTestResult } from '@/services/abTestingService';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 
 const ABTestDashboard = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
   const [tests, setTests] = useState<ABTest[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +28,7 @@ const ABTestDashboard = () => {
     
     setIsLoading(true);
     try {
-      const data = await ABTestingService.getTests(user.id);
+      const data = await abTestingService.getTests(user.id);
       setTests(data);
     } catch (error) {
       console.error('Error fetching tests:', error);
@@ -253,7 +249,7 @@ const ABTestDashboard = () => {
 };
 
 const CreateTestForm = ({ onSuccess }: { onSuccess: () => void }) => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
@@ -288,7 +284,7 @@ const CreateTestForm = ({ onSuccess }: { onSuccess: () => void }) => {
         metrics: { primary: formData.primaryMetric, secondary: [] }
       };
 
-      const testId = await ABTestingService.createTest(testData);
+      const testId = await abTestingService.createTest(testData);
       
       if (testId) {
         toast({

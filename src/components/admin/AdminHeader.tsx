@@ -71,7 +71,7 @@ const AdminHeader = () => {
           <div className="flex items-center space-x-2 text-gray-300">
             <User className="h-4 w-4" />
             <span className="text-sm">
-              {user?.user_metadata?.name || user?.email}
+              {user?.email}
             </span>
           </div>
 

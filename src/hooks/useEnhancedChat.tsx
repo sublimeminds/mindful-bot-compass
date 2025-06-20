@@ -1,22 +1,12 @@
-
-import { useState, useCallback } from 'react';
-import { useSession } from '@/contexts/SessionContext';
-import { sendEnhancedMessage, analyzeEmotion } from '@/services/enhancedAiService';
-import { voiceService } from '@/services/voiceService';
-import { PersonalizationService } from '@/services/personalizationService';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState, useEffect, useRef } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Message } from '@/types/chat';
 import { useToast } from '@/hooks/use-toast';
-
-interface Message {
-  id: string;
-  content: string;
-  isUser: boolean;
-  timestamp: Date;
-  emotion?: any;
-}
+import { chatService } from '@/services/chatService';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 export const useEnhancedChat = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
   const { currentSession, addMessage } = useSession();
   const [messages, setMessages] = useState<Message[]>([]);

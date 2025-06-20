@@ -1,36 +1,9 @@
-
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-
-interface SubscriptionPlan {
-  id: string;
-  name: string;
-  price_monthly: number;
-  price_yearly: number;
-  features: Record<string, string>;
-  limits: Record<string, number>;
-}
-
-interface UserSubscription {
-  id: string;
-  plan_id: string;
-  status: string;
-  billing_cycle: string;
-  current_period_end: string;
-  plan: SubscriptionPlan;
-}
-
-interface UsageData {
-  resource_type: string;
-  usage_count: number;
-  period_start: string;
-  period_end: string;
-}
+import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { subscriptionService } from '@/services/subscriptionService';
 
 export const useSubscription = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);

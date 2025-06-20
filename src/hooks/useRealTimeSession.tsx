@@ -1,133 +1,59 @@
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
-import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { RealTimeSessionState } from '@/components/session/SessionStatusIndicator';
+export const useRealTimeSession = (sessionId: string) => {
+  const { user } = useSimpleApp();
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export const useRealTimeSession = () => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  
-  const [sessionState, setSessionState] = useState<RealTimeSessionState>({
-    isActive: false,
-    startTime: null,
-    duration: 0,
-    connectionStatus: 'disconnected',
-    connectionQuality: 'excellent',
-    participantCount: 0,
-    sessionId: null
-  });
-
-  // Update duration timer
   useEffect(() => {
-    if (!sessionState.isActive || !sessionState.startTime) return;
-
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const duration = Math.floor((now - sessionState.startTime!.getTime()) / 1000);
-      setSessionState(prev => ({ ...prev, duration }));
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [sessionState.isActive, sessionState.startTime]);
-
-  const startSession = useCallback(async () => {
-    try {
-      setSessionState(prev => ({
-        ...prev,
-        connectionStatus: 'connecting'
-      }));
-
-      // Simulate connection process
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const sessionId = `session_${Date.now()}`;
-      const startTime = new Date();
-      
-      setSessionState({
-        isActive: true,
-        startTime,
-        duration: 0,
-        connectionStatus: 'connected',
-        connectionQuality: 'excellent',
-        participantCount: 2, // User + AI
-        sessionId
-      });
-
-      toast({
-        title: "Session Started",
-        description: "Your therapy session is now active.",
-      });
-
-    } catch (error) {
-      setSessionState(prev => ({
-        ...prev,
-        connectionStatus: 'disconnected'
-      }));
-      
-      toast({
-        title: "Connection Failed",
-        description: "Unable to start session. Please try again.",
-        variant: "destructive"
-      });
+    if (!user) {
+      setLoading(false);
+      return;
     }
-  }, [toast]);
 
-  const endSession = useCallback(async () => {
-    try {
-      setSessionState({
-        isActive: false,
-        startTime: null,
-        duration: 0,
-        connectionStatus: 'disconnected',
-        connectionQuality: 'excellent',
-        participantCount: 0,
-        sessionId: null
-      });
+    const fetchInitialMessages = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('messages')
+          .select('*')
+          .eq('session_id', sessionId)
+          .order('created_at', { ascending: true });
 
-      toast({
-        title: "Session Ended",
-        description: "Your therapy session has been completed.",
-      });
+        if (error) {
+          setError(error.message);
+        } else {
+          setMessages(data || []);
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to end session properly.",
-        variant: "destructive"
-      });
-    }
-  }, [toast]);
+    fetchInitialMessages();
 
-  const pauseSession = useCallback(() => {
-    setSessionState(prev => ({
-      ...prev,
-      isActive: false
-    }));
-    
-    toast({
-      title: "Session Paused",
-      description: "Your session has been paused.",
-    });
-  }, [toast]);
+    const channel = supabase
+      .channel(`session_${sessionId}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'messages', filter: `session_id=eq.${sessionId}` },
+        (payload) => {
+          if (payload.new) {
+            setMessages((prevMessages) => [...prevMessages, payload.new]);
+          }
+        }
+      )
+      .subscribe();
 
-  const resumeSession = useCallback(() => {
-    setSessionState(prev => ({
-      ...prev,
-      isActive: true
-    }));
-    
-    toast({
-      title: "Session Resumed",
-      description: "Your session has been resumed.",
-    });
-  }, [toast]);
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [sessionId, user]);
 
-  return {
-    sessionState,
-    startSession,
-    endSession,
-    pauseSession,
-    resumeSession
-  };
+  return { messages, loading, error };
 };
