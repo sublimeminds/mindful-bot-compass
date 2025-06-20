@@ -1,4 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,15 +9,20 @@ import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { ToastService } from '@/services/toastService';
 
 const SmartScheduleDashboard = () => {
-  const { user } = useSimpleApp();
+  const { user, loading } = useSimpleApp();
+  const navigate = useNavigate();
   const [scheduleData, setScheduleData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
+    if (!loading) {
+      if (!user) {
+        navigate('/auth');
+        return;
+      }
       loadScheduleData();
     }
-  }, [user]);
+  }, [user, loading, navigate]);
 
   const loadScheduleData = async () => {
     setIsLoading(true);
@@ -51,6 +58,23 @@ const SmartScheduleDashboard = () => {
   const handleScheduleSession = () => {
     ToastService.genericSuccess('Session Scheduled', 'Your therapy session has been added to your calendar.');
   };
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
+          <p className="text-therapy-600">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render anything if user is not authenticated (redirect will happen)
+  if (!user) {
+    return null;
+  }
 
   if (isLoading) {
     return (
