@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Clock, Calendar, BookOpen, ThumbsUp, Share2, Print } from 'lucide-react';
+import { ArrowLeft, Clock, Calendar, BookOpen, ThumbsUp, Share2, Printer } from 'lucide-react';
 
 const HelpArticleDetail = () => {
   const { id } = useParams();
@@ -141,7 +140,7 @@ const HelpArticleDetail = () => {
               Share
             </Button>
             <Button variant="outline" size="sm">
-              <Print className="h-4 w-4 mr-2" />
+              <Printer className="h-4 w-4 mr-2" />
               Print
             </Button>
           </div>
