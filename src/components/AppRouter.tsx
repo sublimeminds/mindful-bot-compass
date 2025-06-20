@@ -12,6 +12,7 @@ import NotebookPage from '@/pages/NotebookPage';
 import SmartScheduling from '@/pages/SmartScheduling';
 import Help from '@/pages/Help';
 import Plans from '@/pages/Plans';
+import TherapySyncAI from '@/pages/TherapySyncAI';
 import NotFound from '@/pages/NotFound';
 
 const AppRouter = () => {
@@ -28,6 +29,7 @@ const AppRouter = () => {
       <Route path="/smart-scheduling" element={<SmartScheduling />} />
       <Route path="/help" element={<Help />} />
       <Route path="/plans" element={<Plans />} />
+      <Route path="/therapysync-ai" element={<TherapySyncAI />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
