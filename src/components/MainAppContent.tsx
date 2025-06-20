@@ -22,7 +22,8 @@ const MainAppContent: React.FC = () => {
         <MinimalErrorBoundary>
           <AppRouter />
           <SimpleOfflineIndicator />
-          <Toaster />
+          {/* Only render Toaster after React is fully initialized */}
+          {typeof React !== 'undefined' && React.useState && <Toaster />}
         </MinimalErrorBoundary>
       </SimpleAppProvider>
     </MinimalErrorBoundary>
