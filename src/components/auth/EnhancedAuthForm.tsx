@@ -7,9 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, EyeOff, Mail, Lock, User, AlertCircle } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useApp } from '@/components/MinimalAppProvider';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import GradientLogo from '@/components/ui/GradientLogo';
 
 interface FormData {
@@ -40,10 +40,9 @@ const EnhancedAuthForm = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [activeTab, setActiveTab] = useState('signin');
   
-  const { login } = useSimpleApp();
+  const { login, register } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
-  const { toast } = useToast();
 
   const validateEmail = (email: string): string | undefined => {
     if (!email) return 'Email is required';
@@ -107,10 +106,7 @@ const EnhancedAuthForm = () => {
     try {
       await login(formData.email, formData.password);
       
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in to TherapySync.",
-      });
+      toast("Welcome back! You have successfully signed in to TherapySync.");
 
       // Redirect to dashboard or home
       navigate('/');
@@ -132,11 +128,9 @@ const EnhancedAuthForm = () => {
     setErrors({});
 
     try {
-      // For now, just simulate signup and redirect to sign in
-      toast({
-        title: "Account created!",
-        description: "Please sign in with your new credentials.",
-      });
+      await register(formData.email, formData.password);
+      
+      toast("Account created! Please sign in with your new credentials.");
 
       // Switch to sign in tab after successful signup
       setActiveTab('signin');
