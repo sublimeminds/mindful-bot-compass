@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SimpleAppProvider } from '@/components/SimpleAppProvider';
-import { Toaster } from '@/components/ui/sonner';
+import { Toaster } from 'sonner';
 import AppRouter from '@/components/AppRouter';
 import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import './App.css';

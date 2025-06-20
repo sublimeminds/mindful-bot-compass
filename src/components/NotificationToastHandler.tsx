@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 
 const NotificationToastHandler = () => {
   // Safety check for React hooks
