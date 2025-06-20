@@ -4,7 +4,18 @@ import { Badge } from "@/components/ui/badge";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { TrendingUp, TrendingDown, Minus, Brain } from "lucide-react";
 import { AnalyticsData } from "@/services/analyticsService";
-import { MoodEntry } from "@/services/moodTrackingService";
+
+interface MoodEntry {
+  id: string;
+  user_id: string;
+  overall: number;
+  anxiety: number;
+  depression: number;
+  stress: number;
+  energy: number;
+  created_at: string;
+  timestamp: string;
+}
 
 interface MoodChartProps {
   moodTrends: AnalyticsData['moodTrends'];
@@ -39,8 +50,8 @@ const MoodChart = ({ moodTrends, moodEntries }: MoodChartProps) => {
       month: 'short', 
       day: 'numeric' 
     }),
-    mood: entry.mood_level,
-    energy: entry.energy_level || 5,
+    mood: entry.overall,
+    energy: entry.energy || 5,
     index
   }));
 
