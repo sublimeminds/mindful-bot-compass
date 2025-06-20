@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,25 +29,16 @@ const QuickSignupWithPlan = ({ planName, planPrice, onSignupSuccess }: QuickSign
     setIsLoading(true);
 
     try {
-      const { error } = await register(email, password);
-
-      if (error) {
-        toast({
-          title: t("signupErrorTitle"),
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: t("signupSuccessTitle"),
-          description: t("signupSuccessDescription"),
-        });
-        onSignupSuccess();
-      }
-    } catch (error) {
+      await register(email, password);
+      toast({
+        title: t("signupSuccessTitle"),
+        description: t("signupSuccessDescription"),
+      });
+      onSignupSuccess();
+    } catch (error: any) {
       toast({
         title: t("signupErrorTitle"),
-        description: t("genericErrorMessage"),
+        description: error.message || t("genericErrorMessage"),
         variant: "destructive",
       });
     } finally {
