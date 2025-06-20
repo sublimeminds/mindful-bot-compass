@@ -94,7 +94,8 @@ export class CommunityService {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) return null;
 
-      const { data, error } = await supabase
+      // Create the group
+      const { data: group, error: groupError } = await supabase
         .from('support_groups')
         .insert({
           name: groupData.name || '',
@@ -102,25 +103,66 @@ export class CommunityService {
           category: groupData.category || '',
           group_type: groupData.group_type || 'open',
           max_members: groupData.max_members || 50,
-          moderator_id: user.user.id
+          moderator_id: user.user.id,
+          current_members: 1 // Creator is the first member
         })
         .select()
         .single();
 
-      if (error) throw error;
-      return data;
+      if (groupError) throw groupError;
+
+      // Automatically add the creator as a member with moderator role
+      const { error: membershipError } = await supabase
+        .from('group_memberships')
+        .insert({
+          user_id: user.user.id,
+          group_id: group.id,
+          role: 'moderator'
+        });
+
+      if (membershipError) {
+        console.error('Error adding creator as member:', membershipError);
+        // Don't fail the whole operation, just log the error
+      }
+
+      return group;
     } catch (error) {
       console.error('Error creating support group:', error);
       return null;
     }
   }
 
-  static async joinGroup(groupId: string): Promise<boolean> {
+  static async joinGroup(groupId: string): Promise<{ success: boolean; error?: string }> {
     try {
       const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return false;
+      if (!user.user) return { success: false, error: 'User not authenticated' };
 
-      const { error } = await supabase
+      // Check if user is already a member
+      const { data: existingMembership } = await supabase
+        .from('group_memberships')
+        .select('id')
+        .eq('user_id', user.user.id)
+        .eq('group_id', groupId)
+        .eq('is_active', true)
+        .single();
+
+      if (existingMembership) {
+        return { success: false, error: 'You are already a member of this group' };
+      }
+
+      // Check group capacity
+      const { data: group } = await supabase
+        .from('support_groups')
+        .select('current_members, max_members')
+        .eq('id', groupId)
+        .single();
+
+      if (group?.max_members && group.current_members >= group.max_members) {
+        return { success: false, error: 'This group has reached its maximum capacity' };
+      }
+
+      // Add user to group
+      const { error: membershipError } = await supabase
         .from('group_memberships')
         .insert({
           user_id: user.user.id,
@@ -128,26 +170,25 @@ export class CommunityService {
           role: 'member'
         });
 
-      if (error) throw error;
+      if (membershipError) throw membershipError;
 
-      // Update group member count manually
-      const { data: group } = await supabase
+      // Update group member count
+      const { error: updateError } = await supabase
         .from('support_groups')
-        .select('current_members')
-        .eq('id', groupId)
-        .single();
+        .update({ 
+          current_members: (group?.current_members || 0) + 1 
+        })
+        .eq('id', groupId);
 
-      if (group) {
-        await supabase
-          .from('support_groups')
-          .update({ current_members: (group.current_members || 0) + 1 })
-          .eq('id', groupId);
+      if (updateError) {
+        console.error('Error updating member count:', updateError);
+        // Don't fail the operation for this
       }
 
-      return true;
+      return { success: true };
     } catch (error) {
       console.error('Error joining group:', error);
-      return false;
+      return { success: false, error: 'Failed to join group. Please try again.' };
     }
   }
 

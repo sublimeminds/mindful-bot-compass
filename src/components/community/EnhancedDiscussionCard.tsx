@@ -22,7 +22,7 @@ const EnhancedDiscussionCard: React.FC<EnhancedDiscussionCardProps> = ({
   canModerate = false,
   onViewDiscussion 
 }) => {
-  const [isPinned, setIsPinned] = useState(false);
+  const [isPinned, setIsPinned] = useState(discussion.is_pinned);
 
   // Mock data for demonstration - in real app this would come from API
   const reactions: Reaction[] = [
@@ -57,8 +57,8 @@ const EnhancedDiscussionCard: React.FC<EnhancedDiscussionCardProps> = ({
     // TODO: Implement actual reaction functionality
   };
 
-  // Use available properties from GroupDiscussion type
-  const authorName = discussion.is_anonymous ? 'Anonymous' : (discussion.created_by || 'Unknown User');
+  // Use available properties from GroupDiscussion type - fixed to use author_id
+  const authorName = discussion.is_anonymous ? 'Anonymous' : (discussion.author_id || 'Unknown User');
   const isFeatured = false; // This would come from database in real implementation
 
   return (

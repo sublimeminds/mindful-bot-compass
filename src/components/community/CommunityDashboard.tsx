@@ -58,20 +58,25 @@ const CommunityDashboard: React.FC = () => {
 
   const handleJoinGroup = async (groupId: string) => {
     try {
-      const success = await CommunityService.joinGroup(groupId);
-      if (success) {
+      const result = await CommunityService.joinGroup(groupId);
+      if (result.success) {
         toast({
           title: "Success",
           description: "You've successfully joined the support group!"
         });
         loadCommunityData(); // Refresh data
       } else {
-        throw new Error('Failed to join group');
+        toast({
+          title: "Join Failed",
+          description: result.error || "Failed to join the group. Please try again.",
+          variant: "destructive"
+        });
       }
     } catch (error) {
+      console.error('Error joining group:', error);
       toast({
         title: "Error",
-        description: "Failed to join the group. Please try again.",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive"
       });
     }
