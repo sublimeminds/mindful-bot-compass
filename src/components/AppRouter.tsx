@@ -6,7 +6,8 @@ import Auth from '@/pages/Auth';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import DashboardPage from '@/pages/DashboardPage';
-import CrisisManagement from '@/pages/CrisisManagement';
+import CrisisResources from '@/pages/CrisisResources';
+import AdminCrisisManagement from '@/pages/AdminCrisisManagement';
 import Community from '@/pages/Community';
 import NotebookPage from '@/pages/NotebookPage';
 import SmartScheduling from '@/pages/SmartScheduling';
@@ -27,7 +28,8 @@ const AppRouter = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/crisis-management" element={<CrisisManagement />} />
+      <Route path="/crisis-resources" element={<CrisisResources />} />
+      <Route path="/admin/crisis-management" element={<AdminCrisisManagement />} />
       <Route path="/community" element={<Community />} />
       <Route path="/notebook" element={<NotebookPage />} />
       <Route path="/smart-scheduling" element={<SmartScheduling />} />

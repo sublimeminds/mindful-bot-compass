@@ -1,4 +1,3 @@
-
 import { SystemHealthService, SystemMetrics, SystemAlert } from './systemHealthService';
 
 export interface AdvancedSystemMetrics extends SystemMetrics {
@@ -181,7 +180,7 @@ export class EnhancedSystemHealthService extends SystemHealthService {
   // Helper methods for metrics collection
   private static async estimateBundleSize(): Promise<number> {
     try {
-      const resources = performance.getEntriesByType('resource');
+      const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
       const jsResources = resources.filter(r => r.name.includes('.js'));
       return jsResources.reduce((total, resource) => total + (resource.transferSize || 0), 0) / 1024;
     } catch {

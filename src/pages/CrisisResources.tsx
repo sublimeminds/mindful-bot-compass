@@ -1,14 +1,15 @@
 
 import React from 'react';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import CrisisResourcesPublic from '@/components/safety/CrisisResourcesPublic';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import CrisisInterventionDashboard from '@/components/safety/CrisisInterventionDashboard';
 import CrisisAssessmentForm from '@/components/safety/CrisisAssessmentForm';
 import EmergencyContactsManager from '@/components/safety/EmergencyContactsManager';
 import SafetyPlanManager from '@/components/safety/SafetyPlanManager';
-import { Shield, AlertTriangle, Heart, Users, Phone, FileText } from 'lucide-react';
+import { Shield, Heart, Users, Phone, FileText } from 'lucide-react';
 
-const CrisisManagement = () => {
+const CrisisResources = () => {
   return (
     <>
       <Header />
@@ -17,22 +18,22 @@ const CrisisManagement = () => {
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
               <Shield className="h-12 w-12 text-red-600 mr-3" />
-              <h1 className="text-3xl font-bold text-gray-900">Crisis Management Center</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Crisis Resources & Support</h1>
             </div>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Advanced crisis intervention, real-time monitoring, and immediate support resources 
-              to ensure user safety and provide immediate assistance when needed.
+              Access immediate help, safety planning tools, and support resources 
+              to help you through difficult times.
             </p>
           </div>
 
-          <Tabs defaultValue="dashboard" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5 max-w-3xl mx-auto">
-              <TabsTrigger value="dashboard" className="flex items-center space-x-2">
-                <AlertTriangle className="h-4 w-4" />
-                <span>Dashboard</span>
+          <Tabs defaultValue="resources" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4 max-w-2xl mx-auto">
+              <TabsTrigger value="resources" className="flex items-center space-x-2">
+                <Heart className="h-4 w-4" />
+                <span>Resources</span>
               </TabsTrigger>
               <TabsTrigger value="assessment" className="flex items-center space-x-2">
-                <Heart className="h-4 w-4" />
+                <Shield className="h-4 w-4" />
                 <span>Assessment</span>
               </TabsTrigger>
               <TabsTrigger value="contacts" className="flex items-center space-x-2">
@@ -43,14 +44,10 @@ const CrisisManagement = () => {
                 <FileText className="h-4 w-4" />
                 <span>Safety Plans</span>
               </TabsTrigger>
-              <TabsTrigger value="support" className="flex items-center space-x-2">
-                <Users className="h-4 w-4" />
-                <span>Support</span>
-              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="dashboard">
-              <CrisisInterventionDashboard />
+            <TabsContent value="resources">
+              <CrisisResourcesPublic />
             </TabsContent>
 
             <TabsContent value="assessment">
@@ -64,21 +61,12 @@ const CrisisManagement = () => {
             <TabsContent value="safety">
               <SafetyPlanManager />
             </TabsContent>
-
-            <TabsContent value="support">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Support network features will be implemented here */}
-                <div className="text-center py-12 col-span-full">
-                  <Users className="h-16 w-16 mx-auto text-gray-400 mb-4" />
-                  <p className="text-gray-600">Support Network features coming soon...</p>
-                </div>
-              </div>
-            </TabsContent>
           </Tabs>
         </div>
       </div>
+      <Footer />
     </>
   );
 };
 
-export default CrisisManagement;
+export default CrisisResources;

@@ -33,10 +33,10 @@ const UnifiedNavigation = () => {
           href: '/smart-scheduling'
         },
         {
-          title: 'Crisis Management',
-          description: 'Comprehensive safety and crisis intervention tools',
+          title: 'Crisis Resources',
+          description: 'Emergency support and safety planning tools',
           icon: Shield,
-          href: '/crisis-management'
+          href: '/crisis-resources'
         }
       ]
     },
