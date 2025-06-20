@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Toaster } from '@/components/ui/toaster';
 import AppRouter from '@/components/AppRouter';
 import MinimalErrorBoundary from '@/components/MinimalErrorBoundary';
 import { SimpleAppProvider } from '@/components/SimpleAppProvider';
@@ -22,10 +21,6 @@ const MainAppContent: React.FC = () => {
         <MinimalErrorBoundary>
           <AppRouter />
           <SimpleOfflineIndicator />
-        </MinimalErrorBoundary>
-        {/* Render Toaster outside the inner error boundary and only after React is ready */}
-        <MinimalErrorBoundary>
-          <Toaster />
         </MinimalErrorBoundary>
       </SimpleAppProvider>
     </MinimalErrorBoundary>
