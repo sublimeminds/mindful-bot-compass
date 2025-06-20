@@ -1,8 +1,17 @@
 
 import React from 'react';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import LandingPage from '@/components/LandingPage';
 import { useNavigate } from 'react-router-dom';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import HeroSection from '@/components/HeroSection';
+import FeaturesSection from '@/components/FeaturesSection';
+import HowItWorksSection from '@/components/landing/HowItWorksSection';
+import TestimonialsSection from '@/components/landing/TestimonialsSection';
+import StatsCounter from '@/components/landing/StatsCounter';
+import CTASection from '@/components/landing/CTASection';
+import ComprehensivePricingSection from '@/components/landing/ComprehensivePricingSection';
+import ComplianceSection from '@/components/landing/ComplianceSection';
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -26,8 +35,27 @@ const Index = () => {
     );
   }
 
-  // Show landing page for unauthenticated users
-  return <LandingPage />;
+  // Show comprehensive landing page for unauthenticated users
+  return (
+    <div className="min-h-screen">
+      <Header />
+      <HeroSection />
+      <StatsCounter />
+      <div id="how-it-works">
+        <HowItWorksSection />
+      </div>
+      <div id="features">
+        <FeaturesSection />
+      </div>
+      <TestimonialsSection />
+      <div id="pricing">
+        <ComprehensivePricingSection />
+      </div>
+      <ComplianceSection />
+      <CTASection />
+      <Footer />
+    </div>
+  );
 };
 
 export default Index;
