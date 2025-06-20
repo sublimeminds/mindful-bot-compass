@@ -7,7 +7,6 @@ import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import FeaturesSection from '@/components/FeaturesSection';
 import HowItWorksSection from '@/components/landing/HowItWorksSection';
-import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import StatsCounter from '@/components/landing/StatsCounter';
 import CTASection from '@/components/landing/CTASection';
 import ComprehensivePricingSection from '@/components/landing/ComprehensivePricingSection';
@@ -47,7 +46,6 @@ const Index = () => {
       <div id="features">
         <FeaturesSection />
       </div>
-      <TestimonialsSection />
       <div id="pricing">
         <ComprehensivePricingSection />
       </div>
