@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import { MessageCircle, Send, Mic, MicOff, Volume2, VolumeX, Brain, Heart, Lightbulb } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useEnhancedChat } from '@/hooks/useEnhancedChat';

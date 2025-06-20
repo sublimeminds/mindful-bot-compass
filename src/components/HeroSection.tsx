@@ -1,145 +1,163 @@
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Shield, Brain, Heart } from "lucide-react";
-import AuthModal from "./AuthModal";
-import QuickSignupWithPlan from "./subscription/QuickSignupWithPlan";
-import GradientLogo from "@/components/ui/GradientLogo";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Play, ArrowRight, Sparkles, Shield, Heart } from 'lucide-react';
+import AuthModal from '@/components/AuthModal';
+import QuickSignupWithPlan from '@/components/subscription/QuickSignupWithPlan';
 
 const HeroSection = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showQuickSignup, setShowQuickSignup] = useState(false);
 
-  const handleStartSession = () => {
+  const handleGetStarted = () => {
     setShowAuthModal(true);
   };
 
-  const scrollToDemo = () => {
-    const demoElement = document.querySelector('#video-demo');
-    if (demoElement) {
-      demoElement.scrollIntoView({ behavior: 'smooth' });
+  const handleStartTrial = () => {
+    setShowQuickSignup(true);
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <>
-      <section className="relative py-24 lg:py-40 overflow-hidden bg-gradient-to-br from-harmony-50 via-balance-50 to-flow-100 animate-gradient-flow bg-[length:400%_400%] min-h-screen flex items-center">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-6xl mx-auto">
-            <div className="animate-fade-in">
-              {/* Enhanced hero badge */}
-              <div className="inline-flex items-center space-x-3 bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 mb-8 shadow-lg">
-                <Sparkles className="h-5 w-5 text-harmony-600" />
-                <span className="text-harmony-800 text-base font-medium">Complete AI Mental Health Platform</span>
-                <div className="flex items-center space-x-1">
-                  <Brain className="h-4 w-4 text-balance-600" />
-                  <Heart className="h-4 w-4 text-flow-600" />
-                  <Shield className="h-4 w-4 text-harmony-600" />
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-center mb-12">
-                <div className="flex items-center justify-center w-80 h-80 bg-white/95 backdrop-blur-sm rounded-full shadow-2xl animate-swirl-breathe p-8">
-                  <GradientLogo 
-                    size="hero"
-                    className="drop-shadow-xl"
-                  />
-                </div>
-              </div>
-              
-              <h1 className="text-5xl sm:text-6xl lg:text-8xl font-bold text-slate-800 mb-10 leading-tight">
-                Your Complete
-                <span className="block bg-gradient-to-r from-harmony-600 via-balance-600 to-flow-600 bg-clip-text text-transparent">
-                  Mental Health
-                </span>
-                <span className="block text-4xl sm:text-5xl lg:text-6xl mt-4 text-slate-600">
-                  AI Companion
-                </span>
-              </h1>
-              
-              <p className="text-2xl sm:text-3xl text-slate-700 mb-16 max-w-5xl mx-auto leading-relaxed">
-                Advanced AI therapy with crisis detection, cultural awareness, predictive analytics, 
-                and community support—all in one comprehensive platform.
-                <span className="block mt-3 font-semibold text-harmony-700">
-                  Available 24/7 with enterprise-grade security and personalized care.
-                </span>
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-8 justify-center items-center mb-20">
-                <QuickSignupWithPlan>
-                  <Button 
-                    size="lg" 
-                    className="bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-600 hover:from-harmony-600 hover:via-balance-600 hover:to-flow-700 text-white border-0 px-12 py-6 text-2xl font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:animate-swirl-grow"
-                  >
-                    Start Free Trial
-                    <ArrowRight className="h-6 w-6 ml-3" />
-                  </Button>
-                </QuickSignupWithPlan>
-                
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="border-2 border-harmony-300 text-harmony-700 hover:bg-white/80 px-12 py-6 text-2xl font-semibold backdrop-blur-sm group shadow-lg bg-white/60"
-                  onClick={scrollToDemo}
-                >
-                  <GradientLogo 
-                    size="md"
-                    className="mr-3 group-hover:animate-swirl-grow"
-                  />
-                  Explore Platform
-                </Button>
-              </div>
-              
-              {/* Enhanced trust indicators */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-base text-slate-600">
-                <div className="flex flex-col items-center space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <Shield className="h-5 w-5 text-harmony-600" />
-                    <span className="font-medium">HIPAA Compliant</span>
-                  </div>
-                  <span className="text-sm text-slate-500">Enterprise Security</span>
-                </div>
-                <div className="flex flex-col items-center space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <Brain className="h-5 w-5 text-balance-600" />
-                    <span className="font-medium">AI-Powered</span>
-                  </div>
-                  <span className="text-sm text-slate-500">Crisis Detection</span>
-                </div>
-                <div className="flex flex-col items-center space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <Heart className="h-5 w-5 text-flow-600" />
-                    <span className="font-medium">Evidence-Based</span>
-                  </div>
-                  <span className="text-sm text-slate-500">Therapeutic Approaches</span>
-                </div>
-                <div className="flex flex-col items-center space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <Sparkles className="h-5 w-5 text-harmony-600" />
-                    <span className="font-medium">25K+ Users</span>
-                  </div>
-                  <span className="text-sm text-slate-500">Helped Worldwide</span>
-                </div>
-              </div>
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 via-calm-50 to-therapy-100 overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23E0F2FE" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+      
+      <div className="container mx-auto px-4 py-20 relative z-10">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Trust Badge */}
+          <Badge variant="secondary" className="mb-6 bg-white/80 backdrop-blur-sm">
+            <Shield className="h-3 w-3 mr-1" />
+            HIPAA Compliant & Secure
+          </Badge>
+
+          {/* Main Headline */}
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+            Your Personal
+            <span className="text-therapy-600 relative">
+              <span className="relative z-10"> AI Therapist</span>
+              <svg className="absolute -bottom-2 left-0 w-full h-3 z-0" viewBox="0 0 200 12" fill="none">
+                <path d="M0 8C40 4, 80 4, 120 8C160 12, 200 8, 200 6" stroke="#7C3AED" strokeWidth="3" fill="none"/>
+              </svg>
+            </span>
+            <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-therapy-600 to-calm-600">
+              Available 24/7
+            </span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            Get professional therapy support whenever you need it. Our AI-powered platform provides personalized mental health care that adapts to your unique needs.
+          </p>
+
+          {/* Key Benefits */}
+          <div className="flex flex-wrap justify-center gap-4 mb-10">
+            <Badge variant="outline" className="bg-white/60 backdrop-blur-sm text-gray-700 border-gray-200">
+              <Heart className="h-3 w-3 mr-1 text-therapy-500" />
+              Personalized Care
+            </Badge>
+            <Badge variant="outline" className="bg-white/60 backdrop-blur-sm text-gray-700 border-gray-200">
+              <Sparkles className="h-3 w-3 mr-1 text-calm-500" />
+              AI-Powered Insights
+            </Badge>
+            <Badge variant="outline" className="bg-white/60 backdrop-blur-sm text-gray-700 border-gray-200">
+              <Shield className="h-3 w-3 mr-1 text-green-500" />
+              100% Private
+            </Badge>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <Button 
+              size="lg" 
+              className="bg-therapy-600 hover:bg-therapy-700 text-white px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+              onClick={handleGetStarted}
+            >
+              Start Your Journey
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="lg"
+              className="border-2 border-therapy-600 text-therapy-600 hover:bg-therapy-600 hover:text-white px-8 py-6 text-lg rounded-full transition-all duration-300 group"
+              onClick={() => scrollToSection('demo')}
+            >
+              <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+              Watch Demo
+            </Button>
+          </div>
+
+          {/* Quick Trial CTA */}
+          <div className="text-center">
+            <p className="text-gray-600 mb-4">Ready to get started? Try our premium features free for 7 days.</p>
+            <Button 
+              variant="ghost" 
+              className="text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50 underline underline-offset-4"
+              onClick={handleStartTrial}
+            >
+              Start Free Trial
+            </Button>
+          </div>
+
+          {/* Social Proof */}
+          <div className="mt-16 pt-8 border-t border-gray-200">
+            <p className="text-gray-500 text-sm mb-4">Trusted by thousands of users worldwide</p>
+            <div className="flex justify-center items-center space-x-8 opacity-60">
+              <div className="text-2xl font-bold text-gray-400">10K+</div>
+              <div className="text-gray-300">•</div>
+              <div className="text-2xl font-bold text-gray-400">4.9★</div>
+              <div className="text-gray-300">•</div>
+              <div className="text-2xl font-bold text-gray-400">24/7</div>
             </div>
           </div>
         </div>
-        
-        {/* Enhanced decorative elements */}
-        <div className="absolute top-32 left-16 w-40 h-40 bg-harmony-200/30 rounded-full opacity-40 animate-swirl-breathe"></div>
-        <div className="absolute bottom-32 right-16 w-32 h-32 bg-flow-200/30 rounded-full opacity-40 animate-swirl-breathe" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-8 w-24 h-24 bg-balance-300/20 rounded-full opacity-30 animate-swirl-breathe" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-48 right-1/4 w-28 h-28 bg-harmony-300/20 rounded-full opacity-25 animate-swirl-breathe" style={{ animationDelay: '3s' }}></div>
-        
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/10 pointer-events-none"></div>
-      </section>
+      </div>
 
-      <AuthModal 
-        isOpen={showAuthModal} 
-        onClose={() => setShowAuthModal(false)} 
-        defaultMode="signup"
+      {/* Quick Signup Modal */}
+      {showQuickSignup && (
+        <QuickSignupWithPlan>
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full">
+              <h3 className="text-lg font-semibold mb-4">Start Your Free Trial</h3>
+              <p className="text-gray-600 mb-4">Get access to all premium features for 7 days, absolutely free.</p>
+              <div className="flex space-x-3">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowQuickSignup(false)}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={() => {
+                    setShowQuickSignup(false);
+                    setShowAuthModal(true);
+                  }}
+                  className="flex-1 bg-therapy-600 hover:bg-therapy-700"
+                >
+                  Continue
+                </Button>
+              </div>
+            </div>
+          </div>
+        </QuickSignupWithPlan>
+      )}
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
       />
-    </>
+    </section>
   );
 };
 

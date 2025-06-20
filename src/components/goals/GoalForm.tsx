@@ -1,88 +1,78 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, Target } from 'lucide-react';
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 interface GoalFormProps {
-  goal?: any;
-  onSuccess: () => void;
-  onCancel: () => void;
+  onGoalCreated?: () => void;
 }
 
-const GoalForm: React.FC<GoalFormProps> = ({ goal, onSuccess, onCancel }) => {
-  const navigate = useNavigate();
+const GoalForm = ({ onGoalCreated }: GoalFormProps) => {
   const { user } = useSimpleApp();
   const { toast } = useToast();
-  const [title, setTitle] = useState(goal?.title || '');
-  const [description, setDescription] = useState(goal?.description || '');
-  const [targetDate, setTargetDate] = useState<Date | undefined>(goal?.target_date ? new Date(goal.target_date) : undefined);
-  const [priority, setPriority] = useState(goal?.priority || 'medium');
   const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    category: '',
+    priority: 'medium',
+    targetDate: undefined as Date | undefined,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!user) {
-      toast({
-        title: "Error",
-        description: "You must be logged in to create a goal.",
-        variant: "destructive",
-      });
-      return;
-    }
+    if (!user || !formData.title || !formData.targetDate) return;
 
     setIsLoading(true);
-
     try {
-      const updates = {
-        user_id: user.id,
-        title,
-        description,
-        target_date: targetDate?.toISOString(),
-        priority,
-        is_completed: false,
-        current_progress: 0,
-      };
+      const { error } = await supabase
+        .from('goals')
+        .insert({
+          user_id: user.id,
+          title: formData.title,
+          description: formData.description,
+          category: formData.category || 'general',
+          priority: formData.priority,
+          target_date: formData.targetDate.toISOString(),
+          type: 'personal',
+          is_completed: false,
+          current_progress: 0
+        });
 
-      let error;
-      if (goal) {
-        const { error: updateError } = await supabase
-          .from('goals')
-          .update(updates)
-          .eq('id', goal.id);
-        error = updateError;
-      } else {
-        const { error: insertError } = await supabase
-          .from('goals')
-          .insert(updates);
-        error = insertError;
-      }
-
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       toast({
-        title: "Success",
-        description: `Goal ${goal ? 'updated' : 'created'} successfully!`,
+        title: "Goal Created",
+        description: "Your goal has been created successfully!",
       });
-      onSuccess();
-    } catch (error: any) {
-      console.error("Error creating goal:", error);
+
+      // Reset form
+      setFormData({
+        title: '',
+        description: '',
+        category: '',
+        priority: 'medium',
+        targetDate: undefined,
+      });
+
+      onGoalCreated?.();
+    } catch (error) {
+      console.error('Error creating goal:', error);
       toast({
         title: "Error",
-        description: error.message || "Failed to create goal. Please try again.",
+        description: "Failed to create goal. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -93,74 +83,99 @@ const GoalForm: React.FC<GoalFormProps> = ({ goal, onSuccess, onCancel }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{goal ? 'Edit Goal' : 'Create New Goal'}</CardTitle>
+        <CardTitle className="flex items-center">
+          <Target className="h-5 w-5 mr-2" />
+          Create New Goal
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">Goal Title</Label>
             <Input
-              type="text"
               id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Goal title"
+              value={formData.title}
+              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              placeholder="Enter your goal..."
               required
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Goal description"
+              value={formData.description}
+              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              placeholder="Describe your goal..."
               rows={3}
             />
           </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="health">Health & Wellness</SelectItem>
+                  <SelectItem value="personal">Personal Growth</SelectItem>
+                  <SelectItem value="career">Career</SelectItem>
+                  <SelectItem value="relationships">Relationships</SelectItem>
+                  <SelectItem value="general">General</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="priority">Priority</Label>
+              <Select value={formData.priority} onValueChange={(value) => setFormData(prev => ({ ...prev, priority: value }))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label>Target Date</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
-                  variant={"outline"}
-                  className="w-full justify-start text-left font-normal"
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !formData.targetDate && "text-muted-foreground"
+                  )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {targetDate ? format(targetDate, "PPP") : <span>Pick a date</span>}
+                  {formData.targetDate ? format(formData.targetDate, "PPP") : "Pick a date"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-auto p-0">
                 <Calendar
                   mode="single"
-                  selected={targetDate}
-                  onSelect={setTargetDate}
-                  disabled={(date) =>
-                    date < new Date()
-                  }
+                  selected={formData.targetDate}
+                  onSelect={(date) => setFormData(prev => ({ ...prev, targetDate: date }))}
                   initialFocus
                 />
               </PopoverContent>
             </Popover>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="priority">Priority</Label>
-            <Select value={priority} onValueChange={setPriority}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? 'Loading...' : 'Submit'}
-          </Button>
-          <Button type="button" variant="ghost" onClick={onCancel} className="w-full">
-            Cancel
+
+          <Button 
+            type="submit" 
+            className="w-full" 
+            disabled={isLoading || !formData.title || !formData.targetDate}
+          >
+            {isLoading ? "Creating..." : "Create Goal"}
           </Button>
         </form>
       </CardContent>
