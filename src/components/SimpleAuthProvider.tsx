@@ -26,6 +26,18 @@ interface AuthProviderProps {
 }
 
 export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  // Ensure React is properly loaded before using hooks
+  if (typeof React === 'undefined' || !React.useState) {
+    console.error('SimpleAuthProvider: React is not properly initialized');
+    return React.createElement('div', {
+      style: {
+        padding: '20px',
+        textAlign: 'center',
+        color: '#dc2626'
+      }
+    }, 'Loading React...');
+  }
+
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -114,5 +126,5 @@ export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) =>
 
   console.log('SimpleAuthProvider: Rendering with user:', user ? 'Authenticated' : 'Not authenticated', 'loading:', loading);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return React.createElement(AuthContext.Provider, { value }, children);
 };

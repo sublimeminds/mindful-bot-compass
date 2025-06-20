@@ -31,6 +31,10 @@ const TechniqueSession = () => {
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [hasSpokenInstruction, setHasSpokenInstruction] = useState(false);
 
+  // Define currentStep after state is initialized
+  const currentStep = technique?.steps[currentStepIndex];
+  const progress = technique ? ((currentStepIndex + 1) / technique.steps.length) * 100 : 0;
+
   useEffect(() => {
     if (!loading && !user) {
       navigate('/auth');
@@ -73,9 +77,6 @@ const TechniqueSession = () => {
     }
   }, [isActive, currentStep, voiceEnabled, hasSpokenInstruction]);
 
-  const currentStep = technique?.steps[currentStepIndex];
-  const progress = technique ? ((currentStepIndex + 1) / technique.steps.length) * 100 : 0;
-
   const speakInstruction = async (text: string) => {
     if (!voiceEnabled) return;
     
@@ -100,12 +101,10 @@ const TechniqueSession = () => {
     if (currentStep?.duration) {
       setStepTimeRemaining(currentStep.duration);
     } else {
-      // For steps without duration, auto-advance after 3 seconds
+      // For steps without duration, auto-advance after 5 seconds
       setTimeout(() => {
-        if (!currentStep?.duration) {
-          handleNextStep();
-        }
-      }, 3000);
+        handleNextStep();
+      }, 5000);
     }
   };
 
@@ -130,12 +129,10 @@ const TechniqueSession = () => {
         setStepStartTime(new Date());
       } else {
         setStepTimeRemaining(0);
-        // Auto-advance steps without duration after 3 seconds
+        // Auto-advance steps without duration after 5 seconds
         setTimeout(() => {
-          if (!nextStep?.duration && isActive) {
-            handleNextStep();
-          }
-        }, 3000);
+          handleNextStep();
+        }, 5000);
       }
     } else {
       handleComplete();
