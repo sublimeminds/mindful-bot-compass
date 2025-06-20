@@ -19,6 +19,8 @@ import EnhancedMonitoringPage from '@/pages/EnhancedMonitoringPage';
 import NotFound from '@/pages/NotFound';
 import HelpArticles from '@/pages/HelpArticles';
 import HelpArticleDetail from '@/pages/HelpArticleDetail';
+import ProfilePage from '@/pages/ProfilePage';
+import SettingsPage from '@/pages/SettingsPage';
 
 const AppRouter = () => {
   return (
@@ -28,6 +30,8 @@ const AppRouter = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/settings" element={<SettingsPage />} />
       <Route path="/crisis-resources" element={<CrisisResources />} />
       <Route path="/admin/crisis-management" element={<AdminCrisisManagement />} />
       <Route path="/community" element={<Community />} />

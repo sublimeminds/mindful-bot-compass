@@ -7,6 +7,7 @@ import Logo from '@/components/navigation/Logo';
 import UnifiedNavigation from '@/components/navigation/UnifiedNavigation';
 import UserMenu from '@/components/navigation/UserMenu';
 import LanguageSelector from '@/components/ui/LanguageSelector';
+import { LayoutDashboard } from 'lucide-react';
 
 const DesktopHeader = () => {
   const { user } = useAuth();
@@ -25,7 +26,16 @@ const DesktopHeader = () => {
           <div className="flex items-center space-x-4">
             <LanguageSelector />
             {user ? (
-              <UserMenu />
+              <div className="flex items-center space-x-3">
+                <Button
+                  onClick={() => navigate('/dashboard')}
+                  className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-medium"
+                >
+                  <LayoutDashboard className="h-4 w-4 mr-2" />
+                  Dashboard
+                </Button>
+                <UserMenu />
+              </div>
             ) : (
               <div className="flex items-center space-x-2">
                 <Button
