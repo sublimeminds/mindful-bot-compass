@@ -1,15 +1,15 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Sparkles, Users, TrendingUp } from 'lucide-react';
-import AuthModal from '@/components/AuthModal';
+import { useNavigate } from 'react-router-dom';
 
 const CTASection = () => {
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleGetStarted = () => {
-    setShowAuthModal(true);
+    navigate('/auth');
   };
 
   return (
@@ -64,12 +64,6 @@ const CTASection = () => {
           </p>
         </div>
       </div>
-
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-      />
     </section>
   );
 };

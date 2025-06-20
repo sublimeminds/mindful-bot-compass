@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
+import { SimpleAuthProvider } from '@/components/SimpleAuthProvider';
+import AppRouter from '@/components/AppRouter';
 
 // Create a simple, reliable QueryClient
 const queryClient = new QueryClient({
@@ -18,30 +20,29 @@ const queryClient = new QueryClient({
   },
 });
 
-// Lazy load the main app content to ensure React is ready
-const MainAppContent = React.lazy(() => import('@/components/MainAppContent'));
-
 // Simple loading component
-const LoadingFallback = () => React.createElement('div', {
-  className: 'min-h-screen bg-background flex items-center justify-center'
-}, React.createElement('div', {
-  className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-primary'
-}));
+const LoadingFallback = () => (
+  <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+);
 
 // Main SafeApp component with minimal complexity
 class SafeApp extends Component {
   render() {
-    return React.createElement(SimpleErrorBoundary, { children: 
-      React.createElement(QueryClientProvider, { 
-        client: queryClient,
-        children: React.createElement(Router, { children:
-          React.createElement(React.Suspense, {
-            fallback: React.createElement(LoadingFallback),
-            children: React.createElement(MainAppContent)
-          })
-        })
-      })
-    });
+    return (
+      <SimpleErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <Router>
+            <SimpleAuthProvider>
+              <React.Suspense fallback={<LoadingFallback />}>
+                <AppRouter />
+              </React.Suspense>
+            </SimpleAuthProvider>
+          </Router>
+        </QueryClientProvider>
+      </SimpleErrorBoundary>
+    );
   }
 }
 
