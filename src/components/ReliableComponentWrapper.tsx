@@ -1,15 +1,14 @@
 
 import React, { Component, ReactNode } from 'react';
-import MinimalErrorBoundary from '@/components/MinimalErrorBoundary';
 
 interface Props {
   children: ReactNode;
-  fallback?: ReactNode;
-  componentName?: string;
+  componentName: string;
 }
 
 interface State {
   hasError: boolean;
+  error?: Error;
 }
 
 class ReliableComponentWrapper extends Component<Props, State> {
@@ -18,35 +17,37 @@ class ReliableComponentWrapper extends Component<Props, State> {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError() {
-    return { hasError: true };
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error) {
-    console.warn(`Component ${this.props.componentName || 'unknown'} failed:`, error);
+  componentDidCatch(error: Error, errorInfo: any) {
+    console.error(`Error in ${this.props.componentName}:`, error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback || (
-        <div style={{
-          padding: '20px',
-          backgroundColor: '#f9fafb',
-          border: '1px solid #e5e7eb',
-          borderRadius: '8px',
-          textAlign: 'center' as const,
-          color: '#6b7280'
-        }}>
-          <p>Component temporarily unavailable</p>
+      return (
+        <div className="flex items-center justify-center p-8 bg-gray-50 rounded-lg border">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Something went wrong
+            </h3>
+            <p className="text-gray-600 mb-4">
+              The {this.props.componentName} component encountered an error
+            </p>
+            <button
+              onClick={() => this.setState({ hasError: false, error: undefined })}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       );
     }
 
-    return (
-      <MinimalErrorBoundary>
-        {this.props.children}
-      </MinimalErrorBoundary>
-    );
+    return this.props.children;
   }
 }
 

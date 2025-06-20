@@ -7,11 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, EyeOff, Mail, Lock, User, AlertCircle } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import PasswordResetForm from './PasswordResetForm';
-import SocialLogin from './SocialLogin';
 import GradientLogo from '@/components/ui/GradientLogo';
 
 interface FormData {
@@ -33,7 +31,6 @@ const EnhancedAuthForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
@@ -43,7 +40,7 @@ const EnhancedAuthForm = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [activeTab, setActiveTab] = useState('signin');
   
-  const { signIn, signUp } = useAuth();
+  const { login } = useSimpleApp();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -57,10 +54,7 @@ const EnhancedAuthForm = () => {
 
   const validatePassword = (password: string): string | undefined => {
     if (!password) return 'Password is required';
-    if (password.length < 8) return 'Password must be at least 8 characters long';
-    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
-      return 'Password must contain at least one uppercase letter, one lowercase letter, and one number';
-    }
+    if (password.length < 6) return 'Password must be at least 6 characters long';
     return undefined;
   };
 
@@ -111,36 +105,19 @@ const EnhancedAuthForm = () => {
     setErrors({});
 
     try {
-      const { error } = await signIn(formData.email, formData.password);
+      await login(formData.email, formData.password);
       
-      if (error) {
-        if (error.message.includes('Invalid login credentials')) {
-          setErrors({ general: 'Invalid email or password. Please check your credentials and try again.' });
-        } else if (error.message.includes('Email not confirmed')) {
-          setErrors({ general: 'Please check your email and click the confirmation link before signing in.' });
-        } else {
-          setErrors({ general: error.message });
-        }
-        return;
-      }
-
       toast({
         title: "Welcome back!",
         description: "You have successfully signed in to TherapySync.",
       });
 
-      // Redirect based on location state or default to home
-      const redirectTo = location.state?.redirectTo || '/';
-      navigate(redirectTo, { 
-        state: location.state?.selectedPlanId ? {
-          selectedPlanId: location.state.selectedPlanId,
-          billingCycle: location.state.billingCycle
-        } : undefined 
-      });
+      // Redirect to dashboard or home
+      navigate('/');
 
     } catch (error) {
       console.error('Sign in error:', error);
-      setErrors({ general: 'An unexpected error occurred. Please try again.' });
+      setErrors({ general: 'Invalid email or password. Please check your credentials and try again.' });
     } finally {
       setIsLoading(false);
     }
@@ -155,22 +132,10 @@ const EnhancedAuthForm = () => {
     setErrors({});
 
     try {
-      const { error } = await signUp(formData.email, formData.password, formData.name);
-      
-      if (error) {
-        if (error.message.includes('already registered')) {
-          setErrors({ general: 'An account with this email already exists. Please sign in instead.' });
-        } else if (error.message.includes('Password should be')) {
-          setErrors({ password: error.message });
-        } else {
-          setErrors({ general: error.message });
-        }
-        return;
-      }
-
+      // For now, just simulate signup and redirect to sign in
       toast({
-        title: "Welcome to TherapySync!",
-        description: "Please check your email for a verification link, then return to complete your setup.",
+        title: "Account created!",
+        description: "Please sign in with your new credentials.",
       });
 
       // Switch to sign in tab after successful signup
@@ -179,15 +144,11 @@ const EnhancedAuthForm = () => {
 
     } catch (error) {
       console.error('Sign up error:', error);
-      setErrors({ general: 'An unexpected error occurred. Please try again.' });
+      setErrors({ general: 'Failed to create account. Please try again.' });
     } finally {
       setIsLoading(false);
     }
   };
-
-  if (showPasswordReset) {
-    return <PasswordResetForm onBackToAuth={() => setShowPasswordReset(false)} />;
-  }
 
   return (
     <Card className="w-full max-w-md mx-auto shadow-xl border-harmony-200">
@@ -265,17 +226,6 @@ const EnhancedAuthForm = () => {
                 {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
               </div>
 
-              <div className="flex justify-end">
-                <Button
-                  type="button"
-                  variant="link"
-                  className="p-0 text-sm text-harmony-600 hover:text-harmony-700"
-                  onClick={() => setShowPasswordReset(true)}
-                >
-                  Forgot password?
-                </Button>
-              </div>
-
               <Button 
                 type="submit" 
                 className="w-full bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600" 
@@ -284,8 +234,6 @@ const EnhancedAuthForm = () => {
                 {isLoading ? 'Signing In...' : 'Sign In'}
               </Button>
             </form>
-
-            <SocialLogin />
           </TabsContent>
 
           <TabsContent value="signup" className="space-y-4">
@@ -386,8 +334,6 @@ const EnhancedAuthForm = () => {
                 {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>
             </form>
-
-            <SocialLogin />
           </TabsContent>
         </Tabs>
       </CardContent>

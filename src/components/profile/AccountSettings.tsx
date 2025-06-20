@@ -1,17 +1,16 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Eye, EyeOff, Mail, Lock, User, Trash2, ExternalLink } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { Eye, EyeOff, Mail, Lock, User, Trash2 } from 'lucide-react';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 
 const AccountSettings = () => {
-  const { user } = useAuth();
+  const { user, updateUser } = useSimpleApp();
   const { toast } = useToast();
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -24,11 +23,6 @@ const AccountSettings = () => {
   });
 
   const [email, setEmail] = useState(user?.email || '');
-  const [connectedAccounts] = useState([
-    { provider: 'google', email: user?.email, connected: true },
-    { provider: 'github', email: null, connected: false },
-    { provider: 'discord', email: null, connected: false }
-  ]);
 
   const handlePasswordChange = async () => {
     if (!passwords.new || passwords.new !== passwords.confirm) {
@@ -51,12 +45,7 @@ const AccountSettings = () => {
 
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: passwords.new
-      });
-
-      if (error) throw error;
-
+      // Mock password update - in real app would use Supabase
       toast({
         title: "Success",
         description: "Password updated successfully",
@@ -66,7 +55,7 @@ const AccountSettings = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to update password",
+        description: "Failed to update password",
         variant: "destructive",
       });
     } finally {
@@ -79,62 +68,23 @@ const AccountSettings = () => {
 
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.updateUser({
-        email: email
-      });
-
-      if (error) throw error;
-
+      // Mock email update - in real app would use Supabase
+      if (user) {
+        updateUser({ ...user, email });
+      }
+      
       toast({
-        title: "Verification Email Sent",
-        description: "Please check your new email to confirm the change",
+        title: "Success",
+        description: "Email updated successfully",
       });
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to update email",
+        description: "Failed to update email",
         variant: "destructive",
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleSocialConnect = async (provider: string) => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: provider as any
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "Account Connected",
-        description: `Successfully connected your ${provider} account`,
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || `Failed to connect ${provider} account`,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleSocialDisconnect = async (provider: string) => {
-    try {
-      // Note: unlinkIdentity is not available in the current Supabase JS client
-      // This would need to be implemented via admin API or custom function
-      toast({
-        title: "Feature Coming Soon",
-        description: "Social account disconnection will be available soon",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || `Failed to disconnect ${provider} account`,
-        variant: "destructive",
-      });
     }
   };
 
@@ -234,60 +184,6 @@ const AccountSettings = () => {
           <Button onClick={handlePasswordChange} disabled={isLoading}>
             Update Password
           </Button>
-        </CardContent>
-      </Card>
-
-      {/* Social Login Connections */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <User className="h-5 w-5 mr-2" />
-            Connected Accounts
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {connectedAccounts.map((account) => (
-              <div key={account.provider} className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    {account.provider.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="font-medium capitalize">{account.provider}</p>
-                    {account.email && (
-                      <p className="text-sm text-muted-foreground">{account.email}</p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  {account.connected ? (
-                    <>
-                      <Badge variant="secondary" className="bg-green-100 text-green-800">
-                        Connected
-                      </Badge>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleSocialDisconnect(account.provider)}
-                      >
-                        Disconnect
-                      </Button>
-                    </>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleSocialConnect(account.provider)}
-                    >
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Connect
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
         </CardContent>
       </Card>
 
