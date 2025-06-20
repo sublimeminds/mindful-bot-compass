@@ -10,7 +10,6 @@ export interface AppContextType {
   login: (email: string, password: string) => Promise<{ error: any }>;
   logout: () => Promise<void>;
   register: (email: string, password: string) => Promise<{ error: any }>;
-  updateUser?: (updates: any) => Promise<void>;
 }
 
 export const SimpleAppContext = createContext<AppContextType | undefined>(undefined);
@@ -20,23 +19,26 @@ interface SimpleAppProviderProps {
 }
 
 export const SimpleAppProvider: React.FC<SimpleAppProviderProps> = ({ children }) => {
-  // Safety check for React availability
-  if (typeof React === 'undefined' || !React.useState) {
-    console.error('React hooks are not available in SimpleAppProvider');
-    return React.createElement('div', { 
-      style: { 
-        padding: '20px', 
-        textAlign: 'center', 
-        color: 'red' 
-      } 
-    }, 'React initialization error. Please reload the page.');
-  }
-
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Get initial session
+    const getInitialSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        setSession(session);
+        setUser(session?.user ?? null);
+      } catch (error) {
+        console.error('Error getting session:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getInitialSession();
+
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -45,13 +47,6 @@ export const SimpleAppProvider: React.FC<SimpleAppProviderProps> = ({ children }
         setLoading(false);
       }
     );
-
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
 
     return () => subscription.unsubscribe();
   }, []);
@@ -65,14 +60,9 @@ export const SimpleAppProvider: React.FC<SimpleAppProviderProps> = ({ children }
   };
 
   const register = async (email: string, password: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: redirectUrl
-      }
     });
     return { error };
   };
@@ -84,16 +74,6 @@ export const SimpleAppProvider: React.FC<SimpleAppProviderProps> = ({ children }
     }
   };
 
-  const updateUser = async (updates: any) => {
-    try {
-      const { error } = await supabase.auth.updateUser(updates);
-      if (error) throw error;
-      console.log("Profile updated successfully");
-    } catch (error: any) {
-      console.error("Failed to update profile:", error.message);
-    }
-  };
-
   const value: AppContextType = {
     user,
     session,
@@ -101,8 +81,11 @@ export const SimpleAppProvider: React.FC<SimpleAppProviderProps> = ({ children }
     login,
     logout,
     register,
-    updateUser,
   };
 
-  return React.createElement(SimpleAppContext.Provider, { value }, children);
+  return (
+    <SimpleAppContext.Provider value={value}>
+      {children}
+    </SimpleAppContext.Provider>
+  );
 };
