@@ -1,46 +1,42 @@
-import React, { useState, useMemo } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { TrendingUp, Calendar, Brain, Heart, BarChart3, Target, Zap, Clock } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { CalendarDays, TrendingUp, Brain, Heart } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface MoodEntry {
   id: string;
+  user_id: string;
   overall: number;
   anxiety: number;
+  depression: number;
   stress: number;
   energy: number;
-  sleep: number;
-  social: number;
-  work: number;
+  sleep_quality: number;
+  social_connection: number;
+  notes: string;
+  activities: string[];
+  triggers: string[];
+  weather: string;
   created_at: string;
+  timestamp: string;
 }
-
-const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#a4de6c', '#d0ed57'];
 
 const AdvancedMoodAnalytics = () => {
   const { user } = useSimpleApp();
   const [timeRange, setTimeRange] = useState('7d');
-  const [selectedCategory, setSelectedCategory] = useState('overall');
 
-  const { data: moodEntries = [], isLoading, error } = useQuery({
-    queryKey: ['mood-entries', user?.id, timeRange],
-    queryFn: async (): Promise<MoodEntry[]> => {
+  const { data: moodEntries = [], isLoading } = useQuery({
+    queryKey: ['mood-analytics', user?.id, timeRange],
+    queryFn: async () => {
       if (!user?.id) return [];
 
+      const daysBack = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
       const startDate = new Date();
-      if (timeRange === '7d') {
-        startDate.setDate(startDate.getDate() - 7);
-      } else if (timeRange === '30d') {
-        startDate.setDate(startDate.getDate() - 30);
-      } else if (timeRange === '90d') {
-        startDate.setDate(startDate.getDate() - 90);
-      }
+      startDate.setDate(startDate.getDate() - daysBack);
 
       const { data, error } = await supabase
         .from('mood_entries')
@@ -49,99 +45,128 @@ const AdvancedMoodAnalytics = () => {
         .gte('created_at', startDate.toISOString())
         .order('created_at', { ascending: true });
 
-      if (error) {
-        console.error('Error fetching mood entries:', error);
-        throw error;
-      }
-
-      return data || [];
+      if (error) throw error;
+      return data as MoodEntry[];
     },
-    enabled: !!user?.id
+    enabled: !!user?.id,
   });
 
-  const categoryOptions = useMemo(() => [
-    { value: 'overall', label: 'Overall Mood', icon: Heart },
-    { value: 'anxiety', label: 'Anxiety Level', icon: Brain },
-    { value: 'stress', label: 'Stress Level', icon: Zap },
-    { value: 'energy', label: 'Energy Level', icon: Brain },
-    { value: 'sleep', label: 'Sleep Quality', icon: Brain },
-    { value: 'social', label: 'Social Interaction', icon: Brain },
-    { value: 'work', label: 'Work Productivity', icon: Brain }
-  ], []);
+  // Calculate trends and insights
+  const calculateTrends = () => {
+    if (moodEntries.length < 2) return null;
 
-  const chartData = useMemo(() => {
-    return moodEntries.map(entry => ({
-      date: new Date(entry.created_at).toLocaleDateString(),
-      [selectedCategory]: entry[selectedCategory]
-    }));
-  }, [moodEntries, selectedCategory]);
+    const recent = moodEntries.slice(-3);
+    const earlier = moodEntries.slice(0, 3);
 
-  const averageMood = useMemo(() => {
-    if (moodEntries.length === 0) return 0;
-    const sum = moodEntries.reduce((acc, entry) => acc + entry[selectedCategory], 0);
-    return sum / moodEntries.length;
-  }, [moodEntries, selectedCategory]);
+    const recentAvg = recent.reduce((sum, entry) => sum + entry.overall, 0) / recent.length;
+    const earlierAvg = earlier.reduce((sum, entry) => sum + entry.overall, 0) / earlier.length;
 
-  const categoryLabel = categoryOptions.find(option => option.value === selectedCategory)?.label || 'Mood';
+    return {
+      trend: recentAvg > earlierAvg ? 'improving' : recentAvg < earlierAvg ? 'declining' : 'stable',
+      change: Math.abs(recentAvg - earlierAvg).toFixed(1)
+    };
+  };
+
+  const trends = calculateTrends();
+
+  // Prepare chart data
+  const chartData = moodEntries.map(entry => ({
+    date: new Date(entry.created_at).toLocaleDateString(),
+    overall: entry.overall,
+    anxiety: entry.anxiety,
+    stress: entry.stress,
+    energy: entry.energy
+  }));
 
   if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {(error as Error).message}</div>;
+    return (
+      <Card>
+        <CardContent className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
     <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Mood Analytics</h2>
+        <select 
+          value={timeRange} 
+          onChange={(e) => setTimeRange(e.target.value)}
+          className="border rounded-md px-3 py-2"
+        >
+          <option value="7d">Last 7 days</option>
+          <option value="30d">Last 30 days</option>
+          <option value="90d">Last 90 days</option>
+        </select>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <Brain className="h-5 w-5 text-blue-500" />
+              <div>
+                <p className="text-sm text-muted-foreground">Average Mood</p>
+                <p className="text-2xl font-bold">
+                  {moodEntries.length > 0 
+                    ? (moodEntries.reduce((sum, entry) => sum + entry.overall, 0) / moodEntries.length).toFixed(1)
+                    : 'N/A'
+                  }/10
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <TrendingUp className="h-5 w-5 text-green-500" />
+              <div>
+                <p className="text-sm text-muted-foreground">Trend</p>
+                <p className="text-2xl font-bold capitalize">
+                  {trends?.trend || 'Stable'}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <CalendarDays className="h-5 w-5 text-purple-500" />
+              <div>
+                <p className="text-sm text-muted-foreground">Entries</p>
+                <p className="text-2xl font-bold">{moodEntries.length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Mood Trend Chart */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center">
-              <BarChart3 className="h-5 w-5 mr-2 text-therapy-600" />
-              Mood Analytics
-            </div>
-            <div className="flex items-center space-x-2">
-              <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select time range" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="7d">Last 7 Days</SelectItem>
-                  <SelectItem value="30d">Last 30 Days</SelectItem>
-                  <SelectItem value="90d">Last 90 Days</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-[220px]">
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categoryOptions.map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </CardTitle>
+          <CardTitle>Mood Trends Over Time</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis domain={[0, 10]} />
-                <Tooltip />
-                <Line type="monotone" dataKey={selectedCategory} stroke="#82ca9d" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="text-center mt-4">
-            <h3 className="text-lg font-medium">Average {categoryLabel}: {averageMood.toFixed(1)}</h3>
-          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis domain={[1, 10]} />
+              <Tooltip />
+              <Line type="monotone" dataKey="overall" stroke="#3b82f6" strokeWidth={2} />
+              <Line type="monotone" dataKey="anxiety" stroke="#ef4444" strokeWidth={2} />
+              <Line type="monotone" dataKey="stress" stroke="#f59e0b" strokeWidth={2} />
+              <Line type="monotone" dataKey="energy" stroke="#10b981" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
         </CardContent>
       </Card>
     </div>
