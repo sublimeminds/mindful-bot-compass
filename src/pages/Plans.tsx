@@ -1,23 +1,20 @@
-
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PlanSelector from '@/components/subscription/PlanSelector';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Clock, Users, CheckCircle } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useNavigate } from 'react-router-dom';
 
 const Plans = () => {
-  const { isAuthenticated } = useAuth();
+  const { user } = useSimpleApp();
   const navigate = useNavigate();
 
   const handlePlanSelect = (planId: string, billingCycle: 'monthly' | 'yearly') => {
-    if (isAuthenticated) {
-      // If user is already logged in, go to onboarding with plan preselected
+    if (user) {
       navigate('/onboarding', { state: { selectedPlanId: planId, billingCycle } });
     } else {
-      // If user is not logged in, go to auth page with plan info
       navigate('/auth', { state: { selectedPlanId: planId, billingCycle, redirectTo: '/onboarding' } });
     }
   };
@@ -42,8 +39,7 @@ const Plans = () => {
         {/* Plans Section */}
         <div className="max-w-7xl mx-auto px-4 py-16">
           <PlanSelector 
-            onPlanSelect={handlePlanSelect}
-            showCurrentPlan={isAuthenticated}
+            onSelectPlan={handlePlanSelect}
           />
         </div>
 

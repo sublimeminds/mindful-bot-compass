@@ -7,6 +7,10 @@ import BillingHistory from '@/components/subscription/BillingHistory';
 import PlanSelector from '@/components/subscription/PlanSelector';
 
 const SubscriptionPage = () => {
+  const handleSelectPlan = (planId: string, billingCycle: 'monthly' | 'yearly') => {
+    console.log('Selected plan:', planId, billingCycle);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
       <div className="max-w-4xl mx-auto">
@@ -36,7 +40,7 @@ const SubscriptionPage = () => {
                 <CardTitle>Choose Your Plan</CardTitle>
               </CardHeader>
               <CardContent>
-                <PlanSelector />
+                <PlanSelector onSelectPlan={handleSelectPlan} />
               </CardContent>
             </Card>
           </TabsContent>

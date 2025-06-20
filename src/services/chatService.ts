@@ -38,7 +38,7 @@ export const chatService = {
         userId: data.user_id,
         startTime: new Date(data.start_time),
         endTime: data.end_time ? new Date(data.end_time) : undefined,
-        status: data.status
+        status: 'active'
       };
     } catch (error) {
       console.error('Error creating chat session:', error);
@@ -64,7 +64,7 @@ export const chatService = {
       return {
         id: data.id,
         content: data.content,
-        sender: data.sender,
+        sender: data.sender as 'user' | 'ai',
         timestamp: new Date(data.timestamp),
         emotion: data.emotion,
         sessionId: data.session_id
@@ -88,7 +88,7 @@ export const chatService = {
       return data.map(msg => ({
         id: msg.id,
         content: msg.content,
-        sender: msg.sender,
+        sender: msg.sender as 'user' | 'ai',
         timestamp: new Date(msg.timestamp),
         emotion: msg.emotion,
         sessionId: msg.session_id

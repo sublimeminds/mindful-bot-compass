@@ -1,103 +1,146 @@
 
-import { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, BookOpen } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import TechniqueLibrary from "@/components/techniques/TechniqueLibrary";
-import GuidedTechnique from "@/components/techniques/GuidedTechnique";
-import { useToast } from "@/hooks/use-toast";
-import Header from "@/components/Header";
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { Heart, Brain, Zap, Clock, Star } from 'lucide-react';
 
 const Techniques = () => {
-  const navigate = useNavigate();
-  const { techniqueId } = useParams();
-  const { user } = useAuth();
-  const { toast } = useToast();
-  
-  // Show library when there's no techniqueId, show guided technique when there is
-  const showLibrary = !techniqueId;
+  const { user } = useSimpleApp();
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const handleTechniqueComplete = async (
-    rating: number, 
-    notes: string, 
-    moodBefore: number, 
-    moodAfter: number
-  ) => {
-    if (!user) return;
-
-    try {
-      // In a real app, you would save this to Supabase
-      console.log('Technique session completed:', {
-        userId: user.id,
-        techniqueId,
-        rating,
-        notes,
-        moodBefore,
-        moodAfter,
-        completed: true,
-        timestamp: new Date()
-      });
-
-      toast({
-        title: "Great Job! 🎉",
-        description: "Your technique session has been recorded successfully. Keep up the excellent work!",
-      });
-
-      navigate('/techniques');
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to save session. Please try again.",
-        variant: "destructive",
-      });
+  const techniques = [
+    {
+      id: '1',
+      title: 'Deep Breathing Exercise',
+      category: 'anxiety',
+      duration: 5,
+      difficulty: 'beginner',
+      rating: 4.8,
+      description: 'A simple breathing technique to reduce anxiety and stress.',
+      icon: Heart
+    },
+    {
+      id: '2',
+      title: 'Progressive Muscle Relaxation',
+      category: 'stress',
+      duration: 15,
+      difficulty: 'intermediate',
+      rating: 4.6,
+      description: 'Systematically tense and relax muscle groups to reduce physical tension.',
+      icon: Brain
+    },
+    {
+      id: '3',
+      title: 'Mindfulness Meditation',
+      category: 'mindfulness',
+      duration: 10,
+      difficulty: 'beginner',
+      rating: 4.9,
+      description: 'Focus on the present moment to cultivate awareness and calm.',
+      icon: Zap
     }
-  };
+  ];
 
-  const handleExitTechnique = () => {
-    navigate('/techniques');
-  };
+  const categories = [
+    { id: 'all', label: 'All Techniques' },
+    { id: 'anxiety', label: 'Anxiety' },
+    { id: 'stress', label: 'Stress' },
+    { id: 'mindfulness', label: 'Mindfulness' }
+  ];
+
+  const filteredTechniques = selectedCategory === 'all' 
+    ? techniques 
+    : techniques.filter(technique => technique.category === selectedCategory);
+
+  if (!user) {
+    return (
+      <div className="container mx-auto py-10 text-center">
+        <p>Please log in to access therapeutic techniques.</p>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <Header />
-      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-        <div className="max-w-6xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" onClick={() => navigate('/')} className="hover:bg-therapy-50">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Dashboard
-              </Button>
-              <div>
-                <h1 className="text-3xl font-bold flex items-center text-therapy-700">
-                  <BookOpen className="h-8 w-8 mr-3" />
-                  Therapy Techniques
-                </h1>
-                <p className="text-muted-foreground text-lg">
-                  {techniqueId && !showLibrary 
-                    ? "Follow the guided technique to practice therapeutic exercises"
-                    : "Interactive guided exercises to support your mental health journey"
-                  }
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Content */}
-          {showLibrary ? (
-            <TechniqueLibrary />
-          ) : (
-            <GuidedTechnique
-              techniqueId={techniqueId!}
-              onComplete={handleTechniqueComplete}
-              onExit={handleExitTechnique}
-            />
-          )}
-        </div>
+    <div className="container mx-auto py-10">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-4">Therapeutic Techniques</h1>
+        <p className="text-muted-foreground">
+          Discover evidence-based techniques to support your mental wellness journey.
+        </p>
       </div>
-    </>
+
+      {/* Category Filter */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        {categories.map((category) => (
+          <Button
+            key={category.id}
+            variant={selectedCategory === category.id ? "default" : "outline"}
+            onClick={() => setSelectedCategory(category.id)}
+            className="rounded-full"
+          >
+            {category.label}
+          </Button>
+        ))}
+      </div>
+
+      {/* Techniques Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredTechniques.map((technique) => (
+          <Card key={technique.id} className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <technique.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">{technique.title}</CardTitle>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <Badge variant="secondary" className="capitalize">
+                        {technique.category}
+                      </Badge>
+                      <Badge variant="outline">
+                        {technique.difficulty}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground text-sm">
+                {technique.description}
+              </p>
+              
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center space-x-1">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <span>{technique.duration} min</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Star className="h-4 w-4 text-yellow-500" />
+                  <span>{technique.rating}</span>
+                </div>
+              </div>
+
+              <Button className="w-full">
+                Start Technique
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {filteredTechniques.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">
+            No techniques found for the selected category.
+          </p>
+        </div>
+      )}
+    </div>
   );
 };
 

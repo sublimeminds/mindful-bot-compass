@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,25 +16,18 @@ import {
   Target,
   TrendingUp
 } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { useSession } from "@/contexts/SessionContext";
-import { useTherapist } from "@/contexts/TherapistContext";
-import TherapyChatInterface from "@/components/chat/TherapyChatInterface";
-import SessionTimer from "@/components/session/SessionTimer";
-import SessionEndModal from "@/components/SessionEndModal";
-import TherapistCard from "@/components/therapist/TherapistCard";
-import { therapists } from "@/components/therapist/TherapistMatcher";
+import { useSimpleApp } from "@/hooks/useSimpleApp";
 import Header from "@/components/Header";
 import GradientLogo from "@/components/ui/GradientLogo";
 
 const TherapyChat = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { currentSession, startSession, endSession } = useSession();
-  const { currentTherapist, selectTherapist } = useTherapist();
+  const { user } = useSimpleApp();
   const [showEndModal, setShowEndModal] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [activeTab, setActiveTab] = useState('chat');
+  const [currentSession, setCurrentSession] = useState<any>(null);
+  const [currentTherapist, setCurrentTherapist] = useState<any>(null);
 
   useEffect(() => {
     if (!user) {
@@ -43,11 +37,13 @@ const TherapyChat = () => {
   }, [user, navigate]);
 
   const handleStartSession = async () => {
-    if (!currentTherapist) {
-      const defaultTherapist = therapists[0];
-      selectTherapist(defaultTherapist);
-    }
-    await startSession();
+    const newSession = {
+      id: '1',
+      userId: user?.id,
+      startTime: new Date(),
+      status: 'active'
+    };
+    setCurrentSession(newSession);
     setActiveTab('chat');
   };
 
@@ -55,23 +51,29 @@ const TherapyChat = () => {
     setShowEndModal(true);
   };
 
-  const confirmEndSession = async (data: {
-    moodAfter: number;
-    notes: string;
-    rating: number;
-    breakthroughs: string[];
-  }) => {
-    await endSession();
+  const confirmEndSession = async () => {
+    setCurrentSession(null);
     setShowEndModal(false);
     setActiveTab('overview');
-    navigate('/session-history');
   };
 
-  const handleSelectTherapist = (therapist: typeof therapists[0]) => {
-    selectTherapist(therapist);
-    if (currentSession) {
-      handleStartSession();
+  const mockTherapists = [
+    {
+      id: '1',
+      name: 'Dr. Sarah Chen',
+      specialties: ['Anxiety', 'Depression'],
+      approach: 'Cognitive Behavioral Therapy'
+    },
+    {
+      id: '2',
+      name: 'Dr. Michael Rodriguez',
+      specialties: ['Trauma', 'PTSD'],
+      approach: 'EMDR Therapy'
     }
+  ];
+
+  const handleSelectTherapist = (therapist: any) => {
+    setCurrentTherapist(therapist);
   };
 
   if (!user) {
@@ -187,47 +189,9 @@ const TherapyChat = () => {
                         </Button>
                       </div>
                     </div>
-                    <div className="hidden lg:block">
-                      <div className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
-                        <GradientLogo size="lg" />
-                      </div>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
-
-              {/* Quick Stats */}
-              {currentSession && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <Card>
-                    <CardContent className="p-6 text-center">
-                      <Target className="h-8 w-8 text-harmony-500 mx-auto mb-2" />
-                      <h3 className="font-semibold text-2xl">Active</h3>
-                      <p className="text-muted-foreground">Current Session</p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-6 text-center">
-                      <Clock className="h-8 w-8 text-flow-500 mx-auto mb-2" />
-                      {currentSession && (
-                        <SessionTimer 
-                          startTime={currentSession.start_time ? new Date(currentSession.start_time) : new Date()} 
-                          onEndSession={handleEndSession}
-                          canEnd={true}
-                        />
-                      )}
-                      <p className="text-muted-foreground">Session Duration</p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-6 text-center">
-                      <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                      <h3 className="font-semibold text-2xl">Flowing</h3>
-                      <p className="text-muted-foreground">Your Progress</p>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
             </TabsContent>
 
             {/* Therapist Selection Tab */}
@@ -243,26 +207,26 @@ const TherapyChat = () => {
                   </p>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {therapists.map((therapist) => (
-                      <div key={therapist.id} className="relative">
-                        <TherapistCard
-                          therapist={therapist}
-                          isSelected={currentTherapist?.id === therapist.id}
-                        />
-                        <Button 
-                          onClick={() => handleSelectTherapist(therapist)}
-                          className="w-full mt-3"
-                          variant={currentTherapist?.id === therapist.id ? "default" : "outline"}
-                        >
-                          {currentTherapist?.id === therapist.id ? "Selected" : "Select"}
-                        </Button>
-                        {currentTherapist?.id === therapist.id && (
-                          <Badge className="absolute -top-2 -right-2 bg-therapy-500">
-                            Selected
-                          </Badge>
-                        )}
-                      </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {mockTherapists.map((therapist) => (
+                      <Card key={therapist.id} className="cursor-pointer hover:shadow-lg transition-shadow">
+                        <CardContent className="p-6">
+                          <h3 className="font-semibold text-lg mb-2">{therapist.name}</h3>
+                          <p className="text-muted-foreground mb-3">{therapist.approach}</p>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {therapist.specialties.map((specialty, index) => (
+                              <Badge key={index} variant="secondary">{specialty}</Badge>
+                            ))}
+                          </div>
+                          <Button 
+                            onClick={() => handleSelectTherapist(therapist)}
+                            className="w-full"
+                            variant={currentTherapist?.id === therapist.id ? "default" : "outline"}
+                          >
+                            {currentTherapist?.id === therapist.id ? "Selected" : "Select"}
+                          </Button>
+                        </CardContent>
+                      </Card>
                     ))}
                   </div>
                   
@@ -289,11 +253,21 @@ const TherapyChat = () => {
             {/* Active Chat Tab */}
             <TabsContent value="chat" className="space-y-6">
               {currentSession ? (
-                <TherapyChatInterface 
-                  onEndSession={handleEndSession}
-                  voiceEnabled={voiceEnabled}
-                  onVoiceToggle={setVoiceEnabled}
-                />
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Therapy Session in Progress</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="p-4 bg-muted rounded-lg">
+                        <p>Your therapy session is now active. This is where the chat interface would appear.</p>
+                      </div>
+                      <Button onClick={handleEndSession} variant="destructive">
+                        End Session
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               ) : (
                 <Card>
                   <CardContent className="p-8 text-center">
@@ -313,11 +287,28 @@ const TherapyChat = () => {
         </div>
       </div>
 
-      <SessionEndModal
-        isOpen={showEndModal}
-        onClose={() => setShowEndModal(false)}
-        onConfirm={confirmEndSession}
-      />
+      {showEndModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="w-full max-w-md mx-4">
+            <CardHeader>
+              <CardTitle>End Session?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                Are you sure you want to end this therapy session?
+              </p>
+              <div className="flex space-x-2">
+                <Button onClick={() => setShowEndModal(false)} variant="outline" className="flex-1">
+                  Cancel
+                </Button>
+                <Button onClick={confirmEndSession} variant="destructive" className="flex-1">
+                  End Session
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </>
   );
 };

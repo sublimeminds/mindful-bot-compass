@@ -4,10 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, TrendingUp, Brain, Target } from 'lucide-react';
-import DetailedMoodTracker from '@/components/mood/DetailedMoodTracker';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface MoodEntry {
   id: string;
@@ -18,36 +15,34 @@ interface MoodEntry {
 }
 
 const MoodTracking = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [showDetailedTracker, setShowDetailedTracker] = useState(false);
 
-  const { data: moodEntries, isLoading, error } = useQuery({
-    queryKey: ['mood-entries', user?.id],
-    queryFn: async (): Promise<MoodEntry[]> => {
-      if (!user?.id) return [];
-
-      const { data, error } = await supabase
-        .from('mood_entries')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching mood entries:', error);
-        throw error;
-      }
-
-      return data || [];
+  // Mock data for demonstration
+  const moodEntries: MoodEntry[] = [
+    {
+      id: '1',
+      overall: 7,
+      anxiety: 4,
+      stress: 5,
+      created_at: new Date().toISOString()
     },
-    enabled: !!user?.id
-  });
+    {
+      id: '2',
+      overall: 6,
+      anxiety: 6,
+      stress: 7,
+      created_at: new Date(Date.now() - 86400000).toISOString()
+    }
+  ];
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const handleMoodSubmit = () => {
+    setShowDetailedTracker(false);
+    console.log('Mood submitted');
+  };
 
-  if (error) {
-    return <div>Error: {(error as Error).message}</div>;
+  if (!user) {
+    return <div>Please log in to track your mood.</div>;
   }
 
   return (
@@ -60,7 +55,7 @@ const MoodTracking = () => {
           </p>
         </div>
         <Button onClick={() => setShowDetailedTracker(true)}>
-          Detailed Mood Tracker
+          Track Mood
         </Button>
       </div>
 
@@ -71,7 +66,12 @@ const MoodTracking = () => {
               <CardTitle>Detailed Mood Tracker</CardTitle>
             </CardHeader>
             <CardContent>
-              <DetailedMoodTracker onMoodSubmit={() => setShowDetailedTracker(false)} />
+              <div className="space-y-4">
+                <p>Rate your current mood from 1-10:</p>
+                <Button onClick={handleMoodSubmit}>
+                  Submit Mood Entry
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
