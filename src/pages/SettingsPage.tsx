@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import AccountSettings from '@/components/profile/AccountSettings';
-import AdvancedNotificationSettings from '@/components/notifications/AdvancedNotificationSettings';
-import SecurityDashboard from '@/components/profile/SecurityDashboard';
+import EnhancedAccountSettings from '@/components/profile/EnhancedAccountSettings';
+import ComprehensiveNotificationSettings from '@/components/notifications/ComprehensiveNotificationSettings';
+import PrivacySettings from '@/components/profile/PrivacySettings';
 import SubscriptionManager from '@/components/subscription/SubscriptionManager';
 
 const SettingsPage = () => {
@@ -46,7 +46,7 @@ const SettingsPage = () => {
               <TabsTrigger value="account">Account</TabsTrigger>
               <TabsTrigger value="subscription">Subscription</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
-              <TabsTrigger value="security">Security</TabsTrigger>
+              <TabsTrigger value="privacy">Privacy</TabsTrigger>
             </TabsList>
             
             <TabsContent value="account">
@@ -55,7 +55,7 @@ const SettingsPage = () => {
                   <CardTitle>Account Settings</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <AccountSettings />
+                  <EnhancedAccountSettings />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -77,18 +77,18 @@ const SettingsPage = () => {
                   <CardTitle>Notification Preferences</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <AdvancedNotificationSettings />
+                  <ComprehensiveNotificationSettings />
                 </CardContent>
               </Card>
             </TabsContent>
             
-            <TabsContent value="security">
+            <TabsContent value="privacy">
               <Card>
                 <CardHeader>
-                  <CardTitle>Security & Privacy</CardTitle>
+                  <CardTitle>Privacy & Security</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <SecurityDashboard />
+                  <PrivacySettings />
                 </CardContent>
               </Card>
             </TabsContent>

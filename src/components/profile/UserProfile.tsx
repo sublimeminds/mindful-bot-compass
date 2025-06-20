@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, CreditCard, Bell, Shield } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
-import SubscriptionManager from '@/components/subscription/SubscriptionManager';
-import AccountSettings from './AccountSettings';
+import { useAuth } from '@/components/SimpleAuthProvider';
+import RealBillingHistory from '@/components/subscription/RealBillingHistory';
+import EnhancedAccountSettings from './EnhancedAccountSettings';
+import ComprehensiveNotificationSettings from '@/components/notifications/ComprehensiveNotificationSettings';
+import PrivacySettings from './PrivacySettings';
 
 const UserProfile = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('account');
 
   return (
@@ -38,7 +40,7 @@ const UserProfile = () => {
             </TabsTrigger>
             <TabsTrigger value="subscription" className="flex items-center space-x-2">
               <CreditCard className="h-4 w-4" />
-              <span>Subscription</span>
+              <span>Billing</span>
             </TabsTrigger>
             <TabsTrigger value="notifications" className="flex items-center space-x-2">
               <Bell className="h-4 w-4" />
@@ -51,37 +53,19 @@ const UserProfile = () => {
           </TabsList>
 
           <TabsContent value="account" className="space-y-6">
-            <AccountSettings />
+            <EnhancedAccountSettings />
           </TabsContent>
 
           <TabsContent value="subscription" className="space-y-6">
-            <SubscriptionManager />
+            <RealBillingHistory />
           </TabsContent>
 
           <TabsContent value="notifications" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Notification Settings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Notification settings will be available soon. You can manage your preferences here.
-                </p>
-              </CardContent>
-            </Card>
+            <ComprehensiveNotificationSettings />
           </TabsContent>
 
           <TabsContent value="privacy" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Privacy & Security</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Your data is encrypted and secure. Privacy settings will be available soon.
-                </p>
-              </CardContent>
-            </Card>
+            <PrivacySettings />
           </TabsContent>
         </Tabs>
       </div>
