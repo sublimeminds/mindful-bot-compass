@@ -11,24 +11,18 @@ import {
 } from "@/components/ui/toast"
 
 export function Toaster() {
-  // Enhanced safety check for React hooks availability
-  if (typeof React === 'undefined' || !React.useState || !React.useEffect) {
-    console.warn('Toaster: React hooks not available, skipping render');
-    return null;
-  }
-
-  // Ensure React context is available
-  if (typeof React.createContext === 'undefined') {
-    console.warn('Toaster: React context not available, skipping render');
+  // Check if React is properly initialized
+  if (typeof React === 'undefined' || !React.useState) {
+    console.warn('Toaster: React not properly initialized, returning null');
     return null;
   }
 
   try {
     const { toasts } = useToast();
 
-    // Additional safety check - ensure toasts is an array
+    // Safety check for toasts
     if (!Array.isArray(toasts)) {
-      console.warn('Toaster: Invalid toasts data, skipping render');
+      console.warn('Toaster: Invalid toasts data');
       return null;
     }
 
@@ -52,7 +46,7 @@ export function Toaster() {
       </ToastProvider>
     )
   } catch (error) {
-    console.warn('Toaster: Error rendering toaster component:', error);
+    console.error('Toaster: Error in component:', error);
     return null;
   }
 }
