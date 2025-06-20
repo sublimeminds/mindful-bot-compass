@@ -21,19 +21,19 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <SimpleAuthProvider>
-          <AdminProvider>
-            <TherapistProvider>
+      <SimpleAuthProvider>
+        <AdminProvider>
+          <TherapistProvider>
+            <TooltipProvider>
               <Toaster />
               <Sonner />
               <BrowserRouter>
                 <AppRouter />
               </BrowserRouter>
-            </TherapistProvider>
-          </AdminProvider>
-        </SimpleAuthProvider>
-      </TooltipProvider>
+            </TooltipProvider>
+          </TherapistProvider>
+        </AdminProvider>
+      </SimpleAuthProvider>
     </QueryClientProvider>
   );
 };
