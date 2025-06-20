@@ -15,12 +15,6 @@ interface AuthModalProps {
 }
 
 const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
-  // Safety check for React availability
-  if (typeof React === 'undefined' || !React.useState || !React.useRef) {
-    console.warn('AuthModal: React not fully available');
-    return null;
-  }
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">

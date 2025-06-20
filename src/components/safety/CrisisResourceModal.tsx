@@ -20,12 +20,6 @@ const CrisisResourceModal: React.FC<CrisisResourceModalProps> = ({
   crisisIndicator,
   resources
 }) => {
-  // Safety check for React availability
-  if (typeof React === 'undefined' || !React.useState || !React.useRef) {
-    console.warn('CrisisResourceModal: React not fully available');
-    return null;
-  }
-
   const getSeverityColor = (type: string) => {
     switch (type) {
       case 'severe': return 'bg-red-100 text-red-800 border-red-200';
