@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
+import { AdminProvider } from "@/contexts/AdminContext";
+import { TherapistProvider } from "@/contexts/TherapistContext";
 import AppRouter from "@/components/AppRouter";
 import { useEffect } from "react";
 import "./App.css";
@@ -21,11 +23,15 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <SimpleAuthProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AppRouter />
-          </BrowserRouter>
+          <AdminProvider>
+            <TherapistProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <AppRouter />
+              </BrowserRouter>
+            </TherapistProvider>
+          </AdminProvider>
         </SimpleAuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
