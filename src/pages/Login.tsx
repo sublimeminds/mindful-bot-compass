@@ -1,13 +1,18 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import AuthForm from '@/components/auth/AuthForm';
 
 const Login = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center p-4">
-      <AuthForm />
-    </div>
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center p-4">
+        <AuthForm />
+      </div>
+      <Footer />
+    </>
   );
 };
 

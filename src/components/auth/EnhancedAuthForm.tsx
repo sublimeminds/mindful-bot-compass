@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -44,6 +43,13 @@ const EnhancedAuthForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Set default tab based on current route
+  useEffect(() => {
+    if (location.pathname === '/register') {
+      setActiveTab('signup');
+    }
+  }, [location.pathname]);
+
   const validateEmail = (email: string): string | undefined => {
     if (!email) return 'Email is required';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -60,21 +66,17 @@ const EnhancedAuthForm = () => {
   const validateForm = (isSignUp: boolean): boolean => {
     const newErrors: FormErrors = {};
 
-    // Email validation
     const emailError = validateEmail(formData.email);
     if (emailError) newErrors.email = emailError;
 
-    // Password validation
     const passwordError = validatePassword(formData.password);
     if (passwordError) newErrors.password = passwordError;
 
     if (isSignUp) {
-      // Name validation
       if (!formData.name.trim()) {
         newErrors.name = 'Name is required';
       }
 
-      // Confirm password validation
       if (!formData.confirmPassword) {
         newErrors.confirmPassword = 'Please confirm your password';
       } else if (formData.password !== formData.confirmPassword) {
@@ -89,7 +91,6 @@ const EnhancedAuthForm = () => {
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
-    // Clear field-specific error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
     }
@@ -105,12 +106,8 @@ const EnhancedAuthForm = () => {
 
     try {
       await login(formData.email, formData.password);
-      
       toast("Welcome back! You have successfully signed in to TherapySync.");
-
-      // Redirect to dashboard or home
       navigate('/');
-
     } catch (error) {
       console.error('Sign in error:', error);
       setErrors({ general: 'Invalid email or password. Please check your credentials and try again.' });
@@ -129,13 +126,9 @@ const EnhancedAuthForm = () => {
 
     try {
       await register(formData.email, formData.password);
-      
       toast("Account created! Please sign in with your new credentials.");
-
-      // Switch to sign in tab after successful signup
       setActiveTab('signin');
       setFormData({ email: formData.email, password: '', confirmPassword: '', name: '' });
-
     } catch (error) {
       console.error('Sign up error:', error);
       setErrors({ general: 'Failed to create account. Please try again.' });
