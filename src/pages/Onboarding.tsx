@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,8 +19,10 @@ const Onboarding = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    // If user is not authenticated, redirect to auth page
     if (!user) {
       navigate('/auth');
+      return;
     }
   }, [user, navigate]);
 
@@ -50,7 +53,8 @@ const Onboarding = () => {
         if (error) {
           console.error('Error saving onboarding data:', error);
         } else {
-          navigate('/chat');
+          // After completing onboarding, redirect to dashboard
+          navigate('/dashboard');
         }
       } finally {
         setIsLoading(false);
@@ -96,34 +100,51 @@ const Onboarding = () => {
     }
   };
 
+  // Show loading while checking auth
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
+          <p className="text-therapy-600 font-medium">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="container mx-auto py-10">
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
-            Welcome to TherapySync!
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="text-center">
-            <p>
-              Let's set up your profile to personalize your therapy experience.
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 py-10">
+      <div className="container mx-auto px-4">
+        <Card className="max-w-4xl mx-auto">
+          <CardHeader className="text-center">
+            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+              Welcome to TherapySync!
+            </CardTitle>
+            <p className="text-slate-600 mt-2">
+              Let's personalize your mental wellness journey
             </p>
-            <Progress value={(step / 3) * 100} className="mt-4" />
-            <p className="text-sm text-muted-foreground">
-              Step {step} of 3
-            </p>
-          </div>
-
-          {renderStepContent()}
-
-          {isLoading && (
-            <div className="flex justify-center">
-              <Button disabled>Loading...</Button>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="text-center">
+              <Progress value={(step / 3) * 100} className="mt-4" />
+              <p className="text-sm text-muted-foreground mt-2">
+                Step {step} of 3
+              </p>
             </div>
-          )}
-        </CardContent>
-      </Card>
+
+            {renderStepContent()}
+
+            {isLoading && (
+              <div className="flex justify-center">
+                <Button disabled className="bg-therapy-500">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Completing setup...
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

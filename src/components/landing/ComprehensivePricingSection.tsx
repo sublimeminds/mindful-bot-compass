@@ -15,9 +15,15 @@ const ComprehensivePricingSection = () => {
 
   const handleGetStarted = (plan: string) => {
     if (user) {
-      navigate('/dashboard');
+      navigate('/onboarding');
     } else {
-      navigate('/auth');
+      // For premium/professional plans, go to register first, then onboarding
+      if (plan === 'Premium' || plan === 'Professional') {
+        navigate('/register');
+      } else {
+        // For free plan, can go directly to auth (login or register)
+        navigate('/auth');
+      }
     }
   };
 
@@ -46,8 +52,8 @@ const ComprehensivePricingSection = () => {
       id: 'premium',
       name: 'Premium',
       icon: Zap,
-      monthlyPrice: 19,
-      yearlyPrice: 190,
+      monthlyPrice: 29,
+      yearlyPrice: 290,
       description: 'For dedicated users seeking comprehensive mental health support',
       features: [
         'Unlimited AI therapy sessions',
@@ -70,8 +76,8 @@ const ComprehensivePricingSection = () => {
       id: 'professional',
       name: 'Professional',
       icon: Crown,
-      monthlyPrice: 49,
-      yearlyPrice: 490,
+      monthlyPrice: 79,
+      yearlyPrice: 790,
       description: 'Advanced features for mental health professionals and coaches',
       features: [
         'Everything in Premium',
@@ -143,7 +149,7 @@ const ComprehensivePricingSection = () => {
             </span>
             {billingCycle === 'yearly' && (
               <Badge className="bg-therapy-100 text-therapy-700 border-therapy-200">
-                Save up to 20%
+                Save up to 17%
               </Badge>
             )}
           </div>
