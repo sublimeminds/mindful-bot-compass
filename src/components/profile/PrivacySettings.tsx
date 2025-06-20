@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -51,14 +52,15 @@ const PrivacySettings = () => {
         throw error;
       }
 
-      if (data?.privacy_settings) {
+      if (data?.privacy_settings && typeof data.privacy_settings === 'object') {
+        const privacyData = data.privacy_settings as Record<string, any>;
         setSettings({
-          profile_visibility: data.privacy_settings.profile_visibility || 'private',
-          data_sharing: data.privacy_settings.data_sharing || false,
-          analytics_tracking: data.privacy_settings.analytics_tracking ?? true,
-          marketing_communications: data.privacy_settings.marketing_communications || false,
-          session_data_retention: data.privacy_settings.session_data_retention || '2_years',
-          anonymous_usage_stats: data.privacy_settings.anonymous_usage_stats ?? true,
+          profile_visibility: privacyData.profile_visibility || 'private',
+          data_sharing: privacyData.data_sharing || false,
+          analytics_tracking: privacyData.analytics_tracking ?? true,
+          marketing_communications: privacyData.marketing_communications || false,
+          session_data_retention: privacyData.session_data_retention || '2_years',
+          anonymous_usage_stats: privacyData.anonymous_usage_stats ?? true,
         });
       }
     } catch (error) {
@@ -94,7 +96,7 @@ const PrivacySettings = () => {
       const { error } = await supabase
         .from('profiles')
         .update({
-          privacy_settings: settings,
+          privacy_settings: settings as any,
           updated_at: new Date().toISOString(),
         })
         .eq('id', user?.id);
