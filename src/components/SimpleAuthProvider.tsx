@@ -30,13 +30,21 @@ export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('SimpleAuthProvider: Initializing auth...');
+    
     // Get initial session
     const getInitialSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        setUser(session?.user ?? null);
+        console.log('SimpleAuthProvider: Getting initial session...');
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('SimpleAuthProvider: Error getting session:', error);
+        } else {
+          console.log('SimpleAuthProvider: Initial session:', session ? 'Found' : 'Not found');
+          setUser(session?.user ?? null);
+        }
       } catch (error) {
-        console.error('Error getting session:', error);
+        console.error('SimpleAuthProvider: Exception getting session:', error);
         setUser(null);
       } finally {
         setLoading(false);
@@ -46,25 +54,36 @@ export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) =>
     getInitialSession();
 
     // Listen for auth changes
+    console.log('SimpleAuthProvider: Setting up auth state listener...');
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('SimpleAuthProvider: Auth state changed:', event, session ? 'User logged in' : 'User logged out');
         setUser(session?.user ?? null);
         setLoading(false);
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      console.log('SimpleAuthProvider: Cleaning up auth listener...');
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = async (email: string, password: string) => {
+    console.log('SimpleAuthProvider: Attempting login...');
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    if (error) throw error;
+    if (error) {
+      console.error('SimpleAuthProvider: Login error:', error);
+      throw error;
+    }
+    console.log('SimpleAuthProvider: Login successful');
   };
 
   const register = async (email: string, password: string) => {
+    console.log('SimpleAuthProvider: Attempting registration...');
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -72,11 +91,17 @@ export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) =>
         emailRedirectTo: `${window.location.origin}/`
       }
     });
-    if (error) throw error;
+    if (error) {
+      console.error('SimpleAuthProvider: Registration error:', error);
+      throw error;
+    }
+    console.log('SimpleAuthProvider: Registration successful');
   };
 
   const logout = async () => {
+    console.log('SimpleAuthProvider: Attempting logout...');
     await supabase.auth.signOut();
+    console.log('SimpleAuthProvider: Logout successful');
   };
 
   const value = {
@@ -86,6 +111,8 @@ export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) =>
     register,
     logout,
   };
+
+  console.log('SimpleAuthProvider: Rendering with user:', user ? 'Authenticated' : 'Not authenticated', 'loading:', loading);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

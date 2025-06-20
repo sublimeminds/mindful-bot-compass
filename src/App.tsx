@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,9 +9,8 @@ import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { TherapistProvider } from "@/contexts/TherapistContext";
 import AppRouter from "@/components/AppRouter";
-import { useEffect } from "react";
 import "./App.css";
-import './i18n'; // Initialize i18n
+import './i18n';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,10 +26,6 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  useEffect(() => {
-    console.log("App mounted - TherapySync initialized");
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <SimpleAuthProvider>
