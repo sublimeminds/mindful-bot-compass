@@ -15,25 +15,9 @@ import Help from '@/pages/Help';
 import Plans from '@/pages/Plans';
 import NotFound from '@/pages/NotFound';
 import SafeComponent from '@/components/SafeComponent';
-import { reactChecker } from '@/utils/reactReadinessChecker';
 
 const AppRouter = () => {
   console.log('AppRouter rendering');
-  
-  const isReactReady = reactChecker.checkReactReadiness();
-  
-  if (!isReactReady) {
-    return (
-      <div style={{ 
-        padding: '20px', 
-        textAlign: 'center', 
-        backgroundColor: '#fee2e2',
-        color: '#991b1b' 
-      }}>
-        React is not ready. Please refresh the page.
-      </div>
-    );
-  }
   
   return (
     <SafeComponent 

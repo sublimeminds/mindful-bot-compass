@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import AppRouter from '@/components/AppRouter';
 import SafeComponent from '@/components/SafeComponent';
-import { reactChecker } from '@/utils/reactReadinessChecker';
 import './App.css';
 
 const queryClient = new QueryClient({
@@ -20,37 +19,6 @@ const queryClient = new QueryClient({
 
 function App() {
   console.log('App component rendering');
-  
-  // Check React readiness using our centralized checker
-  const isReactReady = reactChecker.checkReactReadiness();
-
-  if (!isReactReady) {
-    return (
-      <div style={{ 
-        padding: '20px', 
-        textAlign: 'center', 
-        backgroundColor: '#fee2e2',
-        color: '#991b1b',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column'
-      }}>
-        <h2>Application Loading</h2>
-        <p>TherapySync is initializing. Please wait...</p>
-        <div style={{
-          width: '40px',
-          height: '40px',
-          border: '4px solid #f3f4f6',
-          borderTop: '4px solid #3b82f6',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-          marginTop: '20px'
-        }}></div>
-      </div>
-    );
-  }
   
   return (
     <SafeComponent 

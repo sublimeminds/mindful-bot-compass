@@ -1,6 +1,8 @@
 
+import React from 'react';
+
 /**
- * Centralized React readiness checker to prevent hook initialization errors
+ * Simplified React readiness checker to prevent hook initialization errors
  */
 export class ReactReadinessChecker {
   private static instance: ReactReadinessChecker;
@@ -20,15 +22,9 @@ export class ReactReadinessChecker {
     }
 
     try {
-      // Check if React is available
-      if (typeof React === 'undefined' || React === null) {
-        console.warn('ReactReadinessChecker: React is not available');
-        return false;
-      }
-
-      // Check if React is properly structured
-      if (typeof React !== 'object') {
-        console.warn('ReactReadinessChecker: React is not properly structured');
+      // Check if React is available and properly structured
+      if (typeof React === 'undefined' || React === null || typeof React !== 'object') {
+        console.warn('ReactReadinessChecker: React is not available or properly structured');
         return false;
       }
 
@@ -41,30 +37,13 @@ export class ReactReadinessChecker {
         }
       }
 
-      // Check all required hooks
-      const requiredHooks = [
-        'useState', 'useEffect', 'useContext', 'useRef',
-        'useMemo', 'useCallback', 'useReducer'
-      ];
-      
+      // Check required hooks
+      const requiredHooks = ['useState', 'useEffect', 'useContext'];
       for (const hook of requiredHooks) {
         if (!React[hook] || typeof React[hook] !== 'function') {
           console.warn(`ReactReadinessChecker: React.${hook} is not available or not a function`);
           return false;
         }
-      }
-
-      // Test basic hook functionality
-      const TestComponent = () => {
-        const [state] = React.useState(true);
-        const ref = React.useRef(null);
-        return React.createElement('div', { ref }, state ? 'Ready' : 'Not Ready');
-      };
-      
-      const testElement = React.createElement(TestComponent);
-      if (!testElement) {
-        console.warn('ReactReadinessChecker: React.createElement test failed');
-        return false;
       }
 
       this.isReactReady = true;

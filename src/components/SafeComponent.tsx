@@ -9,42 +9,30 @@ interface Props {
 }
 
 interface State {
-  isReactSafe: boolean;
   hasError: boolean;
 }
 
 /**
- * Universal component wrapper that ensures React is ready before rendering children
+ * Lightweight component wrapper with basic error boundary functionality
  */
 export class SafeComponent extends Component<Props, State> {
   public state: State = {
-    isReactSafe: false,
     hasError: false
   };
 
-  public componentDidMount() {
-    this.checkReactSafety();
-  }
-
   public static getDerivedStateFromError(): State {
-    return { isReactSafe: false, hasError: true };
+    return { hasError: true };
   }
 
-  private checkReactSafety = () => {
-    try {
-      const isReady = reactChecker.checkReactReadiness();
-      this.setState({ isReactSafe: isReady, hasError: false });
-    } catch (error) {
-      console.error(`SafeComponent[${this.props.componentName}]: Safety check failed`, error);
-      this.setState({ isReactSafe: false, hasError: true });
-    }
-  };
+  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error(`SafeComponent[${this.props.componentName}]: Error caught`, error, errorInfo);
+  }
 
   public render() {
     const { children, fallback, componentName = 'Component' } = this.props;
-    const { isReactSafe, hasError } = this.state;
+    const { hasError } = this.state;
 
-    if (hasError || !isReactSafe) {
+    if (hasError) {
       if (fallback) {
         return fallback;
       }
@@ -58,7 +46,7 @@ export class SafeComponent extends Component<Props, State> {
           color: '#6b7280',
           textAlign: 'center'
         }
-      }, `${componentName} loading...`);
+      }, `${componentName} encountered an error`);
     }
 
     return children;
