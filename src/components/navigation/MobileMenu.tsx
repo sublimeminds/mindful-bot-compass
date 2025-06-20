@@ -3,11 +3,11 @@ import React, { useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/components/SimpleAuthProvider';
 
 interface MobileMenuProps {
   isMenuOpen: boolean;
   setIsMenuOpen: (open: boolean) => void;
-  isAuthenticated: boolean;
   activeSection: string;
   scrollToSection: (sectionId: string) => void;
 }
@@ -15,12 +15,11 @@ interface MobileMenuProps {
 const MobileMenu = ({
   isMenuOpen,
   setIsMenuOpen,
-  isAuthenticated,
   activeSection,
   scrollToSection
 }: MobileMenuProps) => {
-  console.log('MobileMenu: Rendering with props:', { isMenuOpen, isAuthenticated, activeSection });
-  
+  const { user } = useAuth();
+  const isAuthenticated = !!user;
   const navigate = useNavigate();
 
   const publicSections = [
@@ -30,18 +29,17 @@ const MobileMenu = ({
   ];
 
   const authenticatedSections = [
-    { id: '/therapy', label: 'Therapy' },
-    { id: '/mood-tracking', label: 'Mood' },
-    { id: '/goals', label: 'Goals' },
-    { id: '/session-history', label: 'History' },
-    { id: '/help', label: 'Help' },
-    { id: '/contact', label: 'Contact' }
+    { id: '/dashboard', label: 'Dashboard' },
+    { id: '/crisis-management', label: 'Crisis' },
+    { id: '/community', label: 'Community' },
+    { id: '/notebook', label: 'Journal' },
+    { id: '/smart-scheduling', label: 'Schedule' },
+    { id: '/help', label: 'Help' }
   ];
 
   const sectionsToShow = isAuthenticated ? authenticatedSections : publicSections;
 
   const handleSectionClick = useCallback((sectionId: string) => {
-    console.log('MobileMenu: Handling section click:', sectionId);
     try {
       if (sectionId.startsWith('#')) {
         scrollToSection(sectionId);
@@ -55,7 +53,6 @@ const MobileMenu = ({
   }, [navigate, scrollToSection, setIsMenuOpen]);
 
   const handleAuthClick = useCallback(() => {
-    console.log('MobileMenu: Handling auth click');
     try {
       navigate("/auth");
       setIsMenuOpen(false);

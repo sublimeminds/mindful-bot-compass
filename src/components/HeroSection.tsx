@@ -1,162 +1,86 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Play, ArrowRight, Sparkles, Shield, Heart } from 'lucide-react';
-import AuthModal from '@/components/AuthModal';
-import QuickSignupWithPlan from '@/components/subscription/QuickSignupWithPlan';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/components/SimpleAuthProvider';
 
 const HeroSection = () => {
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showQuickSignup, setShowQuickSignup] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleGetStarted = () => {
-    setShowAuthModal(true);
-  };
-
-  const handleStartTrial = () => {
-    setShowQuickSignup(true);
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
     }
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 via-calm-50 to-therapy-100 overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-50/30 to-purple-50/30"></div>
-      </div>
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 via-white to-calm-50 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-therapy-100/20 via-transparent to-calm-100/20 pointer-events-none" />
       
-      <div className="container mx-auto px-4 py-20 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Trust Badge */}
-          <Badge variant="secondary" className="mb-6 bg-white/80 backdrop-blur-sm">
-            <Shield className="h-3 w-3 mr-1" />
-            HIPAA Compliant & Secure
-          </Badge>
-
-          {/* Main Headline */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-            Your Personal
-            <span className="text-therapy-600 relative">
-              <span className="relative z-10"> AI Therapist</span>
-              <svg className="absolute -bottom-2 left-0 w-full h-3 z-0" viewBox="0 0 200 12" fill="none">
-                <path d="M0 8C40 4, 80 4, 120 8C160 12, 200 8, 200 6" stroke="#7C3AED" strokeWidth="3" fill="none"/>
-              </svg>
-            </span>
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-therapy-600 to-calm-600">
-              Available 24/7
-            </span>
+      <div className="relative z-10 container mx-auto px-4 py-20 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-therapy-600 via-therapy-700 to-calm-700 bg-clip-text text-transparent leading-tight">
+            Your Journey to Mental Wellness Starts Here
           </h1>
-
-          {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Get professional therapy support whenever you need it. Our AI-powered platform provides personalized mental health care that adapts to your unique needs.
+          
+          <p className="text-xl md:text-2xl text-therapy-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            Experience personalized therapy sessions, mood tracking, and wellness tools designed to support your mental health journey with AI-powered insights.
           </p>
-
-          {/* Key Benefits */}
-          <div className="flex flex-wrap justify-center gap-4 mb-10">
-            <Badge variant="outline" className="bg-white/60 backdrop-blur-sm text-gray-700 border-gray-200">
-              <Heart className="h-3 w-3 mr-1 text-therapy-500" />
-              Personalized Care
-            </Badge>
-            <Badge variant="outline" className="bg-white/60 backdrop-blur-sm text-gray-700 border-gray-200">
-              <Sparkles className="h-3 w-3 mr-1 text-calm-500" />
-              AI-Powered Insights
-            </Badge>
-            <Badge variant="outline" className="bg-white/60 backdrop-blur-sm text-gray-700 border-gray-200">
-              <Shield className="h-3 w-3 mr-1 text-green-500" />
-              100% Private
-            </Badge>
-          </div>
-
-          {/* CTA Buttons */}
+          
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <Button 
               size="lg" 
-              className="bg-therapy-600 hover:bg-therapy-700 text-white px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+              className="bg-gradient-to-r from-therapy-500 via-therapy-600 to-therapy-700 hover:from-therapy-600 hover:via-therapy-700 hover:to-therapy-800 text-white font-semibold rounded-full px-8 py-4 text-lg shadow-lg hover:shadow-therapy-500/30 transition-all duration-300 hover:scale-105"
               onClick={handleGetStarted}
             >
               Start Your Journey
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             
             <Button 
               variant="outline" 
-              size="lg"
-              className="border-2 border-therapy-600 text-therapy-600 hover:bg-therapy-600 hover:text-white px-8 py-6 text-lg rounded-full transition-all duration-300 group"
-              onClick={() => scrollToSection('demo')}
+              size="lg" 
+              className="border-therapy-300 text-therapy-700 hover:bg-therapy-50 rounded-full px-8 py-4 text-lg transition-all duration-300"
+              onClick={() => {
+                const element = document.getElementById('features');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
             >
-              <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-              Watch Demo
+              Learn More
             </Button>
           </div>
-
-          {/* Quick Trial CTA */}
-          <div className="text-center">
-            <p className="text-gray-600 mb-4">Ready to get started? Try our premium features free for 7 days.</p>
-            <Button 
-              variant="ghost" 
-              className="text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50 underline underline-offset-4"
-              onClick={handleStartTrial}
-            >
-              Start Free Trial
-            </Button>
-          </div>
-
-          {/* Social Proof */}
-          <div className="mt-16 pt-8 border-t border-gray-200">
-            <p className="text-gray-500 text-sm mb-4">Trusted by thousands of users worldwide</p>
-            <div className="flex justify-center items-center space-x-8 opacity-60">
-              <div className="text-2xl font-bold text-gray-400">10K+</div>
-              <div className="text-gray-300">•</div>
-              <div className="text-2xl font-bold text-gray-400">4.9★</div>
-              <div className="text-gray-300">•</div>
-              <div className="text-2xl font-bold text-gray-400">24/7</div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-therapy-100">
+              <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-therapy-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
+                <span className="text-white font-bold text-xl">AI</span>
+              </div>
+              <h3 className="text-lg font-semibold text-therapy-800 mb-2">AI-Powered Therapy</h3>
+              <p className="text-therapy-600">Personalized sessions with intelligent insights tailored to your unique needs.</p>
+            </div>
+            
+            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-therapy-100">
+              <div className="w-12 h-12 bg-gradient-to-r from-calm-500 to-calm-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
+                <span className="text-white font-bold text-xl">📊</span>
+              </div>
+              <h3 className="text-lg font-semibold text-therapy-800 mb-2">Mood Tracking</h3>
+              <p className="text-therapy-600">Track your emotional patterns and gain insights into your mental wellness journey.</p>
+            </div>
+            
+            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-therapy-100">
+              <div className="w-12 h-12 bg-gradient-to-r from-harmony-500 to-harmony-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
+                <span className="text-white font-bold text-xl">🎯</span>
+              </div>
+              <h3 className="text-lg font-semibold text-therapy-800 mb-2">Goal Setting</h3>
+              <p className="text-therapy-600">Set and achieve meaningful wellness goals with guided support and progress tracking.</p>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Quick Signup Modal */}
-      {showQuickSignup && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-semibold mb-4">Start Your Free Trial</h3>
-            <p className="text-gray-600 mb-4">Get access to all premium features for 7 days, absolutely free.</p>
-            <div className="flex space-x-3">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowQuickSignup(false)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button 
-                onClick={() => {
-                  setShowQuickSignup(false);
-                  setShowAuthModal(true);
-                }}
-                className="flex-1 bg-therapy-600 hover:bg-therapy-700"
-              >
-                Continue
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-      />
     </section>
   );
 };
