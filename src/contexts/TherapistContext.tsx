@@ -35,6 +35,18 @@ interface TherapistProviderProps {
 }
 
 export const TherapistProvider: React.FC<TherapistProviderProps> = ({ children }) => {
+  // Ensure React is properly loaded before using hooks
+  if (typeof React === 'undefined' || !React.useState) {
+    console.error('TherapistProvider: React is not properly initialized');
+    return React.createElement('div', {
+      style: {
+        padding: '20px',
+        textAlign: 'center',
+        color: '#dc2626'
+      }
+    }, 'Loading React...');
+  }
+
   // Mock therapist data
   const mockTherapists: Therapist[] = [
     {
@@ -79,9 +91,7 @@ export const TherapistProvider: React.FC<TherapistProviderProps> = ({ children }
     therapists: mockTherapists
   };
 
-  return (
-    <TherapistContext.Provider value={therapistData}>
-      {children}
-    </TherapistContext.Provider>
-  );
+  console.log('TherapistProvider: Rendering with therapists loaded');
+
+  return React.createElement(TherapistContext.Provider, { value: therapistData }, children);
 };
