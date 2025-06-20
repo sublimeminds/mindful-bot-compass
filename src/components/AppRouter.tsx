@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { SimpleAuthProvider } from '@/components/SimpleAuthProvider';
 import Index from '@/pages/Index';
 import Auth from '@/pages/Auth';
 import Login from '@/pages/Login';
@@ -17,22 +16,20 @@ import NotFound from '@/pages/NotFound';
 
 const AppRouter = () => {
   return (
-    <SimpleAuthProvider>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/crisis-management" element={<CrisisManagement />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/notebook" element={<NotebookPage />} />
-        <Route path="/smart-scheduling" element={<SmartScheduling />} />
-        <Route path="/help" element={<Help />} />
-        <Route path="/plans" element={<Plans />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </SimpleAuthProvider>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/crisis-management" element={<CrisisManagement />} />
+      <Route path="/community" element={<Community />} />
+      <Route path="/notebook" element={<NotebookPage />} />
+      <Route path="/smart-scheduling" element={<SmartScheduling />} />
+      <Route path="/help" element={<Help />} />
+      <Route path="/plans" element={<Plans />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 };
 

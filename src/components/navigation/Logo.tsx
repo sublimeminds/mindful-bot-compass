@@ -1,17 +1,15 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import GradientLogo from '@/components/ui/GradientLogo';
 
 const Logo = () => {
-  const navigate = useNavigate();
-
   return (
     <button
-      onClick={() => navigate('/')}
+      onClick={() => window.location.href = '/'}
       className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
     >
-      <GradientLogo size="sm" />
+      <div className="w-8 h-8 bg-gradient-to-r from-therapy-500 to-therapy-600 rounded-lg flex items-center justify-center">
+        <span className="text-white font-bold text-sm">T</span>
+      </div>
       <span className="text-xl font-bold text-therapy-900">TherapySync</span>
     </button>
   );
