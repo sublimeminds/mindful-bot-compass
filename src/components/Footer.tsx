@@ -1,63 +1,88 @@
 
-import { Link } from "react-router-dom";
-import GradientLogo from "@/components/ui/GradientLogo";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const Footer = () => {
+  const navigate = useNavigate();
+
   return (
-    <footer className="bg-slate-900 text-white py-16">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
-              <GradientLogo 
-                size="md"
-                className="opacity-90"
-              />
-              <span className="text-xl font-bold bg-gradient-to-r from-harmony-400 to-flow-400 bg-clip-text text-transparent">
-                TherapySync
-              </span>
-            </div>
-            <p className="text-slate-300 leading-relaxed max-w-md">
-              Sync your mind with AI-powered therapy support to help you heal, harmonize, and thrive. 
-              Your mental health matters, and we're here to support your wellbeing journey.
+    <footer className="bg-therapy-900 text-white">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">TherapySync</h3>
+            <p className="text-therapy-200 text-sm">
+              AI-powered mental health platform designed to support your wellness journey.
             </p>
           </div>
           
-          <div>
-            <h3 className="font-semibold mb-4 text-white">Support</h3>
-            <ul className="space-y-2">
-              <li><Link to="/help" className="text-slate-300 hover:text-harmony-400 transition-colors">Help Center</Link></li>
-              <li><Link to="/contact" className="text-slate-300 hover:text-harmony-400 transition-colors">Contact Us</Link></li>
-              <li><a href="#" className="text-slate-300 hover:text-harmony-400 transition-colors">Crisis Resources</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-harmony-400 transition-colors">Community</a></li>
-            </ul>
+          <div className="space-y-4">
+            <h4 className="font-semibold">Product</h4>
+            <div className="space-y-2">
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-therapy-200 hover:text-white justify-start"
+                onClick={() => {
+                  navigate('/');
+                  setTimeout(() => {
+                    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+                  }, 100);
+                }}
+              >
+                Features
+              </Button>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-therapy-200 hover:text-white justify-start"
+                onClick={() => {
+                  navigate('/');
+                  setTimeout(() => {
+                    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+                  }, 100);
+                }}
+              >
+                Pricing
+              </Button>
+            </div>
           </div>
           
-          <div>
-            <h3 className="font-semibold mb-4 text-white">Legal</h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-slate-300 hover:text-harmony-400 transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-harmony-400 transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-harmony-400 transition-colors">HIPAA Compliance</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-harmony-400 transition-colors">Ethics</a></li>
-            </ul>
+          <div className="space-y-4">
+            <h4 className="font-semibold">Support</h4>
+            <div className="space-y-2">
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-therapy-200 hover:text-white justify-start"
+                onClick={() => navigate('/help')}
+              >
+                Help Center
+              </Button>
+            </div>
+          </div>
+          
+          <div className="space-y-4">
+            <h4 className="font-semibold">Company</h4>
+            <div className="space-y-2">
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-therapy-200 hover:text-white justify-start"
+              >
+                Privacy Policy
+              </Button>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-therapy-200 hover:text-white justify-start"
+              >
+                Terms of Service
+              </Button>
+            </div>
           </div>
         </div>
         
-        <div className="border-t border-slate-700 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-slate-400 mb-4 md:mb-0">
-              © 2024 TherapySync. All rights reserved.
-            </p>
-            <div className="flex items-center space-x-4">
-              <span className="text-slate-400 text-sm">Made with</span>
-              <GradientLogo 
-                size="sm"
-                className="opacity-60"
-              />
-              <span className="text-slate-400 text-sm">for mental wellness</span>
-            </div>
-          </div>
+        <div className="border-t border-therapy-800 mt-8 pt-8 text-center">
+          <p className="text-therapy-300 text-sm">
+            © 2024 TherapySync. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

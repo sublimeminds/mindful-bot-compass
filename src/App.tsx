@@ -24,7 +24,7 @@ function App() {
         <SimpleAuthProvider>
           <div className="min-h-screen">
             <AppRouter />
-            <Toaster />
+            <Toaster position="top-right" />
           </div>
         </SimpleAuthProvider>
       </Router>
