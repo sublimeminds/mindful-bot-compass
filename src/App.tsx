@@ -1,35 +1,35 @@
 
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'sonner';
-import { SimpleAuthProvider } from '@/components/SimpleAuthProvider';
-import AppRouter from '@/components/AppRouter';
-import './App.css';
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter } from "react-router-dom";
+import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
+import AppRouter from "@/components/AppRouter";
+import { useEffect } from "react";
+import "./App.css";
+import './i18n'; // Initialize i18n
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      staleTime: 5 * 60 * 1000,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
-function App() {
+const App = () => {
+  useEffect(() => {
+    console.log("App mounted - TherapySync initialized");
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
-      <Router>
+      <TooltipProvider>
         <SimpleAuthProvider>
-          <div className="min-h-screen bg-background text-foreground">
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
             <AppRouter />
-            <Toaster position="top-right" />
-          </div>
+          </BrowserRouter>
         </SimpleAuthProvider>
-      </Router>
+      </TooltipProvider>
     </QueryClientProvider>
   );
-}
+};
 
 export default App;

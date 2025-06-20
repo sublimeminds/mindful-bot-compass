@@ -1,15 +1,23 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/SimpleAuthProvider';
+import RegionalPricingDisplay from '@/components/regional/RegionalPricingDisplay';
 
 const PricingSection = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [regionalPricing, setRegionalPricing] = useState({
+    currency: 'USD',
+    symbol: '$',
+    free: '0',
+    premium: '19',
+    professional: '49'
+  });
 
   const handleGetStarted = (plan: string) => {
     if (user) {
@@ -22,7 +30,7 @@ const PricingSection = () => {
   const plans = [
     {
       name: 'Free',
-      price: '$0',
+      price: regionalPricing.symbol + regionalPricing.free,
       period: 'forever',
       description: 'Perfect for getting started with your mental wellness journey',
       features: [
@@ -37,7 +45,7 @@ const PricingSection = () => {
     },
     {
       name: 'Premium',
-      price: '$19',
+      price: regionalPricing.symbol + regionalPricing.premium,
       period: 'month',
       description: 'For dedicated users seeking comprehensive mental health support',
       features: [
@@ -54,7 +62,7 @@ const PricingSection = () => {
     },
     {
       name: 'Professional',
-      price: '$49',
+      price: regionalPricing.symbol + regionalPricing.professional,
       period: 'month',
       description: 'Advanced features for mental health professionals and coaches',
       features: [
@@ -78,9 +86,10 @@ const PricingSection = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-therapy-900 mb-4">
             Choose Your <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">Wellness Plan</span>
           </h2>
-          <p className="text-xl text-therapy-600 max-w-3xl mx-auto">
+          <p className="text-xl text-therapy-600 max-w-3xl mx-auto mb-6">
             Start free and upgrade as your mental wellness journey evolves. All plans include our core AI therapy features.
           </p>
+          <RegionalPricingDisplay />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">

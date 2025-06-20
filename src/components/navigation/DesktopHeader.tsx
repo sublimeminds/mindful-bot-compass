@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Logo from '@/components/navigation/Logo';
 import UnifiedNavigation from '@/components/navigation/UnifiedNavigation';
 import UserMenu from '@/components/navigation/UserMenu';
+import LanguageSelector from '@/components/ui/LanguageSelector';
 
 const DesktopHeader = () => {
   const { user } = useAuth();
@@ -22,6 +23,7 @@ const DesktopHeader = () => {
           </div>
 
           <div className="flex items-center space-x-4">
+            <LanguageSelector />
             {user ? (
               <UserMenu />
             ) : (
