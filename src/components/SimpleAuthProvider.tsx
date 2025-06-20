@@ -25,19 +25,45 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
+// Safe wrapper component that validates React before using hooks
 export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // Ensure React is properly loaded before using hooks
-  if (typeof React === 'undefined' || !React.useState) {
-    console.error('SimpleAuthProvider: React is not properly initialized');
+  // Early validation - check React availability before using any hooks
+  if (typeof React === 'undefined' || React === null) {
+    console.error('SimpleAuthProvider: React is not available');
     return React.createElement('div', {
       style: {
         padding: '20px',
         textAlign: 'center',
-        color: '#dc2626'
+        color: '#dc2626',
+        backgroundColor: '#fee2e2',
+        border: '1px solid #fecaca',
+        borderRadius: '6px',
+        margin: '20px'
       }
-    }, 'Loading React...');
+    }, 'React framework is not loaded. Please refresh the page.');
   }
 
+  if (!React.useState || !React.useEffect || !React.useContext) {
+    console.error('SimpleAuthProvider: React hooks are not available');
+    return React.createElement('div', {
+      style: {
+        padding: '20px',
+        textAlign: 'center',
+        color: '#dc2626',
+        backgroundColor: '#fee2e2',
+        border: '1px solid #fecaca',
+        borderRadius: '6px',
+        margin: '20px'
+      }
+    }, 'React hooks are not available. Please refresh the page.');
+  }
+
+  // Now it's safe to use hooks
+  return React.createElement(AuthProviderInner, { children });
+};
+
+// Inner component that safely uses hooks
+const AuthProviderInner: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
