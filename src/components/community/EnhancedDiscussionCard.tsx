@@ -52,6 +52,15 @@ const EnhancedDiscussionCard: React.FC<EnhancedDiscussionCardProps> = ({
     console.log('Flagging discussion:', discussion.id);
   };
 
+  const handleReact = (type: string) => {
+    console.log('Reacting with:', type, 'to discussion:', discussion.id);
+    // TODO: Implement actual reaction functionality
+  };
+
+  // Use available properties from GroupDiscussion type
+  const authorName = discussion.is_anonymous ? 'Anonymous' : (discussion.created_by || 'Unknown User');
+  const isFeatured = false; // This would come from database in real implementation
+
   return (
     <Card className={`hover:shadow-md transition-shadow ${isPinned ? 'ring-2 ring-therapy-200' : ''}`}>
       <CardHeader>
@@ -59,7 +68,7 @@ const EnhancedDiscussionCard: React.FC<EnhancedDiscussionCardProps> = ({
           <div className="flex items-start space-x-3 flex-1">
             <Avatar className="h-10 w-10">
               <AvatarFallback>
-                {discussion.is_anonymous ? 'A' : discussion.author_name?.charAt(0) || 'U'}
+                {discussion.is_anonymous ? 'A' : authorName.charAt(0)}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
@@ -71,12 +80,10 @@ const EnhancedDiscussionCard: React.FC<EnhancedDiscussionCardProps> = ({
                 {isPinned && <Pin className="h-4 w-4 text-therapy-600" />}
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                <span>
-                  {discussion.is_anonymous ? 'Anonymous' : discussion.author_name}
-                </span>
+                <span>{authorName}</span>
                 <span>•</span>
                 <span>{formatTimeAgo(discussion.created_at)}</span>
-                {discussion.is_featured && (
+                {isFeatured && (
                   <>
                     <span>•</span>
                     <Badge variant="secondary" className="text-xs">Featured</Badge>
@@ -130,7 +137,11 @@ const EnhancedDiscussionCard: React.FC<EnhancedDiscussionCardProps> = ({
           
           {canInteract && (
             <div className="flex items-center space-x-2">
-              <DiscussionReactions reactions={reactions} />
+              <DiscussionReactions 
+                reactions={reactions} 
+                discussionId={discussion.id}
+                onReact={handleReact}
+              />
               <Button 
                 variant="outline" 
                 size="sm"
@@ -147,4 +158,3 @@ const EnhancedDiscussionCard: React.FC<EnhancedDiscussionCardProps> = ({
 };
 
 export default EnhancedDiscussionCard;
-
