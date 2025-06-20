@@ -5,10 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Users, Heart, MessageSquare, Search, Plus } from 'lucide-react';
+import { Users, Heart, MessageSquare, Search, ArrowLeft } from 'lucide-react';
 import { CommunityService, SupportGroup, SharedMilestone } from '@/services/communityService';
 import SupportGroupCard from './SupportGroupCard';
+import CreateGroupDialog from './CreateGroupDialog';
+import GroupDetailPage from './GroupDetailPage';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/components/SimpleAuthProvider';
 
 const CommunityDashboard: React.FC = () => {
   const [supportGroups, setSupportGroups] = useState<SupportGroup[]>([]);
@@ -16,11 +19,13 @@ const CommunityDashboard: React.FC = () => {
   const [milestones, setMilestones] = useState<SharedMilestone[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [selectedGroup, setSelectedGroup] = useState<SupportGroup | null>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   useEffect(() => {
     loadCommunityData();
-  }, []);
+  }, [user]);
 
   const loadCommunityData = async () => {
     try {
@@ -35,7 +40,10 @@ const CommunityDashboard: React.FC = () => {
       setMilestones(milestonesData);
 
       // Load user's groups if authenticated
-      // This would require auth context to get current user ID
+      if (user) {
+        const userGroupsData = await CommunityService.getUserGroups(user.id);
+        setUserGroups(userGroupsData);
+      }
     } catch (error) {
       console.error('Error loading community data:', error);
       toast({
@@ -94,11 +102,22 @@ const CommunityDashboard: React.FC = () => {
     group.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  if (selectedGroup) {
+    return (
+      <GroupDetailPage
+        group={selectedGroup}
+        onBack={() => setSelectedGroup(null)}
+        isJoined={userGroups.some(ug => ug.id === selectedGroup.id)}
+        onJoin={handleJoinGroup}
+      />
+    );
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading community...</p>
         </div>
       </div>
@@ -109,27 +128,24 @@ const CommunityDashboard: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Community</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-therapy-900">Community</h1>
+          <p className="text-therapy-600 mt-1">
             Connect with others on similar journeys and find support
           </p>
         </div>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Create Group
-        </Button>
+        <CreateGroupDialog onGroupCreated={loadCommunityData} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Users className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-therapy-100 rounded-lg">
+                <Users className="h-5 w-5 text-therapy-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Active Groups</p>
-                <p className="text-xl font-semibold">{supportGroups.length}</p>
+                <p className="text-sm text-therapy-600">Active Groups</p>
+                <p className="text-xl font-semibold text-therapy-900">{supportGroups.length}</p>
               </div>
             </div>
           </CardContent>
@@ -138,12 +154,12 @@ const CommunityDashboard: React.FC = () => {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <MessageSquare className="h-5 w-5 text-green-600" />
+              <div className="p-2 bg-harmony-100 rounded-lg">
+                <MessageSquare className="h-5 w-5 text-harmony-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Your Groups</p>
-                <p className="text-xl font-semibold">{userGroups.length}</p>
+                <p className="text-sm text-therapy-600">Your Groups</p>
+                <p className="text-xl font-semibold text-therapy-900">{userGroups.length}</p>
               </div>
             </div>
           </CardContent>
@@ -156,8 +172,8 @@ const CommunityDashboard: React.FC = () => {
                 <Heart className="h-5 w-5 text-purple-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Recent Milestones</p>
-                <p className="text-xl font-semibold">{milestones.length}</p>
+                <p className="text-sm text-therapy-600">Recent Milestones</p>
+                <p className="text-xl font-semibold text-therapy-900">{milestones.length}</p>
               </div>
             </div>
           </CardContent>
@@ -168,7 +184,7 @@ const CommunityDashboard: React.FC = () => {
         <TabsList>
           <TabsTrigger value="groups">Support Groups</TabsTrigger>
           <TabsTrigger value="milestones">Community Milestones</TabsTrigger>
-          <TabsTrigger value="connections">Peer Connections</TabsTrigger>
+          <TabsTrigger value="my-groups">My Groups</TabsTrigger>
         </TabsList>
 
         <TabsContent value="groups" className="space-y-4">
@@ -186,12 +202,13 @@ const CommunityDashboard: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredGroups.map(group => (
-              <SupportGroupCard
-                key={group.id}
-                group={group}
-                onJoin={handleJoinGroup}
-                isJoined={userGroups.some(ug => ug.id === group.id)}
-              />
+              <div key={group.id} onClick={() => setSelectedGroup(group)} className="cursor-pointer">
+                <SupportGroupCard
+                  group={group}
+                  onJoin={handleJoinGroup}
+                  isJoined={userGroups.some(ug => ug.id === group.id)}
+                />
+              </div>
             ))}
           </div>
 
@@ -202,6 +219,30 @@ const CommunityDashboard: React.FC = () => {
               <p className="text-gray-600">
                 {searchTerm ? 'Try adjusting your search terms' : 'Be the first to create a support group!'}
               </p>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="my-groups" className="space-y-4">
+          {userGroups.length === 0 ? (
+            <div className="text-center py-12">
+              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No groups joined yet</h3>
+              <p className="text-gray-600">
+                Join some support groups to connect with others on similar journeys.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {userGroups.map(group => (
+                <div key={group.id} onClick={() => setSelectedGroup(group)} className="cursor-pointer">
+                  <SupportGroupCard
+                    group={group}
+                    onJoin={handleJoinGroup}
+                    isJoined={true}
+                  />
+                </div>
+              ))}
             </div>
           )}
         </TabsContent>
@@ -221,16 +262,16 @@ const CommunityDashboard: React.FC = () => {
                           {new Date(milestone.created_at).toLocaleDateString()}
                         </span>
                       </div>
-                      <h3 className="font-medium mb-1">{milestone.title}</h3>
+                      <h3 className="font-medium mb-1 text-therapy-900">{milestone.title}</h3>
                       {milestone.description && (
-                        <p className="text-gray-600 text-sm">{milestone.description}</p>
+                        <p className="text-therapy-700 text-sm">{milestone.description}</p>
                       )}
                     </div>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => handleCelebrateMilestone(milestone.id)}
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 text-therapy-600 hover:text-therapy-700"
                     >
                       <Heart className="h-4 w-4" />
                       <span>{milestone.celebration_count}</span>
@@ -250,26 +291,6 @@ const CommunityDashboard: React.FC = () => {
               </p>
             </div>
           )}
-        </TabsContent>
-
-        <TabsContent value="connections" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Peer Connections</CardTitle>
-              <CardDescription>
-                Connect with others for mutual support and accountability
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Coming Soon</h3>
-                <p className="text-gray-600">
-                  Peer connection features are being developed to help you find accountability partners and support buddies.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>
