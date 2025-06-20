@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useApp } from '@/components/MinimalAppProvider';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import Logo from '@/components/navigation/Logo';
@@ -8,7 +8,7 @@ import UnifiedNavigation from '@/components/navigation/UnifiedNavigation';
 import UserMenu from '@/components/navigation/UserMenu';
 
 const DesktopHeader = () => {
-  const { user } = useSimpleApp();
+  const { user } = useApp();
   const navigate = useNavigate();
 
   return (

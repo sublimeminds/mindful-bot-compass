@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useApp } from '@/components/MinimalAppProvider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 const UnifiedNavigation = () => {
-  const { user } = useSimpleApp();
+  const { user } = useApp();
   const isAuthenticated = !!user;
   const location = useLocation();
   const navigate = useNavigate();

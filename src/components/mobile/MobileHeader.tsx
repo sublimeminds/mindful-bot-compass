@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Logo from '@/components/navigation/Logo';
 import UserMenu from '@/components/navigation/UserMenu';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useApp } from '@/components/MinimalAppProvider';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const MobileHeader = () => {
-  const { user, logout } = useSimpleApp();
+  const { user, logout } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);

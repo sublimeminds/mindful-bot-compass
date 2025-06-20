@@ -11,8 +11,12 @@ const LandingPage = () => {
     <div className="min-h-screen">
       <Header />
       <HeroSection />
-      <FeaturesSection />
-      <PricingSection />
+      <div id="features">
+        <FeaturesSection />
+      </div>
+      <div id="pricing">
+        <PricingSection />
+      </div>
       <Footer />
     </div>
   );
