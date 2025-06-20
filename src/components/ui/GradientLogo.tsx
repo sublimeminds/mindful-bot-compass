@@ -20,12 +20,12 @@ const GradientLogo = ({
     hero: 'w-64 h-64'
   };
 
-  console.log('GradientLogo - rendering with new logo, size:', size);
+  console.log('GradientLogo - rendering with wellness brand logo, size:', size);
 
   return (
     <div className={`${sizeClasses[size]} ${className} relative flex items-center justify-center`}>
       <img 
-        src="/lovable-uploads/35af5cd7-b64e-4516-9e7e-7da867faee3e.png"
+        src="/lovable-uploads/24c86eb9-4983-4fdc-a4b4-94e0db57ebd2.png"
         alt="TherapySync - AI Therapy Companion"
         className="w-full h-full object-contain animate-swirl-breathe drop-shadow-lg"
       />
