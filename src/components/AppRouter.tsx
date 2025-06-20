@@ -18,6 +18,20 @@ import NotFound from '@/pages/NotFound';
 const AppRouter = () => {
   console.log('AppRouter rendering');
   
+  // Ensure React is available before setting up routing
+  if (!React || !React.useState || !React.useContext) {
+    return (
+      <div style={{ 
+        padding: '20px', 
+        textAlign: 'center', 
+        backgroundColor: '#fee2e2',
+        color: '#991b1b' 
+      }}>
+        React context not available. Please refresh the page.
+      </div>
+    );
+  }
+  
   return (
     <AppProvider>
       <Routes>

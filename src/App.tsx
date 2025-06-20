@@ -20,6 +20,20 @@ const queryClient = new QueryClient({
 function App() {
   console.log('App component rendering');
   
+  // Double-check React is available before rendering
+  if (!React || !React.useState || !React.useRef) {
+    return (
+      <div style={{ 
+        padding: '20px', 
+        textAlign: 'center', 
+        backgroundColor: '#fee2e2',
+        color: '#991b1b' 
+      }}>
+        React is not properly initialized. Please refresh the page.
+      </div>
+    );
+  }
+  
   return (
     <QueryClientProvider client={queryClient}>
       <Router>

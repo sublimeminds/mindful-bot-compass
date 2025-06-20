@@ -15,6 +15,12 @@ interface AuthModalProps {
 }
 
 const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
+  // Ensure React hooks are available before rendering Dialog
+  if (!React || !React.useRef || !React.useState) {
+    console.warn('AuthModal: React hooks not available, not rendering dialog');
+    return null;
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
