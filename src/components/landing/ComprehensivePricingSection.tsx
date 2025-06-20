@@ -169,7 +169,7 @@ const ComprehensivePricingSection = () => {
                 key={plan.id} 
                 className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl ${
                   plan.popular 
-                    ? 'ring-4 ring-harmony-400 shadow-harmony-500/30 scale-110 bg-gradient-to-br from-harmony-50 to-balance-50 border-harmony-200' 
+                    ? 'ring-4 ring-harmony-400 shadow-harmony-500/30 scale-105 bg-gradient-to-br from-harmony-50 to-balance-50 border-harmony-200' 
                     : 'hover:shadow-therapy-500/10 bg-white/80 backdrop-blur-sm border-slate-200'
                 }`}
               >
@@ -185,17 +185,17 @@ const ComprehensivePricingSection = () => {
                   </div>
                 )}
                 
-                <CardHeader className={`text-center ${plan.popular ? 'pt-16 pb-8' : 'pb-8'}`}>
-                  <div className={`w-20 h-20 bg-gradient-to-r ${plan.gradient} rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl ${plan.popular ? 'animate-pulse' : ''}`}>
-                    <IconComponent className={`${plan.popular ? 'h-10 w-10' : 'h-8 w-8'} text-white`} />
+                <CardHeader className={`text-center ${plan.popular ? 'pt-16 pb-6' : 'pb-8'}`}>
+                  <div className={`w-16 h-16 bg-gradient-to-r ${plan.gradient} rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl ${plan.popular ? 'animate-pulse' : ''}`}>
+                    <IconComponent className={`${plan.popular ? 'h-8 w-8' : 'h-6 w-6'} text-white`} />
                   </div>
                   
-                  <CardTitle className={`${plan.popular ? 'text-3xl' : 'text-2xl'} font-bold text-slate-900 mb-2`}>
+                  <CardTitle className={`${plan.popular ? 'text-2xl' : 'text-2xl'} font-bold text-slate-900 mb-2`}>
                     {plan.name}
                   </CardTitle>
                   
                   <div className="mb-4">
-                    <span className={`${plan.popular ? 'text-5xl' : 'text-4xl'} font-bold text-slate-800`}>{getPrice(plan)}</span>
+                    <span className={`${plan.popular ? 'text-4xl' : 'text-4xl'} font-bold text-slate-800`}>{getPrice(plan)}</span>
                     <span className="text-slate-600">
                       {plan.monthlyPrice === 0 ? '' : `/${billingCycle === 'monthly' ? 'month' : 'month'}`}
                     </span>
@@ -206,7 +206,7 @@ const ComprehensivePricingSection = () => {
                     )}
                   </div>
                   
-                  <p className={`text-slate-600 ${plan.popular ? 'text-base font-medium' : 'text-sm'}`}>
+                  <p className={`text-slate-600 ${plan.popular ? 'text-sm' : 'text-sm'}`}>
                     {plan.description}
                   </p>
                 </CardHeader>
@@ -215,8 +215,8 @@ const ComprehensivePricingSection = () => {
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-start gap-3">
-                        <Check className={`${plan.popular ? 'h-6 w-6 text-harmony-500' : 'h-5 w-5 text-therapy-500'} flex-shrink-0 mt-0.5`} />
-                        <span className={`text-slate-700 ${plan.popular ? 'text-base font-medium' : 'text-sm'}`}>{feature}</span>
+                        <Check className={`${plan.popular ? 'h-5 w-5 text-harmony-500' : 'h-5 w-5 text-therapy-500'} flex-shrink-0 mt-0.5`} />
+                        <span className={`text-slate-700 ${plan.popular ? 'text-sm' : 'text-sm'}`}>{feature}</span>
                       </li>
                     ))}
                     {plan.limitations.map((limitation, limitIndex) => (
@@ -233,9 +233,9 @@ const ComprehensivePricingSection = () => {
                     className={`w-full font-semibold text-base py-3 transition-all duration-300 ${
                       plan.popular 
                         ? 'bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-500 hover:from-harmony-600 hover:via-balance-600 hover:to-flow-600 text-white shadow-lg hover:shadow-xl hover:scale-105 ring-2 ring-harmony-300' 
-                        : plan.id === 'free'
-                        ? 'bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white shadow-md hover:shadow-lg hover:scale-105'
-                        : 'bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white shadow-md hover:shadow-lg hover:scale-105'
+                        : plan.id === 'premium'
+                        ? 'bg-gradient-to-r from-therapy-500 via-harmony-500 to-balance-500 hover:from-therapy-600 hover:via-harmony-600 hover:to-balance-600 text-white shadow-lg hover:shadow-lg hover:scale-105 border border-therapy-300'
+                        : 'bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white shadow-md hover:shadow-lg hover:scale-105'
                     }`}
                     onClick={() => handleGetStarted(plan.name)}
                   >
@@ -249,7 +249,7 @@ const ComprehensivePricingSection = () => {
 
         <div className="text-center mt-12">
           <p className="text-slate-600 mb-4">
-            ✨ Professional plan includes a 7-day free trial. No credit card required for Free plan.
+            No credit card required for Free plan. Professional plan includes 7-day free trial.
           </p>
           <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-500">
             <span>🔒 HIPAA Compliant</span>

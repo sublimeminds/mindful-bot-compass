@@ -7,12 +7,12 @@ const Footer = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="bg-therapy-900 text-white">
+    <footer className="bg-gradient-to-br from-therapy-700 via-harmony-700 to-balance-700 text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">TherapySync</h3>
-            <p className="text-therapy-200 text-sm">
+            <p className="text-white/80 text-sm">
               AI-powered mental health platform designed to support your wellness journey.
             </p>
           </div>
@@ -22,7 +22,7 @@ const Footer = () => {
             <div className="space-y-2">
               <Button 
                 variant="link" 
-                className="p-0 h-auto text-therapy-200 hover:text-white justify-start"
+                className="p-0 h-auto text-white/70 hover:text-white justify-start"
                 onClick={() => {
                   navigate('/');
                   setTimeout(() => {
@@ -34,7 +34,7 @@ const Footer = () => {
               </Button>
               <Button 
                 variant="link" 
-                className="p-0 h-auto text-therapy-200 hover:text-white justify-start"
+                className="p-0 h-auto text-white/70 hover:text-white justify-start"
                 onClick={() => {
                   navigate('/');
                   setTimeout(() => {
@@ -52,7 +52,7 @@ const Footer = () => {
             <div className="space-y-2">
               <Button 
                 variant="link" 
-                className="p-0 h-auto text-therapy-200 hover:text-white justify-start"
+                className="p-0 h-auto text-white/70 hover:text-white justify-start"
                 onClick={() => navigate('/help')}
               >
                 Help Center
@@ -65,13 +65,13 @@ const Footer = () => {
             <div className="space-y-2">
               <Button 
                 variant="link" 
-                className="p-0 h-auto text-therapy-200 hover:text-white justify-start"
+                className="p-0 h-auto text-white/70 hover:text-white justify-start"
               >
                 Privacy Policy
               </Button>
               <Button 
                 variant="link" 
-                className="p-0 h-auto text-therapy-200 hover:text-white justify-start"
+                className="p-0 h-auto text-white/70 hover:text-white justify-start"
               >
                 Terms of Service
               </Button>
@@ -79,8 +79,8 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="border-t border-therapy-800 mt-8 pt-8 text-center">
-          <p className="text-therapy-300 text-sm">
+        <div className="border-t border-white/20 mt-8 pt-8 text-center">
+          <p className="text-white/60 text-sm">
             © 2024 TherapySync. All rights reserved.
           </p>
         </div>

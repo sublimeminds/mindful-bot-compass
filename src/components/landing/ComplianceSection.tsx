@@ -61,19 +61,19 @@ const certifications = [
 
 const ComplianceSection = () => {
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-900 via-therapy-900 to-calm-900 text-white">
+    <section className="py-20 bg-gradient-to-br from-therapy-600 via-harmony-600 to-balance-600 text-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-6">
             <GradientLogo 
               size="xl"
-              className="drop-shadow-sm filter brightness-0 invert"
+              className="drop-shadow-sm"
             />
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
             Enterprise-Grade Security & Compliance
           </h2>
-          <p className="text-lg text-slate-300 max-w-3xl mx-auto mb-8">
+          <p className="text-lg text-white/90 max-w-3xl mx-auto mb-8">
             Your privacy and security are our top priorities. TherapySync meets the highest industry standards 
             for healthcare, data protection, and accessibility compliance.
           </p>
@@ -83,9 +83,9 @@ const ComplianceSection = () => {
             {certifications.map((cert, index) => (
               <Badge 
                 key={index}
-                className="bg-white/10 text-white border-white/20 backdrop-blur-sm px-4 py-2"
+                className="bg-white/20 text-white border-white/30 backdrop-blur-sm px-4 py-2"
               >
-                <CheckCircle className="h-3 w-3 mr-1 text-green-400" />
+                <CheckCircle className="h-3 w-3 mr-1 text-green-300" />
                 {cert.name} Certified
               </Badge>
             ))}
@@ -98,14 +98,14 @@ const ComplianceSection = () => {
             return (
               <Card 
                 key={index}
-                className="bg-white/5 backdrop-blur-sm border-white/10 hover:bg-white/10 transition-all duration-300 group hover:scale-105"
+                className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 group hover:scale-105"
               >
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
-                    <div className="p-3 bg-gradient-to-r from-therapy-500 via-harmony-500 to-calm-500 rounded-lg group-hover:animate-swirl-breathe">
+                    <div className="p-3 bg-gradient-to-r from-therapy-400 via-harmony-400 to-balance-400 rounded-lg group-hover:animate-swirl-breathe">
                       <IconComponent className="h-6 w-6 text-white" />
                     </div>
-                    <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+                    <Badge variant="secondary" className="bg-white/30 text-white border-white/40">
                       {standard.badge}
                     </Badge>
                   </div>
@@ -114,15 +114,15 @@ const ComplianceSection = () => {
                     {standard.title}
                   </h3>
                   
-                  <p className="text-slate-300 text-sm mb-4 leading-relaxed">
+                  <p className="text-white/80 text-sm mb-4 leading-relaxed">
                     {standard.description}
                   </p>
                   
                   <ul className="space-y-2">
                     {standard.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center space-x-2">
-                        <CheckCircle className="h-3 w-3 text-green-400 flex-shrink-0" />
-                        <span className="text-slate-400 text-xs">{feature}</span>
+                        <CheckCircle className="h-3 w-3 text-green-300 flex-shrink-0" />
+                        <span className="text-white/70 text-xs">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -133,41 +133,41 @@ const ComplianceSection = () => {
         </div>
 
         {/* Additional Trust Indicators */}
-        <div className="mt-16 bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
+        <div className="mt-16 bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
           <div className="text-center mb-8">
             <h3 className="text-2xl font-bold mb-4">Your Data, Your Control</h3>
-            <p className="text-slate-300 max-w-2xl mx-auto">
+            <p className="text-white/80 max-w-2xl mx-auto">
               We believe in complete transparency about how your data is handled, stored, and protected.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-2xl font-bold text-therapy-400 mb-2">256-bit</div>
-              <div className="text-sm text-slate-400">Encryption Standard</div>
+              <div className="text-2xl font-bold text-therapy-200 mb-2">256-bit</div>
+              <div className="text-sm text-white/70">Encryption Standard</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-therapy-400 mb-2">99.9%</div>
-              <div className="text-sm text-slate-400">Uptime Guarantee</div>
+              <div className="text-2xl font-bold text-therapy-200 mb-2">99.9%</div>
+              <div className="text-sm text-white/70">Uptime Guarantee</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-therapy-400 mb-2">24/7</div>
-              <div className="text-sm text-slate-400">Security Monitoring</div>
+              <div className="text-2xl font-bold text-therapy-200 mb-2">24/7</div>
+              <div className="text-sm text-white/70">Security Monitoring</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-therapy-400 mb-2">Zero</div>
-              <div className="text-sm text-slate-400">Data Breaches</div>
+              <div className="text-2xl font-bold text-therapy-200 mb-2">Zero</div>
+              <div className="text-sm text-white/70">Data Breaches</div>
             </div>
           </div>
         </div>
 
         {/* Contact for Compliance */}
         <div className="text-center mt-12">
-          <p className="text-slate-400 text-sm">
+          <p className="text-white/70 text-sm">
             Need compliance documentation or have security questions? 
             <br />
             Contact our compliance team at{' '}
-            <span className="text-therapy-400 font-medium">compliance@therapysync.ai</span>
+            <span className="text-therapy-200 font-medium">compliance@therapysync.ai</span>
           </p>
         </div>
       </div>
