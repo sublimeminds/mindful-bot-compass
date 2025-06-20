@@ -1,21 +1,37 @@
 
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
 
-// Add simple spinner animation to CSS
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+// Ensure React is available globally
+if (typeof window !== 'undefined') {
+  (window as any).React = React;
+}
+
+// Simple error boundary for the root
+const SimpleRootErrorBoundary = ({ children }: { children: React.ReactNode }) => {
+  try {
+    return <>{children}</>;
+  } catch (error) {
+    console.error('Root error:', error);
+    return <div style={{ padding: '20px', textAlign: 'center', color: 'red' }}>
+      Application failed to load. Please refresh the page.
+    </div>;
   }
-`;
-document.head.appendChild(style);
+};
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Root element not found');
+}
+
+const root = ReactDOM.createRoot(rootElement);
+
+root.render(
+  <React.StrictMode>
+    <SimpleRootErrorBoundary>
+      <App />
+    </SimpleRootErrorBoundary>
+  </React.StrictMode>
+);

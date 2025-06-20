@@ -17,17 +17,31 @@ const queryClient = new QueryClient({
   },
 });
 
-// Ultra-simple class component for maximum reliability with rich UI
+// Ultra-simple class component for maximum reliability
 class App extends Component {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('App component error:', error, errorInfo);
+  }
+
   render() {
-    return (
-      <MinimalErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <Router>
-            <MainAppContent />
-          </Router>
-        </QueryClientProvider>
-      </MinimalErrorBoundary>
+    // Ensure React is available
+    if (typeof React === 'undefined' || !React.createElement) {
+      return React.createElement('div', {
+        style: {
+          padding: '20px',
+          textAlign: 'center',
+          color: 'red',
+          fontFamily: 'Arial, sans-serif'
+        }
+      }, 'React is not properly initialized. Please reload the page.');
+    }
+
+    return React.createElement(MinimalErrorBoundary, null,
+      React.createElement(QueryClientProvider, { client: queryClient },
+        React.createElement(Router, null,
+          React.createElement(MainAppContent)
+        )
+      )
     );
   }
 }

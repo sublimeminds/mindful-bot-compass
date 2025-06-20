@@ -2,7 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Brain, Heart, Target, CheckCircle, Clock } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { 
+  Brain, 
+  Heart, 
+  TrendingUp, 
+  AlertTriangle, 
+  Sparkles, 
+  Shield, 
+  Globe,
+  CheckCircle,
+  Clock
+} from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface EnhancedSmartAnalysisStepProps {
@@ -28,6 +41,7 @@ const EnhancedSmartAnalysisStep = ({ onNext, onBack, onboardingData }: EnhancedS
   const [analysis, setAnalysis] = useState<EnhancedAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  const toast = useToast();
 
   useEffect(() => {
     if (user) {

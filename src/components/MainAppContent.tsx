@@ -9,12 +9,18 @@ import { SimpleAppProvider } from '@/components/SimpleAppProvider';
 import SimpleOfflineIndicator from '@/components/fallback/SimpleOfflineIndicator';
 
 const MainAppContent: React.FC = () => {
+  // Safety check for React availability
+  if (typeof React === 'undefined' || !React.createElement) {
+    return React.createElement('div', {
+      style: { padding: '20px', textAlign: 'center', color: 'red' }
+    }, 'React initialization error');
+  }
+
   return (
     <MinimalErrorBoundary>
       <SimpleAppProvider>
         <MinimalErrorBoundary>
           <AppRouter />
-          
           <SimpleOfflineIndicator />
           <Toaster />
         </MinimalErrorBoundary>

@@ -4,8 +4,22 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Settings, Heart, Brain, Target, TrendingUp, Calendar, Award, Clock, Activity } from 'lucide-react';
+import { 
+  User, 
+  Calendar, 
+  TrendingUp, 
+  Target, 
+  Award, 
+  Heart, 
+  Brain, 
+  Activity,
+  Globe,
+  Shield,
+  Lightbulb,
+  BarChart3,
+  Settings,
+  Download
+} from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';

@@ -1,5 +1,5 @@
 
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -17,10 +17,22 @@ export interface AppContextType {
 export const SimpleAppContext = createContext<AppContextType | undefined>(undefined);
 
 interface SimpleAppProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const SimpleAppProvider: React.FC<SimpleAppProviderProps> = ({ children }) => {
+  // Ensure React is available before using hooks
+  if (typeof React === 'undefined' || !React.useState) {
+    console.error('React hooks are not available in SimpleAppProvider');
+    return React.createElement('div', { 
+      style: { 
+        padding: '20px', 
+        textAlign: 'center', 
+        color: 'red' 
+      } 
+    }, 'React initialization error. Please reload the page.');
+  }
+
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -106,9 +118,5 @@ export const SimpleAppProvider: React.FC<SimpleAppProviderProps> = ({ children }
     updateUser,
   };
 
-  return (
-    <SimpleAppContext.Provider value={value}>
-      {children}
-    </SimpleAppContext.Provider>
-  );
+  return React.createElement(SimpleAppContext.Provider, { value }, children);
 };
