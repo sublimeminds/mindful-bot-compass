@@ -63,14 +63,14 @@ export const subscriptionService = {
 
       if (error) throw error;
 
-      // Map database fields to interface properties
+      // Map database fields to interface properties with proper type conversion
       return (data || []).map(plan => ({
         id: plan.id,
         name: plan.name,
         priceMonthly: plan.price_monthly,
         priceYearly: plan.price_yearly,
-        features: plan.features,
-        limits: plan.limits,
+        features: (plan.features && typeof plan.features === 'object') ? plan.features as Record<string, any> : {},
+        limits: (plan.limits && typeof plan.limits === 'object') ? plan.limits as Record<string, any> : {},
         isActive: plan.is_active
       }));
     } catch (error) {
