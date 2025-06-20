@@ -4,9 +4,10 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import AppRouter from '@/components/AppRouter';
+import SafeComponent from '@/components/SafeComponent';
+import { reactChecker } from '@/utils/reactReadinessChecker';
 import './App.css';
 
-// Create QueryClient once
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -20,20 +21,10 @@ const queryClient = new QueryClient({
 function App() {
   console.log('App component rendering');
   
-  // Comprehensive React validation before any router initialization
-  const isReactFullyReady = React && 
-    typeof React === 'object' && 
-    React.useState && 
-    React.useRef &&
-    React.useContext &&
-    React.useEffect &&
-    React.useMemo &&
-    React.useCallback &&
-    React.createElement &&
-    React.Fragment;
+  // Check React readiness using our centralized checker
+  const isReactReady = reactChecker.checkReactReadiness();
 
-  if (!isReactFullyReady) {
-    console.error('React is not fully initialized, showing fallback');
+  if (!isReactReady) {
     return (
       <div style={{ 
         padding: '20px', 
@@ -47,7 +38,7 @@ function App() {
         flexDirection: 'column'
       }}>
         <h2>Application Loading</h2>
-        <p>React is initializing. Please wait...</p>
+        <p>TherapySync is initializing. Please wait...</p>
         <div style={{
           width: '40px',
           height: '40px',
@@ -62,14 +53,26 @@ function App() {
   }
   
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <div className="min-h-screen">
-          <AppRouter />
-          <Toaster />
+    <SafeComponent 
+      componentName="App"
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
+            <p className="text-therapy-600 font-medium">Loading TherapySync...</p>
+          </div>
         </div>
-      </Router>
-    </QueryClientProvider>
+      }
+    >
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <div className="min-h-screen">
+            <AppRouter />
+            <Toaster />
+          </div>
+        </Router>
+      </QueryClientProvider>
+    </SafeComponent>
   );
 }
 
