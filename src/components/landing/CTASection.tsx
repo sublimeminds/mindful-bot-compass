@@ -9,7 +9,7 @@ const CTASection = () => {
   const navigate = useNavigate();
 
   const handleGetStarted = () => {
-    navigate('/auth');
+    navigate('/onboarding');
   };
 
   return (

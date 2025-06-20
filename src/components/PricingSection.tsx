@@ -15,7 +15,7 @@ const PricingSection = () => {
     if (user) {
       navigate('/dashboard');
     } else {
-      navigate('/auth');
+      navigate('/onboarding');
     }
   };
 
