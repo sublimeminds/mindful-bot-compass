@@ -27,6 +27,20 @@ interface FormErrors {
 }
 
 const EnhancedAuthForm = () => {
+  // Early return if React hooks aren't available
+  if (!React || !React.useState || !React.useEffect) {
+    console.error('EnhancedAuthForm: React hooks not available');
+    return (
+      <Card className="w-full max-w-md mx-auto shadow-xl border-harmony-200">
+        <CardContent className="p-6">
+          <div className="text-center text-red-600">
+            Application is loading, please wait...
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

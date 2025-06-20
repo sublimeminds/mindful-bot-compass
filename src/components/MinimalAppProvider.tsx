@@ -47,6 +47,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     );
   }
 
+  console.log('AppProvider: Initializing with React version:', React.version);
+
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -103,6 +105,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`
+        }
       });
       if (error) throw error;
     } catch (error) {
