@@ -168,26 +168,6 @@ function toast({ ...props }: Toast) {
 }
 
 function useToast() {
-  // Enhanced safety check for React hooks
-  if (typeof useState === 'undefined' || typeof useEffect === 'undefined') {
-    console.warn('useToast: React hooks not available');
-    return {
-      toasts: [],
-      toast: () => ({ id: '', dismiss: () => {}, update: () => {} }),
-      dismiss: () => {},
-    };
-  }
-
-  // Additional safety check for React itself
-  if (typeof React === 'undefined' || !React.useState) {
-    console.warn('useToast: React not properly initialized');
-    return {
-      toasts: [],
-      toast: () => ({ id: '', dismiss: () => {}, update: () => {} }),
-      dismiss: () => {},
-    };
-  }
-
   try {
     const [state, setState] = useState<State>(memoryState)
 
