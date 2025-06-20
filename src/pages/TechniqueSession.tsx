@@ -8,12 +8,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import SessionTimer from '@/components/session/SessionTimer';
-import { ArrowLeft, Play, Pause, SkipForward, CheckCircle } from 'lucide-react';
+import VoiceSettings from '@/components/voice/VoiceSettings';
+import { ArrowLeft, Play, Pause, SkipForward, CheckCircle, Volume2, VolumeX } from 'lucide-react';
+import { voiceService } from '@/services/voiceService';
+import { useToast } from '@/hooks/use-toast';
 
 const TechniqueSession = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const { toast } = useToast();
   
   const [technique, setTechnique] = useState<TherapyTechnique | null>(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -24,6 +28,8 @@ const TechniqueSession = () => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [moodBefore, setMoodBefore] = useState<number | null>(null);
   const [moodAfter, setMoodAfter] = useState<number | null>(null);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [hasSpokenInstruction, setHasSpokenInstruction] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -59,26 +65,60 @@ const TechniqueSession = () => {
     return () => clearInterval(interval);
   }, [isActive, stepTimeRemaining]);
 
+  // Voice instruction effect
+  useEffect(() => {
+    if (isActive && currentStep && voiceEnabled && !hasSpokenInstruction) {
+      speakInstruction(currentStep.instruction);
+      setHasSpokenInstruction(true);
+    }
+  }, [isActive, currentStep, voiceEnabled, hasSpokenInstruction]);
+
   const currentStep = technique?.steps[currentStepIndex];
   const progress = technique ? ((currentStepIndex + 1) / technique.steps.length) * 100 : 0;
+
+  const speakInstruction = async (text: string) => {
+    if (!voiceEnabled) return;
+    
+    try {
+      await voiceService.playText(text, {
+        voiceId: localStorage.getItem('therapy_voice_id') || "9BWtsMINqrJLrRacOk9x",
+        stability: 0.75,
+        similarityBoost: 0.85
+      });
+    } catch (error) {
+      console.error('Error playing voice instruction:', error);
+    }
+  };
 
   const handleStart = () => {
     if (!technique) return;
     
     setIsActive(true);
     setStepStartTime(new Date());
+    setHasSpokenInstruction(false);
     
     if (currentStep?.duration) {
       setStepTimeRemaining(currentStep.duration);
+    } else {
+      // For steps without duration, auto-advance after 3 seconds
+      setTimeout(() => {
+        if (!currentStep?.duration) {
+          handleNextStep();
+        }
+      }, 3000);
     }
   };
 
   const handlePause = () => {
     setIsActive(false);
+    voiceService.stop();
   };
 
   const handleNextStep = () => {
     if (!technique) return;
+
+    voiceService.stop();
+    setHasSpokenInstruction(false);
 
     if (currentStepIndex < technique.steps.length - 1) {
       const nextIndex = currentStepIndex + 1;
@@ -90,7 +130,12 @@ const TechniqueSession = () => {
         setStepStartTime(new Date());
       } else {
         setStepTimeRemaining(0);
-        setIsActive(false);
+        // Auto-advance steps without duration after 3 seconds
+        setTimeout(() => {
+          if (!nextStep?.duration && isActive) {
+            handleNextStep();
+          }
+        }, 3000);
       }
     } else {
       handleComplete();
@@ -100,10 +145,14 @@ const TechniqueSession = () => {
   const handleComplete = () => {
     setIsCompleted(true);
     setIsActive(false);
+    voiceService.stop();
+    
+    if (voiceEnabled) {
+      speakInstruction("Great job! You've completed the technique. How are you feeling now?");
+    }
   };
 
   const handleFinishSession = () => {
-    // Here you would typically save the session data
     console.log('Session completed:', {
       techniqueId: technique?.id,
       startTime: sessionStartTime,
@@ -111,6 +160,11 @@ const TechniqueSession = () => {
       moodBefore,
       moodAfter,
       completed: true
+    });
+    
+    toast({
+      title: "Session Complete",
+      description: "Your technique session has been saved.",
     });
     
     navigate('/techniques');
@@ -255,6 +309,12 @@ const TechniqueSession = () => {
                           )}
                         </div>
                       )}
+
+                      {!currentStep.duration && isActive && (
+                        <div className="text-center text-sm text-muted-foreground">
+                          Take your time, then continue to the next step
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex justify-center space-x-4">
@@ -277,10 +337,20 @@ const TechniqueSession = () => {
                       <Button
                         onClick={handleNextStep}
                         variant="outline"
-                        disabled={currentStep?.duration ? stepTimeRemaining > 0 : false}
+                        disabled={currentStep?.duration ? stepTimeRemaining > 0 && isActive : false}
                       >
                         <SkipForward className="h-4 w-4 mr-2" />
                         {currentStepIndex === technique.steps.length - 1 ? 'Complete' : 'Next Step'}
+                      </Button>
+
+                      <Button
+                        onClick={() => voiceEnabled && currentStep ? speakInstruction(currentStep.instruction) : null}
+                        variant="outline"
+                        disabled={!voiceEnabled}
+                        className="flex items-center space-x-2"
+                      >
+                        {voiceEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+                        <span>Repeat</span>
                       </Button>
                     </div>
                   </div>
@@ -291,6 +361,12 @@ const TechniqueSession = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Voice Settings */}
+            <VoiceSettings 
+              isEnabled={voiceEnabled}
+              onToggle={setVoiceEnabled}
+            />
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Technique Info</CardTitle>
