@@ -13,6 +13,8 @@ import SmartScheduling from '@/pages/SmartScheduling';
 import Help from '@/pages/Help';
 import Plans from '@/pages/Plans';
 import TherapySyncAI from '@/pages/TherapySyncAI';
+import FeaturesOverview from '@/pages/FeaturesOverview';
+import EnhancedMonitoringPage from '@/pages/EnhancedMonitoringPage';
 import NotFound from '@/pages/NotFound';
 import HelpArticles from '@/pages/HelpArticles';
 import HelpArticleDetail from '@/pages/HelpArticleDetail';
@@ -34,6 +36,8 @@ const AppRouter = () => {
       <Route path="/help/articles/:id" element={<HelpArticleDetail />} />
       <Route path="/plans" element={<Plans />} />
       <Route path="/therapysync-ai" element={<TherapySyncAI />} />
+      <Route path="/features-overview" element={<FeaturesOverview />} />
+      <Route path="/enhanced-monitoring" element={<EnhancedMonitoringPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

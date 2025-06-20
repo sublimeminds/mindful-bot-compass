@@ -1,128 +1,147 @@
 
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
 import { Button } from '@/components/ui/button';
-import { 
-  MessageCircle, 
-  Target, 
-  BarChart3, 
-  Heart, 
-  BookOpen, 
-  History,
-  Crown,
-  Sparkles,
-  HelpCircle,
-  Users,
-  Star,
-  Info,
-  Shield
-} from 'lucide-react';
+import { Brain, Calendar, Shield, Users, BookOpen, BarChart3, Settings, Star, Zap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/components/SimpleAuthProvider';
 
 const UnifiedNavigation = () => {
-  const { user } = useAuth();
-  const isAuthenticated = !!user;
-  const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const scrollToSection = (sectionId: string) => {
-    if (sectionId.startsWith('#')) {
-      if (location.pathname !== '/') {
-        navigate('/', { state: { scrollTo: sectionId } });
-        return;
-      }
-      
-      const elementId = sectionId.substring(1);
-      const element = document.getElementById(elementId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    } else {
-      navigate(sectionId);
-    }
-  };
-
-  const publicNavItems = [
-    { id: '#how-it-works', label: 'How It Works', icon: Info, priority: 1 },
-    { id: '#features', label: 'Features', icon: Sparkles, priority: 1 },
-    { id: '#testimonials', label: 'Reviews', icon: Star, priority: 2 },
-    { id: '#pricing', label: 'Pricing', icon: Crown, priority: 1 },
-    { id: '/help', label: 'Help', icon: HelpCircle, priority: 2 }
-  ];
-
-  const authNavItems = [
-    { id: '/dashboard', label: 'Dashboard', icon: BarChart3, priority: 1 },
-    { id: '/crisis-management', label: 'Crisis', icon: Shield, priority: 1 },
-    { id: '/community', label: 'Community', icon: Users, priority: 1 },
-    { id: '/notebook', label: 'Journal', icon: BookOpen, priority: 2 },
-    { id: '/smart-scheduling', label: 'Schedule', icon: Target, priority: 2 },
-    { id: '/help', label: 'Help', icon: HelpCircle, priority: 3 }
-  ];
-
-  const navItems = isAuthenticated ? authNavItems : publicNavItems;
-
-  // Handle scroll on page load if coming from navigation
-  React.useEffect(() => {
-    const state = location.state as { scrollTo?: string };
-    if (state?.scrollTo && state.scrollTo.startsWith('#')) {
-      setTimeout(() => {
-        const elementId = state.scrollTo.substring(1);
-        const element = document.getElementById(elementId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const navigationItems = [
+    {
+      trigger: 'Features',
+      items: [
+        {
+          title: 'Features Overview',
+          description: 'Comprehensive feature showcase and system capabilities',
+          icon: Star,
+          href: '/features-overview'
+        },
+        {
+          title: 'TherapySync AI',
+          description: 'Advanced AI-powered therapeutic conversations',
+          icon: Brain,
+          href: '/therapysync-ai'
+        },
+        {
+          title: 'Smart Scheduling',
+          description: 'AI-optimized appointment and reminder system',
+          icon: Calendar,
+          href: '/smart-scheduling'
+        },
+        {
+          title: 'Crisis Management',
+          description: 'Comprehensive safety and crisis intervention tools',
+          icon: Shield,
+          href: '/crisis-management'
         }
-      }, 100);
+      ]
+    },
+    {
+      trigger: 'Tools',
+      items: [
+        {
+          title: 'Digital Notebook',
+          description: 'Personal journaling and reflection space',
+          icon: BookOpen,
+          href: '/notebook'
+        },
+        {
+          title: 'Analytics',
+          description: 'Track your progress and insights',
+          icon: BarChart3,
+          href: '/analytics'
+        },
+        {
+          title: 'Community',
+          description: 'Connect with supportive peer groups',
+          icon: Users,
+          href: '/community'
+        }
+      ]
+    },
+    {
+      trigger: 'Support',
+      items: [
+        {
+          title: 'Help Center',
+          description: 'Comprehensive support and documentation',
+          icon: Settings,
+          href: '/help'
+        },
+        {
+          title: 'Plans & Pricing',
+          description: 'Choose the right plan for your needs',
+          icon: Zap,
+          href: '/plans'
+        }
+      ]
     }
-  }, [location]);
+  ];
+
+  if (!user) {
+    return (
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <Button variant="ghost" onClick={() => navigate('/features-overview')}>
+              Features
+            </Button>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Button variant="ghost" onClick={() => navigate('/therapysync-ai')}>
+              AI Therapy
+            </Button>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Button variant="ghost" onClick={() => navigate('/plans')}>
+              Pricing
+            </Button>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Button variant="ghost" onClick={() => navigate('/help')}>
+              Help
+            </Button>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    );
+  }
 
   return (
-    <div className="flex items-center justify-center w-full">
-      <div className="flex items-center space-x-1 lg:space-x-4 overflow-x-auto scrollbar-hide px-2 w-full max-w-5xl">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = item.id.startsWith('#') 
-            ? false 
-            : location.pathname === item.id;
-
-          const getVisibilityClass = () => {
-            if (!isAuthenticated) return 'flex';
-            
-            switch (item.priority) {
-              case 1: return 'flex';
-              case 2: return 'hidden sm:flex';
-              case 3: return 'hidden lg:flex';
-              default: return 'flex';
-            }
-          };
-
-          return (
-            <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className={`${getVisibilityClass()} items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-muted/50 whitespace-nowrap flex-shrink-0 min-w-0 ${
-                isActive 
-                  ? 'text-harmony-600 bg-harmony-50' 
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Icon className="h-4 w-4 flex-shrink-0" />
-              <span className="text-sm truncate">{item.label}</span>
-            </button>
-          );
-        })}
-
-        {isAuthenticated && (
-          <Button
-            onClick={() => navigate('/plans')}
-            size="sm"
-            className="bg-gradient-to-r from-harmony-500 to-flow-600 hover:from-harmony-600 hover:to-flow-700 text-white px-4 py-2 text-sm whitespace-nowrap flex-shrink-0"
-          >
-            <Crown className="h-4 w-4 mr-2" />
-            Upgrade
-          </Button>
-        )}
-      </div>
-    </div>
+    <NavigationMenu>
+      <NavigationMenuList className="space-x-2">
+        {navigationItems.map((section, index) => (
+          <NavigationMenuItem key={index}>
+            <NavigationMenuTrigger className="text-therapy-700 hover:text-therapy-900">
+              {section.trigger}
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <div className="grid gap-3 p-6 w-96">
+                {section.items.map((item, itemIndex) => (
+                  <NavigationMenuLink key={itemIndex} asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex items-start space-x-3 p-3 h-auto justify-start"
+                      onClick={() => navigate(item.href)}
+                    >
+                      <item.icon className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                      <div className="text-left">
+                        <div className="font-medium text-therapy-900 mb-1">{item.title}</div>
+                        <div className="text-sm text-therapy-600">{item.description}</div>
+                      </div>
+                    </Button>
+                  </NavigationMenuLink>
+                ))}
+              </div>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        ))}
+      </NavigationMenuList>
+    </NavigationMenu>
   );
 };
 
