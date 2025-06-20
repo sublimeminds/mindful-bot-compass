@@ -14,37 +14,27 @@ import SmartScheduling from '@/pages/SmartScheduling';
 import Help from '@/pages/Help';
 import Plans from '@/pages/Plans';
 import NotFound from '@/pages/NotFound';
-import SafeComponent from '@/components/SafeComponent';
 
 const AppRouter = () => {
   console.log('AppRouter rendering');
   
   return (
-    <SafeComponent 
-      componentName="AppRouter"
-      fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          <p>Loading application routes...</p>
-        </div>
-      }
-    >
-      <AppProvider>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/crisis-management" element={<CrisisManagement />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/notebook" element={<NotebookPage />} />
-          <Route path="/smart-scheduling" element={<SmartScheduling />} />
-          <Route path="/help" element={<Help />} />
-          <Route path="/plans" element={<Plans />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AppProvider>
-    </SafeComponent>
+    <AppProvider>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/crisis-management" element={<CrisisManagement />} />
+        <Route path="/community" element={<Community />} />
+        <Route path="/notebook" element={<NotebookPage />} />
+        <Route path="/smart-scheduling" element={<SmartScheduling />} />
+        <Route path="/help" element={<Help />} />
+        <Route path="/plans" element={<Plans />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AppProvider>
   );
 };
 

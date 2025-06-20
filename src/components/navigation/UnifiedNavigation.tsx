@@ -18,7 +18,6 @@ import {
   Info,
   Shield
 } from 'lucide-react';
-import SafeComponent from '@/components/SafeComponent';
 
 const UnifiedNavigation = () => {
   const { user } = useSafeAuth();
@@ -77,62 +76,53 @@ const UnifiedNavigation = () => {
   }, [location]);
 
   return (
-    <SafeComponent 
-      componentName="UnifiedNavigation"
-      fallback={
-        <div className="flex items-center justify-center w-full">
-          <span className="text-muted-foreground text-sm">Loading navigation...</span>
-        </div>
-      }
-    >
-      <div className="flex items-center justify-center w-full">
-        <div className="flex items-center space-x-1 lg:space-x-4 overflow-x-auto scrollbar-hide px-2 w-full max-w-5xl">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = item.id.startsWith('#') 
-              ? false 
-              : location.pathname === item.id;
+    <div className="flex items-center justify-center w-full">
+      <div className="flex items-center space-x-1 lg:space-x-4 overflow-x-auto scrollbar-hide px-2 w-full max-w-5xl">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = item.id.startsWith('#') 
+            ? false 
+            : location.pathname === item.id;
 
-            const getVisibilityClass = () => {
-              if (!isAuthenticated) return 'flex';
-              
-              switch (item.priority) {
-                case 1: return 'flex';
-                case 2: return 'hidden sm:flex';
-                case 3: return 'hidden lg:flex';
-                default: return 'flex';
-              }
-            };
+          const getVisibilityClass = () => {
+            if (!isAuthenticated) return 'flex';
+            
+            switch (item.priority) {
+              case 1: return 'flex';
+              case 2: return 'hidden sm:flex';
+              case 3: return 'hidden lg:flex';
+              default: return 'flex';
+            }
+          };
 
-            return (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`${getVisibilityClass()} items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-muted/50 whitespace-nowrap flex-shrink-0 min-w-0 ${
-                  isActive 
-                    ? 'text-harmony-600 bg-harmony-50' 
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <Icon className="h-4 w-4 flex-shrink-0" />
-                <span className="text-sm truncate">{item.label}</span>
-              </button>
-            );
-          })}
-
-          {isAuthenticated && (
-            <Button
-              onClick={() => navigate('/plans')}
-              size="sm"
-              className="bg-gradient-to-r from-harmony-500 to-flow-600 hover:from-harmony-600 hover:to-flow-700 text-white px-4 py-2 text-sm whitespace-nowrap flex-shrink-0"
+          return (
+            <button
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              className={`${getVisibilityClass()} items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-muted/50 whitespace-nowrap flex-shrink-0 min-w-0 ${
+                isActive 
+                  ? 'text-harmony-600 bg-harmony-50' 
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
             >
-              <Crown className="h-4 w-4 mr-2" />
-              Upgrade
-            </Button>
-          )}
-        </div>
+              <Icon className="h-4 w-4 flex-shrink-0" />
+              <span className="text-sm truncate">{item.label}</span>
+            </button>
+          );
+        })}
+
+        {isAuthenticated && (
+          <Button
+            onClick={() => navigate('/plans')}
+            size="sm"
+            className="bg-gradient-to-r from-harmony-500 to-flow-600 hover:from-harmony-600 hover:to-flow-700 text-white px-4 py-2 text-sm whitespace-nowrap flex-shrink-0"
+          >
+            <Crown className="h-4 w-4 mr-2" />
+            Upgrade
+          </Button>
+        )}
       </div>
-    </SafeComponent>
+    </div>
   );
 };
 
