@@ -1,6 +1,5 @@
 
-import { useAuth } from "@/contexts/AuthContext";
-import { useSession } from "@/contexts/SessionContext";
+import { useSimpleApp } from "@/hooks/useSimpleApp";
 import { useOnboardingData } from "@/hooks/useOnboardingData";
 
 interface SessionRecommendation {

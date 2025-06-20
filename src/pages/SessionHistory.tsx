@@ -1,128 +1,141 @@
 
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Calendar, BarChart3, Filter } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { useSessionHistory } from "@/hooks/useSessionHistory";
-import SessionHistoryList from "@/components/session/SessionHistoryList";
-import SessionFilters from "@/components/session/SessionFilters";
-import Header from "@/components/Header";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { Calendar, Clock, MessageCircle, TrendingUp } from 'lucide-react';
 
 const SessionHistory = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const { sessionSummaries, isLoading } = useSessionHistory();
-  const [activeTab, setActiveTab] = useState('list');
-  const [filters, setFilters] = useState({
-    dateRange: '30d',
-    moodFilter: 'all',
-    sortBy: 'date'
-  });
+  const { user } = useSimpleApp();
+  const [selectedSession, setSelectedSession] = useState<string | null>(null);
+
+  // Mock session history data
+  const sessions = [
+    {
+      id: '1',
+      date: '2024-01-15',
+      duration: 45,
+      type: 'Therapy Chat',
+      mood_before: 4,
+      mood_after: 7,
+      notes: 'Discussed anxiety management techniques',
+      status: 'completed'
+    },
+    {
+      id: '2',
+      date: '2024-01-13',
+      duration: 30,
+      type: 'Therapy Chat',
+      mood_before: 3,
+      mood_after: 6,
+      notes: 'Worked on breathing exercises',
+      status: 'completed'
+    },
+    {
+      id: '3',
+      date: '2024-01-10',
+      duration: 40,
+      type: 'Therapy Chat',
+      mood_before: 5,
+      mood_after: 8,
+      notes: 'Progress review and goal setting',
+      status: 'completed'
+    }
+  ];
 
   if (!user) {
     return (
-      <>
-        <Header />
-        <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center py-8">Please sign in to view your session history.</div>
-          </div>
-        </div>
-      </>
+      <div className="container mx-auto py-10 text-center">
+        <p>Please log in to view your session history.</p>
+      </div>
     );
   }
 
   return (
-    <>
-      <Header />
-      <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-        <div className="max-w-6xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" onClick={() => navigate('/')}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Dashboard
-              </Button>
-              <div>
-                <h1 className="text-2xl font-bold flex items-center">
-                  <Calendar className="h-6 w-6 mr-2" />
-                  Session History
-                </h1>
-                <p className="text-muted-foreground">
-                  Review your therapy sessions and track your progress over time
-                </p>
-              </div>
-            </div>
-          </div>
+    <div className="container mx-auto py-10">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-4">Session History</h1>
+        <p className="text-muted-foreground">
+          Review your past therapy sessions and track your progress.
+        </p>
+      </div>
 
-          {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="list" className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4" />
-                <span>Session List</span>
-              </TabsTrigger>
-              <TabsTrigger value="analytics" className="flex items-center space-x-2">
-                <BarChart3 className="h-4 w-4" />
-                <span>Analytics</span>
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="list" className="space-y-6">
-              {/* Filters */}
-              <Card>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <div className="space-y-4">
+            {sessions.map((session) => (
+              <Card key={session.id} className="cursor-pointer hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Filter className="h-5 w-5 mr-2" />
-                    Filters
-                  </CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">{session.type}</CardTitle>
+                    <Badge variant="secondary">{session.status}</Badge>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <SessionFilters 
-                    dateRange={filters.dateRange}
-                    moodFilter={filters.moodFilter}
-                    sortBy={filters.sortBy}
-                    onDateRangeChange={(dateRange) => setFilters(prev => ({ ...prev, dateRange }))}
-                    onMoodFilterChange={(moodFilter) => setFilters(prev => ({ ...prev, moodFilter }))}
-                    onSortByChange={(sortBy) => setFilters(prev => ({ ...prev, sortBy }))}
-                  />
-                </CardContent>
-              </Card>
-
-              {/* Session List */}
-              <SessionHistoryList
-                sessionSummaries={sessionSummaries}
-                isLoading={isLoading}
-                dateRange={filters.dateRange}
-                moodFilter={filters.moodFilter}
-                sortBy={filters.sortBy}
-              />
-            </TabsContent>
-
-            <TabsContent value="analytics" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Session Analytics</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8">
-                    <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-medium mb-2">Analytics coming soon</h3>
-                    <p className="text-muted-foreground">
-                      Detailed analytics about your session patterns and progress
-                    </p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm">{session.date}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm">{session.duration}m</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm">{session.mood_before} → {session.mood_after}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <MessageCircle className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm">Notes</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{session.notes}</p>
+                  <div className="mt-4">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setSelectedSession(session.id)}
+                    >
+                      View Details
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
-            </TabsContent>
-          </Tabs>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Session Summary</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-medium">Total Sessions</p>
+                  <p className="text-2xl font-bold">{sessions.length}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Average Duration</p>
+                  <p className="text-2xl font-bold">
+                    {Math.round(sessions.reduce((acc, s) => acc + s.duration, 0) / sessions.length)}m
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Average Improvement</p>
+                  <p className="text-2xl font-bold">
+                    +{Math.round(sessions.reduce((acc, s) => acc + (s.mood_after - s.mood_before), 0) / sessions.length)}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -63,7 +63,16 @@ export const subscriptionService = {
 
       if (error) throw error;
 
-      return data || [];
+      // Map database fields to interface properties
+      return (data || []).map(plan => ({
+        id: plan.id,
+        name: plan.name,
+        priceMonthly: plan.price_monthly,
+        priceYearly: plan.price_yearly,
+        features: plan.features,
+        limits: plan.limits,
+        isActive: plan.is_active
+      }));
     } catch (error) {
       console.error('Error fetching subscription plans:', error);
       return [];
