@@ -1,33 +1,49 @@
 
 import React from 'react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/components/SimpleAuthProvider';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import DashboardLayout from '@/components/dashboard/DashboardLayout';
 
 const DashboardPage = () => {
-  const { user } = useSimpleApp();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
+          <p className="text-therapy-600 font-medium">Loading Dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <div className="flex items-center justify-center min-h-[80vh] bg-gradient-to-br from-therapy-50 to-calm-50">
+          <div className="text-center max-w-md mx-auto p-6">
+            <h1 className="text-2xl font-bold text-therapy-900 mb-4">Access Denied</h1>
+            <p className="text-therapy-600 mb-6">Please sign in to access your dashboard.</p>
+            <a 
+              href="/auth" 
+              className="inline-block bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+            >
+              Sign In
+            </a>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="container mx-auto py-10">
-        <h1 className="text-3xl font-bold mb-4">Welcome to your Dashboard</h1>
-        <p className="mb-4">You are logged in as: {user?.email}</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-2">Quick Actions</h3>
-            <p className="text-gray-600">Your dashboard features will be available soon.</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-2">Recent Activity</h3>
-            <p className="text-gray-600">No recent activity to display.</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-2">Settings</h3>
-            <p className="text-gray-600">Manage your account and preferences.</p>
-          </div>
-        </div>
-      </div>
+      <DashboardLayout />
       <Footer />
     </div>
   );

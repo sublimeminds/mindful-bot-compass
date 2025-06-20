@@ -2,10 +2,18 @@
 import React from 'react';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import LandingPage from '@/components/LandingPage';
-import DashboardPage from '@/pages/DashboardPage';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect authenticated users to dashboard
+  React.useEffect(() => {
+    if (user && !loading) {
+      navigate('/dashboard');
+    }
+  }, [user, loading, navigate]);
 
   if (loading) {
     return (
@@ -18,10 +26,7 @@ const Index = () => {
     );
   }
 
-  if (user) {
-    return <DashboardPage />;
-  }
-
+  // Show landing page for unauthenticated users
   return <LandingPage />;
 };
 
