@@ -42,7 +42,19 @@ const RealBillingHistory = () => {
 
       if (error) throw error;
 
-      setBillingHistory(data || []);
+      // Transform the data to match our interface
+      const transformedData = (data || []).map(item => ({
+        id: item.id,
+        amount: item.amount,
+        currency: item.currency,
+        description: item.description || 'Subscription Payment',
+        invoice_url: item.invoice_url,
+        payment_method: item.payment_method,
+        status: item.status,
+        created_at: item.created_at,
+      }));
+
+      setBillingHistory(transformedData);
     } catch (error) {
       console.error('Error loading billing history:', error);
       toast({

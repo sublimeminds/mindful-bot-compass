@@ -354,8 +354,11 @@ export type Database = {
           billing_period_start: string | null
           created_at: string
           currency: string
+          description: string | null
           id: string
+          invoice_url: string | null
           paid_at: string | null
+          payment_method: string | null
           status: string
           stripe_invoice_id: string | null
           subscription_id: string
@@ -367,8 +370,11 @@ export type Database = {
           billing_period_start?: string | null
           created_at?: string
           currency?: string
+          description?: string | null
           id?: string
+          invoice_url?: string | null
           paid_at?: string | null
+          payment_method?: string | null
           status: string
           stripe_invoice_id?: string | null
           subscription_id: string
@@ -380,8 +386,11 @@ export type Database = {
           billing_period_start?: string | null
           created_at?: string
           currency?: string
+          description?: string | null
           id?: string
+          invoice_url?: string | null
           paid_at?: string | null
+          payment_method?: string | null
           status?: string
           stripe_invoice_id?: string | null
           subscription_id?: string
@@ -1229,9 +1238,11 @@ export type Database = {
           milestone_notifications: boolean | null
           notification_frequency: string | null
           progress_updates: boolean | null
+          push_notifications: boolean | null
           quiet_hours_end: string | null
           quiet_hours_start: string | null
           session_reminders: boolean | null
+          sms_notifications: boolean | null
           streak_reminders: boolean | null
           updated_at: string | null
           user_id: string
@@ -1246,9 +1257,11 @@ export type Database = {
           milestone_notifications?: boolean | null
           notification_frequency?: string | null
           progress_updates?: boolean | null
+          push_notifications?: boolean | null
           quiet_hours_end?: string | null
           quiet_hours_start?: string | null
           session_reminders?: boolean | null
+          sms_notifications?: boolean | null
           streak_reminders?: boolean | null
           updated_at?: string | null
           user_id: string
@@ -1263,9 +1276,11 @@ export type Database = {
           milestone_notifications?: boolean | null
           notification_frequency?: string | null
           progress_updates?: boolean | null
+          push_notifications?: boolean | null
           quiet_hours_end?: string | null
           quiet_hours_start?: string | null
           session_reminders?: boolean | null
+          sms_notifications?: boolean | null
           streak_reminders?: boolean | null
           updated_at?: string | null
           user_id?: string
@@ -1509,34 +1524,49 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
+          bio: string | null
           created_at: string
+          date_of_birth: string | null
           email: string
           id: string
           name: string
           onboarding_complete: boolean | null
+          phone: string | null
           plan: string | null
+          privacy_settings: Json | null
           subscription_plan: string | null
           subscription_status: string | null
           updated_at: string
         }
         Insert: {
+          avatar_url?: string | null
+          bio?: string | null
           created_at?: string
+          date_of_birth?: string | null
           email: string
           id: string
           name: string
           onboarding_complete?: boolean | null
+          phone?: string | null
           plan?: string | null
+          privacy_settings?: Json | null
           subscription_plan?: string | null
           subscription_status?: string | null
           updated_at?: string
         }
         Update: {
+          avatar_url?: string | null
+          bio?: string | null
           created_at?: string
+          date_of_birth?: string | null
           email?: string
           id?: string
           name?: string
           onboarding_complete?: boolean | null
+          phone?: string | null
           plan?: string | null
+          privacy_settings?: Json | null
           subscription_plan?: string | null
           subscription_status?: string | null
           updated_at?: string
@@ -2369,6 +2399,33 @@ export type Database = {
           trauma_types?: string[] | null
           triggers?: string[] | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_activity: {
+        Row: {
+          activity_data: Json | null
+          activity_type: string
+          created_at: string
+          id: string
+          searchable_content: string | null
+          user_id: string
+        }
+        Insert: {
+          activity_data?: Json | null
+          activity_type: string
+          created_at?: string
+          id?: string
+          searchable_content?: string | null
+          user_id: string
+        }
+        Update: {
+          activity_data?: Json | null
+          activity_type?: string
+          created_at?: string
+          id?: string
+          searchable_content?: string | null
           user_id?: string
         }
         Relationships: []

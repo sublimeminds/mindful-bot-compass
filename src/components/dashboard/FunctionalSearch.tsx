@@ -162,22 +162,27 @@ const FunctionalSearch = () => {
     }
   };
 
-  const handleResultClick = (result: SearchResult) => {
+  const handleResultClick = async (result: SearchResult) => {
     // Save to recent searches
     const newRecentSearches = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
     setRecentSearches(newRecentSearches);
     localStorage.setItem('recentSearches', JSON.stringify(newRecentSearches));
 
-    // Log search activity
+    // Log search activity - try to insert but don't fail if table doesn't exist yet
     if (user) {
-      supabase
-        .from('user_activity')
-        .insert({
-          user_id: user.id,
-          activity_type: 'search',
-          activity_data: { query, resultType: result.type, resultId: result.id },
-          searchable_content: `search: ${query} clicked: ${result.title}`,
-        });
+      try {
+        await supabase
+          .from('user_activity')
+          .insert({
+            user_id: user.id,
+            activity_type: 'search',
+            activity_data: { query, resultType: result.type, resultId: result.id },
+            searchable_content: `search: ${query} clicked: ${result.title}`,
+          });
+      } catch (error) {
+        // Silently fail if user_activity table doesn't exist yet
+        console.log('Activity logging not available yet');
+      }
     }
 
     navigate(result.url);
