@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import SessionStarterWidget from './widgets/SessionStarterWidget';
 import ProgressOverviewWidget from './widgets/ProgressOverviewWidget';
 import QuickActionsWidget from './widgets/QuickActionsWidget';
@@ -14,7 +14,7 @@ import EnhancedMoodWidget from './widgets/EnhancedMoodWidget';
 import AnalyticsWidget from './widgets/AnalyticsWidget';
 
 const DashboardLayout = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50">

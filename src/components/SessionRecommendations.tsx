@@ -7,12 +7,12 @@ import { Clock, Brain, Play, Lightbulb } from "lucide-react";
 import { SessionRecommendationService } from "@/services/sessionRecommendationService";
 import { useSession } from "@/contexts/SessionContext";
 import { useOnboardingData } from "@/hooks/useOnboardingData";
-import { useAuth } from "@/contexts/AuthContext";
+import { useSimpleApp } from "@/hooks/useSimpleApp";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 const SessionRecommendations = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { sessions, startSession } = useSession();
   const { onboardingData } = useOnboardingData();
   const [recommendations, setRecommendations] = useState<any[]>([]);

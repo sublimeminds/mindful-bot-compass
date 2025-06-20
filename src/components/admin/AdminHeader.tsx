@@ -1,21 +1,22 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, User, Home } from 'lucide-react';
 
 const AdminHeader = () => {
-  const { user, logout } = useAuth();
-  const { userRoles } = useAdmin();
+  const { user, logout } = useSimpleApp();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
     navigate('/');
   };
+
+  // Mock admin roles for now since we removed the complex admin system
+  const userRoles = ['admin'];
 
   const getRoleColor = (role: string) => {
     switch (role) {

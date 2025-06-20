@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface AdminProtectedRouteProps {
   children: React.ReactNode;
@@ -13,10 +12,9 @@ interface AdminProtectedRouteProps {
 }
 
 const AdminProtectedRoute = ({ children, requiredPermission }: AdminProtectedRouteProps) => {
-  const { isAuthenticated, loading: authLoading } = useAuth();
-  const { isAdmin, hasPermission, isLoading: adminLoading } = useAdmin();
+  const { user, isLoading } = useSimpleApp();
 
-  if (authLoading || adminLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-white">Loading...</div>
@@ -24,9 +22,12 @@ const AdminProtectedRoute = ({ children, requiredPermission }: AdminProtectedRou
     );
   }
 
-  if (!isAuthenticated) {
+  if (!user) {
     return <Navigate to="/auth" replace />;
   }
+
+  // Simple admin check - in a real app you'd check user roles
+  const isAdmin = user.email === 'admin@therapysync.com';
 
   if (!isAdmin) {
     return (
@@ -34,17 +35,6 @@ const AdminProtectedRoute = ({ children, requiredPermission }: AdminProtectedRou
         <div className="text-center text-white">
           <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
           <p className="text-gray-400">You don't have permission to access the admin panel.</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (requiredPermission && !hasPermission(requiredPermission.name, requiredPermission.resource)) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-center text-white">
-          <h1 className="text-2xl font-bold mb-4">Insufficient Permissions</h1>
-          <p className="text-gray-400">You don't have permission to access this section.</p>
         </div>
       </div>
     );
