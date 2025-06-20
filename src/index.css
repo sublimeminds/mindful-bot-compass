@@ -41,6 +41,31 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    
+    /* TherapySync brand colors */
+    --therapy-50: 240 100% 98%;
+    --therapy-100: 240 100% 95%;
+    --therapy-200: 240 96% 89%;
+    --therapy-300: 240 87% 81%;
+    --therapy-400: 240 76% 70%;
+    --therapy-500: 240 67% 58%;
+    --therapy-600: 240 64% 47%;
+    --therapy-700: 240 62% 37%;
+    --therapy-800: 240 60% 27%;
+    --therapy-900: 240 58% 17%;
+    --therapy-950: 240 56% 7%;
+    
+    --calm-50: 210 40% 98%;
+    --calm-100: 210 40% 96%;
+    --calm-200: 214 32% 91%;
+    --calm-300: 213 27% 84%;
+    --calm-400: 215 20% 65%;
+    --calm-500: 220 13% 46%;
+    --calm-600: 225 15% 37%;
+    --calm-700: 227 16% 29%;
+    --calm-800: 230 16% 23%;
+    --calm-900: 232 15% 18%;
+    --calm-950: 234 13% 10%;
   }
 
   .dark {
@@ -79,32 +104,4 @@
     @apply bg-background text-foreground;
     font-family: "Inter", system-ui, -apple-system, sans-serif;
   }
-}
-
-/* Custom styles for React error states */
-.react-error-boundary {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.react-error-content {
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  max-width: 600px;
-  width: 100%;
-}
-
-.react-loading-state {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
 }
