@@ -5,37 +5,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { User, Mail, Lock, Save } from 'lucide-react';
+import { User, Mail, Lock } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { useToast } from '@/hooks/use-toast';
 
 const AccountSettings = () => {
-  const { user, updateUser } = useSimpleApp();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useSimpleApp();
   const [formData, setFormData] = useState({
     name: user?.user_metadata?.name || '',
     email: user?.email || '',
     bio: user?.user_metadata?.bio || '',
   });
-
-  const handleUpdateProfile = async () => {
-    if (!updateUser) return;
-    
-    setIsLoading(true);
-    try {
-      await updateUser({
-        data: {
-          name: formData.name,
-          bio: formData.bio,
-        }
-      });
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -52,7 +31,8 @@ const AccountSettings = () => {
             <Input
               id="name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              disabled
+              className="bg-gray-50"
               placeholder="Enter your full name"
             />
           </div>
@@ -76,20 +56,16 @@ const AccountSettings = () => {
             <Textarea
               id="bio"
               value={formData.bio}
-              onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+              disabled
+              className="bg-gray-50"
               placeholder="Tell us about yourself"
               rows={3}
             />
           </div>
 
-          <Button
-            onClick={handleUpdateProfile}
-            disabled={isLoading}
-            className="w-full"
-          >
-            <Save className="h-4 w-4 mr-2" />
-            {isLoading ? 'Saving...' : 'Save Changes'}
-          </Button>
+          <div className="text-sm text-muted-foreground">
+            Profile editing will be available soon
+          </div>
         </CardContent>
       </Card>
 
@@ -104,7 +80,7 @@ const AccountSettings = () => {
           <p className="text-sm text-muted-foreground mb-4">
             Manage your password and security settings
           </p>
-          <Button variant="outline">
+          <Button variant="outline" disabled>
             Change Password
           </Button>
         </CardContent>
