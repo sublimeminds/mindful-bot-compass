@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/components/ui/sonner';
 
 const NotificationToastHandler = () => {
   // Safety check for React hooks
@@ -12,7 +12,6 @@ const NotificationToastHandler = () => {
 
   try {
     const { user } = useSimpleApp();
-    const { toast } = useToast();
     const channelRef = useRef<any>(null);
     const isSubscribedRef = useRef(false);
 
@@ -49,10 +48,9 @@ const NotificationToastHandler = () => {
           (payload) => {
             const notification = payload.new;
             
-            // Show toast for high priority notifications
+            // Show toast for high priority notifications using Sonner
             if (notification.priority === 'high') {
-              toast({
-                title: notification.title,
+              toast(notification.title, {
                 description: notification.message,
                 duration: 6000,
               });
@@ -86,7 +84,7 @@ const NotificationToastHandler = () => {
         }
         isSubscribedRef.current = false;
       };
-    }, [user?.id, toast]);
+    }, [user?.id]);
 
     return null; // This is a utility component that doesn't render anything
   } catch (error) {
