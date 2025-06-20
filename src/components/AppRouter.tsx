@@ -14,6 +14,7 @@ import SmartScheduling from '@/pages/SmartScheduling';
 import Help from '@/pages/Help';
 import Plans from '@/pages/Plans';
 import TherapySyncAI from '@/pages/TherapySyncAI';
+import TherapyChat from '@/pages/TherapyChat';
 import FeaturesOverview from '@/pages/FeaturesOverview';
 import EnhancedMonitoringPage from '@/pages/EnhancedMonitoringPage';
 import NotFound from '@/pages/NotFound';
@@ -46,6 +47,7 @@ const AppRouter = () => {
       <Route path="/goals" element={<Goals />} />
       <Route path="/analytics" element={<Analytics />} />
       <Route path="/session-history" element={<SessionHistory />} />
+      <Route path="/therapy" element={<TherapyChat />} />
       <Route path="/crisis-resources" element={<CrisisResources />} />
       <Route path="/admin/crisis-management" element={<AdminCrisisManagement />} />
       <Route path="/community" element={<Community />} />

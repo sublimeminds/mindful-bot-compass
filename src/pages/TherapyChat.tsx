@@ -17,17 +17,20 @@ import {
   TrendingUp
 } from "lucide-react";
 import { useSimpleApp } from "@/hooks/useSimpleApp";
+import { useTherapist } from "@/contexts/TherapistContext";
+import { chatService } from "@/services/chatService";
 import Header from "@/components/Header";
 import GradientLogo from "@/components/ui/GradientLogo";
+import EnhancedTherapyInterface from "@/components/therapy/EnhancedTherapyInterface";
 
 const TherapyChat = () => {
   const navigate = useNavigate();
   const { user } = useSimpleApp();
+  const { selectedTherapist, therapists } = useTherapist();
   const [showEndModal, setShowEndModal] = useState(false);
-  const [voiceEnabled, setVoiceEnabled] = useState(false);
-  const [activeTab, setActiveTab] = useState('chat');
+  const [activeTab, setActiveTab] = useState('overview');
   const [currentSession, setCurrentSession] = useState<any>(null);
-  const [currentTherapist, setCurrentTherapist] = useState<any>(null);
+  const [currentTherapist, setCurrentTherapist] = useState<any>(selectedTherapist);
 
   useEffect(() => {
     if (!user) {
@@ -37,14 +40,17 @@ const TherapyChat = () => {
   }, [user, navigate]);
 
   const handleStartSession = async () => {
-    const newSession = {
-      id: '1',
-      userId: user?.id,
-      startTime: new Date(),
-      status: 'active'
-    };
-    setCurrentSession(newSession);
-    setActiveTab('chat');
+    if (!user) return;
+    
+    try {
+      const newSession = await chatService.createSession(user.id);
+      if (newSession) {
+        setCurrentSession(newSession);
+        setActiveTab('chat');
+      }
+    } catch (error) {
+      console.error('Error starting session:', error);
+    }
   };
 
   const handleEndSession = () => {
@@ -52,25 +58,13 @@ const TherapyChat = () => {
   };
 
   const confirmEndSession = async () => {
-    setCurrentSession(null);
-    setShowEndModal(false);
-    setActiveTab('overview');
-  };
-
-  const mockTherapists = [
-    {
-      id: '1',
-      name: 'Dr. Sarah Chen',
-      specialties: ['Anxiety', 'Depression'],
-      approach: 'Cognitive Behavioral Therapy'
-    },
-    {
-      id: '2',
-      name: 'Dr. Michael Rodriguez',
-      specialties: ['Trauma', 'PTSD'],
-      approach: 'EMDR Therapy'
+    if (currentSession) {
+      await chatService.endSession(currentSession.id);
+      setCurrentSession(null);
+      setShowEndModal(false);
+      setActiveTab('overview');
     }
-  ];
+  };
 
   const handleSelectTherapist = (therapist: any) => {
     setCurrentTherapist(therapist);
@@ -208,7 +202,7 @@ const TherapyChat = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {mockTherapists.map((therapist) => (
+                    {therapists.map((therapist) => (
                       <Card key={therapist.id} className="cursor-pointer hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
                           <h3 className="font-semibold text-lg mb-2">{therapist.name}</h3>
@@ -253,21 +247,10 @@ const TherapyChat = () => {
             {/* Active Chat Tab */}
             <TabsContent value="chat" className="space-y-6">
               {currentSession ? (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Therapy Session in Progress</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="p-4 bg-muted rounded-lg">
-                        <p>Your therapy session is now active. This is where the chat interface would appear.</p>
-                      </div>
-                      <Button onClick={handleEndSession} variant="destructive">
-                        End Session
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <EnhancedTherapyInterface
+                  sessionId={currentSession.id}
+                  onEndSession={handleEndSession}
+                />
               ) : (
                 <Card>
                   <CardContent className="p-8 text-center">
