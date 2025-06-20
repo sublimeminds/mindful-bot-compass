@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
+import { useAuth } from '@/components/SimpleAuthProvider';
 
 interface AdminContextType {
   isAdmin: boolean;
@@ -21,9 +22,11 @@ interface AdminProviderProps {
 }
 
 export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
+  const { user } = useAuth();
+  
   // Mock admin context for now
   const adminData = {
-    isAdmin: false,
+    isAdmin: user?.email === 'admin@therapysync.com' || false,
     adminData: null
   };
 
