@@ -12,7 +12,18 @@ import { useEffect } from "react";
 import "./App.css";
 import './i18n'; // Initialize i18n
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 5 * 60 * 1000,
+      refetchOnWindowFocus: false,
+    },
+    mutations: {
+      retry: 1,
+    },
+  },
+});
 
 const App = () => {
   useEffect(() => {
