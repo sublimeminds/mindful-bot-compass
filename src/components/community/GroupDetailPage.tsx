@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +8,8 @@ import { CommunityService, SupportGroup, GroupDiscussion } from '@/services/comm
 import { useToast } from '@/hooks/use-toast';
 import CreateDiscussionDialog from './CreateDiscussionDialog';
 import DiscussionCard from './DiscussionCard';
+import EnhancedCreateDiscussionDialog from './EnhancedCreateDiscussionDialog';
+import EnhancedDiscussionCard from './EnhancedDiscussionCard';
 
 interface GroupDetailPageProps {
   group: SupportGroup;
@@ -25,6 +26,7 @@ const GroupDetailPage: React.FC<GroupDetailPageProps> = ({
 }) => {
   const [discussions, setDiscussions] = useState<GroupDiscussion[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedDiscussion, setSelectedDiscussion] = useState<GroupDiscussion | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -73,6 +75,34 @@ const GroupDetailPage: React.FC<GroupDetailPageProps> = ({
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+  const handleViewDiscussion = (discussion: GroupDiscussion) => {
+    setSelectedDiscussion(discussion);
+  };
+
+  if (selectedDiscussion) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Button variant="ghost" onClick={() => setSelectedDiscussion(null)}>
+            ← Back to Discussions
+          </Button>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>{selectedDiscussion.title}</CardTitle>
+            <CardDescription>
+              Discussion in {group.name}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-700">{selectedDiscussion.content}</p>
+            {/* Add reply system here in future phases */}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -145,7 +175,7 @@ const GroupDetailPage: React.FC<GroupDetailPageProps> = ({
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Group Discussions</h3>
             {isJoined && (
-              <CreateDiscussionDialog 
+              <EnhancedCreateDiscussionDialog 
                 groupId={group.id} 
                 onDiscussionCreated={loadDiscussions}
               />
@@ -173,10 +203,12 @@ const GroupDetailPage: React.FC<GroupDetailPageProps> = ({
           ) : (
             <div className="space-y-4">
               {discussions.map(discussion => (
-                <DiscussionCard 
+                <EnhancedDiscussionCard 
                   key={discussion.id} 
                   discussion={discussion}
                   canInteract={isJoined}
+                  canModerate={false} // TODO: Check if user is moderator
+                  onViewDiscussion={handleViewDiscussion}
                 />
               ))}
             </div>
