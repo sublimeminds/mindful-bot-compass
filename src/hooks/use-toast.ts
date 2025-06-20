@@ -168,41 +168,22 @@ function toast({ ...props }: Toast) {
 }
 
 function useToast() {
-  // Check if React hooks are available
-  if (typeof useState === 'undefined' || typeof useEffect === 'undefined') {
-    console.warn('useToast: React hooks not available, returning fallback');
-    return {
-      toasts: [],
-      toast: () => ({ id: '', dismiss: () => {}, update: () => {} }),
-      dismiss: () => {},
-    };
-  }
+  const [state, setState] = useState<State>(memoryState)
 
-  try {
-    const [state, setState] = useState<State>(memoryState)
-
-    useEffect(() => {
-      listeners.push(setState)
-      return () => {
-        const index = listeners.indexOf(setState)
-        if (index > -1) {
-          listeners.splice(index, 1)
-        }
+  useEffect(() => {
+    listeners.push(setState)
+    return () => {
+      const index = listeners.indexOf(setState)
+      if (index > -1) {
+        listeners.splice(index, 1)
       }
-    }, [state])
-
-    return {
-      ...state,
-      toast,
-      dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
     }
-  } catch (error) {
-    console.error('useToast: Error initializing hook:', error);
-    return {
-      toasts: [],
-      toast: () => ({ id: '', dismiss: () => {}, update: () => {} }),
-      dismiss: () => {},
-    };
+  }, [state])
+
+  return {
+    ...state,
+    toast,
+    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
   }
 }
 

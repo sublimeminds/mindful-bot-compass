@@ -20,13 +20,6 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  // Safety check for React
-  if (typeof React === 'undefined') {
-    return React.createElement('div', { 
-      style: { padding: '20px', textAlign: 'center' } 
-    }, 'Loading...');
-  }
-
   return (
     <SimpleErrorBoundary>
       <QueryClientProvider client={queryClient}>
