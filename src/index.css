@@ -10,8 +10,31 @@
   100% { transform: rotate(360deg); }
 }
 
+@keyframes swirl-breathe {
+  0%, 100% { 
+    transform: rotate(0deg) scale(1);
+    filter: hue-rotate(0deg);
+  }
+  25% { 
+    transform: rotate(90deg) scale(1.05);
+    filter: hue-rotate(45deg);
+  }
+  50% { 
+    transform: rotate(180deg) scale(1.1);
+    filter: hue-rotate(90deg);
+  }
+  75% { 
+    transform: rotate(270deg) scale(1.05);
+    filter: hue-rotate(135deg);
+  }
+}
+
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+.animate-swirl-breathe {
+  animation: swirl-breathe 4s ease-in-out infinite;
 }
 
 @layer base {
@@ -66,6 +89,43 @@
     --calm-800: 230 16% 23%;
     --calm-900: 232 15% 18%;
     --calm-950: 234 13% 10%;
+
+    /* Additional gradient colors */
+    --harmony-50: 280 100% 98%;
+    --harmony-100: 280 100% 95%;
+    --harmony-200: 280 96% 89%;
+    --harmony-300: 280 87% 81%;
+    --harmony-400: 280 76% 70%;
+    --harmony-500: 280 67% 58%;
+    --harmony-600: 280 64% 47%;
+    --harmony-700: 280 62% 37%;
+    --harmony-800: 280 60% 27%;
+    --harmony-900: 280 58% 17%;
+    --harmony-950: 280 56% 7%;
+    
+    --balance-50: 200 100% 98%;
+    --balance-100: 200 100% 95%;
+    --balance-200: 200 96% 89%;
+    --balance-300: 200 87% 81%;
+    --balance-400: 200 76% 70%;
+    --balance-500: 200 67% 58%;
+    --balance-600: 200 64% 47%;
+    --balance-700: 200 62% 37%;
+    --balance-800: 200 60% 27%;
+    --balance-900: 200 58% 17%;
+    --balance-950: 200 56% 7%;
+    
+    --flow-50: 160 100% 98%;
+    --flow-100: 160 100% 95%;
+    --flow-200: 160 96% 89%;
+    --flow-300: 160 87% 81%;
+    --flow-400: 160 76% 70%;
+    --flow-500: 160 67% 58%;
+    --flow-600: 160 64% 47%;
+    --flow-700: 160 62% 37%;
+    --flow-800: 160 60% 27%;
+    --flow-900: 160 58% 17%;
+    --flow-950: 160 56% 7%;
   }
 
   .dark {
