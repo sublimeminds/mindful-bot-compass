@@ -29,6 +29,37 @@ const stats = [
   }
 ];
 
+const AnimatedNumber = ({ value, suffix, isVisible }: { value: number; suffix: string; isVisible: boolean }) => {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const duration = 2000;
+    const steps = 60;
+    const increment = value / steps;
+    let current = 0;
+
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= value) {
+        setDisplayValue(value);
+        clearInterval(timer);
+      } else {
+        setDisplayValue(Math.floor(current));
+      }
+    }, duration / steps);
+
+    return () => clearInterval(timer);
+  }, [isVisible, value]);
+
+  return (
+    <span>
+      {suffix === "/5" ? displayValue.toFixed(1) : displayValue.toLocaleString()}{suffix}
+    </span>
+  );
+};
+
 const StatsCounter = () => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -50,37 +81,6 @@ const StatsCounter = () => {
     return () => observer.disconnect();
   }, []);
 
-  const AnimatedNumber = ({ value, suffix }: { value: number; suffix: string }) => {
-    const [displayValue, setDisplayValue] = useState(0);
-
-    useEffect(() => {
-      if (!isVisible) return;
-
-      const duration = 2000;
-      const steps = 60;
-      const increment = value / steps;
-      let current = 0;
-
-      const timer = setInterval(() => {
-        current += increment;
-        if (current >= value) {
-          setDisplayValue(value);
-          clearInterval(timer);
-        } else {
-          setDisplayValue(Math.floor(current));
-        }
-      }, duration / steps);
-
-      return () => clearInterval(timer);
-    }, [isVisible, value]);
-
-    return (
-      <span>
-        {suffix === "/5" ? displayValue.toFixed(1) : displayValue.toLocaleString()}{suffix}
-      </span>
-    );
-  };
-
   return (
     <section id="stats-counter" className="py-16 bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-600">
       <div className="container mx-auto px-4">
@@ -95,7 +95,7 @@ const StatsCounter = () => {
                   </div>
                 </div>
                 <div className="text-3xl font-bold mb-2">
-                  <AnimatedNumber value={stat.value} suffix={stat.suffix} />
+                  <AnimatedNumber value={stat.value} suffix={stat.suffix} isVisible={isVisible} />
                 </div>
                 <div className="text-sm opacity-90">{stat.label}</div>
               </div>
