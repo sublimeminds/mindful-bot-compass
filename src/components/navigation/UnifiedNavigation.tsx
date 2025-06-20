@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { useSubscription } from '@/hooks/useSubscription';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -22,13 +21,10 @@ import {
 } from 'lucide-react';
 
 const UnifiedNavigation = () => {
-  const { isAuthenticated } = useAuth();
+  const { user } = useSimpleApp();
+  const isAuthenticated = !!user;
   const location = useLocation();
   const navigate = useNavigate();
-  
-  // Only call useSubscription if authenticated to avoid hook issues
-  const subscriptionData = useSubscription();
-  const isFreePlan = isAuthenticated ? subscriptionData.isFreePlan() : false;
 
   const scrollToSection = (sectionId: string) => {
     if (sectionId.startsWith('#')) {
@@ -123,7 +119,7 @@ const UnifiedNavigation = () => {
         })}
 
         {/* Upgrade button for free users - responsive */}
-        {isAuthenticated && isFreePlan && (
+        {isAuthenticated && (
           <Button
             onClick={() => navigate('/plans')}
             size="sm"

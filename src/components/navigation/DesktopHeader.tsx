@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { Button } from '@/components/ui/button';
 import { User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ import UserMenu from './UserMenu';
 import UnifiedNavigation from './UnifiedNavigation';
 
 const DesktopHeader = () => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useSimpleApp();
   const navigate = useNavigate();
 
   return (
