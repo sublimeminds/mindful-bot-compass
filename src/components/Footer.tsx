@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Shield, Globe, Users, Brain, Sparkles } from 'lucide-react';
+import { Heart, Shield, Globe, Users, Brain, Sparkles, Mail, Phone, MapPin, FileText, HelpCircle, Settings, Calendar, BookOpen, Zap } from 'lucide-react';
 import GradientLogo from '@/components/ui/GradientLogo';
 
 const Footer = () => {
@@ -18,17 +18,17 @@ const Footer = () => {
               <GradientLogo size="sm" />
               <h3 className="text-xl font-bold">TherapySync</h3>
             </div>
-            <p className="text-white/80 text-sm leading-relaxed max-w-md">
+            <p className="text-white/80 text-sm leading-relaxed">
               Advanced AI-powered mental health platform designed to support your wellness journey 
               with enterprise-grade security and personalized therapeutic interventions.
             </p>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Shield className="h-4 w-4 text-white/70" />
+            <div className="space-y-2">
+              <div className="flex items-center space-x-3">
+                <Shield className="h-4 w-4 text-white/70 flex-shrink-0" />
                 <span className="text-xs text-white/70">HIPAA Compliant</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <Globe className="h-4 w-4 text-white/70" />
+              <div className="flex items-center space-x-3">
+                <Globe className="h-4 w-4 text-white/70 flex-shrink-0" />
                 <span className="text-xs text-white/70">Available Worldwide</span>
               </div>
             </div>
@@ -37,13 +37,13 @@ const Footer = () => {
           {/* Product Section */}
           <div className="space-y-4">
             <h4 className="font-semibold text-white">Product</h4>
-            <div className="space-y-3">
+            <div className="space-y-2">
               <Button 
                 variant="link" 
                 className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
                 onClick={() => navigate('/therapysync-ai')}
               >
-                <Brain className="h-3 w-3 mr-2" />
+                <Brain className="h-3 w-3 mr-3 flex-shrink-0" />
                 TherapySync AI
               </Button>
               <Button 
@@ -56,8 +56,32 @@ const Footer = () => {
                   }, 100);
                 }}
               >
-                <Sparkles className="h-3 w-3 mr-2" />
+                <Sparkles className="h-3 w-3 mr-3 flex-shrink-0" />
                 Features
+              </Button>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
+                onClick={() => navigate('/dashboard')}
+              >
+                <Zap className="h-3 w-3 mr-3 flex-shrink-0" />
+                Dashboard
+              </Button>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
+                onClick={() => navigate('/smart-scheduling')}
+              >
+                <Calendar className="h-3 w-3 mr-3 flex-shrink-0" />
+                Smart Scheduling
+              </Button>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
+                onClick={() => navigate('/techniques')}
+              >
+                <BookOpen className="h-3 w-3 mr-3 flex-shrink-0" />
+                Techniques
               </Button>
               <Button 
                 variant="link" 
@@ -76,13 +100,14 @@ const Footer = () => {
           
           {/* Support Section */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-white">Support</h4>
-            <div className="space-y-3">
+            <h4 className="font-semibold text-white">Support & Resources</h4>
+            <div className="space-y-2">
               <Button 
                 variant="link" 
                 className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
                 onClick={() => navigate('/help')}
               >
+                <HelpCircle className="h-3 w-3 mr-3 flex-shrink-0" />
                 Help Center
               </Button>
               <Button 
@@ -90,14 +115,30 @@ const Footer = () => {
                 className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
                 onClick={() => navigate('/community')}
               >
-                <Users className="h-3 w-3 mr-2" />
+                <Users className="h-3 w-3 mr-3 flex-shrink-0" />
                 Community
               </Button>
               <Button 
                 variant="link" 
                 className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
+                onClick={() => navigate('/crisis-management')}
               >
+                <Shield className="h-3 w-3 mr-3 flex-shrink-0" />
+                Crisis Support
+              </Button>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
+              >
+                <Mail className="h-3 w-3 mr-3 flex-shrink-0" />
                 Contact Us
+              </Button>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
+              >
+                <Phone className="h-3 w-3 mr-3 flex-shrink-0" />
+                24/7 Support
               </Button>
             </div>
           </div>
@@ -105,7 +146,7 @@ const Footer = () => {
           {/* Company Section */}
           <div className="space-y-4">
             <h4 className="font-semibold text-white">Company</h4>
-            <div className="space-y-3">
+            <div className="space-y-2">
               <Button 
                 variant="link" 
                 className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
@@ -116,14 +157,34 @@ const Footer = () => {
                 variant="link" 
                 className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
               >
+                Careers
+              </Button>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
+              >
+                <FileText className="h-3 w-3 mr-3 flex-shrink-0" />
                 Privacy Policy
               </Button>
               <Button 
                 variant="link" 
                 className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
               >
+                <FileText className="h-3 w-3 mr-3 flex-shrink-0" />
                 Terms of Service
               </Button>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-white/80 hover:text-white justify-start text-sm"
+              >
+                Security
+              </Button>
+              <div className="pt-2">
+                <div className="flex items-center space-x-2 text-xs text-white/70">
+                  <MapPin className="h-3 w-3 flex-shrink-0" />
+                  <span>San Francisco, CA</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
