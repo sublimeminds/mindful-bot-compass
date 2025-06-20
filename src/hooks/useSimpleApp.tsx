@@ -1,11 +1,4 @@
 
-import { useContext } from 'react';
-import { SimpleAppContext } from '@/components/SimpleAppProvider';
+import { useApp } from '@/components/MinimalAppProvider';
 
-export const useSimpleApp = () => {
-  const context = useContext(SimpleAppContext);
-  if (!context) {
-    throw new Error('useSimpleApp must be used within a SimpleAppProvider');
-  }
-  return context;
-};
+export const useSimpleApp = useApp;

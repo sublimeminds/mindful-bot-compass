@@ -2,10 +2,8 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SimpleAppProvider } from '@/components/SimpleAppProvider';
 import { Toaster } from 'sonner';
 import AppRouter from '@/components/AppRouter';
-import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import './App.css';
 
 // Create QueryClient once
@@ -21,16 +19,12 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <SimpleErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <Router>
-          <SimpleAppProvider>
-            <AppRouter />
-            <Toaster />
-          </SimpleAppProvider>
-        </Router>
-      </QueryClientProvider>
-    </SimpleErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <AppRouter />
+        <Toaster />
+      </Router>
+    </QueryClientProvider>
   );
 }
 

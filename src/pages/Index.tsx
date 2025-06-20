@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useApp } from '@/components/MinimalAppProvider';
 import LandingPage from '@/components/LandingPage';
 import DashboardPage from '@/pages/DashboardPage';
 
 const Index = () => {
-  const { user, loading } = useSimpleApp();
+  const { user, loading } = useApp();
 
   // Show loading while checking authentication
   if (loading) {
