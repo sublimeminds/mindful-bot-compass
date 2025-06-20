@@ -21,6 +21,12 @@ import HelpArticles from '@/pages/HelpArticles';
 import HelpArticleDetail from '@/pages/HelpArticleDetail';
 import ProfilePage from '@/pages/ProfilePage';
 import SettingsPage from '@/pages/SettingsPage';
+import Techniques from '@/pages/Techniques';
+import SessionAnalytics from '@/pages/SessionAnalytics';
+import MoodTracking from '@/pages/MoodTracking';
+import Goals from '@/pages/Goals';
+import Analytics from '@/pages/Analytics';
+import SessionHistory from '@/pages/SessionHistory';
 
 const AppRouter = () => {
   return (
@@ -32,6 +38,12 @@ const AppRouter = () => {
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/settings" element={<SettingsPage />} />
+      <Route path="/techniques" element={<Techniques />} />
+      <Route path="/session-analytics" element={<SessionAnalytics />} />
+      <Route path="/mood-tracking" element={<MoodTracking />} />
+      <Route path="/goals" element={<Goals />} />
+      <Route path="/analytics" element={<Analytics />} />
+      <Route path="/session-history" element={<SessionHistory />} />
       <Route path="/crisis-resources" element={<CrisisResources />} />
       <Route path="/admin/crisis-management" element={<AdminCrisisManagement />} />
       <Route path="/community" element={<Community />} />
