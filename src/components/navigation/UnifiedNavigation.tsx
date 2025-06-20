@@ -21,6 +21,25 @@ import {
 } from 'lucide-react';
 
 const UnifiedNavigation = () => {
+  // Ensure React and hooks are fully available before using router hooks
+  const isReactReady = React && 
+    typeof React === 'object' && 
+    React.useState && 
+    React.useEffect &&
+    React.useContext &&
+    React.createElement;
+
+  // Early return if React isn't ready to prevent hook calls
+  if (!isReactReady) {
+    console.warn('UnifiedNavigation: React not ready, skipping render');
+    return (
+      <div className="flex items-center justify-center w-full">
+        <span className="text-muted-foreground text-sm">Loading navigation...</span>
+      </div>
+    );
+  }
+
+  // Now safe to use hooks
   const { user } = useApp();
   const isAuthenticated = !!user;
   const location = useLocation();

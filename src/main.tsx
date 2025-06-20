@@ -21,7 +21,7 @@ const validateReact = () => {
     throw new Error('React.createElement is not available');
   }
 
-  // Check all required hooks
+  // Check all required hooks including useContext
   const requiredHooks = ['useState', 'useEffect', 'useContext', 'useRef', 'useMemo', 'useCallback'];
   for (const hook of requiredHooks) {
     if (!React[hook]) {
@@ -29,7 +29,7 @@ const validateReact = () => {
     }
   }
 
-  console.log('React validation passed successfully');
+  console.log('React validation passed successfully - all hooks available');
   return true;
 };
 
@@ -39,19 +39,26 @@ validateReact();
 // Ensure React is globally available for debugging
 if (typeof window !== 'undefined') {
   (window as any).React = React;
+  console.log('React attached to window for debugging');
 }
 
 console.log('Starting React application...');
 
-// Initialize app with proper error handling
+// Initialize app with proper error handling and timing
 const initializeApp = () => {
   try {
+    // Re-validate React before initialization
+    validateReact();
+    
     const rootElement = document.getElementById('root');
     if (!rootElement) {
       throw new Error('Root element not found');
     }
 
+    console.log('Creating React root...');
     const root = ReactDOM.createRoot(rootElement);
+    
+    console.log('Rendering React app...');
     root.render(
       <React.StrictMode>
         <App />
@@ -72,21 +79,40 @@ const initializeApp = () => {
           background-color: #fee2e2; 
           color: #991b1b;
           font-family: Arial, sans-serif;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
         ">
           <h2>Application Error</h2>
           <p>Failed to initialize the application. Please refresh the page.</p>
           <p style="font-size: 14px; margin-top: 10px;">Error: ${error.message}</p>
+          <button onclick="window.location.reload()" style="
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+          ">Reload Page</button>
         </div>
       `;
     }
   }
 };
 
-// Use a small delay to ensure DOM is ready and React is fully loaded
+// Enhanced initialization timing - wait for both DOM and React
+const startApp = () => {
+  // Additional delay to ensure all React internals are ready
+  setTimeout(() => {
+    initializeApp();
+  }, 150); // Increased delay to ensure router context is ready
+};
+
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(initializeApp, 100);
-  });
+  document.addEventListener('DOMContentLoaded', startApp);
 } else {
-  setTimeout(initializeApp, 100);
+  startApp();
 }
