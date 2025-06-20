@@ -6,6 +6,8 @@ import type { User } from '@supabase/supabase-js';
 interface AppContextType {
   user: User | null;
   loading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -54,6 +56,38 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  const login = async (email: string, password: string) => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error signing in:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const register = async (email: string, password: string) => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error signing up:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const logout = async () => {
     try {
       await supabase.auth.signOut();
@@ -65,6 +99,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const value = {
     user,
     loading,
+    login,
+    register,
     logout,
   };
 
