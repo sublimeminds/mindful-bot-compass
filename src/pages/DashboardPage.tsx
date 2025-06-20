@@ -1,12 +1,18 @@
 
 import React from 'react';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import { useNavigate } from 'react-router-dom';
+import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 
 const DashboardPage = () => {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!loading && !user) {
+      navigate('/auth');
+    }
+  }, [user, loading, navigate]);
 
   if (loading) {
     return (
@@ -20,33 +26,10 @@ const DashboardPage = () => {
   }
 
   if (!user) {
-    return (
-      <div className="min-h-screen">
-        <Header />
-        <div className="flex items-center justify-center min-h-[80vh] bg-gradient-to-br from-therapy-50 to-calm-50">
-          <div className="text-center max-w-md mx-auto p-6">
-            <h1 className="text-2xl font-bold text-therapy-900 mb-4">Access Denied</h1>
-            <p className="text-therapy-600 mb-6">Please sign in to access your dashboard.</p>
-            <a 
-              href="/auth" 
-              className="inline-block bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
-            >
-              Sign In
-            </a>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
+    return null;
   }
 
-  return (
-    <div className="min-h-screen">
-      <Header />
-      <DashboardLayout />
-      <Footer />
-    </div>
-  );
+  return <DashboardLayoutWithSidebar />;
 };
 
 export default DashboardPage;
