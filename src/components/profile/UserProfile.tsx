@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, CreditCard, Bell, Shield } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import SubscriptionManager from '@/components/subscription/SubscriptionManager';
 import AccountSettings from './AccountSettings';
 
 const UserProfile = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [activeTab, setActiveTab] = useState('account');
 
   return (

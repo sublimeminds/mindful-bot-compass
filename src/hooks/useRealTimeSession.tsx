@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
@@ -18,7 +19,7 @@ export const useRealTimeSession = (sessionId: string) => {
       setLoading(true);
       try {
         const { data, error } = await supabase
-          .from('messages')
+          .from('session_messages')
           .select('*')
           .eq('session_id', sessionId)
           .order('created_at', { ascending: true });
@@ -41,7 +42,7 @@ export const useRealTimeSession = (sessionId: string) => {
       .channel(`session_${sessionId}`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'messages', filter: `session_id=eq.${sessionId}` },
+        { event: '*', schema: 'public', table: 'session_messages', filter: `session_id=eq.${sessionId}` },
         (payload) => {
           if (payload.new) {
             setMessages((prevMessages) => [...prevMessages, payload.new]);

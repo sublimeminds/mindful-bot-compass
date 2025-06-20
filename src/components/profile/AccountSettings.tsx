@@ -4,85 +4,34 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Eye, EyeOff, Mail, Lock, User, Trash2 } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { User, Mail, Lock, Save } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 
 const AccountSettings = () => {
   const { user, updateUser } = useSimpleApp();
   const { toast } = useToast();
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
-  const [passwords, setPasswords] = useState({
-    current: '',
-    new: '',
-    confirm: ''
+  const [formData, setFormData] = useState({
+    name: user?.user_metadata?.name || '',
+    email: user?.email || '',
+    bio: user?.user_metadata?.bio || '',
   });
 
-  const [email, setEmail] = useState(user?.email || '');
-
-  const handlePasswordChange = async () => {
-    if (!passwords.new || passwords.new !== passwords.confirm) {
-      toast({
-        title: "Error",
-        description: "Passwords don't match or are empty",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (passwords.new.length < 6) {
-      toast({
-        title: "Error",
-        description: "Password must be at least 6 characters long",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const handleUpdateProfile = async () => {
+    if (!updateUser) return;
+    
     setIsLoading(true);
     try {
-      // Mock password update - in real app would use Supabase
-      toast({
-        title: "Success",
-        description: "Password updated successfully",
+      await updateUser({
+        data: {
+          name: formData.name,
+          bio: formData.bio,
+        }
       });
-      
-      setPasswords({ current: '', new: '', confirm: '' });
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: "Failed to update password",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleEmailChange = async () => {
-    if (!email || email === user?.email) return;
-
-    setIsLoading(true);
-    try {
-      // Mock email update - in real app would use Supabase
-      if (user) {
-        updateUser({ ...user, email });
-      }
-      
-      toast({
-        title: "Success",
-        description: "Email updated successfully",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: "Failed to update email",
-        variant: "destructive",
-      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
     } finally {
       setIsLoading(false);
     }
@@ -90,123 +39,74 @@ const AccountSettings = () => {
 
   return (
     <div className="space-y-6">
-      {/* Email Settings */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Mail className="h-5 w-5 mr-2" />
-            Email Address
+            <User className="h-5 w-5 mr-2" />
+            Account Information
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="name">Full Name</Label>
+            <Input
+              id="name"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="Enter your full name"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              value={formData.email}
+              disabled
+              className="bg-gray-50"
             />
-          </div>
-          {email !== user?.email && (
-            <Button onClick={handleEmailChange} disabled={isLoading}>
-              Update Email
-            </Button>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Password Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Lock className="h-5 w-5 mr-2" />
-            Password
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="current-password">Current Password</Label>
-            <div className="relative">
-              <Input
-                id="current-password"
-                type={showCurrentPassword ? "text" : "password"}
-                value={passwords.current}
-                onChange={(e) => setPasswords(prev => ({ ...prev, current: e.target.value }))}
-                placeholder="Enter current password"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-              >
-                {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </Button>
-            </div>
+            <p className="text-sm text-muted-foreground">
+              Email cannot be changed from this interface
+            </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="new-password">New Password</Label>
-            <div className="relative">
-              <Input
-                id="new-password"
-                type={showNewPassword ? "text" : "password"}
-                value={passwords.new}
-                onChange={(e) => setPasswords(prev => ({ ...prev, new: e.target.value }))}
-                placeholder="Enter new password"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                onClick={() => setShowNewPassword(!showNewPassword)}
-              >
-                {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="confirm-password">Confirm New Password</Label>
-            <Input
-              id="confirm-password"
-              type="password"
-              value={passwords.confirm}
-              onChange={(e) => setPasswords(prev => ({ ...prev, confirm: e.target.value }))}
-              placeholder="Confirm new password"
+            <Label htmlFor="bio">Bio</Label>
+            <Textarea
+              id="bio"
+              value={formData.bio}
+              onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+              placeholder="Tell us about yourself"
+              rows={3}
             />
           </div>
 
-          <Button onClick={handlePasswordChange} disabled={isLoading}>
-            Update Password
+          <Button
+            onClick={handleUpdateProfile}
+            disabled={isLoading}
+            className="w-full"
+          >
+            <Save className="h-4 w-4 mr-2" />
+            {isLoading ? 'Saving...' : 'Save Changes'}
           </Button>
         </CardContent>
       </Card>
 
-      {/* Danger Zone */}
-      <Card className="border-red-200">
+      <Card>
         <CardHeader>
-          <CardTitle className="flex items-center text-red-600">
-            <Trash2 className="h-5 w-5 mr-2" />
-            Danger Zone
+          <CardTitle className="flex items-center">
+            <Lock className="h-5 w-5 mr-2" />
+            Security
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-medium">Delete Account</h3>
-              <p className="text-sm text-muted-foreground mb-3">
-                Permanently delete your account and all associated data. This action cannot be undone.
-              </p>
-              <Button variant="destructive" size="sm">
-                Delete Account
-              </Button>
-            </div>
-          </div>
+          <p className="text-sm text-muted-foreground mb-4">
+            Manage your password and security settings
+          </p>
+          <Button variant="outline">
+            Change Password
+          </Button>
         </CardContent>
       </Card>
     </div>
