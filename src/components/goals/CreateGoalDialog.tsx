@@ -22,6 +22,12 @@ interface CreateGoalDialogProps {
 }
 
 const CreateGoalDialog = ({ open, onOpenChange, onGoalCreated }: CreateGoalDialogProps) => {
+  // Safety check for React availability
+  if (typeof React === 'undefined' || !React.useState || !React.useRef) {
+    console.warn('CreateGoalDialog: React not fully available');
+    return null;
+  }
+
   const { user } = useSimpleApp();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);

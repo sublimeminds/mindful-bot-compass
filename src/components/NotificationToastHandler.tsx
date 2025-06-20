@@ -6,7 +6,8 @@ import { toast } from 'sonner';
 
 const NotificationToastHandler = () => {
   // Safety check for React hooks
-  if (typeof React === 'undefined' || !React.useState) {
+  if (typeof React === 'undefined' || !React.useState || !React.useRef) {
+    console.warn('NotificationToastHandler: React not fully available');
     return null;
   }
 

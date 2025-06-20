@@ -20,6 +20,12 @@ interface SessionEndModalProps {
 }
 
 const SessionEndModal = ({ isOpen, onClose, onConfirm }: SessionEndModalProps) => {
+  // Safety check for React availability
+  if (typeof React === 'undefined' || !React.useState || !React.useRef) {
+    console.warn('SessionEndModal: React not fully available');
+    return null;
+  }
+
   const [moodAfter, setMoodAfter] = useState([7]);
   const [notes, setNotes] = useState('');
   const [rating, setRating] = useState(0);
