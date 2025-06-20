@@ -39,7 +39,7 @@ const DashboardSidebar = () => {
   const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const { collapsed } = useSidebar();
+  const { state } = useSidebar();
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -111,17 +111,19 @@ const DashboardSidebar = () => {
 
   if (!user) return null;
 
+  const isCollapsed = state === 'collapsed';
+
   return (
     <Sidebar
       className={`border-r bg-background transition-all duration-300 ${
-        collapsed ? 'w-16' : 'w-72'
+        isCollapsed ? 'w-16' : 'w-72'
       }`}
-      collapsible
+      collapsible="icon"
     >
       <div className="flex h-full flex-col">
         {/* Header with trigger */}
         <div className="flex items-center justify-between p-4 border-b">
-          {!collapsed && (
+          {!isCollapsed && (
             <div className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-therapy-500 to-calm-500 flex items-center justify-center">
                 <LayoutDashboard className="h-4 w-4 text-white" />
@@ -140,10 +142,9 @@ const DashboardSidebar = () => {
             return (
               <SidebarGroup
                 key={section.title}
-                defaultOpen={hasActiveItem}
                 className="px-2"
               >
-                {!collapsed && (
+                {!isCollapsed && (
                   <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-3 py-2">
                     {section.title}
                   </SidebarGroupLabel>
@@ -160,8 +161,8 @@ const DashboardSidebar = () => {
                               : 'hover:bg-therapy-50 text-gray-700 hover:text-therapy-900'
                           }`}
                         >
-                          <item.icon className={`h-4 w-4 ${collapsed ? 'mx-auto' : 'mr-3'}`} />
-                          {!collapsed && <span className="truncate">{item.title}</span>}
+                          <item.icon className={`h-4 w-4 ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                          {!isCollapsed && <span className="truncate">{item.title}</span>}
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     ))}
@@ -173,7 +174,7 @@ const DashboardSidebar = () => {
 
           {/* Quick Links */}
           <SidebarGroup className="mt-auto px-2 border-t pt-4">
-            {!collapsed && (
+            {!isCollapsed && (
               <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-3 py-2">
                 Quick Links
               </SidebarGroupLabel>
@@ -190,8 +191,8 @@ const DashboardSidebar = () => {
                           : 'hover:bg-therapy-50 text-gray-700 hover:text-therapy-900'
                       }`}
                     >
-                      <item.icon className={`h-4 w-4 ${collapsed ? 'mx-auto' : 'mr-3'}`} />
-                      {!collapsed && <span className="truncate">{item.title}</span>}
+                      <item.icon className={`h-4 w-4 ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                      {!isCollapsed && <span className="truncate">{item.title}</span>}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
