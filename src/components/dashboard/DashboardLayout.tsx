@@ -1,53 +1,55 @@
 
 import React from 'react';
 import { useAuth } from '@/components/SimpleAuthProvider';
+import WelcomeWidget from './widgets/WelcomeWidget';
+import QuickStatsWidget from './widgets/QuickStatsWidget';
+import WeeklyOverviewWidget from './widgets/WeeklyOverviewWidget';
+import RecentActivityWidget from './widgets/RecentActivityWidget';
+import MoodTrendWidget from './widgets/MoodTrendWidget';
 import SessionStarterWidget from './widgets/SessionStarterWidget';
-import ProgressOverviewWidget from './widgets/ProgressOverviewWidget';
 import QuickActionsWidget from './widgets/QuickActionsWidget';
-import MoodTrackerWidget from './widgets/MoodTrackerWidget';
 import GoalsWidget from './widgets/GoalsWidget';
-import InsightsWidget from './widgets/InsightsWidget';
 import TherapistWidget from './widgets/TherapistWidget';
-import SessionHistoryWidget from './widgets/SessionHistoryWidget';
-import EnhancedMoodWidget from './widgets/EnhancedMoodWidget';
 import AnalyticsWidget from './widgets/AnalyticsWidget';
+import InsightsWidget from './widgets/InsightsWidget';
 
 const DashboardLayout = () => {
   const { user } = useAuth();
 
   return (
-    <div className="flex-1 p-6">
-      {/* Dashboard Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* First Row - Full Width Session Starter */}
-        <div className="lg:col-span-3">
-          <SessionStarterWidget />
-        </div>
+    <div className="flex-1 p-6 space-y-6">
+      {/* Welcome Section */}
+      <WelcomeWidget />
 
-        {/* Second Row - Three Columns */}
+      {/* Main Dashboard Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Left Column - Quick Stats and Weekly Overview */}
         <div className="space-y-6">
-          <EnhancedMoodWidget />
-          <QuickActionsWidget />
+          <QuickStatsWidget />
+          <WeeklyOverviewWidget />
         </div>
 
+        {/* Center Column - Main Content */}
+        <div className="lg:col-span-2 space-y-6">
+          <SessionStarterWidget />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <MoodTrendWidget />
+            <GoalsWidget />
+          </div>
+        </div>
+
+        {/* Right Column - Secondary Content */}
         <div className="space-y-6">
           <TherapistWidget />
+          <QuickActionsWidget />
           <AnalyticsWidget />
         </div>
+      </div>
 
-        <div className="space-y-6">
-          <GoalsWidget />
-          <ProgressOverviewWidget />
-        </div>
-
-        {/* Third Row - Two Columns */}
-        <div className="lg:col-span-2">
-          <SessionHistoryWidget />
-        </div>
-
-        <div className="lg:col-span-1">
-          <InsightsWidget />
-        </div>
+      {/* Bottom Section - Activity and Insights */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <RecentActivityWidget />
+        <InsightsWidget />
       </div>
     </div>
   );
