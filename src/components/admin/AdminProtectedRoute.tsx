@@ -12,9 +12,9 @@ interface AdminProtectedRouteProps {
 }
 
 const AdminProtectedRoute = ({ children, requiredPermission }: AdminProtectedRouteProps) => {
-  const { user, isLoading } = useSimpleApp();
+  const { user, loading } = useSimpleApp();
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-white">Loading...</div>

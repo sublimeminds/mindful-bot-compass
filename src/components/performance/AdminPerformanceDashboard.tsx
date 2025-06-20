@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,12 +14,12 @@ import {
   Settings,
   Shield
 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { isAdminUser } from '@/utils/adminUtils';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 
 const AdminPerformanceDashboard = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [isOpen, setIsOpen] = useState(false);
   const [config] = useState({
     enableMetrics: true,

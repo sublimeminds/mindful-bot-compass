@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +5,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { PersonalizationService } from '@/services/personalizationService';
 import { useToast } from '@/hooks/use-toast';
 
@@ -15,7 +14,7 @@ interface PersonalizationWizardProps {
 }
 
 const PersonalizationWizard = ({ onComplete }: PersonalizationWizardProps) => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
   const [step, setStep] = useState(1);
   const [preferences, setPreferences] = useState({

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,7 +24,7 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signIn, signUp } = useSimpleApp();
+  const { login, register } = useSimpleApp();
 
   if (!isOpen) return null;
 
@@ -37,9 +36,9 @@ const AuthModal = ({ isOpen, onClose, defaultMode = 'signin' }: AuthModalProps) 
       let result;
       
       if (mode === 'signin') {
-        result = await signIn(formData.email, formData.password);
+        result = await login(formData.email, formData.password);
       } else {
-        result = await signUp(formData.email, formData.password, formData.name);
+        result = await register(formData.email, formData.password, formData.name);
       }
 
       if (result.error) {
