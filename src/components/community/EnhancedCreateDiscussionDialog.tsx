@@ -105,7 +105,7 @@ const EnhancedCreateDiscussionDialog: React.FC<EnhancedCreateDiscussionDialogPro
               rows={8}
             />
             <p className="text-xs text-gray-500 mt-1">
-              You can use **bold**, *italic*, > quotes, - lists, and [links](url)
+              You can use **bold**, *italic*, quotes, lists, and links
             </p>
           </div>
 

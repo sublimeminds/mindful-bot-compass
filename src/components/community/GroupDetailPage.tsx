@@ -1,15 +1,18 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Users, MessageSquare, Settings, UserPlus, Globe, Lock, ShieldCheck } from 'lucide-react';
+import { Users, MessageSquare, Settings, UserPlus, Globe, Lock, ShieldCheck, Calendar, FileText } from 'lucide-react';
 import { CommunityService, SupportGroup, GroupDiscussion } from '@/services/communityService';
 import { useToast } from '@/hooks/use-toast';
 import CreateDiscussionDialog from './CreateDiscussionDialog';
 import DiscussionCard from './DiscussionCard';
 import EnhancedCreateDiscussionDialog from './EnhancedCreateDiscussionDialog';
 import EnhancedDiscussionCard from './EnhancedDiscussionCard';
+import GroupEventsTab from './GroupEventsTab';
+import GroupResourcesTab from './GroupResourcesTab';
 
 interface GroupDetailPageProps {
   group: SupportGroup;
@@ -97,7 +100,6 @@ const GroupDetailPage: React.FC<GroupDetailPageProps> = ({
           </CardHeader>
           <CardContent>
             <p className="text-gray-700">{selectedDiscussion.content}</p>
-            {/* Add reply system here in future phases */}
           </CardContent>
         </Card>
       </div>
@@ -164,6 +166,14 @@ const GroupDetailPage: React.FC<GroupDetailPageProps> = ({
             <MessageSquare className="h-4 w-4 mr-2" />
             Discussions
           </TabsTrigger>
+          <TabsTrigger value="events">
+            <Calendar className="h-4 w-4 mr-2" />
+            Events
+          </TabsTrigger>
+          <TabsTrigger value="resources">
+            <FileText className="h-4 w-4 mr-2" />
+            Resources
+          </TabsTrigger>
           <TabsTrigger value="members">
             <Users className="h-4 w-4 mr-2" />
             Members
@@ -207,12 +217,28 @@ const GroupDetailPage: React.FC<GroupDetailPageProps> = ({
                   key={discussion.id} 
                   discussion={discussion}
                   canInteract={isJoined}
-                  canModerate={false} // TODO: Check if user is moderator
+                  canModerate={false}
                   onViewDiscussion={handleViewDiscussion}
                 />
               ))}
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="events">
+          <GroupEventsTab 
+            groupId={group.id} 
+            isJoined={isJoined}
+            canModerate={false}
+          />
+        </TabsContent>
+
+        <TabsContent value="resources">
+          <GroupResourcesTab 
+            groupId={group.id} 
+            isJoined={isJoined}
+            canModerate={false}
+          />
         </TabsContent>
 
         <TabsContent value="members">
