@@ -58,7 +58,7 @@ const MobileHeader = () => {
           {/* Show user menu or login button on larger screens */}
           <div className="hidden sm:flex items-center space-x-2">
             {user ? (
-              <UserMenu user={user} logout={logout} />
+              <UserMenu />
             ) : (
               <Button 
                 onClick={() => navigate('/auth')}
@@ -117,7 +117,7 @@ const MobileHeader = () => {
                 {/* User Section */}
                 <div className="border-t p-4">
                   {user ? (
-                    <UserMenu user={user} logout={logout} />
+                    <UserMenu />
                   ) : (
                     <Button 
                       onClick={() => {
