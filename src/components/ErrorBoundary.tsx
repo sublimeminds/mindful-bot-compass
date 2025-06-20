@@ -1,8 +1,8 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { DebugLogger } from '@/utils/debugLogger';
-import { reactInitValidator } from '@/utils/reactInitValidator';
-import ReactErrorFallback from './fallback/ReactErrorFallback';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -12,95 +12,66 @@ interface Props {
 interface State {
   hasError: boolean;
   error?: Error;
-  errorInfo?: ErrorInfo;
-  isReactHookError: boolean;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
+class ErrorBoundary extends Component<Props, State> {
   public state: State = {
-    hasError: false,
-    isReactHookError: false
+    hasError: false
   };
 
   public static getDerivedStateFromError(error: Error): State {
-    // Check if this is a React hook related error
-    const isReactHookError = error.message.includes('Cannot read properties of null') ||
-                            error.message.includes('useState') ||
-                            error.message.includes('useEffect') ||
-                            error.message.includes('useContext') ||
-                            error.message.includes('Invalid hook call');
-
-    DebugLogger.error('ErrorBoundary: Error caught by boundary', error, {
-      component: 'ErrorBoundary',
-      method: 'getDerivedStateFromError',
-      isReactHookError
-    });
-    
-    return { 
-      hasError: true, 
-      error,
-      isReactHookError
-    };
+    return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    DebugLogger.error('ErrorBoundary: Component stack trace', error, {
-      component: 'ErrorBoundary',
-      method: 'componentDidCatch',
-      errorInfo,
-      componentStack: errorInfo.componentStack
-    });
-
-    this.setState({
-      error,
-      errorInfo
-    });
-
-    // If this is a React hook error, reset the validator
-    if (this.state.isReactHookError) {
-      reactInitValidator.reset();
-    }
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
   }
 
-  private handleRecovery = () => {
-    DebugLogger.info('ErrorBoundary: Attempting error recovery', {
-      component: 'ErrorBoundary'
-    });
-    
-    // Reset the validator
-    reactInitValidator.reset();
-    
-    // Reset component state
-    this.setState({
-      hasError: false,
-      error: undefined,
-      errorInfo: undefined,
-      isReactHookError: false
-    });
+  private handleReset = () => {
+    this.setState({ hasError: false, error: undefined });
   };
 
   public render() {
     if (this.state.hasError) {
-      // For React hook errors, use the specialized fallback
-      if (this.state.isReactHookError) {
-        return (
-          <ReactErrorFallback 
-            error={this.state.error}
-            onReload={this.handleRecovery}
-          />
-        );
-      }
-
-      // For other errors, use the provided fallback or default
       if (this.props.fallback) {
         return this.props.fallback;
       }
 
       return (
-        <ReactErrorFallback 
-          error={this.state.error}
-          onReload={this.handleRecovery}
-        />
+        <div className="min-h-screen flex items-center justify-center p-4">
+          <Card className="max-w-md w-full">
+            <CardHeader>
+              <CardTitle className="flex items-center text-red-600">
+                <AlertTriangle className="h-5 w-5 mr-2" />
+                Something went wrong
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground">
+                We're sorry, but something unexpected happened. Please try refreshing the page.
+              </p>
+              {this.state.error && (
+                <details className="text-sm">
+                  <summary className="cursor-pointer text-muted-foreground">
+                    Error details
+                  </summary>
+                  <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto">
+                    {this.state.error.toString()}
+                  </pre>
+                </details>
+              )}
+              <div className="flex space-x-2">
+                <Button onClick={this.handleReset} className="flex items-center">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Try Again
+                </Button>
+                <Button variant="outline" onClick={() => window.location.reload()}>
+                  Refresh Page
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       );
     }
 

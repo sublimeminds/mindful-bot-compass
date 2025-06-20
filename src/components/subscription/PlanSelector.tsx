@@ -1,133 +1,127 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Check, Crown, Star, Zap, AlertCircle } from 'lucide-react';
-import { useSubscription } from '@/hooks/useSubscription';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { Check, Crown, Zap, Heart, Star, Sparkles, Shield } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useCurrency } from '@/hooks/useCurrency';
 
-interface PlanSelectorProps {
-  onPlanSelect?: (planId: string, billingCycle: 'monthly' | 'yearly') => void;
-  showCurrentPlan?: boolean;
+interface Plan {
+  id: string;
+  name: string;
+  priceMonthly: number;
+  priceYearly: number;
+  features: string[];
+  popular?: boolean;
+  icon: React.ComponentType<any>;
+  description: string;
 }
 
-const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorProps) => {
-  const { plans, getCurrentPlan, loading } = useSubscription();
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-  const [processingPlan, setProcessingPlan] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  
-  const currentPlan = getCurrentPlan();
+interface PlanSelectorProps {
+  onSelectPlan: (planId: string, isYearly: boolean) => void;
+  currentPlanId?: string;
+  showTrialInfo?: boolean;
+}
 
-  const handleSelectPlan = async (plan: any) => {
-    console.log('Selecting plan:', plan.name, 'with billing:', billingCycle);
-    
-    if (plan.name === 'Free') {
-      // Handle free plan selection if needed
-      if (onPlanSelect) {
-        onPlanSelect(plan.id, billingCycle);
-      }
-      return;
+const PlanSelector = ({ onSelectPlan, currentPlanId, showTrialInfo = false }: PlanSelectorProps) => {
+  const { t } = useTranslation();
+  const { formatPrice } = useCurrency();
+  const [isYearly, setIsYearly] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<string>(currentPlanId || 'free');
+
+  const plans: Plan[] = [
+    {
+      id: 'free',
+      name: 'Free',
+      priceMonthly: 0,
+      priceYearly: 0,
+      description: 'Perfect for getting started',
+      features: [
+        'Basic mood tracking',
+        '3 therapy sessions per month',
+        'Community support',
+        'Basic insights',
+        'Mobile app access'
+      ],
+      icon: Heart
+    },
+    {
+      id: 'premium',
+      name: 'Premium',
+      priceMonthly: 29,
+      priceYearly: 290,
+      description: 'Most popular for regular users',
+      popular: true,
+      features: [
+        'Advanced mood analytics',
+        'Unlimited therapy sessions',
+        'Personalized insights',
+        'Priority support',
+        'Goal tracking',
+        'Progress reports',
+        'Custom therapy plans',
+        'Export your data'
+      ],
+      icon: Star
+    },
+    {
+      id: 'pro',
+      name: 'Pro',
+      priceMonthly: 49,
+      priceYearly: 490,
+      description: 'For power users and families',
+      features: [
+        'Everything in Premium',
+        'AI-powered recommendations',
+        'Advanced therapy matching',
+        'Family sharing (up to 5 members)',
+        'Expert consultations',
+        'Advanced analytics',
+        'Custom integrations',
+        'Dedicated support'
+      ],
+      icon: Crown
     }
+  ];
 
-    setProcessingPlan(plan.id);
-
-    if (onPlanSelect) {
-      onPlanSelect(plan.id, billingCycle);
-    } else {
-      // Create checkout session directly
-      try {
-        const { data, error } = await supabase.functions.invoke('create-checkout', {
-          body: { 
-            planId: plan.id, 
-            billingCycle: billingCycle 
-          }
-        });
-
-        if (error) throw error;
-
-        if (data.url) {
-          window.open(data.url, '_blank');
-          toast({
-            title: "Payment window opened",
-            description: "Complete your payment in the new tab to activate your subscription.",
-          });
-        }
-      } catch (error) {
-        console.error('Error creating checkout session:', error);
-        toast({
-          title: "Error",
-          description: "Failed to start checkout. Please try again.",
-          variant: "destructive",
-        });
-      }
-    }
-
-    setProcessingPlan(null);
+  const getPrice = (plan: Plan) => {
+    const price = isYearly ? plan.priceYearly : plan.priceMonthly;
+    return price === 0 ? 'Free' : formatPrice(price);
   };
 
-  const getPlanIcon = (planName: string) => {
-    switch (planName.toLowerCase()) {
-      case 'free': return <Zap className="h-6 w-6" />;
-      case 'basic': return <Star className="h-6 w-6" />;
-      case 'premium': return <Crown className="h-6 w-6" />;
-      default: return <Zap className="h-6 w-6" />;
-    }
+  const getSavings = (plan: Plan) => {
+    if (plan.priceYearly === 0) return null;
+    const monthlyCost = plan.priceMonthly * 12;
+    const savings = monthlyCost - plan.priceYearly;
+    return savings;
   };
-
-  const getYearlyDiscount = (monthly: number, yearly: number) => {
-    if (!monthly || !yearly) return 0;
-    const yearlyMonthly = yearly / 12;
-    const discount = ((monthly - yearlyMonthly) / monthly) * 100;
-    return Math.round(discount);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
-      </div>
-    );
-  }
-
-  if (!plans || plans.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-        <p className="text-muted-foreground">No plans available at the moment.</p>
-        <Button 
-          onClick={() => window.location.reload()} 
-          variant="outline" 
-          className="mt-4"
-        >
-          Retry
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
-      {/* Billing Cycle Toggle */}
+      {/* Billing Toggle */}
       <div className="flex items-center justify-center space-x-4">
-        <span className={`font-medium ${billingCycle === 'monthly' ? 'text-foreground' : 'text-muted-foreground'}`}>
+        <span className={`text-sm ${!isYearly ? 'font-medium' : 'text-muted-foreground'}`}>
           Monthly
         </span>
-        <Switch
-          checked={billingCycle === 'yearly'}
-          onCheckedChange={(checked) => setBillingCycle(checked ? 'yearly' : 'monthly')}
-        />
-        <span className={`font-medium ${billingCycle === 'yearly' ? 'text-foreground' : 'text-muted-foreground'}`}>
+        <button
+          onClick={() => setIsYearly(!isYearly)}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+            isYearly ? 'bg-therapy-500' : 'bg-gray-200'
+          }`}
+        >
+          <span
+            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+              isYearly ? 'translate-x-6' : 'translate-x-1'
+            }`}
+          />
+        </button>
+        <span className={`text-sm ${isYearly ? 'font-medium' : 'text-muted-foreground'}`}>
           Yearly
         </span>
-        {billingCycle === 'yearly' && (
+        {isYearly && (
           <Badge variant="secondary" className="bg-green-100 text-green-800">
-            Save 20%
+            Save up to 20%
           </Badge>
         )}
       </div>
@@ -135,128 +129,95 @@ const PlanSelector = ({ onPlanSelect, showCurrentPlan = false }: PlanSelectorPro
       {/* Plans Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {plans.map((plan) => {
-          const isCurrentPlan = showCurrentPlan && currentPlan?.id === plan.id;
-          const price = billingCycle === 'yearly' ? plan.price_yearly : plan.price_monthly;
-          const monthlyPrice = billingCycle === 'yearly' ? plan.price_yearly / 12 : plan.price_monthly;
-          const isProcessing = processingPlan === plan.id;
+          const IconComponent = plan.icon;
+          const savings = getSavings(plan);
           
           return (
-            <Card 
-              key={plan.id} 
-              className={`relative transition-all duration-300 hover:shadow-lg ${
-                plan.name === 'Premium' ? 'ring-2 ring-therapy-500 scale-105' : ''
-              } ${isCurrentPlan ? 'ring-2 ring-blue-500' : ''}`}
+            <Card
+              key={plan.id}
+              className={`relative cursor-pointer transition-all ${
+                selectedPlan === plan.id
+                  ? 'ring-2 ring-therapy-500 shadow-lg'
+                  : 'hover:shadow-md'
+              } ${plan.popular ? 'border-therapy-200' : ''}`}
+              onClick={() => setSelectedPlan(plan.id)}
             >
-              {plan.name === 'Premium' && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-therapy-500 text-white px-4 py-1">
+              {plan.popular && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-therapy-500 text-white">
+                    <Sparkles className="h-3 w-3 mr-1" />
                     Most Popular
                   </Badge>
                 </div>
               )}
-
-              {isCurrentPlan && (
-                <div className="absolute -top-4 right-4">
-                  <Badge className="bg-blue-500 text-white px-3 py-1">
-                    Current Plan
-                  </Badge>
-                </div>
-              )}
-
-              <CardHeader className="text-center pb-4">
-                <div className="flex items-center justify-center mb-2">
-                  <div className={`p-3 rounded-full ${
-                    plan.name === 'Free' ? 'bg-gray-100 text-gray-600' :
-                    plan.name === 'Basic' ? 'bg-blue-100 text-blue-600' :
-                    'bg-therapy-100 text-therapy-600'
-                  }`}>
-                    {getPlanIcon(plan.name)}
-                  </div>
-                </div>
-                
-                <CardTitle className="text-2xl font-bold">
-                  {plan.name}
-                </CardTitle>
+              
+              <CardHeader className="text-center">
+                <IconComponent className={`h-12 w-12 mx-auto ${
+                  plan.popular ? 'text-therapy-500' : 'text-gray-500'
+                }`} />
+                <CardTitle className="text-xl">{plan.name}</CardTitle>
+                <p className="text-sm text-muted-foreground">{plan.description}</p>
                 
                 <div className="space-y-1">
                   <div className="text-3xl font-bold">
-                    ${monthlyPrice.toFixed(2)}
-                    <span className="text-lg font-normal text-muted-foreground">/month</span>
+                    {getPrice(plan)}
+                    {plan.priceMonthly > 0 && (
+                      <span className="text-sm font-normal text-muted-foreground">
+                        /{isYearly ? 'year' : 'month'}
+                      </span>
+                    )}
                   </div>
-                  {billingCycle === 'yearly' && plan.price_yearly > 0 && (
-                    <div className="text-sm text-muted-foreground">
-                      Billed annually (${plan.price_yearly}/year)
-                    </div>
-                  )}
-                  {billingCycle === 'yearly' && plan.price_yearly > 0 && (
-                    <div className="text-sm text-green-600 font-medium">
-                      Save {getYearlyDiscount(plan.price_monthly, plan.price_yearly)}% with yearly billing
-                    </div>
-                  )}
-                  {plan.name === 'Premium' && billingCycle === 'yearly' && (
-                    <div className="text-sm text-therapy-600 font-medium">
-                      🎉 Includes 7-day free trial
+                  {isYearly && savings && savings > 0 && (
+                    <div className="text-sm text-green-600">
+                      Save {formatPrice(savings)} per year
                     </div>
                   )}
                 </div>
               </CardHeader>
-
+              
               <CardContent className="space-y-4">
-                {/* Features List */}
-                <div className="space-y-3">
-                  {Object.entries(plan.features).slice(0, 4).map(([key, value]) => (
-                    <div key={key} className="flex items-start space-x-3">
-                      <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm text-muted-foreground">{value}</span>
-                    </div>
+                <ul className="space-y-2">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-start">
+                      <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
                   ))}
-                </div>
-
-                {/* Limits Display */}
-                <div className="pt-4 border-t space-y-2">
-                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                    Usage Limits
+                </ul>
+                
+                {showTrialInfo && plan.id !== 'free' && (
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <div className="flex items-center">
+                      <Shield className="h-4 w-4 text-blue-500 mr-2" />
+                      <span className="text-sm text-blue-700">
+                        7-day free trial included
+                      </span>
+                    </div>
                   </div>
-                  {Object.entries(plan.limits).slice(0, 2).map(([key, value]) => {
-                    const displayValue = value === -1 ? 'Unlimited' : value.toString();
-                    const displayKey = key.replace(/_/g, ' ').replace(/per month|per day|max/, '').trim();
-                    
-                    return (
-                      <div key={key} className="flex justify-between text-sm">
-                        <span className="capitalize">{displayKey}:</span>
-                        <span className="font-medium">{displayValue}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Action Button */}
+                )}
+                
                 <Button
-                  onClick={() => handleSelectPlan(plan)}
-                  disabled={isCurrentPlan || isProcessing}
-                  className={`w-full mt-6 ${
-                    plan.name === 'Premium' 
-                      ? 'bg-therapy-500 hover:bg-therapy-600' 
-                      : plan.name === 'Basic'
-                      ? 'bg-blue-500 hover:bg-blue-600'
+                  variant={selectedPlan === plan.id ? 'default' : 'outline'}
+                  className={`w-full ${
+                    plan.popular && selectedPlan === plan.id
+                      ? 'bg-therapy-500 hover:bg-therapy-600'
                       : ''
                   }`}
-                  variant={plan.name === 'Free' ? 'outline' : 'default'}
+                  onClick={() => onSelectPlan(plan.id, isYearly)}
                 >
-                  {isProcessing ? 'Processing...' :
-                   isCurrentPlan ? 'Current Plan' : 
-                   plan.name === 'Free' ? 'Get Started' : 
-                   `Upgrade to ${plan.name}`}
+                  {currentPlanId === plan.id
+                    ? 'Current Plan'
+                    : selectedPlan === plan.id
+                    ? 'Selected'
+                    : plan.priceMonthly === 0
+                    ? 'Get Started'
+                    : 'Select Plan'
+                  }
                 </Button>
               </CardContent>
             </Card>
           );
         })}
-      </div>
-
-      {/* Features Comparison */}
-      <div className="text-center text-sm text-muted-foreground">
-        All plans include secure, confidential therapy sessions and 24/7 crisis resources
       </div>
     </div>
   );

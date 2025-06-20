@@ -1,24 +1,15 @@
-
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
-import { 
-  Users, 
-  Activity, 
-  Clock, 
-  Brain, 
-  Heart, 
-  MessageCircle,
-  Mic,
-  Video,
-  Share,
-  BarChart3
-} from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useSession } from '@/contexts/SessionContext';
+import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { AlertTriangle, CheckCircle, Clock, Users, MessageCircle, Activity, Pause, Play, Square, Volume2, VolumeX, Heart, Brain, Target, TrendingUp, Zap, Shield, User, Calendar } from 'lucide-react';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useRealTimeSession } from '@/hooks/useRealTimeSession';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SessionParticipant {
   id: string;
@@ -44,8 +35,8 @@ interface SessionProgress {
 }
 
 const RealTimeSessionManager = () => {
-  const { user } = useAuth();
-  const { currentSession } = useSession();
+  const { user } = useSimpleApp();
+  const { currentSession } = useRealTimeSession();
   const { toast } = useToast();
   
   const [participants, setParticipants] = useState<SessionParticipant[]>([]);

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { GoalService } from '@/services/goalService';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { supabase } from '@/integrations/supabase/client';
 
 interface CreateGoalDialogProps {
   children?: React.ReactNode;
@@ -232,12 +237,24 @@ const CreateGoalDialog = ({ children }: CreateGoalDialogProps) => {
           {/* Target Date */}
           <div className="space-y-2">
             <Label htmlFor="targetDate">Target Date</Label>
-            <Input
-              id="targetDate"
-              type="date"
-              value={goalData.targetDate}
-              onChange={(e) => setGoalData(prev => ({ ...prev, targetDate: e.target.value }))}
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Input
+                  id="targetDate"
+                  type="date"
+                  value={goalData.targetDate}
+                  onChange={(e) => setGoalData(prev => ({ ...prev, targetDate: e.target.value }))}
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <Calendar
+                  mode="single"
+                  selected={new Date(goalData.targetDate)}
+                  onSelect={(date) => setGoalData(prev => ({ ...prev, targetDate: format(date, 'yyyy-MM-dd') }))}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
 
           {/* Type */}

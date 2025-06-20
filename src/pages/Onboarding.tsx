@@ -1,389 +1,129 @@
-import { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Heart } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { useToast } from "@/hooks/use-toast";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { useNavigate } from 'react-router-dom';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { supabase } from '@/integrations/supabase/client';
-import GoalsStep from "@/components/onboarding/GoalsStep";
-import PreferencesStep from "@/components/onboarding/PreferencesStep";
-import TherapistPersonalityStep from "@/components/onboarding/TherapistPersonalityStep";
-import PlanSelectionStep from "@/components/onboarding/PlanSelectionStep";
-import StripeCheckout from "@/components/subscription/StripeCheckout";
-import NotificationPreferencesStep from "@/components/onboarding/NotificationPreferencesStep";
-import ProfileSetupStep from "@/components/onboarding/ProfileSetupStep";
-import WelcomeStep from "@/components/onboarding/WelcomeStep";
-import MoodBaselineStep from "@/components/onboarding/MoodBaselineStep";
-import { useSubscription } from "@/hooks/useSubscription";
-import GradientLogo from "@/components/ui/GradientLogo";
-
-const STEPS = [
-  'Welcome',
-  'Goals & Challenges',
-  'Therapy Preferences', 
-  'Mood Baseline',
-  'Choose Your Therapist',
-  'Notification Preferences',
-  'Select Your Plan',
-  'Payment',
-  'Profile Setup',
-  'Complete Setup'
-];
+import GoalsStep from '@/components/onboarding/GoalsStep';
+import PreferencesStep from '@/components/onboarding/PreferencesStep';
+import PlanSelectionStep from '@/components/onboarding/PlanSelectionStep';
 
 const Onboarding = () => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [goals, setGoals] = useState<string[]>([]);
-  const [preferences, setPreferences] = useState<string[]>([]);
-  const [moodBaseline, setMoodBaseline] = useState<any>(null);
-  const [selectedPersonality, setSelectedPersonality] = useState<string | null>(null);
-  const [selectedPlan, setSelectedPlan] = useState<{planId: string, billingCycle: 'monthly' | 'yearly'} | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { plans } = useSubscription();
+  const [step, setStep] = useState(1);
+  const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
+  const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Check if user has already completed onboarding
   useEffect(() => {
-    const checkOnboardingStatus = async () => {
-      if (!user) return;
-
-      try {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('onboarding_complete')
-          .eq('id', user.id)
-          .single();
-
-        if (profile?.onboarding_complete) {
-          navigate('/');
-          return;
-        }
-      } catch (error) {
-        console.error('Error checking onboarding status:', error);
-      }
-    };
-
-    checkOnboardingStatus();
+    if (!user) {
+      navigate('/auth');
+    }
   }, [user, navigate]);
 
-  // Enhanced auto-select therapist based on goals and preferences
-  const autoSelectTherapist = () => {
-    const goalKeywords = goals.map(g => g.toLowerCase());
-    const prefKeywords = preferences.map(p => p.toLowerCase());
-    
-    // More sophisticated matching logic
-    if (goalKeywords.some(g => g.includes('trauma')) || prefKeywords.some(p => p.includes('trauma'))) {
-      return 'trauma-informed';
-    } else if (goalKeywords.some(g => g.includes('anxiety') || g.includes('stress')) || 
-               prefKeywords.some(p => p.includes('mindfulness'))) {
-      return 'mindfulness-coach';
-    } else if (goalKeywords.some(g => g.includes('depression') || g.includes('confidence')) || 
-               prefKeywords.some(p => p.includes('cbt') || p.includes('cognitive'))) {
-      return 'cbt-specialist';
-    } else if (goalKeywords.some(g => g.includes('relationship') || g.includes('communication')) || 
-               prefKeywords.some(p => p.includes('talk therapy'))) {
-      return 'relationship-counselor';
-    } else if (goalKeywords.some(g => g.includes('purpose') || g.includes('coping')) || 
-               prefKeywords.some(p => p.includes('solution') || p.includes('positive'))) {
-      return 'solution-focused';
-    }
-    return 'holistic-wellness'; // Default fallback
+  const handleGoalToggle = (goal: string) => {
+    setSelectedGoals((prevGoals) =>
+      prevGoals.includes(goal) ? prevGoals.filter((g) => g !== goal) : [...prevGoals, goal]
+    );
   };
 
-  const handlePlanSelect = (planId: string, billingCycle: 'monthly' | 'yearly') => {
-    setSelectedPlan({ planId, billingCycle });
+  const handlePreferenceToggle = (preference: string) => {
+    setSelectedPreferences((prevPreferences) =>
+      prevPreferences.includes(preference) ? prevPreferences.filter((p) => p !== preference) : [...prevPreferences, preference]
+    );
   };
 
-  const handlePaymentSuccess = () => {
-    setCurrentStep(8);
-  };
+  const handleNext = async () => {
+    if (step === 3) {
+      setIsLoading(true);
+      try {
+        const { error } = await supabase
+          .from('user_onboarding')
+          .upsert({
+            user_id: user?.id,
+            goals: selectedGoals,
+            preferences: selectedPreferences,
+          }, { onConflict: 'user_id' });
 
-  const handleComplete = async () => {
-    if (!user) return;
-
-    setIsLoading(true);
-    try {
-      const { error: insertError } = await supabase
-        .from('user_onboarding')
-        .insert({
-          user_id: user.id,
-          goals,
-          preferences
-        });
-
-      if (insertError) throw insertError;
-
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({ onboarding_complete: true })
-        .eq('id', user.id);
-
-      if (updateError) throw updateError;
-
-      toast({
-        title: "Welcome to TherapySync!",
-        description: "Your profile has been set up successfully. Let's begin your wellness journey.",
-      });
-
-      navigate('/');
-    } catch (error) {
-      console.error('Error completing onboarding:', error);
-      toast({
-        title: "Error",
-        description: "There was an issue completing your setup. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const nextStep = () => {
-    // Auto-select therapist when reaching therapist selection step
-    if (currentStep === 4 && !selectedPersonality) {
-      const autoSelected = autoSelectTherapist();
-      setSelectedPersonality(autoSelected);
-    }
-    
-    if (currentStep < STEPS.length - 1) {
-      setCurrentStep(currentStep + 1);
+        if (error) {
+          console.error('Error saving onboarding data:', error);
+        } else {
+          navigate('/chat');
+        }
+      } finally {
+        setIsLoading(false);
+      }
     } else {
-      handleComplete();
+      setStep((prevStep) => prevStep + 1);
     }
   };
 
-  const prevStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+  const handleBack = () => {
+    setStep((prevStep) => prevStep - 1);
+  };
+
+  const renderStepContent = () => {
+    switch (step) {
+      case 1:
+        return (
+          <GoalsStep
+            selectedGoals={selectedGoals}
+            onGoalToggle={handleGoalToggle}
+            onNext={handleNext}
+            onBack={handleBack}
+          />
+        );
+      case 2:
+        return (
+          <PreferencesStep
+            selectedPreferences={selectedPreferences}
+            onPreferenceToggle={handlePreferenceToggle}
+            onNext={handleNext}
+            onBack={handleBack}
+          />
+        );
+      case 3:
+        return (
+          <PlanSelectionStep
+            onNext={handleNext}
+            onBack={handleBack}
+          />
+        );
+      default:
+        return <div>Invalid step</div>;
     }
-  };
-
-  const skipPayment = () => {
-    setCurrentStep(8);
-  };
-
-  // Get selected plan details
-  const getSelectedPlanDetails = () => {
-    if (!selectedPlan) return null;
-    const plan = plans.find(p => p.id === selectedPlan.planId);
-    if (!plan) return null;
-    
-    const price = selectedPlan.billingCycle === 'yearly' ? plan.price_yearly : plan.price_monthly;
-    return {
-      name: plan.name,
-      price: price,
-      billingCycle: selectedPlan.billingCycle
-    };
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50 p-6">
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <div className="flex items-center justify-center mb-4">
-            <GradientLogo 
-              size="lg"
-              className="drop-shadow-lg animate-swirl-breathe"
-            />
+    <div className="container mx-auto py-10">
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold">
+            Welcome to TherapySync!
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="text-center">
+            <p>
+              Let's set up your profile to personalize your therapy experience.
+            </p>
+            <Progress value={(step / 3) * 100} className="mt-4" />
+            <p className="text-sm text-muted-foreground">
+              Step {step} of 3
+            </p>
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Welcome to TherapySync</h1>
-          <p className="text-muted-foreground">Let's personalize your wellness experience</p>
-        </div>
 
-        {/* Progress */}
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>Step {currentStep + 1} of {STEPS.length}</span>
-            <span>{Math.round(((currentStep + 1) / STEPS.length) * 100)}% complete</span>
-          </div>
-          <Progress value={((currentStep + 1) / STEPS.length) * 100} className="h-2" />
-          <p className="text-center text-sm font-medium text-harmony-600">
-            {STEPS[currentStep]}
-          </p>
-        </div>
+          {renderStepContent()}
 
-        {/* Step Content */}
-        <Card className="min-h-[500px]">
-          <CardContent className="p-8">
-            {currentStep === 0 && (
-              <WelcomeStep onNext={nextStep} />
-            )}
-
-            {currentStep === 1 && (
-              <GoalsStep
-                selectedGoals={goals}
-                onGoalToggle={(goal) => {
-                  setGoals(prev => 
-                    prev.includes(goal) 
-                      ? prev.filter(g => g !== goal)
-                      : [...prev, goal]
-                  );
-                }}
-                onNext={nextStep}
-                onBack={prevStep}
-              />
-            )}
-
-            {currentStep === 2 && (
-              <PreferencesStep
-                selectedPreferences={preferences}
-                selectedGoals={goals}
-                onPreferenceToggle={(preference) => {
-                  setPreferences(prev => 
-                    prev.includes(preference) 
-                      ? prev.filter(p => p !== preference)
-                      : [...prev, preference]
-                  );
-                }}
-                onNext={nextStep}
-                onBack={prevStep}
-              />
-            )}
-
-            {currentStep === 3 && (
-              <MoodBaselineStep
-                onMoodSet={(mood) => {
-                  setMoodBaseline(mood);
-                  nextStep();
-                }}
-                onBack={prevStep}
-              />
-            )}
-
-            {currentStep === 4 && (
-              <TherapistPersonalityStep
-                selectedPersonality={selectedPersonality}
-                selectedGoals={goals}
-                selectedPreferences={preferences}
-                onPersonalitySelect={setSelectedPersonality}
-                onNext={nextStep}
-                onBack={prevStep}
-              />
-            )}
-
-            {currentStep === 5 && (
-              <NotificationPreferencesStep
-                onNext={nextStep}
-                onBack={prevStep}
-              />
-            )}
-
-            {currentStep === 6 && (
-              <div className="space-y-6">
-                {plans && plans.length > 0 ? (
-                  <PlanSelectionStep
-                    selectedPlan={selectedPlan}
-                    onPlanSelect={handlePlanSelect}
-                    onNext={nextStep}
-                    onBack={prevStep}
-                  />
-                ) : (
-                  <div className="text-center py-12">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-harmony-500 mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">Loading plans...</p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {currentStep === 7 && (
-              <div className="space-y-6">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold mb-4">Complete Your Payment</h2>
-                  <p className="text-muted-foreground">
-                    {selectedPlan?.planId ? 'Secure your subscription and start your journey' : 'You selected the free plan - no payment needed!'}
-                  </p>
-                </div>
-
-                {selectedPlan?.planId && getSelectedPlanDetails() ? (
-                  <StripeCheckout
-                    planName={getSelectedPlanDetails()!.name}
-                    planPrice={getSelectedPlanDetails()!.price}
-                    billingCycle={getSelectedPlanDetails()!.billingCycle}
-                    onSuccess={handlePaymentSuccess}
-                  />
-                ) : (
-                  <div className="text-center space-y-4">
-                    <p className="text-lg">You're all set with the free plan!</p>
-                    <Button onClick={skipPayment} size="lg">
-                      Continue to Setup
-                    </Button>
-                  </div>
-                )}
-
-                <div className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
-                  {!selectedPlan?.planId && (
-                    <Button onClick={skipPayment}>
-                      Skip Payment
-                    </Button>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {currentStep === 8 && (
-              <ProfileSetupStep
-                onNext={nextStep}
-                onBack={prevStep}
-              />
-            )}
-
-            {currentStep === 9 && (
-              <div className="text-center space-y-6">
-                <div>
-                  <h2 className="text-2xl font-bold mb-4">You're All Set!</h2>
-                  <p className="text-muted-foreground mb-6">
-                    Your personalized wellness experience is ready. Let's start your journey toward better mental health.
-                  </p>
-                </div>
-
-                <div className="bg-harmony-50 p-6 rounded-lg border border-harmony-200">
-                  <h3 className="font-semibold mb-4">Your Setup Summary:</h3>
-                  <div className="space-y-2 text-sm">
-                    <p><strong>Goals:</strong> {goals.length} selected</p>
-                    <p><strong>Preferences:</strong> {preferences.length} selected</p>
-                    <p><strong>Mood Baseline:</strong> {moodBaseline ? 'Recorded' : 'Skipped'}</p>
-                    <p><strong>Therapist:</strong> {selectedPersonality ? 'Selected' : 'Default'}</p>
-                    <p><strong>Plan:</strong> {selectedPlan ? 'Premium' : 'Free'}</p>
-                  </div>
-                </div>
-
-                <div className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
-                  <Button 
-                    onClick={handleComplete}
-                    disabled={isLoading}
-                    className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
-                  >
-                    {isLoading ? "Setting up..." : "Complete Setup"}
-                  </Button>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Navigation */}
-        <div className="text-center">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/')}
-            className="text-muted-foreground hover:text-primary"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Home
-          </Button>
-        </div>
-      </div>
+          {isLoading && (
+            <div className="flex justify-center">
+              <Button disabled>Loading...</Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

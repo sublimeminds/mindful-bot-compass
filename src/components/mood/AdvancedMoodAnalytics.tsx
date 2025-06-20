@@ -1,269 +1,149 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { TrendingUp, Calendar, Brain, Heart, BarChart3, Target, Zap, Clock } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { TrendingUp, TrendingDown, Brain, Heart, AlertTriangle, Calendar, Target } from 'lucide-react';
-import { MoodTrackingService } from '@/services/moodTrackingService';
-import { useAuth } from '@/contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
+
+interface MoodEntry {
+  id: string;
+  overall: number;
+  anxiety: number;
+  stress: number;
+  energy: number;
+  sleep: number;
+  social: number;
+  work: number;
+  created_at: string;
+}
+
+const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#a4de6c', '#d0ed57'];
 
 const AdvancedMoodAnalytics = () => {
-  const { user } = useAuth();
-  const [moodData, setMoodData] = useState([]);
-  const [patterns, setPatterns] = useState(null);
-  const [insights, setInsights] = useState([]);
-  const [correlations, setCorrelations] = useState([]);
+  const { user } = useSimpleApp();
   const [timeRange, setTimeRange] = useState('7d');
+  const [selectedCategory, setSelectedCategory] = useState('overall');
 
-  useEffect(() => {
-    if (user) {
-      loadMoodData();
-    }
-  }, [user, timeRange]);
+  const { data: moodEntries = [], isLoading, error } = useQuery({
+    queryKey: ['mood-entries', user?.id, timeRange],
+    queryFn: async (): Promise<MoodEntry[]> => {
+      if (!user?.id) return [];
 
-  const loadMoodData = async () => {
-    try {
-      const entries = await MoodTrackingService.getMoodEntries(user.id);
-      setMoodData(entries);
-      
-      const analysisPatterns = MoodTrackingService.analyzeMoodPatterns(entries);
-      setPatterns(analysisPatterns);
-      
-      const generatedInsights = MoodTrackingService.generateMoodInsights(entries);
-      setInsights(generatedInsights);
-      
-      const moodCorrelations = MoodTrackingService.generateMoodCorrelations(entries);
-      setCorrelations(moodCorrelations);
-    } catch (error) {
-      console.error('Error loading mood data:', error);
-    }
-  };
+      const startDate = new Date();
+      if (timeRange === '7d') {
+        startDate.setDate(startDate.getDate() - 7);
+      } else if (timeRange === '30d') {
+        startDate.setDate(startDate.getDate() - 30);
+      } else if (timeRange === '90d') {
+        startDate.setDate(startDate.getDate() - 90);
+      }
 
-  const getTrendIcon = (trend) => {
-    switch (trend) {
-      case 'improving': return <TrendingUp className="h-4 w-4 text-green-500" />;
-      case 'declining': return <TrendingDown className="h-4 w-4 text-red-500" />;
-      default: return <Brain className="h-4 w-4 text-gray-500" />;
-    }
-  };
+      const { data, error } = await supabase
+        .from('mood_entries')
+        .select('*')
+        .eq('user_id', user.id)
+        .gte('created_at', startDate.toISOString())
+        .order('created_at', { ascending: true });
 
-  const getInsightIcon = (type) => {
-    switch (type) {
-      case 'positive': return <TrendingUp className="h-4 w-4 text-green-600" />;
-      case 'warning': return <AlertTriangle className="h-4 w-4 text-orange-600" />;
-      default: return <Brain className="h-4 w-4 text-blue-600" />;
-    }
-  };
+      if (error) {
+        console.error('Error fetching mood entries:', error);
+        throw error;
+      }
 
-  const COLORS = ['#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+      return data || [];
+    },
+    enabled: !!user?.id
+  });
 
-  if (!patterns) {
-    return <div>Loading analytics...</div>;
+  const categoryOptions = useMemo(() => [
+    { value: 'overall', label: 'Overall Mood', icon: Heart },
+    { value: 'anxiety', label: 'Anxiety Level', icon: Brain },
+    { value: 'stress', label: 'Stress Level', icon: Zap },
+    { value: 'energy', label: 'Energy Level', icon: Brain },
+    { value: 'sleep', label: 'Sleep Quality', icon: Brain },
+    { value: 'social', label: 'Social Interaction', icon: Brain },
+    { value: 'work', label: 'Work Productivity', icon: Brain }
+  ], []);
+
+  const chartData = useMemo(() => {
+    return moodEntries.map(entry => ({
+      date: new Date(entry.created_at).toLocaleDateString(),
+      [selectedCategory]: entry[selectedCategory]
+    }));
+  }, [moodEntries, selectedCategory]);
+
+  const averageMood = useMemo(() => {
+    if (moodEntries.length === 0) return 0;
+    const sum = moodEntries.reduce((acc, entry) => acc + entry[selectedCategory], 0);
+    return sum / moodEntries.length;
+  }, [moodEntries, selectedCategory]);
+
+  const categoryLabel = categoryOptions.find(option => option.value === selectedCategory)?.label || 'Mood';
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {(error as Error).message}</div>;
   }
 
   return (
     <div className="space-y-6">
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Average Mood</p>
-                <p className="text-2xl font-bold">{patterns.averageMood}/10</p>
-              </div>
-              <Heart className="h-8 w-8 text-therapy-500" />
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center">
+              <BarChart3 className="h-5 w-5 mr-2 text-therapy-600" />
+              Mood Analytics
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Trend</p>
-                <div className="flex items-center space-x-2">
-                  {getTrendIcon(patterns.trend)}
-                  <span className="text-lg font-bold capitalize">{patterns.trend}</span>
-                </div>
-              </div>
+            <div className="flex items-center space-x-2">
+              <Select value={timeRange} onValueChange={setTimeRange}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select time range" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="7d">Last 7 Days</SelectItem>
+                  <SelectItem value="30d">Last 30 Days</SelectItem>
+                  <SelectItem value="90d">Last 90 Days</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-[220px]">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categoryOptions.map(option => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Tracking Streak</p>
-                <p className="text-2xl font-bold">{patterns.streak} days</p>
-              </div>
-              <Calendar className="h-8 w-8 text-calm-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Best Time</p>
-                <p className="text-lg font-bold">{patterns.bestTime}</p>
-              </div>
-              <Target className="h-8 w-8 text-focus-500" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Time Range Selector */}
-      <div className="flex space-x-2">
-        {['7d', '30d', '90d', '1y'].map((range) => (
-          <Button
-            key={range}
-            variant={timeRange === range ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setTimeRange(range)}
-          >
-            {range === '7d' ? '7 Days' : range === '30d' ? '30 Days' : range === '90d' ? '3 Months' : '1 Year'}
-          </Button>
-        ))}
-      </div>
-
-      {/* Analytics Tabs */}
-      <Tabs defaultValue="trends" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="trends">Mood Trends</TabsTrigger>
-          <TabsTrigger value="patterns">Patterns</TabsTrigger>
-          <TabsTrigger value="correlations">Correlations</TabsTrigger>
-          <TabsTrigger value="insights">Insights</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="trends" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Mood Trends Over Time</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={moodData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="timestamp" />
-                    <YAxis domain={[1, 10]} />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="overall" stroke="hsl(var(--therapy-500))" strokeWidth={2} name="Overall" />
-                    <Line type="monotone" dataKey="energy" stroke="hsl(var(--calm-500))" strokeWidth={2} name="Energy" />
-                    <Line type="monotone" dataKey="anxiety" stroke="hsl(var(--focus-500))" strokeWidth={2} strokeDasharray="5 5" name="Anxiety" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="patterns" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Time-of-Day Patterns</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                    <span className="font-medium">Best Time</span>
-                    <Badge variant="secondary" className="bg-green-100 text-green-800">
-                      {patterns.bestTime}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-                    <span className="font-medium">Challenging Time</span>
-                    <Badge variant="secondary" className="bg-red-100 text-red-800">
-                      {patterns.worstTime}
-                    </Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Mood Stability</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span>Variability Score</span>
-                    <span className="font-bold">{patterns.moodVariability.toFixed(1)}</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className={`h-2 rounded-full ${patterns.moodVariability < 1.5 ? 'bg-green-500' : patterns.moodVariability < 2.5 ? 'bg-yellow-500' : 'bg-red-500'}`}
-                      style={{ width: `${Math.min((patterns.moodVariability / 4) * 100, 100)}%` }}
-                    />
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {patterns.moodVariability < 1.5 ? 'Very stable mood patterns' : 
-                     patterns.moodVariability < 2.5 ? 'Moderately stable mood patterns' : 
-                     'Variable mood patterns - consider professional support'}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis domain={[0, 10]} />
+                <Tooltip />
+                <Line type="monotone" dataKey={selectedCategory} stroke="#82ca9d" />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
-        </TabsContent>
-
-        <TabsContent value="correlations" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Activity Impact on Mood</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {correlations.slice(0, 5).map((correlation, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <span className="font-medium">{correlation.activity}</span>
-                      <p className="text-sm text-muted-foreground">{correlation.occurrences} occurrences</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className={`w-2 h-2 rounded-full ${correlation.impact > 0 ? 'bg-green-500' : 'bg-red-500'}`} />
-                      <span className={`font-bold ${correlation.impact > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {correlation.impact > 0 ? '+' : ''}{(correlation.impact * 10).toFixed(1)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="insights" className="space-y-4">
-          <div className="space-y-4">
-            {insights.map((insight, index) => (
-              <Card key={index} className={`${insight.type === 'positive' ? 'border-green-200' : insight.type === 'warning' ? 'border-orange-200' : 'border-blue-200'}`}>
-                <CardContent className="p-4">
-                  <div className="flex items-start space-x-3">
-                    {getInsightIcon(insight.type)}
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-medium">{insight.title}</h4>
-                        <Badge variant="outline" className="text-xs">
-                          {Math.round(insight.confidence * 100)}% confidence
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-1">{insight.description}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="text-center mt-4">
+            <h3 className="text-lg font-medium">Average {categoryLabel}: {averageMood.toFixed(1)}</h3>
           </div>
-        </TabsContent>
-      </Tabs>
+        </CardContent>
+      </Card>
     </div>
   );
 };

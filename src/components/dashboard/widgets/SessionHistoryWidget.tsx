@@ -1,13 +1,14 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, TrendingUp, MessageSquare, ArrowRight } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Calendar, Clock, TrendingUp, ArrowRight, Brain } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { format } from 'date-fns';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 const SessionHistoryWidget = () => {
   const navigate = useNavigate();

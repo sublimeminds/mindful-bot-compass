@@ -1,238 +1,140 @@
 
 import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check, Crown, Star, Zap, Gift } from 'lucide-react';
-import { useSubscription } from '@/hooks/useSubscription';
-import GradientLogo from '@/components/ui/GradientLogo';
-import TrialSignup from '@/components/subscription/TrialSignup';
+import { Check, Crown, Zap, Heart, Star, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface PlanSelectionStepProps {
-  selectedPlan?: { planId: string; billingCycle: 'monthly' | 'yearly' } | null;
-  onPlanSelect: (planId: string, billingCycle: 'monthly' | 'yearly') => void;
   onNext: () => void;
   onBack: () => void;
 }
 
-const PlanSelectionStep = ({ selectedPlan, onPlanSelect, onNext, onBack }: PlanSelectionStepProps) => {
-  const { plans } = useSubscription();
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-  const [showTrialSignup, setShowTrialSignup] = useState(false);
+const PlanSelectionStep = ({ onNext, onBack }: PlanSelectionStepProps) => {
+  const { t } = useTranslation();
+  const [selectedPlan, setSelectedPlan] = useState<string>('free');
 
-  const getPlanIcon = (planName: string) => {
-    switch (planName.toLowerCase()) {
-      case 'free': return <Zap className="h-6 w-6" />;
-      case 'basic': return <Star className="h-6 w-6" />;
-      case 'premium': return <Crown className="h-6 w-6" />;
-      default: return <Zap className="h-6 w-6" />;
+  const plans = [
+    {
+      id: 'free',
+      name: 'Free',
+      price: '$0',
+      period: '/month',
+      features: [
+        'Basic mood tracking',
+        '3 therapy sessions per month',
+        'Community support',
+        'Basic insights'
+      ],
+      icon: Heart,
+      popular: false
+    },
+    {
+      id: 'premium',
+      name: 'Premium',
+      price: '$29',
+      period: '/month',
+      features: [
+        'Advanced mood analytics',
+        'Unlimited therapy sessions',
+        'Personalized insights',
+        'Priority support',
+        'Goal tracking',
+        'Progress reports'
+      ],
+      icon: Star,
+      popular: true
+    },
+    {
+      id: 'pro',
+      name: 'Pro',
+      price: '$49',
+      period: '/month',
+      features: [
+        'Everything in Premium',
+        'AI-powered recommendations',
+        'Custom therapy plans',
+        'Family sharing',
+        'Expert consultations',
+        'Advanced analytics'
+      ],
+      icon: Crown,
+      popular: false
     }
-  };
-
-  const handlePlanSelect = (planId: string) => {
-    const plan = plans.find(p => p.id === planId);
-    
-    // If Premium plan is selected, show trial signup instead of direct payment
-    if (plan?.name === 'Premium') {
-      setShowTrialSignup(true);
-      return;
-    }
-    
-    onPlanSelect(planId, billingCycle);
-  };
-
-  const handleTrialStart = () => {
-    // Find Premium plan and select it
-    const premiumPlan = plans.find(p => p.name === 'Premium');
-    if (premiumPlan) {
-      onPlanSelect(premiumPlan.id, 'yearly'); // Default to yearly for trial
-    }
-    setShowTrialSignup(false);
-    onNext();
-  };
-
-  const isSelected = (planId: string) => {
-    return selectedPlan?.planId === planId && selectedPlan?.billingCycle === billingCycle;
-  };
-
-  if (showTrialSignup) {
-    return (
-      <div className="space-y-6">
-        <div className="text-center">
-          <div className="flex items-center justify-center mb-4">
-            <GradientLogo 
-              size="md"
-              className="drop-shadow-lg"
-            />
-          </div>
-          <h2 className="text-2xl font-bold mb-4">Start Your Free Trial</h2>
-          <p className="text-muted-foreground">
-            Experience all Premium features with a 7-day free trial
-          </p>
-        </div>
-
-        <TrialSignup onClose={() => setShowTrialSignup(false)} />
-
-        <div className="text-center">
-          <Button 
-            variant="outline" 
-            onClick={() => setShowTrialSignup(false)}
-            className="mr-4"
-          >
-            Back to Plans
-          </Button>
-          <Button 
-            onClick={handleTrialStart}
-            className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
-          >
-            Continue with Trial
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  ];
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <div className="flex items-center justify-center mb-4">
-          <GradientLogo 
-            size="md"
-            className="drop-shadow-lg"
-          />
-        </div>
-        <h2 className="text-2xl font-bold mb-4">Choose Your Plan</h2>
+      <div className="text-center space-y-2">
+        <h2 className="text-2xl font-bold">Choose Your Plan</h2>
         <p className="text-muted-foreground">
           Select the plan that best fits your mental health journey
         </p>
       </div>
 
-      {/* Billing Cycle Toggle */}
-      <div className="flex items-center justify-center space-x-4">
-        <span className={`font-medium ${billingCycle === 'monthly' ? 'text-foreground' : 'text-muted-foreground'}`}>
-          Monthly
-        </span>
-        <Switch
-          checked={billingCycle === 'yearly'}
-          onCheckedChange={(checked) => setBillingCycle(checked ? 'yearly' : 'monthly')}
-        />
-        <span className={`font-medium ${billingCycle === 'yearly' ? 'text-foreground' : 'text-muted-foreground'}`}>
-          Yearly
-        </span>
-        {billingCycle === 'yearly' && (
-          <Badge variant="secondary" className="bg-green-100 text-green-800">
-            Save 20%
-          </Badge>
-        )}
-      </div>
-
-      {/* Plans Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {plans.map((plan) => {
-          const price = billingCycle === 'yearly' ? plan.price_yearly : plan.price_monthly;
-          const monthlyPrice = billingCycle === 'yearly' ? plan.price_yearly / 12 : plan.price_monthly;
-          const selected = isSelected(plan.id);
-          const isPremium = plan.name === 'Premium';
-          
+          const IconComponent = plan.icon;
           return (
-            <Card 
-              key={plan.id} 
-              className={`relative cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                isPremium ? 'ring-2 ring-harmony-500 scale-105' : ''
-              } ${selected ? 'ring-2 ring-blue-500 bg-blue-50' : ''}`}
-              onClick={() => handlePlanSelect(plan.id)}
+            <Card
+              key={plan.id}
+              className={`relative cursor-pointer transition-all ${
+                selectedPlan === plan.id
+                  ? 'ring-2 ring-therapy-500 shadow-lg'
+                  : 'hover:shadow-md'
+              }`}
+              onClick={() => setSelectedPlan(plan.id)}
             >
-              {isPremium && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-harmony-500 text-white px-4 py-1 flex items-center space-x-1">
-                    <Gift className="h-3 w-3" />
-                    <span>7-Day Free Trial</span>
+              {plan.popular && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-therapy-500 text-white">
+                    <Sparkles className="h-3 w-3 mr-1" />
+                    Most Popular
                   </Badge>
                 </div>
               )}
-
-              {selected && (
-                <div className="absolute -top-4 right-4">
-                  <Badge className="bg-blue-500 text-white px-3 py-1">
-                    Selected
-                  </Badge>
-                </div>
-              )}
-
-              <CardHeader className="text-center pb-4">
-                <div className="flex items-center justify-center mb-2">
-                  <div className={`p-3 rounded-full ${
-                    plan.name === 'Free' ? 'bg-gray-100 text-gray-600' :
-                    plan.name === 'Basic' ? 'bg-blue-100 text-blue-600' :
-                    'bg-harmony-100 text-harmony-600'
-                  }`}>
-                    {getPlanIcon(plan.name)}
-                  </div>
-                </div>
-                
-                <CardTitle className="text-xl font-bold">
-                  {plan.name}
-                </CardTitle>
-                
-                <div className="space-y-1">
-                  {isPremium ? (
-                    <div className="space-y-1">
-                      <div className="text-lg font-bold text-green-600">
-                        Free for 7 days
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Then ${monthlyPrice.toFixed(2)}/month
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-2xl font-bold">
-                      ${monthlyPrice.toFixed(2)}
-                      <span className="text-sm font-normal text-muted-foreground">/month</span>
-                    </div>
-                  )}
-                  {billingCycle === 'yearly' && plan.price_yearly > 0 && !isPremium && (
-                    <div className="text-xs text-muted-foreground">
-                      Billed annually (${plan.price_yearly}/year)
-                    </div>
-                  )}
+              
+              <CardHeader className="text-center">
+                <IconComponent className="h-12 w-12 mx-auto text-therapy-500" />
+                <CardTitle className="text-xl">{plan.name}</CardTitle>
+                <div className="text-3xl font-bold">
+                  {plan.price}
+                  <span className="text-sm font-normal text-muted-foreground">
+                    {plan.period}
+                  </span>
                 </div>
               </CardHeader>
-
-              <CardContent className="space-y-3">
-                {/* Key Features */}
-                <div className="space-y-2">
-                  {Object.entries(plan.features).slice(0, 3).map(([key, value]) => (
-                    <div key={key} className="flex items-start space-x-2">
-                      <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-xs text-muted-foreground">{value}</span>
-                    </div>
+              
+              <CardContent className="space-y-4">
+                <ul className="space-y-2">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-center">
+                      <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
                   ))}
-                </div>
-
-                {isPremium && (
-                  <div className="pt-2 border-t border-harmony-200">
-                    <p className="text-xs text-harmony-600 font-medium text-center">
-                      🎁 Start your wellness journey risk-free!
-                    </p>
-                  </div>
-                )}
+                </ul>
+                
+                <Button
+                  variant={selectedPlan === plan.id ? 'default' : 'outline'}
+                  className="w-full"
+                  onClick={() => setSelectedPlan(plan.id)}
+                >
+                  {selectedPlan === plan.id ? 'Selected' : 'Select Plan'}
+                </Button>
               </CardContent>
             </Card>
           );
         })}
       </div>
 
-      <div className="flex justify-between mt-8">
+      <div className="flex justify-between">
         <Button variant="outline" onClick={onBack}>
-          Back
+          Previous
         </Button>
-        <Button 
-          onClick={onNext}
-          disabled={!selectedPlan}
-          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
-        >
-          Continue
+        <Button onClick={onNext} className="bg-therapy-500 hover:bg-therapy-600">
+          Continue with {plans.find(p => p.id === selectedPlan)?.name}
         </Button>
       </div>
     </div>

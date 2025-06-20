@@ -3,14 +3,14 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings, FileText, Clock, BarChart3 } from "lucide-react";
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import AdvancedNotificationSettings from '@/components/notifications/AdvancedNotificationSettings';
 import NotificationTemplateManager from '@/components/notifications/NotificationTemplateManager';
 import IntelligentScheduler from '@/components/notifications/IntelligentScheduler';
 import Header from '@/components/Header';
 
 const NotificationSettings = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
 
   if (!user) {
     return (

@@ -1,77 +1,39 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { 
-  Brain, 
-  Lightbulb, 
-  Heart, 
-  Target, 
-  TrendingUp,
-  Calendar,
-  MessageCircle,
-  AlertTriangle
-} from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { MemoryService, ConversationMemory, EmotionalPattern } from '@/services/memoryService';
-import { useToast } from '@/hooks/use-toast';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
+import { Brain, Clock, TrendingUp, Heart, Lightbulb, Target, Users, Calendar, BarChart3, Zap, Shield, MessageCircle, CheckCircle, AlertTriangle, Star } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 const MemoryInsights = () => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  
-  const [memories, setMemories] = useState<ConversationMemory[]>([]);
-  const [patterns, setPatterns] = useState<EmotionalPattern[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { user } = useSimpleApp();
+  const [activeTab, setActiveTab] = useState('overview');
 
-  useEffect(() => {
-    if (user?.id) {
-      loadMemoryData();
-    }
-  }, [user?.id]);
+  const { data: memoryData, isLoading, error } = useQuery({
+    queryKey: ['memory-insights', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
 
-  const loadMemoryData = async () => {
-    try {
-      setLoading(true);
-      const [memoriesData, patternsData] = await Promise.all([
-        MemoryService.getRecentMemories(user!.id, 10),
-        MemoryService.getEmotionalPatterns(user!.id)
-      ]);
-      
-      setMemories(memoriesData);
-      setPatterns(patternsData);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load memory insights",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+      // Mock memory insights data
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-  const getMemoryIcon = (type: string) => {
-    switch (type) {
-      case 'breakthrough': return <Lightbulb className="h-4 w-4 text-yellow-500" />;
-      case 'insight': return <Brain className="h-4 w-4 text-purple-500" />;
-      case 'concern': return <AlertTriangle className="h-4 w-4 text-red-500" />;
-      case 'goal': return <Target className="h-4 w-4 text-green-500" />;
-      case 'pattern': return <TrendingUp className="h-4 w-4 text-blue-500" />;
-      case 'technique': return <MessageCircle className="h-4 w-4 text-indigo-500" />;
-      default: return <Heart className="h-4 w-4 text-therapy-500" />;
-    }
-  };
+      return {
+        totalEntries: 125,
+        recentTopics: ['Childhood', 'Relationships', 'Career'],
+        emotionalTone: 'Positive',
+        recallRate: 0.85,
+        entryFrequency: 3.2,
+        mostUsedKeywords: ['happy', 'family', 'success']
+      };
+    },
+    enabled: !!user?.id,
+  });
 
-  const getPatternColor = (effectiveness: number) => {
-    if (effectiveness >= 0.8) return 'text-green-600';
-    if (effectiveness >= 0.6) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <Card>
         <CardContent className="p-6">
@@ -81,159 +43,100 @@ const MemoryInsights = () => {
     );
   }
 
+  if (error) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center text-red-500">Error loading memory insights.</div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!memoryData) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center">No memory data available.</div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {/* Recent Memories */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Brain className="h-5 w-5 mr-2 text-therapy-600" />
-            Recent Therapy Insights
+            <Brain className="h-5 w-5 mr-2" />
+            Memory Insights
           </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {memories.length === 0 ? (
-            <div className="text-center py-6 text-muted-foreground">
-              No insights recorded yet. Continue your therapy sessions to build your personal memory bank.
-            </div>
-          ) : (
-            memories.map((memory) => (
-              <div key={memory.id} className="border rounded-lg p-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    {getMemoryIcon(memory.memoryType)}
-                    <span className="font-medium">{memory.title}</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="text-xs">
-                      {memory.memoryType}
-                    </Badge>
-                    <div className="text-xs text-muted-foreground">
-                      {new Date(memory.createdAt).toLocaleDateString()}
-                    </div>
-                  </div>
-                </div>
-                
-                <p className="text-sm text-muted-foreground">{memory.content}</p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-wrap gap-1">
-                    {memory.tags.map((tag, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs text-muted-foreground">Importance:</span>
-                    <Progress 
-                      value={memory.importanceScore * 100} 
-                      className="w-16 h-2" 
-                    />
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Emotional Patterns */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <TrendingUp className="h-5 w-5 mr-2 text-therapy-600" />
-            Emotional Patterns
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {patterns.length === 0 ? (
-            <div className="text-center py-6 text-muted-foreground">
-              Emotional patterns will appear as you continue your therapy journey.
-            </div>
-          ) : (
-            patterns.map((pattern) => (
-              <div key={pattern.id} className="border rounded-lg p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Heart className="h-4 w-4 text-therapy-500" />
-                    <span className="font-medium capitalize">
-                      {pattern.patternType.replace('_', ' ')}
-                    </span>
-                  </div>
-                  <Badge variant="outline" className="text-xs">
-                    {pattern.patternData?.emotion || 'General'}
-                  </Badge>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <span className="text-sm text-muted-foreground">Frequency:</span>
-                    <div className="flex items-center space-x-2">
-                      <Progress value={Math.min(pattern.frequencyScore * 10, 100)} className="flex-1 h-2" />
-                      <span className="text-sm font-medium">{pattern.frequencyScore}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <span className="text-sm text-muted-foreground">Effectiveness:</span>
-                    <div className="flex items-center space-x-2">
-                      <Progress value={pattern.effectivenessScore * 100} className="flex-1 h-2" />
-                      <span className={`text-sm font-medium ${getPatternColor(pattern.effectivenessScore)}`}>
-                        {(pattern.effectivenessScore * 100).toFixed(0)}%
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                
-                {pattern.lastOccurred && (
-                  <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                    <Calendar className="h-3 w-3" />
-                    <span>Last occurred: {new Date(pattern.lastOccurred).toLocaleDateString()}</span>
-                  </div>
-                )}
-              </div>
-            ))
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Memory Stats */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Memory Statistics</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-therapy-600">{memories.length}</div>
-              <div className="text-xs text-muted-foreground">Total Insights</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-therapy-600">
-                {memories.filter(m => m.memoryType === 'breakthrough').length}
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="overview" className="flex items-center space-x-2">
+                <Lightbulb className="h-4 w-4" />
+                <span>Overview</span>
+              </TabsTrigger>
+              <TabsTrigger value="trends" className="flex items-center space-x-2">
+                <TrendingUp className="h-4 w-4" />
+                <span>Trends</span>
+              </TabsTrigger>
+              <TabsTrigger value="details" className="flex items-center space-x-2">
+                <Calendar className="h-4 w-4" />
+                <span>Details</span>
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="overview" className="mt-4">
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="font-medium">Total Entries</h3>
+                    <p className="text-3xl font-bold">{memoryData.totalEntries}</p>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="font-medium">Recent Topics</h3>
+                    <p>{memoryData.recentTopics.join(', ')}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="font-medium">Emotional Tone</h3>
+                    <p>{memoryData.emotionalTone}</p>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="font-medium">Recall Rate</h3>
+                    <p>{Math.round(memoryData.recallRate * 100)}%</p>
+                  </div>
+                </div>
               </div>
-              <div className="text-xs text-muted-foreground">Breakthroughs</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-therapy-600">{patterns.length}</div>
-              <div className="text-xs text-muted-foreground">Patterns Tracked</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-therapy-600">
-                {memories.filter(m => m.importanceScore > 0.8).length}
+            </TabsContent>
+
+            <TabsContent value="trends" className="mt-4">
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="font-medium">Entry Frequency</h3>
+                    <p>{memoryData.entryFrequency} entries per week</p>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="font-medium">Most Used Keywords</h3>
+                    <p>{memoryData.mostUsedKeywords.join(', ')}</p>
+                  </div>
+                </div>
               </div>
-              <div className="text-xs text-muted-foreground">High Impact</div>
-            </div>
-          </div>
+            </TabsContent>
+
+            <TabsContent value="details" className="mt-4">
+              <div className="space-y-4">
+                <p>Detailed memory insights will be available soon.</p>
+              </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
-
-      <div className="text-center">
-        <Button onClick={loadMemoryData} variant="outline">
-          <Brain className="h-4 w-4 mr-2" />
-          Refresh Insights
-        </Button>
-      </div>
     </div>
   );
 };

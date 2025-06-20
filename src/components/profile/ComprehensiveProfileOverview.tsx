@@ -1,18 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
-import { 
-  User, Brain, Target, TrendingUp, Award, Calendar, 
-  Heart, Lightbulb, Globe, Shield, Activity, BarChart3
-} from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { User, Settings, Heart, Brain, Target, TrendingUp, Calendar, Award, Clock, Activity } from 'lucide-react';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 const ComprehensiveProfileOverview = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [onboardingData, setOnboardingData] = useState<any>(null);
   const [aiAnalysis, setAiAnalysis] = useState<any>(null);
   const [progressData, setProgressData] = useState<any>(null);

@@ -1,166 +1,95 @@
+
 import { useState, useEffect } from 'react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { subscriptionService } from '@/services/subscriptionService';
+import { subscriptionService, UserSubscription, SubscriptionPlan, UsageData } from '@/services/subscriptionService';
+import { useToast } from '@/hooks/use-toast';
 
 export const useSubscription = () => {
   const { user } = useSimpleApp();
   const { toast } = useToast();
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
-  const [usage, setUsage] = useState<UsageData[]>([]);
+  const [usage, setUsage] = useState<UsageData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
-      fetchSubscription();
-      fetchPlans();
-      fetchUsage();
+      loadSubscriptionData();
     }
   }, [user]);
 
-  const fetchSubscription = async () => {
+  const loadSubscriptionData = async () => {
     if (!user) return;
 
-    const { data, error } = await supabase
-      .from('user_subscriptions')
-      .select(`
-        *,
-        plan:subscription_plans(*)
-      `)
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-      .maybeSingle();
-
-    if (error) {
-      console.error('Error fetching subscription:', error);
-      return;
-    }
-
-    if (data) {
-      // Type-safe conversion from Supabase data
-      const typedSubscription: UserSubscription = {
-        id: data.id,
-        plan_id: data.plan_id,
-        status: data.status,
-        billing_cycle: data.billing_cycle,
-        current_period_end: data.current_period_end,
-        plan: {
-          id: data.plan.id,
-          name: data.plan.name,
-          price_monthly: data.plan.price_monthly,
-          price_yearly: data.plan.price_yearly,
-          features: data.plan.features as Record<string, string>,
-          limits: data.plan.limits as Record<string, number>
-        }
-      };
-      setSubscription(typedSubscription);
-    }
-  };
-
-  const fetchPlans = async () => {
-    const { data, error } = await supabase
-      .from('subscription_plans')
-      .select('*')
-      .eq('is_active', true)
-      .order('price_monthly');
-
-    if (error) {
-      console.error('Error fetching plans:', error);
-      return;
-    }
-
-    if (data) {
-      // Type-safe conversion from Supabase data
-      const typedPlans: SubscriptionPlan[] = data.map(plan => ({
-        id: plan.id,
-        name: plan.name,
-        price_monthly: plan.price_monthly,
-        price_yearly: plan.price_yearly,
-        features: plan.features as Record<string, string>,
-        limits: plan.limits as Record<string, number>
-      }));
-      setPlans(typedPlans);
-    }
-    setLoading(false);
-  };
-
-  const fetchUsage = async () => {
-    if (!user) return;
-
-    const { data, error } = await supabase
-      .from('user_usage')
-      .select('*')
-      .eq('user_id', user.id)
-      .gte('period_end', new Date().toISOString());
-
-    if (error) {
-      console.error('Error fetching usage:', error);
-      return;
-    }
-
-    setUsage(data || []);
-  };
-
-  const getCurrentPlan = (): SubscriptionPlan | null => {
-    if (subscription?.plan) {
-      return subscription.plan;
-    }
-    
-    // Return free plan if no active subscription
-    return plans.find(plan => plan.name === 'Free') || null;
-  };
-
-  const getUsageForResource = (resourceType: string): number => {
-    const resourceUsage = usage.find(u => u.resource_type === resourceType);
-    return resourceUsage?.usage_count || 0;
-  };
-
-  const canPerformAction = (resourceType: string): boolean => {
-    const currentPlan = getCurrentPlan();
-    if (!currentPlan) return false;
-
-    const limit = currentPlan.limits[resourceType];
-    if (limit === -1) return true; // Unlimited
-
-    const currentUsage = getUsageForResource(resourceType);
-    return currentUsage < limit;
-  };
-
-  const getRemainingUsage = (resourceType: string): number => {
-    const currentPlan = getCurrentPlan();
-    if (!currentPlan) return 0;
-
-    const limit = currentPlan.limits[resourceType];
-    if (limit === -1) return Infinity; // Unlimited
-
-    const currentUsage = getUsageForResource(resourceType);
-    return Math.max(0, limit - currentUsage);
-  };
-
-  const createCheckoutSession = async (planId: string, billingCycle: 'monthly' | 'yearly') => {
+    setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { planId, billingCycle }
-      });
+      const [userSub, availablePlans, usageData] = await Promise.all([
+        subscriptionService.getUserSubscription(user.id),
+        subscriptionService.getAvailablePlans(),
+        subscriptionService.getUsageData(user.id)
+      ]);
 
-      if (error) throw error;
-
-      if (data.url) {
-        window.location.href = data.url;
-      }
+      setSubscription(userSub);
+      setPlans(availablePlans);
+      setUsage(usageData);
     } catch (error) {
-      console.error('Error creating checkout session:', error);
+      console.error('Error loading subscription data:', error);
       toast({
         title: "Error",
-        description: "Failed to create checkout session. Please try again.",
+        description: "Failed to load subscription information.",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const isFreePlan = (): boolean => {
-    const currentPlan = getCurrentPlan();
-    return currentPlan?.name === 'Free' || !subscription;
+  const changePlan = async (planId: string) => {
+    if (!user) return false;
+
+    try {
+      const success = await subscriptionService.changePlan(user.id, planId);
+      if (success) {
+        await loadSubscriptionData();
+        toast({
+          title: "Plan Changed",
+          description: "Your subscription plan has been updated successfully.",
+        });
+      }
+      return success;
+    } catch (error) {
+      console.error('Error changing plan:', error);
+      toast({
+        title: "Error",
+        description: "Failed to change subscription plan.",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
+  const cancelSubscription = async () => {
+    if (!user) return false;
+
+    try {
+      const success = await subscriptionService.cancelSubscription(user.id);
+      if (success) {
+        await loadSubscriptionData();
+        toast({
+          title: "Subscription Cancelled",
+          description: "Your subscription has been cancelled successfully.",
+        });
+      }
+      return success;
+    } catch (error) {
+      console.error('Error cancelling subscription:', error);
+      toast({
+        title: "Error",
+        description: "Failed to cancel subscription.",
+        variant: "destructive",
+      });
+      return false;
+    }
   };
 
   return {
@@ -168,15 +97,8 @@ export const useSubscription = () => {
     plans,
     usage,
     loading,
-    getCurrentPlan,
-    getUsageForResource,
-    canPerformAction,
-    getRemainingUsage,
-    createCheckoutSession,
-    isFreePlan,
-    refetch: () => {
-      fetchSubscription();
-      fetchUsage();
-    }
+    changePlan,
+    cancelSubscription,
+    refetch: loadSubscriptionData
   };
 };

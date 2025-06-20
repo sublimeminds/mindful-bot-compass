@@ -1,17 +1,15 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Brain, Target, TrendingUp, Settings, User, Heart } from 'lucide-react';
-import { AdvancedPersonalizationService, PersonalizedRecommendation } from '@/services/advancedPersonalizationService';
-import { useAuth } from '@/contexts/AuthContext';
-import RealTimeEmotionTracker from '@/components/emotion/RealTimeEmotionTracker';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Settings, Brain, Heart, Target, TrendingUp, User, Palette, Clock } from 'lucide-react';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { supabase } from '@/integrations/supabase/client';
 
 const PersonalizationDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [recommendations, setRecommendations] = useState<PersonalizedRecommendation[]>([]);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);

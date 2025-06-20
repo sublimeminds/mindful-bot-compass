@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TrendingUp, Calendar, Target, Brain } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { analyticsService, AnalyticsData } from '@/services/analyticsService';
+import { AnalyticsService, AnalyticsData } from '@/services/analyticsService';
 import SessionInsights from '@/components/analytics/SessionInsights';
 import MoodChart from '@/components/analytics/MoodChart';
 import GoalProgress from '@/components/analytics/GoalProgress';
@@ -27,7 +28,7 @@ const Analytics = () => {
     setError(null);
 
     try {
-      const data = await analyticsService.getAnalyticsData(user.id, dateRange);
+      const data = await AnalyticsService.getAnalyticsData(user.id, dateRange);
       setAnalyticsData(data);
     } catch (error) {
       console.error('Error fetching analytics data:', error);
@@ -99,7 +100,7 @@ const Analytics = () => {
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <SessionInsights sessionStats={analyticsData.sessionStats} insights={analyticsData.insights} patterns={analyticsData.patterns} />
-            <MoodChart moodTrends={analyticsData.moodTrends} moodEntries={analyticsData.moodEntries} />
+            <MoodChart moodTrends={analyticsData.moodTrends} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
             <GoalProgress goalProgress={analyticsData.goalProgress} />

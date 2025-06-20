@@ -1,19 +1,19 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Heart, TrendingUp, Plus, BarChart3, Calendar } from 'lucide-react';
+import { Heart, TrendingUp, Calendar, Plus, Brain } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 import { format, startOfWeek, endOfWeek } from 'date-fns';
 
 const EnhancedMoodWidget = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
 
   // Get today's mood

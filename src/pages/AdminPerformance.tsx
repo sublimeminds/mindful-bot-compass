@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import AdminLayout from '@/components/admin/AdminLayout';
 import PerformanceDashboard from './PerformanceDashboard';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -8,7 +8,7 @@ import { Shield } from 'lucide-react';
 import Header from '@/components/Header';
 
 const AdminPerformance = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
 
   // Simple admin check - in a real app this would be more sophisticated
   const isAdmin = user?.email === 'hi@fbeeg.io' || user?.user_metadata?.role === 'admin';

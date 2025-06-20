@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Brain, Target, Clock, CheckCircle, AlertTriangle, TrendingUp, Sparkles, Globe } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { Brain, Heart, Target, CheckCircle, Clock } from 'lucide-react';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface EnhancedSmartAnalysisStepProps {
   onNext: () => void;
@@ -26,8 +23,7 @@ interface EnhancedAnalysis {
 }
 
 const EnhancedSmartAnalysisStep = ({ onNext, onBack, onboardingData }: EnhancedSmartAnalysisStepProps) => {
-  const { user } = useAuth();
-  const { toast } = useToast();
+  const { user } = useSimpleApp();
   const [isAnalyzing, setIsAnalyzing] = useState(true);
   const [analysis, setAnalysis] = useState<EnhancedAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);

@@ -1,8 +1,11 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 import { Crown, CreditCard, Clock, CheckCircle, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscription } from '@/hooks/useSubscription';
