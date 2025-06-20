@@ -17,16 +17,6 @@ const DashboardLayout = () => {
 
   return (
     <div className="flex-1 p-6">
-      {/* Welcome Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-therapy-900 mb-2">
-          Welcome back, {user?.email?.split('@')[0]}!
-        </h1>
-        <p className="text-therapy-600">
-          Continue your wellness journey today
-        </p>
-      </div>
-
       {/* Dashboard Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* First Row - Full Width Session Starter */}
