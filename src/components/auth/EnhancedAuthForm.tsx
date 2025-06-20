@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,9 +28,21 @@ interface FormErrors {
 }
 
 const EnhancedAuthForm = () => {
-  // Early return if React hooks aren't available
-  if (!React || !React.useState || !React.useEffect) {
-    console.error('EnhancedAuthForm: React hooks not available');
+  // Comprehensive React readiness check
+  const isReactFullyReady = React && 
+    typeof React === 'object' && 
+    React.useState && 
+    React.useEffect && 
+    React.useContext &&
+    React.createElement &&
+    typeof React.useState === 'function' &&
+    typeof React.useEffect === 'function' &&
+    typeof React.useContext === 'function';
+
+  console.log('EnhancedAuthForm: React readiness check:', isReactFullyReady);
+
+  if (!isReactFullyReady) {
+    console.error('EnhancedAuthForm: React not fully ready');
     return (
       <Card className="w-full max-w-md mx-auto shadow-xl border-harmony-200">
         <CardContent className="p-6">
@@ -52,10 +65,29 @@ const EnhancedAuthForm = () => {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [activeTab, setActiveTab] = useState('signin');
+  const [isReactReady, setIsReactReady] = useState(false);
   
   const { login, register } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Additional React readiness verification
+  useEffect(() => {
+    const checkReactReadiness = () => {
+      try {
+        // Test if React context system is working
+        React.useContext(React.createContext(null));
+        setIsReactReady(true);
+        console.log('EnhancedAuthForm: React context system verified');
+      } catch (error) {
+        console.error('EnhancedAuthForm: React context system not ready:', error);
+        // Retry after a short delay
+        setTimeout(checkReactReadiness, 100);
+      }
+    };
+
+    checkReactReadiness();
+  }, []);
 
   // Set default tab based on current route
   useEffect(() => {
@@ -63,6 +95,20 @@ const EnhancedAuthForm = () => {
       setActiveTab('signup');
     }
   }, [location.pathname]);
+
+  // Don't render Tabs until React is fully ready
+  if (!isReactReady) {
+    return (
+      <Card className="w-full max-w-md mx-auto shadow-xl border-harmony-200">
+        <CardContent className="p-6">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-harmony-600 mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Initializing authentication...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const validateEmail = (email: string): string | undefined => {
     if (!email) return 'Email is required';
