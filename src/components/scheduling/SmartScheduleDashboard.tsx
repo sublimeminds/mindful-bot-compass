@@ -1,15 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, Brain, TrendingUp, Target, Bell, BarChart3, Settings, Plus, CheckCircle } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { useToast } from '@/hooks/use-toast';
+import { ToastService } from '@/services/toastService';
 
 const SmartScheduleDashboard = () => {
   const { user } = useSimpleApp();
-  const { toast } = useToast();
   const [scheduleData, setScheduleData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,21 +42,14 @@ const SmartScheduleDashboard = () => {
       setScheduleData(mockData);
     } catch (error) {
       console.error('Error loading schedule data:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to load smart schedule data.',
-        variant: 'destructive'
-      });
+      ToastService.genericError('Failed to load smart schedule data.');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleScheduleSession = () => {
-    toast({
-      title: 'Session Scheduled',
-      description: 'Your therapy session has been added to your calendar.',
-    });
+    ToastService.genericSuccess('Session Scheduled', 'Your therapy session has been added to your calendar.');
   };
 
   if (isLoading) {
