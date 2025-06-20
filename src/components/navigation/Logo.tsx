@@ -1,13 +1,26 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import GradientLogo from '@/components/ui/GradientLogo';
 
 const Logo = () => {
+  // Validate React is available before using any hooks
+  if (typeof React === 'undefined' || !React.useContext) {
+    console.error('Logo: React is not available');
+    return (
+      <div className="flex items-center flex-shrink-0">
+        <div className="flex items-center space-x-3">
+          <GradientLogo size="lg" />
+          <span className="text-xl font-bold">TherapySync</span>
+        </div>
+      </div>
+    );
+  }
+
   let navigate: any = null;
   
   // Safely try to get navigate function
   try {
+    const { useNavigate } = require('react-router-dom');
     navigate = useNavigate();
   } catch (error) {
     console.warn('Logo: Router context not available');
