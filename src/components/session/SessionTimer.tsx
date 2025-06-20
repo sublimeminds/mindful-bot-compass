@@ -35,8 +35,8 @@ const SessionTimer = ({ startTime, onEndSession, canEnd = true }: SessionTimerPr
 
   const getTimerColor = () => {
     const minutes = Math.floor(elapsed / 60);
-    if (minutes < 15) return 'text-amber-600';
-    if (minutes < 30) return 'text-green-600';
+    if (minutes < 5) return 'text-amber-600';
+    if (minutes < 15) return 'text-green-600';
     return 'text-blue-600';
   };
 

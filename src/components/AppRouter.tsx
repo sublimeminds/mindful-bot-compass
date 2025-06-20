@@ -22,6 +22,7 @@ import HelpArticleDetail from '@/pages/HelpArticleDetail';
 import ProfilePage from '@/pages/ProfilePage';
 import SettingsPage from '@/pages/SettingsPage';
 import Techniques from '@/pages/Techniques';
+import TechniqueSession from '@/pages/TechniqueSession';
 import SessionAnalytics from '@/pages/SessionAnalytics';
 import MoodTracking from '@/pages/MoodTracking';
 import Goals from '@/pages/Goals';
@@ -39,6 +40,7 @@ const AppRouter = () => {
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/techniques" element={<Techniques />} />
+      <Route path="/techniques/:id" element={<TechniqueSession />} />
       <Route path="/session-analytics" element={<SessionAnalytics />} />
       <Route path="/mood-tracking" element={<MoodTracking />} />
       <Route path="/goals" element={<Goals />} />
