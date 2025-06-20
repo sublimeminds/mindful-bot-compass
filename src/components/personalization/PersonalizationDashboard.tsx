@@ -1,16 +1,27 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Settings, Brain, Heart, Target, TrendingUp, User, Palette, Clock } from 'lucide-react';
+import { Settings, Brain, Heart, Target, TrendingUp, User } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { supabase } from '@/integrations/supabase/client';
+
+interface SimpleRecommendation {
+  id: string;
+  title: string;
+  description: string;
+  reasoning: string;
+  type: string;
+  priority: string;
+  confidence: number;
+  estimatedImpact: number;
+}
 
 const PersonalizationDashboard: React.FC = () => {
   const { user } = useSimpleApp();
-  const [recommendations, setRecommendations] = useState<PersonalizedRecommendation[]>([]);
+  const [recommendations, setRecommendations] = useState<SimpleRecommendation[]>([]);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -21,17 +32,46 @@ const PersonalizationDashboard: React.FC = () => {
   }, [user]);
 
   const loadPersonalizationData = async () => {
-    if (!user) return;
-    
     setLoading(true);
     try {
-      // Initialize profile if needed
-      const userProfile = await AdvancedPersonalizationService.initializeProfile(user.id);
-      setProfile(userProfile);
-
-      // Get personalized recommendations
-      const recs = await AdvancedPersonalizationService.generatePersonalizedRecommendations(user.id);
-      setRecommendations(recs);
+      // Mock data for now
+      const mockProfile = {
+        learningStyle: 'visual',
+        communicationStyle: 'balanced',
+        therapyPreferences: {
+          approach: ['cognitive_behavioral', 'mindfulness'],
+          sessionLength: 50,
+          frequency: 'weekly',
+          timeOfDay: 'evening'
+        },
+        motivationFactors: ['progress_tracking', 'goal_achievement']
+      };
+      
+      const mockRecommendations: SimpleRecommendation[] = [
+        {
+          id: '1',
+          title: 'Try Mindfulness Meditation',
+          description: 'Based on your stress levels, mindfulness meditation could help',
+          reasoning: 'Your recent mood entries show elevated stress patterns',
+          type: 'technique',
+          priority: 'high',
+          confidence: 0.85,
+          estimatedImpact: 0.7
+        },
+        {
+          id: '2',
+          title: 'Schedule Regular Check-ins',
+          description: 'Weekly self-reflection sessions could improve awareness',
+          reasoning: 'You respond well to structured activities',
+          type: 'session',
+          priority: 'medium',
+          confidence: 0.72,
+          estimatedImpact: 0.6
+        }
+      ];
+      
+      setProfile(mockProfile);
+      setRecommendations(mockRecommendations);
     } catch (error) {
       console.error('Error loading personalization data:', error);
     } finally {
@@ -39,25 +79,9 @@ const PersonalizationDashboard: React.FC = () => {
     }
   };
 
-  const handleRecommendationAction = async (rec: PersonalizedRecommendation, action: 'accept' | 'dismiss' | 'later') => {
-    if (!user) return;
-
-    try {
-      // Track user interaction
-      await AdvancedPersonalizationService.trackUserInteraction(user.id, {
-        type: 'recommendation_interaction',
-        content: { recommendationId: rec.id, action },
-        outcome: action === 'accept' ? 'positive' : action === 'dismiss' ? 'negative' : 'neutral',
-        timestamp: new Date()
-      });
-
-      // Update recommendations list
-      setRecommendations(prev => 
-        prev.filter(r => r.id !== rec.id)
-      );
-    } catch (error) {
-      console.error('Error handling recommendation action:', error);
-    }
+  const handleRecommendationAction = async (rec: SimpleRecommendation, action: 'accept' | 'dismiss' | 'later') => {
+    console.log('Recommendation action:', rec.id, action);
+    setRecommendations(prev => prev.filter(r => r.id !== rec.id));
   };
 
   const getPriorityColor = (priority: string) => {
@@ -95,7 +119,6 @@ const PersonalizationDashboard: React.FC = () => {
       <Tabs defaultValue="recommendations" className="space-y-4">
         <TabsList>
           <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-          <TabsTrigger value="emotions">Emotional Intelligence</TabsTrigger>
           <TabsTrigger value="profile">Profile & Preferences</TabsTrigger>
         </TabsList>
 
@@ -175,10 +198,6 @@ const PersonalizationDashboard: React.FC = () => {
               )}
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="emotions" className="space-y-4">
-          <RealTimeEmotionTracker />
         </TabsContent>
 
         <TabsContent value="profile" className="space-y-4">

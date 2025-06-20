@@ -1,147 +1,144 @@
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Activity, BarChart3, Users, Settings } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import RealTimeSessionManager from '@/components/session/RealTimeSessionManager';
-import LiveSessionAnalytics from '@/components/session/LiveSessionAnalytics';
-import SessionStatusIndicator from '@/components/session/SessionStatusIndicator';
-import SessionControlPanel from '@/components/session/SessionControlPanel';
-import MobileOptimizedLayout from '@/components/mobile/MobileOptimizedLayout';
-import { useRealTimeSession } from '@/hooks/useRealTimeSession';
-import Header from '@/components/Header';
+import { Badge } from '@/components/ui/badge';
+import { MessageCircle, Video, Phone, Settings } from 'lucide-react';
 
 const LiveSession = () => {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('session');
-  
-  const {
-    sessionState,
-    startSession,
-    endSession,
-    pauseSession,
-    resumeSession
-  } = useRealTimeSession();
+  const [sessionStatus, setSessionStatus] = useState<'idle' | 'active' | 'paused' | 'ended'>('idle');
+
+  const handleStartSession = () => {
+    setSessionStatus('active');
+  };
+
+  const handleEndSession = () => {
+    setSessionStatus('ended');
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'bg-green-100 text-green-800';
+      case 'paused': return 'bg-yellow-100 text-yellow-800';
+      case 'ended': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
 
   return (
-    <>
-      <Header />
-      <MobileOptimizedLayout>
-        <div className="space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => navigate('/dashboard')}
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Dashboard
-              </Button>
-              <div>
-                <h1 className="text-2xl font-bold">Live Session</h1>
-                <p className="text-muted-foreground">Real-time therapy session management</p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <div className="flex items-center space-x-2 text-sm">
-                <div className={`w-2 h-2 rounded-full ${
-                  sessionState.connectionStatus === 'connected' ? 'bg-green-500 animate-pulse' : 'bg-gray-400'
-                }`} />
-                <span>{sessionState.connectionStatus === 'connected' ? 'Live' : 'Offline'}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Session Control Panel */}
-          <SessionControlPanel
-            sessionState={sessionState}
-            onStartSession={startSession}
-            onEndSession={endSession}
-          />
-
-          {/* Main Content */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="session" className="flex items-center">
-                <Users className="h-4 w-4 mr-2" />
-                Session
-              </TabsTrigger>
-              <TabsTrigger value="analytics" className="flex items-center">
-                <BarChart3 className="h-4 w-4 mr-2" />
-                Analytics
-              </TabsTrigger>
-              <TabsTrigger value="insights" className="flex items-center">
-                <Activity className="h-4 w-4 mr-2" />
-                Insights
-              </TabsTrigger>
-              <TabsTrigger value="settings" className="flex items-center">
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="session" className="mt-6">
-              <RealTimeSessionManager />
-            </TabsContent>
-
-            <TabsContent value="analytics" className="mt-6">
-              <LiveSessionAnalytics />
-            </TabsContent>
-
-            <TabsContent value="insights" className="mt-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>AI-Powered Session Insights</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="text-center py-8">
-                      <Activity className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-lg font-medium mb-2">Advanced Insights Coming Soon</h3>
-                      <p className="text-muted-foreground">
-                        Real-time AI analysis of session patterns, emotional markers, and therapeutic progress will be available here.
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="settings" className="mt-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Session Settings</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="text-center py-8">
-                      <Settings className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-lg font-medium mb-2">Session Configuration</h3>
-                      <p className="text-muted-foreground">
-                        Configure real-time session preferences, recording settings, and AI analysis parameters.
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-
-          {/* Session Status Indicator - Shows only when session is active */}
-          <SessionStatusIndicator
-            sessionState={sessionState}
-            onPause={pauseSession}
-            onResume={resumeSession}
-            onEnd={endSession}
-          />
+    <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Live Therapy Session</h1>
+          <p className="text-muted-foreground">
+            Connect with your therapist in real-time
+          </p>
         </div>
-      </MobileOptimizedLayout>
-    </>
+        <Badge className={getStatusColor(sessionStatus)}>
+          {sessionStatus}
+        </Badge>
+      </div>
+
+      {sessionStatus === 'idle' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Ready to Start Your Session?</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              Your therapist is available and ready to begin your session.
+            </p>
+            <div className="flex space-x-4">
+              <Button onClick={handleStartSession} className="flex items-center space-x-2">
+                <Video className="h-4 w-4" />
+                <span>Start Video Session</span>
+              </Button>
+              <Button variant="outline" onClick={handleStartSession} className="flex items-center space-x-2">
+                <Phone className="h-4 w-4" />
+                <span>Start Audio Session</span>
+              </Button>
+              <Button variant="outline" onClick={handleStartSession} className="flex items-center space-x-2">
+                <MessageCircle className="h-4 w-4" />
+                <span>Start Chat Session</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {sessionStatus === 'active' && (
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>Session in Progress</span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-muted-foreground">Live</span>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="aspect-video bg-gray-900 rounded-lg flex items-center justify-center">
+                <div className="text-white text-center">
+                  <Video className="h-12 w-12 mx-auto mb-2" />
+                  <p>Video session would appear here</p>
+                </div>
+              </div>
+              
+              <div className="flex justify-center space-x-4">
+                <Button variant="destructive" onClick={handleEndSession}>
+                  End Session
+                </Button>
+                <Button variant="outline">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Settings
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Session Notes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <p className="text-sm text-muted-foreground">
+                    Take notes during your session to remember key insights and action items.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {sessionStatus === 'ended' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Session Complete</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              Your session has ended. Thank you for participating in your therapy journey.
+            </p>
+            <div className="space-y-2">
+              <Button variant="outline" className="w-full">
+                View Session Summary
+              </Button>
+              <Button variant="outline" className="w-full">
+                Schedule Next Session
+              </Button>
+              <Button onClick={() => setSessionStatus('idle')} className="w-full">
+                Start New Session
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 };
 

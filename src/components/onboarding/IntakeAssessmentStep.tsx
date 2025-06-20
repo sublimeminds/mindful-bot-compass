@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,8 +10,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Heart, Brain, Shield, AlertTriangle, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { supabase } from '@/integrations/supabase/client';
 
 interface IntakeAssessmentStepProps {
   onNext: () => void;
@@ -18,13 +17,11 @@ interface IntakeAssessmentStepProps {
 }
 
 const IntakeAssessmentStep = ({ onNext, onBack }: IntakeAssessmentStepProps) => {
-  const { user } = useSimpleApp();
   const [stressLevel, setStressLevel] = useState(5);
   const [anxietyLevel, setAnxietyLevel] = useState(5);
   const [sleepQuality, setSleepQuality] = useState('average');
   const [copingMechanisms, setCopingMechanisms] = useState<string[]>([]);
   const [additionalNotes, setAdditionalNotes] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCopingMechanismToggle = (mechanism: string) => {
     setCopingMechanisms((prev) =>
@@ -33,34 +30,17 @@ const IntakeAssessmentStep = ({ onNext, onBack }: IntakeAssessmentStepProps) => 
   };
 
   const handleSubmit = async () => {
-    if (!user) return;
-
-    setIsSubmitting(true);
-
-    try {
-      const { error } = await supabase
-        .from('intake_assessments')
-        .insert({
-          user_id: user.id,
-          stress_level: stressLevel,
-          anxiety_level: anxietyLevel,
-          sleep_quality: sleepQuality,
-          coping_mechanisms: copingMechanisms,
-          additional_notes: additionalNotes,
-        });
-
-      if (error) {
-        console.error('Error submitting intake assessment:', error);
-        // Handle error (e.g., show a toast notification)
-      } else {
-        onNext();
-      }
-    } catch (error) {
-      console.error('Error during submission:', error);
-      // Handle error
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Store data locally for now - no database operations
+    const assessmentData = {
+      stressLevel,
+      anxietyLevel,
+      sleepQuality,
+      copingMechanisms,
+      additionalNotes,
+    };
+    
+    console.log('Assessment data:', assessmentData);
+    onNext();
   };
 
   return (
@@ -150,54 +130,16 @@ const IntakeAssessmentStep = ({ onNext, onBack }: IntakeAssessmentStepProps) => 
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="coping-exercise"
-                checked={copingMechanisms.includes('exercise')}
-                onCheckedChange={() => handleCopingMechanismToggle('exercise')}
-              />
-              <Label htmlFor="coping-exercise">Exercise</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="coping-meditation"
-                checked={copingMechanisms.includes('meditation')}
-                onCheckedChange={() => handleCopingMechanismToggle('meditation')}
-              />
-              <Label htmlFor="coping-meditation">Meditation</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="coping-hobbies"
-                checked={copingMechanisms.includes('hobbies')}
-                onCheckedChange={() => handleCopingMechanismToggle('hobbies')}
-              />
-              <Label htmlFor="coping-hobbies">Hobbies</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="coping-socialize"
-                checked={copingMechanisms.includes('socialize')}
-                onCheckedChange={() => handleCopingMechanismToggle('socialize')}
-              />
-              <Label htmlFor="coping-socialize">Socialize</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="coping-therapy"
-                checked={copingMechanisms.includes('therapy')}
-                onCheckedChange={() => handleCopingMechanismToggle('therapy')}
-              />
-              <Label htmlFor="coping-therapy">Therapy</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="coping-journaling"
-                checked={copingMechanisms.includes('journaling')}
-                onCheckedChange={() => handleCopingMechanismToggle('journaling')}
-              />
-              <Label htmlFor="coping-journaling">Journaling</Label>
-            </div>
+            {['exercise', 'meditation', 'hobbies', 'socialize', 'therapy', 'journaling'].map((mechanism) => (
+              <div key={mechanism} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`coping-${mechanism}`}
+                  checked={copingMechanisms.includes(mechanism)}
+                  onCheckedChange={() => handleCopingMechanismToggle(mechanism)}
+                />
+                <Label htmlFor={`coping-${mechanism}`} className="capitalize">{mechanism}</Label>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -223,18 +165,9 @@ const IntakeAssessmentStep = ({ onNext, onBack }: IntakeAssessmentStepProps) => 
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
-        <Button onClick={handleSubmit} disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              Submitting...
-              <Progress className="w-6 inline-block ml-2" value={null} />
-            </>
-          ) : (
-            <>
-              Next
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </>
-          )}
+        <Button onClick={handleSubmit}>
+          Next
+          <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
       </div>
     </div>

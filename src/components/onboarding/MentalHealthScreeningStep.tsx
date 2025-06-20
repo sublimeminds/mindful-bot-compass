@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,9 +6,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Heart, Brain, Shield, CheckCircle } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { supabase } from '@/integrations/supabase/client';
+import { AlertTriangle, Heart, Brain } from 'lucide-react';
 
 interface MentalHealthScreeningStepProps {
   onNext: () => void;
@@ -15,10 +14,8 @@ interface MentalHealthScreeningStepProps {
 }
 
 const MentalHealthScreeningStep = ({ onNext, onBack }: MentalHealthScreeningStepProps) => {
-  const { user } = useSimpleApp();
   const [phq9Score, setPhq9Score] = useState<number | null>(null);
   const [gad7Score, setGad7Score] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handlePhq9Change = (value: string) => {
     setPhq9Score(parseInt(value, 10));
@@ -29,33 +26,18 @@ const MentalHealthScreeningStep = ({ onNext, onBack }: MentalHealthScreeningStep
   };
 
   const handleSubmit = async () => {
-    if (!user || phq9Score === null || gad7Score === null) {
+    if (phq9Score === null || gad7Score === null) {
       return;
     }
 
-    setIsLoading(true);
-
-    try {
-      const { error } = await supabase
-        .from('mental_health_screening')
-        .insert([
-          {
-            user_id: user.id,
-            phq9_score: phq9Score,
-            gad7_score: gad7Score,
-          },
-        ]);
-
-      if (error) {
-        console.error('Error submitting screening:', error);
-      } else {
-        onNext();
-      }
-    } catch (error) {
-      console.error('Error submitting screening:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    // Store data locally for now
+    const screeningData = {
+      phq9Score,
+      gad7Score,
+    };
+    
+    console.log('Screening data:', screeningData);
+    onNext();
   };
 
   const phq9Interpretation = () => {
@@ -97,48 +79,31 @@ const MentalHealthScreeningStep = ({ onNext, onBack }: MentalHealthScreeningStep
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Over the last 2 weeks, how often have you been bothered by any of the following problems?
+            Over the last 2 weeks, how often have you been bothered by feeling down, depressed, or hopeless?
           </p>
           <RadioGroup onValueChange={handlePhq9Change}>
-            <div className="grid grid-cols-5 gap-2">
-              <Label htmlFor="phq9-0" className="text-center">0</Label>
-              <Label htmlFor="phq9-1" className="text-center">1</Label>
-              <Label htmlFor="phq9-2" className="text-center">2</Label>
-              <Label htmlFor="phq9-3" className="text-center">3</Label>
-              <div></div>
-
-              <Label htmlFor="phq9-1">Little interest or pleasure in doing things</Label>
-              <RadioGroupItem value="0" id="phq9-0" />
-              <RadioGroupItem value="1" id="phq9-1" />
-              <RadioGroupItem value="2" id="phq9-2" />
-              <RadioGroupItem value="3" id="phq9-3" />
-              <div></div>
-
-              <Label htmlFor="phq9-2">Feeling down, depressed, or hopeless</Label>
-              <RadioGroupItem value="0" id="phq9-0" />
-              <RadioGroupItem value="1" id="phq9-1" />
-              <RadioGroupItem value="2" id="phq9-2" />
-              <RadioGroupItem value="3" id="phq9-3" />
-              <div></div>
-
-              <Label htmlFor="phq9-3">Trouble falling or staying asleep, or sleeping too much</Label>
-              <RadioGroupItem value="0" id="phq9-0" />
-              <RadioGroupItem value="1" id="phq9-1" />
-              <RadioGroupItem value="2" id="phq9-2" />
-              <RadioGroupItem value="3" id="phq9-3" />
-              <div></div>
-
-              <Label htmlFor="phq9-4">Feeling tired or having little energy</Label>
-              <RadioGroupItem value="0" id="phq9-0" />
-              <RadioGroupItem value="1" id="phq9-1" />
-              <RadioGroupItem value="2" id="phq9-2" />
-              <RadioGroupItem value="3" id="phq9-3" />
-              <div></div>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="0" id="phq9-0" />
+                <Label htmlFor="phq9-0">Not at all</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="1" id="phq9-1" />
+                <Label htmlFor="phq9-1">Several days</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="2" id="phq9-2" />
+                <Label htmlFor="phq9-2">More than half the days</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="3" id="phq9-3" />
+                <Label htmlFor="phq9-3">Nearly every day</Label>
+              </div>
             </div>
           </RadioGroup>
           {phq9Score !== null && (
             <Badge variant="secondary">
-              Interpretation: {phq9Interpretation()}
+              Score: {phq9Score} - {phq9Interpretation()}
             </Badge>
           )}
         </CardContent>
@@ -153,48 +118,31 @@ const MentalHealthScreeningStep = ({ onNext, onBack }: MentalHealthScreeningStep
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Over the last 2 weeks, how often have you been bothered by the following problems?
+            Over the last 2 weeks, how often have you been bothered by feeling nervous, anxious, or on edge?
           </p>
           <RadioGroup onValueChange={handleGad7Change}>
-            <div className="grid grid-cols-5 gap-2">
-              <Label htmlFor="gad7-0" className="text-center">0</Label>
-              <Label htmlFor="gad7-1" className="text-center">1</Label>
-              <Label htmlFor="gad7-2" className="text-center">2</Label>
-              <Label htmlFor="gad7-3" className="text-center">3</Label>
-              <div></div>
-
-              <Label htmlFor="gad7-1">Feeling nervous, anxious, or on edge</Label>
-              <RadioGroupItem value="0" id="gad7-0" />
-              <RadioGroupItem value="1" id="gad7-1" />
-              <RadioGroupItem value="2" id="gad7-2" />
-              <RadioGroupItem value="3" id="gad7-3" />
-              <div></div>
-
-              <Label htmlFor="gad7-2">Not being able to stop or control worrying</Label>
-              <RadioGroupItem value="0" id="gad7-0" />
-              <RadioGroupItem value="1" id="gad7-1" />
-              <RadioGroupItem value="2" id="gad7-2" />
-              <RadioGroupItem value="3" id="gad7-3" />
-              <div></div>
-
-              <Label htmlFor="gad7-3">Worrying too much about different things</Label>
-              <RadioGroupItem value="0" id="gad7-0" />
-              <RadioGroupItem value="1" id="gad7-1" />
-              <RadioGroupItem value="2" id="gad7-2" />
-              <RadioGroupItem value="3" id="gad7-3" />
-              <div></div>
-
-              <Label htmlFor="gad7-4">Trouble relaxing</Label>
-              <RadioGroupItem value="0" id="gad7-0" />
-              <RadioGroupItem value="1" id="gad7-1" />
-              <RadioGroupItem value="2" id="gad7-2" />
-              <RadioGroupItem value="3" id="gad7-3" />
-              <div></div>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="0" id="gad7-0" />
+                <Label htmlFor="gad7-0">Not at all</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="1" id="gad7-1" />
+                <Label htmlFor="gad7-1">Several days</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="2" id="gad7-2" />
+                <Label htmlFor="gad7-2">More than half the days</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="3" id="gad7-3" />
+                <Label htmlFor="gad7-3">Nearly every day</Label>
+              </div>
             </div>
           </RadioGroup>
           {gad7Score !== null && (
             <Badge variant="secondary">
-              Interpretation: {gad7Interpretation()}
+              Score: {gad7Score} - {gad7Interpretation()}
             </Badge>
           )}
         </CardContent>
@@ -213,18 +161,9 @@ const MentalHealthScreeningStep = ({ onNext, onBack }: MentalHealthScreeningStep
         </Button>
         <Button
           onClick={handleSubmit}
-          disabled={phq9Score === null || gad7Score === null || isLoading}
-          className="bg-therapy-500 hover:bg-therapy-600"
+          disabled={phq9Score === null || gad7Score === null}
         >
-          {isLoading ? (
-            <>
-              Submitting...
-            </>
-          ) : (
-            <>
-              Continue
-            </>
-          )}
+          Continue
         </Button>
       </div>
     </div>

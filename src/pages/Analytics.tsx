@@ -1,113 +1,146 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { TrendingUp, Calendar, Target, Brain } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { AnalyticsService, AnalyticsData } from '@/services/analyticsService';
-import SessionInsights from '@/components/analytics/SessionInsights';
-import MoodChart from '@/components/analytics/MoodChart';
-import GoalProgress from '@/components/analytics/GoalProgress';
-import ProgressReport from '@/components/analytics/ProgressReport';
+import { TrendingUp, Users, Activity, Target } from 'lucide-react';
 
 const Analytics = () => {
-  const { user } = useSimpleApp();
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
-  const [dateRange, setDateRange] = useState('7d');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    loadAnalyticsData();
-  }, [user, dateRange]);
-
-  const loadAnalyticsData = async () => {
-    if (!user) return;
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const data = await AnalyticsService.getAnalyticsData(user.id, dateRange);
-      setAnalyticsData(data);
-    } catch (error) {
-      console.error('Error fetching analytics data:', error);
-      setError('Failed to load analytics data. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+  // Mock analytics data
+  const analyticsData = {
+    totalSessions: 245,
+    activeUsers: 89,
+    moodImprovement: 72,
+    goalsCompleted: 156
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
+  const metrics = [
+    {
+      title: 'Total Sessions',
+      value: analyticsData.totalSessions,
+      icon: Activity,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100'
+    },
+    {
+      title: 'Active Users',
+      value: analyticsData.activeUsers,
+      icon: Users,
+      color: 'text-green-600',
+      bgColor: 'bg-green-100'
+    },
+    {
+      title: 'Mood Improvement',
+      value: `${analyticsData.moodImprovement}%`,
+      icon: TrendingUp,
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-100'
+    },
+    {
+      title: 'Goals Completed',
+      value: analyticsData.goalsCompleted,
+      icon: Target,
+      color: 'text-orange-600',
+      bgColor: 'bg-orange-100'
+    }
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
+        <p className="text-muted-foreground">
+          Track your progress and insights
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {metrics.map((metric, index) => (
+          <Card key={index}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    {metric.title}
+                  </p>
+                  <p className="text-2xl font-bold">{metric.value}</p>
+                </div>
+                <div className={`p-3 rounded-full ${metric.bgColor}`}>
+                  <metric.icon className={`h-6 w-6 ${metric.color}`} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <Brain className="h-5 w-5 animate-spin" />
-              <p>Loading analytics data...</p>
+          <CardHeader>
+            <CardTitle>Recent Activity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <div>
+                  <p className="text-sm font-medium">Completed mood tracking</p>
+                  <p className="text-xs text-muted-foreground">2 hours ago</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div>
+                  <p className="text-sm font-medium">Achieved weekly goal</p>
+                  <p className="text-xs text-muted-foreground">1 day ago</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <div>
+                  <p className="text-sm font-medium">Therapy session completed</p>
+                  <p className="text-xs text-muted-foreground">3 days ago</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Progress Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between text-sm">
+                  <span>Mood Stability</span>
+                  <span>78%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                  <div className="bg-blue-600 h-2 rounded-full" style={{ width: '78%' }}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-sm">
+                  <span>Goal Progress</span>
+                  <span>65%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                  <div className="bg-green-600 h-2 rounded-full" style={{ width: '65%' }}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-sm">
+                  <span>Session Completion</span>
+                  <span>92%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                  <div className="bg-purple-600 h-2 rounded-full" style={{ width: '92%' }}></div>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Card>
-          <CardContent className="p-6">
-            <p className="text-red-500">Error: {error}</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (!analyticsData) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Card>
-          <CardContent className="p-6">
-            <p>No analytics data available.</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  return (
-    <div className="container mx-auto py-8 space-y-6">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl font-bold flex items-center">
-              <TrendingUp className="h-5 w-5 mr-2 text-therapy-500" />
-              Analytics Dashboard
-            </CardTitle>
-            <select
-              value={dateRange}
-              onChange={(e) => setDateRange(e.target.value)}
-              className="border rounded px-3 py-2"
-            >
-              <option value="7d">Last 7 Days</option>
-              <option value="30d">Last 30 Days</option>
-              <option value="90d">Last 90 Days</option>
-            </select>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <SessionInsights sessionStats={analyticsData.sessionStats} insights={analyticsData.insights} patterns={analyticsData.patterns} />
-            <MoodChart moodTrends={analyticsData.moodTrends} />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-            <GoalProgress goalProgress={analyticsData.goalProgress} />
-          </div>
-        </CardContent>
-      </Card>
-      <ProgressReport analyticsData={analyticsData} dateRange={dateRange} />
     </div>
   );
 };
