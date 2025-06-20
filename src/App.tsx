@@ -17,8 +17,6 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  console.log('App component rendering, React available:', !!React);
-  
   return (
     <QueryClientProvider client={queryClient}>
       <Router>

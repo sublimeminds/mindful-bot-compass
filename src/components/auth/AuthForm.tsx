@@ -5,22 +5,32 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Eye, EyeOff, Mail, Lock, AlertCircle } from 'lucide-react';
-import { useSafeAuth } from '@/hooks/useSafeAuth';
-import { useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, Mail, Lock, AlertCircle, User } from 'lucide-react';
+import { useAuth } from '@/components/SimpleAuthProvider';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import GradientLogo from '@/components/ui/GradientLogo';
-import SafeComponent from '@/components/SafeComponent';
 
 const AuthForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState('');
   const [error, setError] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
   
-  const { login } = useSafeAuth();
+  const { login, register } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    if (location.pathname === '/register') {
+      setIsSignUp(true);
+    }
+  }, [location.pathname]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,70 +40,134 @@ const AuthForm = () => {
       return;
     }
 
+    if (isSignUp) {
+      if (!name.trim()) {
+        setError('Please enter your name');
+        return;
+      }
+      if (password !== confirmPassword) {
+        setError('Passwords do not match');
+        return;
+      }
+    }
+
     setIsLoading(true);
     setError('');
 
     try {
-      await login(email, password);
-      toast("Welcome back! You have successfully signed in to TherapySync.");
-      navigate('/');
+      if (isSignUp) {
+        await register(email, password);
+        toast("Account created! Please sign in with your new credentials.");
+        setIsSignUp(false);
+        setPassword('');
+        setConfirmPassword('');
+        setName('');
+      } else {
+        await login(email, password);
+        toast("Welcome back! You have successfully signed in to TherapySync.");
+        navigate('/');
+      }
     } catch (error) {
-      console.error('Sign in error:', error);
-      setError('Invalid email or password. Please check your credentials and try again.');
+      console.error('Auth error:', error);
+      setError(isSignUp ? 'Failed to create account. Please try again.' : 'Invalid email or password. Please check your credentials and try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <SafeComponent componentName="AuthForm">
-      <Card className="w-full max-w-md mx-auto shadow-xl border-harmony-200">
-        <CardHeader className="text-center pb-4">
-          <div className="flex items-center justify-center mb-4">
-            <GradientLogo size="md" className="drop-shadow-lg" />
-          </div>
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-harmony-600 to-flow-600 bg-clip-text text-transparent">
-            Welcome Back
-          </CardTitle>
-          <p className="text-muted-foreground text-sm">
-            Sign in to your TherapySync account
-          </p>
-        </CardHeader>
-        <CardContent>
-          {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
+    <Card className="w-full max-w-md mx-auto shadow-xl border-harmony-200">
+      <CardHeader className="text-center pb-4">
+        <div className="flex items-center justify-center mb-4">
+          <GradientLogo size="md" className="drop-shadow-lg" />
+        </div>
+        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-harmony-600 to-flow-600 bg-clip-text text-transparent">
+          {isSignUp ? 'Create Account' : 'Welcome Back'}
+        </CardTitle>
+        <p className="text-muted-foreground text-sm">
+          {isSignUp ? 'Sign up for TherapySync' : 'Sign in to your TherapySync account'}
+        </p>
+      </CardHeader>
+      <CardContent>
+        {error && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {isSignUp && (
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="name">Full Name</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="name"
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="pl-10"
                   disabled={isLoading}
                 />
               </div>
             </div>
+          )}
 
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-10"
+                disabled={isLoading}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder={isSignUp ? "Create a password" : "Enter your password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pl-10 pr-10"
+                disabled={isLoading}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                onClick={() => setShowPassword(!showPassword)}
+                disabled={isLoading}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+
+          {isSignUp && (
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   className="pl-10 pr-10"
                   disabled={isLoading}
                 />
@@ -102,38 +176,38 @@ const AuthForm = () => {
                   variant="ghost"
                   size="sm"
                   className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   disabled={isLoading}
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </Button>
               </div>
             </div>
+          )}
 
-            <Button 
-              type="submit" 
-              className="w-full bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600" 
-              disabled={isLoading}
+          <Button 
+            type="submit" 
+            className="w-full bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600" 
+            disabled={isLoading}
+          >
+            {isLoading ? (isSignUp ? 'Creating Account...' : 'Signing In...') : (isSignUp ? 'Create Account' : 'Sign In')}
+          </Button>
+        </form>
+
+        <div className="mt-4 text-center">
+          <p className="text-sm text-muted-foreground">
+            {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+            <Button
+              variant="link"
+              className="p-0 h-auto font-normal text-harmony-600 hover:text-harmony-700"
+              onClick={() => setIsSignUp(!isSignUp)}
             >
-              {isLoading ? 'Signing In...' : 'Sign In'}
+              {isSignUp ? 'Sign in here' : 'Sign up here'}
             </Button>
-          </form>
-
-          <div className="mt-4 text-center">
-            <p className="text-sm text-muted-foreground">
-              Don't have an account?{' '}
-              <Button
-                variant="link"
-                className="p-0 h-auto font-normal text-harmony-600 hover:text-harmony-700"
-                onClick={() => navigate('/register')}
-              >
-                Sign up here
-              </Button>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    </SafeComponent>
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

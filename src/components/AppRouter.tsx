@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { AppProvider } from '@/components/MinimalAppProvider';
+import { SimpleAuthProvider } from '@/components/SimpleAuthProvider';
 import Index from '@/pages/Index';
 import Auth from '@/pages/Auth';
 import Login from '@/pages/Login';
@@ -16,10 +16,8 @@ import Plans from '@/pages/Plans';
 import NotFound from '@/pages/NotFound';
 
 const AppRouter = () => {
-  console.log('AppRouter rendering');
-  
   return (
-    <AppProvider>
+    <SimpleAuthProvider>
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
@@ -34,7 +32,7 @@ const AppRouter = () => {
         <Route path="/plans" element={<Plans />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </AppProvider>
+    </SimpleAuthProvider>
   );
 };
 

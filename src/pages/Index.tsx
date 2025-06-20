@@ -1,15 +1,12 @@
 
 import React from 'react';
-import { useApp } from '@/components/MinimalAppProvider';
+import { useAuth } from '@/components/SimpleAuthProvider';
 import LandingPage from '@/components/LandingPage';
 import DashboardPage from '@/pages/DashboardPage';
 
 const Index = () => {
-  const { user, loading } = useApp();
+  const { user, loading } = useAuth();
 
-  console.log('Index page - user:', user, 'loading:', loading);
-
-  // Show loading while checking authentication
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
@@ -21,14 +18,10 @@ const Index = () => {
     );
   }
 
-  // If user is authenticated, show dashboard
   if (user) {
-    console.log('Rendering DashboardPage for authenticated user');
     return <DashboardPage />;
   }
 
-  // Show landing page for non-authenticated users
-  console.log('Rendering LandingPage for non-authenticated user');
   return <LandingPage />;
 };
 
