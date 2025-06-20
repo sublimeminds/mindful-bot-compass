@@ -30,10 +30,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('AppProvider: Setting up auth listener');
+    
     // Get initial session
     const getInitialSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
+        console.log('Initial session:', session);
         setUser(session?.user ?? null);
       } catch (error) {
         console.error('Error getting session:', error);
@@ -48,6 +51,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session);
         setUser(session?.user ?? null);
         setLoading(false);
       }

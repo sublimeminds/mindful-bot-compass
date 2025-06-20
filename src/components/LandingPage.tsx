@@ -7,6 +7,8 @@ import FeaturesSection from '@/components/FeaturesSection';
 import PricingSection from '@/components/PricingSection';
 
 const LandingPage = () => {
+  console.log('LandingPage rendering');
+  
   return (
     <div className="min-h-screen">
       <Header />

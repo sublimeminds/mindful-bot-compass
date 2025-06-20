@@ -16,6 +16,8 @@ import Plans from '@/pages/Plans';
 import NotFound from '@/pages/NotFound';
 
 const AppRouter = () => {
+  console.log('AppRouter rendering');
+  
   return (
     <AppProvider>
       <Routes>
