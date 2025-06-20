@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { useApp } from '@/components/MinimalAppProvider';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,20 +10,42 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { User, Settings, LogOut } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { User, Settings, LogOut, Crown } from 'lucide-react';
 
 const UserMenu = () => {
-  const { user, logout } = useSimpleApp();
+  // Ensure React is ready before using any hooks
+  const isReactReady = React && 
+    typeof React === 'object' && 
+    React.useState && 
+    React.useContext &&
+    React.createElement;
+
+  if (!isReactReady) {
+    console.warn('UserMenu: React not ready, showing static menu');
+    return (
+      <div className="flex items-center space-x-2">
+        <div className="w-8 h-8 bg-therapy-200 rounded-full"></div>
+        <span className="text-sm text-muted-foreground">Loading...</span>
+      </div>
+    );
+  }
+
+  const { user, logout } = useApp();
   const navigate = useNavigate();
 
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
 
   const handleLogout = async () => {
-    await logout();
-    navigate('/');
+    try {
+      await logout();
+      navigate('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (
@@ -30,9 +53,8 @@ const UserMenu = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email} />
             <AvatarFallback>
-              {user.email?.charAt(0).toUpperCase()}
+              {user.email?.charAt(0).toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -40,9 +62,7 @@ const UserMenu = () => {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
-              {user.user_metadata?.name || 'User'}
-            </p>
+            <p className="text-sm font-medium leading-none">Account</p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>
@@ -56,6 +76,10 @@ const UserMenu = () => {
         <DropdownMenuItem onClick={() => navigate('/settings')}>
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate('/plans')}>
+          <Crown className="mr-2 h-4 w-4" />
+          <span>Upgrade Plan</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>

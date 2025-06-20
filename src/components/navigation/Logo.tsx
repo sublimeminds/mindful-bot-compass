@@ -4,34 +4,33 @@ import { useNavigate } from 'react-router-dom';
 import GradientLogo from '@/components/ui/GradientLogo';
 
 const Logo = () => {
+  // Ensure React is ready before using any hooks
+  const isReactReady = React && 
+    typeof React === 'object' && 
+    React.useState && 
+    React.useContext &&
+    React.createElement;
+
+  if (!isReactReady) {
+    console.warn('Logo: React not ready, showing static logo');
+    return (
+      <div className="flex items-center space-x-2">
+        <div className="w-8 h-8 bg-gradient-to-r from-therapy-500 to-therapy-600 rounded-lg"></div>
+        <span className="text-xl font-bold text-therapy-900">TherapySync</span>
+      </div>
+    );
+  }
+
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate("/");
-  };
-
   return (
-    <div className="flex items-center flex-shrink-0">
-      <button 
-        onClick={handleClick}
-        className="flex items-center space-x-3 hover:opacity-90 transition-all duration-300 group"
-      >
-        <div className="flex items-center justify-center transition-all duration-300 group-hover:scale-105">
-          <GradientLogo 
-            size="lg"
-            className="drop-shadow-lg animate-swirl-breathe"
-          />
-        </div>
-        <div className="flex flex-col">
-          <span className="text-xl font-bold bg-gradient-to-r from-harmony-600 via-balance-600 to-flow-600 bg-clip-text text-transparent group-hover:from-harmony-500 group-hover:to-flow-500 transition-all duration-300">
-            TherapySync
-          </span>
-          <span className="text-xs text-muted-foreground font-medium -mt-1 group-hover:text-harmony-600 transition-colors duration-300">
-            AI Therapy Companion
-          </span>
-        </div>
-      </button>
-    </div>
+    <button
+      onClick={() => navigate('/')}
+      className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+    >
+      <GradientLogo size="sm" />
+      <span className="text-xl font-bold text-therapy-900">TherapySync</span>
+    </button>
   );
 };
 

@@ -14,6 +14,12 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const useApp = () => {
+  // Enhanced React validation before using context
+  if (!React || !React.useContext || typeof React.useContext !== 'function') {
+    console.error('useApp: React.useContext not available');
+    throw new Error('React context system not available');
+  }
+
   const context = useContext(AppContext);
   if (!context) {
     throw new Error('useApp must be used within an AppProvider');
@@ -26,6 +32,21 @@ interface AppProviderProps {
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+  // Validate React before setting up state
+  if (!React || !React.useState || !React.useEffect) {
+    console.error('AppProvider: React hooks not available');
+    return (
+      <div style={{ 
+        padding: '20px', 
+        textAlign: 'center', 
+        backgroundColor: '#fee2e2',
+        color: '#991b1b' 
+      }}>
+        React hooks not available. Please refresh the page.
+      </div>
+    );
+  }
+
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
