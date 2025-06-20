@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSafeAuth } from '@/hooks/useSafeAuth';
+import { useAuth } from '@/components/SimpleAuthProvider';
 import { Button } from '@/components/ui/button';
 import { 
   MessageCircle, 
@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 const UnifiedNavigation = () => {
-  const { user } = useSafeAuth();
+  const { user } = useAuth();
   const isAuthenticated = !!user;
   const location = useLocation();
   const navigate = useNavigate();

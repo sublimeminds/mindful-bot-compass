@@ -6,8 +6,17 @@ import { useNavigate } from 'react-router-dom';
 import Logo from '@/components/navigation/Logo';
 
 const Header = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -23,11 +32,7 @@ const Header = () => {
                 </span>
                 <Button
                   variant="outline"
-                  onClick={async () => {
-                    const { logout } = await import('@/components/SimpleAuthProvider');
-                    // This is a simplified approach - in a real app you'd use the context
-                    window.location.href = '/';
-                  }}
+                  onClick={handleSignOut}
                 >
                   Sign Out
                 </Button>

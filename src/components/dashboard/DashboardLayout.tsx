@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/components/SimpleAuthProvider';
 import SessionStarterWidget from './widgets/SessionStarterWidget';
 import ProgressOverviewWidget from './widgets/ProgressOverviewWidget';
 import QuickActionsWidget from './widgets/QuickActionsWidget';
@@ -9,18 +9,14 @@ import GoalsWidget from './widgets/GoalsWidget';
 import InsightsWidget from './widgets/InsightsWidget';
 import TherapistWidget from './widgets/TherapistWidget';
 import SessionHistoryWidget from './widgets/SessionHistoryWidget';
-import SmartOnboardingGuide from '@/components/ai/SmartOnboardingGuide';
 import EnhancedMoodWidget from './widgets/EnhancedMoodWidget';
 import AnalyticsWidget from './widgets/AnalyticsWidget';
 
 const DashboardLayout = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50">
-      {/* Smart Onboarding Guide */}
-      <SmartOnboardingGuide />
-
       <main className="container mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* First Row - Full Width Session Starter */}
