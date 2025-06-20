@@ -1,34 +1,25 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { 
-  CalendarIcon, 
-  TrendingUp, 
   Heart, 
   Brain, 
   Activity, 
   Sun, 
   Moon, 
   Users, 
-  Briefcase,
   Shield,
-  Plus,
-  Minus
+  CheckCircle,
+  AlertTriangle
 } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface MoodEntry {
   overall: number;
@@ -36,15 +27,13 @@ interface MoodEntry {
   depression: number;
   stress: number;
   energy: number;
-  sleepQuality: number;
-  socialInteraction: number;
-  physicalActivity: number;
+  sleep_quality: number;
+  social_connection: number;
   notes: string;
 }
 
 const AdvancedMoodTracker = () => {
   const { user } = useSimpleApp();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const [moodEntry, setMoodEntry] = useState<MoodEntry>({
@@ -53,9 +42,8 @@ const AdvancedMoodTracker = () => {
     depression: 5,
     stress: 5,
     energy: 5,
-    sleepQuality: 5,
-    socialInteraction: 5,
-    physicalActivity: 5,
+    sleep_quality: 5,
+    social_connection: 5,
     notes: '',
   });
 
@@ -74,28 +62,19 @@ const AdvancedMoodTracker = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mood-entries', user?.id] });
-      toast({
-        title: "Mood Logged",
-        description: "Your mood has been recorded successfully!",
-      });
+      console.log("Mood logged successfully!");
       setMoodEntry({
         overall: 5,
         anxiety: 5,
         depression: 5,
         stress: 5,
         energy: 5,
-        sleepQuality: 5,
-        socialInteraction: 5,
-        physicalActivity: 5,
+        sleep_quality: 5,
+        social_connection: 5,
         notes: '',
       });
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: "Failed to log mood. Please try again.",
-        variant: "destructive",
-      });
       console.error('Error logging mood:', error);
     },
   });
@@ -138,7 +117,7 @@ const AdvancedMoodTracker = () => {
           <div className="space-y-2">
             <Label htmlFor="anxiety">Anxiety Level</Label>
             <div className="flex items-center space-x-2">
-              <Zap className="h-4 w-4 text-yellow-500" />
+              <AlertTriangle className="h-4 w-4 text-yellow-500" />
               <Slider
                 id="anxiety"
                 defaultValue={[moodEntry.anxiety]}
@@ -200,50 +179,34 @@ const AdvancedMoodTracker = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="sleepQuality">Sleep Quality</Label>
+            <Label htmlFor="sleep_quality">Sleep Quality</Label>
             <div className="flex items-center space-x-2">
               <Moon className="h-4 w-4 text-blue-500" />
               <Slider
-                id="sleepQuality"
-                defaultValue={[moodEntry.sleepQuality]}
+                id="sleep_quality"
+                defaultValue={[moodEntry.sleep_quality]}
                 max={10}
                 min={1}
                 step={1}
-                onValueChange={(value) => handleChange('sleepQuality', value[0])}
+                onValueChange={(value) => handleChange('sleep_quality', value[0])}
               />
-              <Badge variant="secondary">{moodEntry.sleepQuality}/10</Badge>
+              <Badge variant="secondary">{moodEntry.sleep_quality}/10</Badge>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="socialInteraction">Social Interaction</Label>
+            <Label htmlFor="social_connection">Social Connection</Label>
             <div className="flex items-center space-x-2">
               <Users className="h-4 w-4 text-green-500" />
               <Slider
-                id="socialInteraction"
-                defaultValue={[moodEntry.socialInteraction]}
+                id="social_connection"
+                defaultValue={[moodEntry.social_connection]}
                 max={10}
                 min={1}
                 step={1}
-                onValueChange={(value) => handleChange('socialInteraction', value[0])}
+                onValueChange={(value) => handleChange('social_connection', value[0])}
               />
-              <Badge variant="secondary">{moodEntry.socialInteraction}/10</Badge>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="physicalActivity">Physical Activity</Label>
-            <div className="flex items-center space-x-2">
-              <Activity className="h-4 w-4 text-red-500" />
-              <Slider
-                id="physicalActivity"
-                defaultValue={[moodEntry.physicalActivity]}
-                max={10}
-                min={1}
-                step={1}
-                onValueChange={(value) => handleChange('physicalActivity', value[0])}
-              />
-              <Badge variant="secondary">{moodEntry.physicalActivity}/10</Badge>
+              <Badge variant="secondary">{moodEntry.social_connection}/10</Badge>
             </div>
           </div>
 

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,27 +28,23 @@ import { useSimpleApp } from '@/hooks/useSimpleApp';
 const RealTimeSessionManager = () => {
   const { user } = useSimpleApp();
   const {
+    messages,
+    loading,
+    error,
     sessionState,
     startSession,
+    endSession,
     pauseSession,
-    stopSession,
-    toggleAudio,
-    toggleVideo,
-    shareSession,
-    endCall,
-    sessionMessages,
-    sendMessage,
-    isAudioEnabled,
-    isVideoEnabled,
-    isSharing,
-    isCallOngoing,
-    sessionStartTime,
-    sessionEndTime,
-    sessionProgress,
-    isLoading
+    resumeSession,
+    sendMessage
   } = useRealTimeSession();
 
   const [messageInput, setMessageInput] = useState('');
+  const [isAudioEnabled, setIsAudioEnabled] = useState(true);
+  const [isVideoEnabled, setIsVideoEnabled] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const [isCallOngoing, setIsCallOngoing] = useState(false);
+  const [sessionProgress, setSessionProgress] = useState(0);
 
   useEffect(() => {
     // Load session data or perform initial setup
@@ -58,6 +55,26 @@ const RealTimeSessionManager = () => {
       sendMessage(messageInput);
       setMessageInput('');
     }
+  };
+
+  const toggleAudio = () => {
+    setIsAudioEnabled(!isAudioEnabled);
+  };
+
+  const toggleVideo = () => {
+    setIsVideoEnabled(!isVideoEnabled);
+  };
+
+  const shareSession = () => {
+    setIsSharing(!isSharing);
+  };
+
+  const stopSession = async () => {
+    await endSession();
+  };
+
+  const endCall = () => {
+    setIsCallOngoing(false);
   };
 
   return (
@@ -148,15 +165,15 @@ const RealTimeSessionManager = () => {
             onChange={(e) => setMessageInput(e.target.value)}
             className="flex-1 rounded-md border border-gray-200 px-3 py-2"
           />
-          <Button onClick={handleSendMessage} disabled={isLoading}>
+          <Button onClick={handleSendMessage} disabled={loading}>
             Send
           </Button>
         </div>
 
         {/* Display Session Messages */}
         <div className="flex-1 overflow-y-auto">
-          {sessionMessages.map((message) => (
-            <div key={message.id} className="mb-2 p-2 rounded-md bg-gray-100">
+          {messages.map((message, index) => (
+            <div key={index} className="mb-2 p-2 rounded-md bg-gray-100">
               {message.content}
             </div>
           ))}

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,8 +16,8 @@ import {
   CheckCircle,
   Clock
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { supabase } from '@/integrations/supabase/client';
 
 interface EnhancedSmartAnalysisStepProps {
   onNext: () => void;
@@ -41,7 +42,6 @@ const EnhancedSmartAnalysisStep = ({ onNext, onBack, onboardingData }: EnhancedS
   const [analysis, setAnalysis] = useState<EnhancedAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
-  const toast = useToast();
 
   useEffect(() => {
     if (user) {
@@ -85,18 +85,11 @@ const EnhancedSmartAnalysisStep = ({ onNext, onBack, onboardingData }: EnhancedS
 
       setAnalysis(mockAnalysis);
 
-      toast({
-        title: "Enhanced Analysis Complete",
-        description: "Your personalized therapy plan has been created with cultural considerations!",
-      });
+      console.log("Enhanced Analysis Complete: Your personalized therapy plan has been created with cultural considerations!");
     } catch (error) {
       console.error('Enhanced analysis error:', error);
       setError('Failed to complete enhanced analysis. Please try again.');
-      toast({
-        title: "Analysis Error",
-        description: "We couldn't complete your enhanced analysis. Please try again.",
-        variant: "destructive"
-      });
+      console.error("Analysis Error: We couldn't complete your enhanced analysis. Please try again.");
     } finally {
       setIsAnalyzing(false);
     }
@@ -328,7 +321,7 @@ const EnhancedSmartAnalysisStep = ({ onNext, onBack, onboardingData }: EnhancedS
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <Target className="h-5 w-5" />
+            <Shield className="h-5 w-5" />
             <span>Risk Assessment & Duration</span>
           </CardTitle>
         </CardHeader>

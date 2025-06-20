@@ -2,7 +2,6 @@
 import React, { createContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 
 export interface AppContextType {
   user: User | null;
@@ -21,7 +20,7 @@ interface SimpleAppProviderProps {
 }
 
 export const SimpleAppProvider: React.FC<SimpleAppProviderProps> = ({ children }) => {
-  // Ensure React is available before using hooks
+  // Safety check for React availability
   if (typeof React === 'undefined' || !React.useState) {
     console.error('React hooks are not available in SimpleAppProvider');
     return React.createElement('div', { 
@@ -36,7 +35,6 @@ export const SimpleAppProvider: React.FC<SimpleAppProviderProps> = ({ children }
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
 
   useEffect(() => {
     // Set up auth state listener
@@ -82,11 +80,7 @@ export const SimpleAppProvider: React.FC<SimpleAppProviderProps> = ({ children }
   const logout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to sign out",
-        variant: "destructive",
-      });
+      console.error("Failed to sign out:", error);
     }
   };
 
@@ -94,17 +88,9 @@ export const SimpleAppProvider: React.FC<SimpleAppProviderProps> = ({ children }
     try {
       const { error } = await supabase.auth.updateUser(updates);
       if (error) throw error;
-      
-      toast({
-        title: "Profile Updated",
-        description: "Your profile has been updated successfully.",
-      });
+      console.log("Profile updated successfully");
     } catch (error: any) {
-      toast({
-        title: "Update Failed",
-        description: error.message || "Failed to update profile",
-        variant: "destructive",
-      });
+      console.error("Failed to update profile:", error.message);
     }
   };
 
