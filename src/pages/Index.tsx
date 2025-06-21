@@ -20,7 +20,8 @@ import {
   Volume2,
   Mic,
   Eye,
-  BarChart3
+  BarChart3,
+  Crown
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSEO } from '@/hooks/useSEO';
