@@ -1,0 +1,68 @@
+
+{
+  "onboarding": {
+    "title": "TherapySync 설정",
+    "steps": {
+      "welcome": "환영합니다",
+      "goals": "당신의 목표",
+      "preferences": "선호사항",
+      "cultural": "문화적 배경",
+      "analysis": "스마트 분석",
+      "therapist": "치료사 성격",
+      "plan": "플랜 선택",
+      "notifications": "알림"
+    }
+  },
+  "navigation": {
+    "home": "홈",
+    "therapy": "AI 치료",
+    "dashboard": "대시보드",
+    "goals": "목표",
+    "mood": "기분",
+    "community": "커뮤니티",
+    "help": "도움말",
+    "settings": "설정",
+    "profile": "프로필"
+  },
+  "pricing": {
+    "free": "무료",
+    "premium": "프리미엄",
+    "professional": "전문가",
+    "perMonth": "월",
+    "perYear": "연",
+    "startTrial": "무료 체험 시작",
+    "choosePlan": "플랜 선택",
+    "features": {
+      "basicChat": "기본 AI 채팅",
+      "unlimitedSessions": "무제한 세션",
+      "advancedAnalytics": "고급 분석",
+      "prioritySupport": "우선 지원",
+      "culturalAdaptation": "문화적 적응",
+      "multiLanguage": "다국어 지원"
+    }
+  },
+  "therapy": {
+    "startSession": "세션 시작",
+    "endSession": "세션 종료",
+    "askAnything": "무엇이든 물어보세요...",
+    "howFeeling": "오늘 기분이 어떠신가요?",
+    "sessionNotes": "세션 노트",
+    "insights": "통찰",
+    "progress": "진행상황"
+  },
+  "cultural": {
+    "title": "문화적 선호사항",
+    "language": "주요 언어",
+    "background": "문화적 배경",
+    "familyStructure": "가족 구조",
+    "communicationStyle": "소통 스타일",
+    "religiousConsiderations": "종교적 고려사항",
+    "therapyApproaches": "치료 접근법"
+  },
+  "currency": {
+    "title": "통화",
+    "change": "통화 변경",
+    "detected": "감지됨: {currency} ({country})",
+    "suggestion": "{country}에서의 위치를 기반으로 {currency}를 제안합니다"
+  }
+}

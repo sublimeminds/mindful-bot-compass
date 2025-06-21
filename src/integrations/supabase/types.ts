@@ -612,6 +612,30 @@ export type Database = {
         }
         Relationships: []
       }
+      cultural_interactions: {
+        Row: {
+          cultural_context: Json
+          id: string
+          interaction_type: string
+          timestamp: string
+          user_id: string
+        }
+        Insert: {
+          cultural_context?: Json
+          id?: string
+          interaction_type: string
+          timestamp?: string
+          user_id: string
+        }
+        Update: {
+          cultural_context?: Json
+          id?: string
+          interaction_type?: string
+          timestamp?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       discussion_replies: {
         Row: {
           author_id: string
@@ -827,6 +851,33 @@ export type Database = {
           therapy_modalities?: string[] | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      exchange_rates: {
+        Row: {
+          base_currency: string
+          id: string
+          last_updated: string
+          provider: string
+          rate: number
+          target_currency: string
+        }
+        Insert: {
+          base_currency?: string
+          id?: string
+          last_updated?: string
+          provider?: string
+          rate: number
+          target_currency: string
+        }
+        Update: {
+          base_currency?: string
+          id?: string
+          last_updated?: string
+          provider?: string
+          rate?: number
+          target_currency?: string
         }
         Relationships: []
       }
@@ -1526,6 +1577,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          country_code: string | null
           created_at: string
           date_of_birth: string | null
           email: string
@@ -1534,14 +1586,18 @@ export type Database = {
           onboarding_complete: boolean | null
           phone: string | null
           plan: string | null
+          preferred_currency: string | null
+          preferred_language: string | null
           privacy_settings: Json | null
           subscription_plan: string | null
           subscription_status: string | null
+          timezone: string | null
           updated_at: string
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          country_code?: string | null
           created_at?: string
           date_of_birth?: string | null
           email: string
@@ -1550,14 +1606,18 @@ export type Database = {
           onboarding_complete?: boolean | null
           phone?: string | null
           plan?: string | null
+          preferred_currency?: string | null
+          preferred_language?: string | null
           privacy_settings?: Json | null
           subscription_plan?: string | null
           subscription_status?: string | null
+          timezone?: string | null
           updated_at?: string
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          country_code?: string | null
           created_at?: string
           date_of_birth?: string | null
           email?: string
@@ -1566,9 +1626,12 @@ export type Database = {
           onboarding_complete?: boolean | null
           phone?: string | null
           plan?: string | null
+          preferred_currency?: string | null
+          preferred_language?: string | null
           privacy_settings?: Json | null
           subscription_plan?: string | null
           subscription_status?: string | null
+          timezone?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -2426,6 +2489,51 @@ export type Database = {
           created_at?: string
           id?: string
           searchable_content?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_cultural_profiles: {
+        Row: {
+          communication_style: string
+          created_at: string
+          cultural_background: string | null
+          cultural_sensitivities: string[]
+          family_structure: string
+          id: string
+          primary_language: string
+          religious_considerations: boolean
+          religious_details: string | null
+          therapy_approach_preferences: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          communication_style?: string
+          created_at?: string
+          cultural_background?: string | null
+          cultural_sensitivities?: string[]
+          family_structure?: string
+          id?: string
+          primary_language?: string
+          religious_considerations?: boolean
+          religious_details?: string | null
+          therapy_approach_preferences?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          communication_style?: string
+          created_at?: string
+          cultural_background?: string | null
+          cultural_sensitivities?: string[]
+          family_structure?: string
+          id?: string
+          primary_language?: string
+          religious_considerations?: boolean
+          religious_details?: string | null
+          therapy_approach_preferences?: string[]
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

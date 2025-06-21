@@ -1,0 +1,68 @@
+
+{
+  "onboarding": {
+    "title": "Configurazione TherapySync",
+    "steps": {
+      "welcome": "Benvenuto",
+      "goals": "I Tuoi Obiettivi",
+      "preferences": "Preferenze",
+      "cultural": "Contesto Culturale",
+      "analysis": "Analisi Intelligente",
+      "therapist": "Personalità del Terapeuta",
+      "plan": "Selezione Piano",
+      "notifications": "Notifiche"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "therapy": "Terapia IA",
+    "dashboard": "Dashboard",
+    "goals": "Obiettivi",
+    "mood": "Umore",
+    "community": "Comunità",
+    "help": "Aiuto",
+    "settings": "Impostazioni",
+    "profile": "Profilo"
+  },
+  "pricing": {
+    "free": "Gratuito",
+    "premium": "Premium",
+    "professional": "Professionale",
+    "perMonth": "al mese",
+    "perYear": "all'anno",
+    "startTrial": "Inizia Prova Gratuita",
+    "choosePlan": "Scegli Piano",
+    "features": {
+      "basicChat": "Chat base con IA",
+      "unlimitedSessions": "Sessioni illimitate",
+      "advancedAnalytics": "Analitiche avanzate",
+      "prioritySupport": "Supporto prioritario",
+      "culturalAdaptation": "Adattamento culturale",
+      "multiLanguage": "Supporto multilingue"
+    }
+  },
+  "therapy": {
+    "startSession": "Inizia Sessione",
+    "endSession": "Termina Sessione",
+    "askAnything": "Chiedi qualsiasi cosa...",
+    "howFeeling": "Come ti senti oggi?",
+    "sessionNotes": "Note della sessione",
+    "insights": "Insights",
+    "progress": "Progresso"
+  },
+  "cultural": {
+    "title": "Preferenze Culturali",
+    "language": "Lingua Principale",
+    "background": "Contesto Culturale",
+    "familyStructure": "Struttura Familiare",
+    "communicationStyle": "Stile di Comunicazione",
+    "religiousConsiderations": "Considerazioni Religiose",
+    "therapyApproaches": "Approcci Terapeutici"
+  },
+  "currency": {
+    "title": "Valuta",
+    "change": "Cambia valuta",
+    "detected": "Rilevata: {currency} ({country})",
+    "suggestion": "Suggeriamo {currency} basato sulla tua posizione in {country}"
+  }
+}

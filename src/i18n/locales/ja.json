@@ -1,0 +1,68 @@
+
+{
+  "onboarding": {
+    "title": "TherapySync セットアップ",
+    "steps": {
+      "welcome": "ようこそ",
+      "goals": "あなたの目標",
+      "preferences": "設定",
+      "cultural": "文化的背景",
+      "analysis": "スマート分析",
+      "therapist": "セラピストの性格",
+      "plan": "プラン選択",
+      "notifications": "通知"
+    }
+  },
+  "navigation": {
+    "home": "ホーム",
+    "therapy": "AIセラピー",
+    "dashboard": "ダッシュボード",
+    "goals": "目標",
+    "mood": "気分",
+    "community": "コミュニティ",
+    "help": "ヘルプ",
+    "settings": "設定",
+    "profile": "プロフィール"
+  },
+  "pricing": {
+    "free": "無料",
+    "premium": "プレミアム",
+    "professional": "プロフェッショナル",
+    "perMonth": "月額",
+    "perYear": "年額",
+    "startTrial": "無料トライアル開始",
+    "choosePlan": "プラン選択",
+    "features": {
+      "basicChat": "基本AIチャット",
+      "unlimitedSessions": "無制限セッション",
+      "advancedAnalytics": "高度な分析",
+      "prioritySupport": "優先サポート",
+      "culturalAdaptation": "文化的適応",
+      "multiLanguage": "多言語サポート"
+    }
+  },
+  "therapy": {
+    "startSession": "セッション開始",
+    "endSession": "セッション終了",
+    "askAnything": "なんでも聞いてください...",
+    "howFeeling": "今日の気分はいかがですか？",
+    "sessionNotes": "セッションメモ",
+    "insights": "洞察",
+    "progress": "進捗"
+  },
+  "cultural": {
+    "title": "文化的設定",
+    "language": "主要言語",
+    "background": "文化的背景",
+    "familyStructure": "家族構造",
+    "communicationStyle": "コミュニケーションスタイル",
+    "religiousConsiderations": "宗教的配慮",
+    "therapyApproaches": "セラピーアプローチ"
+  },
+  "currency": {
+    "title": "通貨",
+    "change": "通貨変更",
+    "detected": "検出: {currency} ({country})",
+    "suggestion": "{country}での位置に基づいて{currency}を提案します"
+  }
+}

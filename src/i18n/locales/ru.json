@@ -1,0 +1,68 @@
+
+{
+  "onboarding": {
+    "title": "Настройка TherapySync",
+    "steps": {
+      "welcome": "Добро пожаловать",
+      "goals": "Ваши Цели",
+      "preferences": "Предпочтения",
+      "cultural": "Культурный Контекст",
+      "analysis": "Умный Анализ",
+      "therapist": "Личность Терапевта",
+      "plan": "Выбор Плана",
+      "notifications": "Уведомления"
+    }
+  },
+  "navigation": {
+    "home": "Главная",
+    "therapy": "ИИ Терапия",
+    "dashboard": "Панель",
+    "goals": "Цели",
+    "mood": "Настроение",
+    "community": "Сообщество",
+    "help": "Помощь",
+    "settings": "Настройки",
+    "profile": "Профиль"
+  },
+  "pricing": {
+    "free": "Бесплатно",
+    "premium": "Премиум",
+    "professional": "Профессиональный",
+    "perMonth": "в месяц",
+    "perYear": "в год",
+    "startTrial": "Начать Бесплатную Пробную Версию",
+    "choosePlan": "Выбрать План",
+    "features": {
+      "basicChat": "Базовый чат с ИИ",
+      "unlimitedSessions": "Неограниченные сессии",
+      "advancedAnalytics": "Продвинутая аналитика",
+      "prioritySupport": "Приоритетная поддержка",
+      "culturalAdaptation": "Культурная адаптация",
+      "multiLanguage": "Многоязычная поддержка"
+    }
+  },
+  "therapy": {
+    "startSession": "Начать Сессию",
+    "endSession": "Завершить Сессию",
+    "askAnything": "Спросите что угодно...",
+    "howFeeling": "Как вы себя чувствуете сегодня?",
+    "sessionNotes": "Заметки сессии",
+    "insights": "Инсайты",
+    "progress": "Прогресс"
+  },
+  "cultural": {
+    "title": "Культурные Предпочтения",
+    "language": "Основной Язык",
+    "background": "Культурный Фон",
+    "familyStructure": "Семейная Структура",
+    "communicationStyle": "Стиль Общения",
+    "religiousConsiderations": "Религиозные Соображения",
+    "therapyApproaches": "Терапевтические Подходы"
+  },
+  "currency": {
+    "title": "Валюта",
+    "change": "Изменить валюту",
+    "detected": "Обнаружено: {currency} ({country})",
+    "suggestion": "Мы предлагаем {currency} на основе вашего местоположения в {country}"
+  }
+}

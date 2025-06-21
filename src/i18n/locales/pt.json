@@ -1,0 +1,68 @@
+
+{
+  "onboarding": {
+    "title": "Configuração do TherapySync",
+    "steps": {
+      "welcome": "Bem-vindos",
+      "goals": "Seus Objetivos",
+      "preferences": "Preferências",
+      "cultural": "Contexto Cultural",
+      "analysis": "Análise Inteligente",
+      "therapist": "Personalidade do Terapeuta",
+      "plan": "Escolha do Plano",
+      "notifications": "Notificações"
+    }
+  },
+  "navigation": {
+    "home": "Início",
+    "therapy": "Terapia IA",
+    "dashboard": "Painel",
+    "goals": "Objetivos",
+    "mood": "Humor",
+    "community": "Comunidade",
+    "help": "Ajuda",
+    "settings": "Configurações",
+    "profile": "Perfil"
+  },
+  "pricing": {
+    "free": "Gratuito",
+    "premium": "Premium",
+    "professional": "Profissional",
+    "perMonth": "por mês",
+    "perYear": "por ano",
+    "startTrial": "Iniciar Teste Gratuito",
+    "choosePlan": "Escolher Plano",
+    "features": {
+      "basicChat": "Chat básico com IA",
+      "unlimitedSessions": "Sessões ilimitadas",
+      "advancedAnalytics": "Análise avançada",
+      "prioritySupport": "Suporte prioritário",
+      "culturalAdaptation": "Adaptação cultural",
+      "multiLanguage": "Suporte multilíngue"
+    }
+  },
+  "therapy": {
+    "startSession": "Iniciar Sessão",
+    "endSession": "Encerrar Sessão",
+    "askAnything": "Pergunte qualquer coisa...",
+    "howFeeling": "Como você está se sentindo hoje?",
+    "sessionNotes": "Notas da sessão",
+    "insights": "Insights",
+    "progress": "Progresso"
+  },
+  "cultural": {
+    "title": "Preferências Culturais",
+    "language": "Idioma Principal",
+    "background": "Contexto Cultural",
+    "familyStructure": "Estrutura Familiar",
+    "communicationStyle": "Estilo de Comunicação",
+    "religiousConsiderations": "Considerações Religiosas",
+    "therapyApproaches": "Abordagens Terapêuticas"
+  },
+  "currency": {
+    "title": "Moeda",
+    "change": "Alterar moeda",
+    "detected": "Detectada: {currency} ({country})",
+    "suggestion": "Sugerimos {currency} baseado na sua localização em {country}"
+  }
+}

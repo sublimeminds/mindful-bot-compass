@@ -1,0 +1,68 @@
+
+{
+  "onboarding": {
+    "title": "TherapySync Instelling",
+    "steps": {
+      "welcome": "Welkom",
+      "goals": "Uw Doelen",
+      "preferences": "Voorkeuren",
+      "cultural": "Culturele Context",
+      "analysis": "Intelligente Analyse",
+      "therapist": "Therapeut Persoonlijkheid",
+      "plan": "Plan Selectie",
+      "notifications": "Meldingen"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "therapy": "AI Therapie",
+    "dashboard": "Dashboard",
+    "goals": "Doelen",
+    "mood": "Stemming",
+    "community": "Gemeenschap",
+    "help": "Help",
+    "settings": "Instellingen",
+    "profile": "Profiel"
+  },
+  "pricing": {
+    "free": "Gratis",
+    "premium": "Premium",
+    "professional": "Professioneel",
+    "perMonth": "per maand",
+    "perYear": "per jaar",
+    "startTrial": "Start Gratis Proefperiode",
+    "choosePlan": "Kies Plan",
+    "features": {
+      "basicChat": "Basis AI chat",
+      "unlimitedSessions": "Onbeperkte sessies",
+      "advancedAnalytics": "Geavanceerde analyses",
+      "prioritySupport": "Prioriteit ondersteuning",
+      "culturalAdaptation": "Culturele aanpassing",
+      "multiLanguage": "Meertalige ondersteuning"
+    }
+  },
+  "therapy": {
+    "startSession": "Start Sessie",
+    "endSession": "Beëindig Sessie",
+    "askAnything": "Vraag wat dan ook...",
+    "howFeeling": "Hoe voel je je vandaag?",
+    "sessionNotes": "Sessie notities",
+    "insights": "Inzichten",
+    "progress": "Voortgang"
+  },
+  "cultural": {
+    "title": "Culturele Voorkeuren",
+    "language": "Hoofdtaal",
+    "background": "Culturele Achtergrond",
+    "familyStructure": "Familiestructuur",
+    "communicationStyle": "Communicatiestijl",
+    "religiousConsiderations": "Religieuze Overwegingen",
+    "therapyApproaches": "Therapie Benaderingen"
+  },
+  "currency": {
+    "title": "Valuta",
+    "change": "Verander valuta",
+    "detected": "Gedetecteerd: {currency} ({country})",
+    "suggestion": "We stellen {currency} voor op basis van uw locatie in {country}"
+  }
+}

@@ -1,0 +1,68 @@
+
+{
+  "onboarding": {
+    "title": "TherapySync सेटअप",
+    "steps": {
+      "welcome": "स्वागत है",
+      "goals": "आपके लक्ष्य",
+      "preferences": "प्राथमिकताएं",
+      "cultural": "सांस्कृतिक संदर्भ",
+      "analysis": "स्मार्ट विश्लेषण",
+      "therapist": "चिकित्सक व्यक्तित्व",
+      "plan": "योजना चयन",
+      "notifications": "सूचनाएं"
+    }
+  },
+  "navigation": {
+    "home": "मुख्य",
+    "therapy": "AI चिकित्सा",
+    "dashboard": "डैशबोर्ड",
+    "goals": "लक्ष्य",
+    "mood": "मूड",
+    "community": "समुदाय",
+    "help": "सहायता",
+    "settings": "सेटिंग्स",
+    "profile": "प्रोफाइल"
+  },
+  "pricing": {
+    "free": "मुफ्त",
+    "premium": "प्रीमियम",
+    "professional": "पेशेवर",
+    "perMonth": "प्रति माह",
+    "perYear": "प्रति वर्ष",
+    "startTrial": "मुफ्त ट्रायल शुरू करें",
+    "choosePlan": "योजना चुनें",
+    "features": {
+      "basicChat": "बेसिक AI चैट",
+      "unlimitedSessions": "असीमित सत्र",
+      "advancedAnalytics": "उन्नत विश्लेषण",
+      "prioritySupport": "प्राथमिकता समर्थन",
+      "culturalAdaptation": "सांस्कृतिक अनुकूलन",
+      "multiLanguage": "बहुभाषी समर्थन"
+    }
+  },
+  "therapy": {
+    "startSession": "सत्र शुरू करें",
+    "endSession": "सत्र समाप्त करें",
+    "askAnything": "कुछ भी पूछें...",
+    "howFeeling": "आज आप कैसा महसूस कर रहे हैं?",
+    "sessionNotes": "सत्र नोट्स",
+    "insights": "अंतर्दृष्टि",
+    "progress": "प्रगति"
+  },
+  "cultural": {
+    "title": "सांस्कृतिक प्राथमिकताएं",
+    "language": "मुख्य भाषा",
+    "background": "सांस्कृतिक पृष्ठभूमि",
+    "familyStructure": "पारिवारिक संरचना",
+    "communicationStyle": "संचार शैली",
+    "religiousConsiderations": "धार्मिक विचार",
+    "therapyApproaches": "चिकित्सा दृष्टिकोण"
+  },
+  "currency": {
+    "title": "मुद्रा",
+    "change": "मुद्रा बदलें",
+    "detected": "पता लगाया गया: {currency} ({country})",
+    "suggestion": "हम {country} में आपके स्थान के आधार पर {currency} का सुझाव देते हैं"
+  }
+}

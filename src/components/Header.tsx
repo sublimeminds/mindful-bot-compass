@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -35,7 +34,8 @@ import {
 } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import GradientLogo from '@/components/ui/GradientLogo';
-import LanguageSelector from '@/components/ui/LanguageSelector';
+import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
+import EnhancedCurrencySelector from '@/components/ui/EnhancedCurrencySelector';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -382,8 +382,11 @@ const Header = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-4">
-            {/* Language Selector */}
-            <LanguageSelector />
+            {/* Enhanced Language & Currency Selectors */}
+            <div className="hidden lg:flex items-center space-x-3">
+              <EnhancedLanguageSelector />
+              <EnhancedCurrencySelector />
+            </div>
             
             {user ? (
               <>

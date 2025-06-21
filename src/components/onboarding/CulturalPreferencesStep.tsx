@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Globe, Users, MessageCircle, Heart, Info, Languages } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 interface CulturalPreferences {
   primaryLanguage: string;
@@ -54,6 +55,7 @@ const CulturalPreferencesStep = ({
   onNext, 
   onBack 
 }: CulturalPreferencesStepProps) => {
+  const { t } = useTranslation();
   const [currentPreferences, setCurrentPreferences] = useState<CulturalPreferences>(preferences);
 
   const updatePreference = (key: keyof CulturalPreferences, value: any) => {
@@ -73,7 +75,7 @@ const CulturalPreferencesStep = ({
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Cultural Preferences</h2>
+        <h2 className="text-2xl font-bold mb-2">{t('cultural.title')}</h2>
         <p className="text-muted-foreground mb-4">
           Help us provide more culturally-aware and personalized therapy. All information is optional and confidential.
         </p>
@@ -95,7 +97,7 @@ const CulturalPreferencesStep = ({
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Languages className="h-5 w-5" />
-              <span>Language Preferences</span>
+              <span>{t('cultural.language')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -116,6 +118,9 @@ const CulturalPreferencesStep = ({
                   <SelectItem value="ko">Korean (한국어)</SelectItem>
                   <SelectItem value="hi">Hindi (हिन्दी)</SelectItem>
                   <SelectItem value="pt">Portuguese (Português)</SelectItem>
+                  <SelectItem value="it">Italian (Italiano)</SelectItem>
+                  <SelectItem value="nl">Dutch (Nederlands)</SelectItem>
+                  <SelectItem value="ru">Russian (Русский)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -127,7 +132,7 @@ const CulturalPreferencesStep = ({
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Globe className="h-5 w-5" />
-              <span>Cultural Background</span>
+              <span>{t('cultural.background')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -154,7 +159,7 @@ const CulturalPreferencesStep = ({
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Users className="h-5 w-5" />
-              <span>Family & Community Orientation</span>
+              <span>{t('cultural.familyStructure')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -203,7 +208,7 @@ const CulturalPreferencesStep = ({
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <MessageCircle className="h-5 w-5" />
-              <span>Communication Style</span>
+              <span>{t('cultural.communicationStyle')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -252,7 +257,7 @@ const CulturalPreferencesStep = ({
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Heart className="h-5 w-5" />
-              <span>Spiritual & Religious Considerations</span>
+              <span>{t('cultural.religiousConsiderations')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -294,7 +299,7 @@ const CulturalPreferencesStep = ({
         {/* Therapy Approach Preferences */}
         <Card>
           <CardHeader>
-            <CardTitle>Preferred Therapy Approaches</CardTitle>
+            <CardTitle>{t('cultural.therapyApproaches')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground mb-4">
