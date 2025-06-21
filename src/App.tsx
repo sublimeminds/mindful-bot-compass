@@ -25,66 +25,69 @@ const queryClient = new QueryClient({
   },
 });
 
-// Simple loading component without hooks
+// Simple loading component
 const AppLoading = () => {
-  return React.createElement('div', {
-    style: {
+  return (
+    <div style={{
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: '#f8fafc',
       fontFamily: 'system-ui, sans-serif'
-    }
-  }, React.createElement('div', {
-    style: {
-      padding: '20px',
-      textAlign: 'center',
-      color: '#6b7280'
-    }
-  }, 'Loading TherapySync...'));
+    }}>
+      <div style={{
+        padding: '20px',
+        textAlign: 'center',
+        color: '#6b7280'
+      }}>
+        Loading TherapySync...
+      </div>
+    </div>
+  );
 };
 
-// Error component without hooks
+// Error component
 const AppError = ({ error }: { error: string }) => {
-  return React.createElement('div', {
-    style: {
+  return (
+    <div style={{
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: '#fee2e2',
       fontFamily: 'system-ui, sans-serif'
-    }
-  }, React.createElement('div', {
-    style: {
-      padding: '30px',
-      textAlign: 'center',
-      color: '#dc2626',
-      backgroundColor: 'white',
-      borderRadius: '8px',
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-      maxWidth: '400px'
-    }
-  }, [
-    React.createElement('h2', { key: 'title', style: { marginBottom: '16px' } }, 'Application Error'),
-    React.createElement('p', { key: 'message', style: { marginBottom: '20px' } }, error),
-    React.createElement('button', {
-      key: 'reload',
-      onClick: () => window.location.reload(),
-      style: {
-        backgroundColor: '#dc2626',
-        color: 'white',
-        border: 'none',
-        padding: '10px 20px',
-        borderRadius: '6px',
-        cursor: 'pointer'
-      }
-    }, 'Reload Page')
-  ]));
+    }}>
+      <div style={{
+        padding: '30px',
+        textAlign: 'center',
+        color: '#dc2626',
+        backgroundColor: 'white',
+        borderRadius: '8px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        maxWidth: '400px'
+      }}>
+        <h2 style={{ marginBottom: '16px' }}>Application Error</h2>
+        <p style={{ marginBottom: '20px' }}>{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          style={{
+            backgroundColor: '#dc2626',
+            color: 'white',
+            border: 'none',
+            padding: '10px 20px',
+            borderRadius: '6px',
+            cursor: 'pointer'
+          }}
+        >
+          Reload Page
+        </button>
+      </div>
+    </div>
+  );
 };
 
-// Main app content that uses hooks
+// Main app content with hooks
 const AppContent = () => {
   return (
     <QueryClientProvider client={queryClient}>
@@ -105,7 +108,7 @@ const AppContent = () => {
   );
 };
 
-// Safe React checker class component
+// Simplified React checker class component
 class SafeReactChecker extends React.Component<
   { children: React.ReactNode }, 
   { isReactReady: boolean; error?: string }
@@ -127,20 +130,13 @@ class SafeReactChecker extends React.Component<
 
   private validateReact = () => {
     try {
-      // Validate React is properly loaded
+      // Simple React validation
       if (typeof React === 'undefined' || React === null) {
         throw new Error('React is not available');
       }
 
-      // Validate essential React methods
       if (!React.useState || !React.useEffect || !React.useContext || !React.createElement) {
         throw new Error('React hooks are not available');
-      }
-
-      // Test createElement
-      const testElement = React.createElement('div', null, 'test');
-      if (!testElement) {
-        throw new Error('React.createElement is not working');
       }
 
       console.log('SafeReactChecker: React validation successful');
@@ -165,11 +161,11 @@ class SafeReactChecker extends React.Component<
     const { isReactReady, error } = this.state;
 
     if (error) {
-      return React.createElement(AppError, { error });
+      return <AppError error={error} />;
     }
 
     if (!isReactReady) {
-      return React.createElement(AppLoading);
+      return <AppLoading />;
     }
 
     return children;
@@ -177,15 +173,17 @@ class SafeReactChecker extends React.Component<
 }
 
 const App = () => {
-  // Basic React availability check before using class component
+  // Basic React availability check
   if (typeof React === 'undefined' || React === null) {
     console.error('App: React is not available');
-    return React.createElement(AppError, { 
-      error: 'React framework is not loaded. Please refresh the page.' 
-    });
+    return <AppError error="React framework is not loaded. Please refresh the page." />;
   }
 
-  return React.createElement(SafeReactChecker, {}, React.createElement(AppContent));
+  return (
+    <SafeReactChecker>
+      <AppContent />
+    </SafeReactChecker>
+  );
 };
 
 export default App;
