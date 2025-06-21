@@ -23,22 +23,14 @@ import {
   Shield,
   Crown,
   Mic,
-  Bell,
   FileText,
-  Home,
-  Languages,
-  Globe,
-  Accessibility,
   UserCheck,
-  GraduationCap,
-  Palette,
-  DollarSign,
-  CheckCircle
+  Award,
+  Star
 } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import GradientLogo from '@/components/ui/GradientLogo';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
-import EnhancedCurrencySelector from '@/components/ui/EnhancedCurrencySelector';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -104,16 +96,16 @@ const Header = () => {
       icon: Users,
     },
     {
-      title: "Voice Samples",
-      href: "/voice-features",
-      description: "Experience our ElevenLabs voice technology",
-      icon: Mic,
-    },
-    {
       title: "Therapist Matching",
       href: "/therapist-matching",
       description: "Find the perfect AI therapist for your needs",
       icon: UserCheck,
+    },
+    {
+      title: "Voice Technology",
+      href: "/therapists",
+      description: "Experience our ElevenLabs voice technology",
+      icon: Mic,
     },
   ];
 
@@ -137,10 +129,49 @@ const Header = () => {
       icon: Users,
     },
     {
+      title: "Crisis Resources",
+      href: "/crisis-resources",
+      description: "24/7 crisis support and resources",
+      icon: Shield,
+    },
+    {
       title: "Help Center",
       href: "/help",
       description: "Get answers and support",
       icon: HelpCircle,
+    },
+  ];
+
+  const dashboardFeatures = [
+    {
+      title: "Main Dashboard",
+      href: "/dashboard",
+      description: "Your wellness overview",
+      icon: LayoutDashboard,
+    },
+    {
+      title: "Session Analytics",
+      href: "/session-analytics",
+      description: "Detailed analysis of your progress",
+      icon: BarChart3,
+    },
+    {
+      title: "Goals Tracking",
+      href: "/goals",
+      description: "Set and achieve wellness goals",
+      icon: Target,
+    },
+    {
+      title: "Smart Scheduling",
+      href: "/smart-scheduling",
+      description: "AI-powered session scheduling",
+      icon: Calendar,
+    },
+    {
+      title: "Enhanced Monitoring",
+      href: "/enhanced-monitoring",
+      description: "Advanced progress monitoring",
+      icon: TrendingUp,
     },
   ];
 
@@ -178,32 +209,7 @@ const Header = () => {
     },
     {
       title: "Dashboard",
-      items: [
-        {
-          title: "Main Dashboard",
-          href: "/dashboard",
-          description: "Your wellness overview",
-          icon: LayoutDashboard,
-        },
-        {
-          title: "Session Analytics",
-          href: "/session-analytics",
-          description: "Detailed analysis of your progress",
-          icon: BarChart3,
-        },
-        {
-          title: "Goals Tracking",
-          href: "/goals",
-          description: "Set and achieve wellness goals",
-          icon: Target,
-        },
-        {
-          title: "Smart Scheduling",
-          href: "/smart-scheduling",
-          description: "AI-powered session scheduling",
-          icon: Calendar,
-        },
-      ],
+      items: dashboardFeatures,
     },
     {
       title: "Resources",
@@ -214,7 +220,7 @@ const Header = () => {
   const navigationItems = user ? authenticatedNavigation : publicNavigation;
 
   return (
-    <header className="bg-white/90 backdrop-blur-md border-b border-harmony-200 sticky top-0 z-50">
+    <header className="bg-white/95 backdrop-blur-md border-b border-harmony-200 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -270,10 +276,9 @@ const Header = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-3">
-            {/* Language & Currency Selectors */}
-            <div className="hidden md:flex items-center space-x-2">
+            {/* Language Selector */}
+            <div className="hidden md:flex">
               <EnhancedLanguageSelector />
-              <EnhancedCurrencySelector />
             </div>
             
             {user ? (
@@ -281,7 +286,7 @@ const Header = () => {
                 {/* Quick Access to TherapySync AI */}
                 <Button
                   onClick={() => navigate('/therapysync-ai')}
-                  className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600 text-white font-medium"
+                  className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600 text-white font-medium hidden md:flex"
                 >
                   <Brain className="h-4 w-4 mr-2" />
                   TherapySync AI

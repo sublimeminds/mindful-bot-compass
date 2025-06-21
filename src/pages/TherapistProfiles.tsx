@@ -36,6 +36,7 @@ interface TherapistProfile {
   sampleText: string;
   background: string;
   techniques: string[];
+  culturalBackground: string;
 }
 
 const TherapistProfiles = () => {
@@ -63,7 +64,8 @@ const TherapistProfiles = () => {
       rating: 4.9,
       sampleText: "Hello, I'm Dr. Sarah Chen. I specialize in helping people overcome anxiety and develop practical coping strategies. My approach combines evidence-based cognitive behavioral therapy with mindfulness techniques to create lasting positive change.",
       background: "Dr. Chen brings over 15 years of experience in clinical psychology, specializing in anxiety disorders and stress management. She combines traditional CBT approaches with modern mindfulness techniques.",
-      techniques: ['CBT', 'Mindfulness', 'Exposure Therapy', 'Stress Reduction']
+      techniques: ['CBT', 'Mindfulness', 'Exposure Therapy', 'Stress Reduction'],
+      culturalBackground: 'Chinese-American, culturally sensitive to Asian mental health perspectives'
     },
     {
       id: 'dr-michael-rodriguez',
@@ -79,7 +81,8 @@ const TherapistProfiles = () => {
       rating: 4.8,
       sampleText: "I'm Dr. Michael Rodriguez, and I specialize in trauma recovery and EMDR therapy. My gentle, trauma-informed approach helps you process difficult experiences at your own pace, creating a safe space for healing.",
       background: "Dr. Rodriguez is a trauma specialist with expertise in EMDR and somatic therapies. He creates safe, supportive environments for healing from traumatic experiences.",
-      techniques: ['EMDR', 'Somatic Therapy', 'Trauma-Informed Care', 'Body Awareness']
+      techniques: ['EMDR', 'Somatic Therapy', 'Trauma-Informed Care', 'Body Awareness'],
+      culturalBackground: 'Latino background with bilingual therapy expertise'
     },
     {
       id: 'dr-emily-johnson',
@@ -95,23 +98,93 @@ const TherapistProfiles = () => {
       rating: 4.9,
       sampleText: "Welcome, I'm Dr. Emily Johnson. I guide people toward inner peace through mindfulness and meditation practices. Together, we'll explore techniques that bring calm and clarity to your daily life.",
       background: "Dr. Johnson is a mindfulness expert who integrates meditation practices with traditional therapy to promote holistic well-being and emotional balance.",
-      techniques: ['Mindfulness-Based Therapy', 'Meditation', 'Breathwork', 'Body Scan']
+      techniques: ['Mindfulness-Based Therapy', 'Meditation', 'Breathwork', 'Body Scan'],
+      culturalBackground: 'European training in mindfulness and meditation practices'
     },
     {
-      id: 'dr-david-kim',
-      name: 'Dr. David Kim',
-      voiceId: 'EXAVITQu4vr4xnSDxMaL',
-      voiceName: 'Sarah',
-      avatar: '👨‍💼',
-      specializations: ['Depression', 'Life Transitions', 'Career Counseling'],
-      approach: 'Solution-focused therapy with goal setting',
-      personality: ['Analytical', 'Structured', 'Motivating', 'Goal-oriented'],
-      languages: ['English', 'Korean', 'Japanese'],
-      experience: '8+ years in clinical practice',
+      id: 'dr-maria-santos',
+      name: 'Dr. Maria Santos',
+      voiceId: 'cgSgspJ2msm6clMCkdW9',
+      voiceName: 'Jessica',
+      avatar: '👩‍👧‍👦',
+      specializations: ['Family Therapy', 'Couples Counseling', 'Relationship Issues'],
+      approach: 'Systemic family therapy with cultural sensitivity',
+      personality: ['Warm', 'Understanding', 'Family-focused', 'Culturally-aware'],
+      languages: ['English', 'Spanish', 'Portuguese'],
+      experience: '14+ years in family systems therapy',
+      rating: 4.8,
+      sampleText: "Hello, I'm Dr. Maria Santos. I help families and couples strengthen their relationships through understanding, communication, and cultural awareness. Every family has unique strengths we can build upon.",
+      background: "Dr. Santos specializes in family dynamics and couples therapy, with particular expertise in multicultural families and relationship challenges.",
+      techniques: ['Family Systems Therapy', 'Couples Counseling', 'Communication Skills', 'Cultural Integration'],
+      culturalBackground: 'Latin American heritage with expertise in multicultural family dynamics'
+    },
+    {
+      id: 'dr-james-wilson',
+      name: 'Dr. James Wilson',
+      voiceId: 'nPczCjzI2devNBz1zQrb',
+      voiceName: 'Brian',
+      avatar: '👨‍🎓',
+      specializations: ['ADHD', 'Autism Spectrum', 'Neurodevelopmental Disorders'],
+      approach: 'Neurodiversity-affirming therapy with practical strategies',
+      personality: ['Patient', 'Understanding', 'Structured', 'Neurodiverse-affirming'],
+      languages: ['English', 'Sign Language', 'German'],
+      experience: '11+ years in neurodevelopmental therapy',
+      rating: 4.9,
+      sampleText: "I'm Dr. James Wilson, and I specialize in supporting individuals with ADHD, autism, and other neurodevelopmental differences. My approach celebrates neurodiversity while providing practical tools for success.",
+      background: "Dr. Wilson is a neurodiversity specialist who works with individuals across the autism spectrum and those with ADHD, focusing on strength-based interventions.",
+      techniques: ['Applied Behavior Analysis', 'Social Skills Training', 'Executive Function Coaching', 'Sensory Integration'],
+      culturalBackground: 'Neurodiversity advocate with specialized training in autism and ADHD'
+    },
+    {
+      id: 'dr-aisha-patel',
+      name: 'Dr. Aisha Patel',
+      voiceId: 'pFZP5JQG7iQjIQuC4Bku',
+      voiceName: 'Lily',
+      avatar: '👩‍💼',
+      specializations: ['Cultural Identity', 'Immigration Stress', 'Intergenerational Trauma'],
+      approach: 'Culturally-responsive therapy with identity integration',
+      personality: ['Culturally-sensitive', 'Empowering', 'Identity-focused', 'Inclusive'],
+      languages: ['English', 'Hindi', 'Gujarati', 'French'],
+      experience: '9+ years in cultural psychology',
       rating: 4.7,
-      sampleText: "Hello, I'm Dr. David Kim. I help people navigate life transitions and overcome depression through structured, goal-oriented therapy. We'll work together to create actionable plans for positive change.",
-      background: "Dr. Kim specializes in solution-focused therapy, helping clients set and achieve meaningful goals while addressing depression and major life transitions.",
-      techniques: ['Solution-Focused Therapy', 'Goal Setting', 'Motivational Interviewing', 'Action Planning']
+      sampleText: "I'm Dr. Aisha Patel, and I help individuals navigate cultural identity, immigration challenges, and intergenerational differences. Together, we'll honor your cultural heritage while building resilience.",
+      background: "Dr. Patel specializes in cultural identity therapy, helping individuals balance multiple cultural identities and overcome immigration-related stress.",
+      techniques: ['Cultural Identity Therapy', 'Narrative Therapy', 'Community-Based Intervention', 'Identity Integration'],
+      culturalBackground: 'South Asian heritage with expertise in multicultural identity development'
+    },
+    {
+      id: 'dr-robert-kim',
+      name: 'Dr. Robert Kim',
+      voiceId: 'onwK4e9ZLuTAKqWW03F9',
+      voiceName: 'Daniel',
+      avatar: '🧑‍⚕️',
+      specializations: ['Addiction Recovery', 'Substance Abuse', 'Behavioral Addictions'],
+      approach: 'Integrated addiction treatment with harm reduction',
+      personality: ['Non-judgmental', 'Recovery-focused', 'Compassionate', 'Realistic'],
+      languages: ['English', 'Korean', 'Japanese'],
+      experience: '13+ years in addiction medicine',
+      rating: 4.8,
+      sampleText: "I'm Dr. Robert Kim, specializing in addiction recovery and substance abuse treatment. My approach is non-judgmental and focuses on sustainable recovery strategies tailored to your unique situation.",
+      background: "Dr. Kim is an addiction specialist who combines medical knowledge with therapeutic interventions to support individuals in their recovery journey.",
+      techniques: ['Motivational Interviewing', 'Cognitive Behavioral Therapy', 'Harm Reduction', 'Relapse Prevention'],
+      culturalBackground: 'Korean-American with understanding of cultural stigma around addiction'
+    },
+    {
+      id: 'dr-sofia-andersson',
+      name: 'Dr. Sofia Andersson',
+      voiceId: 'Xb7hH8MSUJpSbSDYk0k2',
+      voiceName: 'Alice',
+      avatar: '👩‍❤️‍👨',
+      specializations: ['Couples Therapy', 'Sexual Health', 'Relationship Dynamics'],
+      approach: 'Emotionally-focused therapy with communication enhancement',
+      personality: ['Open-minded', 'Relationship-focused', 'Communicative', 'Accepting'],
+      languages: ['English', 'Swedish', 'Norwegian', 'Danish'],
+      experience: '8+ years in couples and sexual therapy',
+      rating: 4.9,
+      sampleText: "Hello, I'm Dr. Sofia Andersson. I help couples strengthen their emotional and physical connections through improved communication and understanding. Every relationship has the potential for deeper intimacy.",
+      background: "Dr. Andersson specializes in couples therapy and sexual health, helping partners develop stronger emotional and physical connections.",
+      techniques: ['Emotionally Focused Therapy', 'Gottman Method', 'Sexual Therapy', 'Communication Training'],
+      culturalBackground: 'Scandinavian background with progressive views on relationships and sexuality'
     }
   ];
 
@@ -213,6 +286,15 @@ const TherapistProfiles = () => {
                       Background
                     </h4>
                     <p className="text-sm text-muted-foreground">{therapist.background}</p>
+                  </div>
+
+                  {/* Cultural Background */}
+                  <div>
+                    <h4 className="font-semibold mb-2 flex items-center">
+                      <Languages className="h-4 w-4 mr-2 text-flow-600" />
+                      Cultural Background
+                    </h4>
+                    <p className="text-sm text-muted-foreground">{therapist.culturalBackground}</p>
                   </div>
 
                   {/* Specializations */}
