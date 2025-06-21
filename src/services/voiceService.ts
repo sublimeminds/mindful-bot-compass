@@ -21,15 +21,28 @@ class EnhancedVoiceService {
     return !!this.apiKey;
   }
 
-  // Play therapist message with ElevenLabs voice
-  async playTherapistMessage(text: string, therapistId: string): Promise<void> {
-    console.log(`Playing voice message for therapist ${therapistId}: ${text.substring(0, 50)}...`);
+  // Add missing playText method for compatibility
+  async playText(text: string, options?: { voiceId?: string; stability?: number; similarityBoost?: number }): Promise<void> {
+    const voiceId = options?.voiceId || '9BWtsMINqrJLrRacOk9x';
+    await this.playTherapistMessage(text, voiceId);
+  }
+
+  // Add missing isCurrentlyPlaying property
+  get isCurrentlyPlaying(): boolean {
+    return this.isPlaying;
+  }
+
+  // Play therapist message with ElevenLabs voice - updated signature to handle multiple parameters
+  async playTherapistMessage(text: string, therapistIdOrVoiceId: string, emotion?: string, isUrgent?: boolean): Promise<void> {
+    console.log(`Playing voice message for therapist ${therapistIdOrVoiceId}: ${text.substring(0, 50)}...`);
     
     // Use ElevenLabs if API key is available, otherwise fallback to Web Speech API
     if (this.hasApiKey()) {
-      await this.playWithElevenLabs(text, this.getTherapistVoiceId(therapistId));
+      // If therapistIdOrVoiceId looks like a voice ID, use it directly, otherwise get voice ID from therapist
+      const voiceId = therapistIdOrVoiceId.length > 20 ? therapistIdOrVoiceId : this.getTherapistVoiceId(therapistIdOrVoiceId);
+      await this.playWithElevenLabs(text, voiceId);
     } else {
-      await this.playWithWebSpeech(text, therapistId);
+      await this.playWithWebSpeech(text, therapistIdOrVoiceId);
     }
   }
 

@@ -48,7 +48,7 @@ interface TherapistProfile {
 
 const TherapistProfiles = () => {
   const { user } = useSimpleApp();
-  const userPlan = user ? 'premium' : 'free'; // Default to free for non-authenticated users
+  const userPlan: 'free' | 'premium' | 'plus' = user ? 'premium' : 'free'; // Fixed type annotation
   
   useSEO({
     title: 'AI Therapist Profiles - TherapySync',
