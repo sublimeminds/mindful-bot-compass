@@ -29,10 +29,10 @@ const supportedLanguages: LanguageData[] = [
 ];
 
 const languageByCountry: Record<string, string> = {
-  'US': 'en', 'CA': 'en', 'GB': 'en', 'AU': 'en', 'NZ': 'en',
+  'US': 'en', 'GB': 'en', 'AU': 'en', 'NZ': 'en',
   'ES': 'es', 'MX': 'es', 'AR': 'es', 'CO': 'es', 'PE': 'es',
-  'FR': 'fr', 'BE': 'fr', 'CH': 'fr', 'CA': 'fr',
-  'DE': 'de', 'AT': 'de', 'CH': 'de',
+  'FR': 'fr', 'BE': 'fr', 'CH': 'fr',
+  'DE': 'de', 'AT': 'de',
   'SA': 'ar', 'AE': 'ar', 'EG': 'ar', 'MA': 'ar',
   'BR': 'pt', 'PT': 'pt',
   'IT': 'it',

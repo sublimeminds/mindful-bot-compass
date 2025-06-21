@@ -1,6 +1,6 @@
 
 import React from 'react';
-import SmartOnboardingFlow from '@/components/onboarding/SmartOnboardingFlow';
+import EnhancedSmartOnboardingFlow from '@/components/onboarding/EnhancedSmartOnboardingFlow';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ const OnboardingPage = () => {
     return null;
   }
 
-  return <SmartOnboardingFlow onComplete={handleOnboardingComplete} />;
+  return <EnhancedSmartOnboardingFlow onComplete={handleOnboardingComplete} />;
 };
 
 export default OnboardingPage;

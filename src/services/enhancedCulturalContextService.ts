@@ -1,13 +1,15 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { CulturalContext } from './culturallyAwareAiService';
+
+type FamilyStructureType = 'individual' | 'family-centered' | 'community-based' | 'collective';
+type CommunicationStyleType = 'direct' | 'indirect' | 'high-context' | 'low-context';
 
 export interface UserCulturalProfile {
   userId: string;
   primaryLanguage: string;
   culturalBackground: string;
-  familyStructure: 'individual' | 'family-centered' | 'community-based' | 'collective';
-  communicationStyle: 'direct' | 'indirect' | 'high-context' | 'low-context';
+  familyStructure: FamilyStructureType;
+  communicationStyle: CommunicationStyleType;
   religiousConsiderations: boolean;
   religiousDetails?: string;
   therapyApproachPreferences: string[];
@@ -62,8 +64,8 @@ export class EnhancedCulturalContextService {
         userId: data.user_id,
         primaryLanguage: data.primary_language || 'en',
         culturalBackground: data.cultural_background || '',
-        familyStructure: data.family_structure || 'individual',
-        communicationStyle: data.communication_style || 'direct',
+        familyStructure: data.family_structure as FamilyStructureType || 'individual',
+        communicationStyle: data.communication_style as CommunicationStyleType || 'direct',
         religiousConsiderations: data.religious_considerations || false,
         religiousDetails: data.religious_details,
         therapyApproachPreferences: data.therapy_approach_preferences || [],
@@ -95,7 +97,9 @@ export class EnhancedCulturalContextService {
       region: this.inferRegionFromCulture(profile.culturalBackground),
       culturalBackground: profile.culturalBackground,
       religiousBeliefs: profile.religiousDetails,
-      familyStructure: profile.familyStructure,
+      familyStructure: profile.familyStructure === 'family-centered' || profile.familyStructure === 'community-based' 
+        ? 'collective' 
+        : profile.familyStructure,
       communicationStyle: profile.communicationStyle
     };
   }
