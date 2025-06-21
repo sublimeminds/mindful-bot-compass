@@ -11,7 +11,9 @@ import {
   Brain,
   BookOpen,
   Users,
-  BarChart3
+  BarChart3,
+  Heart,
+  HelpCircle
 } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import GradientLogo from '@/components/ui/GradientLogo';
@@ -36,12 +38,31 @@ const Header = () => {
     }
   };
 
-  const navigationItems = [
+  const authenticatedNavItems = [
     { label: 'AI Therapy', path: '/therapy', icon: MessageCircle },
     { label: 'Dashboard', path: '/dashboard', icon: BarChart3 },
     { label: 'Community', path: '/community', icon: Users },
     { label: 'Notebook', path: '/notebook', icon: BookOpen }
   ];
+
+  const publicNavItems = [
+    { label: 'Features', path: '#features', icon: Heart },
+    { label: 'Pricing', path: '#pricing', icon: BarChart3 },
+    { label: 'Help', path: '/help', icon: HelpCircle }
+  ];
+
+  const navigationItems = user ? authenticatedNavItems : publicNavItems;
+
+  const handleNavigation = (path: string) => {
+    if (path.startsWith('#')) {
+      const element = document.querySelector(path);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate(path);
+    }
+  };
 
   return (
     <header className="bg-white/80 backdrop-blur-md border-b border-harmony-200 sticky top-0 z-50">
@@ -56,20 +77,18 @@ const Header = () => {
           </Link>
 
           {/* Navigation */}
-          {user && (
-            <nav className="hidden md:flex items-center space-x-6">
-              {navigationItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className="flex items-center space-x-2 text-gray-600 hover:text-harmony-600 transition-colors"
-                >
-                  <item.icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                </Link>
-              ))}
-            </nav>
-          )}
+          <nav className="hidden md:flex items-center space-x-6">
+            {navigationItems.map((item) => (
+              <button
+                key={item.path}
+                onClick={() => handleNavigation(item.path)}
+                className="flex items-center space-x-2 text-gray-600 hover:text-harmony-600 transition-colors cursor-pointer"
+              >
+                <item.icon className="h-4 w-4" />
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </nav>
 
           {/* User Actions */}
           <div className="flex items-center space-x-4">
