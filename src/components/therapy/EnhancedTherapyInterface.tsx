@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   MessageCircle, 
   Send, 
@@ -13,15 +14,21 @@ import {
   Brain, 
   Heart,
   AlertTriangle,
-  Phone
+  Phone,
+  Podcast,
+  Activity,
+  Headphones
 } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useTherapist } from '@/contexts/TherapistContext';
 import { chatService } from '@/services/chatService';
 import { OpenAIService } from '@/services/openAiService';
 import { EnhancedCrisisDetectionService } from '@/services/enhancedCrisisDetectionService';
-import { voiceService } from '@/services/voiceService';
+import { enhancedVoiceService } from '@/services/voiceService';
 import SessionTimer from '@/components/session/SessionTimer';
+import GuidedSessionPlayer from '@/components/audio/GuidedSessionPlayer';
+import PodcastLibrary from '@/components/podcast/PodcastLibrary';
+import VoiceAnalytics from '@/components/voice/VoiceAnalytics';
 
 interface Message {
   id: string;
@@ -43,8 +50,9 @@ const EnhancedTherapyInterface = ({ sessionId, onEndSession }: EnhancedTherapyIn
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionStart] = useState(new Date());
-  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [crisisAlert, setCrisisAlert] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState('chat');
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -114,11 +122,13 @@ const EnhancedTherapyInterface = ({ sessionId, onEndSession }: EnhancedTherapyIn
       await chatService.sendMessage(sessionId, response.message, 'ai');
 
       // Play voice if enabled
-      if (voiceEnabled && voiceService.hasApiKey()) {
-        await voiceService.playText(response.message, {
-          voiceId: "9BWtsMINqrJLrRacOk9x",
-          emotionAnalysis: true
-        });
+      if (voiceEnabled && enhancedVoiceService.hasApiKey()) {
+        await enhancedVoiceService.playTherapistMessage(
+          response.message,
+          selectedTherapist?.id || 'dr-sarah-chen',
+          response.emotion,
+          !!crisisIndicator
+        );
       }
 
     } catch (error) {
@@ -144,6 +154,16 @@ const EnhancedTherapyInterface = ({ sessionId, onEndSession }: EnhancedTherapyIn
 
   const dismissCrisisAlert = () => {
     setCrisisAlert(null);
+  };
+
+  const playMessageVoice = async (message: Message) => {
+    if (message.sender === 'ai' && enhancedVoiceService.hasApiKey()) {
+      await enhancedVoiceService.playTherapistMessage(
+        message.content,
+        selectedTherapist?.id || 'dr-sarah-chen',
+        message.emotion
+      );
+    }
   };
 
   return (
@@ -182,7 +202,7 @@ const EnhancedTherapyInterface = ({ sessionId, onEndSession }: EnhancedTherapyIn
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center">
               <MessageCircle className="h-5 w-5 mr-2 text-therapy-500" />
-              Therapy Session with {selectedTherapist?.name || 'AI Therapist'}
+              Enhanced Therapy Session with {selectedTherapist?.name || 'AI Therapist'}
             </CardTitle>
             <div className="flex items-center space-x-4">
               <Button
@@ -207,88 +227,144 @@ const EnhancedTherapyInterface = ({ sessionId, onEndSession }: EnhancedTherapyIn
               <Badge variant="secondary">{selectedTherapist.approach}</Badge>
               <span>•</span>
               <span>{selectedTherapist.specialties.join(', ')}</span>
+              <span>•</span>
+              <Badge variant="outline" className="text-xs">
+                <Headphones className="h-3 w-3 mr-1" />
+                {enhancedVoiceService.getTherapistVoice(selectedTherapist.id)?.voiceName || 'Default Voice'}
+              </Badge>
             </div>
           )}
         </CardHeader>
       </Card>
 
-      {/* Chat Messages */}
+      {/* Enhanced Interface Tabs */}
       <Card className="flex-1 flex flex-col">
-        <CardContent className="flex-1 p-0">
-          <ScrollArea className="h-[500px] p-4">
-            <div className="space-y-4">
-              {messages.length === 0 && (
-                <div className="text-center text-muted-foreground py-8">
-                  <Brain className="h-12 w-12 mx-auto mb-4 text-therapy-300" />
-                  <p>Welcome to your therapy session. How are you feeling today?</p>
-                </div>
-              )}
-              
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-lg p-3 ${
-                      message.sender === 'user'
-                        ? 'bg-therapy-500 text-white'
-                        : 'bg-gray-100 text-gray-900'
-                    }`}
-                  >
-                    <p className="text-sm">{message.content}</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className={`text-xs ${
-                        message.sender === 'user' ? 'text-therapy-100' : 'text-gray-500'
-                      }`}>
-                        {message.timestamp.toLocaleTimeString()}
-                      </span>
-                      {message.emotion && (
-                        <Badge variant="outline" className="text-xs">
-                          {message.emotion}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="chat">Chat Therapy</TabsTrigger>
+            <TabsTrigger value="guided">Guided Sessions</TabsTrigger>
+            <TabsTrigger value="podcasts">Audio Library</TabsTrigger>
+            <TabsTrigger value="analytics">Voice Analytics</TabsTrigger>
+          </TabsList>
+
+          {/* Chat Therapy Tab */}
+          <TabsContent value="chat" className="flex-1 flex flex-col">
+            <CardContent className="flex-1 p-0">
+              <ScrollArea className="h-[500px] p-4">
+                <div className="space-y-4">
+                  {messages.length === 0 && (
+                    <div className="text-center text-muted-foreground py-8">
+                      <Brain className="h-12 w-12 mx-auto mb-4 text-therapy-300" />
+                      <p>Welcome to your enhanced therapy session. How are you feeling today?</p>
+                      {voiceEnabled && (
+                        <Badge variant="secondary" className="mt-2">
+                          <Volume2 className="h-3 w-3 mr-1" />
+                          Voice responses enabled
                         </Badge>
                       )}
                     </div>
-                  </div>
-                </div>
-              ))}
-              
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-gray-100 rounded-lg p-3 max-w-[80%]">
-                    <div className="flex items-center space-x-2">
-                      <Brain className="h-4 w-4 animate-spin text-therapy-500" />
-                      <span className="text-sm text-gray-600">Thinking...</span>
+                  )}
+                  
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`max-w-[80%] rounded-lg p-3 ${
+                          message.sender === 'user'
+                            ? 'bg-therapy-500 text-white'
+                            : 'bg-gray-100 text-gray-900'
+                        }`}
+                      >
+                        <p className="text-sm">{message.content}</p>
+                        <div className="flex items-center justify-between mt-2">
+                          <span className={`text-xs ${
+                            message.sender === 'user' ? 'text-therapy-100' : 'text-gray-500'
+                          }`}>
+                            {message.timestamp.toLocaleTimeString()}
+                          </span>
+                          <div className="flex items-center space-x-2">
+                            {message.emotion && (
+                              <Badge variant="outline" className="text-xs">
+                                {message.emotion}
+                              </Badge>
+                            )}
+                            {message.sender === 'ai' && voiceEnabled && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => playMessageVoice(message)}
+                                className="h-6 w-6 p-0"
+                              >
+                                <Volume2 className="h-3 w-3" />
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ))}
+                  
+                  {isLoading && (
+                    <div className="flex justify-start">
+                      <div className="bg-gray-100 rounded-lg p-3 max-w-[80%]">
+                        <div className="flex items-center space-x-2">
+                          <Brain className="h-4 w-4 animate-spin text-therapy-500" />
+                          <span className="text-sm text-gray-600">Analyzing and responding...</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div ref={chatBottomRef} />
                 </div>
-              )}
-              
-              <div ref={chatBottomRef} />
-            </div>
-          </ScrollArea>
-        </CardContent>
+              </ScrollArea>
+            </CardContent>
 
-        {/* Message Input */}
-        <div className="border-t p-4">
-          <div className="flex space-x-2">
-            <Input
-              placeholder="Share what's on your mind..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              disabled={isLoading}
-              className="flex-1"
-            />
-            <Button 
-              onClick={handleSendMessage} 
-              disabled={isLoading || !input.trim()}
-              size="sm"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+            {/* Message Input */}
+            <div className="border-t p-4">
+              <div className="flex space-x-2">
+                <Input
+                  placeholder="Share what's on your mind..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  disabled={isLoading}
+                  className="flex-1"
+                />
+                <Button 
+                  onClick={handleSendMessage} 
+                  disabled={isLoading || !input.trim()}
+                  size="sm"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Guided Sessions Tab */}
+          <TabsContent value="guided" className="flex-1">
+            <div className="p-4 h-full flex items-center justify-center">
+              <GuidedSessionPlayer className="w-full max-w-lg" />
+            </div>
+          </TabsContent>
+
+          {/* Podcasts Tab */}
+          <TabsContent value="podcasts" className="flex-1">
+            <div className="p-4 h-full">
+              <PodcastLibrary />
+            </div>
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="flex-1">
+            <div className="p-4 h-full">
+              <VoiceAnalytics />
+            </div>
+          </TabsContent>
+        </Tabs>
       </Card>
     </div>
   );
