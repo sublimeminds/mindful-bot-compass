@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Shield } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
+import EmailVerificationWarning from './EmailVerificationWarning';
 
 const EnhancedUserProfile = () => {
   const { user } = useSimpleApp();
@@ -31,6 +32,8 @@ const EnhancedUserProfile = () => {
 
   return (
     <div className="space-y-6">
+      <EmailVerificationWarning />
+      
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">

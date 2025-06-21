@@ -72,11 +72,10 @@ const AuthForm = () => {
     try {
       if (isSignUp) {
         await register(email, password);
-        toast("Account created successfully! Please check your email to verify your account, then you can sign in.");
-        setIsSignUp(false);
-        setPassword('');
-        setConfirmPassword('');
-        setName('');
+        // After successful registration, automatically log them in
+        await login(email, password);
+        toast("Welcome to TherapySync! Let's get you set up.");
+        navigate('/onboarding');
       } else {
         await login(email, password);
         toast("Welcome back! You have successfully signed in to TherapySync.");
@@ -114,10 +113,10 @@ const AuthForm = () => {
           <GradientLogo size="md" className="drop-shadow-lg" />
         </div>
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-harmony-600 to-flow-600 bg-clip-text text-transparent">
-          {isSignUp ? 'Create Account' : 'Welcome Back'}
+          {isSignUp ? 'Join TherapySync' : 'Welcome Back'}
         </CardTitle>
         <p className="text-muted-foreground text-sm">
-          {isSignUp ? 'Sign up for TherapySync' : 'Sign in to your TherapySync account'}
+          {isSignUp ? 'Start your mental wellness journey today' : 'Sign in to your TherapySync account'}
         </p>
       </CardHeader>
       <CardContent>
@@ -222,7 +221,7 @@ const AuthForm = () => {
             className="w-full bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600" 
             disabled={isLoading}
           >
-            {isLoading ? (isSignUp ? 'Creating Account...' : 'Signing In...') : (isSignUp ? 'Create Account' : 'Sign In')}
+            {isLoading ? (isSignUp ? 'Creating Account...' : 'Signing In...') : (isSignUp ? 'Start My Journey' : 'Sign In')}
           </Button>
         </form>
 
@@ -234,7 +233,7 @@ const AuthForm = () => {
               className="p-0 h-auto font-normal text-harmony-600 hover:text-harmony-700"
               onClick={() => setIsSignUp(!isSignUp)}
             >
-              {isSignUp ? 'Sign in here' : 'Sign up here'}
+              {isSignUp ? 'Sign in here' : 'Join today'}
             </Button>
           </p>
         </div>

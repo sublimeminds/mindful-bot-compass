@@ -5,6 +5,7 @@ import Index from '@/pages/Index';
 import Auth from '@/pages/Auth';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
+import Onboarding from '@/pages/Onboarding';
 import DashboardPage from '@/pages/DashboardPage';
 import CrisisResources from '@/pages/CrisisResources';
 import AdminCrisisManagement from '@/pages/AdminCrisisManagement';
@@ -37,6 +38,7 @@ const AppRouter = () => {
       <Route path="/auth" element={<Auth />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/settings" element={<SettingsPage />} />

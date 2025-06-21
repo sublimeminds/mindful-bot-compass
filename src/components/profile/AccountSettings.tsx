@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { User, Mail, Lock } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
+import EmailVerificationWarning from './EmailVerificationWarning';
 
 const AccountSettings = () => {
   const { user } = useSimpleApp();
@@ -18,6 +19,8 @@ const AccountSettings = () => {
 
   return (
     <div className="space-y-6">
+      <EmailVerificationWarning />
+      
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">

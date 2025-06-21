@@ -10,6 +10,7 @@ import { useAuth } from '@/components/SimpleAuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import ProfilePictureUpload from './ProfilePictureUpload';
+import EmailVerificationWarning from './EmailVerificationWarning';
 
 const EnhancedAccountSettings = () => {
   const { user } = useAuth();
@@ -139,6 +140,8 @@ const EnhancedAccountSettings = () => {
 
   return (
     <div className="space-y-6">
+      <EmailVerificationWarning />
+      
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
