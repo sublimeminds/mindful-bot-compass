@@ -4,6 +4,7 @@ import MobileOptimizedLayout from '@/components/mobile/MobileOptimizedLayout';
 import PlanSelector from '@/components/subscription/PlanSelector';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Check, Star, Shield, Zap, Volume2, Headphones, Brain, Podcast, Activity, Heart } from 'lucide-react';
 
 const Plans = () => {
