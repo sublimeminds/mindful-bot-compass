@@ -34,19 +34,19 @@ interface TherapistProviderProps {
   children: ReactNode;
 }
 
-export const TherapistProvider: React.FC<TherapistProviderProps> = ({ children }) => {
-  // Ensure React is properly loaded before using hooks
-  if (typeof React === 'undefined' || !React.useState) {
-    console.error('TherapistProvider: React is not properly initialized');
-    return React.createElement('div', {
-      style: {
-        padding: '20px',
-        textAlign: 'center',
-        color: '#dc2626'
-      }
-    }, 'Loading React...');
-  }
+// Loading component that doesn't use hooks
+const TherapistLoadingFallback = ({ children }: { children: ReactNode }) => {
+  return React.createElement('div', {
+    style: {
+      padding: '20px',
+      textAlign: 'center',
+      color: '#666'
+    }
+  }, 'Loading therapist data...');
+};
 
+// Main provider component that uses hooks
+const TherapistProviderWithHooks: React.FC<TherapistProviderProps> = ({ children }) => {
   // Mock therapist data
   const mockTherapists: Therapist[] = [
     {
@@ -91,7 +91,82 @@ export const TherapistProvider: React.FC<TherapistProviderProps> = ({ children }
     therapists: mockTherapists
   };
 
-  console.log('TherapistProvider: Rendering with therapists loaded');
-
   return React.createElement(TherapistContext.Provider, { value: therapistData }, children);
+};
+
+export const TherapistProvider: React.FC<TherapistProviderProps> = ({ children }) => {
+  // Use a state to track React readiness without hooks initially
+  const [isReactReady, setIsReactReady] = React.useState(false);
+
+  React.useEffect(() => {
+    let mounted = true;
+    
+    const checkReactReadiness = () => {
+      try {
+        // Comprehensive React validation
+        if (
+          typeof React !== 'undefined' &&
+          React !== null &&
+          React.useState &&
+          React.useEffect &&
+          React.useContext &&
+          React.createElement &&
+          typeof React.useState === 'function' &&
+          typeof React.useEffect === 'function' &&
+          typeof React.useContext === 'function' &&
+          typeof React.createElement === 'function'
+        ) {
+          if (mounted) {
+            console.log('TherapistProvider: React is fully ready');
+            setIsReactReady(true);
+          }
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error('TherapistProvider: Error checking React readiness:', error);
+        return false;
+      }
+    };
+
+    // Initial check
+    if (checkReactReadiness()) {
+      return;
+    }
+
+    // Retry mechanism
+    const maxAttempts = 5;
+    let attempts = 0;
+    
+    const retryCheck = () => {
+      attempts++;
+      
+      if (checkReactReadiness()) {
+        return;
+      }
+      
+      if (attempts < maxAttempts && mounted) {
+        const delay = Math.min(50 * Math.pow(2, attempts), 1000);
+        console.log(`TherapistProvider: Retrying React check (attempt ${attempts}/${maxAttempts}) in ${delay}ms`);
+        setTimeout(retryCheck, delay);
+      } else if (mounted) {
+        console.error('TherapistProvider: Failed to initialize React after maximum attempts');
+        // Force set ready to prevent infinite loading
+        setIsReactReady(true);
+      }
+    };
+
+    // Start retry mechanism
+    setTimeout(retryCheck, 25);
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (!isReactReady) {
+    return React.createElement(TherapistLoadingFallback, { children });
+  }
+
+  return React.createElement(TherapistProviderWithHooks, { children });
 };
