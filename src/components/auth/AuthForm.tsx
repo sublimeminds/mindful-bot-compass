@@ -32,11 +32,26 @@ const AuthForm = () => {
     }
   }, [location.pathname]);
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
       setError('Please enter both email and password');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
       return;
     }
 
@@ -57,7 +72,7 @@ const AuthForm = () => {
     try {
       if (isSignUp) {
         await register(email, password);
-        toast("Account created! Please sign in with your new credentials.");
+        toast("Account created successfully! Please check your email to verify your account, then you can sign in.");
         setIsSignUp(false);
         setPassword('');
         setConfirmPassword('');
@@ -65,11 +80,28 @@ const AuthForm = () => {
       } else {
         await login(email, password);
         toast("Welcome back! You have successfully signed in to TherapySync.");
-        navigate('/');
+        navigate('/dashboard');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Auth error:', error);
-      setError(isSignUp ? 'Failed to create account. Please try again.' : 'Invalid email or password. Please check your credentials and try again.');
+      
+      let errorMessage = 'An unexpected error occurred. Please try again.';
+      
+      if (error?.message) {
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = 'Invalid email or password. Please check your credentials and try again.';
+        } else if (error.message.includes('Email address') && error.message.includes('invalid')) {
+          errorMessage = 'Please enter a valid email address.';
+        } else if (error.message.includes('User already registered')) {
+          errorMessage = 'An account with this email already exists. Please sign in instead.';
+        } else if (error.message.includes('Password should be at least')) {
+          errorMessage = 'Password must be at least 6 characters long.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -138,7 +170,7 @@ const AuthForm = () => {
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder={isSignUp ? "Create a password" : "Enter your password"}
+                placeholder={isSignUp ? "Create a password (min 6 characters)" : "Enter your password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10 pr-10"

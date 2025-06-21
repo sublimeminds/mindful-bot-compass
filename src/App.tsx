@@ -50,7 +50,7 @@ const ErrorScreen = ({ message }: { message: string }) => {
   }, message));
 };
 
-// Main app component that uses hooks - wrapped in ReactReadyWrapper
+// Main app component that uses hooks
 const AppContent = () => {
   return (
     <QueryClientProvider client={queryClient}>
@@ -85,7 +85,11 @@ const App = () => {
 
   console.log('App: Rendering with ReactReadyWrapper');
 
-  return React.createElement(ReactReadyWrapper, {}, React.createElement(AppContent, {}));
+  return (
+    <ReactReadyWrapper>
+      <AppContent />
+    </ReactReadyWrapper>
+  );
 };
 
 export default App;
