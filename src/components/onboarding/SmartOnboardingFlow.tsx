@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import WelcomeStep from './WelcomeStep';
 import IntakeAssessmentStep from './IntakeAssessmentStep';
 import MentalHealthScreeningStep from './MentalHealthScreeningStep';
-import CulturalContextStep from './CulturalContextStep';
+import CulturalPreferencesStep from './CulturalPreferencesStep';
 import InternationalizedEnhancedSmartAnalysisStep from './InternationalizedEnhancedSmartAnalysisStep';
 import TherapistPersonalityStep from './TherapistPersonalityStep';
 import PlanSelectionStep from './PlanSelectionStep';
@@ -19,13 +19,23 @@ interface SmartOnboardingFlowProps {
 const SmartOnboardingFlow = ({ onComplete }: SmartOnboardingFlowProps) => {
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
-  const [onboardingData, setOnboardingData] = useState<any>({});
+  const [onboardingData, setOnboardingData] = useState<any>({
+    culturalPreferences: {
+      primaryLanguage: 'en',
+      culturalBackground: '',
+      familyStructure: 'individual',
+      communicationStyle: 'direct',
+      religiousConsiderations: false,
+      therapyApproachPreferences: [],
+      culturalSensitivities: []
+    }
+  });
 
   const steps = [
     { component: WelcomeStep, titleKey: 'onboarding.steps.welcome' },
     { component: IntakeAssessmentStep, titleKey: 'onboarding.steps.goals' },
     { component: MentalHealthScreeningStep, titleKey: 'onboarding.steps.preferences' },
-    { component: CulturalContextStep, titleKey: 'onboarding.steps.cultural' },
+    { component: CulturalPreferencesStep, titleKey: 'onboarding.steps.cultural' },
     { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'onboarding.steps.analysis' },
     { component: TherapistPersonalityStep, titleKey: 'onboarding.steps.therapist' },
     { component: PlanSelectionStep, titleKey: 'onboarding.steps.plan' },
@@ -50,12 +60,32 @@ const SmartOnboardingFlow = ({ onComplete }: SmartOnboardingFlowProps) => {
     }
   };
 
+  const handleCulturalPreferencesChange = (preferences: any) => {
+    setOnboardingData(prev => ({
+      ...prev,
+      culturalPreferences: preferences
+    }));
+  };
+
   const CurrentStepComponent = steps[currentStep].component;
 
-  const stepProps = {
-    onNext: handleNext,
-    onBack: handleBack,
-    onboardingData
+  const getStepProps = () => {
+    const baseProps = {
+      onNext: handleNext,
+      onBack: handleBack,
+      onboardingData
+    };
+
+    // Add specific props for Cultural Preferences step
+    if (currentStep === 3) { // Cultural Preferences step
+      return {
+        ...baseProps,
+        preferences: onboardingData.culturalPreferences,
+        onPreferencesChange: handleCulturalPreferencesChange
+      };
+    }
+
+    return baseProps;
   };
 
   return (
@@ -89,7 +119,7 @@ const SmartOnboardingFlow = ({ onComplete }: SmartOnboardingFlowProps) => {
         </div>
 
         {/* Step Content */}
-        <CurrentStepComponent {...stepProps} />
+        <CurrentStepComponent {...getStepProps()} />
       </div>
     </div>
   );

@@ -25,10 +25,17 @@ import {
   Mic,
   Bell,
   FileText,
-  Home
+  Home,
+  Languages,
+  Globe,
+  Accessibility,
+  UserCheck,
+  GraduationCap,
+  Palette
 } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import GradientLogo from '@/components/ui/GradientLogo';
+import LanguageSelector from '@/components/ui/LanguageSelector';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -80,12 +87,6 @@ const Header = () => {
       icon: Heart,
     },
     {
-      title: "Techniques Library",
-      href: "/techniques",
-      description: "Guided therapeutic techniques",
-      icon: Sparkles,
-    },
-    {
       title: "Session History",
       href: "/session-history",
       description: "Review past therapy sessions",
@@ -96,6 +97,114 @@ const Header = () => {
       href: "/crisis-resources",
       description: "24/7 emergency support",
       icon: Shield,
+    },
+  ];
+
+  const aiPersonalizationFeatures = [
+    {
+      title: "Cultural AI Settings",
+      href: "/cultural-preferences",
+      description: "Customize AI responses for your cultural background",
+      icon: Globe,
+    },
+    {
+      title: "Language Preferences",
+      href: "/language-settings",
+      description: "Set your preferred languages and communication style",
+      icon: Languages,
+    },
+    {
+      title: "Personalization Dashboard",
+      href: "/personalization",
+      description: "View and adjust your AI therapy preferences",
+      icon: UserCheck,
+    },
+    {
+      title: "Communication Style",
+      href: "/communication-style",
+      description: "Configure how the AI communicates with you",
+      icon: MessageCircle,
+    },
+  ];
+
+  const learningResourcesFeatures = [
+    {
+      title: "Techniques Library",
+      href: "/techniques",
+      description: "Guided therapeutic techniques and exercises",
+      icon: Sparkles,
+    },
+    {
+      title: "Educational Content",
+      href: "/education",
+      description: "Learn about mental health and wellness",
+      icon: BookOpen,
+    },
+    {
+      title: "Research & Insights",
+      href: "/research",
+      description: "Latest research in mental health therapy",
+      icon: TrendingUp,
+    },
+    {
+      title: "Wellness Courses",
+      href: "/courses",
+      description: "Structured learning paths for mental wellness",
+      icon: GraduationCap,
+    },
+  ];
+
+  const professionalFeatures = [
+    {
+      title: "Therapist Matching",
+      href: "/therapist-matching",
+      description: "Find the perfect AI therapist for your needs",
+      icon: Users,
+    },
+    {
+      title: "Professional Network",
+      href: "/professional-network",
+      description: "Connect with mental health professionals",
+      icon: UserCheck,
+    },
+    {
+      title: "Session Analytics",
+      href: "/session-analytics",
+      description: "Detailed analysis of your therapy progress",
+      icon: BarChart3,
+    },
+    {
+      title: "Goals Tracking",
+      href: "/goals",
+      description: "Set and achieve wellness goals",
+      icon: Target,
+    },
+  ];
+
+  const accessibilityFeatures = [
+    {
+      title: "Voice Settings",
+      href: "/voice-settings",
+      description: "Configure voice interactions and accessibility",
+      icon: Mic,
+    },
+    {
+      title: "Visual Accessibility",
+      href: "/visual-accessibility",
+      description: "Customize visual elements for better accessibility",
+      icon: Accessibility,
+    },
+    {
+      title: "Cognitive Support Tools",
+      href: "/cognitive-tools",
+      description: "Tools to support cognitive accessibility",
+      icon: Brain,
+    },
+    {
+      title: "Interface Customization",
+      href: "/interface-customization",
+      description: "Personalize the interface for your needs",
+      icon: Palette,
     },
   ];
 
@@ -113,27 +222,6 @@ const Header = () => {
       icon: TrendingUp,
     },
     {
-      title: "Session Analytics",
-      href: "/session-analytics",
-      description: "Detailed session analysis",
-      icon: BarChart3,
-    },
-    {
-      title: "Goals Tracking",
-      href: "/goals",
-      description: "Set and achieve wellness goals",
-      icon: Target,
-    },
-    {
-      title: "Progress Analytics",
-      href: "/analytics",
-      description: "Comprehensive progress reports",
-      icon: TrendingUp,
-    },
-  ];
-
-  const toolsFeatures = [
-    {
       title: "Digital Notebook",
       href: "/notebook",
       description: "Journal your thoughts and progress",
@@ -144,18 +232,6 @@ const Header = () => {
       href: "/smart-scheduling",
       description: "AI-powered session scheduling",
       icon: Calendar,
-    },
-    {
-      title: "Voice Settings",
-      href: "/voice-settings",
-      description: "Configure voice interactions",
-      icon: Mic,
-    },
-    {
-      title: "Features Overview",
-      href: "/features-overview",
-      description: "Explore all platform features",
-      icon: Sparkles,
     },
   ];
 
@@ -180,30 +256,9 @@ const Header = () => {
     },
   ];
 
-  const accountFeatures = [
-    {
-      title: "Profile",
-      href: "/profile",
-      description: "Manage your profile",
-      icon: User,
-    },
-    {
-      title: "Settings",
-      href: "/settings",
-      description: "Account and preferences",
-      icon: Settings,
-    },
-    {
-      title: "Subscription Plans",
-      href: "/plans",
-      description: "Upgrade your plan",
-      icon: Crown,
-    },
-  ];
-
   const publicNavigation = [
     {
-      title: "Therapy & AI",
+      title: "Features",
       items: [
         {
           title: "TherapySync AI",
@@ -212,35 +267,28 @@ const Header = () => {
           icon: Brain,
         },
         {
-          title: "Features Overview",
-          href: "/features-overview",
-          description: "Explore all our features",
-          icon: Sparkles,
-        },
-        {
           title: "Crisis Resources",
           href: "/crisis-resources",
           description: "24/7 emergency support",
           icon: Shield,
         },
-      ],
-    },
-    {
-      title: "Support",
-      items: [
+        {
+          title: "Community Support",
+          href: "/community",
+          description: "Connect with supportive communities",
+          icon: Users,
+        },
         {
           title: "Help Center",
           href: "/help",
           description: "Get answers and support",
           icon: HelpCircle,
         },
-        {
-          title: "Pricing",
-          href: "/plans",
-          description: "View our pricing plans",
-          icon: Crown,
-        },
       ],
+    },
+    {
+      title: "Pricing",
+      href: "/plans",
     },
   ];
 
@@ -250,20 +298,28 @@ const Header = () => {
       items: therapyFeatures,
     },
     {
-      title: "Dashboard",
+      title: "AI & Personalization",
+      items: aiPersonalizationFeatures,
+    },
+    {
+      title: "Learning & Resources",
+      items: learningResourcesFeatures,
+    },
+    {
+      title: "Dashboard & Tools",
       items: dashboardFeatures,
     },
     {
-      title: "Tools",
-      items: toolsFeatures,
+      title: "Professional Features",
+      items: professionalFeatures,
+    },
+    {
+      title: "Accessibility",
+      items: accessibilityFeatures,
     },
     {
       title: "Community",
       items: communityFeatures,
-    },
-    {
-      title: "Account",
-      items: accountFeatures,
     },
   ];
 
@@ -286,28 +342,39 @@ const Header = () => {
             <NavigationMenuList>
               {navigationItems.map((item) => (
                 <NavigationMenuItem key={item.title}>
-                  <NavigationMenuTrigger className="h-10 px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                    {item.title}
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid w-[500px] gap-3 p-6 md:w-[600px] md:grid-cols-2 lg:w-[700px] bg-white border border-gray-200 shadow-lg rounded-md">
-                      {item.items.map((subItem) => (
-                        <NavigationMenuLink
-                          key={subItem.title}
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
-                          onClick={() => navigate(subItem.href)}
-                        >
-                          <div className="flex items-center space-x-2 mb-2">
-                            <subItem.icon className="h-4 w-4 text-harmony-600" />
-                            <div className="text-sm font-medium leading-none">{subItem.title}</div>
-                          </div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {subItem.description}
-                          </p>
-                        </NavigationMenuLink>
-                      ))}
-                    </div>
-                  </NavigationMenuContent>
+                  {item.items ? (
+                    <>
+                      <NavigationMenuTrigger className="h-10 px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
+                        {item.title}
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <div className="grid w-[500px] gap-3 p-6 md:w-[600px] md:grid-cols-2 lg:w-[700px] bg-white border border-gray-200 shadow-lg rounded-md">
+                          {item.items.map((subItem) => (
+                            <NavigationMenuLink
+                              key={subItem.title}
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                              onClick={() => navigate(subItem.href)}
+                            >
+                              <div className="flex items-center space-x-2 mb-2">
+                                <subItem.icon className="h-4 w-4 text-harmony-600" />
+                                <div className="text-sm font-medium leading-none">{subItem.title}</div>
+                              </div>
+                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                {subItem.description}
+                              </p>
+                            </NavigationMenuLink>
+                          ))}
+                        </div>
+                      </NavigationMenuContent>
+                    </>
+                  ) : (
+                    <NavigationMenuLink
+                      className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 cursor-pointer"
+                      onClick={() => navigate(item.href || '')}
+                    >
+                      {item.title}
+                    </NavigationMenuLink>
+                  )}
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
@@ -315,6 +382,9 @@ const Header = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-4">
+            {/* Language Selector */}
+            <LanguageSelector />
+            
             {user ? (
               <>
                 {/* Quick Access to TherapySync AI */}
@@ -338,7 +408,7 @@ const Header = () => {
                       </span>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg">
+                  <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg z-50">
                     <DropdownMenuLabel className="px-3 py-2 border-b">
                       <p className="text-sm font-medium">{user.email}</p>
                       <Badge variant="secondary" className="text-xs mt-1">
@@ -349,6 +419,11 @@ const Header = () => {
                     <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                       <LayoutDashboard className="h-4 w-4 mr-2" />
                       Dashboard
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem onClick={() => navigate('/cultural-preferences')}>
+                      <Globe className="h-4 w-4 mr-2" />
+                      Cultural Preferences
                     </DropdownMenuItem>
                     
                     <DropdownMenuItem onClick={() => navigate('/profile')}>
