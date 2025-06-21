@@ -25,67 +25,7 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-// Safe wrapper that ensures React hooks are available before using them
 export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // Use class component approach to avoid hook issues during initialization
-  return React.createElement(SafeAuthProviderClass, { children });
-};
-
-// Class component that doesn't use hooks until React is ready
-class SafeAuthProviderClass extends React.Component<AuthProviderProps, { isReactReady: boolean }> {
-  constructor(props: AuthProviderProps) {
-    super(props);
-    this.state = { isReactReady: false };
-  }
-
-  componentDidMount() {
-    // Check if React hooks are available
-    this.checkReactReadiness();
-  }
-
-  checkReactReadiness = () => {
-    try {
-      // Test if React hooks are available
-      if (
-        typeof React !== 'undefined' &&
-        React.useState &&
-        React.useEffect &&
-        React.useContext &&
-        typeof React.useState === 'function'
-      ) {
-        console.log('SimpleAuthProvider: React hooks are ready');
-        this.setState({ isReactReady: true });
-      } else {
-        console.log('SimpleAuthProvider: React hooks not ready, retrying...');
-        setTimeout(this.checkReactReadiness, 50);
-      }
-    } catch (error) {
-      console.error('SimpleAuthProvider: Error checking React readiness:', error);
-      setTimeout(this.checkReactReadiness, 100);
-    }
-  };
-
-  render() {
-    if (!this.state.isReactReady) {
-      return React.createElement('div', {
-        style: {
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#f8fafc',
-          fontFamily: 'system-ui, sans-serif'
-        }
-      }, 'Initializing authentication...');
-    }
-
-    // Now it's safe to use the hook-based component
-    return React.createElement(AuthProviderWithHooks, this.props);
-  }
-}
-
-// Hook-based component that only renders when React is fully ready
-const AuthProviderWithHooks: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -174,5 +114,9 @@ const AuthProviderWithHooks: React.FC<AuthProviderProps> = ({ children }) => {
 
   console.log('SimpleAuthProvider: Rendering with user:', user ? 'Authenticated' : 'Not authenticated', 'loading:', loading);
 
-  return React.createElement(AuthContext.Provider, { value }, children);
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
