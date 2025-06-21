@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -30,7 +31,9 @@ import {
   Accessibility,
   UserCheck,
   GraduationCap,
-  Palette
+  Palette,
+  DollarSign,
+  CheckCircle
 } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import GradientLogo from '@/components/ui/GradientLogo';
@@ -52,7 +55,6 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import { cn } from '@/lib/utils';
 
 const Header = () => {
   const { user, logout } = useSimpleApp();
@@ -92,134 +94,35 @@ const Header = () => {
       description: "Review past therapy sessions",
       icon: FileText,
     },
-    {
-      title: "Crisis Resources",
-      href: "/crisis-resources",
-      description: "24/7 emergency support",
-      icon: Shield,
-    },
   ];
 
-  const aiPersonalizationFeatures = [
+  const therapistFeatures = [
     {
-      title: "Cultural AI Settings",
-      href: "/cultural-preferences",
-      description: "Customize AI responses for your cultural background",
-      icon: Globe,
+      title: "AI Therapist Profiles",
+      href: "/therapists",
+      description: "Meet our AI therapists with unique personalities",
+      icon: Users,
     },
     {
-      title: "Language Preferences",
-      href: "/language-settings",
-      description: "Set your preferred languages and communication style",
-      icon: Languages,
+      title: "Voice Samples",
+      href: "/voice-features",
+      description: "Experience our ElevenLabs voice technology",
+      icon: Mic,
     },
     {
-      title: "Personalization Dashboard",
-      href: "/personalization",
-      description: "View and adjust your AI therapy preferences",
+      title: "Therapist Matching",
+      href: "/therapist-matching",
+      description: "Find the perfect AI therapist for your needs",
       icon: UserCheck,
     },
-    {
-      title: "Communication Style",
-      href: "/communication-style",
-      description: "Configure how the AI communicates with you",
-      icon: MessageCircle,
-    },
   ];
 
-  const learningResourcesFeatures = [
+  const resourcesFeatures = [
     {
       title: "Techniques Library",
       href: "/techniques",
       description: "Guided therapeutic techniques and exercises",
       icon: Sparkles,
-    },
-    {
-      title: "Educational Content",
-      href: "/education",
-      description: "Learn about mental health and wellness",
-      icon: BookOpen,
-    },
-    {
-      title: "Research & Insights",
-      href: "/research",
-      description: "Latest research in mental health therapy",
-      icon: TrendingUp,
-    },
-    {
-      title: "Wellness Courses",
-      href: "/courses",
-      description: "Structured learning paths for mental wellness",
-      icon: GraduationCap,
-    },
-  ];
-
-  const professionalFeatures = [
-    {
-      title: "Therapist Matching",
-      href: "/therapist-matching",
-      description: "Find the perfect AI therapist for your needs",
-      icon: Users,
-    },
-    {
-      title: "Professional Network",
-      href: "/professional-network",
-      description: "Connect with mental health professionals",
-      icon: UserCheck,
-    },
-    {
-      title: "Session Analytics",
-      href: "/session-analytics",
-      description: "Detailed analysis of your therapy progress",
-      icon: BarChart3,
-    },
-    {
-      title: "Goals Tracking",
-      href: "/goals",
-      description: "Set and achieve wellness goals",
-      icon: Target,
-    },
-  ];
-
-  const accessibilityFeatures = [
-    {
-      title: "Voice Settings",
-      href: "/voice-settings",
-      description: "Configure voice interactions and accessibility",
-      icon: Mic,
-    },
-    {
-      title: "Visual Accessibility",
-      href: "/visual-accessibility",
-      description: "Customize visual elements for better accessibility",
-      icon: Accessibility,
-    },
-    {
-      title: "Cognitive Support Tools",
-      href: "/cognitive-tools",
-      description: "Tools to support cognitive accessibility",
-      icon: Brain,
-    },
-    {
-      title: "Interface Customization",
-      href: "/interface-customization",
-      description: "Personalize the interface for your needs",
-      icon: Palette,
-    },
-  ];
-
-  const dashboardFeatures = [
-    {
-      title: "Main Dashboard",
-      href: "/dashboard",
-      description: "Your wellness overview",
-      icon: LayoutDashboard,
-    },
-    {
-      title: "Enhanced Monitoring",
-      href: "/enhanced-monitoring",
-      description: "Advanced progress insights",
-      icon: TrendingUp,
     },
     {
       title: "Digital Notebook",
@@ -228,16 +131,7 @@ const Header = () => {
       icon: PenTool,
     },
     {
-      title: "Smart Scheduling",
-      href: "/smart-scheduling",
-      description: "AI-powered session scheduling",
-      icon: Calendar,
-    },
-  ];
-
-  const communityFeatures = [
-    {
-      title: "Community Hub",
+      title: "Community Support",
       href: "/community",
       description: "Connect with supportive communities",
       icon: Users,
@@ -248,47 +142,28 @@ const Header = () => {
       description: "Get answers and support",
       icon: HelpCircle,
     },
-    {
-      title: "Help Articles",
-      href: "/help/articles",
-      description: "Browse knowledge base",
-      icon: BookOpen,
-    },
   ];
 
   const publicNavigation = [
     {
-      title: "Features",
-      items: [
-        {
-          title: "TherapySync AI",
-          href: "/therapysync-ai",
-          description: "Experience our AI therapy platform",
-          icon: Brain,
-        },
-        {
-          title: "Crisis Resources",
-          href: "/crisis-resources",
-          description: "24/7 emergency support",
-          icon: Shield,
-        },
-        {
-          title: "Community Support",
-          href: "/community",
-          description: "Connect with supportive communities",
-          icon: Users,
-        },
-        {
-          title: "Help Center",
-          href: "/help",
-          description: "Get answers and support",
-          icon: HelpCircle,
-        },
-      ],
+      title: "Therapy & AI",
+      items: therapyFeatures,
+    },
+    {
+      title: "Therapists",
+      items: therapistFeatures,
+    },
+    {
+      title: "Resources",
+      items: resourcesFeatures,
     },
     {
       title: "Pricing",
       href: "/plans",
+    },
+    {
+      title: "Compare Plans",
+      href: "/compare-plans",
     },
   ];
 
@@ -298,35 +173,48 @@ const Header = () => {
       items: therapyFeatures,
     },
     {
-      title: "AI & Personalization",
-      items: aiPersonalizationFeatures,
+      title: "Therapists",
+      items: therapistFeatures,
     },
     {
-      title: "Learning & Resources",
-      items: learningResourcesFeatures,
+      title: "Dashboard",
+      items: [
+        {
+          title: "Main Dashboard",
+          href: "/dashboard",
+          description: "Your wellness overview",
+          icon: LayoutDashboard,
+        },
+        {
+          title: "Session Analytics",
+          href: "/session-analytics",
+          description: "Detailed analysis of your progress",
+          icon: BarChart3,
+        },
+        {
+          title: "Goals Tracking",
+          href: "/goals",
+          description: "Set and achieve wellness goals",
+          icon: Target,
+        },
+        {
+          title: "Smart Scheduling",
+          href: "/smart-scheduling",
+          description: "AI-powered session scheduling",
+          icon: Calendar,
+        },
+      ],
     },
     {
-      title: "Dashboard & Tools",
-      items: dashboardFeatures,
-    },
-    {
-      title: "Professional Features",
-      items: professionalFeatures,
-    },
-    {
-      title: "Accessibility",
-      items: accessibilityFeatures,
-    },
-    {
-      title: "Community",
-      items: communityFeatures,
+      title: "Resources",
+      items: resourcesFeatures,
     },
   ];
 
   const navigationItems = user ? authenticatedNavigation : publicNavigation;
 
   return (
-    <header className="bg-white/80 backdrop-blur-md border-b border-harmony-200 sticky top-0 z-50">
+    <header className="bg-white/90 backdrop-blur-md border-b border-harmony-200 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -338,7 +226,7 @@ const Header = () => {
           </Link>
 
           {/* Navigation */}
-          <NavigationMenu className="hidden md:flex">
+          <NavigationMenu className="hidden lg:flex">
             <NavigationMenuList>
               {navigationItems.map((item) => (
                 <NavigationMenuItem key={item.title}>
@@ -348,7 +236,7 @@ const Header = () => {
                         {item.title}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid w-[500px] gap-3 p-6 md:w-[600px] md:grid-cols-2 lg:w-[700px] bg-white border border-gray-200 shadow-lg rounded-md">
+                        <div className="grid w-[500px] gap-3 p-6 md:w-[600px] md:grid-cols-2 lg:w-[700px] bg-white border border-gray-200 shadow-lg rounded-md z-50">
                           {item.items.map((subItem) => (
                             <NavigationMenuLink
                               key={subItem.title}
@@ -381,9 +269,9 @@ const Header = () => {
           </NavigationMenu>
 
           {/* User Actions */}
-          <div className="flex items-center space-x-4">
-            {/* Enhanced Language & Currency Selectors */}
-            <div className="hidden lg:flex items-center space-x-3">
+          <div className="flex items-center space-x-3">
+            {/* Language & Currency Selectors */}
+            <div className="hidden md:flex items-center space-x-2">
               <EnhancedLanguageSelector />
               <EnhancedCurrencySelector />
             </div>
@@ -406,7 +294,7 @@ const Header = () => {
                       <div className="w-8 h-8 bg-gradient-to-br from-harmony-500 to-flow-500 rounded-full flex items-center justify-center">
                         <User className="h-4 w-4 text-white" />
                       </div>
-                      <span className="hidden md:inline text-sm">
+                      <span className="hidden lg:inline text-sm">
                         {user.email?.split('@')[0] || 'User'}
                       </span>
                     </Button>
@@ -424,11 +312,6 @@ const Header = () => {
                       Dashboard
                     </DropdownMenuItem>
                     
-                    <DropdownMenuItem onClick={() => navigate('/cultural-preferences')}>
-                      <Globe className="h-4 w-4 mr-2" />
-                      Cultural Preferences
-                    </DropdownMenuItem>
-                    
                     <DropdownMenuItem onClick={() => navigate('/profile')}>
                       <User className="h-4 w-4 mr-2" />
                       Profile
@@ -441,18 +324,6 @@ const Header = () => {
                     
                     <DropdownMenuSeparator />
                     
-                    <DropdownMenuItem onClick={() => navigate('/therapysync-ai')}>
-                      <Brain className="h-4 w-4 mr-2" />
-                      TherapySync AI
-                    </DropdownMenuItem>
-                    
-                    <DropdownMenuItem onClick={() => navigate('/therapy')}>
-                      <MessageCircle className="h-4 w-4 mr-2" />
-                      AI Therapy Chat
-                    </DropdownMenuItem>
-                    
-                    <DropdownMenuSeparator />
-                    
                     <DropdownMenuItem onClick={handleLogout} className="text-red-600">
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign Out
@@ -461,7 +332,7 @@ const Header = () => {
                 </DropdownMenu>
               </>
             ) : (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
                 <Button
                   onClick={() => navigate('/therapysync-ai')}
                   variant="outline"
@@ -469,7 +340,7 @@ const Header = () => {
                   className="border-harmony-300 text-harmony-700 hover:bg-harmony-50"
                 >
                   <Brain className="h-4 w-4 mr-2" />
-                  Try TherapySync AI
+                  Try AI
                 </Button>
                 <Button
                   onClick={() => navigate('/auth')}

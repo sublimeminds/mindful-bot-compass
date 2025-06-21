@@ -30,6 +30,8 @@ import MoodTracking from '@/pages/MoodTracking';
 import Goals from '@/pages/Goals';
 import Analytics from '@/pages/Analytics';
 import SessionHistory from '@/pages/SessionHistory';
+import TherapistProfiles from '@/pages/TherapistProfiles';
+import ComparePlans from '@/pages/ComparePlans';
 
 const AppRouter = () => {
   return (
@@ -59,6 +61,8 @@ const AppRouter = () => {
       <Route path="/help/articles" element={<HelpArticles />} />
       <Route path="/help/articles/:id" element={<HelpArticleDetail />} />
       <Route path="/plans" element={<Plans />} />
+      <Route path="/compare-plans" element={<ComparePlans />} />
+      <Route path="/therapists" element={<TherapistProfiles />} />
       <Route path="/therapysync-ai" element={<TherapySyncAI />} />
       <Route path="/features-overview" element={<FeaturesOverview />} />
       <Route path="/enhanced-monitoring" element={<EnhancedMonitoringPage />} />
