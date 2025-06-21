@@ -19,7 +19,8 @@ import {
   Eye,
   TrendingUp,
   AlertCircle,
-  RefreshCw
+  RefreshCw,
+  Brain
 } from 'lucide-react';
 import { useSEO } from '@/hooks/useSEO';
 import Header from '@/components/Header';

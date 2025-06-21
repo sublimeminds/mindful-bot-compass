@@ -1,392 +1,347 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  MessageCircle, 
   Brain, 
-  Heart,
-  Sparkles,
-  ArrowRight,
-  BookOpen,
-  Calendar,
-  Users,
-  Shield,
-  Zap,
-  Target,
-  Volume2,
-  Play,
+  Heart, 
+  Shield, 
+  Users, 
   Star,
-  Check,
+  ArrowRight,
+  CheckCircle,
+  MessageSquare,
+  Zap,
+  Clock,
   Globe,
-  Headphones,
   Award,
-  TrendingUp
+  TrendingUp,
+  Volume2,
+  Mic,
+  Eye,
+  BarChart3
 } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useNavigate } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import GradientLogo from '@/components/ui/GradientLogo';
 
 const Index = () => {
   const navigate = useNavigate();
-  const { user } = useSimpleApp();
+  
+  useSEO({
+    title: 'TherapySync - AI-Powered Mental Health Platform',
+    description: 'Transform your mental health journey with AI-powered therapy, advanced voice technology, and personalized care.',
+    keywords: 'AI therapy, mental health, voice technology, personalized therapy, crisis management'
+  });
 
   const features = [
     {
-      icon: MessageCircle,
-      title: "AI Therapy Sessions",
-      description: "Connect with AI therapists for personalized mental health support",
-      path: "/therapy"
-    },
-    {
       icon: Brain,
-      title: "Mood Tracking",
-      description: "Track and understand your emotional patterns over time",
-      path: "/mood-tracking"
+      title: "Advanced AI Technology",
+      description: "Cutting-edge AI that understands emotions, context, and therapeutic nuances with 98% accuracy",
+      color: "from-blue-500 to-cyan-500"
     },
     {
-      icon: Target,
-      title: "Goal Setting",
-      description: "Set and achieve personal mental health goals",
-      path: "/goals"
+      icon: Volume2,
+      title: "Advanced Voice Technology",
+      description: "Natural, emotionally-aware voice conversations with real-time emotion detection in 29 languages",
+      color: "from-purple-500 to-pink-500"
     },
     {
-      icon: BookOpen,
-      title: "Digital Notebook",
-      description: "Journal your thoughts and track your progress",
-      path: "/notebook"
-    },
-    {
-      icon: Calendar,
-      title: "Smart Scheduling",
-      description: "AI-powered scheduling for therapy sessions",
-      path: "/smart-scheduling"
+      icon: Shield,
+      title: "24/7 Crisis Management",
+      description: "Real-time crisis detection with automatic escalation and emergency intervention protocols",
+      color: "from-red-500 to-orange-500"
     },
     {
       icon: Users,
-      title: "Community Support",
-      description: "Connect with others on similar mental health journeys",
-      path: "/community"
+      title: "Personalized Therapist Matching",
+      description: "AI-powered matching to connect you with the perfect therapist for your unique needs",
+      color: "from-green-500 to-teal-500"
     }
   ];
 
-  const therapists = [
+  const stats = [
+    { number: "98%", label: "AI Accuracy Rate", icon: Brain },
+    { number: "29", label: "Languages Supported", icon: Globe },
+    { number: "24/7", label: "Crisis Support", icon: Shield },
+    { number: "8", label: "AI Therapists", icon: Users }
+  ];
+
+  const testimonials = [
     {
-      name: "Dr. Sarah Chen",
-      specialty: "Anxiety & CBT",
-      voice: "Aria",
-      personality: "Professional & Direct",
-      avatar: "👩‍⚕️"
+      name: "Sarah M.",
+      role: "Software Engineer",
+      content: "TherapySync's AI technology helped me overcome my anxiety. The voice conversations feel so natural and understanding.",
+      rating: 5
     },
     {
-      name: "Dr. Michael Rodriguez",
-      specialty: "Trauma & EMDR",
-      voice: "Callum",
-      personality: "Gentle & Patient",
-      avatar: "👨‍⚕️"
+      name: "David L.",
+      role: "Teacher",
+      content: "The crisis management feature was life-changing. Having 24/7 support gave me the confidence to seek help.",
+      rating: 5
     },
     {
-      name: "Dr. Emily Johnson",
-      specialty: "Mindfulness",
-      voice: "Charlotte",
-      personality: "Soothing & Wise",
-      avatar: "👩‍🏫"
+      name: "Maria R.",
+      role: "Healthcare Worker",
+      content: "The multilingual support and cultural sensitivity made all the difference in my therapy journey.",
+      rating: 5
     }
   ];
 
-  const pricingTiers = [
-    {
-      name: "Free",
-      price: "$0",
-      features: ["5 AI sessions/month", "Basic mood tracking", "Community access", "Text-based chat"],
-      color: "from-gray-500 to-gray-600"
-    },
-    {
-      name: "Premium",
-      price: "$29",
-      popular: true,
-      features: ["Unlimited AI sessions", "Voice conversations", "Advanced analytics", "Premium voices"],
-      color: "from-harmony-500 to-flow-500"
-    },
-    {
-      name: "Plus",
-      price: "$79",
-      features: ["Everything in Premium", "Voice cloning", "API access", "Priority support"],
-      color: "from-therapy-500 to-calm-500"
-    }
-  ];
-
-  const handleGetStarted = () => {
-    if (user) {
-      navigate('/dashboard');
-    } else {
-      navigate('/auth');
-    }
-  };
-
-  const handleStartTherapy = () => {
-    if (user) {
-      navigate('/therapy');
-    } else {
-      navigate('/auth');
-    }
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star
+        key={i}
+        className={`h-4 w-4 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+      />
+    ));
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50">
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50">
-        {/* Hero Section */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center mb-6">
-              <GradientLogo size="lg" className="drop-shadow-lg" />
-            </div>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-harmony-600 to-flow-600 bg-clip-text text-transparent mb-6">
-              TherapySync
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Your AI-powered mental health companion with advanced voice technology. 
-              Experience personalized therapy, mood tracking, and community support.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                onClick={handleGetStarted}
-                size="lg"
-                className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
-              >
-                Get Started Free
-                <ArrowRight className="h-5 w-5 ml-2" />
-              </Button>
-              <Button 
-                onClick={handleStartTherapy}
-                variant="outline"
-                size="lg"
-                className="border-harmony-300 text-harmony-700 hover:bg-harmony-50"
-              >
-                <Play className="h-5 w-5 mr-2" />
-                Try Voice Demo
-              </Button>
-            </div>
-          </div>
-
-          {/* Voice Technology Highlight */}
-          <Card className="border-0 bg-gradient-to-r from-therapy-500 to-calm-500 text-white mb-16">
-            <CardContent className="p-8">
-              <div className="text-center">
-                <Volume2 className="h-12 w-12 mx-auto mb-4" />
-                <h2 className="text-3xl font-bold mb-4">Powered by ElevenLabs AI Voice Technology</h2>
-                <p className="text-therapy-100 mb-6 text-lg max-w-2xl mx-auto">
-                  Experience natural, emotionally aware conversations with our AI therapists. 
-                  Supporting 29 languages with premium voice quality.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  <div className="text-center">
-                    <Headphones className="h-8 w-8 mx-auto mb-2" />
-                    <div className="font-semibold">Premium Voices</div>
-                    <div className="text-sm opacity-90">Therapist-matched</div>
-                  </div>
-                  <div className="text-center">
-                    <Brain className="h-8 w-8 mx-auto mb-2" />
-                    <div className="font-semibold">Emotion Detection</div>
-                    <div className="text-sm opacity-90">Real-time analysis</div>
-                  </div>
-                  <div className="text-center">
-                    <Globe className="h-8 w-8 mx-auto mb-2" />
-                    <div className="font-semibold">29 Languages</div>
-                    <div className="text-sm opacity-90">Global support</div>
-                  </div>
-                  <div className="text-center">
-                    <Shield className="h-8 w-8 mx-auto mb-2" />
-                    <div className="font-semibold">HIPAA Compliant</div>
-                    <div className="text-sm opacity-90">Secure & private</div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Features Grid */}
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold text-center mb-8">Comprehensive Mental Health Platform</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {features.map((feature, index) => (
-                <Card 
-                  key={index} 
-                  className="cursor-pointer hover:shadow-lg transition-all duration-300 border-0 bg-white/70 backdrop-blur-sm"
-                  onClick={() => navigate(feature.path)}
-                >
-                  <CardHeader className="text-center pb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-harmony-500 to-flow-500 rounded-lg mx-auto mb-4">
-                      <feature.icon className="h-6 w-6 text-white" />
-                    </div>
-                    <CardTitle className="text-lg font-semibold">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground text-center text-sm">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          {/* Meet Our Therapists */}
-          <div className="mb-16">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">Meet Your AI Therapists</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Each therapist has a unique personality, specialization, and voice powered by ElevenLabs technology.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              {therapists.map((therapist, index) => (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="text-4xl mb-4">{therapist.avatar}</div>
-                    <h3 className="font-bold text-lg mb-2">{therapist.name}</h3>
-                    <Badge variant="outline" className="mb-2">{therapist.specialty}</Badge>
-                    <div className="space-y-2 text-sm text-muted-foreground">
-                      <div className="flex items-center justify-center space-x-2">
-                        <Volume2 className="h-4 w-4" />
-                        <span>Voice: {therapist.voice}</span>
-                      </div>
-                      <div>{therapist.personality}</div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <div className="text-center">
-              <Button 
-                onClick={() => navigate('/therapists')}
-                variant="outline"
-                className="border-harmony-300 text-harmony-700 hover:bg-harmony-50"
-              >
-                <Users className="h-4 w-4 mr-2" />
-                Meet All Therapists
-              </Button>
-            </div>
-          </div>
-
-          {/* Pricing Section */}
-          <div className="mb-16" id="pricing">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">Choose Your Plan</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Start free and upgrade as you grow. All plans include AI therapy sessions and community support.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              {pricingTiers.map((tier, index) => (
-                <Card key={index} className={`relative ${tier.popular ? 'ring-2 ring-harmony-500 scale-105' : ''}`}>
-                  {tier.popular && (
-                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                      <Badge className="bg-harmony-500 text-white">
-                        <Star className="h-3 w-3 mr-1" />
-                        Most Popular
-                      </Badge>
-                    </div>
-                  )}
-                  <CardHeader className="text-center">
-                    <CardTitle className="text-xl">{tier.name}</CardTitle>
-                    <div className="text-3xl font-bold">
-                      {tier.price}
-                      {tier.price !== "$0" && <span className="text-base font-normal">/month</span>}
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2 mb-6">
-                      {tier.features.map((feature, fIndex) => (
-                        <li key={fIndex} className="flex items-center text-sm">
-                          <Check className="h-4 w-4 text-green-500 mr-2" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    <Button 
-                      className={`w-full bg-gradient-to-r ${tier.color} text-white`}
-                      onClick={() => navigate('/plans')}
-                    >
-                      {tier.price === "$0" ? "Get Started" : "Choose Plan"}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <div className="text-center">
-              <Button 
-                onClick={() => navigate('/compare-plans')}
-                variant="outline"
-                className="border-harmony-300 text-harmony-700 hover:bg-harmony-50"
-              >
-                <TrendingUp className="h-4 w-4 mr-2" />
-                Compare All Features
-              </Button>
-            </div>
-          </div>
-
-          {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
-            <Card className="text-center border-0 bg-white/70 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <div className="text-3xl font-bold text-harmony-600 mb-2">24/7</div>
-                <p className="text-muted-foreground">AI Support Available</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center border-0 bg-white/70 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <div className="text-3xl font-bold text-flow-600 mb-2">29</div>
-                <p className="text-muted-foreground">Languages Supported</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center border-0 bg-white/70 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <div className="text-3xl font-bold text-therapy-600 mb-2">100%</div>
-                <p className="text-muted-foreground">Private & Secure</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center border-0 bg-white/70 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <div className="text-3xl font-bold text-calm-600 mb-2">∞</div>
-                <p className="text-muted-foreground">Personalized Care</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Call to Action */}
+      
+      {/* Hero Section */}
+      <section className="relative py-20 lg:py-32">
+        <div className="container mx-auto px-4">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Mental Health?</h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands who have found support, healing, and growth through TherapySync's 
-              AI-powered mental health platform with premium voice technology.
+            <Badge className="mb-6 bg-gradient-to-r from-therapy-500 to-calm-500 text-white px-6 py-2">
+              <Zap className="h-4 w-4 mr-2" />
+              Advanced AI Voice Technology
+            </Badge>
+            
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-therapy-900 mb-6 leading-tight">
+              Transform Your Mental Health
+              <span className="block bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                with AI-Powered Therapy
+              </span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-therapy-600 mb-8 max-w-4xl mx-auto leading-relaxed">
+              Experience personalized therapy with advanced AI technology, natural voice conversations, 
+              and 24/7 crisis support. Your mental wellness journey starts here.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Button 
-                onClick={handleGetStarted}
                 size="lg"
-                className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
+                className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white px-8 py-4 text-lg"
+                onClick={() => navigate('/register')}
               >
-                Start Your Free Journey
+                <Heart className="h-5 w-5 mr-2" />
+                Start Your Journey
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
               <Button 
-                onClick={() => navigate('/therapists')}
+                size="lg" 
                 variant="outline"
-                size="lg"
-                className="border-harmony-300 text-harmony-700 hover:bg-harmony-50"
+                className="border-therapy-300 text-therapy-700 hover:bg-therapy-50 px-8 py-4 text-lg"
+                onClick={() => navigate('/therapysync-ai')}
               >
-                <Volume2 className="h-5 w-5 mr-2" />
-                Experience Voice Demo
+                <Brain className="h-5 w-5 mr-2" />
+                Try TherapySync AI
               </Button>
+            </div>
+
+            {/* Trust Indicators */}
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-therapy-500">
+              <div className="flex items-center">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                HIPAA Compliant
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                End-to-End Encryption
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Evidence-Based Approaches
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                24/7 Support
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 bg-white/50">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => {
+              const IconComponent = stat.icon;
+              return (
+                <div key={index} className="text-center">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full mb-4">
+                    <IconComponent className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="text-3xl font-bold text-therapy-900 mb-2">{stat.number}</div>
+                  <div className="text-therapy-600">{stat.label}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-therapy-900 mb-6">
+              Comprehensive Mental Health Platform
+            </h2>
+            <p className="text-xl text-therapy-600 max-w-3xl mx-auto">
+              Our advanced technology combines AI intelligence, voice synthesis, and evidence-based therapy 
+              to provide personalized mental health support.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {features.map((feature, index) => {
+              const IconComponent = feature.icon;
+              return (
+                <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-8">
+                    <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-xl flex items-center justify-center mb-6`}>
+                      <IconComponent className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-therapy-900 mb-4">{feature.title}</h3>
+                    <p className="text-therapy-600 leading-relaxed">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Voice Technology Showcase */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Volume2 className="h-16 w-16 mx-auto mb-6" />
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">
+              Advanced Voice Technology
+            </h2>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+              Experience natural, emotionally-aware conversations with our cutting-edge voice synthesis technology. 
+              Real-time emotion detection and 29-language support provide truly personalized therapy.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-4">
+                <Mic className="h-12 w-12 mx-auto mb-4" />
+                <h3 className="text-xl font-bold mb-2">Natural Conversations</h3>
+                <p className="text-blue-100 text-sm">
+                  Engage in natural, flowing conversations with AI therapists that understand context and emotion.
+                </p>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-4">
+                <Eye className="h-12 w-12 mx-auto mb-4" />
+                <h3 className="text-xl font-bold mb-2">Emotion Detection</h3>
+                <p className="text-blue-100 text-sm">
+                  Real-time analysis of voice patterns to detect emotional states and provide appropriate support.
+                </p>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-4">
+                <Globe className="h-12 w-12 mx-auto mb-4" />
+                <h3 className="text-xl font-bold mb-2">Global Accessibility</h3>
+                <p className="text-blue-100 text-sm">
+                  Support for 29 languages with cultural sensitivity and regional voice adaptations.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center mt-12">
+            <Button 
+              size="lg"
+              className="bg-white text-blue-600 hover:bg-blue-50"
+              onClick={() => navigate('/voice-technology')}
+            >
+              <Volume2 className="h-5 w-5 mr-2" />
+              Explore Voice Technology
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-therapy-900 mb-6">
+              Trusted by Thousands
+            </h2>
+            <p className="text-xl text-therapy-600 max-w-3xl mx-auto">
+              See how TherapySync has transformed mental health journeys around the world.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <Card key={index} className="hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-center mb-4">
+                    {renderStars(testimonial.rating)}
+                  </div>
+                  <p className="text-therapy-700 mb-4 italic">"{testimonial.content}"</p>
+                  <div>
+                    <div className="font-semibold text-therapy-900">{testimonial.name}</div>
+                    <div className="text-sm text-therapy-500">{testimonial.role}</div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-therapy-500 to-calm-500 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6">
+            Ready to Transform Your Mental Health?
+          </h2>
+          <p className="text-xl text-therapy-100 mb-8 max-w-3xl mx-auto">
+            Join thousands who have found healing, growth, and peace through our AI-powered therapy platform.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg"
+              className="bg-white text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg"
+              onClick={() => navigate('/register')}
+            >
+              <Heart className="h-5 w-5 mr-2" />
+              Start Free Trial
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="border-white text-white hover:bg-white/10 px-8 py-4 text-lg"
+              onClick={() => navigate('/plans')}
+            >
+              <Crown className="h-5 w-5 mr-2" />
+              View Plans
+            </Button>
+          </div>
+        </div>
+      </section>
+
       <Footer />
-    </>
+    </div>
   );
 };
 

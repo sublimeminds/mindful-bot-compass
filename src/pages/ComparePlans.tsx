@@ -55,13 +55,14 @@ const ComparePlans = () => {
       ]
     },
     {
-      category: "Voice & Audio Features",
+      category: "Therapist Access & Voice Features",
       features: [
         { name: "Text-based chat", free: true, premium: true, plus: true },
         { name: "Voice-enabled conversations", free: false, premium: true, plus: true, icon: Volume2 },
-        { name: "ElevenLabs premium voices", free: false, premium: true, plus: true, icon: Headphones },
+        { name: "Standard therapist profiles", free: "2 therapists", premium: "All standard", plus: "All therapists", icon: Users },
+        { name: "Premium therapist profiles", free: false, premium: "Limited access", plus: "Full access", icon: Headphones },
+        { name: "Plus-exclusive therapists", free: false, premium: false, plus: true, icon: Crown },
         { name: "Voice emotion analysis", free: false, premium: true, plus: true },
-        { name: "Custom voice cloning", free: false, premium: false, plus: true, icon: Crown },
         { name: "Multi-language support (29 languages)", free: "English only", premium: true, plus: true, icon: Globe },
         { name: "Podcast library access", free: "5 episodes", premium: "100+ episodes", plus: "Unlimited" },
         { name: "Guided meditation sessions", free: "5 sessions", premium: "50+ sessions", plus: "Unlimited" },
@@ -115,7 +116,7 @@ const ComparePlans = () => {
     {
       id: 'premium',
       name: 'Premium',
-      price: 29,
+      price: 9,
       description: 'Most popular choice',
       color: 'from-harmony-500 to-flow-500',
       popular: true
@@ -123,7 +124,7 @@ const ComparePlans = () => {
     {
       id: 'plus',
       name: 'Plus',
-      price: 79,
+      price: 29,
       description: 'Professional features',
       color: 'from-therapy-500 to-calm-500',
       popular: false
@@ -132,13 +133,21 @@ const ComparePlans = () => {
 
   const renderFeatureValue = (value: boolean | string) => {
     if (typeof value === 'boolean') {
-      return value ? (
-        <Check className="h-5 w-5 text-green-600" />
-      ) : (
-        <X className="h-5 w-5 text-gray-400" />
+      return (
+        <div className="flex justify-center">
+          {value ? (
+            <Check className="h-5 w-5 text-green-600" />
+          ) : (
+            <X className="h-5 w-5 text-gray-400" />
+          )}
+        </div>
       );
     }
-    return <span className="text-sm font-medium">{value}</span>;
+    return (
+      <div className="text-center">
+        <span className="text-sm font-medium">{value}</span>
+      </div>
+    );
   };
 
   return (
@@ -177,7 +186,7 @@ const ComparePlans = () => {
                   </div>
                   <p className="text-sm text-muted-foreground">{plan.description}</p>
                   <Button 
-                    className={`w-full bg-gradient-to-r ${plan.color} text-white mt-4`}
+                    className={`w-full bg-gradient-to-r ${plan.color} text-white mt-4 hover:opacity-90 transition-opacity`}
                     onClick={() => navigate('/plans')}
                   >
                     {plan.price === 0 ? 'Get Started' : 'Choose Plan'}
@@ -204,15 +213,9 @@ const ComparePlans = () => {
                           {feature.icon && <feature.icon className="h-4 w-4 text-harmony-600" />}
                           <span className="font-medium">{feature.name}</span>
                         </div>
-                        <div className="text-center">
-                          {renderFeatureValue(feature.free)}
-                        </div>
-                        <div className="text-center">
-                          {renderFeatureValue(feature.premium)}
-                        </div>
-                        <div className="text-center">
-                          {renderFeatureValue(feature.plus)}
-                        </div>
+                        {renderFeatureValue(feature.free)}
+                        {renderFeatureValue(feature.premium)}
+                        {renderFeatureValue(feature.plus)}
                       </div>
                     ))}
                   </div>

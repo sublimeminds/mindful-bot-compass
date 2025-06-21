@@ -18,7 +18,8 @@ import {
   TrendingUp,
   Eye,
   Heart,
-  ArrowRight
+  ArrowRight,
+  Users
 } from 'lucide-react';
 import { useSEO } from '@/hooks/useSEO';
 import Header from '@/components/Header';

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -25,11 +26,13 @@ import {
   FileText,
   UserCheck,
   Award,
-  Star
+  Star,
+  Monitor,
+  Zap,
+  Globe
 } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import GradientLogo from '@/components/ui/GradientLogo';
-import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import CleanLanguageSelector from '@/components/ui/CleanLanguageSelector';
 import {
   DropdownMenu,
@@ -175,6 +178,33 @@ const Header = () => {
     },
   ];
 
+  const featuresOverview = [
+    {
+      title: "Features Overview",
+      href: "/features-overview",
+      description: "Comprehensive overview of all TherapySync features and capabilities",
+      icon: Star,
+    },
+    {
+      title: "System Health",
+      href: "/system-health",
+      description: "Real-time system monitoring and platform status",
+      icon: Monitor,
+    },
+    {
+      title: "AI Technology Hub",
+      href: "/ai-hub",
+      description: "Deep dive into our AI technology and capabilities",
+      icon: Brain,
+    },
+    {
+      title: "Compare Plans",
+      href: "/compare-plans",
+      description: "Detailed comparison of all subscription plans and features",
+      icon: BarChart3,
+    },
+  ];
+
   const publicNavigation = [
     {
       title: "Therapy & AI",
@@ -190,7 +220,7 @@ const Header = () => {
     },
     {
       title: "Features",
-      href: "/features-overview",
+      items: featuresOverview,
     },
     {
       title: "Pricing",
