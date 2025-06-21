@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -31,6 +30,7 @@ import {
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import GradientLogo from '@/components/ui/GradientLogo';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
+import CleanLanguageSelector from '@/components/ui/CleanLanguageSelector';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,26 +65,26 @@ const Header = () => {
     {
       title: "TherapySync AI",
       href: "/therapysync-ai",
-      description: "Advanced AI-powered therapy platform",
+      description: "Advanced AI-powered therapy platform with voice technology",
       icon: Brain,
     },
     {
       title: "AI Therapy Chat",
       href: "/therapy",
-      description: "Real-time AI therapy conversations",
+      description: "Real-time AI therapy conversations with emotional intelligence",
       icon: MessageCircle,
     },
     {
-      title: "Mood Tracking",
-      href: "/mood-tracking",
-      description: "Monitor your emotional well-being",
-      icon: Heart,
+      title: "Voice Technology",
+      href: "/voice-technology",
+      description: "Experience our advanced voice synthesis and emotion detection",
+      icon: Mic,
     },
     {
-      title: "Session History",
-      href: "/session-history",
-      description: "Review past therapy sessions",
-      icon: FileText,
+      title: "Crisis Management",
+      href: "/crisis-management",
+      description: "24/7 AI-powered crisis detection and intervention",
+      icon: Shield,
     },
   ];
 
@@ -92,20 +92,20 @@ const Header = () => {
     {
       title: "AI Therapist Profiles",
       href: "/therapists",
-      description: "Meet our AI therapists with unique personalities",
+      description: "Meet our AI therapists with unique personalities and specializations",
       icon: Users,
     },
     {
       title: "Therapist Matching",
       href: "/therapist-matching",
-      description: "Find the perfect AI therapist for your needs",
+      description: "AI-powered matching to find your perfect therapist",
       icon: UserCheck,
     },
     {
-      title: "Voice Technology",
-      href: "/therapists",
-      description: "Experience our ElevenLabs voice technology",
-      icon: Mic,
+      title: "Individual Profiles",
+      href: "/therapist-profiles",
+      description: "Detailed profiles with voice samples and specializations",
+      icon: User,
     },
   ];
 
@@ -113,31 +113,31 @@ const Header = () => {
     {
       title: "Techniques Library",
       href: "/techniques",
-      description: "Guided therapeutic techniques and exercises",
+      description: "Comprehensive collection of therapeutic techniques and exercises",
       icon: Sparkles,
     },
     {
       title: "Digital Notebook",
       href: "/notebook",
-      description: "Journal your thoughts and progress",
+      description: "AI-enhanced journaling with insights and progress tracking",
       icon: PenTool,
     },
     {
       title: "Community Support",
       href: "/community",
-      description: "Connect with supportive communities",
+      description: "Connect with supportive communities and peer groups",
       icon: Users,
     },
     {
       title: "Crisis Resources",
       href: "/crisis-resources",
-      description: "24/7 crisis support and resources",
+      description: "Immediate access to crisis support and emergency resources",
       icon: Shield,
     },
     {
       title: "Help Center",
       href: "/help",
-      description: "Get answers and support",
+      description: "Comprehensive guides, tutorials, and support documentation",
       icon: HelpCircle,
     },
   ];
@@ -146,31 +146,31 @@ const Header = () => {
     {
       title: "Main Dashboard",
       href: "/dashboard",
-      description: "Your wellness overview",
+      description: "Your comprehensive wellness overview and progress tracking",
       icon: LayoutDashboard,
     },
     {
       title: "Session Analytics",
       href: "/session-analytics",
-      description: "Detailed analysis of your progress",
+      description: "Detailed AI-powered analysis of your therapy progress",
       icon: BarChart3,
     },
     {
       title: "Goals Tracking",
       href: "/goals",
-      description: "Set and achieve wellness goals",
+      description: "Set, monitor, and achieve your mental wellness goals",
       icon: Target,
     },
     {
       title: "Smart Scheduling",
       href: "/smart-scheduling",
-      description: "AI-powered session scheduling",
+      description: "AI-optimized session scheduling based on your patterns",
       icon: Calendar,
     },
     {
       title: "Enhanced Monitoring",
       href: "/enhanced-monitoring",
-      description: "Advanced progress monitoring",
+      description: "Advanced progress monitoring with predictive insights",
       icon: TrendingUp,
     },
   ];
@@ -189,12 +189,12 @@ const Header = () => {
       items: resourcesFeatures,
     },
     {
-      title: "Pricing",
-      href: "/plans",
+      title: "Features",
+      href: "/features-overview",
     },
     {
-      title: "Compare Plans",
-      href: "/compare-plans",
+      title: "Pricing",
+      href: "/plans",
     },
   ];
 
@@ -276,14 +276,14 @@ const Header = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-3">
-            {/* Language Selector */}
+            {/* Clean Language Selector */}
             <div className="hidden md:flex">
-              <EnhancedLanguageSelector />
+              <CleanLanguageSelector />
             </div>
             
             {user ? (
               <>
-                {/* Quick Access to TherapySync AI */}
+                {/* TherapySync AI Button */}
                 <Button
                   onClick={() => navigate('/therapysync-ai')}
                   className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600 text-white font-medium hidden md:flex"
@@ -345,7 +345,7 @@ const Header = () => {
                   className="border-harmony-300 text-harmony-700 hover:bg-harmony-50"
                 >
                   <Brain className="h-4 w-4 mr-2" />
-                  Try AI
+                  TherapySync AI
                 </Button>
                 <Button
                   onClick={() => navigate('/auth')}

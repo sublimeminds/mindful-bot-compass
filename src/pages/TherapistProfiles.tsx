@@ -1,10 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSEO } from '@/hooks/useSEO';
 import MobileOptimizedLayout from '@/components/mobile/MobileOptimizedLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Play, 
   Pause, 
@@ -21,7 +22,9 @@ import {
   Crown,
   Zap,
   Lock,
-  CheckCircle
+  CheckCircle,
+  Search,
+  Filter
 } from 'lucide-react';
 import { enhancedVoiceService } from '@/services/voiceService';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
@@ -48,21 +51,20 @@ interface TherapistProfile {
 
 const TherapistProfiles = () => {
   const { user } = useSimpleApp();
-  const userPlan: 'free' | 'premium' | 'plus' = user ? 'premium' : 'free'; // Fixed type annotation
+  const userPlan: 'free' | 'premium' | 'plus' = user ? 'premium' : 'free';
   
   useSEO({
     title: 'AI Therapist Profiles - TherapySync',
-    description: 'Meet our AI therapists with unique personalities, specializations, and voice profiles powered by ElevenLabs technology.',
+    description: 'Meet our AI therapists with unique personalities, specializations, and voice profiles.',
     keywords: 'AI therapists, therapy voices, mental health professionals, AI personalities'
   });
 
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasElevenLabsKey, setHasElevenLabsKey] = useState(false);
-
-  useEffect(() => {
-    setHasElevenLabsKey(enhancedVoiceService.hasApiKey());
-  }, []);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [specializationFilter, setSpecializationFilter] = useState('all');
+  const [languageFilter, setLanguageFilter] = useState('all');
+  const [experienceFilter, setExperienceFilter] = useState('all');
 
   const therapists: TherapistProfile[] = [
     {
@@ -219,6 +221,28 @@ const TherapistProfiles = () => {
     }
   ];
 
+  // Get unique values for filters
+  const allSpecializations = Array.from(new Set(therapists.flatMap(t => t.specializations)));
+  const allLanguages = Array.from(new Set(therapists.flatMap(t => t.languages)));
+  const allExperience = Array.from(new Set(therapists.map(t => t.experience)));
+
+  // Filter therapists based on search and filters
+  const filteredTherapists = therapists.filter(therapist => {
+    const matchesSearch = therapist.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         therapist.specializations.some(spec => spec.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesSpecialization = specializationFilter === 'all' || 
+                                 therapist.specializations.some(spec => spec === specializationFilter);
+    
+    const matchesLanguage = languageFilter === 'all' || 
+                           therapist.languages.includes(languageFilter);
+    
+    const matchesExperience = experienceFilter === 'all' || 
+                             therapist.experience === experienceFilter;
+    
+    return matchesSearch && matchesSpecialization && matchesLanguage && matchesExperience;
+  });
+
   const playVoiceSample = async (therapist: TherapistProfile) => {
     if (playingVoice === therapist.id) {
       enhancedVoiceService.stop();
@@ -228,7 +252,12 @@ const TherapistProfiles = () => {
 
     // Check if premium voice requires upgrade
     if (therapist.voiceQuality !== 'standard' && userPlan === 'free') {
-      alert('Premium voice features require a subscription. Please upgrade to access high-quality ElevenLabs voices.');
+      alert('Premium voice features require a subscription. Please upgrade to access high-quality voices.');
+      return;
+    }
+
+    if (therapist.voiceQuality === 'plus' && userPlan !== 'plus') {
+      alert('Plus voice features require a Plus subscription. Please upgrade to access advanced voice analytics.');
       return;
     }
 
@@ -276,52 +305,68 @@ const TherapistProfiles = () => {
               Meet Your AI Therapists
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Each AI therapist has a unique personality, specialization, and voice powered by 
-              ElevenLabs technology. Find the perfect match for your therapy journey.
+              Each AI therapist has a unique personality, specialization, and voice. 
+              Find the perfect match for your therapy journey with advanced filtering options.
             </p>
             
-            {/* ElevenLabs Integration Status */}
-            <div className="flex items-center justify-center space-x-6 text-sm text-muted-foreground mb-6">
-              <div className="flex items-center space-x-2">
-                <Volume2 className="h-4 w-4" />
-                <span>{hasElevenLabsKey ? 'ElevenLabs Enabled' : 'Web Speech Fallback'}</span>
+            {/* Search and Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-6xl mx-auto mb-8">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Search therapists..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
               </div>
-              <div className="flex items-center space-x-2">
-                <Languages className="h-4 w-4" />
-                <span>29 Languages Supported</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Shield className="h-4 w-4" />
-                <span>HIPAA Compliant</span>
-              </div>
+              
+              <Select value={specializationFilter} onValueChange={setSpecializationFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Specialization" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Specializations</SelectItem>
+                  {allSpecializations.map(spec => (
+                    <SelectItem key={spec} value={spec}>{spec}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <Select value={languageFilter} onValueChange={setLanguageFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Language" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Languages</SelectItem>
+                  {allLanguages.map(lang => (
+                    <SelectItem key={lang} value={lang}>{lang}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <Select value={experienceFilter} onValueChange={setExperienceFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Experience" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Experience</SelectItem>
+                  {allExperience.map(exp => (
+                    <SelectItem key={exp} value={exp}>{exp}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            {/* Feature Tier Info */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-8">
-              <Card className="border-gray-200">
-                <CardContent className="p-4 text-center">
-                  <Badge variant="outline" className="mb-2">Free</Badge>
-                  <p className="text-sm text-muted-foreground">Basic Web Speech voices</p>
-                </CardContent>
-              </Card>
-              <Card className="border-blue-200 bg-blue-50">
-                <CardContent className="p-4 text-center">
-                  <Badge className="bg-blue-500 mb-2"><Zap className="h-3 w-3 mr-1" />Premium</Badge>
-                  <p className="text-sm text-muted-foreground">High-quality ElevenLabs voices</p>
-                </CardContent>
-              </Card>
-              <Card className="border-purple-200 bg-purple-50">
-                <CardContent className="p-4 text-center">
-                  <Badge className="bg-purple-500 mb-2"><Crown className="h-3 w-3 mr-1" />Plus</Badge>
-                  <p className="text-sm text-muted-foreground">Premium + Voice analytics & emotion detection</p>
-                </CardContent>
-              </Card>
-            </div>
+            {/* Results Count */}
+            <p className="text-sm text-muted-foreground mb-6">
+              Showing {filteredTherapists.length} of {therapists.length} therapists
+            </p>
           </div>
 
           {/* Therapist Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {therapists.map((therapist) => {
+            {filteredTherapists.map((therapist) => {
               const hasAccess = canAccessTherapist(therapist);
               
               return (
@@ -459,31 +504,25 @@ const TherapistProfiles = () => {
             })}
           </div>
 
-          {/* Voice Technology Info */}
-          <Card className="mt-16 border-0 bg-gradient-to-r from-therapy-500 to-calm-500 text-white">
-            <CardContent className="p-8 text-center">
-              <Volume2 className="h-12 w-12 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold mb-4">Powered by ElevenLabs AI Voice Technology</h2>
-              <p className="text-therapy-100 mb-6 max-w-2xl mx-auto">
-                Our AI therapists use state-of-the-art voice synthesis to create natural, 
-                emotionally aware conversations that adapt to your needs and cultural preferences.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <h3 className="font-semibold mb-2">29 Languages</h3>
-                  <p className="text-sm text-therapy-100">Multi-language support</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Emotion Detection</h3>
-                  <p className="text-sm text-therapy-100">Real-time voice analysis</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Premium Quality</h3>
-                  <p className="text-sm text-therapy-100">Studio-grade voice synthesis</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* No Results */}
+          {filteredTherapists.length === 0 && (
+            <div className="text-center py-16">
+              <Filter className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No therapists found</h3>
+              <p className="text-gray-600 mb-4">Try adjusting your search criteria or filters</p>
+              <Button 
+                onClick={() => {
+                  setSearchTerm('');
+                  setSpecializationFilter('all');
+                  setLanguageFilter('all');
+                  setExperienceFilter('all');
+                }}
+                variant="outline"
+              >
+                Clear Filters
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </MobileOptimizedLayout>
