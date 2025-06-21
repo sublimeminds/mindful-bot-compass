@@ -2,7 +2,6 @@
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
@@ -25,19 +24,37 @@ const queryClient = new QueryClient({
   },
 });
 
+// Safe wrapper component for TooltipProvider
+const SafeTooltipWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Check if React and hooks are available
+  if (!React || typeof React.useState !== 'function') {
+    console.warn('React hooks not available, rendering without tooltips');
+    return <>{children}</>;
+  }
+
+  // Dynamically import TooltipProvider to avoid early initialization issues
+  const { TooltipProvider } = require("@/components/ui/tooltip");
+  
+  return (
+    <TooltipProvider>
+      {children}
+    </TooltipProvider>
+  );
+};
+
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <SimpleAuthProvider>
         <AdminProvider>
           <TherapistProvider>
-            <TooltipProvider>
+            <SafeTooltipWrapper>
               <Toaster />
               <Sonner />
               <BrowserRouter>
                 <AppRouter />
               </BrowserRouter>
-            </TooltipProvider>
+            </SafeTooltipWrapper>
           </TherapistProvider>
         </AdminProvider>
       </SimpleAuthProvider>
