@@ -2,6 +2,7 @@
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
@@ -32,14 +33,16 @@ const SafeTooltipWrapper: React.FC<{ children: React.ReactNode }> = ({ children 
     return <>{children}</>;
   }
 
-  // Dynamically import TooltipProvider to avoid early initialization issues
-  const { TooltipProvider } = require("@/components/ui/tooltip");
-  
-  return (
-    <TooltipProvider>
-      {children}
-    </TooltipProvider>
-  );
+  try {
+    return (
+      <TooltipProvider>
+        {children}
+      </TooltipProvider>
+    );
+  } catch (error) {
+    console.warn('TooltipProvider failed to render, rendering without tooltips:', error);
+    return <>{children}</>;
+  }
 };
 
 const App = () => {
