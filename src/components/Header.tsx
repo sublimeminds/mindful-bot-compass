@@ -29,7 +29,10 @@ import {
   Star,
   Monitor,
   Zap,
-  Globe
+  Globe,
+  Volume2,
+  Eye,
+  Cpu
 } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import GradientLogo from '@/components/ui/GradientLogo';
@@ -81,7 +84,7 @@ const Header = () => {
       title: "Voice Technology",
       href: "/voice-technology",
       description: "Experience our advanced voice synthesis and emotion detection",
-      icon: Mic,
+      icon: Volume2,
     },
     {
       title: "Crisis Management",
@@ -178,12 +181,18 @@ const Header = () => {
     },
   ];
 
-  const featuresOverview = [
+  const platformFeatures = [
     {
       title: "Features Overview",
       href: "/features-overview",
       description: "Comprehensive overview of all TherapySync features and capabilities",
       icon: Star,
+    },
+    {
+      title: "AI Technology Hub",
+      href: "/ai-hub",
+      description: "Deep dive into our AI technology and capabilities",
+      icon: Cpu,
     },
     {
       title: "System Health",
@@ -192,15 +201,24 @@ const Header = () => {
       icon: Monitor,
     },
     {
-      title: "AI Technology Hub",
-      href: "/ai-hub",
-      description: "Deep dive into our AI technology and capabilities",
-      icon: Brain,
+      title: "Compare Plans",
+      href: "/compare-plans",
+      description: "Detailed comparison of all subscription plans and features",
+      icon: BarChart3,
+    },
+  ];
+
+  const pricingFeatures = [
+    {
+      title: "Subscription Plans",
+      href: "/plans",
+      description: "Choose the perfect plan for your mental wellness journey",
+      icon: Crown,
     },
     {
       title: "Compare Plans",
       href: "/compare-plans",
-      description: "Detailed comparison of all subscription plans and features",
+      description: "Side-by-side comparison of features and pricing",
       icon: BarChart3,
     },
   ];
@@ -215,16 +233,16 @@ const Header = () => {
       items: therapistFeatures,
     },
     {
+      title: "Platform",
+      items: platformFeatures,
+    },
+    {
       title: "Resources",
       items: resourcesFeatures,
     },
     {
-      title: "Features",
-      items: featuresOverview,
-    },
-    {
       title: "Pricing",
-      href: "/plans",
+      items: pricingFeatures,
     },
   ];
 
@@ -266,39 +284,28 @@ const Header = () => {
             <NavigationMenuList>
               {navigationItems.map((item) => (
                 <NavigationMenuItem key={item.title}>
-                  {item.items ? (
-                    <>
-                      <NavigationMenuTrigger className="h-10 px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                        {item.title}
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent>
-                        <div className="grid w-[500px] gap-3 p-6 md:w-[600px] md:grid-cols-2 lg:w-[700px] bg-white border border-gray-200 shadow-lg rounded-md z-50">
-                          {item.items.map((subItem) => (
-                            <NavigationMenuLink
-                              key={subItem.title}
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
-                              onClick={() => navigate(subItem.href)}
-                            >
-                              <div className="flex items-center space-x-2 mb-2">
-                                <subItem.icon className="h-4 w-4 text-harmony-600" />
-                                <div className="text-sm font-medium leading-none">{subItem.title}</div>
-                              </div>
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                {subItem.description}
-                              </p>
-                            </NavigationMenuLink>
-                          ))}
-                        </div>
-                      </NavigationMenuContent>
-                    </>
-                  ) : (
-                    <NavigationMenuLink
-                      className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 cursor-pointer"
-                      onClick={() => navigate(item.href || '')}
-                    >
-                      {item.title}
-                    </NavigationMenuLink>
-                  )}
+                  <NavigationMenuTrigger className="h-10 px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
+                    {item.title}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="grid w-[500px] gap-3 p-6 md:w-[600px] md:grid-cols-2 lg:w-[700px] bg-white border border-gray-200 shadow-lg rounded-md z-50">
+                      {item.items.map((subItem) => (
+                        <NavigationMenuLink
+                          key={subItem.title}
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                          onClick={() => navigate(subItem.href)}
+                        >
+                          <div className="flex items-center space-x-2 mb-2">
+                            <subItem.icon className="h-4 w-4 text-harmony-600" />
+                            <div className="text-sm font-medium leading-none">{subItem.title}</div>
+                          </div>
+                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            {subItem.description}
+                          </p>
+                        </NavigationMenuLink>
+                      ))}
+                    </div>
+                  </NavigationMenuContent>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>

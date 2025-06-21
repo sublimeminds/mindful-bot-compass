@@ -32,6 +32,11 @@ import Analytics from '@/pages/Analytics';
 import SessionHistory from '@/pages/SessionHistory';
 import TherapistProfiles from '@/pages/TherapistProfiles';
 import ComparePlans from '@/pages/ComparePlans';
+import VoiceTechnology from '@/pages/VoiceTechnology';
+import CrisisManagement from '@/pages/CrisisManagement';
+import TherapistMatching from '@/pages/TherapistMatching';
+import SystemHealth from '@/pages/SystemHealth';
+import AIHub from '@/pages/AIHub';
 
 const AppRouter = () => {
   return (
@@ -53,6 +58,7 @@ const AppRouter = () => {
       <Route path="/session-history" element={<SessionHistory />} />
       <Route path="/therapy" element={<TherapyChat />} />
       <Route path="/crisis-resources" element={<CrisisResources />} />
+      <Route path="/crisis-management" element={<CrisisManagement />} />
       <Route path="/admin/crisis-management" element={<AdminCrisisManagement />} />
       <Route path="/community" element={<Community />} />
       <Route path="/notebook" element={<NotebookPage />} />
@@ -63,6 +69,11 @@ const AppRouter = () => {
       <Route path="/plans" element={<Plans />} />
       <Route path="/compare-plans" element={<ComparePlans />} />
       <Route path="/therapists" element={<TherapistProfiles />} />
+      <Route path="/therapist-profiles" element={<TherapistProfiles />} />
+      <Route path="/therapist-matching" element={<TherapistMatching />} />
+      <Route path="/voice-technology" element={<VoiceTechnology />} />
+      <Route path="/system-health" element={<SystemHealth />} />
+      <Route path="/ai-hub" element={<AIHub />} />
       <Route path="/therapysync-ai" element={<TherapySyncAI />} />
       <Route path="/features-overview" element={<FeaturesOverview />} />
       <Route path="/enhanced-monitoring" element={<EnhancedMonitoringPage />} />
