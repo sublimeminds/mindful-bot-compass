@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useSEO } from '@/hooks/useSEO';
 import MobileOptimizedLayout from '@/components/mobile/MobileOptimizedLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,6 +28,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { profileImageService } from '@/services/profileImageService';
+import { subscriptionService } from '@/services/subscriptionService';
 
 interface Therapist {
   id: string;
@@ -43,6 +44,18 @@ interface Therapist {
   voiceSampleUrl?: string;
   videoIntroUrl?: string;
   profileImageUrl?: string;
+  background?: string;
+  reviews?: TherapistReview[];
+  averageRating?: number;
+}
+
+interface TherapistReview {
+  id: string;
+  userId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
 }
 
 const therapistsData: Therapist[] = [
@@ -51,6 +64,7 @@ const therapistsData: Therapist[] = [
     name: 'Dr. Sarah Chen',
     title: 'Cognitive Behavioral Therapist',
     description: 'Specializes in anxiety and depression using evidence-based CBT techniques with a warm, supportive approach.',
+    background: 'Dr. Sarah Chen brings over 15 years of clinical experience to TherapySync. She completed her Ph.D. in Clinical Psychology at Stanford University and specialized training in Cognitive Behavioral Therapy at the Beck Institute. Dr. Chen has worked extensively with individuals struggling with anxiety disorders, depression, and stress-related conditions. Her approach combines evidence-based CBT techniques with mindfulness practices, creating a warm and supportive therapeutic environment. She believes in empowering clients with practical tools they can use in their daily lives. Dr. Chen has published research on the effectiveness of digital CBT interventions and is passionate about making mental health care more accessible through technology. Her multicultural background allows her to work effectively with diverse populations, and she speaks fluent English, Mandarin, and Cantonese.',
     approach: 'Cognitive Behavioral Therapy',
     specialties: ['Anxiety', 'Depression', 'Stress Management', 'CBT'],
     communicationStyle: 'Warm, direct, and solution-focused',
@@ -59,13 +73,33 @@ const therapistsData: Therapist[] = [
     tier: 'premium',
     voiceSampleUrl: '/audio/sample-voice-1.mp3',
     videoIntroUrl: '/videos/sample-video-1.mp4',
-    profileImageUrl: '/images/therapist-1.jpg'
+    profileImageUrl: '/images/therapist-1.jpg',
+    averageRating: 4.8,
+    reviews: [
+      {
+        id: '1',
+        userId: 'user1',
+        userName: 'Jennifer M.',
+        rating: 5,
+        comment: 'Dr. Chen helped me overcome my anxiety with practical CBT techniques. Her warm approach made me feel comfortable from day one.',
+        createdAt: '2024-01-15'
+      },
+      {
+        id: '2',
+        userId: 'user2',
+        userName: 'Mark T.',
+        rating: 5,
+        comment: 'Outstanding therapist. The CBT tools she taught me have been life-changing for managing my depression.',
+        createdAt: '2024-01-10'
+      }
+    ]
   },
   {
     id: '2',
     name: 'Dr. Michael Rodriguez',
     title: 'Trauma Specialist',
     description: 'Expert in trauma-informed care and EMDR therapy for PTSD treatment with a gentle, patient-centered approach.',
+    background: 'Dr. Michael Rodriguez is a licensed clinical psychologist with specialized expertise in trauma therapy and EMDR (Eye Movement Desensitization and Reprocessing). He earned his doctorate from UCLA and completed advanced training at the EMDR International Association. With over 12 years of experience treating trauma survivors, Dr. Rodriguez has worked with veterans, first responders, and civilians who have experienced various forms of trauma. His gentle, patient-centered approach creates a safe space for healing. He is bilingual in English and Spanish and has extensive experience working with diverse communities. Dr. Rodriguez is certified in multiple trauma therapies including EMDR, Trauma-Focused CBT, and Somatic Experiencing. He believes in the resilience of the human spirit and works collaboratively with clients to help them reclaim their lives after trauma.',
     approach: 'EMDR Therapy',
     specialties: ['Trauma', 'PTSD', 'EMDR', 'Crisis Intervention'],
     communicationStyle: 'Gentle, patient, and trauma-informed',
@@ -74,7 +108,18 @@ const therapistsData: Therapist[] = [
     tier: 'plus',
     voiceSampleUrl: '/audio/sample-voice-2.mp3',
     videoIntroUrl: '/videos/sample-video-2.mp4',
-    profileImageUrl: '/images/therapist-2.jpg'
+    profileImageUrl: '/images/therapist-2.jpg',
+    averageRating: 4.9,
+    reviews: [
+      {
+        id: '3',
+        userId: 'user3',
+        userName: 'Sarah K.',
+        rating: 5,
+        comment: 'Dr. Rodriguez helped me process my trauma with such care and expertise. EMDR therapy with him was transformative.',
+        createdAt: '2024-01-20'
+      }
+    ]
   },
   {
     id: '3',
@@ -141,16 +186,36 @@ const therapistsData: Therapist[] = [
 const TherapistProfiles = () => {
   const { user } = useSimpleApp();
   const navigate = useNavigate();
+  const [userPlan, setUserPlan] = useState<string>('free');
   
-  const userPlan = user?.subscription?.plan || 'free';
-  const hasStandardAccess = userPlan === 'free' || userPlan === 'premium' || userPlan === 'plus';
-  const hasPremiumAccess = userPlan === 'premium' || userPlan === 'plus';
-  const hasPlusAccess = userPlan === 'plus';
-
   const [searchTerm, setSearchTerm] = useState('');
   const [specialtyFilter, setSpecialtyFilter] = useState('');
   const [accessLevel, setAccessLevel] = useState('all');
   const [therapists, setTherapists] = useState(therapistsData);
+
+  // Fetch user subscription data
+  useEffect(() => {
+    const fetchUserSubscription = async () => {
+      if (user?.id) {
+        const subscription = await subscriptionService.getUserSubscription(user.id);
+        if (subscription) {
+          // Map subscription plan names to our tier system
+          const planMapping: Record<string, string> = {
+            'Free': 'free',
+            'Basic': 'premium', 
+            'Premium': 'plus'
+          };
+          setUserPlan(planMapping[subscription.planId] || 'free');
+        }
+      }
+    };
+
+    fetchUserSubscription();
+  }, [user]);
+
+  const hasStandardAccess = userPlan === 'free' || userPlan === 'premium' || userPlan === 'plus';
+  const hasPremiumAccess = userPlan === 'premium' || userPlan === 'plus';
+  const hasPlusAccess = userPlan === 'plus';
 
   const specialties = useMemo(() => {
     const allSpecialties = therapists.reduce((acc: string[], therapist) => {
@@ -205,8 +270,17 @@ const TherapistProfiles = () => {
     return false;
   };
 
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star
+        key={i}
+        className={`h-4 w-4 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+      />
+    ));
+  };
+
   const renderTherapistCard = (therapist: Therapist) => {
-    const IconComponent = therapist.icon ? (Brain as any)[therapist.icon] : Brain;
+    const canAccess = canAccessTherapist(therapist.tier);
 
     return (
       <Card key={therapist.id} className="relative">
@@ -236,6 +310,18 @@ const TherapistProfiles = () => {
           </div>
           <CardTitle className="text-xl font-bold text-center">{therapist.name}</CardTitle>
           <p className="text-muted-foreground text-center">{therapist.title}</p>
+          
+          {/* Rating Display */}
+          {therapist.averageRating && (
+            <div className="flex justify-center items-center space-x-2 mt-2">
+              <div className="flex">
+                {renderStars(Math.round(therapist.averageRating))}
+              </div>
+              <span className="text-sm text-muted-foreground">
+                {therapist.averageRating} ({therapist.reviews?.length || 0} reviews)
+              </span>
+            </div>
+          )}
         </CardHeader>
         <CardContent className="text-center">
           <p className="text-sm text-muted-foreground mb-4">{therapist.description}</p>
@@ -246,22 +332,38 @@ const TherapistProfiles = () => {
               </Badge>
             ))}
           </div>
-          <div className="flex justify-center space-x-4">
-            {therapist.voiceSampleUrl && (
-              <Button variant="outline" size="icon">
-                <Volume2 className="h-4 w-4" />
+          
+          {canAccess ? (
+            <div className="flex justify-center space-x-4">
+              {therapist.voiceSampleUrl && (
+                <Button variant="outline" size="icon">
+                  <Volume2 className="h-4 w-4" />
+                </Button>
+              )}
+              {therapist.videoIntroUrl && (
+                <Button variant="outline" size="icon">
+                  <Play className="h-4 w-4" />
+                </Button>
+              )}
+              <Button onClick={() => navigate('/therapy')} className="bg-gradient-to-r from-therapy-500 to-calm-500 text-white">
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Chat with {therapist.name.split(' ')[1]}
               </Button>
-            )}
-            {therapist.videoIntroUrl && (
-              <Button variant="outline" size="icon">
-                <Play className="h-4 w-4" />
+            </div>
+          ) : (
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground mb-3">
+                {therapist.tier === 'premium' ? 'Premium Plan Required' : 'Plus Plan Required'}
+              </p>
+              <Button 
+                onClick={() => navigate('/plans')} 
+                className="bg-gradient-to-r from-therapy-500 to-calm-500 text-white"
+              >
+                <Crown className="h-4 w-4 mr-2" />
+                Upgrade to Access
               </Button>
-            )}
-            <Button onClick={() => navigate('/therapy')} className="bg-gradient-to-r from-therapy-500 to-calm-500 text-white">
-              <MessageCircle className="h-4 w-4 mr-2" />
-              Chat with {therapist.name.split(' ')[1]}
-            </Button>
-          </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     );
