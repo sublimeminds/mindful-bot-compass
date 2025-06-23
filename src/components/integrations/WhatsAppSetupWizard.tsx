@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/SimpleAuthProvider';
+import { supabase } from '@/integrations/supabase/client';
 import { Smartphone, MessageSquare, CheckCircle, QrCode, ArrowRight, ArrowLeft } from 'lucide-react';
 
 interface WhatsAppSetupWizardProps {
@@ -32,21 +33,16 @@ const WhatsAppSetupWizard = ({ onComplete, onCancel }: WhatsAppSetupWizardProps)
   const requestVerification = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/functions/v1/whatsapp-verify-phone', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${(await user?.getSession())?.access_token}`
-        },
-        body: JSON.stringify({
+      const { data, error } = await supabase.functions.invoke('whatsapp-verify-phone', {
+        body: {
           phoneNumber: phoneNumber,
           userId: user?.id
-        })
+        }
       });
 
-      const data = await response.json();
+      if (error) throw error;
       
-      if (data.success) {
+      if (data?.success) {
         setIntegrationId(data.integrationId);
         // In development, show the verification code
         if (data.verificationCode) {
