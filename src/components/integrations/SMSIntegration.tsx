@@ -65,7 +65,9 @@ const SMSIntegration = () => {
 
       if (data) {
         setIsConnected(data.is_enabled);
-        setSettings(data.settings || settings);
+        if (data.settings && typeof data.settings === 'object') {
+          setSettings({ ...settings, ...(data.settings as Partial<SMSSettings>) });
+        }
       }
     } catch (error) {
       console.error('Error loading SMS integration:', error);
@@ -99,10 +101,10 @@ const SMSIntegration = () => {
       const { error } = await supabase
         .from('user_integrations')
         .upsert({
-          user_id: user?.id,
+          user_id: user?.id!,
           integration_id: integration.id,
           is_enabled: true,
-          settings: settings
+          settings: settings as any
         });
 
       if (error) throw error;
@@ -166,7 +168,7 @@ const SMSIntegration = () => {
 
       const { error } = await supabase
         .from('user_integrations')
-        .update({ settings: updatedSettings })
+        .update({ settings: updatedSettings as any })
         .eq('user_id', user?.id)
         .eq('integration_id', integration?.id);
 

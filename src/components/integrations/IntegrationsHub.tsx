@@ -19,10 +19,11 @@ import {
   Plus,
   ExternalLink
 } from 'lucide-react';
-import APIManagement from './APIManagement';
+import EnhancedAPIManagement from './EnhancedAPIManagement';
 import SMSIntegration from './SMSIntegration';
 import CalendarIntegration from './CalendarIntegration';
-import HealthIntegration from './HealthIntegration';
+import AdvancedHealthIntegration from './AdvancedHealthIntegration';
+import VideoIntegration from './VideoIntegration';
 
 interface Integration {
   id: string;
@@ -262,7 +263,7 @@ const IntegrationsHub = () => {
               <IntegrationCard key={integration.id} integration={integration} />
             ))}
           </div>
-          <HealthIntegration />
+          <AdvancedHealthIntegration />
         </TabsContent>
 
         <TabsContent value="video" className="space-y-4">
@@ -271,10 +272,11 @@ const IntegrationsHub = () => {
               <IntegrationCard key={integration.id} integration={integration} />
             ))}
           </div>
+          <VideoIntegration />
         </TabsContent>
 
         <TabsContent value="api" className="space-y-4">
-          <APIManagement />
+          <EnhancedAPIManagement />
         </TabsContent>
 
         <TabsContent value="crisis" className="space-y-4">
