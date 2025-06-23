@@ -26,7 +26,8 @@ import {
   Star,
   Monitor,
   Cpu,
-  Menu
+  Menu,
+  ChevronDown
 } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import GradientLogo from '@/components/ui/GradientLogo';
@@ -39,14 +40,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel
 } from '@/components/ui/dropdown-menu';
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu';
 
 const Header = () => {
   const { user, logout } = useSimpleApp();
@@ -61,205 +54,26 @@ const Header = () => {
     }
   };
 
-  const therapyFeatures = [
-    {
-      title: "TherapySync AI",
-      href: "/therapysync-ai",
-      description: "Advanced AI-powered therapy platform with voice technology",
-      icon: Brain,
-    },
-    {
-      title: "AI Therapy Chat",
-      href: "/therapy",
-      description: "Real-time AI therapy conversations with emotional intelligence",
-      icon: MessageCircle,
-    },
-    {
-      title: "Voice Technology",
-      href: "/voice-technology",
-      description: "Experience our advanced voice synthesis and emotion detection",
-      icon: Volume2,
-    },
-    {
-      title: "Crisis Management",
-      href: "/crisis-management",
-      description: "24/7 AI-powered crisis detection and intervention",
-      icon: Shield,
-    },
+  const therapyItems = [
+    { title: "TherapySync AI", href: "/therapysync-ai", icon: Brain },
+    { title: "AI Therapy Chat", href: "/therapy", icon: MessageCircle },
+    { title: "Voice Technology", href: "/voice-technology", icon: Volume2 },
+    { title: "Crisis Management", href: "/crisis-management", icon: Shield },
   ];
 
-  const therapistFeatures = [
-    {
-      title: "AI Therapist Profiles",
-      href: "/therapists",
-      description: "Meet our AI therapists with unique personalities and specializations",
-      icon: Users,
-    },
-    {
-      title: "Therapist Matching",
-      href: "/therapist-matching",
-      description: "AI-powered matching to find your perfect therapist",
-      icon: UserCheck,
-    },
-    {
-      title: "Individual Profiles",
-      href: "/therapist-profiles",
-      description: "Detailed profiles with voice samples and specializations",
-      icon: User,
-    },
+  const resourcesItems = [
+    { title: "Techniques Library", href: "/techniques", icon: Sparkles },
+    { title: "Digital Notebook", href: "/notebook", icon: PenTool },
+    { title: "Community Support", href: "/community", icon: Users },
+    { title: "Help Center", href: "/help", icon: HelpCircle },
   ];
 
-  const resourcesFeatures = [
-    {
-      title: "Techniques Library",
-      href: "/techniques",
-      description: "Comprehensive collection of therapeutic techniques and exercises",
-      icon: Sparkles,
-    },
-    {
-      title: "Digital Notebook",
-      href: "/notebook",
-      description: "AI-enhanced journaling with insights and progress tracking",
-      icon: PenTool,
-    },
-    {
-      title: "Community Support",
-      href: "/community",
-      description: "Connect with supportive communities and peer groups",
-      icon: Users,
-    },
-    {
-      title: "Crisis Resources",
-      href: "/crisis-resources",
-      description: "Immediate access to crisis support and emergency resources",
-      icon: Shield,
-    },
-    {
-      title: "Help Center",
-      href: "/help",
-      description: "Comprehensive guides, tutorials, and support documentation",
-      icon: HelpCircle,
-    },
-  ];
-
-  const dashboardFeatures = [
-    {
-      title: "Main Dashboard",
-      href: "/dashboard",
-      description: "Your comprehensive wellness overview and progress tracking",
-      icon: LayoutDashboard,
-    },
-    {
-      title: "Session Analytics",
-      href: "/session-analytics",
-      description: "Detailed AI-powered analysis of your therapy progress",
-      icon: BarChart3,
-    },
-    {
-      title: "Goals Tracking",
-      href: "/goals",
-      description: "Set, monitor, and achieve your mental wellness goals",
-      icon: Target,
-    },
-    {
-      title: "Smart Scheduling",
-      href: "/smart-scheduling",
-      description: "AI-optimized session scheduling based on your patterns",
-      icon: Calendar,
-    },
-    {
-      title: "Enhanced Monitoring",
-      href: "/enhanced-monitoring",
-      description: "Advanced progress monitoring with predictive insights",
-      icon: TrendingUp,
-    },
-  ];
-
-  const platformFeatures = [
-    {
-      title: "Features Overview",
-      href: "/features-overview",
-      description: "Comprehensive overview of all TherapySync features and capabilities",
-      icon: Star,
-    },
-    {
-      title: "AI Technology Hub",
-      href: "/ai-hub",
-      description: "Deep dive into our AI technology and capabilities",
-      icon: Cpu,
-    },
-    {
-      title: "System Health",
-      href: "/system-health",
-      description: "Real-time system monitoring and platform status",
-      icon: Monitor,
-    },
-    {
-      title: "Compare Plans",
-      href: "/compare-plans",
-      description: "Detailed comparison of all subscription plans and features",
-      icon: BarChart3,
-    },
-  ];
-
-  const pricingFeatures = [
-    {
-      title: "Subscription Plans",
-      href: "/plans",
-      description: "Choose the perfect plan for your mental wellness journey",
-      icon: Crown,
-    },
-    {
-      title: "Compare Plans",
-      href: "/compare-plans",
-      description: "Side-by-side comparison of features and pricing",
-      icon: BarChart3,
-    },
-  ];
-
-  const publicNavigation = [
-    {
-      title: "Therapy & AI",
-      items: therapyFeatures,
-    },
-    {
-      title: "Therapists",
-      items: therapistFeatures,
-    },
-    {
-      title: "Platform",
-      items: platformFeatures,
-    },
-    {
-      title: "Resources",
-      items: resourcesFeatures,
-    },
-    {
-      title: "Pricing",
-      items: pricingFeatures,
-    },
-  ];
-
-  const authenticatedNavigation = [
-    {
-      title: "Therapy & AI",
-      items: therapyFeatures,
-    },
-    {
-      title: "Therapists",
-      items: therapistFeatures,
-    },
-    {
-      title: "Dashboard",
-      items: dashboardFeatures,
-    },
-    {
-      title: "Resources",
-      items: resourcesFeatures,
-    },
-  ];
-
-  const navigationItems = user ? authenticatedNavigation : publicNavigation;
+  const dashboardItems = user ? [
+    { title: "Main Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { title: "Session Analytics", href: "/session-analytics", icon: BarChart3 },
+    { title: "Goals Tracking", href: "/goals", icon: Target },
+    { title: "Smart Scheduling", href: "/smart-scheduling", icon: Calendar },
+  ] : [];
 
   return (
     <header className="bg-white/95 backdrop-blur-md border-b border-harmony-200 sticky top-0 z-50">
@@ -273,53 +87,85 @@ const Header = () => {
             </span>
           </Link>
 
-          {/* Navigation - Desktop */}
-          <div className="hidden lg:flex">
-            <NavigationMenu>
-              <NavigationMenuList>
-                {navigationItems.map((item) => (
-                  <NavigationMenuItem key={item.title}>
-                    <NavigationMenuTrigger className="h-10 px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                      {item.title}
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <div className="grid w-[500px] gap-3 p-6 md:w-[600px] md:grid-cols-2 lg:w-[700px] bg-white border border-gray-200 shadow-lg rounded-md z-50">
-                        {item.items.map((subItem) => (
-                          <NavigationMenuLink
-                            key={subItem.title}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
-                            onClick={() => navigate(subItem.href)}
-                          >
-                            <div className="flex items-center space-x-2 mb-2">
-                              <subItem.icon className="h-4 w-4 text-harmony-600" />
-                              <div className="text-sm font-medium leading-none">{subItem.title}</div>
-                            </div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              {subItem.description}
-                            </p>
-                          </NavigationMenuLink>
-                        ))}
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
+          {/* Desktop Navigation - Hidden on mobile, visible on medium screens and up */}
+          <div className="hidden md:flex items-center space-x-1">
+            {/* Therapy Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-10 px-4 py-2 text-sm font-medium">
+                  Therapy
+                  <ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 bg-white border border-gray-200 shadow-lg z-50">
+                {therapyItems.map((item) => (
+                  <DropdownMenuItem key={item.title} onClick={() => navigate(item.href)}>
+                    <item.icon className="h-4 w-4 mr-2" />
+                    {item.title}
+                  </DropdownMenuItem>
                 ))}
-              </NavigationMenuList>
-            </NavigationMenu>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Dashboard Dropdown - Only show for authenticated users */}
+            {user && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-10 px-4 py-2 text-sm font-medium">
+                    Dashboard
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 bg-white border border-gray-200 shadow-lg z-50">
+                  {dashboardItems.map((item) => (
+                    <DropdownMenuItem key={item.title} onClick={() => navigate(item.href)}>
+                      <item.icon className="h-4 w-4 mr-2" />
+                      {item.title}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {/* Resources Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-10 px-4 py-2 text-sm font-medium">
+                  Resources
+                  <ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 bg-white border border-gray-200 shadow-lg z-50">
+                {resourcesItems.map((item) => (
+                  <DropdownMenuItem key={item.title} onClick={() => navigate(item.href)}>
+                    <item.icon className="h-4 w-4 mr-2" />
+                    {item.title}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Pricing - Simple link for non-authenticated users */}
+            {!user && (
+              <Button variant="ghost" onClick={() => navigate('/plans')} className="h-10 px-4 py-2 text-sm font-medium">
+                Pricing
+              </Button>
+            )}
           </div>
 
           {/* User Actions */}
           <div className="flex items-center space-x-3">
-            {/* Clean Language Selector */}
-            <div className="hidden md:flex">
+            {/* Clean Language Selector - Hidden on small screens */}
+            <div className="hidden lg:flex">
               <CleanLanguageSelector />
             </div>
             
             {user ? (
               <>
-                {/* TherapySync AI Button */}
+                {/* TherapySync AI Button - Hidden on very small screens */}
                 <Button
                   onClick={() => navigate('/therapysync-ai')}
-                  className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600 text-white font-medium hidden md:flex"
+                  className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600 text-white font-medium hidden sm:flex"
                 >
                   <Brain className="h-4 w-4 mr-2" />
                   TherapySync AI
@@ -375,7 +221,7 @@ const Header = () => {
                   onClick={() => navigate('/therapysync-ai')}
                   variant="outline"
                   size="sm"
-                  className="border-harmony-300 text-harmony-700 hover:bg-harmony-50"
+                  className="border-harmony-300 text-harmony-700 hover:bg-harmony-50 hidden sm:flex"
                 >
                   <Brain className="h-4 w-4 mr-2" />
                   TherapySync AI
@@ -384,6 +230,7 @@ const Header = () => {
                   onClick={() => navigate('/auth')}
                   variant="ghost"
                   size="sm"
+                  className="hidden sm:inline-flex"
                 >
                   Sign In
                 </Button>
@@ -397,8 +244,8 @@ const Header = () => {
               </div>
             )}
 
-            {/* Mobile Menu Button */}
-            <div className="lg:hidden">
+            {/* Mobile Menu Button - Only visible on small screens */}
+            <div className="md:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm">
@@ -406,18 +253,45 @@ const Header = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg z-50">
-                  {navigationItems.map((item) => (
-                    <div key={item.title}>
-                      <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
-                      {item.items.slice(0, 3).map((subItem) => (
-                        <DropdownMenuItem key={subItem.title} onClick={() => navigate(subItem.href)}>
-                          <subItem.icon className="h-4 w-4 mr-2" />
-                          {subItem.title}
+                  <DropdownMenuLabel>Therapy</DropdownMenuLabel>
+                  {therapyItems.slice(0, 3).map((item) => (
+                    <DropdownMenuItem key={item.title} onClick={() => navigate(item.href)}>
+                      <item.icon className="h-4 w-4 mr-2" />
+                      {item.title}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  
+                  {user && (
+                    <>
+                      <DropdownMenuLabel>Dashboard</DropdownMenuLabel>
+                      {dashboardItems.slice(0, 3).map((item) => (
+                        <DropdownMenuItem key={item.title} onClick={() => navigate(item.href)}>
+                          <item.icon className="h-4 w-4 mr-2" />
+                          {item.title}
                         </DropdownMenuItem>
                       ))}
                       <DropdownMenuSeparator />
-                    </div>
+                    </>
+                  )}
+                  
+                  <DropdownMenuLabel>Resources</DropdownMenuLabel>
+                  {resourcesItems.slice(0, 3).map((item) => (
+                    <DropdownMenuItem key={item.title} onClick={() => navigate(item.href)}>
+                      <item.icon className="h-4 w-4 mr-2" />
+                      {item.title}
+                    </DropdownMenuItem>
                   ))}
+                  
+                  {!user && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => navigate('/plans')}>
+                        <Crown className="h-4 w-4 mr-2" />
+                        Pricing
+                      </DropdownMenuItem>
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
