@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -24,14 +23,14 @@ import {
   Crown
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useSEO } from '@/hooks/useSEO';
+import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const Index = () => {
   const navigate = useNavigate();
   
-  useSEO({
+  useSafeSEO({
     title: 'TherapySync - AI-Powered Mental Health Platform',
     description: 'Transform your mental health journey with AI-powered therapy, advanced voice technology, and personalized care.',
     keywords: 'AI therapy, mental health, voice technology, personalized therapy, crisis management'
