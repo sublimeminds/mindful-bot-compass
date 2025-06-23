@@ -24,6 +24,7 @@ const queryClient = new QueryClient({
   },
 });
 
+// Fallback App component (only used when loaded via FullApp)
 const App = () => {
   console.log('App: Starting React application...');
 
