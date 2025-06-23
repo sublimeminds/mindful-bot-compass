@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
-import Header from '@/components/Header';
+import SimpleHeader from '@/components/SimpleHeader';
 import Footer from '@/components/Footer';
 
 const Index = () => {
@@ -102,7 +102,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50">
-      <Header />
+      <SimpleHeader />
       
       {/* Hero Section */}
       <section className="relative py-20 lg:py-32">

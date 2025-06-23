@@ -5,8 +5,11 @@ import { BrowserRouter } from "react-router-dom";
 import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
 import AppRouter from "@/components/AppRouter";
 import SimpleErrorBoundary from "@/components/SimpleErrorBoundary";
+import { initI18nSafely } from "@/i18n/safeInit";
 import "./App.css";
-import './i18n';
+
+// Initialize i18n safely before React renders
+initI18nSafely();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,6 +25,8 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
+  console.log('App: Starting React application...');
+
   return (
     <SimpleErrorBoundary>
       <QueryClientProvider client={queryClient}>
