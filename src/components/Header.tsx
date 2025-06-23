@@ -9,7 +9,6 @@ import {
   LogOut, 
   Settings,
   Brain,
-  BookOpen,
   Users,
   BarChart3,
   Heart,
@@ -22,17 +21,12 @@ import {
   Sparkles,
   Shield,
   Crown,
-  Mic,
-  FileText,
+  Volume2,
   UserCheck,
-  Award,
   Star,
   Monitor,
-  Zap,
-  Globe,
-  Volume2,
-  Eye,
-  Cpu
+  Cpu,
+  Menu
 } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import GradientLogo from '@/components/ui/GradientLogo';
@@ -279,37 +273,39 @@ const Header = () => {
             </span>
           </Link>
 
-          {/* Navigation */}
-          <NavigationMenu className="hidden lg:flex">
-            <NavigationMenuList>
-              {navigationItems.map((item) => (
-                <NavigationMenuItem key={item.title}>
-                  <NavigationMenuTrigger className="h-10 px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                    {item.title}
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid w-[500px] gap-3 p-6 md:w-[600px] md:grid-cols-2 lg:w-[700px] bg-white border border-gray-200 shadow-lg rounded-md z-50">
-                      {item.items.map((subItem) => (
-                        <NavigationMenuLink
-                          key={subItem.title}
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
-                          onClick={() => navigate(subItem.href)}
-                        >
-                          <div className="flex items-center space-x-2 mb-2">
-                            <subItem.icon className="h-4 w-4 text-harmony-600" />
-                            <div className="text-sm font-medium leading-none">{subItem.title}</div>
-                          </div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {subItem.description}
-                          </p>
-                        </NavigationMenuLink>
-                      ))}
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+          {/* Navigation - Desktop */}
+          <div className="hidden lg:flex">
+            <NavigationMenu>
+              <NavigationMenuList>
+                {navigationItems.map((item) => (
+                  <NavigationMenuItem key={item.title}>
+                    <NavigationMenuTrigger className="h-10 px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
+                      {item.title}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="grid w-[500px] gap-3 p-6 md:w-[600px] md:grid-cols-2 lg:w-[700px] bg-white border border-gray-200 shadow-lg rounded-md z-50">
+                        {item.items.map((subItem) => (
+                          <NavigationMenuLink
+                            key={subItem.title}
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                            onClick={() => navigate(subItem.href)}
+                          >
+                            <div className="flex items-center space-x-2 mb-2">
+                              <subItem.icon className="h-4 w-4 text-harmony-600" />
+                              <div className="text-sm font-medium leading-none">{subItem.title}</div>
+                            </div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              {subItem.description}
+                            </p>
+                          </NavigationMenuLink>
+                        ))}
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
 
           {/* User Actions */}
           <div className="flex items-center space-x-3">
@@ -400,6 +396,31 @@ const Header = () => {
                 </Button>
               </div>
             )}
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg z-50">
+                  {navigationItems.map((item) => (
+                    <div key={item.title}>
+                      <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
+                      {item.items.slice(0, 3).map((subItem) => (
+                        <DropdownMenuItem key={subItem.title} onClick={() => navigate(subItem.href)}>
+                          <subItem.icon className="h-4 w-4 mr-2" />
+                          {subItem.title}
+                        </DropdownMenuItem>
+                      ))}
+                      <DropdownMenuSeparator />
+                    </div>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
       </div>
