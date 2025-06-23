@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User } from '@supabase/supabase-js';
 
@@ -26,16 +26,10 @@ interface AuthProviderProps {
 }
 
 export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // Ensure React is available before using hooks
-  if (!React || typeof React.useState !== 'function') {
-    console.error('React is not properly initialized');
-    return React.createElement('div', {}, 'Loading...');
-  }
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const [user, setUser] = React.useState<User | null>(null);
-  const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
+  useEffect(() => {
     console.log('SimpleAuthProvider: Initializing auth...');
     
     // Get initial session
@@ -120,5 +114,9 @@ export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) =>
 
   console.log('SimpleAuthProvider: Rendering with user:', user ? 'Authenticated' : 'Not authenticated', 'loading:', loading);
 
-  return React.createElement(AuthContext.Provider, { value }, children);
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

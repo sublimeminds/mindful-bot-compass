@@ -1,13 +1,41 @@
 
-import React, { ReactNode } from 'react';
-import { TherapistProvider } from '@/contexts/TherapistContext';
+import React, { createContext, useContext } from 'react';
 
-interface Props {
-  children: ReactNode;
+interface TherapistContextType {
+  selectedTherapist: string | null;
+  setSelectedTherapist: (id: string) => void;
 }
 
-const SimpleTherapistProvider: React.FC<Props> = ({ children }) => {
-  return <TherapistProvider>{children}</TherapistProvider>;
+const TherapistContext = createContext<TherapistContextType | undefined>(undefined);
+
+export const useTherapist = () => {
+  const context = useContext(TherapistContext);
+  if (!context) {
+    throw new Error('useTherapist must be used within a TherapistProvider');
+  }
+  return context;
 };
 
-export default SimpleTherapistProvider;
+interface TherapistProviderProps {
+  children: React.ReactNode;
+}
+
+export const SimpleTherapistProvider: React.FC<TherapistProviderProps> = ({ children }) => {
+  const [selectedTherapist, setSelectedTherapistState] = React.useState<string | null>(null);
+
+  const setSelectedTherapist = (id: string) => {
+    setSelectedTherapistState(id);
+    localStorage.setItem('selectedTherapist', id);
+  };
+
+  const value = {
+    selectedTherapist,
+    setSelectedTherapist,
+  };
+
+  return (
+    <TherapistContext.Provider value={value}>
+      {children}
+    </TherapistContext.Provider>
+  );
+};
