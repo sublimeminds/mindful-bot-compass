@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import AdminSidebarEnhanced from './AdminSidebarEnhanced';
 import AdminHeaderEnhanced from './AdminHeaderEnhanced';
 
-const AdminLayout = () => {
+const AdminLayoutEnhanced = () => {
   return (
     <div className="min-h-screen bg-gray-950">
       <div className="flex h-screen">
@@ -22,4 +22,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+export default AdminLayoutEnhanced;
