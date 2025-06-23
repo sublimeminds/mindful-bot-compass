@@ -209,7 +209,7 @@ const IntegrationsHub = () => {
 
       {/* Integration Tabs */}
       <Tabs defaultValue="messaging" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="messaging">
             <MessageSquare className="h-4 w-4 mr-2" />
             Messaging
@@ -225,6 +225,14 @@ const IntegrationsHub = () => {
           <TabsTrigger value="video">
             <Video className="h-4 w-4 mr-2" />
             Video
+          </TabsTrigger>
+          <TabsTrigger value="ehr">
+            <FileText className="h-4 w-4 mr-2" />
+            EHR
+          </TabsTrigger>
+          <TabsTrigger value="mobile">
+            <Smartphone className="h-4 w-4 mr-2" />
+            Mobile
           </TabsTrigger>
           <TabsTrigger value="api">
             <Zap className="h-4 w-4 mr-2" />
@@ -275,6 +283,24 @@ const IntegrationsHub = () => {
           <VideoIntegration />
         </TabsContent>
 
+        <TabsContent value="ehr" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {getIntegrationsByType('ehr').map(integration => (
+              <IntegrationCard key={integration.id} integration={integration} />
+            ))}
+          </div>
+          <EHRIntegration />
+        </TabsContent>
+
+        <TabsContent value="mobile" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {getIntegrationsByType('mobile').map(integration => (
+              <IntegrationCard key={integration.id} integration={integration} />
+            ))}
+          </div>
+          <MobileIntegration />
+        </TabsContent>
+
         <TabsContent value="api" className="space-y-4">
           <EnhancedAPIManagement />
         </TabsContent>
@@ -285,6 +311,7 @@ const IntegrationsHub = () => {
               <IntegrationCard key={integration.id} integration={integration} />
             ))}
           </div>
+          <CrisisIntegration />
         </TabsContent>
       </Tabs>
     </div>
