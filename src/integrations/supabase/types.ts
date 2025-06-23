@@ -2867,6 +2867,164 @@ export type Database = {
         }
         Relationships: []
       }
+      whatsapp_config: {
+        Row: {
+          ai_personality_id: string | null
+          auto_responses_enabled: boolean | null
+          business_hours_enabled: boolean | null
+          business_hours_end: string | null
+          business_hours_start: string | null
+          business_timezone: string | null
+          created_at: string
+          crisis_escalation_enabled: boolean | null
+          id: string
+          message_encryption_enabled: boolean | null
+          response_delay_seconds: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_personality_id?: string | null
+          auto_responses_enabled?: boolean | null
+          business_hours_enabled?: boolean | null
+          business_hours_end?: string | null
+          business_hours_start?: string | null
+          business_timezone?: string | null
+          created_at?: string
+          crisis_escalation_enabled?: boolean | null
+          id?: string
+          message_encryption_enabled?: boolean | null
+          response_delay_seconds?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_personality_id?: string | null
+          auto_responses_enabled?: boolean | null
+          business_hours_enabled?: boolean | null
+          business_hours_end?: string | null
+          business_hours_start?: string | null
+          business_timezone?: string | null
+          created_at?: string
+          crisis_escalation_enabled?: boolean | null
+          id?: string
+          message_encryption_enabled?: boolean | null
+          response_delay_seconds?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      whatsapp_integrations: {
+        Row: {
+          access_token_encrypted: string | null
+          business_account_id: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          last_message_at: string | null
+          phone_number: string
+          phone_number_id: string | null
+          privacy_settings: Json | null
+          updated_at: string
+          user_id: string
+          verification_code: string | null
+          verification_status: string
+          verified_at: string | null
+          webhook_token: string | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          access_token_encrypted?: string | null
+          business_account_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_message_at?: string | null
+          phone_number: string
+          phone_number_id?: string | null
+          privacy_settings?: Json | null
+          updated_at?: string
+          user_id: string
+          verification_code?: string | null
+          verification_status?: string
+          verified_at?: string | null
+          webhook_token?: string | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          access_token_encrypted?: string | null
+          business_account_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_message_at?: string | null
+          phone_number?: string
+          phone_number_id?: string | null
+          privacy_settings?: Json | null
+          updated_at?: string
+          user_id?: string
+          verification_code?: string | null
+          verification_status?: string
+          verified_at?: string | null
+          webhook_token?: string | null
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      whatsapp_messages: {
+        Row: {
+          ai_response_metadata: Json | null
+          content: string
+          delivery_status: string | null
+          error_message: string | null
+          id: string
+          integration_id: string
+          message_type: string
+          sender_type: string
+          therapy_session_id: string | null
+          timestamp: string
+          user_id: string
+          whatsapp_message_id: string | null
+        }
+        Insert: {
+          ai_response_metadata?: Json | null
+          content: string
+          delivery_status?: string | null
+          error_message?: string | null
+          id?: string
+          integration_id: string
+          message_type?: string
+          sender_type: string
+          therapy_session_id?: string | null
+          timestamp?: string
+          user_id: string
+          whatsapp_message_id?: string | null
+        }
+        Update: {
+          ai_response_metadata?: Json | null
+          content?: string
+          delivery_status?: string | null
+          error_message?: string | null
+          id?: string
+          integration_id?: string
+          message_type?: string
+          sender_type?: string
+          therapy_session_id?: string | null
+          timestamp?: string
+          user_id?: string
+          whatsapp_message_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_messages_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "whatsapp_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

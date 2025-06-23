@@ -26,7 +26,8 @@ import {
   TrendingUp,
   PenTool,
   Shield,
-  Sparkles
+  Sparkles,
+  Zap
 } from 'lucide-react';
 import GradientLogo from '@/components/ui/GradientLogo';
 
@@ -77,6 +78,13 @@ const DashboardSidebar = () => {
         { title: 'Discussions', url: '/community#discussions', icon: MessageSquare },
         { title: 'Events', url: '/community#events', icon: Calendar },
         { title: 'Resources', url: '/community#resources', icon: BookOpen },
+      ]
+    },
+    {
+      title: 'Integrations',
+      items: [
+        { title: 'WhatsApp', url: '/integrations', icon: MessageSquare },
+        { title: 'API Access', url: '/integrations#api', icon: Zap },
       ]
     },
     {
