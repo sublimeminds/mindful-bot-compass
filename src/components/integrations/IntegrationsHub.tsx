@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -8,12 +7,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { 
   MessageSquare, 
-  calendar, 
+  Calendar, 
   Video, 
   Heart, 
   FileText, 
   AlertTriangle,
-  mobile,
+  Smartphone,
   Zap,
   Settings,
   Plus,
@@ -27,6 +26,7 @@ import VideoIntegration from './VideoIntegration';
 import EHRIntegration from './EHRIntegration';
 import CrisisIntegration from './CrisisIntegration';
 import MobileIntegration from './MobileIntegration';
+import SlackIntegration from './SlackIntegration';
 
 interface Integration {
   id: string;
@@ -89,7 +89,7 @@ const IntegrationsHub = () => {
       case 'sms':
         return MessageSquare;
       case 'calendar':
-        return calendar;
+        return Calendar;
       case 'video':
         return Video;
       case 'health':
@@ -99,7 +99,9 @@ const IntegrationsHub = () => {
       case 'crisis':
         return AlertTriangle;
       case 'mobile':
-        return mobile;
+        return Smartphone;
+      case 'slack':
+        return MessageSquare;
       default:
         return Zap;
     }
@@ -122,6 +124,8 @@ const IntegrationsHub = () => {
         return 'bg-yellow-500';
       case 'mobile':
         return 'bg-indigo-500';
+      case 'slack':
+        return 'bg-violet-500';
       default:
         return 'bg-gray-500';
     }
@@ -211,14 +215,14 @@ const IntegrationsHub = () => {
 
       {/* Integration Tabs */}
       <Tabs defaultValue="messaging" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-8">
+        <TabsList className="grid w-full grid-cols-9">
           <TabsTrigger value="messaging">
             <MessageSquare className="h-4 w-4 mr-2" />
             Messaging
           </TabsTrigger>
           <TabsTrigger value="calendar">
-            <calendar className="h-4 w-4 mr-2" />
-            calendar
+            <Calendar className="h-4 w-4 mr-2" />
+            Calendar
           </TabsTrigger>
           <TabsTrigger value="health">
             <Heart className="h-4 w-4 mr-2" />
@@ -233,8 +237,12 @@ const IntegrationsHub = () => {
             EHR
           </TabsTrigger>
           <TabsTrigger value="mobile">
-            <mobile className="h-4 w-4 mr-2" />
+            <Smartphone className="h-4 w-4 mr-2" />
             Mobile
+          </TabsTrigger>
+          <TabsTrigger value="slack">
+            <MessageSquare className="h-4 w-4 mr-2" />
+            Slack
           </TabsTrigger>
           <TabsTrigger value="api">
             <Zap className="h-4 w-4 mr-2" />
@@ -301,6 +309,15 @@ const IntegrationsHub = () => {
             ))}
           </div>
           <MobileIntegration />
+        </TabsContent>
+
+        <TabsContent value="slack" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {getIntegrationsByType('slack').map(integration => (
+              <IntegrationCard key={integration.id} integration={integration} />
+            ))}
+          </div>
+          <SlackIntegration />
         </TabsContent>
 
         <TabsContent value="api" className="space-y-4">

@@ -7,8 +7,8 @@ import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/SimpleAuthProvider';
 import { 
-  mobile, 
-  bell, 
+  Smartphone, 
+  Bell, 
   Download, 
   Share2,
   Zap,
@@ -34,7 +34,7 @@ const MobileIntegration = () => {
     {
       id: 'push-notifications',
       name: 'Push Notifications',
-      icon: bell,
+      icon: Bell,
       description: 'Receive important alerts and reminders on your mobile device',
       features: ['Session Reminders', 'Crisis Alerts', 'Progress Updates', 'Milestone Celebrations'],
       color: 'bg-blue-500'
@@ -218,7 +218,7 @@ const MobileIntegration = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 border rounded-lg">
-              <mobile className="h-8 w-8 text-blue-500 mb-2" />
+              <Smartphone className="h-8 w-8 text-blue-500 mb-2" />
               <h4 className="font-medium mb-1">Mobile Benefits</h4>
               <ul className="text-sm text-gray-600 space-y-1">
                 <li>• Full-screen experience</li>
@@ -251,7 +251,7 @@ const MobileIntegration = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <bell className="h-5 w-5" />
+            <Bell className="h-5 w-5" />
             <span>Push Notifications</span>
           </CardTitle>
         </CardHeader>
@@ -259,7 +259,7 @@ const MobileIntegration = () => {
           {notificationPermission === 'default' && (
             <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <div className="flex items-start space-x-3">
-                <bell className="h-5 w-5 text-blue-600 mt-0.5" />
+                <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
                 <div className="flex-1">
                   <h4 className="font-medium text-blue-900 mb-1">Enable Notifications</h4>
                   <p className="text-sm text-blue-600 mb-3">
@@ -281,7 +281,7 @@ const MobileIntegration = () => {
                   <p className="text-sm text-gray-600">Notifications are enabled for this device</p>
                 </div>
                 <Badge variant="default" className="bg-green-600">
-                  <bell className="h-3 w-3 mr-1" />
+                  <Bell className="h-3 w-3 mr-1" />
                   Enabled
                 </Badge>
               </div>
@@ -296,7 +296,7 @@ const MobileIntegration = () => {
           {notificationPermission === 'denied' && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
               <div className="flex items-start space-x-3">
-                <bell className="h-5 w-5 text-red-600 mt-0.5" />
+                <Bell className="h-5 w-5 text-red-600 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-red-900 mb-1">Notifications Blocked</h4>
                   <p className="text-sm text-red-600">
@@ -314,7 +314,7 @@ const MobileIntegration = () => {
               {subscriptions.map((subscription) => (
                 <div key={subscription.id} className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex items-center space-x-3">
-                    <mobile className="h-5 w-5 text-gray-500" />
+                    <Smartphone className="h-5 w-5 text-gray-500" />
                     <div>
                       <p className="font-medium">{subscription.device_name || 'Unknown Device'}</p>
                       <p className="text-sm text-gray-600 capitalize">{subscription.device_type}</p>
