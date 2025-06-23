@@ -347,6 +347,48 @@ export type Database = {
         }
         Relationships: []
       }
+      api_keys: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          key_hash: string
+          last_used_at: string | null
+          name: string
+          permissions: Json | null
+          rate_limit: number | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          key_hash: string
+          last_used_at?: string | null
+          name: string
+          permissions?: Json | null
+          rate_limit?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          key_hash?: string
+          last_used_at?: string | null
+          name?: string
+          permissions?: Json | null
+          rate_limit?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       billing_history: {
         Row: {
           amount: number
@@ -1183,6 +1225,80 @@ export type Database = {
           title?: string
           updated_at?: string
           view_count?: number
+        }
+        Relationships: []
+      }
+      integration_logs: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_type: string
+          id: string
+          integration_id: string | null
+          payload: Json | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_type: string
+          id?: string
+          integration_id?: string | null
+          payload?: Json | null
+          status: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          integration_id?: string | null
+          payload?: Json | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integration_logs_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      integrations: {
+        Row: {
+          configuration: Json | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          configuration?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          configuration?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          type?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -2631,6 +2747,47 @@ export type Database = {
         }
         Relationships: []
       }
+      user_integrations: {
+        Row: {
+          created_at: string
+          id: string
+          integration_id: string
+          is_enabled: boolean | null
+          oauth_tokens: Json | null
+          settings: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          integration_id: string
+          is_enabled?: boolean | null
+          oauth_tokens?: Json | null
+          settings?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          integration_id?: string
+          is_enabled?: boolean | null
+          oauth_tokens?: Json | null
+          settings?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_integrations_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_interactions: {
         Row: {
           data: Json | null
@@ -2864,6 +3021,42 @@ export type Database = {
           updated_at?: string
           usage_count?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      webhooks: {
+        Row: {
+          created_at: string
+          event_types: string[]
+          id: string
+          is_active: boolean | null
+          retry_count: number | null
+          secret: string | null
+          updated_at: string
+          url: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_types: string[]
+          id?: string
+          is_active?: boolean | null
+          retry_count?: number | null
+          secret?: string | null
+          updated_at?: string
+          url: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_types?: string[]
+          id?: string
+          is_active?: boolean | null
+          retry_count?: number | null
+          secret?: string | null
+          updated_at?: string
+          url?: string
+          user_id?: string | null
         }
         Relationships: []
       }
