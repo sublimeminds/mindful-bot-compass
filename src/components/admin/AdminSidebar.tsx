@@ -1,69 +1,57 @@
+
 import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import { BarChart3, Users, FileText, Settings, Activity, Brain, TrendingUp } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { 
+  LayoutDashboard, 
+  Users, 
+  Brain, 
+  BarChart3, 
+  FileText, 
+  Settings, 
+  Activity, 
+  Shield,
+  MessageSquare
+} from 'lucide-react';
 
 const AdminSidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const menuItems = [
-    { 
-      icon: BarChart3, 
-      label: 'Dashboard', 
-      path: '/admin',
-      color: 'text-blue-400'
-    },
-    { 
-      icon: Users, 
-      label: 'User Management', 
-      path: '/admin/users',
-      color: 'text-green-400'
-    },
-    { 
-      icon: FileText, 
-      label: 'Content Management', 
-      path: '/admin/content',
-      color: 'text-purple-400'
-    },
-    { 
-      icon: Brain, 
-      label: 'AI Configuration', 
-      path: '/admin/ai',
-      color: 'text-purple-400'
-    },
-    { 
-      icon: TrendingUp, 
-      label: 'Analytics', 
-      path: '/admin/analytics',
-      color: 'text-orange-400'
-    },
-    { 
-      icon: Settings, 
-      label: 'System Management', 
-      path: '/admin/system',
-      color: 'text-red-400'
-    },
-    { 
-      icon: Activity, 
-      label: 'Performance', 
-      path: '/admin/performance',
-      color: 'text-cyan-400'
-    }
+    { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
+    { icon: Users, label: 'Users', path: '/admin/users' },
+    { icon: Brain, label: 'AI Management', path: '/admin/ai' },
+    { icon: BarChart3, label: 'Analytics', path: '/admin/analytics' },
+    { icon: FileText, label: 'Content', path: '/admin/content' },
+    { icon: MessageSquare, label: 'Integrations', path: '/admin/integrations' },
+    { icon: Settings, label: 'System', path: '/admin/system' },
+    { icon: Activity, label: 'Performance', path: '/admin/performance' },
+    { icon: Shield, label: 'Crisis Mgmt', path: '/admin/crisis' },
   ];
 
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <div className="w-64 bg-gray-900 h-screen fixed top-0 left-0 py-8 px-4">
-      <h1 className="text-2xl font-bold text-white mb-6">Admin Panel</h1>
-      <nav>
-        <ul>
+    <div className="w-64 bg-gray-900 text-white h-full flex flex-col">
+      <div className="p-6 border-b border-gray-700">
+        <h2 className="text-xl font-bold">Admin Panel</h2>
+      </div>
+      
+      <nav className="flex-1 p-4">
+        <ul className="space-y-2">
           {menuItems.map((item) => (
-            <li key={item.label} className="mb-2">
-              <Link
-                to={item.path}
-                className={`flex items-center space-x-3 py-2 px-4 rounded-md hover:bg-gray-800 transition-colors duration-200 ${location.pathname === item.path ? 'bg-gray-800 font-semibold' : 'text-gray-400'}`}
+            <li key={item.path}>
+              <button
+                onClick={() => navigate(item.path)}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                  isActive(item.path)
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                }`}
               >
-                <item.icon className={`h-5 w-5 ${item.color}`} />
+                <item.icon className="h-5 w-5" />
                 <span>{item.label}</span>
-              </Link>
+              </button>
             </li>
           ))}
         </ul>

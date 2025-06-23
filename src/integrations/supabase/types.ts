@@ -2915,6 +2915,54 @@ export type Database = {
         }
         Relationships: []
       }
+      whatsapp_global_config: {
+        Row: {
+          access_token_encrypted: string | null
+          business_account_id: string | null
+          created_at: string
+          created_by: string
+          crisis_escalation_enabled: boolean | null
+          id: string
+          is_active: boolean
+          message_monitoring_enabled: boolean | null
+          phone_number_id: string | null
+          rate_limit_per_hour: number | null
+          updated_at: string
+          webhook_url: string | null
+          webhook_verify_token: string | null
+        }
+        Insert: {
+          access_token_encrypted?: string | null
+          business_account_id?: string | null
+          created_at?: string
+          created_by: string
+          crisis_escalation_enabled?: boolean | null
+          id?: string
+          is_active?: boolean
+          message_monitoring_enabled?: boolean | null
+          phone_number_id?: string | null
+          rate_limit_per_hour?: number | null
+          updated_at?: string
+          webhook_url?: string | null
+          webhook_verify_token?: string | null
+        }
+        Update: {
+          access_token_encrypted?: string | null
+          business_account_id?: string | null
+          created_at?: string
+          created_by?: string
+          crisis_escalation_enabled?: boolean | null
+          id?: string
+          is_active?: boolean
+          message_monitoring_enabled?: boolean | null
+          phone_number_id?: string | null
+          rate_limit_per_hour?: number | null
+          updated_at?: string
+          webhook_url?: string | null
+          webhook_verify_token?: string | null
+        }
+        Relationships: []
+      }
       whatsapp_integrations: {
         Row: {
           access_token_encrypted: string | null
@@ -3024,6 +3072,126 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      whatsapp_response_templates: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string
+          id: string
+          is_active: boolean
+          name: string
+          priority: number | null
+          template_text: string
+          updated_at: string
+          usage_count: number | null
+          variables: string[] | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          created_by: string
+          id?: string
+          is_active?: boolean
+          name: string
+          priority?: number | null
+          template_text: string
+          updated_at?: string
+          usage_count?: number | null
+          variables?: string[] | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          priority?: number | null
+          template_text?: string
+          updated_at?: string
+          usage_count?: number | null
+          variables?: string[] | null
+        }
+        Relationships: []
+      }
+      whatsapp_system_prompts: {
+        Row: {
+          created_at: string
+          created_by: string
+          effectiveness_score: number | null
+          id: string
+          is_active: boolean
+          is_default: boolean
+          name: string
+          personality_type: string
+          system_prompt: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          effectiveness_score?: number | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          name: string
+          personality_type: string
+          system_prompt: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          effectiveness_score?: number | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          name?: string
+          personality_type?: string
+          system_prompt?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      whatsapp_usage_analytics: {
+        Row: {
+          active_users: number | null
+          ai_responses: number | null
+          average_response_time: number | null
+          created_at: string
+          crisis_interventions: number | null
+          date: string
+          error_count: number | null
+          id: string
+          total_messages: number | null
+          user_messages: number | null
+        }
+        Insert: {
+          active_users?: number | null
+          ai_responses?: number | null
+          average_response_time?: number | null
+          created_at?: string
+          crisis_interventions?: number | null
+          date?: string
+          error_count?: number | null
+          id?: string
+          total_messages?: number | null
+          user_messages?: number | null
+        }
+        Update: {
+          active_users?: number | null
+          ai_responses?: number | null
+          average_response_time?: number | null
+          created_at?: string
+          crisis_interventions?: number | null
+          date?: string
+          error_count?: number | null
+          id?: string
+          total_messages?: number | null
+          user_messages?: number | null
+        }
+        Relationships: []
       }
     }
     Views: {

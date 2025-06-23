@@ -13,6 +13,7 @@ import AdminContent from '@/pages/AdminContent';
 import AdminSystem from '@/pages/AdminSystem';
 import AdminPerformance from '@/pages/AdminPerformance';
 import AdminCrisisManagement from '@/pages/AdminCrisisManagement';
+import AdminIntegrations from '@/pages/AdminIntegrations';
 import TherapySyncAI from '@/pages/TherapySyncAI';
 import SessionHistory from '@/pages/SessionHistory';
 import Analytics from '@/pages/Analytics';
@@ -152,6 +153,7 @@ const AppRouter = () => {
         <Route path="ai" element={<AdminAI />} />
         <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="content" element={<AdminContent />} />
+        <Route path="integrations" element={<AdminIntegrations />} />
         <Route path="system" element={<AdminSystem />} />
         <Route path="performance" element={<AdminPerformance />} />
         <Route path="crisis" element={<AdminCrisisManagement />} />

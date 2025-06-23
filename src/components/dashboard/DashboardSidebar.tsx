@@ -81,10 +81,10 @@ const DashboardSidebar = () => {
       ]
     },
     {
-      title: 'Integrations',
+      title: 'Connect',
       items: [
         { title: 'WhatsApp', url: '/integrations', icon: MessageSquare },
-        { title: 'API Access', url: '/integrations#api', icon: Zap },
+        { title: 'Integrations', url: '/integrations', icon: Zap },
       ]
     },
     {
