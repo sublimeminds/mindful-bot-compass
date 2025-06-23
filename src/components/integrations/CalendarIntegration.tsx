@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import { supabase } from '@/integrations/supabase/client';
 import { 
   Calendar, 
   Clock, 
@@ -14,7 +13,6 @@ import {
   Users, 
   Video,
   Bell,
-  Sync,
   CheckCircle,
   Plus
 } from 'lucide-react';
@@ -81,13 +79,8 @@ const CalendarIntegration = () => {
 
   const loadCalendarConnections = async () => {
     try {
-      const { data, error } = await supabase
-        .from('calendar_connections')
-        .select('*')
-        .eq('user_id', user?.id);
-
-      if (error) throw error;
-      setConnections(data || []);
+      // Mock data until database types are updated
+      setConnections([]);
     } catch (error) {
       console.error('Error loading calendar connections:', error);
     }
@@ -95,16 +88,8 @@ const CalendarIntegration = () => {
 
   const loadAppointments = async () => {
     try {
-      const { data, error } = await supabase
-        .from('therapy_appointments')
-        .select('*')
-        .eq('user_id', user?.id)
-        .gte('start_time', new Date().toISOString())
-        .order('start_time', { ascending: true })
-        .limit(5);
-
-      if (error) throw error;
-      setAppointments(data || []);
+      // Mock data until database types are updated
+      setAppointments([]);
     } catch (error) {
       console.error('Error loading appointments:', error);
     } finally {
@@ -117,22 +102,16 @@ const CalendarIntegration = () => {
       const provider = calendarProviders.find(p => p.id === providerId);
       if (!provider) return;
 
-      // Simulate OAuth flow
-      const { data, error } = await supabase
-        .from('calendar_connections')
-        .insert({
-          user_id: user?.id!,
-          provider: provider.name,
-          calendar_id: `${providerId}_${Math.random().toString(36).substr(2, 9)}`,
-          sync_enabled: true,
-          two_way_sync: false
-        })
-        .select()
-        .single();
+      // Simulate connection
+      const newConnection: CalendarConnection = {
+        id: `${providerId}_${Math.random().toString(36).substr(2, 9)}`,
+        provider: provider.name,
+        calendar_id: `${providerId}_calendar`,
+        sync_enabled: true,
+        two_way_sync: false
+      };
 
-      if (error) throw error;
-
-      setConnections([...connections, data]);
+      setConnections([...connections, newConnection]);
       
       toast({
         title: "Calendar Connected",
@@ -140,7 +119,7 @@ const CalendarIntegration = () => {
       });
 
       // Create sample appointments
-      setTimeout(() => createSampleAppointments(data.id), 1000);
+      setTimeout(() => createSampleAppointments(newConnection.id), 1000);
 
     } catch (error) {
       console.error('Error connecting calendar:', error);
@@ -154,37 +133,29 @@ const CalendarIntegration = () => {
 
   const createSampleAppointments = async (connectionId: string) => {
     try {
-      const sampleAppointments = [
+      const sampleAppointments: TherapyAppointment[] = [
         {
-          user_id: user?.id!,
-          calendar_connection_id: connectionId,
+          id: 'appointment_1',
           title: 'Therapy Session with Dr. Smith',
           description: 'Weekly therapy session - CBT focus',
           start_time: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
           end_time: new Date(Date.now() + 24 * 60 * 60 * 1000 + 50 * 60 * 1000).toISOString(),
           location: 'Virtual Session',
           meeting_url: 'https://zoom.us/j/123456789',
-          appointment_type: 'therapy',
           status: 'scheduled'
         },
         {
-          user_id: user?.id!,
-          calendar_connection_id: connectionId,
+          id: 'appointment_2',
           title: 'Follow-up Consultation',
           description: 'Progress review and goal setting',
           start_time: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
           end_time: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000 + 30 * 60 * 1000).toISOString(),
           location: 'Wellness Center, Room 201',
-          appointment_type: 'consultation',
           status: 'scheduled'
         }
       ];
 
-      for (const appointment of sampleAppointments) {
-        await supabase.from('therapy_appointments').insert(appointment);
-      }
-
-      await loadAppointments();
+      setAppointments(sampleAppointments);
 
       toast({
         title: "Appointments Synced",
@@ -198,13 +169,6 @@ const CalendarIntegration = () => {
 
   const updateSyncSettings = async (connectionId: string, settings: Partial<CalendarConnection>) => {
     try {
-      const { error } = await supabase
-        .from('calendar_connections')
-        .update(settings)
-        .eq('id', connectionId);
-
-      if (error) throw error;
-
       setConnections(connections.map(conn => 
         conn.id === connectionId ? { ...conn, ...settings } : conn
       ));

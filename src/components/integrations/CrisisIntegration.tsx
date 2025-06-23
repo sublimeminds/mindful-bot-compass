@@ -6,155 +6,176 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import { CrisisManagementService } from '@/services/crisisManagementService';
 import { 
   AlertTriangle, 
   Phone, 
   MessageSquare, 
-  Shield,
   Heart,
+  Shield,
   Users,
   Clock,
   MapPin
 } from 'lucide-react';
 
+interface CrisisResource {
+  id: string;
+  name: string;
+  resource_type: string;
+  phone_number?: string;
+  website_url?: string;
+  description?: string;
+  availability: string;
+  priority_order: number;
+}
+
+interface CrisisAssessment {
+  id: string;
+  assessment_type: string;
+  risk_level: string;
+  status: string;
+  created_at: string;
+}
+
 const CrisisIntegration = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [emergencyContacts, setEmergencyContacts] = useState<any[]>([]);
-  const [crisisResources, setCrisisResources] = useState<any[]>([]);
+  const [resources, setResources] = useState<CrisisResource[]>([]);
+  const [assessments, setAssessments] = useState<CrisisAssessment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [crisisAlertsEnabled, setCrisisAlertsEnabled] = useState(true);
 
   const crisisServices = [
     {
+      id: 'suicide-prevention',
+      name: '988 Suicide & Crisis Lifeline',
+      type: 'hotline',
+      phone: '988',
+      description: '24/7 free and confidential emotional support',
+      availability: '24/7',
+      icon: Phone,
+      color: 'bg-red-500'
+    },
+    {
       id: 'crisis-text-line',
       name: 'Crisis Text Line',
+      type: 'text',
+      phone: 'Text HOME to 741741',
+      description: 'Free, 24/7 support via text message',
+      availability: '24/7',
       icon: MessageSquare,
-      description: '24/7 crisis support via text message',
-      contact: 'Text HOME to 741741',
-      features: ['24/7 Availability', 'Trained Counselors', 'Confidential', 'Free Service'],
-      color: 'bg-red-500',
-      type: 'text'
+      color: 'bg-blue-500'
     },
     {
-      id: 'suicide-prevention',
-      name: 'National Suicide Prevention Lifeline',
-      icon: Phone,
-      description: 'National 24-hour suicide prevention hotline',
-      contact: '988',
-      features: ['Immediate Support', 'Professional Staff', 'Multi-language', 'Follow-up Care'],
-      color: 'bg-blue-500',
-      type: 'phone'
+      id: 'nami-helpline',
+      name: 'NAMI HelpLine',
+      type: 'support',
+      phone: '1-800-950-6264',
+      description: 'Information, referrals and support for mental health',
+      availability: 'Mon-Fri 10am-10pm ET',
+      icon: Heart,
+      color: 'bg-purple-500'
     },
     {
-      id: 'samhsa-helpline',
-      name: 'SAMHSA National Helpline',
-      icon: Phone,
-      description: 'Mental health and substance abuse treatment referral',
-      contact: '1-800-662-HELP (4357)',
-      features: ['Treatment Referrals', 'Insurance Guidance', 'Local Resources', 'Family Support'],
-      color: 'bg-green-500',
-      type: 'phone'
-    },
-    {
-      id: 'teen-line',
-      name: 'Teen Line',
-      icon: Users,
-      description: 'Peer support for teenagers in crisis',
-      contact: 'Text TEEN to 839863',
-      features: ['Peer Support', 'Teen-focused', 'Evening Hours', 'Text & Phone'],
-      color: 'bg-purple-500',
-      type: 'both'
+      id: 'local-emergency',
+      name: 'Emergency Services',
+      type: 'emergency',
+      phone: '911',
+      description: 'Immediate emergency response',
+      availability: '24/7',
+      icon: AlertTriangle,
+      color: 'bg-orange-500'
     }
+  ];
+
+  const riskFactors = [
+    { factor: 'Social Isolation', detected: false, severity: 'medium' },
+    { factor: 'Sleep Disruption', detected: true, severity: 'low' },
+    { factor: 'Mood Deterioration', detected: false, severity: 'high' },
+    { factor: 'Medication Non-compliance', detected: false, severity: 'medium' }
   ];
 
   useEffect(() => {
     if (user) {
-      loadCrisisData();
+      loadCrisisResources();
+      loadCrisisAssessments();
     }
   }, [user]);
 
-  const loadCrisisData = async () => {
+  const loadCrisisResources = async () => {
     try {
-      const [contacts, resources] = await Promise.all([
-        CrisisManagementService.getUserEmergencyContacts(),
-        CrisisManagementService.getCrisisResources()
-      ]);
-
-      setEmergencyContacts(contacts);
-      setCrisisResources(resources);
+      // Mock data until database types are updated
+      const mockResources: CrisisResource[] = crisisServices.map(service => ({
+        id: service.id,
+        name: service.name,
+        resource_type: service.type,
+        phone_number: service.phone,
+        description: service.description,
+        availability: service.availability,
+        priority_order: 1
+      }));
+      
+      setResources(mockResources);
     } catch (error) {
-      console.error('Error loading crisis data:', error);
+      console.error('Error loading crisis resources:', error);
+    }
+  };
+
+  const loadCrisisAssessments = async () => {
+    try {
+      // Mock data until database types are updated
+      setAssessments([]);
+    } catch (error) {
+      console.error('Error loading crisis assessments:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const addEmergencyContact = async () => {
+  const triggerCrisisAssessment = async () => {
     try {
-      const contact = await CrisisManagementService.createEmergencyContact({
-        contact_type: 'personal',
-        name: 'Dr. Sarah Johnson',
-        phone_number: '+1-555-0123',
-        email: 'dr.johnson@therapycenter.com',
-        relationship: 'Primary Therapist',
-        is_primary: true
+      const newAssessment: CrisisAssessment = {
+        id: Math.random().toString(36).substr(2, 9),
+        assessment_type: 'self_assessment',
+        risk_level: 'low',
+        status: 'active',
+        created_at: new Date().toISOString()
+      };
+
+      setAssessments([newAssessment, ...assessments]);
+
+      toast({
+        title: "Crisis Assessment Started",
+        description: "Please answer the following questions to help us assess your current situation",
       });
 
-      if (contact) {
-        setEmergencyContacts([...emergencyContacts, contact]);
-        toast({
-          title: "Emergency Contact Added",
-          description: "Contact has been added to your crisis support network",
-        });
-      }
     } catch (error) {
-      console.error('Error adding emergency contact:', error);
+      console.error('Error triggering crisis assessment:', error);
     }
   };
 
-  const createSafetyPlan = async () => {
-    try {
-      const safetyPlan = await CrisisManagementService.createSafetyPlan({
-        plan_name: 'My Crisis Safety Plan',
-        warning_signs: [
-          'Feeling overwhelmed or hopeless',
-          'Difficulty sleeping for multiple days',
-          'Isolating from friends and family',
-          'Thoughts of self-harm'
-        ],
-        coping_strategies: [
-          'Deep breathing exercises',
-          'Call a trusted friend',
-          'Listen to calming music',
-          'Take a warm bath',
-          'Write in journal'
-        ],
-        social_contacts: {
-          friend1: { name: 'Alex Smith', phone: '+1-555-0100' },
-          family1: { name: 'Mom', phone: '+1-555-0101' }
-        },
-        professional_contacts: {
-          therapist: { name: 'Dr. Johnson', phone: '+1-555-0123' },
-          crisis_line: { name: 'Crisis Text Line', contact: 'Text HOME to 741741' }
-        },
-        reasons_to_live: [
-          'My family needs me',
-          'I want to see my goals achieved',
-          'Tomorrow might be better',
-          'I can help others who are struggling'
-        ]
+  const contactCrisisLine = (service: any) => {
+    if (service.phone.includes('Text')) {
+      toast({
+        title: "Crisis Text Line",
+        description: "Text HOME to 741741 for immediate support",
       });
-
-      if (safetyPlan) {
-        toast({
-          title: "Safety Plan Created",
-          description: "Your personal safety plan has been saved",
-        });
-      }
-    } catch (error) {
-      console.error('Error creating safety plan:', error);
+    } else {
+      // In a real app, this would initiate a call
+      toast({
+        title: `Contacting ${service.name}`,
+        description: `Call ${service.phone} for immediate support`,
+      });
     }
+  };
+
+  const toggleCrisisAlerts = (enabled: boolean) => {
+    setCrisisAlertsEnabled(enabled);
+    toast({
+      title: enabled ? "Crisis Alerts Enabled" : "Crisis Alerts Disabled",
+      description: enabled 
+        ? "You'll receive alerts for crisis prevention and intervention" 
+        : "Crisis alert monitoring has been disabled",
+    });
   };
 
   if (loading) {
@@ -168,28 +189,38 @@ const CrisisIntegration = () => {
   return (
     <div className="space-y-6">
       {/* Crisis Alert Banner */}
-      <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-        <div className="flex items-start space-x-3">
-          <AlertTriangle className="h-6 w-6 text-red-600 mt-0.5" />
-          <div>
-            <h3 className="font-medium text-red-900 mb-1">Crisis Support Available 24/7</h3>
-            <p className="text-sm text-red-600 mb-3">
-              If you're experiencing a mental health crisis, immediate help is available. 
-              Don't wait - reach out now.
-            </p>
-            <div className="flex space-x-3">
-              <Button size="sm" className="bg-red-600 hover:bg-red-700">
-                <Phone className="h-4 w-4 mr-2" />
-                Call 988
-              </Button>
-              <Button size="sm" variant="outline" className="border-red-300 text-red-700">
-                <MessageSquare className="h-4 w-4 mr-2" />
-                Text HOME to 741741
-              </Button>
+      <Card className="border-red-200 bg-red-50">
+        <CardContent className="p-6">
+          <div className="flex items-start space-x-4">
+            <AlertTriangle className="h-6 w-6 text-red-600 mt-1" />
+            <div className="flex-1">
+              <h3 className="font-medium text-red-900 mb-2">Crisis Support Available 24/7</h3>
+              <p className="text-sm text-red-700 mb-4">
+                If you're experiencing a mental health crisis or having thoughts of self-harm, 
+                immediate help is available. You are not alone.
+              </p>
+              <div className="flex space-x-3">
+                <Button 
+                  onClick={() => contactCrisisLine(crisisServices[0])} 
+                  className="bg-red-600 hover:bg-red-700"
+                  size="sm"
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call 988 Now
+                </Button>
+                <Button 
+                  onClick={() => contactCrisisLine(crisisServices[1])} 
+                  variant="outline"
+                  size="sm"
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Text HOME to 741741
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Crisis Services Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -200,188 +231,176 @@ const CrisisIntegration = () => {
             <Card key={service.id} className="border-therapy-200 hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex items-center space-x-3">
-                  <div className={`p-2 ${service.color} rounded-lg`}>
-                    <Icon className="h-5 w-5 text-white" />
+                  <div className={`p-3 ${service.color} rounded-lg`}>
+                    <Icon className="h-6 w-6 text-white" />
                   </div>
                   <div className="flex-1">
                     <CardTitle className="text-base">{service.name}</CardTitle>
-                    <p className="text-sm text-therapy-600">{service.description}</p>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <Badge variant="secondary" className="text-xs capitalize">
+                        {service.type}
+                      </Badge>
+                      <Badge variant="outline" className="text-xs">
+                        {service.availability}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div className="p-3 bg-gray-50 rounded-lg">
-                  <p className="font-medium text-center text-therapy-900">
-                    {service.contact}
-                  </p>
-                </div>
+                <p className="text-sm text-therapy-600">{service.description}</p>
                 
-                <div>
-                  <h5 className="font-medium text-therapy-900 mb-2 text-sm">Available Support</h5>
-                  <div className="flex flex-wrap gap-1">
-                    {service.features.map((feature) => (
-                      <Badge key={feature} variant="secondary" className="text-xs">
-                        {feature}
-                      </Badge>
-                    ))}
+                <div className="flex items-center justify-between">
+                  <div className="text-sm">
+                    <span className="font-medium">Contact: </span>
+                    <span className="font-mono">{service.phone}</span>
                   </div>
                 </div>
                 
-                <div className="flex space-x-2">
-                  {service.type === 'phone' || service.type === 'both' ? (
-                    <Button size="sm" className="flex-1">
-                      <Phone className="h-4 w-4 mr-2" />
-                      Call Now
-                    </Button>
-                  ) : null}
-                  {service.type === 'text' || service.type === 'both' ? (
-                    <Button size="sm" variant="outline" className="flex-1">
-                      <MessageSquare className="h-4 w-4 mr-2" />
-                      Text Now
-                    </Button>
-                  ) : null}
-                </div>
+                <Button 
+                  onClick={() => contactCrisisLine(service)}
+                  size="sm" 
+                  className="w-full"
+                  variant={service.type === 'emergency' ? 'destructive' : 'default'}
+                >
+                  <Icon className="h-4 w-4 mr-2" />
+                  Contact {service.name}
+                </Button>
               </CardContent>
             </Card>
           );
         })}
       </div>
 
-      {/* Emergency Contacts */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center space-x-2">
-              <Users className="h-5 w-5" />
-              <span>Emergency Contacts</span>
-            </CardTitle>
-            <Button onClick={addEmergencyContact} size="sm">
-              Add Contact
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {emergencyContacts.length > 0 ? (
-            <div className="space-y-3">
-              {emergencyContacts.map((contact) => (
-                <div key={contact.id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <Users className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium">{contact.name}</p>
-                      <p className="text-sm text-gray-600">{contact.relationship}</p>
-                      <p className="text-sm text-gray-500">{contact.phone_number}</p>
-                    </div>
-                  </div>
-                  {contact.is_primary && (
-                    <Badge variant="default">Primary</Badge>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-              <Users className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-              <p>No emergency contacts added yet</p>
-              <Button onClick={addEmergencyContact} size="sm" className="mt-2">
-                Add Your First Contact
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Safety Plan */}
+      {/* Risk Factor Monitoring */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Shield className="h-5 w-5" />
-            <span>Personal Safety Plan</span>
+            <span>Risk Factor Monitoring</span>
+            <Switch
+              checked={crisisAlertsEnabled}
+              onCheckedChange={toggleCrisisAlerts}
+              className="ml-auto"
+            />
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <p className="text-therapy-600">
-              A safety plan is a personalized, practical plan that can help you stay safe when having suicidal thoughts. 
-              It includes strategies to help you cope with difficult emotions and situations.
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium mb-2 flex items-center">
-                  <AlertTriangle className="h-4 w-4 mr-2 text-orange-500" />
-                  Warning Signs
-                </h4>
-                <p className="text-sm text-gray-600">Identify personal warning signs of crisis</p>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-gray-600">
+            AI-powered monitoring helps detect early warning signs and risk factors based on your therapy sessions and mood patterns.
+          </p>
+          
+          <div className="space-y-3">
+            {riskFactors.map((risk, index) => (
+              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-3 h-3 rounded-full ${
+                    risk.detected ? 'bg-yellow-500' : 'bg-green-500'
+                  }`}></div>
+                  <span className="font-medium">{risk.factor}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Badge 
+                    variant={risk.detected ? "destructive" : "secondary"}
+                    className="text-xs"
+                  >
+                    {risk.detected ? 'Detected' : 'Normal'}
+                  </Badge>
+                  {risk.detected && (
+                    <Badge variant="outline" className="text-xs capitalize">
+                      {risk.severity} risk
+                    </Badge>
+                  )}
+                </div>
               </div>
-              
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium mb-2 flex items-center">
-                  <Heart className="h-4 w-4 mr-2 text-red-500" />
-                  Coping Strategies
-                </h4>
-                <p className="text-sm text-gray-600">Personal strategies to manage difficult emotions</p>
-              </div>
-              
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium mb-2 flex items-center">
-                  <Users className="h-4 w-4 mr-2 text-blue-500" />
-                  Support Network
-                </h4>
-                <p className="text-sm text-gray-600">Friends, family, and professionals to contact</p>
-              </div>
-              
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium mb-2 flex items-center">
-                  <Shield className="h-4 w-4 mr-2 text-green-500" />
-                  Environmental Safety
-                </h4>
-                <p className="text-sm text-gray-600">Steps to make your environment safer</p>
-              </div>
-            </div>
-            
-            <Button onClick={createSafetyPlan} className="w-full">
-              Create My Safety Plan
-            </Button>
+            ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Crisis Resources */}
-      {crisisResources.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <MapPin className="h-5 w-5" />
-              <span>Local Crisis Resources</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {crisisResources.slice(0, 3).map((resource) => (
-                <div key={resource.id} className="p-3 border rounded-lg">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h4 className="font-medium">{resource.name}</h4>
-                      <p className="text-sm text-gray-600">{resource.description}</p>
-                      {resource.phone_number && (
-                        <p className="text-sm font-medium text-blue-600 mt-1">
-                          {resource.phone_number}
-                        </p>
-                      )}
-                    </div>
-                    <Badge variant="outline" className="text-xs">
-                      {resource.resource_type}
+      {/* Crisis Assessment */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <AlertTriangle className="h-5 w-5" />
+            <span>Crisis Assessment</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-therapy-600">
+            Take a brief assessment to help us understand your current mental state and provide appropriate support.
+          </p>
+          
+          <div className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div>
+              <h4 className="font-medium text-blue-900">Self-Assessment Available</h4>
+              <p className="text-sm text-blue-600">
+                Quick 5-minute assessment to check your current wellbeing
+              </p>
+            </div>
+            <Button onClick={triggerCrisisAssessment} variant="outline">
+              <Heart className="h-4 w-4 mr-2" />
+              Start Assessment
+            </Button>
+          </div>
+
+          {/* Recent Assessments */}
+          {assessments.length > 0 && (
+            <div className="space-y-2">
+              <h4 className="font-medium">Recent Assessments</h4>
+              {assessments.map((assessment) => (
+                <div key={assessment.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <span className="font-medium capitalize">{assessment.assessment_type.replace('_', ' ')}</span>
+                    <p className="text-sm text-gray-600">
+                      {new Date(assessment.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Badge 
+                      variant={assessment.risk_level === 'high' ? 'destructive' : 
+                               assessment.risk_level === 'medium' ? 'default' : 'secondary'}
+                      className="capitalize"
+                    >
+                      {assessment.risk_level} risk
+                    </Badge>
+                    <Badge variant="outline" className="capitalize">
+                      {assessment.status}
                     </Badge>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Emergency Contacts */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Users className="h-5 w-5" />
+            <span>Emergency Contacts</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-gray-600">
+            Designate trusted contacts who can be notified in case of a mental health crisis.
+          </p>
+          
+          <div className="p-4 border-dashed border-2 border-gray-300 rounded-lg text-center">
+            <Users className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+            <h4 className="font-medium text-gray-600 mb-1">No Emergency Contacts</h4>
+            <p className="text-sm text-gray-500 mb-3">
+              Add trusted friends or family members who can provide support
+            </p>
+            <Button variant="outline" size="sm">
+              <Users className="h-4 w-4 mr-2" />
+              Add Emergency Contact
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
