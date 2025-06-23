@@ -286,7 +286,10 @@ class EnhancedVoiceService {
   }
 }
 
-// Create and export both the class instance and the class itself
-export const enhancedVoiceService = new EnhancedVoiceService();
+// Create and export the service instance
+const enhancedVoiceService = new EnhancedVoiceService();
+
+// Export both the class and the instance
+export { EnhancedVoiceService, enhancedVoiceService };
 export const voiceService = enhancedVoiceService; // Alias for compatibility
-export { EnhancedVoiceService };
+export default enhancedVoiceService;
