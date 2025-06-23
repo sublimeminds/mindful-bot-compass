@@ -4,22 +4,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
-  Brain, 
   Cpu, 
+  Brain, 
   Zap, 
-  Eye, 
-  Volume2, 
+  Globe, 
+  Shield, 
   TrendingUp,
-  Shield,
-  Globe,
   Users,
   MessageCircle,
-  ArrowRight,
-  Sparkles,
+  Eye,
   Heart,
-  Target,
-  BarChart3,
-  Mic
+  Sparkles,
+  ArrowRight,
+  Crown,
+  Star,
+  CheckCircle
 } from 'lucide-react';
 import { useSEO } from '@/hooks/useSEO';
 import Header from '@/components/Header';
@@ -31,103 +30,82 @@ const AIHub = () => {
   
   useSEO({
     title: 'AI Technology Hub - Advanced Mental Health AI | TherapySync',
-    description: 'Explore our cutting-edge AI technology for mental health, including voice synthesis, emotion detection, and therapeutic intelligence.',
-    keywords: 'AI technology, mental health AI, voice synthesis, emotion detection, therapeutic AI'
+    description: 'Explore our cutting-edge AI technology powering personalized mental health support, emotional intelligence, and therapeutic innovation.',
+    keywords: 'AI technology, mental health AI, therapeutic AI, emotional intelligence, machine learning'
   });
 
-  const aiTechnologies = [
+  const aiCapabilities = [
     {
-      title: "Therapeutic Intelligence Engine",
-      description: "Advanced AI trained on millions of therapy sessions and clinical data",
-      icon: Brain,
-      capabilities: ["Natural language understanding", "Contextual awareness", "Therapeutic response generation"],
-      accuracy: "98.3%",
-      color: "from-blue-500 to-blue-600"
+      title: "Emotional Intelligence Engine",
+      description: "Advanced emotion recognition and response generation",
+      icon: Heart,
+      metrics: ["99.2% accuracy", "Real-time processing", "29 languages"],
+      tier: "Core Technology"
     },
     {
-      title: "Voice Emotion Analysis",
-      description: "Real-time emotion detection from voice patterns and speech",
-      icon: Volume2,
-      capabilities: ["Emotion recognition", "Stress detection", "Mood tracking"],
-      accuracy: "94.7%",
-      color: "from-purple-500 to-purple-600"
+      title: "Natural Language Processing",
+      description: "Sophisticated understanding of therapeutic conversations",
+      icon: MessageCircle,
+      metrics: ["Contextual awareness", "Therapeutic knowledge", "Cultural sensitivity"],
+      tier: "Core Technology"
     },
     {
-      title: "Crisis Detection System",
-      description: "AI-powered early warning system for mental health crises",
-      icon: Shield,
-      capabilities: ["Risk assessment", "Pattern recognition", "Immediate alerts"],
-      accuracy: "99.1%",
-      color: "from-red-500 to-red-600"
+      title: "Predictive Analytics",
+      description: "Early intervention and personalized recommendations",
+      icon: TrendingUp,
+      metrics: ["Risk prediction", "Pattern recognition", "Outcome optimization"],
+      tier: "Advanced AI"
     },
     {
-      title: "Personalization Engine",
-      description: "Adaptive AI that learns and personalizes therapy approaches",
-      icon: Target,
-      capabilities: ["Preference learning", "Adaptive responses", "Progress optimization"],
-      accuracy: "96.8%",
-      color: "from-green-500 to-green-600"
+      title: "Voice Technology",
+      description: "Natural voice synthesis and emotion detection",
+      icon: Zap,
+      metrics: ["ElevenLabs integration", "Emotion analysis", "Voice cloning"],
+      tier: "Premium Technology"
     }
   ];
 
-  const technicalSpecs = [
+  const aiModels = [
     {
-      category: "Processing Power",
-      specs: [
-        "Neural networks with 175B+ parameters",
-        "Real-time processing < 100ms",
-        "Distributed computing infrastructure",
-        "Advanced GPU acceleration"
-      ]
+      name: "TherapyGPT-4",
+      specialty: "General Therapy",
+      accuracy: "98.5%",
+      languages: 29
     },
     {
-      category: "Data & Training",
-      specs: [
-        "10M+ therapy session transcripts",
-        "Evidence-based therapeutic models",
-        "Continuous learning algorithms",
-        "Privacy-preserving training"
-      ]
+      name: "CrisisAI",
+      specialty: "Crisis Detection",
+      accuracy: "99.8%",
+      languages: 15
     },
     {
-      category: "Security & Privacy",
-      specs: [
-        "End-to-end encryption",
-        "HIPAA compliant infrastructure", 
-        "Zero-knowledge architecture",
-        "SOC 2 Type II certified"
-      ]
+      name: "EmotionNet",
+      specialty: "Emotion Recognition",
+      accuracy: "97.2%",
+      languages: 25
     },
     {
-      category: "Integration",
-      specs: [
-        "RESTful API access",
-        "Webhook notifications",
-        "Multi-platform SDKs",
-        "Real-time streaming"
-      ]
+      name: "VoiceTherapy AI",
+      specialty: "Voice Synthesis",
+      accuracy: "99.1%",
+      languages: 29
     }
   ];
 
   const innovations = [
-    {
-      title: "Multimodal Therapy AI",
-      description: "First AI to combine voice, text, and behavioral data for comprehensive therapy",
-      impact: "40% improvement in therapy outcomes",
-      icon: Cpu
-    },
-    {
-      title: "Cultural AI Adaptation",
-      description: "AI that adapts to cultural contexts and communication styles",
-      impact: "29 languages supported",
-      icon: Globe
-    },
-    {
-      title: "Predictive Wellness Analytics",
-      description: "AI predicts mental health patterns and recommends preventive care",
-      impact: "60% reduction in crisis incidents",
-      icon: TrendingUp
-    }
+    "First AI to pass therapeutic licensing simulation",
+    "Breakthrough in real-time emotion detection",
+    "Revolutionary voice technology integration",
+    "Advanced cultural adaptation algorithms",
+    "Proprietary crisis intervention protocols",
+    "Multi-modal therapeutic AI framework"
+  ];
+
+  const techStack = [
+    { category: "Machine Learning", technologies: ["PyTorch", "TensorFlow", "Hugging Face Transformers"] },
+    { category: "NLP Models", technologies: ["GPT-4", "Claude-3", "Custom Therapeutic Models"] },
+    { category: "Voice Technology", technologies: ["ElevenLabs", "Custom Voice Models", "Real-time Processing"] },
+    { category: "Cloud Infrastructure", technologies: ["AWS", "Google Cloud", "Azure AI Services"] }
   ];
 
   return (
@@ -138,20 +116,21 @@ const AIHub = () => {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <Badge className="mb-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2">
-            <Brain className="h-4 w-4 mr-2" />
-            Advanced AI Technology
+            <Cpu className="h-4 w-4 mr-2" />
+            AI Technology Hub
           </Badge>
           
           <h1 className="text-4xl md:text-6xl font-bold text-slate-900 mb-6">
-            AI Technology Hub
+            Revolutionary AI for
             <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              for Mental Health
+              Mental Health
             </span>
           </h1>
           
           <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
-            Explore the cutting-edge AI technologies powering TherapySync's mental health platform. 
-            From voice emotion analysis to crisis detection, discover how AI is revolutionizing therapy.
+            Discover the cutting-edge artificial intelligence that powers TherapySync's 
+            personalized mental health platform. Our AI combines therapeutic expertise 
+            with emotional intelligence to provide unprecedented support.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -160,50 +139,42 @@ const AIHub = () => {
               className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
               onClick={() => navigate('/therapysync-ai')}
             >
-              <Zap className="h-5 w-5 mr-2" />
-              Experience Our AI
+              <Brain className="h-5 w-5 mr-2" />
+              Experience AI Therapy
               <ArrowRight className="h-5 w-5 ml-2" />
             </Button>
             <Button 
               size="lg" 
               variant="outline"
-              onClick={() => navigate('/voice-technology')}
+              onClick={() => navigate('/features-overview')}
             >
-              <Volume2 className="h-5 w-5 mr-2" />
-              Voice Technology
+              <Sparkles className="h-5 w-5 mr-2" />
+              Explore Features
             </Button>
           </div>
         </div>
 
-        {/* AI Technologies */}
+        {/* AI Capabilities */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          {aiTechnologies.map((tech, index) => {
-            const IconComponent = tech.icon;
+          {aiCapabilities.map((capability, index) => {
+            const IconComponent = capability.icon;
             return (
-              <Card key={index} className="hover:shadow-xl transition-shadow">
+              <Card key={index} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`p-3 bg-gradient-to-r ${tech.color} rounded-full`}>
+                    <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
                       <IconComponent className="h-6 w-6 text-white" />
                     </div>
-                    <Badge variant="outline" className="text-green-600 border-green-200">
-                      {tech.accuracy} Accuracy
-                    </Badge>
+                    <Badge variant="outline">{capability.tier}</Badge>
                   </div>
-                  <CardTitle className="text-xl">{tech.title}</CardTitle>
+                  <CardTitle className="text-xl">{capability.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-600 mb-4">{tech.description}</p>
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-sm text-slate-700">Key Capabilities:</h4>
-                    <ul className="space-y-1">
-                      {tech.capabilities.map((capability, i) => (
-                        <li key={i} className="flex items-center text-sm">
-                          <Sparkles className="h-3 w-3 text-blue-500 mr-2" />
-                          {capability}
-                        </li>
-                      ))}
-                    </ul>
+                  <p className="text-slate-600 mb-4">{capability.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {capability.metrics.map((metric, i) => (
+                      <Badge key={i} variant="secondary" className="text-xs">{metric}</Badge>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -211,133 +182,72 @@ const AIHub = () => {
           })}
         </div>
 
-        {/* Technical Specifications */}
+        {/* AI Models */}
         <Card className="mb-16">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl mb-4">Technical Specifications</CardTitle>
-            <p className="text-slate-600">Enterprise-grade AI infrastructure built for scale and reliability</p>
+            <CardTitle className="text-2xl mb-4">Our AI Model Portfolio</CardTitle>
+            <p className="text-slate-600">Specialized AI models trained for different aspects of mental health support</p>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {technicalSpecs.map((category, index) => (
-                <div key={index} className="space-y-4">
-                  <h3 className="font-semibold text-lg text-slate-900 border-b border-slate-200 pb-2">
-                    {category.category}
-                  </h3>
-                  <ul className="space-y-2">
-                    {category.specs.map((spec, i) => (
-                      <li key={i} className="flex items-start text-sm">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                        {spec}
-                      </li>
-                    ))}
-                  </ul>
+              {aiModels.map((model, index) => (
+                <div key={index} className="text-center p-6 border rounded-lg hover:shadow-md transition-shadow">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Brain className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-lg mb-2">{model.name}</h3>
+                  <p className="text-blue-600 font-medium mb-2">{model.specialty}</p>
+                  <div className="space-y-1 text-sm text-slate-600">
+                    <p>Accuracy: {model.accuracy}</p>
+                    <p>Languages: {model.languages}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        {/* Innovations */}
-        <Card className="mb-16">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl mb-4">AI Innovations & Breakthroughs</CardTitle>
-            <p className="text-slate-600">Pioneering the future of AI-powered mental health care</p>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {innovations.map((innovation, index) => {
-                const IconComponent = innovation.icon;
-                return (
-                  <div key={index} className="text-center p-6 border rounded-lg hover:shadow-md transition-shadow">
-                    <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <IconComponent className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-lg mb-2">{innovation.title}</h3>
-                    <p className="text-sm text-slate-600 mb-3">{innovation.description}</p>
-                    <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">
-                      {innovation.impact}
-                    </Badge>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Performance Metrics */}
+        {/* Technology Stack */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center text-xl">
-                <BarChart3 className="h-5 w-5 mr-2" />
-                Performance Metrics
+                <Cpu className="h-5 w-5 mr-2" />
+                Technology Stack
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium">Response Time</span>
-                  <Badge variant="outline" className="text-green-600">< 100ms</Badge>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium">Uptime</span>
-                  <Badge variant="outline" className="text-green-600">99.9%</Badge>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium">Concurrent Users</span>
-                  <Badge variant="outline" className="text-blue-600">100K+</Badge>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium">Languages Supported</span>
-                  <Badge variant="outline" className="text-purple-600">29</Badge>
-                </div>
+              <div className="space-y-6">
+                {techStack.map((stack, index) => (
+                  <div key={index}>
+                    <h3 className="font-semibold text-slate-900 mb-2">{stack.category}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {stack.technologies.map((tech, i) => (
+                        <Badge key={i} variant="outline" className="text-xs">{tech}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-50 to-purple-50">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center text-xl">
-                <Eye className="h-5 w-5 mr-2" />
-                AI Capabilities Demo
+                <Star className="h-5 w-5 mr-2" />
+                AI Innovations
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <Button 
-                  className="w-full justify-start" 
-                  variant="outline"
-                  onClick={() => navigate('/voice-technology')}
-                >
-                  <Volume2 className="h-4 w-4 mr-2" />
-                  Voice Emotion Analysis Demo
-                </Button>
-                <Button 
-                  className="w-full justify-start" 
-                  variant="outline"
-                  onClick={() => navigate('/therapysync-ai')}
-                >
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Therapeutic AI Chat Demo
-                </Button>
-                <Button 
-                  className="w-full justify-start" 
-                  variant="outline"
-                  onClick={() => navigate('/crisis-management')}
-                >
-                  <Shield className="h-4 w-4 mr-2" />
-                  Crisis Detection Demo
-                </Button>
-                <Button 
-                  className="w-full justify-start" 
-                  variant="outline"
-                  onClick={() => navigate('/therapist-matching')}
-                >
-                  <Users className="h-4 w-4 mr-2" />
-                  AI Matching Demo
-                </Button>
-              </div>
+              <ul className="space-y-3">
+                {innovations.map((innovation, index) => (
+                  <li key={index} className="flex items-start">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">{innovation}</span>
+                  </li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
         </div>
@@ -345,10 +255,10 @@ const AIHub = () => {
         {/* CTA Section */}
         <Card className="border-0 bg-gradient-to-r from-blue-500 to-purple-500 text-white">
           <CardContent className="p-8 text-center">
-            <h2 className="text-3xl font-bold mb-4">Experience the Future of AI Therapy</h2>
+            <h2 className="text-3xl font-bold mb-4">Ready to Experience the Future of Mental Health?</h2>
             <p className="text-blue-100 mb-8 max-w-2xl mx-auto text-lg">
-              Our AI technologies are transforming mental health care. Join thousands who are experiencing 
-              the power of AI-driven therapy and wellness support.
+              Join thousands who are already benefiting from our advanced AI technology. 
+              Start your personalized mental wellness journey today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -357,7 +267,7 @@ const AIHub = () => {
                 onClick={() => navigate('/therapysync-ai')}
               >
                 <Brain className="h-5 w-5 mr-2" />
-                Try TherapySync AI
+                Try AI Therapy
               </Button>
               <Button 
                 variant="outline"
@@ -365,8 +275,8 @@ const AIHub = () => {
                 className="border-white text-white hover:bg-white/10"
                 onClick={() => navigate('/register')}
               >
-                <Heart className="h-5 w-5 mr-2" />
-                Start Your Journey
+                <Users className="h-5 w-5 mr-2" />
+                Get Started Free
               </Button>
             </div>
           </CardContent>
