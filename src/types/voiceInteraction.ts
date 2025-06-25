@@ -24,29 +24,29 @@ declare global {
     prototype: SpeechRecognition;
     new(): SpeechRecognition;
   };
-}
 
-export interface SpeechRecognitionEvent {
-  resultIndex: number;
-  results: SpeechRecognitionResultList;
-}
+  interface SpeechRecognitionEvent extends Event {
+    resultIndex: number;
+    results: SpeechRecognitionResultList;
+  }
 
-export interface SpeechRecognitionResult {
-  isFinal: boolean;
-  0: {
-    transcript: string;
-    confidence: number;
-  };
-}
+  interface SpeechRecognitionErrorEvent extends Event {
+    error: string;
+    message?: string;
+  }
 
-export interface SpeechRecognitionResultList {
-  length: number;
-  [index: number]: SpeechRecognitionResult;
-}
+  interface SpeechRecognitionResult {
+    isFinal: boolean;
+    0: {
+      transcript: string;
+      confidence: number;
+    };
+  }
 
-export interface SpeechRecognitionErrorEvent {
-  error: string;
-  message?: string;
+  interface SpeechRecognitionResultList {
+    length: number;
+    [index: number]: SpeechRecognitionResult;
+  }
 }
 
 export interface EmotionData {
