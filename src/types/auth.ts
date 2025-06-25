@@ -11,6 +11,7 @@ export interface SecurityEventDetails {
   stored?: string;
   current?: string;
   timestamp?: string;
+  event?: string; // Added missing event property
 }
 
 export interface SecurityEvent {

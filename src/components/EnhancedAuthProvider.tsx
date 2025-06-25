@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { securityMiddleware } from '@/services/securityMiddleware';
@@ -89,7 +88,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       async (event, session) => {
         console.log('EnhancedAuthProvider: Auth state changed:', event);
         
-        // Log authentication events
+        // Log authentication events with proper event property
         await logSecurityEvent('auth_state_change', 'low', { 
           event,
           user_id: session?.user?.id,
@@ -346,7 +345,14 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
   };
 
   const getSecurityMetrics = (): SecurityMetrics => {
-    return securityMiddleware.getSecurityMetrics();
+    // Return proper SecurityMetrics with all required properties
+    return {
+      totalEvents: securityMiddleware.getSecurityMetrics().totalEvents || 0,
+      failedLogins: securityMiddleware.getSecurityMetrics().failedLogins || 0,
+      successfulLogins: securityMiddleware.getSecurityMetrics().successfulLogins || 0,
+      suspiciousActivity: securityMiddleware.getSecurityMetrics().suspiciousActivity || 0,
+      lastActivity: securityMiddleware.getSecurityMetrics().lastActivity
+    };
   };
 
   const value = {
