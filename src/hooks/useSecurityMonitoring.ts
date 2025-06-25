@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { securityMiddleware } from '@/services/securityMiddleware';
+import { complianceFramework } from '@/services/complianceFramework';
 
 interface SecurityAlert {
   id: string;
@@ -9,6 +10,7 @@ interface SecurityAlert {
   message: string;
   timestamp: Date;
   acknowledged: boolean;
+  complianceRelated?: boolean;
 }
 
 interface SecurityMetrics {
@@ -16,6 +18,8 @@ interface SecurityMetrics {
   activeThreats: number;
   blockedAttempts: number;
   systemHealth: number;
+  complianceScore: number;
+  auditEventsToday: number;
 }
 
 export const useSecurityMonitoring = () => {
@@ -24,13 +28,30 @@ export const useSecurityMonitoring = () => {
     threatLevel: 'low',
     activeThreats: 0,
     blockedAttempts: 0,
-    systemHealth: 100
+    systemHealth: 100,
+    complianceScore: 0,
+    auditEventsToday: 0
   });
   const [isMonitoring, setIsMonitoring] = useState(false);
 
   const checkSecurityStatus = useCallback(async () => {
     try {
       const securityData = securityMiddleware.getSecurityMetrics();
+      const complianceConfig = complianceFramework.getComplianceConfig();
+      const auditLogs = complianceFramework.getAuditLogs();
+      
+      // Calculate compliance score
+      let complianceScore = 0;
+      if (complianceConfig.hipaa.enabled) complianceScore += 40;
+      if (complianceConfig.gdpr.enabled) complianceScore += 40;
+      if (complianceConfig.auditLogging.enabled) complianceScore += 20;
+      
+      // Count today's audit events
+      const today = new Date();
+      const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const auditEventsToday = auditLogs.filter(log => 
+        new Date(log.timestamp) >= todayStart
+      ).length;
       
       // Calculate threat level
       let threatLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
@@ -42,7 +63,7 @@ export const useSecurityMonitoring = () => {
         threatLevel = 'medium';
       }
 
-      // Calculate system health (simplified)
+      // Calculate system health
       const baseHealth = 100;
       const healthReduction = Math.min(
         securityData.criticalEvents * 20 + 
@@ -55,7 +76,9 @@ export const useSecurityMonitoring = () => {
         threatLevel,
         activeThreats: securityData.criticalEvents,
         blockedAttempts: securityData.rateLimitViolations,
-        systemHealth: Math.max(baseHealth - healthReduction, 10)
+        systemHealth: Math.max(baseHealth - healthReduction, 10),
+        complianceScore,
+        auditEventsToday
       });
 
       // Generate alerts for critical events
@@ -75,6 +98,27 @@ export const useSecurityMonitoring = () => {
             Date.now() - alert.timestamp.getTime() < 60000 // Don't duplicate within 1 minute
           );
           return exists ? prev : [newAlert, ...prev.slice(0, 9)]; // Keep last 10 alerts
+        });
+      }
+
+      // Generate compliance alerts
+      if (complianceScore < 70) {
+        const newAlert: SecurityAlert = {
+          id: crypto.randomUUID(),
+          type: 'warning',
+          title: 'Compliance Score Below Threshold',
+          message: `Current compliance score is ${complianceScore}%. Review compliance settings.`,
+          timestamp: new Date(),
+          acknowledged: false,
+          complianceRelated: true
+        };
+
+        setAlerts(prev => {
+          const exists = prev.some(alert => 
+            alert.title === newAlert.title && 
+            Date.now() - alert.timestamp.getTime() < 300000 // Don't duplicate within 5 minutes
+          );
+          return exists ? prev : [newAlert, ...prev.slice(0, 9)];
         });
       }
 
@@ -98,12 +142,33 @@ export const useSecurityMonitoring = () => {
         });
       }
 
+      // Log security monitoring event
+      await complianceFramework.logAuditEvent(
+        'security_monitoring_check',
+        'security_system',
+        undefined,
+        {
+          threatLevel,
+          activeThreats: securityData.criticalEvents,
+          complianceScore,
+          auditEventsToday
+        }
+      );
+
     } catch (error) {
       console.error('Security monitoring error:', error);
+      
+      // Log monitoring error
+      await complianceFramework.logAuditEvent(
+        'security_monitoring_error',
+        'security_system',
+        undefined,
+        { error: error.message }
+      );
     }
   }, []);
 
-  const acknowledgeAlert = useCallback((alertId: string) => {
+  const acknowledgeAlert = useCallback(async (alertId: string) => {
     setAlerts(prev => 
       prev.map(alert => 
         alert.id === alertId 
@@ -111,10 +176,26 @@ export const useSecurityMonitoring = () => {
           : alert
       )
     );
+
+    // Log alert acknowledgment
+    await complianceFramework.logAuditEvent(
+      'security_alert_acknowledged',
+      'security_alert',
+      undefined,
+      { alertId }
+    );
   }, []);
 
-  const clearAlert = useCallback((alertId: string) => {
+  const clearAlert = useCallback(async (alertId: string) => {
     setAlerts(prev => prev.filter(alert => alert.id !== alertId));
+    
+    // Log alert clearing
+    await complianceFramework.logAuditEvent(
+      'security_alert_cleared',
+      'security_alert',
+      undefined,
+      { alertId }
+    );
   }, []);
 
   const startMonitoring = useCallback(() => {
@@ -135,7 +216,7 @@ export const useSecurityMonitoring = () => {
 
   // Real-time security event listener
   useEffect(() => {
-    const handleSecurityEvent = (event: CustomEvent) => {
+    const handleSecurityEvent = async (event: CustomEvent) => {
       const securityEvent = event.detail;
       
       if (securityEvent.severity === 'critical') {
@@ -149,6 +230,18 @@ export const useSecurityMonitoring = () => {
         };
         
         setAlerts(prev => [alert, ...prev.slice(0, 9)]);
+        
+        // Log the real-time event
+        await complianceFramework.logAuditEvent(
+          'realtime_security_event',
+          'security_system',
+          undefined,
+          {
+            eventType: securityEvent.type,
+            severity: securityEvent.severity,
+            ipAddress: securityEvent.ipAddress
+          }
+        );
       }
     };
 
