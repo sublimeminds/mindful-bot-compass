@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
 import { SimpleAdminProvider } from "@/components/SimpleAdminProvider";
+import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import AppRouter from "@/components/AppRouter";
 import EnhancedErrorBoundary from "@/components/enhanced/EnhancedErrorBoundary";
 import "./App.css";
@@ -30,11 +31,13 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <SimpleAuthProvider>
           <SimpleAdminProvider>
-            <BrowserRouter>
-              <EnhancedErrorBoundary level="page">
-                <AppRouter />
-              </EnhancedErrorBoundary>
-            </BrowserRouter>
+            <AccessibilityProvider>
+              <BrowserRouter>
+                <EnhancedErrorBoundary level="page">
+                  <AppRouter />
+                </EnhancedErrorBoundary>
+              </BrowserRouter>
+            </AccessibilityProvider>
           </SimpleAdminProvider>
         </SimpleAuthProvider>
       </QueryClientProvider>

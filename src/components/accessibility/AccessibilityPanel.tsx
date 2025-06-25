@@ -23,7 +23,9 @@ const AccessibilityPanel = () => {
 
   const handleSettingChange = (key: keyof typeof settings, value: boolean) => {
     updateSetting(key, value);
-    announceToScreenReader(`${key.replace(/([A-Z])/g, ' $1').toLowerCase()} ${value ? 'enabled' : 'disabled'}`);
+    const keyString = String(key);
+    const readableKey = keyString.replace(/([A-Z])/g, ' $1').toLowerCase();
+    announceToScreenReader(`${readableKey} ${value ? 'enabled' : 'disabled'}`);
   };
 
   const accessibilityOptions = [
