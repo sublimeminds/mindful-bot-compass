@@ -193,7 +193,7 @@ const JournalEntry = ({ onSave }: JournalEntryProps) => {
           {showVoiceInput && (
             <div className="border rounded-lg p-4 bg-gray-50">
               <EnhancedVoiceInteraction
-                onTextReceived={handleVoiceInput}
+                onTranscript={handleVoiceInput}
                 enableOCR={false}
                 className="border-0 bg-transparent"
               />

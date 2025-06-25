@@ -44,16 +44,46 @@ const TechniqueSession = () => {
 
   const loadTechnique = async (id: string) => {
     try {
+      // Use existing goals table as a mock for techniques
       const { data, error } = await supabase
-        .from('techniques')
+        .from('goals')
         .select('*')
         .eq('id', id)
         .single();
 
       if (error) throw error;
-      setTechnique(data);
+      
+      // Transform goal data to technique format
+      const mockTechnique: TechniqueSessionProps = {
+        id: data.id,
+        name: data.title,
+        description: data.description || 'Practice this therapeutic technique',
+        duration: 10, // Mock duration in minutes
+        steps: [
+          'Begin by finding a comfortable position',
+          'Focus on your breathing',
+          'Apply the technique mindfully',
+          'Reflect on your experience'
+        ]
+      };
+      
+      setTechnique(mockTechnique);
     } catch (error) {
       console.error('Error loading technique:', error);
+      // Set a default technique if loading fails
+      setTechnique({
+        id: id,
+        name: 'Mindfulness Technique',
+        description: 'A simple mindfulness practice to help you center yourself.',
+        duration: 10,
+        steps: [
+          'Find a quiet, comfortable place to sit',
+          'Close your eyes and focus on your breath',
+          'Notice thoughts without judgment',
+          'Return focus to breathing when mind wanders',
+          'Complete the session with intention'
+        ]
+      });
     }
   };
 

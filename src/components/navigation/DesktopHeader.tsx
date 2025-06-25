@@ -1,58 +1,34 @@
 
 import React from 'react';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { Menu, Bell, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import Logo from '@/components/navigation/Logo';
-import UnifiedNavigation from '@/components/navigation/UnifiedNavigation';
-import UserMenu from '@/components/navigation/UserMenu';
-import LanguageSelector from '@/components/ui/LanguageSelector';
-import { LayoutDashboard } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
-const DesktopHeader = () => {
+interface DesktopHeaderProps {
+  onMenuToggle: () => void;
+}
+
+const DesktopHeader: React.FC<DesktopHeaderProps> = ({ onMenuToggle }) => {
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          <Logo />
-          
-          <div className="flex-1 mx-8">
-            <UnifiedNavigation />
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <LanguageSelector />
-            {user ? (
-              <div className="flex items-center space-x-3">
-                <Button
-                  onClick={() => navigate('/dashboard')}
-                  className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-medium"
-                >
-                  <LayoutDashboard className="h-4 w-4 mr-2" />
-                  Dashboard
-                </Button>
-                <UserMenu />
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="ghost"
-                  onClick={() => navigate('/login')}
-                >
-                  Sign In
-                </Button>
-                <Button
-                  onClick={() => navigate('/register')}
-                  className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
-                >
-                  Get Started
-                </Button>
-              </div>
-            )}
-          </div>
+    <header className="hidden lg:flex bg-white border-b border-gray-200 px-6 py-4">
+      <div className="flex items-center justify-between w-full">
+        <Button variant="ghost" size="sm" onClick={onMenuToggle}>
+          <Menu className="h-5 w-5" />
+        </Button>
+        
+        <h1 className="text-xl font-semibold text-therapy-800">
+          TherapySync
+        </h1>
+        
+        <div className="flex items-center space-x-3">
+          <Button variant="ghost" size="sm">
+            <Bell className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="sm">
+            <User className="h-5 w-5" />
+          </Button>
         </div>
       </div>
     </header>

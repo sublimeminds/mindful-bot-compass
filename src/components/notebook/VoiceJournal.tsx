@@ -116,8 +116,8 @@ const VoiceJournal = ({ onSave }: VoiceJournalProps) => {
           {/* Enhanced Voice Input */}
           <div className="border rounded-lg p-4">
             <EnhancedVoiceInteraction
-              onTextReceived={handleVoiceInput}
-              onEmotionDetected={handleEmotionDetected}
+              onTranscript={handleVoiceInput}
+              onEmotion={handleEmotionDetected}
               enableOCR={false}
               className="border-0"
             />

@@ -19,7 +19,6 @@ import {
   Lightbulb,
   AlertTriangle
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 
 const EnhancedMoodTracker = () => {
   const { user } = useAuth();

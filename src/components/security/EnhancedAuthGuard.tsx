@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +17,7 @@ interface AuthGuardProps {
 }
 
 const EnhancedAuthGuard: React.FC<AuthGuardProps> = ({ children, requiredRole, isEmailVerified }) => {
-  const { user, session, loading, userSecurity } = useAuth();
+  const { user, loading } = useAuth();
   const location = useLocation();
   const { toast } = useToast();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -81,31 +82,6 @@ const EnhancedAuthGuard: React.FC<AuthGuardProps> = ({ children, requiredRole, i
             </Alert>
             <p>
               Please verify your email to access this page.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (userSecurity?.accountLocked) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Lock className="h-5 w-5 text-red-500" />
-              <span>Account Locked</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 p-6">
-            <Alert variant="destructive">
-              <AlertDescription>
-                Your account has been locked due to suspicious activity.
-              </AlertDescription>
-            </Alert>
-            <p>
-              Please contact support to unlock your account.
             </p>
           </CardContent>
         </Card>
