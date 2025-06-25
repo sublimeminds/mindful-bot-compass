@@ -15,7 +15,6 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { useAuth } from '@/components/SimpleAuthProvider';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 interface IntegrationMetric {
@@ -57,23 +56,57 @@ const AnalyticsIntegration = () => {
     try {
       setLoading(true);
 
-      // Load integration analytics
-      const { data: metrics, error: metricsError } = await supabase
-        .from('integration_analytics')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(100);
+      // Mock integration analytics data until we have the actual table
+      const mockMetrics: IntegrationMetric[] = [
+        {
+          id: '1',
+          integration_type: 'whatsapp',
+          event_name: 'message_sent',
+          success: true,
+          response_time_ms: 250,
+          created_at: new Date(Date.now() - 1000 * 60 * 10).toISOString()
+        },
+        {
+          id: '2', 
+          integration_type: 'slack',
+          event_name: 'notification_sent',
+          success: true,
+          response_time_ms: 180,
+          created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString()
+        },
+        {
+          id: '3',
+          integration_type: 'calendar',
+          event_name: 'appointment_sync',
+          success: false,
+          response_time_ms: 5000,
+          created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString()
+        },
+        {
+          id: '4',
+          integration_type: 'sms',
+          event_name: 'reminder_sent',
+          success: true,
+          response_time_ms: 320,
+          created_at: new Date(Date.now() - 1000 * 60 * 60).toISOString()
+        },
+        {
+          id: '5',
+          integration_type: 'whatsapp',
+          event_name: 'status_check',
+          success: true,
+          response_time_ms: 150,
+          created_at: new Date(Date.now() - 1000 * 60 * 90).toISOString()
+        }
+      ];
 
-      if (metricsError) throw metricsError;
-
-      if (metrics && metrics.length > 0) {
+      if (mockMetrics && mockMetrics.length > 0) {
         // Calculate analytics
-        const total_events = metrics.length;
-        const successful_events = metrics.filter(m => m.success).length;
+        const total_events = mockMetrics.length;
+        const successful_events = mockMetrics.filter(m => m.success).length;
         const success_rate = (successful_events / total_events) * 100;
         
-        const response_times = metrics
+        const response_times = mockMetrics
           .filter(m => m.response_time_ms)
           .map(m => m.response_time_ms);
         const average_response_time = response_times.length > 0
@@ -81,12 +114,12 @@ const AnalyticsIntegration = () => {
           : 0;
 
         const last24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
-        const events_last_24h = metrics.filter(m => 
+        const events_last_24h = mockMetrics.filter(m => 
           new Date(m.created_at) > last24h
         ).length;
 
         // Calculate top integrations
-        const integrationCounts = metrics.reduce((acc, metric) => {
+        const integrationCounts = mockMetrics.reduce((acc, metric) => {
           acc[metric.integration_type] = (acc[metric.integration_type] || 0) + 1;
           return acc;
         }, {} as Record<string, number>);
@@ -108,7 +141,7 @@ const AnalyticsIntegration = () => {
         });
 
         // Set recent events for the table
-        setRecentEvents(metrics.slice(0, 10));
+        setRecentEvents(mockMetrics.slice(0, 10));
       } else {
         setAnalytics({
           total_events: 0,
