@@ -20,7 +20,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { complianceFramework } from '@/services/complianceFramework';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const ComplianceDashboard = () => {
   const [auditLogs, setAuditLogs] = useState([]);
@@ -81,7 +81,7 @@ const ComplianceDashboard = () => {
 
     setLoading(true);
     try {
-      const success = await complianceFramework.processDataErasureRequest(userId, reason);
+      const success = await complianceFramework.processDataErasureRequest(userId);
       if (success) {
         alert('Data erasure completed successfully.');
       } else {
@@ -161,7 +161,7 @@ const ComplianceDashboard = () => {
 
   const handleDataPortabilityRequest = async () => {
     try {
-      const exportId = await complianceFramework.processDataPortabilityRequest('user123', 'full_export');
+      const exportId = await complianceFramework.processDataPortabilityRequest('user123');
       toast.success(`Data export created: ${exportId}`);
     } catch (error) {
       toast.error('Failed to process data portability request');
