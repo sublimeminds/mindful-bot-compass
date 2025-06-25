@@ -3,8 +3,9 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { SimpleAuthProvider } from "@/components/SimpleAuthProvider";
+import { SimpleAdminProvider } from "@/components/SimpleAdminProvider";
 import AppRouter from "@/components/AppRouter";
-import SimpleErrorBoundary from "@/components/SimpleErrorBoundary";
+import EnhancedErrorBoundary from "@/components/enhanced/EnhancedErrorBoundary";
 import "./App.css";
 import './i18n';
 
@@ -14,6 +15,8 @@ const queryClient = new QueryClient({
       retry: 1,
       staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
+      retryOnMount: false,
+      refetchOnReconnect: false,
     },
     mutations: {
       retry: 1,
@@ -23,15 +26,19 @@ const queryClient = new QueryClient({
 
 const App = () => {
   return (
-    <SimpleErrorBoundary>
+    <EnhancedErrorBoundary level="critical">
       <QueryClientProvider client={queryClient}>
         <SimpleAuthProvider>
-          <BrowserRouter>
-            <AppRouter />
-          </BrowserRouter>
+          <SimpleAdminProvider>
+            <BrowserRouter>
+              <EnhancedErrorBoundary level="page">
+                <AppRouter />
+              </EnhancedErrorBoundary>
+            </BrowserRouter>
+          </SimpleAdminProvider>
         </SimpleAuthProvider>
       </QueryClientProvider>
-    </SimpleErrorBoundary>
+    </EnhancedErrorBoundary>
   );
 };
 
