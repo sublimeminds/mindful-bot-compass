@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,6 +20,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { complianceFramework } from '@/services/complianceFramework';
+import { toast } from 'react-toastify';
 
 const ComplianceDashboard = () => {
   const [auditLogs, setAuditLogs] = useState([]);
@@ -158,6 +158,15 @@ const ComplianceDashboard = () => {
   };
 
   const complianceScore = getComplianceScore();
+
+  const handleDataPortabilityRequest = async () => {
+    try {
+      const exportId = await complianceFramework.processDataPortabilityRequest('user123', 'full_export');
+      toast.success(`Data export created: ${exportId}`);
+    } catch (error) {
+      toast.error('Failed to process data portability request');
+    }
+  };
 
   return (
     <div className="space-y-6">
