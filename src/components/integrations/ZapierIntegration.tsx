@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Zap, Settings, Link, Plus } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 
 const ZapierIntegration = () => {
   const { user } = useAuth();
@@ -23,28 +23,19 @@ const ZapierIntegration = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Load Zapier settings from database
+    // Mock loading settings
     loadZapierSettings();
   }, [user]);
 
   const loadZapierSettings = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('zapier_integrations')
-        .select('*')
-        .eq('user_id', user?.id)
-        .single();
-
-      if (error) throw error;
-
-      if (data) {
-        setApiKey(data.api_key || '');
-        setIsIntegrationEnabled(data.is_active || false);
-        setTriggerEvent(data.trigger_event || '');
-        setActionType(data.action_type || '');
-        setWebhookUrl(data.webhook_url || '');
-      }
+      // Mock data - no database dependency
+      setApiKey('');
+      setIsIntegrationEnabled(false);
+      setTriggerEvent('');
+      setActionType('');
+      setWebhookUrl('');
     } catch (error) {
       console.error('Error loading Zapier settings:', error);
       toast({
@@ -60,19 +51,7 @@ const ZapierIntegration = () => {
   const saveZapierSettings = async () => {
     try {
       setLoading(true);
-      const { error } = await supabase
-        .from('zapier_integrations')
-        .upsert({
-          user_id: user?.id,
-          api_key: apiKey,
-          is_active: isIntegrationEnabled,
-          trigger_event: triggerEvent,
-          action_type: actionType,
-          webhook_url: webhookUrl,
-        });
-
-      if (error) throw error;
-
+      // Mock save - no database dependency
       toast({
         title: "Settings Saved",
         description: "Zapier integration settings saved successfully.",

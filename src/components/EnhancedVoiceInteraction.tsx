@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Mic, MicOff, Volume2, VolumeX, Settings, Activity } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { VoiceMetadata, EmotionData, SpeechRecognitionEvent, VoiceErrorEvent } from '@/types/voiceInteraction';
+import { VoiceMetadata, EmotionData, CustomSpeechRecognitionEvent, CustomSpeechRecognitionErrorEvent } from '@/types/voiceInteraction';
 
 interface VoiceSettings {
   pitch: number;
@@ -104,11 +105,11 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
     recognitionRef.current.interimResults = true;
     recognitionRef.current.lang = language;
 
-    recognitionRef.current.onstart = () => {
+    recognitionRef.current.addEventListener('start', () => {
       setState(prevState => ({ ...prevState, isListening: true, isProcessing: false }));
-    };
+    });
 
-    recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+    recognitionRef.current.addEventListener('result', (event: any) => {
       let interimTranscript = '';
       let finalTranscript = '';
       let currentConfidence = 0;
@@ -139,13 +140,13 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
         };
         onTranscript(finalTranscript || interimTranscript, metadata);
       }
-    };
+    });
 
-    recognitionRef.current.onend = () => {
+    recognitionRef.current.addEventListener('end', () => {
       setState(prevState => ({ ...prevState, isListening: false }));
-    };
+    });
 
-    recognitionRef.current.onerror = (event: VoiceErrorEvent) => {
+    recognitionRef.current.addEventListener('error', (event: any) => {
       console.error('Speech recognition error:', event.error);
       toast({
         title: "Speech Recognition Error",
@@ -153,7 +154,7 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
         variant: "destructive",
       });
       setState(prevState => ({ ...prevState, isListening: false }));
-    };
+    });
 
     recognitionRef.current.start();
   }, [language, onTranscript, toast]);

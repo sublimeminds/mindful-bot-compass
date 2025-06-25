@@ -22,20 +22,19 @@ export interface OCRBoundingBox {
   confidence: number;
 }
 
-// Use existing browser Speech Recognition types instead of redeclaring
-export interface SpeechRecognitionEventTarget extends EventTarget {
-  results: SpeechRecognitionResultList;
+// Custom speech recognition types to avoid conflicts
+export interface CustomSpeechRecognitionResult {
+  transcript: string;
+  confidence: number;
+  isFinal: boolean;
+}
+
+export interface CustomSpeechRecognitionEvent {
+  results: CustomSpeechRecognitionResult[];
   resultIndex: number;
 }
 
-export interface VoiceRecognitionEvent extends Event {
-  target: SpeechRecognitionEventTarget;
-}
-
-export interface SpeechRecognitionErrorEventTarget extends EventTarget {
+export interface CustomSpeechRecognitionErrorEvent {
   error: string;
-}
-
-export interface VoiceErrorEvent extends Event {
-  target: SpeechRecognitionErrorEventTarget;
+  message?: string;
 }

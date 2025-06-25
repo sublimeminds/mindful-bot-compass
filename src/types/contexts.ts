@@ -11,11 +11,13 @@ export interface AuthContextType {
 
 export interface AdminContextType {
   isAdmin: boolean;
+  adminRole: string | null;
   adminData: any;
+  permissions: string[];
+  hasPermission: (permission: string) => boolean;
 }
 
 export interface TherapistContextType {
-  therapist: any;
-  loading: boolean;
-  updateTherapist: (data: any) => Promise<void>;
+  selectedTherapist: string | null;
+  setSelectedTherapist: (id: string) => void;
 }

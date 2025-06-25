@@ -14,6 +14,7 @@ export const SimpleAdminProvider: React.FC<AdminProviderProps> = ({ children }) 
   const [adminData, setAdminData] = useState<AdminContextType>({
     isAdmin: false,
     adminRole: null,
+    adminData: null,
     permissions: [],
     hasPermission: () => false
   });
@@ -57,6 +58,7 @@ export const SimpleAdminProvider: React.FC<AdminProviderProps> = ({ children }) 
       setAdminData({
         isAdmin,
         adminRole,
+        adminData: user,
         permissions,
         hasPermission
       });
@@ -69,6 +71,7 @@ export const SimpleAdminProvider: React.FC<AdminProviderProps> = ({ children }) 
       setAdminData({
         isAdmin: false,
         adminRole: null,
+        adminData: null,
         permissions: [],
         hasPermission: () => false
       });
