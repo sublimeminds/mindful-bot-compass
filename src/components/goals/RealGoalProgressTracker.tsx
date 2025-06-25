@@ -21,6 +21,11 @@ interface Goal {
   created_at: string;
   user_id: string;
   is_completed: boolean;
+  category: string;
+  type: string;
+  priority: string;
+  notes: string;
+  tags: string[];
 }
 
 const RealGoalProgressTracker = () => {
@@ -77,6 +82,11 @@ const RealGoalProgressTracker = () => {
           target_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
           user_id: user.id,
           is_completed: false,
+          category: 'wellness',
+          type: 'progress',
+          priority: 'medium',
+          notes: '',
+          tags: []
         });
 
       if (error) throw error;

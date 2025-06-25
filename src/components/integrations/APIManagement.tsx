@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,10 +14,15 @@ import { Key, Copy, Trash2, Plus, Eye, EyeOff } from 'lucide-react';
 interface APIKey {
   id: string;
   name: string;
-  key: string;
+  key_hash: string;
   created_at: string;
   is_active: boolean;
   user_id: string;
+  expires_at: string;
+  last_used_at: string;
+  permissions: any;
+  rate_limit: number;
+  updated_at: string;
 }
 
 const APIManagement = () => {
@@ -77,7 +83,7 @@ const APIManagement = () => {
         .from('api_keys')
         .insert({
           name: newKeyName,
-          key: apiKey,
+          key_hash: apiKey,
           user_id: user.id,
           is_active: true,
         });
@@ -125,7 +131,7 @@ const APIManagement = () => {
   };
 
   const copyAPIKey = (apiKey: APIKey) => {
-    navigator.clipboard.writeText(apiKey.key);
+    navigator.clipboard.writeText(apiKey.key_hash);
     toast({
       title: "API Key Copied",
       description: "API key copied to clipboard.",
@@ -182,7 +188,7 @@ const APIManagement = () => {
                     Created: {new Date(apiKey.created_at).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-gray-500">
-                    Key: {showKey ? apiKey.key : '********************************'}
+                    Key: {showKey ? apiKey.key_hash : '********************************'}
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
