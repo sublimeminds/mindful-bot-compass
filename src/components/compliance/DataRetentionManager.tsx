@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -111,19 +110,19 @@ const DataRetentionManager = () => {
   const getStatusColor = (policy) => {
     const now = new Date();
     const daysSinceExecution = policy.lastExecuted 
-      ? Math.floor((now - new Date(policy.lastExecuted)) / (1000 * 60 * 60 * 24))
+      ? Math.floor((now.getTime() - new Date(policy.lastExecuted).getTime()) / (1000 * 60 * 60 * 24))
       : null;
 
     if (!policy.lastExecuted) return 'bg-yellow-100 text-yellow-800';
-    if (daysSinceExecution > 7) return 'bg-red-100 text-red-800';
-    if (daysSinceExecution > 3) return 'bg-orange-100 text-orange-800';
+    if (daysSinceExecution && daysSinceExecution > 7) return 'bg-red-100 text-red-800';
+    if (daysSinceExecution && daysSinceExecution > 3) return 'bg-orange-100 text-orange-800';
     return 'bg-green-100 text-green-800';
   };
 
   const getStatusText = (policy) => {
     const now = new Date();
     const daysSinceExecution = policy.lastExecuted 
-      ? Math.floor((now - new Date(policy.lastExecuted)) / (1000 * 60 * 60 * 24))
+      ? Math.floor((now.getTime() - new Date(policy.lastExecuted).getTime()) / (1000 * 60 * 60 * 24))
       : null;
 
     if (!policy.lastExecuted) return 'Never Executed';
