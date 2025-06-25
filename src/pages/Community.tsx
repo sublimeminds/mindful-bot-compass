@@ -1,9 +1,8 @@
-
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CommunityDashboard from '@/components/community/CommunityDashboard';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 
 const Community = () => {
   const { user } = useAuth();

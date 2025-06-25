@@ -1,8 +1,10 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/hooks/useAuth';
+import { MessageCircle, Sparkles, Heart, ArrowRight, Brain, Shield, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/components/SimpleAuthProvider';
 
 const HeroSection = () => {
   const navigate = useNavigate();

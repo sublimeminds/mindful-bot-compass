@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 import DashboardLayout from './dashboard/DashboardLayout';
 
 const UserDashboard = () => {

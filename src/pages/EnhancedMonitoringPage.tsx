@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import EnhancedSystemHealthDashboard from '@/components/monitoring/EnhancedSystemHealthDashboard';

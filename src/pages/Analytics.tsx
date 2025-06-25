@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 import RealAnalyticsDashboard from '@/components/analytics/RealAnalyticsDashboard';
 

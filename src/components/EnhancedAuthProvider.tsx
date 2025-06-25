@@ -8,6 +8,11 @@ import { useSecurityLogger } from '@/hooks/useSecurityLogger';
 import { useUserSecurity } from '@/hooks/useUserSecurity';
 import { SecurityMetrics } from '@/types/auth';
 
+interface SecurityInitResult {
+  isTrusted: boolean;
+  mfaStatus: boolean;
+}
+
 interface EnhancedAuthContextType {
   user: User | null;
   session: Session | null;
@@ -54,9 +59,9 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
     
     if (session?.user) {
       try {
-        const { isTrusted, mfaStatus } = await initializeUserSecurity(session.user);
-        setDeviceTrusted(isTrusted);
-        setMfaEnabled(mfaStatus);
+        const securityResult: SecurityInitResult = await initializeUserSecurity(session.user);
+        setDeviceTrusted(securityResult.isTrusted);
+        setMfaEnabled(securityResult.mfaStatus);
       } catch (error) {
         console.error('Security initialization failed:', error);
       }
@@ -86,9 +91,9 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
           
           if (initialSession?.user) {
             try {
-              const { isTrusted, mfaStatus } = await initializeUserSecurity(initialSession.user);
-              setDeviceTrusted(isTrusted);
-              setMfaEnabled(mfaStatus);
+              const securityResult: SecurityInitResult = await initializeUserSecurity(initialSession.user);
+              setDeviceTrusted(securityResult.isTrusted);
+              setMfaEnabled(securityResult.mfaStatus);
             } catch (error) {
               console.error('Security initialization failed:', error);
               await logSecurityEvent('security_init_error', 'high', { error: (error as Error).message });

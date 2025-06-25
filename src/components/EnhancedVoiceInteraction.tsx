@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,6 +14,22 @@ import {
   EmotionData,
   OCRBoundingBox
 } from '@/types/voiceInteraction';
+
+interface PersonalityTraits {
+  openness: number;
+  conscientiousness: number;
+  extraversion: number;
+  agreeableness: number;
+  neuroticism: number;
+}
+
+interface EffectivenessAreas {
+  anxiety: number;
+  depression: number;
+  stress: number;
+  relationships: number;
+  self_esteem: number;
+}
 
 interface VoiceAnalysisResult {
   transcript: string;

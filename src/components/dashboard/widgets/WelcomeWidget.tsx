@@ -1,74 +1,52 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/components/SimpleAuthProvider';
-import { Calendar, Clock, TrendingUp, Target } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { MessageSquare, Sparkles, Heart, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const WelcomeWidget = () => {
   const { user } = useAuth();
-  const currentHour = new Date().getHours();
-  
-  const getGreeting = () => {
-    if (currentHour < 12) return 'Good morning';
-    if (currentHour < 18) return 'Good afternoon';
-    return 'Good evening';
-  };
-
-  const getMotivationalMessage = () => {
-    const messages = [
-      "Every step forward is progress worth celebrating.",
-      "Your mental health journey matters.",
-      "Small improvements lead to big changes.",
-      "You're stronger than you think.",
-      "Today is a new opportunity for growth."
-    ];
-    return messages[Math.floor(Math.random() * messages.length)];
-  };
+  const navigate = useNavigate();
 
   return (
-    <Card className="bg-gradient-to-r from-therapy-500 to-therapy-600 text-white border-0">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-2xl font-bold text-white">
-              {getGreeting()}, {user?.email?.split('@')[0] || 'there'}!
-            </CardTitle>
-            <p className="text-therapy-100 mt-1">
-              {getMotivationalMessage()}
-            </p>
-          </div>
-          <div className="text-right">
-            <Badge variant="secondary" className="bg-white/20 text-white border-0">
-              {new Date().toLocaleDateString('en-US', { 
-                weekday: 'long',
-                month: 'short', 
-                day: 'numeric' 
-              })}
-            </Badge>
-          </div>
-        </div>
+    <Card className="bg-gradient-to-br from-therapy-50/70 to-calm-50/70 border-0 shadow-md">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+        <CardTitle className="text-sm font-medium flex items-center space-x-2">
+          <Sparkles className="h-4 w-4 text-yellow-500" />
+          <span>Welcome!</span>
+        </CardTitle>
+        <Badge variant="secondary">
+          {user ? 'Authenticated' : 'Guest'}
+        </Badge>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <Calendar className="h-4 w-4" />
-              <span className="text-sm">Day 5 streak</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Target className="h-4 w-4" />
-              <span className="text-sm">2/3 goals this week</span>
-            </div>
+      <CardContent>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-semibold">
+            {user ? `Welcome back, ${user.email}!` : 'Welcome to TherapySync'}
+          </h2>
+          <p className="text-muted-foreground">
+            {user ? 'Ready for your next session?' : 'Start your journey to better mental health.'}
+          </p>
+          <div className="flex items-center space-x-4 mt-4">
+            {user ? (
+              <>
+                <Button onClick={() => navigate('/session')} className="bg-therapy-500 hover:bg-therapy-600 text-white">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Start Session
+                </Button>
+                <Button variant="outline" onClick={() => navigate('/goals')}>
+                  <Target className="h-4 w-4 mr-2" />
+                  Track Goals
+                </Button>
+              </>
+            ) : (
+              <Button onClick={() => navigate('/auth')} className="bg-therapy-500 hover:bg-therapy-600 text-white">
+                Get Started
+              </Button>
+            )}
           </div>
-          <Button 
-            variant="secondary" 
-            size="sm"
-            className="bg-white/20 hover:bg-white/30 text-white border-0"
-          >
-            Start Session
-          </Button>
         </div>
       </CardContent>
     </Card>

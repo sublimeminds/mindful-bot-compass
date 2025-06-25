@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 import WelcomeWidget from './widgets/WelcomeWidget';
 import QuickStatsWidget from './widgets/QuickStatsWidget';
 import WeeklyOverviewWidget from './widgets/WeeklyOverviewWidget';
