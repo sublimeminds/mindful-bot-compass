@@ -1,16 +1,8 @@
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext } from 'react';
 import { TherapistContextType } from '@/types/contexts';
 
-const TherapistContext = createContext<TherapistContextType | undefined>(undefined);
-
-export const useTherapist = () => {
-  const context = useContext(TherapistContext);
-  if (!context) {
-    throw new Error('useTherapist must be used within a TherapistProvider');
-  }
-  return context;
-};
+export const TherapistContext = createContext<TherapistContextType | undefined>(undefined);
 
 interface TherapistProviderProps {
   children: React.ReactNode;

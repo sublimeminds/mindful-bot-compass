@@ -25,14 +25,6 @@ interface EnhancedAuthContextType {
 
 const EnhancedAuthContext = createContext<EnhancedAuthContextType | undefined>(undefined);
 
-export const useEnhancedAuth = () => {
-  const context = useContext(EnhancedAuthContext);
-  if (!context) {
-    throw new Error('useEnhancedAuth must be used within an EnhancedAuthProvider');
-  }
-  return context;
-};
-
 interface EnhancedAuthProviderProps {
   children: React.ReactNode;
 }
@@ -46,6 +38,36 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
 
   const { logSecurityEvent } = useSecurityLogger(user);
   const { initializeUserSecurity } = useUserSecurity();
+
+  const handleAuthStateChange = React.useCallback(async (event: string, session: Session | null) => {
+    console.log('EnhancedAuthProvider: Auth state changed:', event);
+    
+    // Log authentication events with proper event property
+    await logSecurityEvent('auth_state_change', 'low', { 
+      event,
+      user_id: session?.user?.id,
+      timestamp: new Date().toISOString()
+    });
+
+    setSession(session);
+    setUser(session?.user ?? null);
+    
+    if (session?.user) {
+      try {
+        const { isTrusted, mfaStatus } = await initializeUserSecurity(session.user);
+        setDeviceTrusted(isTrusted);
+        setMfaEnabled(mfaStatus);
+      } catch (error) {
+        console.error('Security initialization failed:', error);
+      }
+    } else {
+      // Clear security state on logout
+      setMfaEnabled(false);
+      setDeviceTrusted(false);
+    }
+    
+    setLoading(false);
+  }, [logSecurityEvent, initializeUserSecurity]);
 
   useEffect(() => {
     console.log('EnhancedAuthProvider: Initializing enhanced auth...');
@@ -85,43 +107,13 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
     initializeAuth();
 
     // Listen for auth changes with enhanced security
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('EnhancedAuthProvider: Auth state changed:', event);
-        
-        // Log authentication events with proper event property
-        await logSecurityEvent('auth_state_change', 'low', { 
-          event,
-          user_id: session?.user?.id,
-          timestamp: new Date().toISOString()
-        });
-
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          try {
-            const { isTrusted, mfaStatus } = await initializeUserSecurity(session.user);
-            setDeviceTrusted(isTrusted);
-            setMfaEnabled(mfaStatus);
-          } catch (error) {
-            console.error('Security initialization failed:', error);
-          }
-        } else {
-          // Clear security state on logout
-          setMfaEnabled(false);
-          setDeviceTrusted(false);
-        }
-        
-        setLoading(false);
-      }
-    );
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthStateChange);
 
     return () => {
       console.log('EnhancedAuthProvider: Cleaning up auth listener...');
       subscription.unsubscribe();
     };
-  }, [logSecurityEvent, initializeUserSecurity]);
+  }, [handleAuthStateChange]);
 
   const login = async (email: string, password: string, mfaCode?: string) => {
     console.log('EnhancedAuthProvider: Attempting enhanced login...');
@@ -380,4 +372,12 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       {children}
     </EnhancedAuthContext.Provider>
   );
+};
+
+export const useEnhancedAuth = () => {
+  const context = useContext(EnhancedAuthContext);
+  if (!context) {
+    throw new Error('useEnhancedAuth must be used within an EnhancedAuthProvider');
+  }
+  return context;
 };

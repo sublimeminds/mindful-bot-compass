@@ -10,20 +10,10 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  SpeechRecognitionEvent, 
-  SpeechRecognitionErrorEvent,
   VoiceMetadata,
   EmotionData,
   OCRBoundingBox
 } from '@/types/voiceInteraction';
-
-// Extend the Window interface to include SpeechRecognition
-declare global {
-  interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
-  }
-}
 
 interface VoiceAnalysisResult {
   transcript: string;
@@ -171,7 +161,8 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
         description: `Listening in ${selectedLanguage}`,
       });
     } catch (error) {
-      handleVoiceError(`Failed to start recognition: ${error}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      handleVoiceError(`Failed to start recognition: ${errorMessage}`);
     }
   };
 

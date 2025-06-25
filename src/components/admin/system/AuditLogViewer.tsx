@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,11 +37,7 @@ const AuditLogViewer = () => {
   const [page, setPage] = useState(1);
   const logsPerPage = 10;
 
-  useEffect(() => {
-    fetchAuditLogs();
-  }, [page]);
-
-  const fetchAuditLogs = async () => {
+  const fetchAuditLogs = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -70,7 +66,11 @@ const AuditLogViewer = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, logsPerPage]);
+
+  useEffect(() => {
+    fetchAuditLogs();
+  }, [fetchAuditLogs]);
 
   const generateMockLogs = (): AuditLog[] => {
     const actions = ['view', 'create', 'update', 'delete'];

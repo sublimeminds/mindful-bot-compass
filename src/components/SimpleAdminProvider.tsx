@@ -1,17 +1,9 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import React, { createContext, useEffect, useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 import { AdminContextType } from '@/types/contexts';
 
-const AdminContext = createContext<AdminContextType | undefined>(undefined);
-
-export const useAdmin = () => {
-  const context = useContext(AdminContext);
-  if (!context) {
-    throw new Error('useAdmin must be used within an AdminProvider');
-  }
-  return context;
-};
+export const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 interface AdminProviderProps {
   children: React.ReactNode;

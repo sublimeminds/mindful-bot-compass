@@ -78,7 +78,7 @@ const NotificationToastHandler = () => {
       }
       isSubscribedRef.current = false;
     };
-  }, [user]); // Added user as dependency
+  }, [user]);
 
   return null; // This is a utility component that doesn't render anything
 };
