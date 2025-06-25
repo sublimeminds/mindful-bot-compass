@@ -1,3 +1,4 @@
+
 import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -24,6 +25,19 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       "@typescript-eslint/no-unused-vars": "off",
+      // Custom rule to prevent Print icon imports
+      "no-restricted-imports": [
+        "error",
+        {
+          "paths": [
+            {
+              "name": "lucide-react",
+              "importNames": ["Print"],
+              "message": "Use 'Printer' instead of 'Print' from lucide-react. The 'Print' icon doesn't exist."
+            }
+          ]
+        }
+      ]
     },
   }
 );

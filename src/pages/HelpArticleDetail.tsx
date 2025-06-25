@@ -1,10 +1,11 @@
+
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Clock, Calendar, BookOpen, ThumbsUp, Share2, Printer } from 'lucide-react';
+import { SafeIcons } from '@/utils/iconImports';
 
 const HelpArticleDetail = () => {
   const { id } = useParams();
@@ -103,7 +104,7 @@ const HelpArticleDetail = () => {
               onClick={() => navigate('/help/articles')}
               className="mb-4 text-therapy-600 hover:text-therapy-700"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <SafeIcons.ArrowLeft className="h-4 w-4 mr-2" />
               Back to Articles
             </Button>
             
@@ -119,11 +120,11 @@ const HelpArticleDetail = () => {
             
             <div className="flex items-center space-x-6 text-sm text-therapy-600">
               <div className="flex items-center">
-                <Calendar className="h-4 w-4 mr-2" />
+                <SafeIcons.Calendar className="h-4 w-4 mr-2" />
                 {new Date(article.publishDate).toLocaleDateString()}
               </div>
               <div className="flex items-center">
-                <Clock className="h-4 w-4 mr-2" />
+                <SafeIcons.Clock className="h-4 w-4 mr-2" />
                 {article.readTime}
               </div>
             </div>
@@ -132,15 +133,15 @@ const HelpArticleDetail = () => {
           {/* Action Buttons */}
           <div className="flex items-center space-x-4 mb-8 pb-6 border-b border-therapy-200">
             <Button variant="outline" size="sm">
-              <ThumbsUp className="h-4 w-4 mr-2" />
+              <SafeIcons.ThumbsUp className="h-4 w-4 mr-2" />
               Helpful
             </Button>
             <Button variant="outline" size="sm">
-              <Share2 className="h-4 w-4 mr-2" />
+              <SafeIcons.Share2 className="h-4 w-4 mr-2" />
               Share
             </Button>
             <Button variant="outline" size="sm">
-              <Printer className="h-4 w-4 mr-2" />
+              <SafeIcons.Printer className="h-4 w-4 mr-2" />
               Print
             </Button>
           </div>
@@ -183,7 +184,7 @@ const HelpArticleDetail = () => {
                   className="w-full justify-start text-left h-auto p-3"
                   onClick={() => navigate('/help/articles/2')}
                 >
-                  <BookOpen className="h-4 w-4 mr-3 flex-shrink-0" />
+                  <SafeIcons.BookOpen className="h-4 w-4 mr-3 flex-shrink-0" />
                   <div>
                     <div className="font-medium">Maximizing Your AI Therapy Sessions</div>
                     <div className="text-sm text-therapy-600">Tips and strategies for effective therapeutic conversations</div>
@@ -194,7 +195,7 @@ const HelpArticleDetail = () => {
                   className="w-full justify-start text-left h-auto p-3"
                   onClick={() => navigate('/help/articles/3')}
                 >
-                  <BookOpen className="h-4 w-4 mr-3 flex-shrink-0" />
+                  <SafeIcons.BookOpen className="h-4 w-4 mr-3 flex-shrink-0" />
                   <div>
                     <div className="font-medium">Building Healthy Coping Strategies</div>
                     <div className="text-sm text-therapy-600">Evidence-based techniques for managing difficult emotions</div>

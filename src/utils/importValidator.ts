@@ -7,9 +7,17 @@ interface ImportValidationResult {
   suggestions: string[];
 }
 
+interface LucideIconValidationResult {
+  isValid: boolean;
+  invalidIcons: string[];
+  suggestions: string[];
+}
+
 class ImportValidator {
   private static instance: ImportValidator;
   private validatedFiles: Set<string> = new Set();
+  private invalidLucideIcons = ['Print']; // Icons that don't exist
+  private validLucideIcons = ['Printer', 'ArrowLeft', 'Clock', 'Calendar', 'BookOpen', 'ThumbsUp', 'Share2'];
 
   static getInstance(): ImportValidator {
     if (!ImportValidator.instance) {
@@ -53,19 +61,61 @@ class ImportValidator {
     return { isValid, issues, suggestions };
   }
 
-  validateFileImports(filename: string): void {
+  validateLucideIcons(code: string): LucideIconValidationResult {
+    const invalidIcons: string[] = [];
+    const suggestions: string[] = [];
+
+    // Check for invalid lucide-react icon imports
+    const importRegex = /import\s*\{([^}]+)\}\s*from\s*['"]lucide-react['"]/g;
+    let match;
+
+    while ((match = importRegex.exec(code)) !== null) {
+      const imports = match[1].split(',').map(imp => imp.trim());
+      
+      for (const imp of imports) {
+        if (this.invalidLucideIcons.includes(imp)) {
+          invalidIcons.push(imp);
+          
+          if (imp === 'Print') {
+            suggestions.push('Replace "Print" with "Printer" - the Print icon does not exist in lucide-react');
+          }
+        }
+      }
+    }
+
+    return {
+      isValid: invalidIcons.length === 0,
+      invalidIcons,
+      suggestions
+    };
+  }
+
+  validateFileImports(filename: string, code?: string): void {
     if (this.validatedFiles.has(filename)) {
       return; // Already validated
     }
 
-    const validation = this.validateReactImports();
+    const reactValidation = this.validateReactImports();
     
-    if (!validation.isValid) {
-      console.warn(`ImportValidator: Issues found in ${filename}`, {
+    if (!reactValidation.isValid) {
+      console.warn(`ImportValidator: React issues found in ${filename}`, {
         filename,
-        issues: validation.issues,
-        suggestions: validation.suggestions
+        issues: reactValidation.issues,
+        suggestions: reactValidation.suggestions
       });
+    }
+
+    // Validate Lucide icons if code is provided
+    if (code) {
+      const lucideValidation = this.validateLucideIcons(code);
+      
+      if (!lucideValidation.isValid) {
+        console.error(`ImportValidator: Invalid Lucide icons found in ${filename}`, {
+          filename,
+          invalidIcons: lucideValidation.invalidIcons,
+          suggestions: lucideValidation.suggestions
+        });
+      }
     }
 
     this.validatedFiles.add(filename);
@@ -79,6 +129,8 @@ class ImportValidator {
       issues: validation.issues,
       suggestions: validation.suggestions,
       validatedFiles: Array.from(this.validatedFiles),
+      invalidLucideIcons: this.invalidLucideIcons,
+      validLucideIcons: this.validLucideIcons,
       timestamp: new Date().toISOString()
     };
   }
@@ -91,8 +143,8 @@ class ImportValidator {
 export const importValidator = ImportValidator.getInstance();
 
 // Development-only import validation
-export const validateComponentImports = (componentName: string): void => {
+export const validateComponentImports = (componentName: string, code?: string): void => {
   if (import.meta.env.DEV) {
-    importValidator.validateFileImports(componentName);
+    importValidator.validateFileImports(componentName, code);
   }
 };

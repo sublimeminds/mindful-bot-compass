@@ -35,10 +35,11 @@ export default defineConfig(({ mode }) => ({
       'react-dom', 
       'react/jsx-runtime',
       '@supabase/supabase-js',
-      '@tanstack/react-query'
+      '@tanstack/react-query',
+      'lucide-react'
     ],
-    // Force rebuild to ensure clean state
-    force: mode === 'development'
+    // Force rebuild to ensure clean state and clear cache
+    force: true
   },
   define: {
     global: 'globalThis',
@@ -52,7 +53,8 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           react: ['react', 'react-dom'],
-          vendor: ['@supabase/supabase-js', '@tanstack/react-query']
+          vendor: ['@supabase/supabase-js', '@tanstack/react-query'],
+          icons: ['lucide-react']
         }
       }
     }
