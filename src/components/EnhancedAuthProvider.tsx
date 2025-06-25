@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { securityMiddleware } from '@/services/securityMiddleware';
@@ -146,11 +145,12 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
 
   const logSecurityEvent = async (eventType: string, severity: 'low' | 'medium' | 'high' | 'critical', details: any) => {
     try {
-      const response = await fetch('/supabase/functions/v1/security-monitor/events', {
+      const projectId = 'dbwrbjjmraodegffupnx';
+      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/security-monitor/events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabase.supabaseKey}`
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRid3JiamptcmFvZGVnZmZ1cG54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk0NjcwNTksImV4cCI6MjA2NTA0MzA1OX0.cY8oKDsNDOzYj7GsWFjFvFoze47lZQe9JM9khJMc6G4`
         },
         body: JSON.stringify({
           event_type: eventType,
