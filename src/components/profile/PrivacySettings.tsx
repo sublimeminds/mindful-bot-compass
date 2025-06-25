@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -310,7 +311,7 @@ const PrivacySettings = () => {
 
       <Button onClick={saveSettings} disabled={saving} className="w-full">
         <Save className="h-4 w-4 mr-2" />
-        {saving ? 'Save Privacy Settings'}
+        {saving ? 'Saving...' : 'Save Privacy Settings'}
       </Button>
     </div>
   );
