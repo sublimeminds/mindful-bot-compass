@@ -1,14 +1,6 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 
-// Extend the Window interface to include SpeechRecognition
-declare global {
-  interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
-  }
-}
-
 interface VoiceInteractionState {
   isListening: boolean;
   isSupported: boolean;
@@ -33,54 +25,56 @@ export const useVoiceInteraction = (): UseVoiceInteractionReturn => {
     error: null
   });
 
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
 
   useEffect(() => {
     if (state.isSupported) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
+      const SpeechRecognitionConstructor = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognitionConstructor();
       
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.interimResults = true;
-      recognitionRef.current.lang = 'en-US';
+      if (recognitionRef.current) {
+        recognitionRef.current.continuous = true;
+        recognitionRef.current.interimResults = true;
+        recognitionRef.current.lang = 'en-US';
 
-      recognitionRef.current.onresult = (event: any) => {
-        let finalTranscript = '';
-        let confidence = 0;
+        recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+          let finalTranscript = '';
+          let confidence = 0;
 
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const result = event.results[i];
-          if (result.isFinal) {
-            finalTranscript += result[0].transcript;
-            confidence = result[0].confidence;
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const result = event.results[i];
+            if (result.isFinal) {
+              finalTranscript += result[0].transcript;
+              confidence = result[0].confidence;
+            }
           }
-        }
 
-        if (finalTranscript) {
+          if (finalTranscript) {
+            setState(prev => ({
+              ...prev,
+              transcript: prev.transcript + finalTranscript,
+              confidence,
+              error: null
+            }));
+          }
+        };
+
+        recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
           setState(prev => ({
             ...prev,
-            transcript: prev.transcript + finalTranscript,
-            confidence,
-            error: null
+            error: `Speech recognition error: ${event.error}`,
+            isListening: false
           }));
-        }
-      };
+        };
 
-      recognitionRef.current.onerror = (event: any) => {
-        setState(prev => ({
-          ...prev,
-          error: `Speech recognition error: ${event.error}`,
-          isListening: false
-        }));
-      };
-
-      recognitionRef.current.onend = () => {
-        setState(prev => ({
-          ...prev,
-          isListening: false
-        }));
-      };
+        recognitionRef.current.onend = () => {
+          setState(prev => ({
+            ...prev,
+            isListening: false
+          }));
+        };
+      }
     }
 
     synthRef.current = window.speechSynthesis;

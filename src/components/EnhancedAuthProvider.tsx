@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { securityMiddleware } from '@/services/securityMiddleware';
@@ -345,13 +346,15 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
   };
 
   const getSecurityMetrics = (): SecurityMetrics => {
-    // Return proper SecurityMetrics with all required properties
+    // Get the actual metrics from securityMiddleware and map to our interface
+    const rawMetrics = securityMiddleware.getSecurityMetrics();
+    
     return {
-      totalEvents: securityMiddleware.getSecurityMetrics().totalEvents || 0,
-      failedLogins: securityMiddleware.getSecurityMetrics().failedLogins || 0,
-      successfulLogins: securityMiddleware.getSecurityMetrics().successfulLogins || 0,
-      suspiciousActivity: securityMiddleware.getSecurityMetrics().suspiciousActivity || 0,
-      lastActivity: securityMiddleware.getSecurityMetrics().lastActivity
+      totalEvents: rawMetrics.totalEvents || 0,
+      failedLogins: rawMetrics.criticalEvents || 0, // Map criticalEvents to failedLogins
+      successfulLogins: 0, // Default value since not available in raw metrics
+      suspiciousActivity: rawMetrics.suspiciousIPs || 0, // Map suspiciousIPs to suspiciousActivity
+      lastActivity: rawMetrics.lastUpdate || new Date() // Map lastUpdate to lastActivity
     };
   };
 

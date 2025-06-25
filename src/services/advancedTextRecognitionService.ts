@@ -1,12 +1,4 @@
 
-// Extend the Window interface to include SpeechRecognition
-declare global {
-  interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
-  }
-}
-
 export interface VoiceAnalysisResult {
   transcript: string;
   confidence: number;
@@ -51,20 +43,20 @@ export class AdvancedTextRecognitionService {
     config: MultiLanguageVoiceConfig,
     onResult: (result: VoiceAnalysisResult) => void,
     onError: (error: string) => void
-  ): Promise<any> {
+  ): Promise<SpeechRecognition | null> {
     try {
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
         throw new Error('Speech recognition not supported');
       }
 
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
+      const SpeechRecognitionConstructor = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognitionConstructor();
       
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = config.language;
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
         let finalTranscript = '';
         let confidence = 0;
 
@@ -91,7 +83,7 @@ export class AdvancedTextRecognitionService {
         }
       };
 
-      recognition.onerror = (event: any) => {
+      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
         onError(`Speech recognition error: ${event.error}`);
       };
 
