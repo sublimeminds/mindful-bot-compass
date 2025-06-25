@@ -27,6 +27,10 @@ import EHRIntegration from './EHRIntegration';
 import CrisisIntegration from './CrisisIntegration';
 import MobileIntegration from './MobileIntegration';
 import SlackIntegration from './SlackIntegration';
+import StripeIntegration from './StripeIntegration';
+import GoogleAnalyticsIntegration from './GoogleAnalyticsIntegration';
+import ZapierIntegration from './ZapierIntegration';
+import AnthropicIntegration from './AnthropicIntegration';
 
 interface Integration {
   id: string;
@@ -215,7 +219,7 @@ const IntegrationsHub = () => {
 
       {/* Integration Tabs */}
       <Tabs defaultValue="messaging" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-9">
+        <TabsList className="grid w-full grid-cols-12">
           <TabsTrigger value="messaging">
             <MessageSquare className="h-4 w-4 mr-2" />
             Messaging
@@ -244,9 +248,21 @@ const IntegrationsHub = () => {
             <MessageSquare className="h-4 w-4 mr-2" />
             Slack
           </TabsTrigger>
-          <TabsTrigger value="api">
+          <TabsTrigger value="payment">
             <Zap className="h-4 w-4 mr-2" />
-            API
+            Payment
+          </TabsTrigger>
+          <TabsTrigger value="analytics">
+            <Zap className="h-4 w-4 mr-2" />
+            Analytics
+          </TabsTrigger>
+          <TabsTrigger value="automation">
+            <Zap className="h-4 w-4 mr-2" />
+            Automation
+          </TabsTrigger>
+          <TabsTrigger value="ai">
+            <Zap className="h-4 w-4 mr-2" />
+            AI
           </TabsTrigger>
           <TabsTrigger value="crisis">
             <AlertTriangle className="h-4 w-4 mr-2" />
@@ -320,8 +336,20 @@ const IntegrationsHub = () => {
           <SlackIntegration />
         </TabsContent>
 
-        <TabsContent value="api" className="space-y-4">
-          <EnhancedAPIManagement />
+        <TabsContent value="payment" className="space-y-4">
+          <StripeIntegration />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <GoogleAnalyticsIntegration />
+        </TabsContent>
+
+        <TabsContent value="automation" className="space-y-4">
+          <ZapierIntegration />
+        </TabsContent>
+
+        <TabsContent value="ai" className="space-y-4">
+          <AnthropicIntegration />
         </TabsContent>
 
         <TabsContent value="crisis" className="space-y-4">
