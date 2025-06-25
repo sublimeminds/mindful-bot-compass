@@ -66,7 +66,7 @@ const IntegrationConfigCard: React.FC<IntegrationConfigCardProps> = ({ integrati
   const handleTestIntegration = async () => {
     setIsTesting(true);
     try {
-      // Simulate test based on integration type
+      // Simulate test
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       toast({

@@ -1,5 +1,5 @@
+
 import React from 'react';
-import { DebugLogger } from './debugLogger';
 
 interface ImportValidationResult {
   isValid: boolean;
@@ -43,27 +43,8 @@ class ImportValidator {
         }
       }
 
-      // Validate that we're not mixing import patterns
-      if (typeof window !== 'undefined' && window.location) {
-        // In development, we can check for common import pattern issues
-        if (import.meta.env.DEV) {
-          // This would ideally be done at build time, but we can add runtime checks
-          const currentScript = document.currentScript as HTMLScriptElement;
-          if (currentScript && currentScript.src) {
-            DebugLogger.debug('ImportValidator: Validating current script context', {
-              component: 'ImportValidator',
-              src: currentScript.src
-            });
-          }
-        }
-      }
-
     } catch (error) {
-      DebugLogger.error('ImportValidator: Error during validation', error as Error, {
-        component: 'ImportValidator',
-        method: 'validateReactImports'
-      });
-      
+      console.error('ImportValidator: Error during validation', error);
       issues.push(`Validation error: ${(error as Error).message}`);
       suggestions.push('Check console for detailed error information');
       isValid = false;
@@ -80,16 +61,10 @@ class ImportValidator {
     const validation = this.validateReactImports();
     
     if (!validation.isValid) {
-      DebugLogger.warn(`ImportValidator: Issues found in ${filename}`, {
-        component: 'ImportValidator',
+      console.warn(`ImportValidator: Issues found in ${filename}`, {
         filename,
         issues: validation.issues,
         suggestions: validation.suggestions
-      });
-    } else {
-      DebugLogger.debug(`ImportValidator: ${filename} passed validation`, {
-        component: 'ImportValidator',
-        filename
       });
     }
 
