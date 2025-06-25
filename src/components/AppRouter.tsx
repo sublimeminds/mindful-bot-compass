@@ -63,6 +63,7 @@ import MonitoringPage from '@/pages/MonitoringPage';
 import SystemHealth from '@/pages/SystemHealth';
 import PerformanceDashboard from '@/pages/PerformanceDashboard';
 import Integrations from '@/pages/Integrations';
+import RealIntegrations from '@/pages/RealIntegrations';
 import NotFound from '@/pages/NotFound';
 import AdminLayout from '@/components/admin/AdminLayout';
 
@@ -107,8 +108,9 @@ const AppRouter = () => {
       <Route path="/techniques" element={<Techniques />} />
       <Route path="/techniques/:id" element={<TechniqueSession />} />
       
-      {/* Integrations Route */}
+      {/* Integrations Routes */}
       <Route path="/integrations" element={<Integrations />} />
+      <Route path="/real-integrations" element={<RealIntegrations />} />
       
       {/* Analytics Routes */}
       <Route path="/analytics" element={<Analytics />} />
