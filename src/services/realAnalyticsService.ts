@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 
 export interface MoodPattern {
@@ -245,7 +246,7 @@ class RealAnalyticsService {
     }, {} as Record<string, number>);
 
     return Object.entries(triggerCounts)
-      .sort(([, a], [, b]) => b - a)
+      .sort(([, a], [, b]) => Number(b) - Number(a))
       .slice(0, 3)
       .map(([trigger]) => trigger);
   }

@@ -1,176 +1,159 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { Badge } from '@/components/ui/badge';
 import { 
   BarChart3, 
   TrendingUp, 
   Activity, 
-  Clock,
+  Clock, 
   Users,
   Zap,
-  Eye,
-  Target
+  AlertTriangle,
+  RefreshCw
 } from 'lucide-react';
+import { useAuth } from '@/components/SimpleAuthProvider';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
-interface AnalyticsData {
+interface IntegrationMetric {
+  id: string;
   integration_type: string;
   event_name: string;
   success: boolean;
   response_time_ms: number;
-  timestamp: string;
+  created_at: string;
 }
 
-interface EngagementMetrics {
-  date: string;
-  integrations_used: string[];
-  api_calls_count: number;
-  notifications_sent: number;
-  notifications_opened: number;
-  session_duration_minutes: number;
+interface IntegrationAnalytics {
+  total_events: number;
+  success_rate: number;
+  average_response_time: number;
+  events_last_24h: number;
+  top_integrations: { type: string; count: number }[];
+  error_rate: number;
 }
 
 const AnalyticsIntegration = () => {
   const { user } = useAuth();
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData[]>([]);
-  const [engagementData, setEngagementData] = useState<EngagementMetrics[]>([]);
+  const { toast } = useToast();
+  
+  const [analytics, setAnalytics] = useState<IntegrationAnalytics | null>(null);
+  const [recentEvents, setRecentEvents] = useState<IntegrationMetric[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const integrationStats = [
-    {
-      name: 'SMS Integration',
-      type: 'sms',
-      usage: 85,
-      success_rate: 98,
-      avg_response_time: 145,
-      color: 'bg-blue-500'
-    },
-    {
-      name: 'Health Data Sync',
-      type: 'health',
-      usage: 72,
-      success_rate: 94,
-      avg_response_time: 890,
-      color: 'bg-red-500'
-    },
-    {
-      name: 'Calendar Sync',
-      type: 'calendar',
-      usage: 68,
-      success_rate: 96,
-      avg_response_time: 320,
-      color: 'bg-green-500'
-    },
-    {
-      name: 'Video Calls',
-      type: 'video',
-      usage: 45,
-      success_rate: 99,
-      avg_response_time: 1200,
-      color: 'bg-purple-500'
-    },
-    {
-      name: 'EHR Integration',
-      type: 'ehr',
-      usage: 35,
-      success_rate: 91,
-      avg_response_time: 2100,
-      color: 'bg-orange-500'
-    },
-    {
-      name: 'Push Notifications',
-      type: 'mobile',
-      usage: 92,
-      success_rate: 97,
-      avg_response_time: 89,
-      color: 'bg-indigo-500'
-    }
-  ];
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     if (user) {
-      loadAnalyticsData();
-      generateSampleEngagementData();
+      loadAnalytics();
     }
   }, [user]);
 
-  const loadAnalyticsData = async () => {
+  const loadAnalytics = async () => {
+    if (!user) return;
+
     try {
-      // Mock data until database types are updated
-      const mockData: AnalyticsData[] = [
-        {
-          integration_type: 'sms',
-          event_name: 'message_sent',
-          success: true,
-          response_time_ms: 145,
-          timestamp: new Date().toISOString()
-        },
-        {
-          integration_type: 'health',
-          event_name: 'data_sync',
-          success: true,
-          response_time_ms: 890,
-          timestamp: new Date().toISOString()
-        }
-      ];
-      
-      setAnalyticsData(mockData);
+      setLoading(true);
+
+      // Load integration analytics
+      const { data: metrics, error: metricsError } = await supabase
+        .from('integration_analytics')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(100);
+
+      if (metricsError) throw metricsError;
+
+      if (metrics && metrics.length > 0) {
+        // Calculate analytics
+        const total_events = metrics.length;
+        const successful_events = metrics.filter(m => m.success).length;
+        const success_rate = (successful_events / total_events) * 100;
+        
+        const response_times = metrics
+          .filter(m => m.response_time_ms)
+          .map(m => m.response_time_ms);
+        const average_response_time = response_times.length > 0
+          ? response_times.reduce((sum, time) => sum + time, 0) / response_times.length
+          : 0;
+
+        const last24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const events_last_24h = metrics.filter(m => 
+          new Date(m.created_at) > last24h
+        ).length;
+
+        // Calculate top integrations
+        const integrationCounts = metrics.reduce((acc, metric) => {
+          acc[metric.integration_type] = (acc[metric.integration_type] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>);
+
+        const top_integrations = Object.entries(integrationCounts)
+          .map(([type, count]) => ({ type, count }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 5);
+
+        const error_rate = ((total_events - successful_events) / total_events) * 100;
+
+        setAnalytics({
+          total_events,
+          success_rate,
+          average_response_time,
+          events_last_24h,
+          top_integrations,
+          error_rate
+        });
+
+        // Set recent events for the table
+        setRecentEvents(metrics.slice(0, 10));
+      } else {
+        setAnalytics({
+          total_events: 0,
+          success_rate: 0,
+          average_response_time: 0,
+          events_last_24h: 0,
+          top_integrations: [],
+          error_rate: 0
+        });
+        setRecentEvents([]);
+      }
+
     } catch (error) {
-      console.error('Error loading analytics data:', error);
+      console.error('Error loading integration analytics:', error);
+      toast({
+        title: "Error Loading Analytics",
+        description: "Failed to load integration analytics",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const generateSampleEngagementData = async () => {
-    // Generate sample engagement data for the last 7 days
-    const sampleData: EngagementMetrics[] = [];
-    
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      
-      sampleData.push({
-        date: date.toISOString().split('T')[0],
-        integrations_used: ['sms', 'health', 'calendar'].slice(0, Math.floor(Math.random() * 3) + 1),
-        api_calls_count: Math.floor(Math.random() * 50) + 10,
-        notifications_sent: Math.floor(Math.random() * 20) + 5,
-        notifications_opened: Math.floor(Math.random() * 15) + 3,
-        session_duration_minutes: Math.floor(Math.random() * 120) + 30
-      });
-    }
-    
-    setEngagementData(sampleData);
-    setLoading(false);
-  };
-
-  const getTotalApiCalls = () => {
-    return engagementData.reduce((sum, day) => sum + day.api_calls_count, 0);
-  };
-
-  const getAverageSessionDuration = () => {
-    const total = engagementData.reduce((sum, day) => sum + day.session_duration_minutes, 0);
-    return Math.round(total / engagementData.length);
-  };
-
-  const getNotificationOpenRate = () => {
-    const totalSent = engagementData.reduce((sum, day) => sum + day.notifications_sent, 0);
-    const totalOpened = engagementData.reduce((sum, day) => sum + day.notifications_opened, 0);
-    return totalSent > 0 ? Math.round((totalOpened / totalSent) * 100) : 0;
-  };
-
-  const getMostUsedIntegrations = () => {
-    const integrationCounts: { [key: string]: number } = {};
-    
-    engagementData.forEach(day => {
-      day.integrations_used.forEach(integration => {
-        integrationCounts[integration] = (integrationCounts[integration] || 0) + 1;
-      });
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await loadAnalytics();
+    setRefreshing(false);
+    toast({
+      title: "Analytics Refreshed",
+      description: "Integration analytics have been updated"
     });
-    
-    return Object.entries(integrationCounts)
-      .sort(([,a], [,b]) => b - a)
-      .slice(0, 3);
+  };
+
+  const getStatusIcon = (success: boolean) => {
+    return success ? (
+      <div className="w-2 h-2 rounded-full bg-green-500"></div>
+    ) : (
+      <div className="w-2 h-2 rounded-full bg-red-500"></div>
+    );
+  };
+
+  const formatResponseTime = (ms: number): string => {
+    if (ms < 1000) return `${ms}ms`;
+    return `${(ms / 1000).toFixed(1)}s`;
   };
 
   if (loading) {
@@ -183,190 +166,161 @@ const AnalyticsIntegration = () => {
 
   return (
     <div className="space-y-6">
-      {/* Key Metrics Overview */}
+      {/* Analytics Overview */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-therapy-900">Integration Analytics</h2>
+        <Button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          variant="outline"
+          size="sm"
+        >
+          <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+          Refresh
+        </Button>
+      </div>
+
+      {/* Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Zap className="h-5 w-5 text-blue-600" />
-              </div>
+        <Card className="border-therapy-200">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <Activity className="h-5 w-5 text-therapy-600" />
               <div>
-                <p className="text-sm text-gray-600">Total API Calls</p>
-                <p className="text-2xl font-bold text-blue-600">{getTotalApiCalls()}</p>
+                <p className="text-sm font-medium">Total Events</p>
+                <p className="text-2xl font-bold">{analytics?.total_events || 0}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Clock className="h-5 w-5 text-green-600" />
-              </div>
+        <Card className="border-therapy-200">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <TrendingUp className="h-5 w-5 text-green-600" />
               <div>
-                <p className="text-sm text-gray-600">Avg Session Time</p>
-                <p className="text-2xl font-bold text-green-600">{getAverageSessionDuration()}m</p>
+                <p className="text-sm font-medium">Success Rate</p>
+                <p className="text-2xl font-bold">{analytics?.success_rate.toFixed(1) || 0}%</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Eye className="h-5 w-5 text-purple-600" />
-              </div>
+        <Card className="border-therapy-200">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <Clock className="h-5 w-5 text-blue-600" />
               <div>
-                <p className="text-sm text-gray-600">Notification Rate</p>
-                <p className="text-2xl font-bold text-purple-600">{getNotificationOpenRate()}%</p>
+                <p className="text-sm font-medium">Avg Response</p>
+                <p className="text-2xl font-bold">
+                  {formatResponseTime(analytics?.average_response_time || 0)}
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <Target className="h-5 w-5 text-orange-600" />
-              </div>
+        <Card className="border-therapy-200">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <Zap className="h-5 w-5 text-yellow-600" />
               <div>
-                <p className="text-sm text-gray-600">Active Integrations</p>
-                <p className="text-2xl font-bold text-orange-600">{getMostUsedIntegrations().length}</p>
+                <p className="text-sm font-medium">Last 24h</p>
+                <p className="text-2xl font-bold">{analytics?.events_last_24h || 0}</p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Integration Performance */}
-      <Card>
+      {/* Top Integrations */}
+      <Card className="border-therapy-200">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <BarChart3 className="h-5 w-5" />
-            <span>Integration Performance</span>
+            <BarChart3 className="h-5 w-5 text-therapy-600" />
+            <span>Integration Usage</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {integrationStats.map((stat) => (
-            <div key={stat.type} className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className={`w-3 h-3 rounded-full ${stat.color}`}></div>
-                  <span className="font-medium">{stat.name}</span>
+        <CardContent>
+          {analytics && analytics.top_integrations.length > 0 ? (
+            <div className="space-y-4">
+              {analytics.top_integrations.map((integration, index) => (
+                <div key={integration.type} className="flex items-center space-x-4">
+                  <div className="w-16 text-sm font-medium capitalize">
+                    {integration.type}
+                  </div>
+                  <div className="flex-1">
+                    <Progress 
+                      value={(integration.count / analytics.total_events) * 100} 
+                      className="h-2"
+                    />
+                  </div>
+                  <div className="w-16 text-right text-sm text-gray-600">
+                    {integration.count} events
+                  </div>
                 </div>
-                <div className="flex items-center space-x-4 text-sm text-gray-600">
-                  <span>Success: {stat.success_rate}%</span>
-                  <span>Avg: {stat.avg_response_time}ms</span>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center py-4">No integration data available</p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Recent Events */}
+      <Card className="border-therapy-200">
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Users className="h-5 w-5 text-therapy-600" />
+            <span>Recent Events</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {recentEvents.length > 0 ? (
+            <div className="space-y-2">
+              {recentEvents.map((event) => (
+                <div key={event.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    {getStatusIcon(event.success)}
+                    <div>
+                      <p className="font-medium capitalize">{event.integration_type}</p>
+                      <p className="text-sm text-gray-600">{event.event_name}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm">
+                      {formatResponseTime(event.response_time_ms)}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(event.created_at).toLocaleTimeString()}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-1">
-                <div className="flex justify-between text-sm">
-                  <span>Usage</span>
-                  <span>{stat.usage}%</span>
-                </div>
-                <Progress value={stat.usage} className="h-2" />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center py-4">No recent events</p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Health Status */}
+      {analytics && analytics.error_rate > 10 && (
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <AlertTriangle className="h-5 w-5 text-red-600" />
+              <div>
+                <p className="font-medium text-red-800">High Error Rate Detected</p>
+                <p className="text-sm text-red-600">
+                  Current error rate: {analytics.error_rate.toFixed(1)}%. 
+                  Consider reviewing your integration configurations.
+                </p>
               </div>
             </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* Weekly Engagement Trends */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <TrendingUp className="h-5 w-5" />
-            <span>Weekly Engagement</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {engagementData.map((day, index) => (
-              <div key={day.date} className="p-4 border rounded-lg">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-medium">
-                    {new Date(day.date).toLocaleDateString('en-US', { 
-                      weekday: 'short', 
-                      month: 'short', 
-                      day: 'numeric' 
-                    })}
-                  </h4>
-                  <div className="flex space-x-2">
-                    {day.integrations_used.map((integration) => (
-                      <Badge key={integration} variant="secondary" className="text-xs">
-                        {integration}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <Zap className="h-4 w-4 text-blue-500" />
-                    <div>
-                      <p className="text-gray-600">API Calls</p>
-                      <p className="font-medium">{day.api_calls_count}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Activity className="h-4 w-4 text-green-500" />
-                    <div>
-                      <p className="text-gray-600">Session Time</p>
-                      <p className="font-medium">{day.session_duration_minutes}m</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Users className="h-4 w-4 text-purple-500" />
-                    <div>
-                      <p className="text-gray-600">Notifications</p>
-                      <p className="font-medium">{day.notifications_sent}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Eye className="h-4 w-4 text-orange-500" />
-                    <div>
-                      <p className="text-gray-600">Opened</p>
-                      <p className="font-medium">{day.notifications_opened}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Most Used Integrations */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Target className="h-5 w-5" />
-            <span>Most Used Integrations</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {getMostUsedIntegrations().map(([integration, count], index) => (
-              <div key={integration} className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
-                    <span className="text-xs font-medium text-blue-600">#{index + 1}</span>
-                  </div>
-                  <span className="font-medium capitalize">{integration}</span>
-                </div>
-                <Badge variant="outline">{count} days</Badge>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
