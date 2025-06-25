@@ -60,40 +60,40 @@ const AnalyticsIntegration = () => {
       const mockMetrics: IntegrationMetric[] = [
         {
           id: '1',
-          integration_type: 'whatsapp',
-          event_name: 'message_sent',
+          integration_type: 'ehr',
+          event_name: 'patient_sync',
           success: true,
-          response_time_ms: 250,
+          response_time_ms: 350,
           created_at: new Date(Date.now() - 1000 * 60 * 10).toISOString()
         },
         {
           id: '2', 
-          integration_type: 'slack',
-          event_name: 'notification_sent',
+          integration_type: 'calendar',
+          event_name: 'appointment_sync',
           success: true,
           response_time_ms: 180,
           created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString()
         },
         {
           id: '3',
-          integration_type: 'calendar',
-          event_name: 'appointment_sync',
+          integration_type: 'mobile',
+          event_name: 'push_notification',
           success: false,
           response_time_ms: 5000,
           created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString()
         },
         {
           id: '4',
-          integration_type: 'sms',
-          event_name: 'reminder_sent',
+          integration_type: 'ehr',
+          event_name: 'data_validation',
           success: true,
-          response_time_ms: 320,
+          response_time_ms: 420,
           created_at: new Date(Date.now() - 1000 * 60 * 60).toISOString()
         },
         {
           id: '5',
-          integration_type: 'whatsapp',
-          event_name: 'status_check',
+          integration_type: 'calendar',
+          event_name: 'sync_check',
           success: true,
           response_time_ms: 150,
           created_at: new Date(Date.now() - 1000 * 60 * 90).toISOString()

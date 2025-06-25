@@ -15,7 +15,8 @@ import {
   Slack,
   Smartphone,
   Database,
-  Zap
+  Zap,
+  Plus
 } from 'lucide-react';
 import { useRealIntegrations } from '@/hooks/useRealIntegrations';
 import IntegrationConfigCard from './IntegrationConfigCard';
@@ -38,6 +39,10 @@ const RealIntegrationsHub = () => {
         return <Smartphone className="h-6 w-6 text-orange-600" />;
       case 'database':
         return <Database className="h-6 w-6 text-gray-600" />;
+      case 'ehr':
+        return <Database className="h-6 w-6 text-blue-700" />;
+      case 'mobile':
+        return <Smartphone className="h-6 w-6 text-green-500" />;
       default:
         return <Zap className="h-6 w-6 text-therapy-600" />;
     }
@@ -45,16 +50,16 @@ const RealIntegrationsHub = () => {
 
   const filteredIntegrations = integrations.filter(integration => {
     const matchesSearch = integration.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         integration.description.toLowerCase().includes(searchTerm.toLowerCase());
+                         (integration.description || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || integration.type === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   const categories = [
     { value: 'all', label: 'All Integrations', count: integrations.length },
-    { value: 'communication', label: 'Communication', count: integrations.filter(i => ['whatsapp', 'slack', 'sms'].includes(i.type)).length },
-    { value: 'productivity', label: 'Productivity', count: integrations.filter(i => ['calendar', 'database'].includes(i.type)).length },
-    { value: 'analytics', label: 'Analytics', count: integrations.filter(i => i.type === 'analytics').length }
+    { value: 'ehr', label: 'EHR Systems', count: integrations.filter(i => i.type === 'ehr').length },
+    { value: 'calendar', label: 'Calendar', count: integrations.filter(i => i.type === 'calendar').length },
+    { value: 'mobile', label: 'Mobile', count: integrations.filter(i => i.type === 'mobile').length }
   ];
 
   if (loading) {
@@ -124,16 +129,30 @@ const RealIntegrationsHub = () => {
           </div>
 
           {/* Integrations Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {filteredIntegrations.map(integration => (
-              <IntegrationConfigCard
-                key={integration.id}
-                integration={integration}
-              />
-            ))}
-          </div>
+          {integrations.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {filteredIntegrations.map(integration => (
+                <IntegrationConfigCard
+                  key={integration.id}
+                  integration={integration}
+                />
+              ))}
+            </div>
+          ) : (
+            <Card className="border-therapy-200">
+              <CardContent className="p-8 text-center">
+                <Plus className="h-12 w-12 text-therapy-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-therapy-800 mb-2">
+                  No integrations available
+                </h3>
+                <p className="text-therapy-600 mb-4">
+                  Integrations will appear here once they are configured in the system.
+                </p>
+              </CardContent>
+            </Card>
+          )}
 
-          {filteredIntegrations.length === 0 && (
+          {filteredIntegrations.length === 0 && integrations.length > 0 && (
             <Card className="border-therapy-200">
               <CardContent className="p-8 text-center">
                 <Puzzle className="h-12 w-12 text-therapy-400 mx-auto mb-4" />
@@ -158,28 +177,35 @@ const RealIntegrationsHub = () => {
               <CardTitle>Available Integrations</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {integrations.map(integration => (
-                  <div key={integration.id} className="border rounded-lg p-4 space-y-3">
-                    <div className="flex items-center space-x-3">
-                      {getIntegrationIcon(integration.type)}
-                      <div>
-                        <h4 className="font-medium">{integration.name}</h4>
-                        <p className="text-sm text-gray-600">{integration.description}</p>
+              {integrations.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {integrations.map(integration => (
+                    <div key={integration.id} className="border rounded-lg p-4 space-y-3">
+                      <div className="flex items-center space-x-3">
+                        {getIntegrationIcon(integration.type)}
+                        <div>
+                          <h4 className="font-medium">{integration.name}</h4>
+                          <p className="text-sm text-gray-600">{integration.description || 'No description available'}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center">
+                        <Badge variant="outline" className="capitalize">
+                          {integration.type}
+                        </Badge>
+                        <Button size="sm" variant="outline">
+                          View Details
+                        </Button>
                       </div>
                     </div>
-                    
-                    <div className="flex justify-between items-center">
-                      <Badge variant="outline" className="capitalize">
-                        {integration.type}
-                      </Badge>
-                      <Button size="sm" variant="outline">
-                        View Details
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <Plus className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500">No integrations available in the marketplace.</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

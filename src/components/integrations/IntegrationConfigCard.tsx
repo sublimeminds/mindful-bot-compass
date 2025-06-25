@@ -22,7 +22,7 @@ interface IntegrationConfigCardProps {
     id: string;
     name: string;
     type: string;
-    description: string;
+    description: string | null;
     configuration: any;
   };
 }
@@ -86,84 +86,40 @@ const IntegrationConfigCard: React.FC<IntegrationConfigCardProps> = ({ integrati
 
   const renderConfigurationFields = () => {
     switch (integration.type) {
-      case 'whatsapp':
+      case 'ehr':
         return (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="phone_number">Phone Number</Label>
+              <Label htmlFor="api_endpoint">API Endpoint</Label>
               <Input
-                id="phone_number"
-                value={settings.phone_number || ''}
-                onChange={(e) => setSettings({ ...settings, phone_number: e.target.value })}
-                placeholder="+1234567890"
+                id="api_endpoint"
+                value={settings.api_endpoint || ''}
+                onChange={(e) => setSettings({ ...settings, api_endpoint: e.target.value })}
+                placeholder="https://api.example.com/v1"
               />
             </div>
             <div>
-              <Label htmlFor="api_token">API Token</Label>
+              <Label htmlFor="api_key">API Key</Label>
               <Input
-                id="api_token"
+                id="api_key"
                 type="password"
-                value={settings.api_token || ''}
-                onChange={(e) => setSettings({ ...settings, api_token: e.target.value })}
-                placeholder="Enter WhatsApp API token"
+                value={settings.api_key || ''}
+                onChange={(e) => setSettings({ ...settings, api_key: e.target.value })}
+                placeholder="Enter your API key"
               />
             </div>
             <div className="flex items-center space-x-2">
               <Switch
-                checked={settings.auto_responses || false}
+                checked={settings.sync_enabled || false}
                 onCheckedChange={(checked) => 
-                  setSettings({ ...settings, auto_responses: checked })
+                  setSettings({ ...settings, sync_enabled: checked })
                 }
               />
-              <Label>Enable automatic responses</Label>
+              <Label>Enable automatic sync</Label>
             </div>
           </div>
         );
         
-      case 'slack':
-        return (
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="webhook_url">Webhook URL</Label>
-              <Input
-                id="webhook_url"
-                value={settings.webhook_url || ''}
-                onChange={(e) => setSettings({ ...settings, webhook_url: e.target.value })}
-                placeholder="https://hooks.slack.com/..."
-              />
-            </div>
-            <div>
-              <Label htmlFor="channel">Default Channel</Label>
-              <Input
-                id="channel"
-                value={settings.channel || ''}
-                onChange={(e) => setSettings({ ...settings, channel: e.target.value })}
-                placeholder="#general"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Notification Types</Label>
-              {['session_reminders', 'crisis_alerts', 'progress_updates', 'milestone_celebrations'].map(type => (
-                <div key={type} className="flex items-center space-x-2">
-                  <Switch
-                    checked={settings.notification_types?.[type] || false}
-                    onCheckedChange={(checked) => 
-                      setSettings({ 
-                        ...settings, 
-                        notification_types: { 
-                          ...settings.notification_types, 
-                          [type]: checked 
-                        } 
-                      })
-                    }
-                  />
-                  <Label className="capitalize">{type.replace('_', ' ')}</Label>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
       case 'calendar':
         return (
           <div className="space-y-4">
@@ -193,6 +149,31 @@ const IntegrationConfigCard: React.FC<IntegrationConfigCardProps> = ({ integrati
                 }
               />
               <Label>Enable two-way sync</Label>
+            </div>
+          </div>
+        );
+
+      case 'mobile':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="push_token">Push Token</Label>
+              <Input
+                id="push_token"
+                type="password"
+                value={settings.push_token || ''}
+                onChange={(e) => setSettings({ ...settings, push_token: e.target.value })}
+                placeholder="Enter push notification token"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Switch
+                checked={settings.notifications_enabled || false}
+                onCheckedChange={(checked) => 
+                  setSettings({ ...settings, notifications_enabled: checked })
+                }
+              />
+              <Label>Enable push notifications</Label>
             </div>
           </div>
         );
@@ -229,7 +210,7 @@ const IntegrationConfigCard: React.FC<IntegrationConfigCardProps> = ({ integrati
             <Settings className="h-6 w-6 text-therapy-600" />
             <div>
               <CardTitle className="text-lg">{integration.name}</CardTitle>
-              <p className="text-sm text-gray-600">{integration.description}</p>
+              <p className="text-sm text-gray-600">{integration.description || 'No description available'}</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -299,11 +280,11 @@ const IntegrationConfigCard: React.FC<IntegrationConfigCardProps> = ({ integrati
           <div className="flex items-center space-x-4 text-sm">
             <div className="flex items-center space-x-1">
               <CheckCircle className="h-4 w-4 text-green-500" />
-              <span>Connection: Active</span>
+              <span>Connection: Ready</span>
             </div>
             <div className="flex items-center space-x-1">
-              <AlertCircle className="h-4 w-4 text-yellow-500" />
-              <span>Last sync: 5 minutes ago</span>
+              <AlertCircle className="h-4 w-4 text-blue-500" />
+              <span>Status: Configured</span>
             </div>
           </div>
         </CardContent>

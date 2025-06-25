@@ -54,8 +54,8 @@ export const useRealIntegrations = () => {
     if (!user) return;
 
     try {
-      // Since user_integrations table doesn't exist yet, we'll create mock data
-      // that represents what the real implementation would look like
+      // For now, we'll use mock data since user_integrations table doesn't exist yet
+      // This will be replaced with real queries when the table is created
       setUserIntegrations([]);
     } catch (error) {
       console.error('Error loading user integrations:', error);
@@ -68,7 +68,7 @@ export const useRealIntegrations = () => {
     if (!user) return false;
 
     try {
-      // This would insert into user_integrations table when it exists
+      // Mock implementation - this would insert into user_integrations table when it exists
       const newUserIntegration = {
         id: `ui_${Date.now()}`,
         user_id: user.id,
