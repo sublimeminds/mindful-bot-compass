@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -118,7 +119,6 @@ const VoiceJournal = ({ onSave }: VoiceJournalProps) => {
             <EnhancedVoiceInteraction
               onTranscript={handleVoiceInput}
               onEmotion={handleEmotionDetected}
-              enableOCR={false}
               className="border-0"
             />
           </div>

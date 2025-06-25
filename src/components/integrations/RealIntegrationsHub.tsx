@@ -89,7 +89,10 @@ const RealIntegrationsHub = () => {
             {filteredIntegrations.map(integration => (
               <IntegrationConfigCard
                 key={integration.id}
-                integration={integration}
+                integration={{
+                  ...integration,
+                  description: integration.description || `${integration.name} integration`
+                }}
               />
             ))}
           </div>
