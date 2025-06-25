@@ -82,10 +82,10 @@ const InfrastructureMonitor = () => {
       for (const droplet of dropletsData) {
         if (droplet.status === 'active') {
           const dropletMetrics = await generateMetricsForDroplet(droplet.id);
-          newMetrics[droplet.id] = dropletMetrics;
+          newMetrics[droplet.id.toString()] = dropletMetrics;
 
-          // Check for alerts
-          const dropletAlerts = checkMetricsForAlerts(droplet.id, dropletMetrics);
+          // Check for alerts - Fix: Convert droplet.id to string
+          const dropletAlerts = checkMetricsForAlerts(droplet.id.toString(), dropletMetrics);
           newAlerts.push(...dropletAlerts);
         }
       }
@@ -322,7 +322,7 @@ const InfrastructureMonitor = () => {
         <CardContent>
           <div className="space-y-6">
             {activeDroplets.map((droplet) => {
-              const dropletMetrics = metrics[droplet.id];
+              const dropletMetrics = metrics[droplet.id.toString()];
               if (!dropletMetrics) return null;
 
               return (

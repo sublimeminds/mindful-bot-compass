@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -148,7 +149,7 @@ const AppRouter = () => {
       <Route path="/performance" element={<PerformanceDashboard />} />
       <Route path="/ai-hub" element={<AIHub />} />
       
-      {/* Admin Routes */}
+      {/* Admin Routes - All properly protected with AdminLayout */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="users" element={<AdminUsers />} />
