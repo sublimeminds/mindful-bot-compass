@@ -3,14 +3,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import { checkReactSafety } from '@/utils/reactSafetyChecker';
-
-interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-}
+import { AuthContextType } from '@/types/contexts';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

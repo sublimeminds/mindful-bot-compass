@@ -1,9 +1,12 @@
+
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { securityMiddleware } from '@/services/securityMiddleware';
-import { encryptionService } from '@/services/encryptionService';
 import type { User, Session } from '@supabase/supabase-js';
 import { toast } from 'sonner';
+import { useSecurityLogger } from '@/hooks/useSecurityLogger';
+import { useUserSecurity } from '@/hooks/useUserSecurity';
+import { SecurityMetrics } from '@/types/auth';
 
 interface EnhancedAuthContextType {
   user: User | null;
@@ -17,7 +20,7 @@ interface EnhancedAuthContextType {
   enableMFA: () => Promise<boolean>;
   disableMFA: (password: string) => Promise<boolean>;
   trustDevice: () => void;
-  getSecurityMetrics: () => any;
+  getSecurityMetrics: () => SecurityMetrics;
 }
 
 const EnhancedAuthContext = createContext<EnhancedAuthContextType | undefined>(undefined);
@@ -41,6 +44,9 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
   const [mfaEnabled, setMfaEnabled] = useState(false);
   const [deviceTrusted, setDeviceTrusted] = useState(false);
 
+  const { logSecurityEvent } = useSecurityLogger(user);
+  const { initializeUserSecurity } = useUserSecurity();
+
   useEffect(() => {
     console.log('EnhancedAuthProvider: Initializing enhanced auth...');
     
@@ -57,7 +63,14 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
           setUser(initialSession?.user ?? null);
           
           if (initialSession?.user) {
-            await initializeUserSecurity(initialSession.user);
+            try {
+              const { isTrusted, mfaStatus } = await initializeUserSecurity(initialSession.user);
+              setDeviceTrusted(isTrusted);
+              setMfaEnabled(mfaStatus);
+            } catch (error) {
+              console.error('Security initialization failed:', error);
+              await logSecurityEvent('security_init_error', 'high', { error: (error as Error).message });
+            }
           }
         }
       } catch (error) {
@@ -87,7 +100,13 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          await initializeUserSecurity(session.user);
+          try {
+            const { isTrusted, mfaStatus } = await initializeUserSecurity(session.user);
+            setDeviceTrusted(isTrusted);
+            setMfaEnabled(mfaStatus);
+          } catch (error) {
+            console.error('Security initialization failed:', error);
+          }
         } else {
           // Clear security state on logout
           setMfaEnabled(false);
@@ -102,82 +121,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       console.log('EnhancedAuthProvider: Cleaning up auth listener...');
       subscription.unsubscribe();
     };
-  }, []);
-
-  const initializeUserSecurity = async (user: User) => {
-    try {
-      // Check device trust
-      const deviceFingerprint = securityMiddleware.generateDeviceFingerprint();
-      const trustedDevices = JSON.parse(localStorage.getItem(`trusted_devices_${user.id}`) || '[]');
-      const isTrusted = trustedDevices.includes(deviceFingerprint);
-      setDeviceTrusted(isTrusted);
-
-      // Check MFA status
-      const mfaStatus = localStorage.getItem(`mfa_enabled_${user.id}`) === 'true';
-      setMfaEnabled(mfaStatus);
-
-      // Validate session security
-      const sessionId = crypto.randomUUID();
-      sessionStorage.setItem('currentSessionId', sessionId);
-      
-      // Store encrypted session data
-      const sessionData = await encryptionService.encryptSensitiveData(
-        JSON.stringify({
-          userId: user.id,
-          sessionId,
-          deviceFingerprint,
-          timestamp: Date.now(),
-          expiresAt: Date.now() + 30 * 60 * 1000 // 30 minutes
-        }),
-        'session_data'
-      );
-
-      if (sessionData) {
-        localStorage.setItem(`session:${sessionId}`, sessionData);
-      }
-
-      console.log('EnhancedAuthProvider: User security initialized');
-    } catch (error) {
-      console.error('Enhanced auth security initialization failed:', error);
-      await logSecurityEvent('security_init_error', 'high', { error: error.message });
-    }
-  };
-
-  const logSecurityEvent = async (eventType: string, severity: 'low' | 'medium' | 'high' | 'critical', details: any) => {
-    try {
-      const projectId = 'dbwrbjjmraodegffupnx';
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/security-monitor/events`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRid3JiamptcmFvZGVnZmZ1cG54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk0NjcwNTksImV4cCI6MjA2NTA0MzA1OX0.cY8oKDsNDOzYj7GsWFjFvFoze47lZQe9JM9khJMc6G4`
-        },
-        body: JSON.stringify({
-          event_type: eventType,
-          severity,
-          details,
-          user_id: user?.id
-        })
-      });
-
-      if (!response.ok) {
-        console.warn('Failed to log security event:', response.statusText);
-      }
-    } catch (error) {
-      console.warn('Security event logging failed:', error);
-      // Fallback to local security middleware
-      securityMiddleware.logSecurityEvent({
-        id: crypto.randomUUID(),
-        timestamp: new Date(),
-        type: eventType as any,
-        userId: user?.id,
-        ipAddress: 'unknown',
-        userAgent: navigator.userAgent,
-        details,
-        severity: severity as any
-      });
-    }
-  };
+  }, [logSecurityEvent, initializeUserSecurity]);
 
   const login = async (email: string, password: string, mfaCode?: string) => {
     console.log('EnhancedAuthProvider: Attempting enhanced login...');
@@ -344,7 +288,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       console.error('MFA enablement failed:', error);
       await logSecurityEvent('mfa_enable_failed', 'medium', { 
         user_id: user.id,
-        error: error.message 
+        error: (error as Error).message 
       });
       return false;
     }
@@ -401,7 +345,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
     }
   };
 
-  const getSecurityMetrics = () => {
+  const getSecurityMetrics = (): SecurityMetrics => {
     return securityMiddleware.getSecurityMetrics();
   };
 

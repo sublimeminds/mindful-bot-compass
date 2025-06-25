@@ -1,10 +1,6 @@
 
 import React, { createContext, useContext } from 'react';
-
-interface TherapistContextType {
-  selectedTherapist: string | null;
-  setSelectedTherapist: (id: string) => void;
-}
+import { TherapistContextType } from '@/types/contexts';
 
 const TherapistContext = createContext<TherapistContextType | undefined>(undefined);
 

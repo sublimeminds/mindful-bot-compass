@@ -9,12 +9,19 @@ import {
   Languages, Brain, Zap, Eye 
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { 
+  SpeechRecognitionEvent, 
+  SpeechRecognitionErrorEvent,
+  VoiceMetadata,
+  EmotionData,
+  OCRBoundingBox
+} from '@/types/voiceInteraction';
 
 // Extend the Window interface to include SpeechRecognition
 declare global {
   interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
   }
 }
 
@@ -22,8 +29,11 @@ interface VoiceAnalysisResult {
   transcript: string;
   confidence: number;
   language: string;
-  emotion?: any;
-  stress?: any;
+  emotion?: EmotionData;
+  stress?: {
+    level: 'low' | 'medium' | 'high';
+    confidence: number;
+  };
   languageDetection: {
     detected: string;
     confidence: number;
@@ -34,7 +44,7 @@ interface OCRResult {
   text: string;
   confidence: number;
   language: string;
-  boundingBoxes?: any[];
+  boundingBoxes?: OCRBoundingBox[];
 }
 
 interface MultiLanguageVoiceConfig {
@@ -45,8 +55,8 @@ interface MultiLanguageVoiceConfig {
 }
 
 interface EnhancedVoiceInteractionProps {
-  onTextReceived?: (text: string, metadata?: any) => void;
-  onEmotionDetected?: (emotion: any) => void;
+  onTextReceived?: (text: string, metadata?: VoiceMetadata) => void;
+  onEmotionDetected?: (emotion: EmotionData) => void;
   autoLanguageDetection?: boolean;
   enableOCR?: boolean;
   enableHandwriting?: boolean;
@@ -65,12 +75,12 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
   const [isMuted, setIsMuted] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('en-US');
   const [transcript, setTranscript] = useState('');
-  const [currentEmotion, setCurrentEmotion] = useState<any>(null);
+  const [currentEmotion, setCurrentEmotion] = useState<EmotionData | null>(null);
   const [isProcessingOCR, setIsProcessingOCR] = useState(false);
   const [ocrResult, setOcrResult] = useState<OCRResult | null>(null);
   const [multiModalText, setMultiModalText] = useState('');
 
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -117,7 +127,7 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
       recognition.interimResults = true;
       recognition.lang = selectedLanguage;
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
         let finalTranscript = '';
         let confidence = 0;
 
@@ -144,7 +154,7 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
         }
       };
 
-      recognition.onerror = (event: any) => {
+      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
         handleVoiceError(`Speech recognition error: ${event.error}`);
       };
 

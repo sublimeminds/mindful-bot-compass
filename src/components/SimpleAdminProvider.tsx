@@ -1,13 +1,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from '@/components/SimpleAuthProvider';
-
-interface AdminContextType {
-  isAdmin: boolean;
-  adminRole: string | null;
-  permissions: string[];
-  hasPermission: (permission: string) => boolean;
-}
+import { AdminContextType } from '@/types/contexts';
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
