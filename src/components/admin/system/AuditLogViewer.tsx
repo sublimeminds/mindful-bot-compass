@@ -1,55 +1,56 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Filter, Download, Eye, AlertTriangle, Info, CheckCircle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { Shield, Calendar, User, Activity, Filter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface AuditLog {
   id: string;
   action: string;
-  user_id: string;
-  resource: string;
-  timestamp: string;
-  ip_address: string;
-  user_agent: string;
-  success: boolean;
-  details: Record<string, unknown>;
+  resource_type: string;
+  resource_id?: string;
+  admin_user_id: string;
+  ip_address?: string;
+  user_agent?: string;
+  details?: Record<string, unknown>;
+  created_at: string;
 }
 
 const AuditLogViewer = () => {
-  const [logs, setLogs] = useState<AuditLog[]>([]);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('all');
+  const [filterAction, setFilterAction] = useState<string>('all');
+  const [filterResource, setFilterResource] = useState<string>('all');
   const { toast } = useToast();
 
   const fetchAuditLogs = useCallback(async () => {
     try {
       setLoading(true);
-      // Mock data for demonstration
+      
+      // Mock audit logs
       const mockLogs: AuditLog[] = [
         {
           id: '1',
-          action: 'user_login',
-          user_id: 'user_123',
-          resource: 'auth',
-          timestamp: new Date().toISOString(),
+          action: 'CREATE',
+          resource_type: 'user',
+          resource_id: 'user-123',
+          admin_user_id: 'admin-1',
           ip_address: '192.168.1.1',
           user_agent: 'Mozilla/5.0...',
-          success: true,
-          details: { method: 'email_password' }
+          details: { email: 'user@example.com' },
+          created_at: new Date().toISOString()
         }
       ];
-      setLogs(mockLogs);
+      
+      setAuditLogs(mockLogs);
     } catch (error) {
       console.error('Error fetching audit logs:', error);
       toast({
-        title: "Error loading audit logs",
-        description: "Failed to fetch audit log data.",
+        title: "Error",
+        description: "Failed to load audit logs",
         variant: "destructive",
       });
     } finally {
@@ -61,98 +62,95 @@ const AuditLogViewer = () => {
     fetchAuditLogs();
   }, [fetchAuditLogs]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleFilterChange = (value: string) => {
-    setFilterType(value);
-  };
-
-  const filteredLogs = logs.filter(log => {
-    const searchTermLower = searchTerm.toLowerCase();
-    const matchesSearch =
-      log.action.toLowerCase().includes(searchTermLower) ||
-      log.user_id.toLowerCase().includes(searchTermLower) ||
-      log.resource.toLowerCase().includes(searchTermLower);
-
-    const matchesFilter = filterType === 'all' || log.action === filterType;
-
-    return matchesSearch && matchesFilter;
+  const filteredLogs = auditLogs.filter(log => {
+    const actionMatch = filterAction === 'all' || log.action === filterAction;
+    const resourceMatch = filterResource === 'all' || log.resource_type === filterResource;
+    return actionMatch && resourceMatch;
   });
 
+  const getActionColor = (action: string) => {
+    switch (action) {
+      case 'CREATE': return 'bg-green-100 text-green-800';
+      case 'UPDATE': return 'bg-blue-100 text-blue-800';
+      case 'DELETE': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   return (
-    <Card className="bg-gray-800 border-gray-700">
+    <Card>
       <CardHeader>
-        <CardTitle className="flex items-center text-white">
-          <Shield className="h-5 w-5 mr-2 text-blue-400" />
+        <CardTitle className="flex items-center">
+          <Shield className="h-5 w-5 mr-2" />
           Audit Log Viewer
         </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center justify-between">
-          <Input
-            type="text"
-            placeholder="Search logs..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-          />
-          <Select value={filterType} onValueChange={handleFilterChange}>
-            <SelectTrigger className="bg-gray-700 text-white border-gray-600">
-              <SelectValue placeholder="Filter by" />
+        <div className="flex space-x-4">
+          <Select value={filterAction} onValueChange={setFilterAction}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Filter by action" />
             </SelectTrigger>
-            <SelectContent className="bg-gray-700 text-white border-gray-600">
+            <SelectContent>
               <SelectItem value="all">All Actions</SelectItem>
-              <SelectItem value="user_login">User Login</SelectItem>
-              <SelectItem value="resource_access">Resource Access</SelectItem>
-              <SelectItem value="data_change">Data Change</SelectItem>
+              <SelectItem value="CREATE">Create</SelectItem>
+              <SelectItem value="UPDATE">Update</SelectItem>
+              <SelectItem value="DELETE">Delete</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Select value={filterResource} onValueChange={setFilterResource}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Filter by resource" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Resources</SelectItem>
+              <SelectItem value="user">Users</SelectItem>
+              <SelectItem value="session">Sessions</SelectItem>
+              <SelectItem value="integration">Integrations</SelectItem>
             </SelectContent>
           </Select>
         </div>
-
+      </CardHeader>
+      
+      <CardContent>
         {loading ? (
-          <div className="text-center py-8 text-gray-400">
-            <Search className="h-12 w-12 mx-auto mb-4 animate-spin" />
-            Loading audit logs...
-          </div>
+          <div className="text-center py-8">Loading audit logs...</div>
         ) : filteredLogs.length === 0 ? (
-          <div className="text-center py-8 text-gray-400">
-            <Info className="h-12 w-12 mx-auto mb-4" />
-            No audit logs found
-          </div>
+          <div className="text-center py-8 text-gray-500">No audit logs found.</div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">Action</th>
-                  <th scope="col" className="px-6 py-3">User</th>
-                  <th scope="col" className="px-6 py-3">Resource</th>
-                  <th scope="col" className="px-6 py-3">Timestamp</th>
-                  <th scope="col" className="px-6 py-3">IP Address</th>
-                  <th scope="col" className="px-6 py-3">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredLogs.map(log => (
-                  <tr key={log.id} className="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
-                    <td className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white">{log.action}</td>
-                    <td className="px-6 py-4">{log.user_id}</td>
-                    <td className="px-6 py-4">{log.resource}</td>
-                    <td className="px-6 py-4">{log.timestamp}</td>
-                    <td className="px-6 py-4">{log.ip_address}</td>
-                    <td className="px-6 py-4">
-                      {log.success ? (
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <AlertTriangle className="h-4 w-4 text-red-500" />
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="space-y-3">
+            {filteredLogs.map((log) => (
+              <div key={log.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-2">
+                    <Badge className={getActionColor(log.action)}>
+                      {log.action}
+                    </Badge>
+                    <span className="font-medium">{log.resource_type}</span>
+                    {log.resource_id && (
+                      <span className="text-sm text-gray-500">#{log.resource_id}</span>
+                    )}
+                  </div>
+                  <span className="text-sm text-gray-500">
+                    {new Date(log.created_at).toLocaleString()}
+                  </span>
+                </div>
+                
+                <div className="text-sm text-gray-600 space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <User className="h-4 w-4" />
+                    <span>Admin: {log.admin_user_id}</span>
+                  </div>
+                  {log.ip_address && (
+                    <div>IP: {log.ip_address}</div>
+                  )}
+                  {log.details && Object.keys(log.details).length > 0 && (
+                    <div className="mt-2 p-2 bg-gray-100 rounded text-xs">
+                      <pre>{JSON.stringify(log.details, null, 2)}</pre>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </CardContent>

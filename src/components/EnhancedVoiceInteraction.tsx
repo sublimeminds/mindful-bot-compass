@@ -15,22 +15,6 @@ import {
   OCRBoundingBox
 } from '@/types/voiceInteraction';
 
-interface PersonalityTraits {
-  openness: number;
-  conscientiousness: number;
-  extraversion: number;
-  agreeableness: number;
-  neuroticism: number;
-}
-
-interface EffectivenessAreas {
-  anxiety: number;
-  depression: number;
-  stress: number;
-  relationships: number;
-  self_esteem: number;
-}
-
 interface VoiceAnalysisResult {
   transcript: string;
   confidence: number;
@@ -51,13 +35,6 @@ interface OCRResult {
   confidence: number;
   language: string;
   boundingBoxes?: OCRBoundingBox[];
-}
-
-interface MultiLanguageVoiceConfig {
-  language: string;
-  emotionDetection: boolean;
-  stressAnalysis: boolean;
-  realTimeTranslation: boolean;
 }
 
 interface EnhancedVoiceInteractionProps {
@@ -94,22 +71,8 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
     { code: 'en-US', name: 'English (US)', flag: '🇺🇸' },
     { code: 'en-GB', name: 'English (UK)', flag: '🇬🇧' },
     { code: 'es-ES', name: 'Spanish (Spain)', flag: '🇪🇸' },
-    { code: 'es-MX', name: 'Spanish (Mexico)', flag: '🇲🇽' },
     { code: 'fr-FR', name: 'French', flag: '🇫🇷' },
-    { code: 'de-DE', name: 'German', flag: '🇩🇪' },
-    { code: 'it-IT', name: 'Italian', flag: '🇮🇹' },
-    { code: 'pt-PT', name: 'Portuguese', flag: '🇵🇹' },
-    { code: 'pt-BR', name: 'Portuguese (Brazil)', flag: '🇧🇷' },
-    { code: 'ru-RU', name: 'Russian', flag: '🇷🇺' },
-    { code: 'ar-SA', name: 'Arabic', flag: '🇸🇦' },
-    { code: 'zh-CN', name: 'Chinese (Simplified)', flag: '🇨🇳' },
-    { code: 'zh-TW', name: 'Chinese (Traditional)', flag: '🇹🇼' },
-    { code: 'ja-JP', name: 'Japanese', flag: '🇯🇵' },
-    { code: 'ko-KR', name: 'Korean', flag: '🇰🇷' },
-    { code: 'hi-IN', name: 'Hindi', flag: '🇮🇳' },
-    { code: 'tr-TR', name: 'Turkish', flag: '🇹🇷' },
-    { code: 'he-IL', name: 'Hebrew', flag: '🇮🇱' },
-    { code: 'nl-NL', name: 'Dutch', flag: '🇳🇱' }
+    { code: 'de-DE', name: 'German', flag: '🇩🇪' }
   ];
 
   useEffect(() => {
@@ -126,8 +89,8 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
         throw new Error('Speech recognition not supported');
       }
 
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
+      const SpeechRecognitionConstructor = (window.SpeechRecognition || window.webkitSpeechRecognition) as SpeechRecognitionConstructor;
+      const recognition = new SpeechRecognitionConstructor();
       
       recognition.continuous = true;
       recognition.interimResults = true;

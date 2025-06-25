@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,10 +14,10 @@ interface Goal {
   title: string;
   description: string;
   target_value: number;
-  current_value: number;
+  current_progress: number;
   unit: string;
   start_date: string;
-  end_date: string;
+  target_date: string;
   created_at: string;
   user_id: string;
   is_completed: boolean;
@@ -70,10 +71,10 @@ const RealGoalProgressTracker = () => {
           title: newGoal,
           description: 'New goal',
           target_value: 100,
-          current_value: 0,
+          current_progress: 0,
           unit: '%',
           start_date: new Date().toISOString(),
-          end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          target_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
           user_id: user.id,
           is_completed: false,
         });
@@ -148,10 +149,10 @@ const RealGoalProgressTracker = () => {
                 <div>
                   <h3 className="font-medium">{goal.title}</h3>
                   <p className="text-sm text-gray-500">
-                    {goal.current_value}/{goal.target_value} {goal.unit}
+                    {goal.current_progress}/{goal.target_value} {goal.unit}
                   </p>
                   <Progress
-                    value={(goal.current_value / goal.target_value) * 100}
+                    value={(goal.current_progress / goal.target_value) * 100}
                   />
                 </div>
                 <div className="flex items-center space-x-2">

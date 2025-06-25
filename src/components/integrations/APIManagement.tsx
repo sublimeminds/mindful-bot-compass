@@ -1,149 +1,58 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  Key, 
-  Webhook, 
-  Copy, 
-  Eye, 
-  EyeOff, 
-  Plus, 
-  Trash2,
-  ExternalLink,
-  Globe,
-  Lock,
-  Activity
-} from 'lucide-react';
+import { Key, Copy, Trash2, Plus, Eye, EyeOff } from 'lucide-react';
 
 interface APIKey {
   id: string;
   name: string;
-  key_hash: string;
-  permissions: any;
-  rate_limit: number;
-  is_active: boolean;
-  last_used_at: string | null;
-  expires_at: string | null;
+  key: string;
   created_at: string;
-}
-
-interface Webhook {
-  id: string;
-  url: string;
-  event_types: string[];
   is_active: boolean;
-  created_at: string;
+  user_id: string;
 }
 
 const APIManagement = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [apiKeys, setApiKeys] = useState<APIKey[]>([]);
-  const [webhooks, setWebhooks] = useState<Webhook[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showCreateKey, setShowCreateKey] = useState(false);
-  const [showCreateWebhook, setShowCreateWebhook] = useState(false);
   const [newKeyName, setNewKeyName] = useState('');
-  const [newWebhookUrl, setNewWebhookUrl] = useState('');
-  const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
-
-  const availableEvents = [
-    'session.started',
-    'session.completed',
-    'mood.updated',
-    'goal.created',
-    'goal.completed',
-    'crisis.detected',
-    'integration.connected',
-    'integration.disconnected'
-  ];
-
-  const apiEndpoints = [
-    {
-      method: 'GET',
-      endpoint: '/api/v1/profile',
-      description: 'Get user profile information',
-      auth: 'Required'
-    },
-    {
-      method: 'GET',
-      endpoint: '/api/v1/sessions',
-      description: 'List therapy sessions',
-      auth: 'Required'
-    },
-    {
-      method: 'POST',
-      endpoint: '/api/v1/sessions',
-      description: 'Create a new therapy session',
-      auth: 'Required'
-    },
-    {
-      method: 'GET',
-      endpoint: '/api/v1/mood',
-      description: 'Get mood tracking data',
-      auth: 'Required'
-    },
-    {
-      method: 'POST',
-      endpoint: '/api/v1/mood',
-      description: 'Log mood entry',
-      auth: 'Required'
-    },
-    {
-      method: 'GET',
-      endpoint: '/api/v1/goals',
-      description: 'List user goals',
-      auth: 'Required'
-    },
-    {
-      method: 'POST',
-      endpoint: '/api/v1/webhooks',
-      description: 'Create webhook endpoint',
-      auth: 'Required'
-    }
-  ];
+  const [loading, setLoading] = useState(true);
+  const [showKey, setShowKey] = useState(false);
 
   useEffect(() => {
     if (user) {
       loadAPIKeys();
-      loadWebhooks();
     }
   }, [user]);
 
   const loadAPIKeys = async () => {
     try {
+      setLoading(true);
+      if (!user) return;
+
       const { data, error } = await supabase
         .from('api_keys')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       setApiKeys(data || []);
     } catch (error) {
       console.error('Error loading API keys:', error);
-    }
-  };
-
-  const loadWebhooks = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('webhooks')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setWebhooks(data || []);
-    } catch (error) {
-      console.error('Error loading webhooks:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load API keys",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -152,332 +61,169 @@ const APIManagement = () => {
   const generateAPIKey = async () => {
     if (!newKeyName.trim()) {
       toast({
-        title: "Error",
-        description: "Please enter a name for your API key",
-        variant: "destructive"
+        title: "Warning",
+        description: "Please enter a name for the API key",
       });
       return;
     }
 
     try {
+      if (!user) return;
+
       // Generate a random API key
-      const apiKey = 'tk_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      
+      const apiKey = generateRandomKey(32);
+
       const { error } = await supabase
         .from('api_keys')
         .insert({
-          user_id: user?.id,
           name: newKeyName,
-          key_hash: btoa(apiKey), // Simple encoding for demo
-          permissions: { read: true, write: false },
-          rate_limit: 1000
+          key: apiKey,
+          user_id: user.id,
+          is_active: true,
         });
 
       if (error) throw error;
-
-      toast({
-        title: "API Key Created",
-        description: `Your API key: ${apiKey}. Please save it securely.`,
-      });
 
       setNewKeyName('');
-      setShowCreateKey(false);
       loadAPIKeys();
+      toast({
+        title: "API Key Generated",
+        description: "New API key created successfully.",
+      });
     } catch (error) {
-      console.error('Error creating API key:', error);
+      console.error('Error generating API key:', error);
       toast({
         title: "Error",
-        description: "Failed to create API key",
-        variant: "destructive"
+        description: "Failed to generate API key.",
+        variant: "destructive",
       });
     }
   };
 
-  const createWebhook = async () => {
-    if (!newWebhookUrl.trim() || selectedEvents.length === 0) {
-      toast({
-        title: "Error",
-        description: "Please enter a webhook URL and select at least one event",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      const { error } = await supabase
-        .from('webhooks')
-        .insert({
-          user_id: user?.id,
-          url: newWebhookUrl,
-          event_types: selectedEvents,
-          secret: Math.random().toString(36).substring(2, 15)
-        });
-
-      if (error) throw error;
-
-      toast({
-        title: "Webhook Created",
-        description: "Your webhook has been created successfully",
-      });
-
-      setNewWebhookUrl('');
-      setSelectedEvents([]);
-      setShowCreateWebhook(false);
-      loadWebhooks();
-    } catch (error) {
-      console.error('Error creating webhook:', error);
-      toast({
-        title: "Error",
-        description: "Failed to create webhook",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const deleteAPIKey = async (keyId: string) => {
+  const revokeAPIKey = async (apiKey: APIKey) => {
     try {
       const { error } = await supabase
         .from('api_keys')
-        .delete()
-        .eq('id', keyId);
+        .update({ is_active: false })
+        .eq('id', apiKey.id);
 
       if (error) throw error;
 
-      toast({
-        title: "API Key Deleted",
-        description: "The API key has been deleted successfully",
-      });
-
       loadAPIKeys();
+      toast({
+        title: "API Key Revoked",
+        description: `API key ${apiKey.name} has been revoked.`,
+      });
     } catch (error) {
-      console.error('Error deleting API key:', error);
+      console.error('Error revoking API key:', error);
       toast({
         title: "Error",
-        description: "Failed to delete API key",
-        variant: "destructive"
+        description: "Failed to revoke API key.",
+        variant: "destructive",
       });
     }
+  };
+
+  const copyAPIKey = (apiKey: APIKey) => {
+    navigator.clipboard.writeText(apiKey.key);
+    toast({
+      title: "API Key Copied",
+      description: "API key copied to clipboard.",
+    });
+  };
+
+  const generateRandomKey = (length: number) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-600"></div>
-      </div>
-    );
+    return <p>Loading API keys...</p>;
   }
 
   return (
-    <div className="space-y-6">
-      <Tabs defaultValue="keys" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="keys">
-            <Key className="h-4 w-4 mr-2" />
-            API Keys
-          </TabsTrigger>
-          <TabsTrigger value="webhooks">
-            <Webhook className="h-4 w-4 mr-2" />
-            Webhooks
-          </TabsTrigger>
-          <TabsTrigger value="docs">
-            <ExternalLink className="h-4 w-4 mr-2" />
-            Documentation
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="keys" className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <h3 className="text-lg font-semibold text-therapy-900">API Keys</h3>
-              <p className="text-sm text-therapy-600">Manage your API keys for programmatic access</p>
-            </div>
-            <Button onClick={() => setShowCreateKey(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Create API Key
-            </Button>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <span>API Management</span>
+          <Button onClick={generateAPIKey}>
+            <Plus className="h-4 w-4 mr-2" />
+            Generate API Key
+          </Button>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="key-name">Key Name:</Label>
+            <Input
+              id="key-name"
+              type="text"
+              placeholder="Enter key name"
+              value={newKeyName}
+              onChange={(e) => setNewKeyName(e.target.value)}
+            />
           </div>
-
-          {showCreateKey && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Create New API Key</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Input
-                  placeholder="API Key Name"
-                  value={newKeyName}
-                  onChange={(e) => setNewKeyName(e.target.value)}
-                />
-                <div className="flex space-x-2">
-                  <Button onClick={generateAPIKey}>Create Key</Button>
-                  <Button variant="outline" onClick={() => setShowCreateKey(false)}>
-                    Cancel
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          <div className="grid gap-4">
-            {apiKeys.map((key) => (
-              <Card key={key.id}>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <Lock className="h-4 w-4 text-therapy-600" />
-                        <span className="font-medium">{key.name}</span>
-                        <Badge variant={key.is_active ? "default" : "secondary"}>
-                          {key.is_active ? 'Active' : 'Inactive'}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-therapy-600">
-                        Rate limit: {key.rate_limit} requests/hour
-                      </p>
-                      <p className="text-xs text-therapy-500">
-                        Created: {new Date(key.created_at).toLocaleDateString()}
-                        {key.last_used_at && ` • Last used: ${new Date(key.last_used_at).toLocaleDateString()}`}
-                      </p>
-                    </div>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => deleteAPIKey(key.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="webhooks" className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <h3 className="text-lg font-semibold text-therapy-900">Webhooks</h3>
-              <p className="text-sm text-therapy-600">Receive real-time notifications for events</p>
-            </div>
-            <Button onClick={() => setShowCreateWebhook(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Create Webhook
-            </Button>
-          </div>
-
-          {showCreateWebhook && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Create New Webhook</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Input
-                  placeholder="Webhook URL (https://...)"
-                  value={newWebhookUrl}
-                  onChange={(e) => setNewWebhookUrl(e.target.value)}
-                />
+          {apiKeys.length === 0 ? (
+            <p>No API keys generated yet. Add one to start using the API!</p>
+          ) : (
+            apiKeys.map((apiKey) => (
+              <div
+                key={apiKey.id}
+                className="flex items-center justify-between p-4 bg-gray-100 rounded-lg"
+              >
                 <div>
-                  <label className="text-sm font-medium">Event Types</label>
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    {availableEvents.map((event) => (
-                      <label key={event} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          checked={selectedEvents.includes(event)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedEvents([...selectedEvents, event]);
-                            } else {
-                              setSelectedEvents(selectedEvents.filter(e => e !== event));
-                            }
-                          }}
-                        />
-                        <span className="text-sm">{event}</span>
-                      </label>
-                    ))}
-                  </div>
+                  <h3 className="font-medium">{apiKey.name}</h3>
+                  <p className="text-sm text-gray-500">
+                    Created: {new Date(apiKey.created_at).toLocaleDateString()}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Key: {showKey ? apiKey.key : '********************************'}
+                  </p>
                 </div>
-                <div className="flex space-x-2">
-                  <Button onClick={createWebhook}>Create Webhook</Button>
-                  <Button variant="outline" onClick={() => setShowCreateWebhook(false)}>
-                    Cancel
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => copyAPIKey(apiKey)}
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy
                   </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => revokeAPIKey(apiKey)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Revoke
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowKey(!showKey)}
+                  >
+                    {showKey ? (
+                      <EyeOff className="h-4 w-4 mr-2" />
+                    ) : (
+                      <Eye className="h-4 w-4 mr-2" />
+                    )}
+                    {showKey ? 'Hide' : 'Show'}
+                  </Button>
+                  <Badge variant={apiKey.is_active ? "default" : "destructive"}>
+                    {apiKey.is_active ? 'Active' : 'Revoked'}
+                  </Badge>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            ))
           )}
-
-          <div className="grid gap-4">
-            {webhooks.map((webhook) => (
-              <Card key={webhook.id}>
-                <CardContent className="p-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Globe className="h-4 w-4 text-therapy-600" />
-                        <span className="font-medium">{webhook.url}</span>
-                        <Badge variant={webhook.is_active ? "default" : "secondary"}>
-                          {webhook.is_active ? 'Active' : 'Inactive'}
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {webhook.event_types.map((event) => (
-                        <Badge key={event} variant="outline" className="text-xs">
-                          {event}
-                        </Badge>
-                      ))}
-                    </div>
-                    <p className="text-xs text-therapy-500">
-                      Created: {new Date(webhook.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="docs" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>API Documentation</CardTitle>
-              <p className="text-therapy-600">Available endpoints and their usage</p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {apiEndpoints.map((endpoint, index) => (
-                  <div key={index} className="border-l-4 border-therapy-200 pl-4">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <Badge variant={endpoint.method === 'GET' ? 'default' : 'secondary'}>
-                        {endpoint.method}
-                      </Badge>
-                      <code className="text-sm bg-gray-100 px-2 py-1 rounded">
-                        {endpoint.endpoint}
-                      </code>
-                      <Badge variant="outline" className="text-xs">
-                        {endpoint.auth}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-therapy-600">{endpoint.description}</p>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="mt-6 p-4 bg-therapy-50 rounded-lg">
-                <h4 className="font-medium text-therapy-900 mb-2">Authentication</h4>
-                <p className="text-sm text-therapy-600 mb-2">
-                  Include your API key in the Authorization header:
-                </p>
-                <code className="text-sm bg-white p-2 rounded border block">
-                  Authorization: Bearer your_api_key_here
-                </code>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
