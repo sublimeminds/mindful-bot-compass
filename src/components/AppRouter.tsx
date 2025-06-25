@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -14,6 +13,7 @@ import AdminSystem from '@/pages/AdminSystem';
 import AdminPerformance from '@/pages/AdminPerformance';
 import AdminCrisisManagement from '@/pages/AdminCrisisManagement';
 import AdminIntegrations from '@/pages/AdminIntegrations';
+import AdminInfrastructure from '@/pages/AdminInfrastructure';
 import TherapySyncAI from '@/pages/TherapySyncAI';
 import SessionHistory from '@/pages/SessionHistory';
 import Analytics from '@/pages/Analytics';
@@ -156,6 +156,7 @@ const AppRouter = () => {
         <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="content" element={<AdminContent />} />
         <Route path="integrations" element={<AdminIntegrations />} />
+        <Route path="infrastructure" element={<AdminInfrastructure />} />
         <Route path="system" element={<AdminSystem />} />
         <Route path="performance" element={<AdminPerformance />} />
         <Route path="crisis" element={<AdminCrisisManagement />} />
