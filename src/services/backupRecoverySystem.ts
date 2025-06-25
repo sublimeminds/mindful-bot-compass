@@ -31,6 +31,12 @@ interface BackupStatistics {
   lastBackup: Date | null;
 }
 
+interface DisasterRecoveryTestResult {
+  success: boolean;
+  actualRTO: number;
+  issues: string[];
+}
+
 export class BackupRecoverySystem {
   private static instance: BackupRecoverySystem;
   private backups: any[] = [];
@@ -161,9 +167,10 @@ export class BackupRecoverySystem {
     };
   }
 
-  async testDisasterRecovery(): Promise<boolean> {
+  async testDisasterRecovery(): Promise<DisasterRecoveryTestResult> {
     try {
       console.log('Starting disaster recovery test...');
+      const startTime = Date.now();
       
       // Create test backup
       const testBackupId = await this.createBackup('full', ['test_data'], 'Disaster recovery test');
@@ -171,11 +178,24 @@ export class BackupRecoverySystem {
       // Test restore
       const restoreSuccess = await this.restoreBackup(testBackupId);
       
+      const endTime = Date.now();
+      const actualRTO = endTime - startTime;
+      
+      const result: DisasterRecoveryTestResult = {
+        success: restoreSuccess,
+        actualRTO,
+        issues: restoreSuccess ? [] : ['Restore failed']
+      };
+      
       console.log(`Disaster recovery test ${restoreSuccess ? 'passed' : 'failed'}`);
-      return restoreSuccess;
+      return result;
     } catch (error) {
       console.error('Disaster recovery test failed:', error);
-      return false;
+      return {
+        success: false,
+        actualRTO: 0,
+        issues: [error.message || 'Unknown error']
+      };
     }
   }
 

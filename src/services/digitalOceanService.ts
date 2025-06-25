@@ -222,7 +222,19 @@ class DigitalOceanService {
         createdAt: new Date().toISOString()
       };
 
-      this.mockData.droplets.push(newDroplet);
+      // Ensure the droplet matches mock data structure before adding
+      const safeDroplet = {
+        id: newDroplet.id,
+        name: newDroplet.name,
+        status: 'active' as const,
+        ip: `164.90.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+        region: newDroplet.region,
+        size: newDroplet.size,
+        created_at: newDroplet.created_at,
+        createdAt: newDroplet.created_at
+      };
+
+      this.mockData.droplets.push(safeDroplet);
       console.log(`Droplet ${name} created successfully`);
       return newDroplet;
     } catch (error) {
@@ -279,7 +291,22 @@ class DigitalOceanService {
         }
       };
 
-      this.mockData.databases.push(newDatabase);
+      // Ensure the database matches mock data structure before adding
+      const safeDatabase = {
+        id: newDatabase.id,
+        name: newDatabase.name,
+        engine: newDatabase.engine,
+        status: 'online' as const,
+        size: newDatabase.size,
+        region: newDatabase.region,
+        version: newDatabase.version || '14',
+        connection: newDatabase.connection || {
+          host: `${name}-do-user-123.db.ondigitalocean.com`,
+          port: 25060
+        }
+      };
+
+      this.mockData.databases.push(safeDatabase);
       console.log(`Database ${name} created successfully`);
       return newDatabase;
     } catch (error) {

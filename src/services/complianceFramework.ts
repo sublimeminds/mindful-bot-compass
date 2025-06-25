@@ -31,6 +31,9 @@ interface ComplianceConfig {
   auditRetentionDays: number;
   dataRetentionDays: number;
   encryptionRequired: boolean;
+  hipaa: boolean;
+  gdpr: boolean;
+  auditLogging: boolean;
 }
 
 export class ComplianceFramework {
@@ -43,7 +46,10 @@ export class ComplianceFramework {
     gdprEnabled: true,
     auditRetentionDays: 365,
     dataRetentionDays: 2555, // 7 years
-    encryptionRequired: true
+    encryptionRequired: true,
+    hipaa: true,
+    gdpr: true,
+    auditLogging: true
   };
 
   static getInstance(): ComplianceFramework {
@@ -155,7 +161,7 @@ export class ComplianceFramework {
     }
   }
 
-  async processDataPortabilityRequest(userId: string): Promise<string> {
+  async processDataPortabilityRequest(userId: string, requestType?: string): Promise<string> {
     try {
       console.log(`Processing data portability request for user: ${userId}`);
       
@@ -163,6 +169,7 @@ export class ComplianceFramework {
       const userData = {
         userId,
         exportDate: new Date().toISOString(),
+        requestType,
         data: {
           profile: 'user profile data',
           sessions: 'session history data',
