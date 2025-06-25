@@ -5,8 +5,37 @@ interface BackupOptions {
   description?: string;
 }
 
+interface RecoveryPoint {
+  id: string;
+  timestamp: Date;
+  type: string;
+  size: number;
+  status: 'healthy' | 'corrupted';
+}
+
+interface DisasterRecoveryPlan {
+  id: string;
+  name: string;
+  priority: 'high' | 'medium' | 'low';
+  rto: number; // Recovery Time Objective in minutes
+  rpo: number; // Recovery Point Objective in minutes
+  status: 'active' | 'inactive';
+}
+
+interface BackupStatistics {
+  totalBackups: number;
+  successfulBackups: number;
+  failedBackups: number;
+  totalSize: number;
+  averageSize: number;
+  lastBackup: Date | null;
+}
+
 export class BackupRecoverySystem {
   private static instance: BackupRecoverySystem;
+  private backups: any[] = [];
+  private recoveryPoints: RecoveryPoint[] = [];
+  private disasterRecoveryPlans: DisasterRecoveryPlan[] = [];
 
   static getInstance(): BackupRecoverySystem {
     if (!BackupRecoverySystem.instance) {
@@ -32,6 +61,7 @@ export class BackupRecoverySystem {
 
       // Store in localStorage for demo purposes
       localStorage.setItem(`backup_${backupId}`, JSON.stringify(backupData));
+      this.backups.push(backupData);
       
       console.log(`Backup created successfully: ${backupId}`);
       return backupId;
@@ -57,6 +87,119 @@ export class BackupRecoverySystem {
     } catch (error) {
       console.error('Failed to restore backup:', error);
       return false;
+    }
+  }
+
+  async restoreFromBackup(backupId: string): Promise<boolean> {
+    return this.restoreBackup(backupId);
+  }
+
+  getBackups(): any[] {
+    return [...this.backups];
+  }
+
+  getRecoveryPoints(): RecoveryPoint[] {
+    // Generate mock recovery points
+    if (this.recoveryPoints.length === 0) {
+      this.recoveryPoints = [
+        {
+          id: '1',
+          timestamp: new Date(Date.now() - 3600000),
+          type: 'automatic',
+          size: 1024 * 1024 * 50,
+          status: 'healthy'
+        },
+        {
+          id: '2',
+          timestamp: new Date(Date.now() - 7200000),
+          type: 'manual',
+          size: 1024 * 1024 * 75,
+          status: 'healthy'
+        }
+      ];
+    }
+    return [...this.recoveryPoints];
+  }
+
+  getDisasterRecoveryPlans(): DisasterRecoveryPlan[] {
+    // Generate mock disaster recovery plans
+    if (this.disasterRecoveryPlans.length === 0) {
+      this.disasterRecoveryPlans = [
+        {
+          id: '1',
+          name: 'Critical System Recovery',
+          priority: 'high',
+          rto: 15,
+          rpo: 5,
+          status: 'active'
+        },
+        {
+          id: '2',
+          name: 'Database Recovery',
+          priority: 'high',
+          rto: 30,
+          rpo: 15,
+          status: 'active'
+        }
+      ];
+    }
+    return [...this.disasterRecoveryPlans];
+  }
+
+  getBackupStatistics(): BackupStatistics {
+    const totalBackups = this.backups.length;
+    const successfulBackups = this.backups.filter(b => b.status !== 'failed').length;
+    const totalSize = this.backups.reduce((sum, backup) => sum + (backup.size || 0), 0);
+    
+    return {
+      totalBackups,
+      successfulBackups,
+      failedBackups: totalBackups - successfulBackups,
+      totalSize,
+      averageSize: totalBackups > 0 ? totalSize / totalBackups : 0,
+      lastBackup: this.backups.length > 0 ? new Date(this.backups[this.backups.length - 1].timestamp) : null
+    };
+  }
+
+  async testDisasterRecovery(): Promise<boolean> {
+    try {
+      console.log('Starting disaster recovery test...');
+      
+      // Create test backup
+      const testBackupId = await this.createBackup('full', ['test_data'], 'Disaster recovery test');
+      
+      // Test restore
+      const restoreSuccess = await this.restoreBackup(testBackupId);
+      
+      console.log(`Disaster recovery test ${restoreSuccess ? 'passed' : 'failed'}`);
+      return restoreSuccess;
+    } catch (error) {
+      console.error('Disaster recovery test failed:', error);
+      return false;
+    }
+  }
+
+  async cleanupOldBackups(retentionDays: number = 30): Promise<number> {
+    try {
+      const cutoffDate = new Date(Date.now() - (retentionDays * 24 * 60 * 60 * 1000));
+      let cleanedCount = 0;
+
+      this.backups = this.backups.filter(backup => {
+        const backupDate = new Date(backup.timestamp);
+        if (backupDate < cutoffDate) {
+          // Remove from localStorage
+          localStorage.removeItem(`backup_${backup.id}`);
+          cleanedCount++;
+          return false;
+        }
+        return true;
+      });
+
+      console.log(`Cleaned up ${cleanedCount} old backups`);
+      return cleanedCount;
+    } catch (error) {
+      console.error('Failed to cleanup old backups:', error);
+      return 0;
     }
   }
 }
