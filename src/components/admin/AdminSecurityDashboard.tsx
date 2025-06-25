@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -17,8 +16,8 @@ import {
   XCircle
 } from 'lucide-react';
 import { useSecurityMonitoring } from '@/hooks/useSecurityMonitoring';
-import { useAuth } from '@/components/SimpleAuthProvider';
-import { useAdmin } from '@/components/SimpleAdminProvider';
+import { useAuth } from '@/hooks/useAuth';
+import { useAdmin } from '@/hooks/useAdmin';
 
 const AdminSecurityDashboard = () => {
   const { user } = useAuth();
@@ -27,13 +26,7 @@ const AdminSecurityDashboard = () => {
   const [securityEvents, setSecurityEvents] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (isAdmin && hasPermission('manage_security')) {
-      loadSecurityEvents();
-    }
-  }, [isAdmin, hasPermission]);
-
-  const loadSecurityEvents = async () => {
+  const loadSecurityEvents = useCallback(async () => {
     setLoading(true);
     try {
       // In production, this would fetch real security events
@@ -72,7 +65,11 @@ const AdminSecurityDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadSecurityEvents();
+  }, [loadSecurityEvents]);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {

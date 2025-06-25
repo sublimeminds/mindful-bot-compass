@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/components/SimpleAuthProvider';
-import { useAdmin } from '@/components/SimpleAdminProvider';
+import { useAuth } from '@/hooks/useAuth';
+import { useAdmin } from '@/hooks/useAdmin';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Shield, Lock, AlertTriangle } from 'lucide-react';

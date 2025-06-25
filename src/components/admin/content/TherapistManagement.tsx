@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -32,11 +31,7 @@ const TherapistManagement = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedTherapist, setSelectedTherapist] = useState<TherapistPersonality | null>(null);
 
-  useEffect(() => {
-    fetchTherapists();
-  }, []);
-
-  const fetchTherapists = async () => {
+  const fetchTherapists = useCallback(async () => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
@@ -56,7 +51,11 @@ const TherapistManagement = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchTherapists();
+  }, [fetchTherapists]);
 
   const toggleTherapistStatus = async (therapist: TherapistPersonality) => {
     try {

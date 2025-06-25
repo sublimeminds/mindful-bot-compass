@@ -1,5 +1,5 @@
 
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 
 export const useSafeAuth = () => {
   try {

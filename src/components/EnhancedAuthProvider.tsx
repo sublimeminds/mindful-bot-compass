@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { securityMiddleware } from '@/services/securityMiddleware';
 import type { User, Session } from '@supabase/supabase-js';
@@ -39,7 +39,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
   const { logSecurityEvent } = useSecurityLogger(user);
   const { initializeUserSecurity } = useUserSecurity();
 
-  const handleAuthStateChange = React.useCallback(async (event: string, session: Session | null) => {
+  const handleAuthStateChange = useCallback(async (event: string, session: Session | null) => {
     console.log('EnhancedAuthProvider: Auth state changed:', event);
     
     // Log authentication events with proper event property
@@ -113,7 +113,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       console.log('EnhancedAuthProvider: Cleaning up auth listener...');
       subscription.unsubscribe();
     };
-  }, [handleAuthStateChange]);
+  }, [handleAuthStateChange, initializeUserSecurity, logSecurityEvent]);
 
   const login = async (email: string, password: string, mfaCode?: string) => {
     console.log('EnhancedAuthProvider: Attempting enhanced login...');

@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 const NotificationToastHandler = () => {
   const { user } = useSimpleApp();
-  const channelRef = useRef<any>(null);
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
   const isSubscribedRef = useRef(false);
 
   useEffect(() => {
