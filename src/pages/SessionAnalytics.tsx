@@ -1,127 +1,85 @@
-
-import React from 'react';
-import { useAuth } from '@/components/SimpleAuthProvider';
-import { useNavigate } from 'react-router-dom';
-import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { BarChart3, TrendingUp, Clock, Target } from 'lucide-react';
 
 const SessionAnalytics = () => {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [sessionData, setSessionData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
-    if (!loading && !user) {
-      navigate('/auth');
+  useEffect(() => {
+    const fetchSessionData = async () => {
+      setLoading(true);
+      try {
+        // Mock data for demonstration
+        const mockData = {
+          totalSessions: 42,
+          averageMood: 7.8,
+          goalCompletionRate: 0.85,
+          timeSpent: '35 hours'
+        };
+        setSessionData(mockData);
+      } catch (error) {
+        console.error('Error fetching session data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchSessionData();
     }
-  }, [user, loading, navigate]);
-
-  // Mock analytics data
-  const analytics = {
-    totalSessions: 12,
-    averageDuration: 35,
-    improvementScore: 78,
-    completionRate: 85,
-    recentSessions: [
-      { id: '1', date: '2024-01-15', duration: 45, mood_before: 4, mood_after: 7 },
-      { id: '2', date: '2024-01-13', duration: 30, mood_before: 3, mood_after: 6 },
-      { id: '3', date: '2024-01-10', duration: 40, mood_before: 5, mood_after: 8 }
-    ]
-  };
+  }, [user]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
-          <p className="text-therapy-600 font-medium">Loading Analytics...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return null;
+    return <p>Loading session analytics...</p>;
   }
 
   return (
-    <DashboardLayoutWithSidebar>
-      <div className="p-6">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-4">Session Analytics</h1>
-          <p className="text-muted-foreground">
-            Track your therapy progress and session insights.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Sessions</CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{analytics.totalSessions}</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Avg Duration</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{analytics.averageDuration}m</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Improvement</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{analytics.improvementScore}%</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
-              <Target className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{analytics.completionRate}%</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Sessions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {analytics.recentSessions.map((session) => (
-                <div key={session.id} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <p className="font-medium">{session.date}</p>
-                    <p className="text-sm text-muted-foreground">{session.duration} minutes</p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline">
-                      {session.mood_before} → {session.mood_after}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
+    <div className="container mx-auto py-8">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <BarChart3 className="h-5 w-5 mr-2" />
+            Session Analytics
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {sessionData ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center">
+                  <div className="text-2xl font-bold">{sessionData.totalSessions}</div>
+                  <div className="text-sm text-muted-foreground">Total Sessions</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center">
+                  <div className="text-2xl font-bold">{sessionData.averageMood}</div>
+                  <div className="text-sm text-muted-foreground">Average Mood</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center">
+                  <div className="text-2xl font-bold">{sessionData.goalCompletionRate * 100}%</div>
+                  <div className="text-sm text-muted-foreground">Goal Completion Rate</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center">
+                  <div className="text-2xl font-bold">{sessionData.timeSpent}</div>
+                  <div className="text-sm text-muted-foreground">Time Spent</div>
+                </CardContent>
+              </Card>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </DashboardLayoutWithSidebar>
+          ) : (
+            <p>No session data available.</p>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

@@ -1,372 +1,251 @@
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Mic, MicOff, Volume2, VolumeX, Camera, Upload, 
-  Languages, Brain, Zap, Eye 
-} from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Settings, Activity } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  VoiceMetadata,
-  EmotionData,
-  OCRBoundingBox
-} from '@/types/voiceInteraction';
+import { VoiceMetadata, EmotionData, SpeechRecognitionEvent, VoiceErrorEvent } from '@/types/voiceInteraction';
 
-interface VoiceAnalysisResult {
-  transcript: string;
-  confidence: number;
-  language: string;
-  emotion?: EmotionData;
-  stress?: {
-    level: 'low' | 'medium' | 'high';
-    confidence: number;
-  };
-  languageDetection: {
-    detected: string;
-    confidence: number;
-  };
+interface VoiceSettings {
+  pitch: number;
+  rate: number;
+  volume: number;
+  voice: SpeechSynthesisVoice | null;
 }
 
-interface OCRResult {
-  text: string;
+interface VoiceInteractionState {
+  isListening: boolean;
+  isProcessing: boolean;
+  transcript: string;
   confidence: number;
-  language: string;
-  boundingBoxes?: OCRBoundingBox[];
+  emotion: EmotionData | null;
+  lastResponse: string;
+  settings: VoiceSettings;
+}
+
+interface SpeechRecognitionResult {
+  transcript: string;
+  confidence: number;
+  isFinal: boolean;
 }
 
 interface EnhancedVoiceInteractionProps {
-  onTextReceived?: (text: string, metadata?: VoiceMetadata) => void;
-  onEmotionDetected?: (emotion: EmotionData) => void;
-  autoLanguageDetection?: boolean;
-  enableOCR?: boolean;
-  enableHandwriting?: boolean;
-  className?: string;
+  onTranscript?: (transcript: string, metadata: VoiceMetadata) => void;
+  onEmotion?: (emotion: EmotionData) => void;
+  autoStart?: boolean;
+  language?: string;
 }
 
 const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
-  onTextReceived,
-  onEmotionDetected,
-  autoLanguageDetection = true,
-  enableOCR = true,
-  enableHandwriting = false,
-  className = ""
+  onTranscript,
+  onEmotion,
+  autoStart = false,
+  language = 'en-US'
 }) => {
-  const [isListening, setIsListening] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('en-US');
-  const [transcript, setTranscript] = useState('');
-  const [currentEmotion, setCurrentEmotion] = useState<EmotionData | null>(null);
-  const [isProcessingOCR, setIsProcessingOCR] = useState(false);
-  const [ocrResult, setOcrResult] = useState<OCRResult | null>(null);
-  const [multiModalText, setMultiModalText] = useState('');
-
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
+  
+  const [state, setState] = useState<VoiceInteractionState>({
+    isListening: false,
+    isProcessing: false,
+    transcript: '',
+    confidence: 0,
+    emotion: null,
+    lastResponse: '',
+    settings: {
+      pitch: 1,
+      rate: 1,
+      volume: 1,
+      voice: null
+    }
+  });
 
-  const supportedLanguages = [
-    { code: 'en-US', name: 'English (US)', flag: '🇺🇸' },
-    { code: 'en-GB', name: 'English (UK)', flag: '🇬🇧' },
-    { code: 'es-ES', name: 'Spanish (Spain)', flag: '🇪🇸' },
-    { code: 'fr-FR', name: 'French', flag: '🇫🇷' },
-    { code: 'de-DE', name: 'German', flag: '🇩🇪' }
-  ];
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
 
   useEffect(() => {
+    synthRef.current = window.speechSynthesis;
+    const populateVoices = () => {
+      const voices = synthRef.current?.getVoices() || [];
+      setAvailableVoices(voices);
+      setState(prevState => ({
+        ...prevState,
+        settings: {
+          ...prevState.settings,
+          voice: voices[0] || null
+        }
+      }));
+    };
+
+    if (synthRef.current?.getVoices().length > 0) {
+      populateVoices();
+    } else {
+      synthRef.current?.addEventListener('voiceschanged', populateVoices);
+    }
+
     return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
-      }
+      synthRef.current?.removeEventListener('voiceschanged', populateVoices);
     };
   }, []);
 
-  const startAdvancedListening = async () => {
-    try {
-      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        throw new Error('Speech recognition not supported');
+  const startSpeechRecognition = useCallback(() => {
+    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+      toast({
+        title: "Speech Recognition Not Supported",
+        description: "Your browser does not support Speech Recognition.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognitionRef.current = new SpeechRecognition();
+    recognitionRef.current.continuous = false;
+    recognitionRef.current.interimResults = true;
+    recognitionRef.current.lang = language;
+
+    recognitionRef.current.onstart = () => {
+      setState(prevState => ({ ...prevState, isListening: true, isProcessing: false }));
+    };
+
+    recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+      let interimTranscript = '';
+      let finalTranscript = '';
+      let currentConfidence = 0;
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        const result = event.results[i];
+        const alternative = result[0];
+        currentConfidence = alternative.confidence;
+
+        if (result.isFinal) {
+          finalTranscript += alternative.transcript;
+        } else {
+          interimTranscript += alternative.transcript;
+        }
       }
 
-      const SpeechRecognitionConstructor = (window.SpeechRecognition || window.webkitSpeechRecognition) as SpeechRecognitionConstructor;
-      const recognition = new SpeechRecognitionConstructor();
-      
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = selectedLanguage;
+      setState(prevState => ({
+        ...prevState,
+        transcript: finalTranscript || interimTranscript,
+        confidence: currentConfidence
+      }));
 
-      recognition.onresult = (event: SpeechRecognitionEvent) => {
-        let finalTranscript = '';
-        let confidence = 0;
+      if (onTranscript) {
+        const metadata: VoiceMetadata = {
+          source: 'voice',
+          language: language,
+          confidence: currentConfidence
+        };
+        onTranscript(finalTranscript || interimTranscript, metadata);
+      }
+    };
 
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const result = event.results[i];
-          if (result.isFinal) {
-            finalTranscript += result[0].transcript;
-            confidence = result[0].confidence;
-          }
-        }
+    recognitionRef.current.onend = () => {
+      setState(prevState => ({ ...prevState, isListening: false }));
+    };
 
-        if (finalTranscript) {
-          const voiceResult: VoiceAnalysisResult = {
-            transcript: finalTranscript,
-            confidence,
-            language: selectedLanguage,
-            languageDetection: {
-              detected: selectedLanguage.split('-')[0],
-              confidence: 0.9
-            }
-          };
-          
-          handleVoiceResult(voiceResult);
-        }
-      };
-
-      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-        handleVoiceError(`Speech recognition error: ${event.error}`);
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
-      recognition.start();
-      recognitionRef.current = recognition;
-      setIsListening(true);
-      
+    recognitionRef.current.onerror = (event: VoiceErrorEvent) => {
+      console.error('Speech recognition error:', event.error);
       toast({
-        title: "Voice Recognition Started",
-        description: `Listening in ${selectedLanguage}`,
+        title: "Speech Recognition Error",
+        description: `Error: ${event.error}`,
+        variant: "destructive",
       });
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      handleVoiceError(`Failed to start recognition: ${errorMessage}`);
-    }
-  };
+      setState(prevState => ({ ...prevState, isListening: false }));
+    };
 
-  const stopListening = () => {
+    recognitionRef.current.start();
+  }, [language, onTranscript, toast]);
+
+  const stopSpeechRecognition = useCallback(() => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
-      recognitionRef.current = null;
+      setState(prevState => ({ ...prevState, isListening: false }));
     }
-    setIsListening(false);
-  };
+  }, []);
 
-  const handleVoiceResult = (result: VoiceAnalysisResult) => {
-    setTranscript(result.transcript);
-    
-    const combinedText = multiModalText ? 
-      `${multiModalText} ${result.transcript}` : 
-      result.transcript;
-
-    onTextReceived?.(combinedText, {
-      source: 'voice',
-      language: result.language,
-      confidence: result.confidence
-    });
-  };
-
-  const handleVoiceError = (error: string) => {
-    setIsListening(false);
-    toast({
-      title: "Voice Recognition Error",
-      description: error,
-      variant: "destructive"
-    });
-  };
-
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setIsProcessingOCR(true);
-    try {
-      // Mock OCR functionality
-      const result: OCRResult = {
-        text: "Sample extracted text from image",
-        confidence: 0.85,
-        language: 'en'
-      };
-      
-      setOcrResult(result);
-      
-      if (result.text.trim()) {
-        const combinedText = multiModalText ? 
-          `${multiModalText} ${result.text}` : 
-          result.text;
-        setMultiModalText(combinedText);
-
-        onTextReceived?.(combinedText, {
-          source: 'ocr',
-          confidence: result.confidence,
-          language: result.language
-        });
-
-        toast({
-          title: "Text Extracted from Image",
-          description: `Found ${result.text.length} characters`,
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "OCR Error",
-        description: "Failed to extract text from image",
-        variant: "destructive"
-      });
-    } finally {
-      setIsProcessingOCR(false);
+  const toggleListening = useCallback(() => {
+    if (state.isListening) {
+      stopSpeechRecognition();
+    } else {
+      startSpeechRecognition();
     }
-  };
+  }, [startSpeechRecognition, stopSpeechRecognition, state.isListening]);
 
-  const clearAllText = () => {
-    setTranscript('');
-    setMultiModalText('');
-    setOcrResult(null);
-    setCurrentEmotion(null);
-  };
-
-  const toggleMute = () => {
-    setIsMuted(!isMuted);
-    if (!isMuted) {
-      window.speechSynthesis?.cancel();
+  const speak = useCallback((text: string) => {
+    if (!synthRef.current) {
+      synthRef.current = window.speechSynthesis;
     }
-  };
+
+    if (synthRef.current?.speaking) {
+      synthRef.current.cancel();
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.pitch = state.settings.pitch;
+    utterance.rate = state.settings.rate;
+    utterance.volume = state.settings.volume;
+    utterance.voice = state.settings.voice;
+
+    synthRef.current?.speak(utterance);
+  }, [state.settings]);
+
+  useEffect(() => {
+    if (autoStart) {
+      startSpeechRecognition();
+    }
+
+    return () => {
+      stopSpeechRecognition();
+    };
+  }, [autoStart, startSpeechRecognition, stopSpeechRecognition]);
 
   return (
-    <Card className={`border-therapy-200 ${className}`}>
-      <CardHeader className="pb-3">
+    <Card>
+      <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Brain className="h-5 w-5 text-therapy-600" />
-            <span>Enhanced Voice & Text Recognition</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            {isListening && (
-              <Badge variant="default" className="bg-therapy-500 animate-pulse">
-                <Mic className="h-3 w-3 mr-1" />
-                Listening
-              </Badge>
-            )}
-          </div>
+          <span>Voice Interaction</span>
+          <Badge variant={state.isListening ? "default" : "secondary"}>
+            {state.isListening ? 'Listening' : 'Inactive'}
+          </Badge>
         </CardTitle>
       </CardHeader>
-
       <CardContent className="space-y-4">
-        {/* Language Selection */}
-        <div className="flex items-center space-x-3">
-          <Languages className="h-4 w-4 text-muted-foreground" />
-          <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-            <SelectTrigger className="w-64">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {supportedLanguages.map((lang) => (
-                <SelectItem key={lang.code} value={lang.code}>
-                  <span className="mr-2">{lang.flag}</span>
-                  {lang.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Transcript</label>
+          <div className="border rounded-md p-2 bg-gray-50">
+            {state.transcript || 'No transcript available.'}
+          </div>
         </div>
 
-        {/* Control Buttons */}
-        <div className="flex justify-center space-x-3">
+        <div className="flex items-center space-x-4">
           <Button
-            onClick={isListening ? stopListening : startAdvancedListening}
-            size="lg"
-            variant={isListening ? "destructive" : "default"}
-            className={isListening ? 'animate-pulse' : 'bg-therapy-600 hover:bg-therapy-700'}
+            onClick={toggleListening}
+            disabled={state.isProcessing}
+            className="flex-1"
           >
-            {isListening ? (
+            {state.isListening ? (
               <>
-                <MicOff className="h-5 w-5 mr-2" />
-                Stop
+                <MicOff className="h-4 w-4 mr-2" />
+                Stop Listening
               </>
             ) : (
               <>
-                <Mic className="h-5 w-5 mr-2" />
-                Start Voice
+                <Mic className="h-4 w-4 mr-2" />
+                Start Listening
               </>
             )}
           </Button>
-
-          {enableOCR && (
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isProcessingOCR}
-              variant="outline"
-              size="lg"
-            >
-              {isProcessingOCR ? (
-                <>
-                  <Eye className="h-5 w-5 mr-2 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <Camera className="h-5 w-5 mr-2" />
-                  Scan Image
-                </>
-              )}
-            </Button>
-          )}
-
           <Button
-            onClick={toggleMute}
-            variant="outline"
-            size="lg"
-            className={isMuted ? "bg-red-50 border-red-200" : ""}
+            variant="secondary"
+            onClick={() => speak(state.transcript)}
+            disabled={!state.transcript}
           >
-            {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
-          </Button>
-
-          <Button onClick={clearAllText} variant="outline" size="lg">
-            Clear All
+            <Volume2 className="h-4 w-4 mr-2" />
+            Speak
           </Button>
         </div>
-
-        {/* Hidden file input for OCR */}
-        {enableOCR && (
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="hidden"
-          />
-        )}
-
-        {/* Results Display */}
-        {(transcript || multiModalText) && (
-          <div className="space-y-3">
-            {transcript && (
-              <div className="p-4 bg-therapy-50 rounded-lg border border-therapy-200">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-therapy-700">
-                    Voice Transcript
-                  </span>
-                </div>
-                <p className="text-sm text-gray-700">{transcript}</p>
-              </div>
-            )}
-
-            {ocrResult && ocrResult.text && (
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-blue-700">
-                    Extracted Text (OCR)
-                  </span>
-                  <Badge variant="outline" className="text-xs">
-                    {Math.round(ocrResult.confidence * 100)}% confidence
-                  </Badge>
-                </div>
-                <p className="text-sm text-gray-700">{ocrResult.text}</p>
-              </div>
-            )}
-          </div>
-        )}
       </CardContent>
     </Card>
   );

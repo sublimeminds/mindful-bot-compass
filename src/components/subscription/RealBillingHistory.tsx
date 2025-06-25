@@ -1,12 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Download, Receipt, CreditCard } from 'lucide-react';
-import { useAuth } from '@/components/SimpleAuthProvider';
-import { supabase } from '@/integrations/supabase/client';
+import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { CreditCard, Download, Calendar, DollarSign } from 'lucide-react';
 
 interface BillingRecord {
   id: string;
@@ -126,7 +125,7 @@ const RealBillingHistory = () => {
       <CardContent>
         {billingHistory.length === 0 ? (
           <div className="text-center py-8">
-            <Receipt className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground">No billing history available</p>
             <p className="text-sm text-muted-foreground mt-2">
               Your billing records will appear here once you make your first purchase.

@@ -1,11 +1,11 @@
-
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Check, Star, Zap, Crown } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { useAuth } from '@/hooks/useAuth';
+import { Check, X, Crown, Zap, Star } from 'lucide-react';
 import GradientLogo from '@/components/ui/GradientLogo';
 
 const ComprehensivePricingSection = () => {

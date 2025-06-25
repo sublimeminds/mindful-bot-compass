@@ -1,28 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Bell, Mail, Smartphone, MessageSquare, Save } from 'lucide-react';
-import { useAuth } from '@/components/SimpleAuthProvider';
-import { supabase } from '@/integrations/supabase/client';
+import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { Bell, Mail, MessageSquare, Calendar, Shield, Volume2 } from 'lucide-react';
 
 interface NotificationSettings {
   email_notifications: boolean;
   push_notifications: boolean;
-  sms_notifications: boolean;
+  sms_alerts: boolean;
   session_reminders: boolean;
-  progress_updates: boolean;
-  milestone_notifications: boolean;
-  insight_notifications: boolean;
-  weekly_reports: boolean;
-  daily_summaries: boolean;
-  streak_reminders: boolean;
-  notification_frequency: string;
-  quiet_hours_start?: string;
-  quiet_hours_end?: string;
+  security_alerts: boolean;
+  sound_enabled: boolean;
 }
 
 const ComprehensiveNotificationSettings = () => {
@@ -33,15 +26,10 @@ const ComprehensiveNotificationSettings = () => {
   const [settings, setSettings] = useState<NotificationSettings>({
     email_notifications: true,
     push_notifications: true,
-    sms_notifications: false,
+    sms_alerts: false,
     session_reminders: true,
-    progress_updates: true,
-    milestone_notifications: true,
-    insight_notifications: true,
-    weekly_reports: false,
-    daily_summaries: false,
-    streak_reminders: true,
-    notification_frequency: 'normal',
+    security_alerts: true,
+    sound_enabled: true,
   });
 
   useEffect(() => {
@@ -54,30 +42,24 @@ const ComprehensiveNotificationSettings = () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('notification_preferences')
-        .select('*')
-        .eq('user_id', user?.id)
+        .from('profiles')
+        .select('notification_settings')
+        .eq('id', user?.id)
         .single();
 
       if (error && error.code !== 'PGRST116') {
         throw error;
       }
 
-      if (data) {
+      if (data?.notification_settings && typeof data.notification_settings === 'object') {
+        const notificationData = data.notification_settings as Record<string, any>;
         setSettings({
-          email_notifications: data.email_notifications ?? true,
-          push_notifications: data.push_notifications ?? true,
-          sms_notifications: data.sms_notifications ?? false,
-          session_reminders: data.session_reminders ?? true,
-          progress_updates: data.progress_updates ?? true,
-          milestone_notifications: data.milestone_notifications ?? true,
-          insight_notifications: data.insight_notifications ?? true,
-          weekly_reports: data.weekly_reports ?? false,
-          daily_summaries: data.daily_summaries ?? false,
-          streak_reminders: data.streak_reminders ?? true,
-          notification_frequency: data.notification_frequency ?? 'normal',
-          quiet_hours_start: data.quiet_hours_start,
-          quiet_hours_end: data.quiet_hours_end,
+          email_notifications: notificationData.email_notifications ?? true,
+          push_notifications: notificationData.push_notifications ?? true,
+          sms_alerts: notificationData.sms_alerts ?? false,
+          session_reminders: notificationData.session_reminders ?? true,
+          security_alerts: notificationData.security_alerts ?? true,
+          sound_enabled: notificationData.sound_enabled ?? true,
         });
       }
     } catch (error) {
@@ -99,24 +81,17 @@ const ComprehensiveNotificationSettings = () => {
     }));
   };
 
-  const handleSelectChange = (key: keyof NotificationSettings, value: string) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: value
-    }));
-  };
-
   const saveSettings = async () => {
     try {
       setSaving(true);
       
       const { error } = await supabase
-        .from('notification_preferences')
-        .upsert({
-          user_id: user?.id,
-          ...settings,
+        .from('profiles')
+        .update({
+          notification_settings: settings as any,
           updated_at: new Date().toISOString(),
-        });
+        })
+        .eq('id', user?.id);
 
       if (error) throw error;
 
@@ -151,17 +126,16 @@ const ComprehensiveNotificationSettings = () => {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Bell className="h-5 w-5 mr-2" />
-            Notification Channels
+            Notification Preferences
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Mail className="h-5 w-5 text-muted-foreground" />
-              <div>
-                <Label htmlFor="email-notifications">Email Notifications</Label>
-                <p className="text-sm text-muted-foreground">Receive notifications via email</p>
-              </div>
+            <div>
+              <Label htmlFor="email-notifications">Email Notifications</Label>
+              <p className="text-sm text-muted-foreground">
+                Receive important updates and reminders via email
+              </p>
             </div>
             <Switch
               id="email-notifications"
@@ -170,13 +144,14 @@ const ComprehensiveNotificationSettings = () => {
             />
           </div>
 
+          <Separator />
+
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Bell className="h-5 w-5 text-muted-foreground" />
-              <div>
-                <Label htmlFor="push-notifications">Push Notifications</Label>
-                <p className="text-sm text-muted-foreground">Receive browser push notifications</p>
-              </div>
+            <div>
+              <Label htmlFor="push-notifications">Push Notifications</Label>
+              <p className="text-sm text-muted-foreground">
+                Get real-time alerts on your mobile device
+              </p>
             </div>
             <Switch
               id="push-notifications"
@@ -185,32 +160,30 @@ const ComprehensiveNotificationSettings = () => {
             />
           </div>
 
+          <Separator />
+
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Smartphone className="h-5 w-5 text-muted-foreground" />
-              <div>
-                <Label htmlFor="sms-notifications">SMS Notifications</Label>
-                <p className="text-sm text-muted-foreground">Receive notifications via text message</p>
-              </div>
+            <div>
+              <Label htmlFor="sms-alerts">SMS Alerts</Label>
+              <p className="text-sm text-muted-foreground">
+                Receive critical alerts via SMS (e.g., security breaches)
+              </p>
             </div>
             <Switch
-              id="sms-notifications"
-              checked={settings.sms_notifications}
-              onCheckedChange={(checked) => handleToggle('sms_notifications', checked)}
+              id="sms-alerts"
+              checked={settings.sms_alerts}
+              onCheckedChange={(checked) => handleToggle('sms_alerts', checked)}
             />
           </div>
-        </CardContent>
-      </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Notification Types</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          <Separator />
+
           <div className="flex items-center justify-between">
             <div>
               <Label htmlFor="session-reminders">Session Reminders</Label>
-              <p className="text-sm text-muted-foreground">Get reminded about upcoming therapy sessions</p>
+              <p className="text-sm text-muted-foreground">
+                Get reminders for upcoming therapy sessions
+              </p>
             </div>
             <Switch
               id="session-reminders"
@@ -219,130 +192,41 @@ const ComprehensiveNotificationSettings = () => {
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="progress-updates">Progress Updates</Label>
-              <p className="text-sm text-muted-foreground">Receive updates about your therapy progress</p>
-            </div>
-            <Switch
-              id="progress-updates"
-              checked={settings.progress_updates}
-              onCheckedChange={(checked) => handleToggle('progress_updates', checked)}
-            />
-          </div>
+          <Separator />
 
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="milestone-notifications">Milestone Achievements</Label>
-              <p className="text-sm text-muted-foreground">Get notified when you reach important milestones</p>
+              <Label htmlFor="security-alerts">Security Alerts</Label>
+              <p className="text-sm text-muted-foreground">
+                Receive notifications about suspicious activity on your account
+              </p>
             </div>
             <Switch
-              id="milestone-notifications"
-              checked={settings.milestone_notifications}
-              onCheckedChange={(checked) => handleToggle('milestone_notifications', checked)}
+              id="security-alerts"
+              checked={settings.security_alerts}
+              onCheckedChange={(checked) => handleToggle('security_alerts', checked)}
             />
           </div>
+
+          <Separator />
 
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="insight-notifications">Therapy Insights</Label>
-              <p className="text-sm text-muted-foreground">Receive personalized insights and recommendations</p>
+              <Label htmlFor="sound-enabled">Sound Enabled</Label>
+              <p className="text-sm text-muted-foreground">
+                Enable sound for notifications
+              </p>
             </div>
             <Switch
-              id="insight-notifications"
-              checked={settings.insight_notifications}
-              onCheckedChange={(checked) => handleToggle('insight_notifications', checked)}
+              id="sound-enabled"
+              checked={settings.sound_enabled}
+              onCheckedChange={(checked) => handleToggle('sound_enabled', checked)}
             />
           </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="weekly-reports">Weekly Reports</Label>
-              <p className="text-sm text-muted-foreground">Get weekly summaries of your progress</p>
-            </div>
-            <Switch
-              id="weekly-reports"
-              checked={settings.weekly_reports}
-              onCheckedChange={(checked) => handleToggle('weekly_reports', checked)}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="daily-summaries">Daily Summaries</Label>
-              <p className="text-sm text-muted-foreground">Receive daily mood and activity summaries</p>
-            </div>
-            <Switch
-              id="daily-summaries"
-              checked={settings.daily_summaries}
-              onCheckedChange={(checked) => handleToggle('daily_summaries', checked)}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="streak-reminders">Streak Reminders</Label>
-              <p className="text-sm text-muted-foreground">Get reminded to maintain your therapy streaks</p>
-            </div>
-            <Switch
-              id="streak-reminders"
-              checked={settings.streak_reminders}
-              onCheckedChange={(checked) => handleToggle('streak_reminders', checked)}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Notification Frequency</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="frequency">How often would you like to receive notifications?</Label>
-            <Select value={settings.notification_frequency} onValueChange={(value) => handleSelectChange('notification_frequency', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select frequency" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="minimal">Minimal - Only urgent notifications</SelectItem>
-                <SelectItem value="normal">Normal - Important updates and reminders</SelectItem>
-                <SelectItem value="frequent">Frequent - All notifications and updates</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="quiet-start">Quiet Hours Start</Label>
-              <input
-                id="quiet-start"
-                type="time"
-                value={settings.quiet_hours_start || ''}
-                onChange={(e) => handleSelectChange('quiet_hours_start', e.target.value)}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="quiet-end">Quiet Hours End</Label>
-              <input
-                id="quiet-end"
-                type="time"
-                value={settings.quiet_hours_end || ''}
-                onChange={(e) => handleSelectChange('quiet_hours_end', e.target.value)}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              />
-            </div>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            During quiet hours, you'll only receive urgent notifications.
-          </p>
         </CardContent>
       </Card>
 
       <Button onClick={saveSettings} disabled={saving} className="w-full">
-        <Save className="h-4 w-4 mr-2" />
         {saving ? 'Saving...' : 'Save Notification Settings'}
       </Button>
     </div>

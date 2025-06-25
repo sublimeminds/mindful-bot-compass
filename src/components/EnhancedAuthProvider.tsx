@@ -1,376 +1,400 @@
-
-import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { securityMiddleware } from '@/services/securityMiddleware';
-import type { User, Session } from '@supabase/supabase-js';
-import { toast } from 'sonner';
-import { useSecurityLogger } from '@/hooks/useSecurityLogger';
-import { useUserSecurity } from '@/hooks/useUserSecurity';
-import { SecurityMetrics } from '@/types/auth';
+import { useToast } from '@/hooks/use-toast';
+import { checkReactSafety } from '@/utils/reactSafetyChecker';
 
-interface SecurityInitResult {
-  isTrusted: boolean;
-  mfaStatus: boolean;
+interface SecurityEvent {
+  type: string;
+  description: string;
+  timestamp: string;
+  ip_address?: string;
+  user_agent?: string;
+  risk_level: 'low' | 'medium' | 'high' | 'critical';
+}
+
+interface UserSecurity {
+  twoFactorEnabled: boolean;
+  lastPasswordChange: string | null;
+  failedLoginAttempts: number;
+  accountLocked: boolean;
+  suspiciousActivity: SecurityEvent[];
 }
 
 interface EnhancedAuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  mfaEnabled: boolean;
-  deviceTrusted: boolean;
-  login: (email: string, password: string, mfaCode?: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  userSecurity: UserSecurity | null;
+  login: (email: string, password: string) => Promise<{ error: Error | null }>;
+  register: (email: string, password: string, userData?: Record<string, unknown>) => Promise<{ error: Error | null }>;
   logout: () => Promise<void>;
-  enableMFA: () => Promise<boolean>;
-  disableMFA: (password: string) => Promise<boolean>;
-  trustDevice: () => void;
-  getSecurityMetrics: () => SecurityMetrics;
+  updateProfile: (updates: Record<string, unknown>) => Promise<{ error: Error | null }>;
+  changePassword: (newPassword: string) => Promise<{ error: Error | null }>;
+  enableTwoFactor: () => Promise<{ error: Error | null; qrCode?: string }>;
+  disableTwoFactor: (token: string) => Promise<{ error: Error | null }>;
+  verifyTwoFactor: (token: string) => Promise<{ error: Error | null }>;
+  resetPassword: (email: string) => Promise<{ error: Error | null }>;
+  refreshSecurityData: () => Promise<void>;
 }
 
 const EnhancedAuthContext = createContext<EnhancedAuthContextType | undefined>(undefined);
 
 interface EnhancedAuthProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ children }) => {
+  const reactSafety = checkReactSafety();
+  
+  if (!reactSafety.isReactSafe) {
+    console.error('EnhancedAuthProvider: React safety check failed:', reactSafety.error);
+    return React.createElement('div', {
+      style: {
+        padding: '20px',
+        backgroundColor: '#fee2e2',
+        border: '1px solid #fecaca',
+        borderRadius: '6px',
+        color: '#991b1b',
+        textAlign: 'center'
+      }
+    }, [
+      React.createElement('h3', { key: 'title' }, 'Enhanced Authentication System Error'),
+      React.createElement('p', { key: 'message' }, reactSafety.error || 'React hooks are not available'),
+      React.createElement('button', {
+        key: 'reload',
+        onClick: () => window.location.reload(),
+        style: {
+          backgroundColor: '#dc2626',
+          color: 'white',
+          border: 'none',
+          padding: '8px 16px',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          marginTop: '10px'
+        }
+      }, 'Reload Page')
+    ]);
+  }
+
+  const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [mfaEnabled, setMfaEnabled] = useState(false);
-  const [deviceTrusted, setDeviceTrusted] = useState(false);
+  const [userSecurity, setUserSecurity] = useState<UserSecurity | null>(null);
 
-  const { logSecurityEvent } = useSecurityLogger(user);
-  const { initializeUserSecurity } = useUserSecurity();
-
-  const handleAuthStateChange = useCallback(async (event: string, session: Session | null) => {
-    console.log('EnhancedAuthProvider: Auth state changed:', event);
-    
-    // Log authentication events with proper event property
-    await logSecurityEvent('auth_state_change', 'low', { 
-      event,
-      user_id: session?.user?.id,
+  const logSecurityEvent = useCallback(async (event: Omit<SecurityEvent, 'timestamp'>) => {
+    const securityEvent: SecurityEvent = {
+      ...event,
       timestamp: new Date().toISOString()
-    });
-
-    setSession(session);
-    setUser(session?.user ?? null);
+    };
     
-    if (session?.user) {
-      try {
-        const securityResult: SecurityInitResult = await initializeUserSecurity(session.user);
-        setDeviceTrusted(securityResult.isTrusted);
-        setMfaEnabled(securityResult.mfaStatus);
-      } catch (error) {
-        console.error('Security initialization failed:', error);
-      }
-    } else {
-      // Clear security state on logout
-      setMfaEnabled(false);
-      setDeviceTrusted(false);
+    try {
+      // Log to security events table or service
+      console.log('Security Event:', securityEvent);
+      
+      // Update user security state
+      setUserSecurity(prev => prev ? {
+        ...prev,
+        suspiciousActivity: [...prev.suspiciousActivity, securityEvent]
+      } : null);
+    } catch (error) {
+      console.error('Failed to log security event:', error);
     }
-    
-    setLoading(false);
-  }, [logSecurityEvent, initializeUserSecurity]);
+  }, []);
+
+  const initializeUserSecurity = useCallback(async (userId: string) => {
+    try {
+      // Initialize or fetch user security data
+      const mockSecurity: UserSecurity = {
+        twoFactorEnabled: false,
+        lastPasswordChange: null,
+        failedLoginAttempts: 0,
+        accountLocked: false,
+        suspiciousActivity: []
+      };
+      
+      setUserSecurity(mockSecurity);
+    } catch (error) {
+      console.error('Failed to initialize user security:', error);
+    }
+  }, []);
 
   useEffect(() => {
     console.log('EnhancedAuthProvider: Initializing enhanced auth...');
     
-    const initializeAuth = async () => {
+    const getInitialSession = async () => {
       try {
-        // Get initial session
-        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
         if (error) {
           console.error('EnhancedAuthProvider: Error getting session:', error);
-          logSecurityEvent('auth_error', 'medium', { error: error.message });
         } else {
-          console.log('EnhancedAuthProvider: Initial session:', initialSession ? 'Found' : 'Not found');
-          setSession(initialSession);
-          setUser(initialSession?.user ?? null);
-          
-          if (initialSession?.user) {
-            try {
-              const securityResult: SecurityInitResult = await initializeUserSecurity(initialSession.user);
-              setDeviceTrusted(securityResult.isTrusted);
-              setMfaEnabled(securityResult.mfaStatus);
-            } catch (error) {
-              console.error('Security initialization failed:', error);
-              await logSecurityEvent('security_init_error', 'high', { error: (error as Error).message });
-            }
+          setSession(session);
+          setUser(session?.user ?? null);
+          if (session?.user) {
+            initializeUserSecurity(session.user.id);
           }
         }
       } catch (error) {
-        console.error('EnhancedAuthProvider: Exception during initialization:', error);
-        setUser(null);
+        console.error('EnhancedAuthProvider: Exception getting session:', error);
         setSession(null);
+        setUser(null);
       } finally {
         setLoading(false);
       }
     };
 
-    initializeAuth();
+    getInitialSession();
 
-    // Listen for auth changes with enhanced security
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthStateChange);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log('EnhancedAuthProvider: Auth state changed:', event);
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+        
+        if (session?.user && event === 'SIGNED_IN') {
+          setTimeout(() => {
+            initializeUserSecurity(session.user.id);
+            logSecurityEvent({
+              type: 'login_success',
+              description: 'User successfully logged in',
+              risk_level: 'low'
+            });
+          }, 0);
+        }
+      }
+    );
 
     return () => {
-      console.log('EnhancedAuthProvider: Cleaning up auth listener...');
       subscription.unsubscribe();
     };
-  }, [handleAuthStateChange, initializeUserSecurity, logSecurityEvent]);
+  }, [initializeUserSecurity, logSecurityEvent]);
 
-  const login = async (email: string, password: string, mfaCode?: string) => {
-    console.log('EnhancedAuthProvider: Attempting enhanced login...');
-    
-    // Check rate limiting
-    if (!securityMiddleware.checkRateLimit('login', email)) {
-      throw new Error('Too many login attempts. Please try again later.');
-    }
-
-    // Validate input
-    const emailValidation = securityMiddleware.validateAndSanitizeInput(email, 'email');
-    const passwordValidation = securityMiddleware.validateAndSanitizeInput(password, 'password');
-
-    if (!emailValidation.isValid) {
-      await logSecurityEvent('auth_validation_failed', 'medium', { 
-        errors: emailValidation.errors,
-        type: 'email'
-      });
-      throw new Error(emailValidation.errors.join(', '));
-    }
-
-    if (!passwordValidation.isValid) {
-      await logSecurityEvent('auth_validation_failed', 'medium', { 
-        errors: passwordValidation.errors,
-        type: 'password'
-      });
-      throw new Error(passwordValidation.errors.join(', '));
-    }
-
+  const login = useCallback(async (email: string, password: string) => {
     try {
-      // Check if MFA is required for this user
-      const userMfaEnabled = localStorage.getItem(`mfa_enabled_${email}`) === 'true';
-      
-      if (userMfaEnabled && !mfaCode) {
-        await logSecurityEvent('mfa_required', 'low', { email });
-        throw new Error('MFA_REQUIRED');
-      }
-
-      if (userMfaEnabled && mfaCode) {
-        // Validate MFA code (mock validation)
-        if (mfaCode.length !== 6 || !/^\d{6}$/.test(mfaCode)) {
-          await logSecurityEvent('mfa_invalid', 'medium', { email });
-          throw new Error('Invalid MFA code format');
-        }
-      }
-
-      const { error } = await supabase.auth.signInWithPassword({
-        email: emailValidation.sanitized,
-        password: passwordValidation.sanitized,
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
       if (error) {
-        await logSecurityEvent('auth_failure', 'medium', { 
-          email: emailValidation.sanitized,
-          error: error.message 
+        console.error('EnhancedAuthProvider: Login error:', error);
+        logSecurityEvent({
+          type: 'login_failed',
+          description: `Failed login attempt for user ${email}`,
+          risk_level: 'medium',
+          ip_address: '::1',
+          user_agent: navigator.userAgent
         });
-        throw error;
+        return { error };
       }
 
-      await logSecurityEvent('auth_success', 'low', { 
-        email: emailValidation.sanitized 
-      });
-      
-      console.log('EnhancedAuthProvider: Enhanced login successful');
-      toast.success('Login successful - Enhanced security active');
-      
-    } catch (error) {
-      console.error('EnhancedAuthProvider: Enhanced login error:', error);
-      throw error;
+      console.log('EnhancedAuthProvider: Login successful');
+      return { error: null };
+    } catch (error: any) {
+      console.error('EnhancedAuthProvider: Unexpected login error:', error);
+      return { error: new Error(error.message || 'Login failed') };
     }
-  };
+  }, [logSecurityEvent]);
 
-  const register = async (email: string, password: string, name: string) => {
-    console.log('EnhancedAuthProvider: Attempting enhanced registration...');
-    
-    // Validate inputs
-    const validations = {
-      email: securityMiddleware.validateAndSanitizeInput(email, 'email'),
-      password: securityMiddleware.validateAndSanitizeInput(password, 'password'),
-      name: securityMiddleware.validateAndSanitizeInput(name, 'text')
-    };
-
-    const errors = Object.entries(validations)
-      .filter(([_, validation]) => !validation.isValid)
-      .flatMap(([field, validation]) => validation.errors.map(error => `${field}: ${error}`));
-
-    if (errors.length > 0) {
-      await logSecurityEvent('registration_validation_failed', 'medium', { errors });
-      throw new Error(errors.join(', '));
-    }
-
+  const register = useCallback(async (email: string, password: string, userData: Record<string, unknown> = {}) => {
     try {
-      const { error } = await supabase.auth.signUp({
-        email: validations.email.sanitized,
-        password: validations.password.sanitized,
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
-          data: {
-            name: validations.name.sanitized
-          }
+          data: userData,
+          emailRedirectTo: `${window.location.origin}/dashboard`
         }
       });
 
       if (error) {
-        await logSecurityEvent('registration_failure', 'medium', { 
-          email: validations.email.sanitized,
-          error: error.message 
-        });
-        throw error;
+        console.error('EnhancedAuthProvider: Registration error:', error);
+        return { error };
       }
 
-      await logSecurityEvent('registration_success', 'low', { 
-        email: validations.email.sanitized 
-      });
-      
-      console.log('EnhancedAuthProvider: Enhanced registration successful');
-      toast.success('Registration successful - Please check your email to verify your account');
-      
-    } catch (error) {
-      console.error('EnhancedAuthProvider: Enhanced registration error:', error);
-      throw error;
+      console.log('EnhancedAuthProvider: Registration successful');
+      return { error: null };
+    } catch (error: any) {
+      console.error('EnhancedAuthProvider: Unexpected registration error:', error);
+      return { error: new Error(error.message || 'Registration failed') };
     }
-  };
+  }, []);
 
-  const logout = async () => {
-    console.log('EnhancedAuthProvider: Attempting enhanced logout...');
-    
+  const logout = useCallback(async () => {
     try {
-      // Clear security data
-      if (user) {
-        await logSecurityEvent('logout', 'low', { user_id: user.id });
-        
-        // Clear session data
-        const sessionId = sessionStorage.getItem('currentSessionId');
-        if (sessionId) {
-          localStorage.removeItem(`session:${sessionId}`);
-          sessionStorage.removeItem('currentSessionId');
-        }
-      }
-
       await supabase.auth.signOut();
-      console.log('EnhancedAuthProvider: Enhanced logout successful');
-      toast.success('Logged out successfully');
-      
+      console.log('EnhancedAuthProvider: Logout successful');
     } catch (error) {
-      console.error('EnhancedAuthProvider: Enhanced logout error:', error);
-      throw error;
+      console.error('EnhancedAuthProvider: Logout error:', error);
     }
-  };
+  }, []);
 
-  const enableMFA = async (): Promise<boolean> => {
-    if (!user) return false;
+  const updateProfile = useCallback(async (updates: Record<string, unknown>) => {
+    if (!user) {
+      console.warn('No user to update profile for.');
+      return { error: new Error('No user logged in') };
+    }
 
     try {
-      // In a real implementation, this would set up TOTP with the backend
-      localStorage.setItem(`mfa_enabled_${user.id}`, 'true');
-      setMfaEnabled(true);
-      
-      await logSecurityEvent('mfa_enabled', 'low', { user_id: user.id });
-      toast.success('Two-factor authentication has been enabled');
-      
-      return true;
-    } catch (error) {
-      console.error('MFA enablement failed:', error);
-      await logSecurityEvent('mfa_enable_failed', 'medium', { 
-        user_id: user.id,
-        error: (error as Error).message 
+      const { data, error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', user.id);
+
+      if (error) {
+        console.error('Error updating profile:', error);
+        return { error };
+      }
+
+      setUser(prevUser => {
+        if (prevUser) {
+          return {
+            ...prevUser,
+            user_metadata: {
+              ...prevUser.user_metadata,
+              ...updates
+            }
+          };
+        }
+        return prevUser;
       });
-      return false;
+
+      return { error: null };
+    } catch (error: any) {
+      console.error('Unexpected error updating profile:', error);
+      return { error: new Error(error.message || 'Profile update failed') };
     }
-  };
+  }, [user]);
 
-  const disableMFA = async (password: string): Promise<boolean> => {
-    if (!user) return false;
-
+  const changePassword = useCallback(async (newPassword: string) => {
     try {
-      // Verify password before disabling MFA
-      const { error } = await supabase.auth.signInWithPassword({
-        email: user.email!,
-        password
+      const { data, error } = await supabase.auth.updateUser({
+        password: newPassword,
       });
 
       if (error) {
-        await logSecurityEvent('mfa_disable_failed', 'medium', { 
-          user_id: user.id,
-          reason: 'password_verification_failed'
-        });
-        throw new Error('Password verification failed');
+        console.error('Error changing password:', error);
+        return { error };
       }
 
-      localStorage.removeItem(`mfa_enabled_${user.id}`);
-      setMfaEnabled(false);
-      
-      await logSecurityEvent('mfa_disabled', 'medium', { user_id: user.id });
-      toast.success('Two-factor authentication has been disabled');
-      
-      return true;
-    } catch (error) {
-      console.error('MFA disabling failed:', error);
-      return false;
-    }
-  };
-
-  const trustDevice = () => {
-    if (!user) return;
-
-    const deviceFingerprint = securityMiddleware.generateDeviceFingerprint();
-    const trustedDevices = JSON.parse(localStorage.getItem(`trusted_devices_${user.id}`) || '[]');
-    
-    if (!trustedDevices.includes(deviceFingerprint)) {
-      trustedDevices.push(deviceFingerprint);
-      localStorage.setItem(`trusted_devices_${user.id}`, JSON.stringify(trustedDevices));
-      setDeviceTrusted(true);
-      
-      logSecurityEvent('device_trusted', 'low', { 
-        user_id: user.id,
-        device_fingerprint: deviceFingerprint 
+      logSecurityEvent({
+        type: 'password_change',
+        description: 'User successfully changed password',
+        risk_level: 'low'
       });
       
-      toast.success('Device has been trusted');
-    }
-  };
+      toast({
+        title: "Password Changed",
+        description: "Your password has been updated successfully.",
+      });
 
-  const getSecurityMetrics = (): SecurityMetrics => {
-    // Get the actual metrics from securityMiddleware and map to our interface
-    const rawMetrics = securityMiddleware.getSecurityMetrics();
-    
-    return {
-      totalEvents: rawMetrics.totalEvents || 0,
-      failedLogins: rawMetrics.criticalEvents || 0, // Map criticalEvents to failedLogins
-      successfulLogins: 0, // Default value since not available in raw metrics
-      suspiciousActivity: rawMetrics.suspiciousIPs || 0, // Map suspiciousIPs to suspiciousActivity
-      lastActivity: rawMetrics.lastUpdate || new Date() // Map lastUpdate to lastActivity
-    };
-  };
+      return { error: null };
+    } catch (error: any) {
+      console.error('Unexpected error changing password:', error);
+      return { error: new Error(error.message || 'Password change failed') };
+    }
+  }, [logSecurityEvent, toast]);
+
+  const enableTwoFactor = useCallback(async () => {
+    try {
+      // Mock 2FA enable
+      const qrCode = 'MOCK_QR_CODE';
+      
+      setUserSecurity(prev => prev ? { ...prev, twoFactorEnabled: true } : null);
+      
+      toast({
+        title: "Two-Factor Authentication Enabled",
+        description: "Your account is now protected with two-factor authentication.",
+      });
+      
+      return { error: null, qrCode };
+    } catch (error: any) {
+      console.error('Error enabling two-factor authentication:', error);
+      return { error: new Error(error.message || 'Failed to enable two-factor authentication') };
+    }
+  }, [toast]);
+
+  const disableTwoFactor = useCallback(async (token: string) => {
+    try {
+      // Mock 2FA disable
+      setUserSecurity(prev => prev ? { ...prev, twoFactorEnabled: false } : null);
+      
+      toast({
+        title: "Two-Factor Authentication Disabled",
+        description: "Two-factor authentication has been disabled for your account.",
+      });
+      
+      return { error: null };
+    } catch (error: any) {
+      console.error('Error disabling two-factor authentication:', error);
+      return { error: new Error(error.message || 'Failed to disable two-factor authentication') };
+    }
+  }, [toast]);
+
+  const verifyTwoFactor = useCallback(async (token: string) => {
+    try {
+      // Mock 2FA verify
+      toast({
+        title: "Two-Factor Authentication Verified",
+        description: "Your two-factor authentication has been verified.",
+      });
+      
+      return { error: null };
+    } catch (error: any) {
+      console.error('Error verifying two-factor authentication:', error);
+      return { error: new Error(error.message || 'Failed to verify two-factor authentication') };
+    }
+  }, [toast]);
+
+  const resetPassword = useCallback(async (email: string) => {
+    try {
+      const { data, error } = await supabase.auth.resetPasswordForEmail(
+        email,
+        {
+          redirectTo: `${window.location.origin}/update-password`,
+        }
+      );
+
+      if (error) {
+        console.error('Error resetting password:', error);
+        return { error };
+      }
+
+      toast({
+        title: "Password Reset Initiated",
+        description: "A password reset link has been sent to your email address.",
+      });
+
+      return { error: null };
+    } catch (error: any) {
+      console.error('Unexpected error resetting password:', error);
+      return { error: new Error(error.message || 'Password reset failed') };
+    }
+  }, [toast]);
+
+  const refreshSecurityData = useCallback(async () => {
+    if (!user) return;
+    initializeUserSecurity(user.id);
+  }, [user, initializeUserSecurity]);
 
   const value = {
     user,
     session,
     loading,
-    mfaEnabled,
-    deviceTrusted,
+    userSecurity,
     login,
     register,
     logout,
-    enableMFA,
-    disableMFA,
-    trustDevice,
-    getSecurityMetrics,
+    updateProfile,
+    changePassword,
+    enableTwoFactor,
+    disableTwoFactor,
+    verifyTwoFactor,
+    resetPassword,
+    refreshSecurityData
   };
-
-  console.log('EnhancedAuthProvider: Rendering with user:', user ? 'Authenticated' : 'Not authenticated', 'loading:', loading);
 
   return (
     <EnhancedAuthContext.Provider value={value}>

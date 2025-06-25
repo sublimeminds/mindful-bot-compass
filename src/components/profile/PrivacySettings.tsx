@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,9 +5,9 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Shield, Eye, Download, Trash2, Save } from 'lucide-react';
-import { useAuth } from '@/components/SimpleAuthProvider';
-import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface PrivacySettings {
   profile_visibility: string;
@@ -311,7 +310,7 @@ const PrivacySettings = () => {
 
       <Button onClick={saveSettings} disabled={saving} className="w-full">
         <Save className="h-4 w-4 mr-2" />
-        {saving ? 'Saving...' : 'Save Privacy Settings'}
+        {saving ? 'Save Privacy Settings'}
       </Button>
     </div>
   );

@@ -1,366 +1,142 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/components/SimpleAuthProvider';
-import { 
-  MessageSquare, 
-  Calendar, 
-  Video, 
-  Heart, 
-  FileText, 
-  AlertTriangle,
-  Smartphone,
-  Zap,
-  Settings,
-  Plus,
-  ExternalLink
-} from 'lucide-react';
-import EnhancedAPIManagement from './EnhancedAPIManagement';
-import SMSIntegration from './SMSIntegration';
-import CalendarIntegration from './CalendarIntegration';
-import AdvancedHealthIntegration from './AdvancedHealthIntegration';
-import VideoIntegration from './VideoIntegration';
-import EHRIntegration from './EHRIntegration';
-import CrisisIntegration from './CrisisIntegration';
-import MobileIntegration from './MobileIntegration';
-import SlackIntegration from './SlackIntegration';
-import StripeIntegration from './StripeIntegration';
-import GoogleAnalyticsIntegration from './GoogleAnalyticsIntegration';
-import ZapierIntegration from './ZapierIntegration';
-import AnthropicIntegration from './AnthropicIntegration';
-
-interface Integration {
-  id: string;
-  name: string;
-  type: string;
-  description: string;
-  is_active: boolean;
-  configuration: any;
-}
-
-interface UserIntegration {
-  id: string;
-  integration_id: string;
-  is_enabled: boolean;
-  settings: any;
-}
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
+import { Settings, Zap, MessageSquare, CreditCard, BarChart3, Database } from 'lucide-react';
 
 const IntegrationsHub = () => {
   const { user } = useAuth();
-  const [integrations, setIntegrations] = useState<Integration[]>([]);
-  const [userIntegrations, setUserIntegrations] = useState<UserIntegration[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('featured');
 
-  useEffect(() => {
-    if (user) {
-      loadIntegrations();
-      loadUserIntegrations();
+  const integrations = [
+    {
+      id: 'whatsapp',
+      name: 'WhatsApp AI Therapy',
+      description: 'Chat with your AI therapist directly on WhatsApp',
+      category: 'communication',
+      status: 'active',
+      icon: MessageSquare,
+      href: '/integrations/whatsapp'
+    },
+    {
+      id: 'stripe',
+      name: 'Stripe Payments',
+      description: 'Manage your subscription and billing with Stripe',
+      category: 'billing',
+      status: 'active',
+      icon: CreditCard,
+      href: '/integrations/stripe'
+    },
+    {
+      id: 'analytics',
+      name: 'Enhanced Analytics',
+      description: 'Track your progress and gain insights into your therapy journey',
+      category: 'analytics',
+      status: 'active',
+      icon: BarChart3,
+      href: '/integrations/analytics'
+    },
+    {
+      id: 'ehr',
+      name: 'EHR Integration',
+      description: 'Connect with your existing Electronic Health Record system',
+      category: 'medical',
+      status: 'inactive',
+      icon: Database,
+      href: '/integrations/ehr'
+    },
+    {
+      id: 'zapier',
+      name: 'Zapier Automation',
+      description: 'Connect TherapySync with thousands of other apps',
+      category: 'automation',
+      status: 'inactive',
+      icon: Zap,
+      href: '/integrations/zapier'
     }
-  }, [user]);
+  ];
 
-  const loadIntegrations = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('integrations')
-        .select('*')
-        .eq('is_active', true)
-        .order('name');
-
-      if (error) throw error;
-      setIntegrations(data || []);
-    } catch (error) {
-      console.error('Error loading integrations:', error);
-    }
-  };
-
-  const loadUserIntegrations = async () => {
-    try {
-      // Mock data until database types are updated
-      setUserIntegrations([]);
-    } catch (error) {
-      console.error('Error loading user integrations:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getIconForType = (type: string) => {
-    switch (type) {
-      case 'messaging':
-      case 'sms':
-        return MessageSquare;
-      case 'calendar':
-        return Calendar;
-      case 'video':
-        return Video;
-      case 'health':
-        return Heart;
-      case 'ehr':
-        return FileText;
-      case 'crisis':
-        return AlertTriangle;
-      case 'mobile':
-        return Smartphone;
-      case 'slack':
-        return MessageSquare;
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'active':
+        return <Badge variant="default">Active</Badge>;
+      case 'inactive':
+        return <Badge variant="secondary">Inactive</Badge>;
       default:
-        return Zap;
+        return <Badge variant="outline">Unknown</Badge>;
     }
   };
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'messaging':
-      case 'sms':
-        return 'bg-blue-500';
-      case 'calendar':
-        return 'bg-green-500';
-      case 'video':
-        return 'bg-purple-500';
-      case 'health':
-        return 'bg-red-500';
-      case 'ehr':
-        return 'bg-orange-500';
-      case 'crisis':
-        return 'bg-yellow-500';
-      case 'mobile':
-        return 'bg-indigo-500';
-      case 'slack':
-        return 'bg-violet-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
-
-  const isIntegrationEnabled = (integrationId: string) => {
-    return userIntegrations.some(ui => ui.integration_id === integrationId && ui.is_enabled);
-  };
-
-  const getIntegrationsByType = (type: string) => {
-    return integrations.filter(integration => integration.type === type);
-  };
-
-  const IntegrationCard = ({ integration }: { integration: Integration }) => {
-    const Icon = getIconForType(integration.type);
-    const isEnabled = isIntegrationEnabled(integration.id);
-    
-    return (
-      <Card className="border-therapy-200 hover:shadow-md transition-shadow">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className={`p-2 rounded-lg ${getTypeColor(integration.type)}`}>
-                <Icon className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <CardTitle className="text-lg text-therapy-900">{integration.name}</CardTitle>
-                <p className="text-sm text-therapy-600">{integration.description}</p>
-              </div>
-            </div>
-            <Badge variant={isEnabled ? "default" : "outline"} className="capitalize">
-              {isEnabled ? 'Connected' : 'Available'}
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <div className="flex justify-between items-center">
-            <Badge variant="secondary" className="text-xs">
-              {integration.type}
-            </Badge>
-            <Button 
-              variant={isEnabled ? "outline" : "default"}
-              size="sm"
-              className="flex items-center space-x-2"
-            >
-              {isEnabled ? (
-                <>
-                  <Settings className="h-4 w-4" />
-                  <span>Configure</span>
-                </>
-              ) : (
-                <>
-                  <Plus className="h-4 w-4" />
-                  <span>Connect</span>
-                </>
-              )}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-600"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-therapy-900">Integrations Hub</h1>
-          <p className="text-therapy-600 mt-2">
-            Connect your favorite platforms and enhance your therapy experience
-          </p>
-        </div>
-        <Badge variant="outline" className="text-therapy-600 border-therapy-300">
-          <Zap className="h-4 w-4 mr-1" />
-          {userIntegrations.filter(ui => ui.is_enabled).length} Active
-        </Badge>
-      </div>
-
-      {/* Integration Tabs */}
-      <Tabs defaultValue="messaging" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-12">
-          <TabsTrigger value="messaging">
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Messaging
-          </TabsTrigger>
-          <TabsTrigger value="calendar">
-            <Calendar className="h-4 w-4 mr-2" />
-            Calendar
-          </TabsTrigger>
-          <TabsTrigger value="health">
-            <Heart className="h-4 w-4 mr-2" />
-            Health
-          </TabsTrigger>
-          <TabsTrigger value="video">
-            <Video className="h-4 w-4 mr-2" />
-            Video
-          </TabsTrigger>
-          <TabsTrigger value="ehr">
-            <FileText className="h-4 w-4 mr-2" />
-            EHR
-          </TabsTrigger>
-          <TabsTrigger value="mobile">
-            <Smartphone className="h-4 w-4 mr-2" />
-            Mobile
-          </TabsTrigger>
-          <TabsTrigger value="slack">
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Slack
-          </TabsTrigger>
-          <TabsTrigger value="payment">
-            <Zap className="h-4 w-4 mr-2" />
-            Payment
-          </TabsTrigger>
-          <TabsTrigger value="analytics">
-            <Zap className="h-4 w-4 mr-2" />
-            Analytics
-          </TabsTrigger>
-          <TabsTrigger value="automation">
-            <Zap className="h-4 w-4 mr-2" />
-            Automation
-          </TabsTrigger>
-          <TabsTrigger value="ai">
-            <Zap className="h-4 w-4 mr-2" />
-            AI
-          </TabsTrigger>
-          <TabsTrigger value="crisis">
-            <AlertTriangle className="h-4 w-4 mr-2" />
-            Crisis
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="messaging" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {getIntegrationsByType('messaging').map(integration => (
-              <IntegrationCard key={integration.id} integration={integration} />
-            ))}
-            {getIntegrationsByType('sms').map(integration => (
-              <IntegrationCard key={integration.id} integration={integration} />
-            ))}
-          </div>
-          <SMSIntegration />
-        </TabsContent>
-
-        <TabsContent value="calendar" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {getIntegrationsByType('calendar').map(integration => (
-              <IntegrationCard key={integration.id} integration={integration} />
-            ))}
-          </div>
-          <CalendarIntegration />
-        </TabsContent>
-
-        <TabsContent value="health" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {getIntegrationsByType('health').map(integration => (
-              <IntegrationCard key={integration.id} integration={integration} />
-            ))}
-          </div>
-          <AdvancedHealthIntegration />
-        </TabsContent>
-
-        <TabsContent value="video" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {getIntegrationsByType('video').map(integration => (
-              <IntegrationCard key={integration.id} integration={integration} />
-            ))}
-          </div>
-          <VideoIntegration />
-        </TabsContent>
-
-        <TabsContent value="ehr" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {getIntegrationsByType('ehr').map(integration => (
-              <IntegrationCard key={integration.id} integration={integration} />
-            ))}
-          </div>
-          <EHRIntegration />
-        </TabsContent>
-
-        <TabsContent value="mobile" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {getIntegrationsByType('mobile').map(integration => (
-              <IntegrationCard key={integration.id} integration={integration} />
-            ))}
-          </div>
-          <MobileIntegration />
-        </TabsContent>
-
-        <TabsContent value="slack" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {getIntegrationsByType('slack').map(integration => (
-              <IntegrationCard key={integration.id} integration={integration} />
-            ))}
-          </div>
-          <SlackIntegration />
-        </TabsContent>
-
-        <TabsContent value="payment" className="space-y-4">
-          <StripeIntegration />
-        </TabsContent>
-
-        <TabsContent value="analytics" className="space-y-4">
-          <GoogleAnalyticsIntegration />
-        </TabsContent>
-
-        <TabsContent value="automation" className="space-y-4">
-          <ZapierIntegration />
-        </TabsContent>
-
-        <TabsContent value="ai" className="space-y-4">
-          <AnthropicIntegration />
-        </TabsContent>
-
-        <TabsContent value="crisis" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {getIntegrationsByType('crisis').map(integration => (
-              <IntegrationCard key={integration.id} integration={integration} />
-            ))}
-          </div>
-          <CrisisIntegration />
-        </TabsContent>
-      </Tabs>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Settings className="h-5 w-5" />
+            <span>Integrations Hub</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="featured">Featured</TabsTrigger>
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="manage">Manage</TabsTrigger>
+            </TabsList>
+            <TabsContent value="featured" className="pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {integrations.slice(0, 3).map((integration) => {
+                  const Icon = integration.icon;
+                  return (
+                    <Card key={integration.id} className="hover:shadow-md transition-shadow cursor-pointer">
+                      <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                          <Icon className="h-4 w-4" />
+                          <span>{integration.name}</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground">{integration.description}</p>
+                        <div className="mt-4">{getStatusBadge(integration.status)}</div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </TabsContent>
+            <TabsContent value="all" className="pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {integrations.map((integration) => {
+                  const Icon = integration.icon;
+                  return (
+                    <Card key={integration.id} className="hover:shadow-md transition-shadow cursor-pointer">
+                      <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                          <Icon className="h-4 w-4" />
+                          <span>{integration.name}</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground">{integration.description}</p>
+                        <div className="mt-4">{getStatusBadge(integration.status)}</div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </TabsContent>
+            <TabsContent value="manage" className="pt-6">
+              <div>
+                <p>Manage your active integrations here.</p>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     </div>
   );
 };

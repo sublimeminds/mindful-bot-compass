@@ -1,14 +1,14 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { CheckCircle, Phone, MessageSquare, QrCode, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/components/SimpleAuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Smartphone, MessageSquare, CheckCircle, QrCode, ArrowRight, ArrowLeft } from 'lucide-react';
 
 interface WhatsAppSetupWizardProps {
   onComplete: () => void;
@@ -25,7 +25,7 @@ const WhatsAppSetupWizard = ({ onComplete, onCancel }: WhatsAppSetupWizardProps)
   const [integrationId, setIntegrationId] = useState<string | null>(null);
 
   const steps = [
-    { id: 1, title: 'Phone Number', icon: Smartphone },
+    { id: 1, title: 'Phone Number', icon: Phone },
     { id: 2, title: 'Verification', icon: MessageSquare },
     { id: 3, title: 'Complete', icon: CheckCircle }
   ];

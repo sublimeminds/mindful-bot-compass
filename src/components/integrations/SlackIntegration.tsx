@@ -1,24 +1,16 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MessageSquare, Settings, Hash, Users } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/components/SimpleAuthProvider';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  MessageSquare, 
-  Users, 
-  Settings, 
-  AlertTriangle,
-  Zap,
-  CheckCircle,
-  ExternalLink,
-  Hash
-} from 'lucide-react';
 
 interface SlackWorkspace {
   id: string;
