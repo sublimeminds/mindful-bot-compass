@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 
 export interface MoodPattern {
@@ -181,16 +180,16 @@ class RealAnalyticsService {
         };
       }
 
-      const overall_rating = analytics.reduce((sum, a) => sum + (a.session_rating || 0), 0) / analytics.length;
-      const mood_improvement_rate = analytics.reduce((sum, a) => sum + (a.mood_improvement || 0), 0) / analytics.length;
-      const user_engagement_score = analytics.reduce((sum, a) => sum + (a.effectiveness_score || 0), 0) / analytics.length;
+      const overall_rating = analytics.reduce((sum, a) => sum + (Number(a.session_rating) || 0), 0) / analytics.length;
+      const mood_improvement_rate = analytics.reduce((sum, a) => sum + (Number(a.mood_improvement) || 0), 0) / analytics.length;
+      const user_engagement_score = analytics.reduce((sum, a) => sum + (Number(a.effectiveness_score) || 0), 0) / analytics.length;
 
       // Aggregate technique effectiveness
       const technique_effectiveness = analytics.reduce((acc, a) => {
         if (a.techniques_effectiveness) {
           Object.entries(a.techniques_effectiveness).forEach(([technique, score]) => {
             if (!acc[technique]) acc[technique] = [];
-            acc[technique].push(score as number);
+            acc[technique].push(Number(score) || 0);
           });
         }
         return acc;
@@ -225,8 +224,8 @@ class RealAnalyticsService {
     const recentMoods = moodEntries.slice(-7); // Last 7 entries
     const earlierMoods = moodEntries.slice(0, 7); // First 7 entries
 
-    const recentAvg = recentMoods.reduce((sum, entry) => sum + entry.overall, 0) / recentMoods.length;
-    const earlierAvg = earlierMoods.reduce((sum, entry) => sum + entry.overall, 0) / earlierMoods.length;
+    const recentAvg = recentMoods.reduce((sum, entry) => sum + (Number(entry.overall) || 0), 0) / recentMoods.length;
+    const earlierAvg = earlierMoods.reduce((sum, entry) => sum + (Number(entry.overall) || 0), 0) / earlierMoods.length;
 
     const difference = recentAvg - earlierAvg;
 
@@ -268,12 +267,12 @@ class RealAnalyticsService {
     }
 
     // Analyze specific issues
-    const avgAnxiety = moodEntries.reduce((sum, e) => sum + (e.anxiety || 0), 0) / moodEntries.length;
+    const avgAnxiety = moodEntries.reduce((sum, e) => sum + (Number(e.anxiety) || 0), 0) / moodEntries.length;
     if (avgAnxiety > 7) {
       recommendations.push('Focus on anxiety management techniques');
     }
 
-    const avgEnergy = moodEntries.reduce((sum, e) => sum + (e.energy || 0), 0) / moodEntries.length;
+    const avgEnergy = moodEntries.reduce((sum, e) => sum + (Number(e.energy) || 0), 0) / moodEntries.length;
     if (avgEnergy < 4) {
       recommendations.push('Consider energy-boosting activities and sleep hygiene');
     }
@@ -282,7 +281,7 @@ class RealAnalyticsService {
   }
 
   private analyzeAnxietyPatterns(moodEntries: any[]): MoodPattern | null {
-    const anxietyLevels = moodEntries.map(entry => entry.anxiety || 0);
+    const anxietyLevels = moodEntries.map(entry => Number(entry.anxiety) || 0);
     const avgAnxiety = anxietyLevels.reduce((sum, level) => sum + level, 0) / anxietyLevels.length;
 
     if (avgAnxiety < 3) return null; // No significant anxiety pattern
@@ -293,7 +292,7 @@ class RealAnalyticsService {
       pattern_type: 'anxiety_pattern',
       frequency: moodEntries.length,
       trend,
-      triggers: this.extractCommonTriggers(moodEntries.filter(e => e.anxiety > 6)),
+      triggers: this.extractCommonTriggers(moodEntries.filter(e => (Number(e.anxiety) || 0) > 6)),
       recommendations: [
         'Practice deep breathing exercises',
         'Consider cognitive behavioral therapy techniques',
@@ -303,7 +302,7 @@ class RealAnalyticsService {
   }
 
   private analyzeEnergyPatterns(moodEntries: any[]): MoodPattern | null {
-    const energyLevels = moodEntries.map(entry => entry.energy || 0);
+    const energyLevels = moodEntries.map(entry => Number(entry.energy) || 0);
     const avgEnergy = energyLevels.reduce((sum, level) => sum + level, 0) / energyLevels.length;
 
     if (avgEnergy > 6) return null; // No significant energy issues
@@ -314,7 +313,7 @@ class RealAnalyticsService {
       pattern_type: 'energy_pattern',
       frequency: moodEntries.length,
       trend,
-      triggers: this.extractCommonTriggers(moodEntries.filter(e => e.energy < 4)),
+      triggers: this.extractCommonTriggers(moodEntries.filter(e => (Number(e.energy) || 0) < 4)),
       recommendations: [
         'Establish regular exercise routine',
         'Improve sleep quality and duration',
