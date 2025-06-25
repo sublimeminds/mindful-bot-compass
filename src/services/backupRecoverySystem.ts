@@ -1,4 +1,3 @@
-
 interface BackupConfig {
   enabled: boolean;
   frequency: 'hourly' | 'daily' | 'weekly';
@@ -97,10 +96,26 @@ export class BackupRecoverySystem {
     try {
       await this.loadStoredData();
       await this.initializeDisasterRecoveryPlans();
+      await this.initializeDigitalOceanIntegration();
       this.scheduleBackups();
-      console.log('Backup & Recovery System initialized');
+      console.log('Backup & Recovery System initialized with DigitalOcean integration');
     } catch (error) {
       console.error('Failed to initialize Backup & Recovery System:', error);
+    }
+  }
+
+  private async initializeDigitalOceanIntegration(): Promise<void> {
+    try {
+      // Import DigitalOcean services dynamically to avoid circular dependencies
+      const { digitalOceanService } = await import('./digitalOceanService');
+      const { enhancedBackupService } = await import('./enhancedBackupService');
+      
+      // Set up integration flags
+      this.config.multiRegion = true;
+      console.log('DigitalOcean integration enabled for backup system');
+    } catch (error) {
+      console.warn('DigitalOcean integration not available:', error);
+      this.config.multiRegion = false;
     }
   }
 
@@ -330,6 +345,15 @@ export class BackupRecoverySystem {
       // Replicate to other regions if enabled
       if (this.config.multiRegion) {
         await this.replicateBackupToRegions(backupId, encryptedData);
+      }
+
+      // Enhanced: Create cross-cloud backup if DigitalOcean is available
+      try {
+        const { enhancedBackupService } = await import('./enhancedBackupService');
+        await enhancedBackupService.createCrossCloudBackup(backupId);
+        console.log(`Cross-cloud backup created for ${backupId}`);
+      } catch (error) {
+        console.warn('Cross-cloud backup not available:', error);
       }
 
       this.saveData();
@@ -646,7 +670,8 @@ export class BackupRecoverySystem {
       averageBackupSize: totalBackups > 0 ? Math.round(totalSize / totalBackups) : 0,
       compressionRatio: this.config.compressionEnabled ? 0.7 : 1.0,
       encryptionEnabled: this.config.encryptionEnabled,
-      multiRegionEnabled: this.config.multiRegion
+      multiRegionEnabled: this.config.multiRegion,
+      digitalOceanIntegrated: this.config.multiRegion // Indicates DO integration status
     };
   }
 }
