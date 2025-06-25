@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { checkReactSafety } from '@/utils/reactSafetyChecker';
 
 export interface AccessibilitySettings {
   reducedMotion: boolean;
@@ -41,6 +42,15 @@ interface AccessibilityProviderProps {
 }
 
 export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ children }) => {
+  // Check React safety before using hooks
+  const reactSafety = checkReactSafety();
+  
+  if (!reactSafety.isReactSafe) {
+    console.error('AccessibilityProvider: React safety check failed:', reactSafety.error);
+    // Return children without accessibility features rather than breaking the app
+    return <>{children}</>;
+  }
+
   const [settings, setSettings] = useState<AccessibilitySettings>(defaultSettings);
 
   const updateSetting = useCallback((key: keyof AccessibilitySettings, value: boolean) => {

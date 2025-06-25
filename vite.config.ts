@@ -12,7 +12,6 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react({
-      // Ensure consistent React handling
       jsxImportSource: 'react',
     }),
     mode === 'development' &&
@@ -21,15 +20,12 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Explicit React aliases to prevent multiple instances
       "react": path.resolve(__dirname, "./node_modules/react"),
       "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
     },
-    // Dedupe to ensure single React instance
     dedupe: ['react', 'react-dom'],
   },
   optimizeDeps: {
-    // Include React dependencies for proper pre-bundling
     include: [
       'react', 
       'react-dom', 
@@ -38,24 +34,18 @@ export default defineConfig(({ mode }) => ({
       '@tanstack/react-query',
       'lucide-react'
     ],
-    // Force rebuild to ensure clean state and clear cache
     force: true
   },
   define: {
     global: 'globalThis',
-    // Ensure React is available in production builds
     'process.env.NODE_ENV': JSON.stringify(mode === 'development' ? 'development' : 'production'),
   },
   build: {
-    // Ensure React is properly bundled
     rollupOptions: {
       external: [],
       output: {
-        manualChunks: {
-          react: ['react', 'react-dom'],
-          vendor: ['@supabase/supabase-js', '@tanstack/react-query'],
-          icons: ['lucide-react']
-        }
+        // Remove manual chunking that was causing React to be split incorrectly
+        manualChunks: undefined
       }
     }
   }

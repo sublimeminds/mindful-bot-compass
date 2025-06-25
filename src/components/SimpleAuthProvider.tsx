@@ -2,6 +2,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User } from '@supabase/supabase-js';
+import { checkReactSafety } from '@/utils/reactSafetyChecker';
 
 interface AuthContextType {
   user: User | null;
@@ -26,6 +27,39 @@ interface AuthProviderProps {
 }
 
 export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  // Check React safety before using hooks
+  const reactSafety = checkReactSafety();
+  
+  if (!reactSafety.isReactSafe) {
+    console.error('SimpleAuthProvider: React safety check failed:', reactSafety.error);
+    return React.createElement('div', {
+      style: {
+        padding: '20px',
+        backgroundColor: '#fee2e2',
+        border: '1px solid #fecaca',
+        borderRadius: '6px',
+        color: '#991b1b',
+        textAlign: 'center'
+      }
+    }, [
+      React.createElement('h3', { key: 'title' }, 'Authentication System Error'),
+      React.createElement('p', { key: 'message' }, reactSafety.error || 'React hooks are not available'),
+      React.createElement('button', {
+        key: 'reload',
+        onClick: () => window.location.reload(),
+        style: {
+          backgroundColor: '#dc2626',
+          color: 'white',
+          border: 'none',
+          padding: '8px 16px',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          marginTop: '10px'
+        }
+      }, 'Reload Page')
+    ]);
+  }
+
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
