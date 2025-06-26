@@ -7,6 +7,8 @@ interface AccessibilitySettings {
   reducedMotion: boolean;
   screenReader: boolean;
   keyboardNavigation: boolean;
+  screenReaderOptimized: boolean;
+  focusIndicators: boolean;
 }
 
 interface AccessibilityContextType {
@@ -15,6 +17,7 @@ interface AccessibilityContextType {
   toggleHighContrast: () => void;
   toggleLargeText: () => void;
   toggleReducedMotion: () => void;
+  announceToScreenReader: (message: string) => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
@@ -30,7 +33,11 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     reducedMotion: false,
     screenReader: false,
     keyboardNavigation: true,
+    screenReaderOptimized: false,
+    focusIndicators: false,
   });
+
+  const [announcementElement, setAnnouncementElement] = useState<HTMLElement | null>(null);
 
   const updateSetting = useCallback((key: keyof AccessibilitySettings, value: boolean) => {
     setSettings(prev => ({ ...prev, [key]: value }));
@@ -46,6 +53,39 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
 
   const toggleReducedMotion = useCallback(() => {
     setSettings(prev => ({ ...prev, reducedMotion: !prev.reducedMotion }));
+  }, []);
+
+  const announceToScreenReader = useCallback((message: string) => {
+    if (announcementElement && settings.screenReaderOptimized) {
+      announcementElement.textContent = message;
+      setTimeout(() => {
+        if (announcementElement) {
+          announcementElement.textContent = '';
+        }
+      }, 1000);
+    }
+  }, [announcementElement, settings.screenReaderOptimized]);
+
+  // Initialize screen reader announcement element
+  useEffect(() => {
+    const announcer = document.createElement('div');
+    announcer.setAttribute('aria-live', 'polite');
+    announcer.setAttribute('aria-atomic', 'true');
+    announcer.className = 'sr-only';
+    announcer.style.position = 'absolute';
+    announcer.style.left = '-10000px';
+    announcer.style.width = '1px';
+    announcer.style.height = '1px';
+    announcer.style.overflow = 'hidden';
+    
+    document.body.appendChild(announcer);
+    setAnnouncementElement(announcer);
+
+    return () => {
+      if (announcer && document.body.contains(announcer)) {
+        document.body.removeChild(announcer);
+      }
+    };
   }, []);
 
   // Load settings from localStorage on mount
@@ -87,6 +127,12 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     } else {
       root.classList.remove('reduced-motion');
     }
+
+    if (settings.focusIndicators) {
+      root.classList.add('enhanced-focus');
+    } else {
+      root.classList.remove('enhanced-focus');
+    }
   }, [settings]);
 
   const value: AccessibilityContextType = {
@@ -95,6 +141,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     toggleHighContrast,
     toggleLargeText,
     toggleReducedMotion,
+    announceToScreenReader,
   };
 
   return (

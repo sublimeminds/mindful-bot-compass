@@ -1,0 +1,81 @@
+
+{
+  "appId": "com.yourcompany.therapy-app",
+  "productName": "Therapy App",
+  "directories": {
+    "output": "dist-electron"
+  },
+  "files": [
+    "dist/**/*",
+    "public/electron.js",
+    "public/preload.js",
+    "node_modules/**/*"
+  ],
+  "extraResources": [
+    {
+      "from": "public/icons",
+      "to": "icons",
+      "filter": ["**/*"]
+    }
+  ],
+  "mac": {
+    "category": "public.app-category.medical",
+    "icon": "public/icons/icon.icns",
+    "hardenedRuntime": true,
+    "entitlements": "public/entitlements.mac.plist",
+    "entitlementsInherit": "public/entitlements.mac.plist",
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      },
+      {
+        "target": "zip",
+        "arch": ["x64", "arm64"]
+      }
+    ]
+  },
+  "win": {
+    "icon": "public/icons/icon.ico",
+    "publisherName": "Your Company Name",
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64", "ia32"]
+      },
+      {
+        "target": "msi",
+        "arch": ["x64", "ia32"]
+      }
+    ]
+  },
+  "linux": {
+    "icon": "public/icons/icon.png",
+    "category": "Office",
+    "target": [
+      {
+        "target": "AppImage",
+        "arch": ["x64"]
+      },
+      {
+        "target": "deb",
+        "arch": ["x64"]
+      },
+      {
+        "target": "rpm",
+        "arch": ["x64"]
+      }
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true
+  },
+  "publish": {
+    "provider": "github",
+    "owner": "your-github-username",
+    "repo": "your-repo-name"
+  }
+}

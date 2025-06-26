@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,7 +26,17 @@ interface VoiceInteractionState {
   error: string | null;
 }
 
-const EnhancedVoiceInteraction: React.FC = () => {
+interface EnhancedVoiceInteractionProps {
+  onTranscript?: (text: string, metadata?: any) => void;
+  onEmotion?: (emotion: EmotionData) => void;
+  className?: string;
+}
+
+const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
+  onTranscript,
+  onEmotion,
+  className = ""
+}) => {
   const [state, setState] = useState<VoiceInteractionState>({
     isListening: false,
     isProcessing: false,
@@ -97,9 +106,14 @@ const EnhancedVoiceInteraction: React.FC = () => {
       isProcessing: false
     }));
 
+    // Call onTranscript callback if provided
+    if (onTranscript) {
+      onTranscript(transcript, { source: 'voice', confidence });
+    }
+
     // Analyze emotion from transcript
     analyzeEmotion(transcript);
-  }, []);
+  }, [onTranscript]);
 
   const handleSpeechError = useCallback((event: SpeechRecognitionErrorEvent) => {
     let errorMessage = 'Speech recognition error occurred';
@@ -166,8 +180,13 @@ const EnhancedVoiceInteraction: React.FC = () => {
       };
 
       setState(prev => ({ ...prev, emotion: emotionData }));
+      
+      // Call onEmotion callback if provided
+      if (onEmotion) {
+        onEmotion(emotionData);
+      }
     }
-  }, []);
+  }, [onEmotion]);
 
   // Load available voices
   useEffect(() => {
@@ -225,7 +244,7 @@ const EnhancedVoiceInteraction: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className={`max-w-4xl mx-auto space-y-6 ${className}`}>
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
