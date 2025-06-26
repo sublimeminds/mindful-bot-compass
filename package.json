@@ -6,7 +6,7 @@
   "main": "public/electron.js",
   "homepage": "./",
   "description": "A modern therapy and mental health application built with React, Vite, and Electron",
-  "author": "Frederic Beeg" <hi@fbeeg.io>,
+ "author": "MindfulAI Team <support@mindfulai.app>",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
