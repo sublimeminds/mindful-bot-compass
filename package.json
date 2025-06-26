@@ -6,7 +6,7 @@
   "main": "public/electron.js",
   "homepage": "./",
   "description": "A modern therapy and mental health application built with React, Vite, and Electron",
-  "author": "Your Name",
+  "author": "Frederic Beeg" <hi@fbeeg.io>,
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
