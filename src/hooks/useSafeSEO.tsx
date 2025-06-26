@@ -1,48 +1,40 @@
 
 import { useEffect } from 'react';
 
-interface SEOMetaData {
+interface SEOProps {
   title?: string;
   description?: string;
   keywords?: string;
-  image?: string;
-  type?: string;
 }
 
-export const useSafeSEO = (meta?: SEOMetaData) => {
+export const useSafeSEO = ({ title, description, keywords }: SEOProps) => {
   useEffect(() => {
-    // Simple SEO update without router dependency
     try {
-      // Get page name from current URL
-      const pageName = window.location.pathname.slice(1) || 'home';
-      
-      // Simple meta updates
-      const finalMeta = {
-        title: 'TherapySync - AI-Powered Mental Wellness Companion',
-        description: 'Transform your mental wellness journey with TherapySync\'s AI-powered therapy sessions, mood tracking, and personalized insights.',
-        keywords: 'AI therapy, mental health, wellness, online therapy, therapy app',
-        ...meta
-      };
-      
-      // Update title
-      if (finalMeta.title) {
-        document.title = finalMeta.title;
+      if (title) {
+        document.title = title;
       }
       
-      // Update description
-      if (finalMeta.description) {
-        let descElement = document.querySelector('meta[name="description"]');
-        if (!descElement) {
-          descElement = document.createElement('meta');
-          descElement.setAttribute('name', 'description');
-          document.head.appendChild(descElement);
+      if (description) {
+        let metaDescription = document.querySelector('meta[name="description"]');
+        if (!metaDescription) {
+          metaDescription = document.createElement('meta');
+          metaDescription.setAttribute('name', 'description');
+          document.head.appendChild(metaDescription);
         }
-        descElement.setAttribute('content', finalMeta.description);
+        metaDescription.setAttribute('content', description);
       }
       
-      console.log('useSafeSEO: Successfully updated basic SEO for page:', pageName);
+      if (keywords) {
+        let metaKeywords = document.querySelector('meta[name="keywords"]');
+        if (!metaKeywords) {
+          metaKeywords = document.createElement('meta');
+          metaKeywords.setAttribute('name', 'keywords');
+          document.head.appendChild(metaKeywords);
+        }
+        metaKeywords.setAttribute('content', keywords);
+      }
     } catch (error) {
-      console.error('useSafeSEO: Error updating SEO:', error);
+      console.error('SEO update failed:', error);
     }
-  }, [meta]);
+  }, [title, description, keywords]);
 };

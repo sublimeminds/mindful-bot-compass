@@ -1,5 +1,4 @@
 
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @tailwind base;
 @tailwind components;
@@ -66,8 +65,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
     
-    /* Wellness & Mental Health Brand Colors - Matching Logo */
-    /* Coral/Orange Primary - representing energy and warmth */
+    /* Complete Therapy Color Scale */
     --therapy-50: 14 100% 97%;
     --therapy-100: 14 100% 93%;
     --therapy-200: 14 100% 87%;
@@ -80,7 +78,7 @@
     --therapy-900: 14 75% 26%;
     --therapy-950: 14 71% 17%;
     
-    /* Calming Blue/Teal - representing peace and trust */
+    /* Complete Calm Color Scale */
     --calm-50: 195 100% 97%;
     --calm-100: 195 100% 93%;
     --calm-200: 195 95% 87%;
@@ -93,7 +91,7 @@
     --calm-900: 195 60% 26%;
     --calm-950: 195 55% 17%;
 
-    /* Pink/Magenta - representing compassion and care */
+    /* Complete Harmony Color Scale */
     --harmony-50: 330 100% 97%;
     --harmony-100: 330 100% 93%;
     --harmony-200: 330 95% 87%;
@@ -106,7 +104,7 @@
     --harmony-900: 330 60% 26%;
     --harmony-950: 330 55% 17%;
     
-    /* Warm Yellow/Gold - representing positivity and growth */
+    /* Complete Balance Color Scale */
     --balance-50: 45 100% 97%;
     --balance-100: 45 100% 93%;
     --balance-200: 45 95% 87%;
@@ -119,7 +117,7 @@
     --balance-900: 45 60% 26%;
     --balance-950: 45 55% 17%;
     
-    /* Mint Green/Teal - representing renewal and healing */
+    /* Complete Flow Color Scale */
     --flow-50: 175 100% 97%;
     --flow-100: 175 100% 93%;
     --flow-200: 175 95% 87%;
@@ -171,3 +169,18 @@
   }
 }
 
+/* Fallback classes for critical components */
+.therapy-fallback {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: white;
+}
+
+.calm-fallback {
+  background: linear-gradient(135deg, #4ecdc4, #44a08d);
+  color: white;
+}
+
+.harmony-fallback {
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  color: white;
+}
