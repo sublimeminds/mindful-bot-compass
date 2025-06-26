@@ -1,6 +1,8 @@
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const path = require('path');
-const isDev = require('electron-is-dev');
+
+// Replace electron-is-dev with a simple environment check
+const isDev = process.env.NODE_ENV === 'development' || process.env.ELECTRON_IS_DEV === 'true' || process.argv.includes('--dev');
 
 // Keep a global reference of the window object
 let mainWindow;
