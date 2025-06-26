@@ -1,59 +1,41 @@
 
-import React, { Component } from 'react';
+import React from 'react';
+import { WifiOff } from 'lucide-react';
 
-interface State {
+interface OfflineIndicatorState {
   isOnline: boolean;
 }
 
-class SimpleOfflineIndicator extends Component<{}, State> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      isOnline: navigator.onLine,
-    };
-  }
-
-  componentDidMount() {
-    window.addEventListener('online', this.handleOnline);
-    window.addEventListener('offline', this.handleOffline);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('online', this.handleOnline);
-    window.removeEventListener('offline', this.handleOffline);
-  }
-
-  private handleOnline = () => {
-    this.setState({ isOnline: true });
-  };
-
-  private handleOffline = () => {
-    this.setState({ isOnline: false });
-  };
-
-  render() {
-    if (this.state.isOnline) {
-      return null;
-    }
-
-    return (
-      <div style={{
-        position: 'fixed',
-        bottom: '20px',
-        left: '20px',
-        backgroundColor: '#ef4444',
-        color: 'white',
-        padding: '12px 20px',
-        borderRadius: '8px',
-        fontSize: '14px',
-        fontWeight: '500',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        zIndex: 1000,
-      }}>
-        📡 You're offline
-      </div>
-    );
-  }
+interface SimpleOfflineIndicatorProps {
+  className?: string;
 }
+
+const SimpleOfflineIndicator: React.FC<SimpleOfflineIndicatorProps> = ({ className = '' }) => {
+  const [state, setState] = React.useState<OfflineIndicatorState>({ isOnline: navigator.onLine });
+
+  React.useEffect(() => {
+    const handleOnline = () => setState({ isOnline: true });
+    const handleOffline = () => setState({ isOnline: false });
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  if (state.isOnline) return null;
+
+  return (
+    <div className={`fixed top-0 left-0 right-0 bg-red-500 text-white px-4 py-2 text-center z-50 ${className}`}>
+      <div className="flex items-center justify-center space-x-2">
+        <WifiOff className="h-4 w-4" />
+        <span className="text-sm">You are currently offline</span>
+      </div>
+    </div>
+  );
+};
 
 export default SimpleOfflineIndicator;

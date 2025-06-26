@@ -1,17 +1,15 @@
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Mic, MicOff, Volume2, Settings, Brain } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  VoiceMetadata, 
-  EmotionData, 
-  SpeechRecognitionEvent, 
-  SpeechRecognitionErrorEvent 
-} from '@/types/voiceInteraction';
 import VoiceControls from '@/components/voice/VoiceControls';
+import VoiceSettings from '@/components/voice/VoiceSettings';
 import VoiceTranscript from '@/components/voice/VoiceTranscript';
 import VoiceEmotionAnalysis from '@/components/voice/VoiceEmotionAnalysis';
 import VoiceStatus from '@/components/voice/VoiceStatus';
+import { EmotionData } from '@/types/voiceInteraction';
 
 interface VoiceSettings {
   pitch: number;
@@ -26,217 +24,262 @@ interface VoiceInteractionState {
   transcript: string;
   confidence: number;
   emotion: EmotionData | null;
-  lastResponse: string;
-  settings: VoiceSettings;
+  error: string | null;
 }
 
-interface EnhancedVoiceInteractionProps {
-  onTranscript?: (transcript: string, metadata: VoiceMetadata) => void;
-  onEmotion?: (emotion: EmotionData) => void;
-  autoStart?: boolean;
-  language?: string;
-  className?: string;
-}
-
-const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
-  onTranscript,
-  onEmotion,
-  autoStart = false,
-  language = 'en-US',
-  className = ''
-}) => {
-  const { toast } = useToast();
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const synthRef = useRef<SpeechSynthesis | null>(null);
-  
+const EnhancedVoiceInteraction: React.FC = () => {
   const [state, setState] = useState<VoiceInteractionState>({
     isListening: false,
     isProcessing: false,
     transcript: '',
     confidence: 0,
     emotion: null,
-    lastResponse: '',
-    settings: {
-      pitch: 1,
-      rate: 1,
-      volume: 1,
-      voice: null
-    }
+    error: null
+  });
+
+  const [settings, setSettings] = useState<VoiceSettings>({
+    pitch: 1,
+    rate: 1,
+    volume: 1,
+    voice: null
   });
 
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [showSettings, setShowSettings] = useState(false);
+  
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const { toast } = useToast();
 
+  // Initialize speech recognition
   useEffect(() => {
-    synthRef.current = window.speechSynthesis;
-    const populateVoices = () => {
-      const voices = synthRef.current?.getVoices() || [];
-      setAvailableVoices(voices);
-      setState(prevState => ({
-        ...prevState,
-        settings: {
-          ...prevState.settings,
-          voice: voices[0] || null
-        }
-      }));
-    };
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
 
-    if (synthRef.current?.getVoices().length > 0) {
-      populateVoices();
-    } else {
-      synthRef.current?.addEventListener('voiceschanged', populateVoices);
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
+        handleSpeechResult(event);
+      };
+
+      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+        handleSpeechError(event);
+      };
+
+      recognition.onend = () => {
+        setState(prev => ({ ...prev, isListening: false, isProcessing: false }));
+      };
+
+      recognitionRef.current = recognition;
     }
 
     return () => {
-      synthRef.current?.removeEventListener('voiceschanged', populateVoices);
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
     };
   }, []);
 
-  const startSpeechRecognition = useCallback(() => {
-    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+  const handleSpeechResult = useCallback((event: SpeechRecognitionEvent) => {
+    const results = Array.from(event.results);
+    const transcript = results
+      .map(result => result[0].transcript)
+      .join('');
+    
+    const confidence = results.length > 0 ? results[results.length - 1][0].confidence : 0;
+
+    setState(prev => ({
+      ...prev,
+      transcript,
+      confidence,
+      isProcessing: false
+    }));
+
+    // Analyze emotion from transcript
+    analyzeEmotion(transcript);
+  }, []);
+
+  const handleSpeechError = useCallback((event: SpeechRecognitionErrorEvent) => {
+    let errorMessage = 'Speech recognition error occurred';
+    
+    switch (event.error) {
+      case 'no-speech':
+        errorMessage = 'No speech detected';
+        break;
+      case 'audio-capture':
+        errorMessage = 'No microphone found';
+        break;
+      case 'not-allowed':
+        errorMessage = 'Microphone permission denied';
+        break;
+      default:
+        errorMessage = `Speech recognition error: ${event.error}`;
+    }
+
+    setState(prev => ({
+      ...prev,
+      error: errorMessage,
+      isListening: false,
+      isProcessing: false
+    }));
+
+    toast({
+      title: "Voice Recognition Error",
+      description: errorMessage,
+      variant: "destructive",
+    });
+  }, [toast]);
+
+  const analyzeEmotion = useCallback((text: string) => {
+    // Simple emotion analysis based on keywords
+    const emotions = {
+      happy: ['happy', 'joy', 'excited', 'great', 'wonderful', 'amazing'],
+      sad: ['sad', 'down', 'depressed', 'upset', 'terrible', 'awful'],
+      angry: ['angry', 'mad', 'furious', 'annoyed', 'frustrated'],
+      calm: ['calm', 'peaceful', 'relaxed', 'serene', 'tranquil'],
+      excited: ['excited', 'thrilled', 'pumped', 'energetic'],
+      neutral: []
+    };
+
+    const words = text.toLowerCase().split(' ');
+    const emotionScores: Record<string, number> = {};
+
+    Object.entries(emotions).forEach(([emotion, keywords]) => {
+      emotionScores[emotion] = keywords.filter(keyword => 
+        words.some(word => word.includes(keyword))
+      ).length;
+    });
+
+    const primaryEmotion = Object.entries(emotionScores)
+      .reduce((a, b) => emotionScores[a[0]] > emotionScores[b[0]] ? a : b)[0];
+
+    if (emotionScores[primaryEmotion] > 0) {
+      const emotionData: EmotionData = {
+        primary: primaryEmotion,
+        confidence: Math.min(emotionScores[primaryEmotion] / words.length, 1),
+        valence: primaryEmotion === 'happy' || primaryEmotion === 'excited' ? 0.8 : 
+                primaryEmotion === 'sad' || primaryEmotion === 'angry' ? -0.6 : 0,
+        arousal: primaryEmotion === 'excited' || primaryEmotion === 'angry' ? 0.8 : 
+                primaryEmotion === 'calm' ? 0.2 : 0.5
+      };
+
+      setState(prev => ({ ...prev, emotion: emotionData }));
+    }
+  }, []);
+
+  // Load available voices
+  useEffect(() => {
+    const loadVoices = () => {
+      const voices = speechSynthesis.getVoices();
+      setAvailableVoices(voices);
+      if (voices.length > 0 && !settings.voice) {
+        setSettings(prev => ({ ...prev, voice: voices[0] }));
+      }
+    };
+
+    loadVoices();
+    speechSynthesis.addEventListener('voiceschanged', loadVoices);
+
+    return () => {
+      speechSynthesis.removeEventListener('voiceschanged', loadVoices);
+    };
+  }, [settings.voice]);
+
+  const toggleListening = useCallback(() => {
+    if (!recognitionRef.current) {
       toast({
-        title: "Speech Recognition Not Supported",
-        description: "Your browser does not support Speech Recognition.",
+        title: "Not Supported",
+        description: "Speech recognition is not supported in this browser",
         variant: "destructive",
       });
       return;
     }
 
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.continuous = false;
-    recognitionRef.current.interimResults = true;
-    recognitionRef.current.lang = language;
-
-    recognitionRef.current.addEventListener('start', () => {
-      setState(prevState => ({ ...prevState, isListening: true, isProcessing: false }));
-    });
-
-    recognitionRef.current.addEventListener('result', (event: Event) => {
-      const speechEvent = event as unknown as SpeechRecognitionEvent;
-      let interimTranscript = '';
-      let finalTranscript = '';
-      let currentConfidence = 0;
-
-      for (let i = speechEvent.resultIndex; i < speechEvent.results.length; ++i) {
-        const result = speechEvent.results[i];
-        const alternative = result[0];
-        currentConfidence = alternative.confidence;
-
-        if (result.isFinal) {
-          finalTranscript += alternative.transcript;
-        } else {
-          interimTranscript += alternative.transcript;
-        }
-      }
-
-      setState(prevState => ({
-        ...prevState,
-        transcript: finalTranscript || interimTranscript,
-        confidence: currentConfidence
-      }));
-
-      if (onTranscript) {
-        const metadata: VoiceMetadata = {
-          source: 'voice',
-          language: language,
-          confidence: currentConfidence
-        };
-        onTranscript(finalTranscript || interimTranscript, metadata);
-      }
-    });
-
-    recognitionRef.current.addEventListener('end', () => {
-      setState(prevState => ({ ...prevState, isListening: false }));
-    });
-
-    recognitionRef.current.addEventListener('error', (event: Event) => {
-      const errorEvent = event as unknown as SpeechRecognitionErrorEvent;
-      console.error('Speech recognition error:', errorEvent.error);
-      toast({
-        title: "Speech Recognition Error",
-        description: `Error: ${errorEvent.error}`,
-        variant: "destructive",
-      });
-      setState(prevState => ({ ...prevState, isListening: false }));
-    });
-
-    recognitionRef.current.start();
-  }, [language, onTranscript, toast]);
-
-  const stopSpeechRecognition = useCallback(() => {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-      setState(prevState => ({ ...prevState, isListening: false }));
-    }
-  }, []);
-
-  const toggleListening = useCallback(() => {
     if (state.isListening) {
-      stopSpeechRecognition();
+      recognitionRef.current.stop();
+      setState(prev => ({ ...prev, isListening: false, isProcessing: false }));
     } else {
-      startSpeechRecognition();
+      setState(prev => ({ ...prev, isListening: true, isProcessing: true, error: null }));
+      recognitionRef.current.start();
     }
-  }, [startSpeechRecognition, stopSpeechRecognition, state.isListening]);
+  }, [state.isListening, toast]);
 
-  const speak = useCallback((text: string) => {
-    if (!synthRef.current) {
-      synthRef.current = window.speechSynthesis;
-    }
-
-    if (synthRef.current?.speaking) {
-      synthRef.current.cancel();
-    }
+  const handleSpeak = useCallback((text: string) => {
+    if (!text.trim()) return;
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.pitch = state.settings.pitch;
-    utterance.rate = state.settings.rate;
-    utterance.volume = state.settings.volume;
-    utterance.voice = state.settings.voice;
-
-    synthRef.current?.speak(utterance);
-  }, [state.settings]);
-
-  useEffect(() => {
-    if (autoStart) {
-      startSpeechRecognition();
+    if (settings.voice) {
+      utterance.voice = settings.voice;
     }
+    utterance.pitch = settings.pitch;
+    utterance.rate = settings.rate;
+    utterance.volume = settings.volume;
 
-    return () => {
-      stopSpeechRecognition();
-    };
-  }, [autoStart, startSpeechRecognition, stopSpeechRecognition]);
+    speechSynthesis.speak(utterance);
+  }, [settings]);
+
+  const handleSettingsChange = useCallback((newSettings: VoiceSettings) => {
+    setSettings(newSettings);
+  }, []);
 
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>
-          <VoiceStatus 
+    <div className="max-w-4xl mx-auto space-y-6">
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center">
+              <Brain className="h-5 w-5 mr-2" />
+              Enhanced Voice Interaction
+            </CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowSettings(!showSettings)}
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <VoiceStatus
             isListening={state.isListening}
             isProcessing={state.isProcessing}
             confidence={state.confidence}
           />
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Transcript</label>
-          <VoiceTranscript 
+
+          <VoiceControls
+            isListening={state.isListening}
+            isProcessing={state.isProcessing}
+            transcript={state.transcript}
+            onToggleListening={toggleListening}
+            onSpeak={handleSpeak}
+          />
+
+          <VoiceTranscript
             transcript={state.transcript}
             confidence={state.confidence}
           />
-        </div>
 
-        <VoiceControls
-          isListening={state.isListening}
-          isProcessing={state.isProcessing}
-          transcript={state.transcript}
-          onToggleListening={toggleListening}
-          onSpeak={speak}
-        />
+          <VoiceEmotionAnalysis emotion={state.emotion} />
 
-        <VoiceEmotionAnalysis emotion={state.emotion} />
-      </CardContent>
-    </Card>
+          {state.error && (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-700 text-sm">{state.error}</p>
+            </div>
+          )}
+
+          {showSettings && (
+            <VoiceSettings
+              settings={settings}
+              availableVoices={availableVoices}
+              onSettingsChange={handleSettingsChange}
+            />
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

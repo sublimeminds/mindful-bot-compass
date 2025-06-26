@@ -1,91 +1,100 @@
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { checkReactSafety } from '@/utils/reactSafetyChecker';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
-export interface AccessibilitySettings {
-  reducedMotion: boolean;
+interface AccessibilitySettings {
   highContrast: boolean;
   largeText: boolean;
-  screenReaderOptimized: boolean;
+  reducedMotion: boolean;
+  screenReader: boolean;
   keyboardNavigation: boolean;
-  focusIndicators: boolean;
 }
 
-export interface AccessibilityContextType {
+interface AccessibilityContextType {
   settings: AccessibilitySettings;
   updateSetting: (key: keyof AccessibilitySettings, value: boolean) => void;
-  resetSettings: () => void;
-  announceToScreenReader: (message: string) => void;
+  toggleHighContrast: () => void;
+  toggleLargeText: () => void;
+  toggleReducedMotion: () => void;
 }
-
-const defaultSettings: AccessibilitySettings = {
-  reducedMotion: false,
-  highContrast: false,
-  largeText: false,
-  screenReaderOptimized: false,
-  keyboardNavigation: false,
-  focusIndicators: false,
-};
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
-export const useAccessibility = () => {
-  const context = useContext(AccessibilityContext);
-  if (context === undefined) {
-    throw new Error('useAccessibility must be used within an AccessibilityProvider');
-  }
-  return context;
-};
-
 interface AccessibilityProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ children }) => {
-  // Check React safety before using hooks
-  const reactSafety = checkReactSafety();
-  
-  if (!reactSafety.isReactSafe) {
-    console.error('AccessibilityProvider: React safety check failed:', reactSafety.error);
-    // Return children without accessibility features rather than breaking the app
-    return <>{children}</>;
-  }
-
-  const [settings, setSettings] = useState<AccessibilitySettings>(defaultSettings);
+  const [settings, setSettings] = useState<AccessibilitySettings>({
+    highContrast: false,
+    largeText: false,
+    reducedMotion: false,
+    screenReader: false,
+    keyboardNavigation: true,
+  });
 
   const updateSetting = useCallback((key: keyof AccessibilitySettings, value: boolean) => {
-    setSettings(prevSettings => ({ ...prevSettings, [key]: value }));
+    setSettings(prev => ({ ...prev, [key]: value }));
   }, []);
 
-  const resetSettings = useCallback(() => {
-    setSettings(defaultSettings);
+  const toggleHighContrast = useCallback(() => {
+    setSettings(prev => ({ ...prev, highContrast: !prev.highContrast }));
   }, []);
 
-  const announceToScreenReader = useCallback((message: string) => {
-    // Create a live region for screen reader announcements
-    const announcement = document.createElement('div');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.setAttribute('aria-atomic', 'true');
-    announcement.style.position = 'absolute';
-    announcement.style.left = '-10000px';
-    announcement.style.width = '1px';
-    announcement.style.height = '1px';
-    announcement.style.overflow = 'hidden';
-    announcement.textContent = message;
-    
-    document.body.appendChild(announcement);
-    
-    // Remove after announcement
-    setTimeout(() => {
-      document.body.removeChild(announcement);
-    }, 1000);
+  const toggleLargeText = useCallback(() => {
+    setSettings(prev => ({ ...prev, largeText: !prev.largeText }));
   }, []);
+
+  const toggleReducedMotion = useCallback(() => {
+    setSettings(prev => ({ ...prev, reducedMotion: !prev.reducedMotion }));
+  }, []);
+
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    const savedSettings = localStorage.getItem('accessibility-settings');
+    if (savedSettings) {
+      try {
+        const parsed = JSON.parse(savedSettings);
+        setSettings(parsed);
+      } catch (error) {
+        console.error('Failed to parse accessibility settings:', error);
+      }
+    }
+  }, []);
+
+  // Save settings to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('accessibility-settings', JSON.stringify(settings));
+  }, [settings]);
+
+  // Apply accessibility classes to document
+  useEffect(() => {
+    const root = document.documentElement;
+    
+    if (settings.highContrast) {
+      root.classList.add('high-contrast');
+    } else {
+      root.classList.remove('high-contrast');
+    }
+
+    if (settings.largeText) {
+      root.classList.add('large-text');
+    } else {
+      root.classList.remove('large-text');
+    }
+
+    if (settings.reducedMotion) {
+      root.classList.add('reduced-motion');
+    } else {
+      root.classList.remove('reduced-motion');
+    }
+  }, [settings]);
 
   const value: AccessibilityContextType = {
     settings,
     updateSetting,
-    resetSettings,
-    announceToScreenReader,
+    toggleHighContrast,
+    toggleLargeText,
+    toggleReducedMotion,
   };
 
   return (
@@ -93,4 +102,12 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
       {children}
     </AccessibilityContext.Provider>
   );
+};
+
+export const useAccessibility = (): AccessibilityContextType => {
+  const context = useContext(AccessibilityContext);
+  if (context === undefined) {
+    throw new Error('useAccessibility must be used within an AccessibilityProvider');
+  }
+  return context;
 };
