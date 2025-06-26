@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,7 +15,7 @@ import {
   Brain, 
   Languages, 
   Settings,
-  Waveform,
+  Radio,
   Heart,
   Activity
 } from 'lucide-react';
@@ -214,7 +213,7 @@ const EnhancedVoiceManager = () => {
           {isListening && (
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
-                <Waveform className="h-4 w-4 animate-pulse text-therapy-600" />
+                <Radio className="h-4 w-4 animate-pulse text-therapy-600" />
                 <span className="text-sm text-muted-foreground">
                   Voice activity detected...
                 </span>
