@@ -3,10 +3,10 @@ import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import CollaborativeWhiteboard from '@/components/collaboration/CollaborativeWhiteboard';
 import LiveSessionManager from '@/components/collaboration/LiveSessionManager';
 import RealTimeChat from '@/components/collaboration/RealTimeChat';
-import CollaborativeWhiteboard from '@/components/collaboration/CollaborativeWhiteboard';
-import { Video, MessageCircle, Palette, Users } from 'lucide-react';
+import { Users, Video, MessageSquare, Paintbrush } from 'lucide-react';
 
 const LiveCollaboration = () => {
   const { user, loading } = useAuth();
@@ -32,7 +32,7 @@ const LiveCollaboration = () => {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Live Collaboration</h1>
           <p className="text-gray-600 mt-2">
-            Real-time therapy sessions with video, chat, and collaborative tools
+            Real-time collaboration tools for enhanced therapy sessions and interactive communication
           </p>
         </div>
 
@@ -43,16 +43,16 @@ const LiveCollaboration = () => {
               <span>Live Session</span>
             </TabsTrigger>
             <TabsTrigger value="chat" className="flex items-center space-x-2">
-              <MessageCircle className="h-4 w-4" />
-              <span>Secure Chat</span>
+              <MessageSquare className="h-4 w-4" />
+              <span>Real-time Chat</span>
             </TabsTrigger>
             <TabsTrigger value="whiteboard" className="flex items-center space-x-2">
-              <Palette className="h-4 w-4" />
+              <Paintbrush className="h-4 w-4" />
               <span>Whiteboard</span>
             </TabsTrigger>
-            <TabsTrigger value="group" className="flex items-center space-x-2">
+            <TabsTrigger value="participants" className="flex items-center space-x-2">
               <Users className="h-4 w-4" />
-              <span>Group Tools</span>
+              <span>Participants</span>
             </TabsTrigger>
           </TabsList>
 
@@ -68,12 +68,12 @@ const LiveCollaboration = () => {
             <CollaborativeWhiteboard />
           </TabsContent>
 
-          <TabsContent value="group" className="space-y-6">
+          <TabsContent value="participants" className="space-y-6">
             <div className="text-center py-12">
               <Users className="h-16 w-16 mx-auto mb-4 text-therapy-600" />
-              <h3 className="text-xl font-semibold mb-2">Group Therapy Tools</h3>
+              <h3 className="text-xl font-semibold mb-2">Participant Management</h3>
               <p className="text-muted-foreground">
-                Advanced tools for group therapy sessions, breakout rooms, and collaborative exercises
+                Advanced participant management and collaboration tools
               </p>
             </div>
           </TabsContent>

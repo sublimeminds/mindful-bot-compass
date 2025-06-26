@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Video, 
   VideoOff, 
@@ -12,216 +13,438 @@ import {
   Phone, 
   PhoneOff,
   Users,
-  MessageCircle,
-  Share2,
   Settings,
-  Clock,
-  Heart
+  Share2,
+  MessageSquare,
+  FileText,
+  Timer,
+  Activity,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface LiveSession {
+interface SessionParticipant {
   id: string;
-  therapistId: string;
-  therapistName: string;
-  therapistAvatar: string;
-  startTime: string;
+  name: string;
+  role: 'therapist' | 'client' | 'observer';
+  status: 'connected' | 'connecting' | 'disconnected';
+  videoEnabled: boolean;
+  audioEnabled: boolean;
+  lastSeen: string;
+}
+
+interface SessionMetrics {
   duration: number;
-  status: 'waiting' | 'active' | 'ended';
   participants: number;
-  sessionType: 'individual' | 'group' | 'crisis';
+  messages: number;
+  activities: number;
+  qualityScore: number;
 }
 
 const LiveSessionManager = () => {
   const { toast } = useToast();
-  const [currentSession, setCurrentSession] = useState<LiveSession | null>(null);
+  const [isSessionActive, setIsSessionActive] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
-  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('connecting');
+  const [isSpeakerEnabled, setIsSpeakerEnabled] = useState(true);
+  const [sessionDuration, setSessionDuration] = useState(1847); // seconds
+  const [participants, setParticipants] = useState<SessionParticipant[]>([
+    {
+      id: '1',
+      name: 'Dr. Sarah Johnson',
+      role: 'therapist',
+      status: 'connected',
+      videoEnabled: true,
+      audioEnabled: true,
+      lastSeen: 'now'
+    },
+    {
+      id: '2',
+      name: 'You',
+      role: 'client',
+      status: 'connected',
+      videoEnabled: true,
+      audioEnabled: true,
+      lastSeen: 'now'
+    },
+    {
+      id: '3',
+      name: 'Dr. Michael Chen (Supervisor)',
+      role: 'observer',
+      status: 'connected',
+      videoEnabled: false,
+      audioEnabled: false,
+      lastSeen: 'now'
+    }
+  ]);
 
-  // Mock current session
+  const [metrics, setMetrics] = useState<SessionMetrics>({
+    duration: 1847,
+    participants: 3,
+    messages: 24,
+    activities: 8,
+    qualityScore: 95
+  });
+
   useEffect(() => {
-    const mockSession: LiveSession = {
-      id: 'session-123',
-      therapistId: 'therapist-1',
-      therapistName: 'Dr. Sarah Chen',
-      therapistAvatar: '/placeholder.svg',
-      startTime: new Date().toISOString(),
-      duration: 50,
-      status: 'active',
-      participants: 2,
-      sessionType: 'individual'
-    };
-    setCurrentSession(mockSession);
-    setConnectionStatus('connected');
-  }, []);
+    const interval = setInterval(() => {
+      if (isSessionActive) {
+        setSessionDuration(prev => prev + 1);
+        setMetrics(prev => ({ ...prev, duration: prev.duration + 1 }));
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isSessionActive]);
+
+  const formatDuration = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const toggleVideo = () => {
     setIsVideoEnabled(!isVideoEnabled);
     toast({
-      title: isVideoEnabled ? "Camera turned off" : "Camera turned on",
-      description: `Video is now ${isVideoEnabled ? 'disabled' : 'enabled'}`,
+      title: isVideoEnabled ? "Video Disabled" : "Video Enabled",
+      description: `Your camera is now ${isVideoEnabled ? 'off' : 'on'}.`,
     });
   };
 
   const toggleAudio = () => {
     setIsAudioEnabled(!isAudioEnabled);
     toast({
-      title: isAudioEnabled ? "Microphone muted" : "Microphone unmuted",
-      description: `Audio is now ${isAudioEnabled ? 'muted' : 'enabled'}`,
+      title: isAudioEnabled ? "Microphone Muted" : "Microphone Unmuted",
+      description: `Your microphone is now ${isAudioEnabled ? 'muted' : 'unmuted'}.`,
+    });
+  };
+
+  const toggleSpeaker = () => {
+    setIsSpeakerEnabled(!isSpeakerEnabled);
+    toast({
+      title: isSpeakerEnabled ? "Speaker Muted" : "Speaker Unmuted",
+      description: `Audio output is now ${isSpeakerEnabled ? 'muted' : 'unmuted'}.`,
     });
   };
 
   const endSession = () => {
+    setIsSessionActive(false);
     toast({
       title: "Session Ended",
-      description: "Thank you for your session. Session summary will be available shortly.",
+      description: "The therapy session has been ended. Summary will be generated.",
     });
-    setCurrentSession(null);
   };
 
   const shareScreen = () => {
     toast({
-      title: "Screen Sharing",
-      description: "Screen sharing initiated",
+      title: "Screen Sharing Started",
+      description: "Your screen is now being shared with participants.",
     });
   };
 
-  if (!currentSession) {
-    return (
-      <Card className="max-w-2xl mx-auto">
-        <CardContent className="p-8 text-center">
-          <Video className="h-16 w-16 text-therapy-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">No Active Session</h3>
-          <p className="text-muted-foreground mb-4">
-            You don't have any active therapy sessions right now.
-          </p>
-          <Button>Schedule a Session</Button>
-        </CardContent>
-      </Card>
-    );
-  }
+  const getRoleColor = (role: string) => {
+    switch (role) {
+      case 'therapist': return 'bg-blue-100 text-blue-800';
+      case 'client': return 'bg-green-100 text-green-800';
+      case 'observer': return 'bg-purple-100 text-purple-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'connected': return 'bg-green-500';
+      case 'connecting': return 'bg-yellow-500';
+      case 'disconnected': return 'bg-red-500';
+      default: return 'bg-gray-500';
+    }
+  };
 
   return (
     <div className="space-y-6">
       {/* Session Header */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={currentSession.therapistAvatar} />
-                <AvatarFallback>{currentSession.therapistName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-              </Avatar>
-              <div>
-                <CardTitle>{currentSession.therapistName}</CardTitle>
-                <div className="flex items-center space-x-2 mt-1">
-                  <Badge variant={currentSession.status === 'active' ? 'default' : 'secondary'}>
-                    {currentSession.status}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground flex items-center">
-                    <Clock className="h-4 w-4 mr-1" />
-                    {currentSession.duration} min session
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Badge variant="outline" className="flex items-center space-x-1">
-                <div className={`h-2 w-2 rounded-full ${
-                  connectionStatus === 'connected' ? 'bg-green-500' : 
-                  connectionStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'
-                }`} />
-                <span className="capitalize">{connectionStatus}</span>
-              </Badge>
-              <Badge variant="outline">
-                <Users className="h-3 w-3 mr-1" />
-                {currentSession.participants}
-              </Badge>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center">
+            <Video className="h-7 w-7 mr-2 text-therapy-600" />
+            Live Therapy Session
+          </h2>
+          <p className="text-muted-foreground">
+            Session Duration: {formatDuration(sessionDuration)}
+          </p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Badge variant={isSessionActive ? "default" : "secondary"}>
+            {isSessionActive ? "Active" : "Ended"}
+          </Badge>
+          <Button variant="outline" onClick={shareScreen}>
+            <Share2 className="h-4 w-4 mr-2" />
+            Share Screen
+          </Button>
+        </div>
+      </div>
 
-      {/* Video Session Area */}
+      {/* Session Controls */}
       <Card>
-        <CardContent className="p-6">
-          <div className="aspect-video bg-gradient-to-br from-therapy-100 to-calm-100 rounded-lg mb-6 flex items-center justify-center relative">
-            {isVideoEnabled ? (
-              <div className="text-center">
-                <Video className="h-16 w-16 text-therapy-600 mx-auto mb-4" />
-                <p className="text-therapy-800 font-medium">Video Session Active</p>
-                <p className="text-therapy-600 text-sm">Connected with {currentSession.therapistName}</p>
-              </div>
-            ) : (
-              <div className="text-center">
-                <VideoOff className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 font-medium">Camera Off</p>
-                <p className="text-gray-500 text-sm">Click the camera button to turn on video</p>
-              </div>
-            )}
-            
-            {/* Floating Controls */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-3 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2">
-              <Button
-                size="sm"
-                variant={isVideoEnabled ? "default" : "outline"}
-                onClick={toggleVideo}
-                className="rounded-full w-10 h-10 p-2"
-              >
-                {isVideoEnabled ? <Video className="h-4 w-4" /> : <VideoOff className="h-4 w-4" />}
-              </Button>
-              <Button
-                size="sm"
-                variant={isAudioEnabled ? "default" : "outline"}
-                onClick={toggleAudio}
-                className="rounded-full w-10 h-10 p-2"
-              >
-                {isAudioEnabled ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={shareScreen}
-                className="rounded-full w-10 h-10 p-2"
-              >
-                <Share2 className="h-4 w-4" />
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="rounded-full w-10 h-10 p-2"
-              >
-                <MessageCircle className="h-4 w-4" />
-              </Button>
-              <Button
-                size="sm"
-                variant="destructive"
-                onClick={endSession}
-                className="rounded-full w-10 h-10 p-2"
-              >
-                <PhoneOff className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-center space-x-4">
+            <Button
+              variant={isVideoEnabled ? "default" : "secondary"}
+              size="lg"
+              onClick={toggleVideo}
+              className="rounded-full h-12 w-12"
+            >
+              {isVideoEnabled ? (
+                <Video className="h-5 w-5" />
+              ) : (
+                <VideoOff className="h-5 w-5" />
+              )}
+            </Button>
 
-          {/* Session Tools */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button variant="outline" className="flex items-center justify-center space-x-2">
-              <Heart className="h-4 w-4" />
-              <span>Mood Check</span>
+            <Button
+              variant={isAudioEnabled ? "default" : "secondary"}
+              size="lg"
+              onClick={toggleAudio}
+              className="rounded-full h-12 w-12"
+            >
+              {isAudioEnabled ? (
+                <Mic className="h-5 w-5" />
+              ) : (
+                <MicOff className="h-5 w-5" />
+              )}
             </Button>
-            <Button variant="outline" className="flex items-center justify-center space-x-2">
-              <MessageCircle className="h-4 w-4" />
-              <span>Session Notes</span>
+
+            <Button
+              variant={isSpeakerEnabled ? "default" : "secondary"}
+              size="lg"
+              onClick={toggleSpeaker}
+              className="rounded-full h-12 w-12"
+            >
+              {isSpeakerEnabled ? (
+                <Volume2 className="h-5 w-5" />
+              ) : (
+                <VolumeX className="h-5 w-5" />
+              )}
             </Button>
-            <Button variant="outline" className="flex items-center justify-center space-x-2">
-              <Settings className="h-4 w-4" />
-              <span>Settings</span>
+
+            <Button
+              variant="destructive"
+              size="lg"
+              onClick={endSession}
+              className="rounded-full h-12 w-12"
+            >
+              <PhoneOff className="h-5 w-5" />
+            </Button>
+
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full h-12 w-12"
+            >
+              <Settings className="h-5 w-5" />
             </Button>
           </div>
         </CardContent>
       </Card>
+
+      <Tabs defaultValue="participants" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="participants">Participants</TabsTrigger>
+          <TabsTrigger value="chat">Chat</TabsTrigger>
+          <TabsTrigger value="notes">Notes</TabsTrigger>
+          <TabsTrigger value="metrics">Metrics</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="participants" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Users className="h-5 w-5 mr-2" />
+                Session Participants ({participants.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {participants.map((participant) => (
+                  <div key={participant.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="relative">
+                        <div className="w-10 h-10 bg-therapy-100 rounded-full flex items-center justify-center">
+                          <span className="font-medium text-therapy-600">
+                            {participant.name.split(' ').map(n => n[0]).join('')}
+                          </span>
+                        </div>
+                        <div
+                          className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getStatusColor(participant.status)}`}
+                        />
+                      </div>
+                      <div>
+                        <div className="font-medium">{participant.name}</div>
+                        <div className="flex items-center space-x-2">
+                          <Badge className={getRoleColor(participant.role)} variant="secondary">
+                            {participant.role}
+                          </Badge>
+                          <span className="text-sm text-muted-foreground">
+                            Last seen: {participant.lastSeen}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className={`p-2 rounded ${participant.videoEnabled ? 'bg-green-100' : 'bg-red-100'}`}>
+                        {participant.videoEnabled ? (
+                          <Video className="h-4 w-4 text-green-600" />
+                        ) : (
+                          <VideoOff className="h-4 w-4 text-red-600" />
+                        )}
+                      </div>
+                      <div className={`p-2 rounded ${participant.audioEnabled ? 'bg-green-100' : 'bg-red-100'}`}>
+                        {participant.audioEnabled ? (
+                          <Mic className="h-4 w-4 text-green-600" />
+                        ) : (
+                          <MicOff className="h-4 w-4 text-red-600" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="chat" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <MessageSquare className="h-5 w-5 mr-2" />
+                Session Chat
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4 h-64 overflow-y-auto">
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-medium text-blue-600">DS</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium">Dr. Sarah Johnson</span>
+                      <span className="text-xs text-muted-foreground">2:30 PM</span>
+                    </div>
+                    <p className="text-sm mt-1">Let's start with how you've been feeling this week.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-medium text-green-600">Y</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium">You</span>
+                      <span className="text-xs text-muted-foreground">2:31 PM</span>
+                    </div>
+                    <p className="text-sm mt-1">I've had some ups and downs, but overall better than last week.</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 pt-4 border-t">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    placeholder="Type a message..."
+                    className="flex-1 px-3 py-2 border rounded-md"
+                  />
+                  <Button size="sm">Send</Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="notes" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <FileText className="h-5 w-5 mr-2" />
+                Session Notes
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <textarea
+                className="w-full h-48 p-3 border rounded-md resize-none"
+                placeholder="Take notes during the session..."
+                defaultValue="Client reports improved mood and sleep patterns. Discussed coping strategies for work stress. Homework: Practice mindfulness exercises daily."
+              />
+              <div className="mt-4 flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  Auto-saved at 2:35 PM
+                </p>
+                <Button variant="outline" size="sm">
+                  Export Notes
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="metrics" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium flex items-center">
+                  <Timer className="h-4 w-4 mr-2" />
+                  Session Duration
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{formatDuration(metrics.duration)}</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium flex items-center">
+                  <Users className="h-4 w-4 mr-2" />
+                  Participants
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{metrics.participants}</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium flex items-center">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Messages
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{metrics.messages}</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium flex items-center">
+                  <Activity className="h-4 w-4 mr-2" />
+                  Quality Score
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{metrics.qualityScore}%</div>
+                <Progress value={metrics.qualityScore} className="mt-2" />
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
