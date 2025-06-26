@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -88,7 +87,7 @@ const OfflineManager = () => {
         setOfflineData(data);
         
         // Count pending uploads
-        const pending = Object.values(data).reduce((total: number, items: any) => {
+        const pending: number = Object.values(data).reduce((total: number, items: any) => {
           if (Array.isArray(items)) {
             return total + items.length;
           }
