@@ -1,5 +1,5 @@
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/components/EnhancedAuthProvider';
 
 export const useSimpleApp = () => {
   const { user, loading, signIn, signUp, signOut } = useAuth();
