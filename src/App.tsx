@@ -35,6 +35,7 @@ import LiveCollaboration from "./pages/LiveCollaboration";
 import AIPersonalization from "./pages/AIPersonalization";
 import AdvancedAnalytics from "./pages/AdvancedAnalytics";
 import { EnhancedAuthProvider } from "./components/EnhancedAuthProvider";
+import AuthErrorBoundary from "./components/auth/AuthErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -43,44 +44,46 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <TooltipProvider>
-          <EnhancedAuthProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/onboarding" element={<OnboardingPage />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/chat" element={<Chat />} />
-                <Route path="/mood-tracker" element={<MoodTracker />} />
-                <Route path="/goals" element={<Goals />} />
-                <Route path="/session-history" element={<SessionHistory />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/voice-ai" element={<VoiceAI />} />
-                <Route path="/therapy-chat" element={<TherapyChat />} />
-                <Route path="/techniques" element={<Techniques />} />
-                <Route path="/techniques/:id" element={<TechniqueSession />} />
-                <Route path="/analytics" element={<Analytics />} />
-                <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
-                <Route path="/integrations" element={<Integrations />} />
-                <Route path="/enhanced-integrations" element={<EnhancedIntegrations />} />
-                <Route path="/content-library" element={<ContentLibrary />} />
-                <Route path="/live-collaboration" element={<LiveCollaboration />} />
-                <Route path="/ai-personalization" element={<AIPersonalization />} />
-                <Route path="/crisis-management" element={<CrisisManagement />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/admin/users" element={<AdminUsers />} />
-                <Route path="/admin/analytics" element={<AdminAnalytics />} />
-                <Route path="/admin/system" element={<AdminSystem />} />
-                <Route path="/admin/content" element={<AdminContent />} />
-                <Route path="/admin/integrations" element={<AdminIntegrations />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </BrowserRouter>
-          </EnhancedAuthProvider>
+          <AuthErrorBoundary>
+            <EnhancedAuthProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/onboarding" element={<OnboardingPage />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/chat" element={<Chat />} />
+                  <Route path="/mood-tracker" element={<MoodTracker />} />
+                  <Route path="/goals" element={<Goals />} />
+                  <Route path="/session-history" element={<SessionHistory />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/voice-ai" element={<VoiceAI />} />
+                  <Route path="/therapy-chat" element={<TherapyChat />} />
+                  <Route path="/techniques" element={<Techniques />} />
+                  <Route path="/techniques/:id" element={<TechniqueSession />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
+                  <Route path="/integrations" element={<Integrations />} />
+                  <Route path="/enhanced-integrations" element={<EnhancedIntegrations />} />
+                  <Route path="/content-library" element={<ContentLibrary />} />
+                  <Route path="/live-collaboration" element={<LiveCollaboration />} />
+                  <Route path="/ai-personalization" element={<AIPersonalization />} />
+                  <Route path="/crisis-management" element={<CrisisManagement />} />
+                  <Route path="/admin" element={<Admin />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin/users" element={<AdminUsers />} />
+                  <Route path="/admin/analytics" element={<AdminAnalytics />} />
+                  <Route path="/admin/system" element={<AdminSystem />} />
+                  <Route path="/admin/content" element={<AdminContent />} />
+                  <Route path="/admin/integrations" element={<AdminIntegrations />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </BrowserRouter>
+            </EnhancedAuthProvider>
+          </AuthErrorBoundary>
         </TooltipProvider>
       </HelmetProvider>
     </QueryClientProvider>
