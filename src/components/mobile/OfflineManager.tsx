@@ -11,7 +11,7 @@ import {
   Upload, 
   RefreshCw, 
   Database,
-  Sync,
+  RotateCcw,
   AlertCircle 
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -88,9 +88,12 @@ const OfflineManager = () => {
         setOfflineData(data);
         
         // Count pending uploads
-        const pending = Object.values(data).reduce((total: number, items: any) => 
-          total + (Array.isArray(items) ? items.length : 0), 0
-        );
+        const pending = Object.values(data).reduce((total: number, items: any) => {
+          if (Array.isArray(items)) {
+            return total + items.length;
+          }
+          return total;
+        }, 0);
         setSyncStatus(prev => ({ ...prev, pendingUploads: pending }));
       }
     } catch (error) {
@@ -238,7 +241,7 @@ const OfflineManager = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <Sync className="h-5 w-5" />
+            <RotateCcw className="h-5 w-5" />
             <span>Data Sync</span>
           </CardTitle>
         </CardHeader>
