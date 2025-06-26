@@ -7,7 +7,7 @@
   },
   "files": [
     "dist/**/*",
-    "public/electron.js",
+    "public/electron.cjs",
     "public/preload.js",
     "node_modules/**/*"
   ],
