@@ -20,6 +20,8 @@ import Help from '@/pages/Help';
 import Admin from '@/pages/Admin';
 import Integrations from '@/pages/Integrations';
 import Settings from '@/pages/Settings';
+import Analytics from '@/pages/Analytics';
+import EnhancedIntegrations from '@/pages/EnhancedIntegrations';
 
 const queryClient = new QueryClient();
 
@@ -44,7 +46,9 @@ function App() {
                 <Route path="/help" element={<Help />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/integrations" element={<Integrations />} />
+                <Route path="/enhanced-integrations" element={<EnhancedIntegrations />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/analytics" element={<Analytics />} />
               </Routes>
               <MobileNavigationTabs />
               <Toaster />
