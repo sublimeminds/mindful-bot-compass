@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +21,8 @@ import {
   Star, 
   HeartHandshake,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Monitor
 } from 'lucide-react';
 import GradientLogo from '@/components/ui/GradientLogo';
 import {
@@ -50,6 +50,7 @@ const Footer = () => {
       links: [
         { label: 'TherapySync AI', href: '/therapysync-ai', icon: Brain },
         { label: 'AI Therapy Chat', href: '/therapy', icon: MessageCircle },
+        { label: 'Desktop Downloads', href: '/downloads', icon: Monitor },
         { label: 'Features', href: '/#features', icon: Sparkles },
         { label: 'Dashboard', href: '/dashboard', icon: Zap },
         { label: 'Smart Scheduling', href: '/smart-scheduling', icon: Calendar },

@@ -65,6 +65,7 @@ const Header = () => {
     { title: "Techniques Library", href: "/techniques", icon: Sparkles },
     { title: "Digital Notebook", href: "/notebook", icon: PenTool },
     { title: "Community Support", href: "/community", icon: Users },
+    { title: "Desktop Downloads", href: "/downloads", icon: Monitor },
     { title: "Help Center", href: "/help", icon: HelpCircle },
   ];
 

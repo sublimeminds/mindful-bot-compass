@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -65,6 +64,7 @@ import SystemHealth from '@/pages/SystemHealth';
 import PerformanceDashboard from '@/pages/PerformanceDashboard';
 import Integrations from '@/pages/Integrations';
 import RealIntegrations from '@/pages/RealIntegrations';
+import Downloads from '@/pages/Downloads';
 import NotFound from '@/pages/NotFound';
 import AdminLayout from '@/components/admin/AdminLayout';
 
@@ -79,6 +79,7 @@ const AppRouter = () => {
       <Route path="/features" element={<FeaturesOverview />} />
       <Route path="/plans" element={<Plans />} />
       <Route path="/compare-plans" element={<ComparePlans />} />
+      <Route path="/downloads" element={<Downloads />} />
       <Route path="/voice-technology" element={<VoiceTechnology />} />
       <Route path="/crisis-resources" element={<CrisisResources />} />
       <Route path="/help" element={<Help />} />
