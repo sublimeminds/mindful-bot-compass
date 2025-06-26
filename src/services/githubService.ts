@@ -1,7 +1,6 @@
-
 const GITHUB_API_BASE = 'https://api.github.com';
-const REPO_OWNER = 'your-username'; // Update this with your GitHub username
-const REPO_NAME = 'your-repo-name'; // Update this with your repository name
+const REPO_OWNER = 'sublimeminds'; // Updated to your GitHub username
+const REPO_NAME = 'mindful-bot-compass'; // Updated to your repository name
 
 export interface GitHubAsset {
   name: string;
