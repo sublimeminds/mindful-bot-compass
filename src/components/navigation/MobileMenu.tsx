@@ -13,12 +13,12 @@ interface MobileMenuProps {
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
-  const { user, logout } = useAuth();
+  const { user, signOut } = useAuth();
 
   if (!isOpen) return null;
 
   const handleLogout = async () => {
-    await logout();
+    await signOut();
     onClose();
   };
 

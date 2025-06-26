@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const MinimalDashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, signOut } = useAuth();
 
   if (!user) {
     return (
@@ -30,7 +30,7 @@ const MinimalDashboard = () => {
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-therapy-900">Dashboard</h1>
-          <Button onClick={logout} variant="outline">
+          <Button onClick={signOut} variant="outline">
             Sign Out
           </Button>
         </div>

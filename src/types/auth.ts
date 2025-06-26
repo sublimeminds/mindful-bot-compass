@@ -29,5 +29,5 @@ export interface SecurityEventDetails {
   user_agent?: string;
   location?: string;
   device_info?: string;
-  additional_context?: Record<string, any>;
+  additional_context?: Record<string, unknown>;
 }

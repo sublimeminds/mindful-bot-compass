@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -181,7 +182,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
 
       console.log('EnhancedAuthProvider: Login successful');
       return { error: null };
-    } catch (error: unknown) {
+    } catch (error) {
       const authError = error as AuthError;
       console.error('EnhancedAuthProvider: Unexpected login error:', authError);
       return { error: new Error(authError.message || 'Login failed') };
@@ -206,7 +207,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
 
       console.log('EnhancedAuthProvider: Registration successful');
       return { error: null };
-    } catch (error: unknown) {
+    } catch (error) {
       const authError = error as AuthError;
       console.error('EnhancedAuthProvider: Unexpected registration error:', authError);
       return { error: new Error(authError.message || 'Registration failed') };
@@ -253,7 +254,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       });
 
       return { error: null };
-    } catch (error: unknown) {
+    } catch (error) {
       const authError = error as AuthError;
       console.error('Unexpected error updating profile:', authError);
       return { error: new Error(authError.message || 'Profile update failed') };
@@ -283,7 +284,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       });
 
       return { error: null };
-    } catch (error: unknown) {
+    } catch (error) {
       const authError = error as AuthError;
       console.error('Unexpected error changing password:', authError);
       return { error: new Error(authError.message || 'Password change failed') };
@@ -302,7 +303,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       });
       
       return { error: null, qrCode };
-    } catch (error: unknown) {
+    } catch (error) {
       const authError = error as AuthError;
       console.error('Error enabling two-factor authentication:', authError);
       return { error: new Error(authError.message || 'Failed to enable two-factor authentication') };
@@ -319,7 +320,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       });
       
       return { error: null };
-    } catch (error: unknown) {
+    } catch (error) {
       const authError = error as AuthError;
       console.error('Error disabling two-factor authentication:', authError);
       return { error: new Error(authError.message || 'Failed to disable two-factor authentication') };
@@ -334,7 +335,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       });
       
       return { error: null };
-    } catch (error: unknown) {
+    } catch (error) {
       const authError = error as AuthError;
       console.error('Error verifying two-factor authentication:', authError);
       return { error: new Error(authError.message || 'Failed to verify two-factor authentication') };
@@ -361,7 +362,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       });
 
       return { error: null };
-    } catch (error: unknown) {
+    } catch (error) {
       const authError = error as AuthError;
       console.error('Unexpected error resetting password:', authError);
       return { error: new Error(authError.message || 'Password reset failed') };

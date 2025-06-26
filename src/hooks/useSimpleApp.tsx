@@ -2,14 +2,14 @@
 import { useAuth } from '@/hooks/useAuth';
 
 export const useSimpleApp = () => {
-  const { user, loading, login, register, logout } = useAuth();
+  const { user, loading, signIn, signUp, signOut } = useAuth();
 
   return {
     user,
     loading,
-    login,
-    register,
-    logout,
+    login: signIn,
+    register: signUp,
+    logout: signOut,
     isAuthenticated: !!user
   };
 };

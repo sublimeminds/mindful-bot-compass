@@ -22,7 +22,7 @@ const AuthForm = () => {
   const [error, setError] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   
-  const { login, register } = useAuth();
+  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -71,32 +71,36 @@ const AuthForm = () => {
 
     try {
       if (isSignUp) {
-        await register(email, password);
+        const { error } = await signUp(email, password);
+        if (error) throw error;
         // After successful registration, automatically log them in
-        await login(email, password);
+        const { error: signInError } = await signIn(email, password);
+        if (signInError) throw signInError;
         toast("Welcome to TherapySync! Let's get you set up.");
         navigate('/onboarding');
       } else {
-        await login(email, password);
+        const { error } = await signIn(email, password);
+        if (error) throw error;
         toast("Welcome back! You have successfully signed in to TherapySync.");
         navigate('/dashboard');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Auth error:', error);
       
       let errorMessage = 'An unexpected error occurred. Please try again.';
       
-      if (error?.message) {
-        if (error.message.includes('Invalid login credentials')) {
+      if (error && typeof error === 'object' && 'message' in error) {
+        const errorObj = error as { message: string };
+        if (errorObj.message.includes('Invalid login credentials')) {
           errorMessage = 'Invalid email or password. Please check your credentials and try again.';
-        } else if (error.message.includes('Email address') && error.message.includes('invalid')) {
+        } else if (errorObj.message.includes('Email address') && errorObj.message.includes('invalid')) {
           errorMessage = 'Please enter a valid email address.';
-        } else if (error.message.includes('User already registered')) {
+        } else if (errorObj.message.includes('User already registered')) {
           errorMessage = 'An account with this email already exists. Please sign in instead.';
-        } else if (error.message.includes('Password should be at least')) {
+        } else if (errorObj.message.includes('Password should be at least')) {
           errorMessage = 'Password must be at least 6 characters long.';
         } else {
-          errorMessage = error.message;
+          errorMessage = errorObj.message;
         }
       }
       

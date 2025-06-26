@@ -37,6 +37,14 @@ interface EnhancedVoiceInteractionProps {
   className?: string;
 }
 
+// Extend Window interface for SpeechRecognition
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
+
 const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
   onTranscript,
   onEmotion,
