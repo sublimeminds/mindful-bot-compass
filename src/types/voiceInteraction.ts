@@ -22,7 +22,7 @@ export interface OCRBoundingBox {
   confidence: number;
 }
 
-// Custom speech recognition types to avoid conflicts
+// Proper speech recognition types
 export interface CustomSpeechRecognitionResult {
   transcript: string;
   confidence: number;
@@ -36,5 +36,30 @@ export interface CustomSpeechRecognitionEvent {
 
 export interface CustomSpeechRecognitionErrorEvent {
   error: string;
+  message?: string;
+}
+
+// Speech recognition interfaces
+export interface SpeechRecognitionEventResult {
+  [index: number]: {
+    transcript: string;
+    confidence: number;
+  };
+  isFinal: boolean;
+  length: number;
+}
+
+export interface SpeechRecognitionEventResults {
+  [index: number]: SpeechRecognitionEventResult;
+  length: number;
+}
+
+export interface SpeechRecognitionEvent {
+  results: SpeechRecognitionEventResults;
+  resultIndex: number;
+}
+
+export interface SpeechRecognitionErrorEvent {
+  error: 'no-speech' | 'aborted' | 'audio-capture' | 'network' | 'not-allowed' | 'service-not-allowed' | 'bad-grammar' | 'language-not-supported';
   message?: string;
 }

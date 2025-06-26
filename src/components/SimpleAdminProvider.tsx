@@ -1,7 +1,6 @@
-
 import React, { createContext, useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { AdminContextType } from '@/types/contexts';
+import { AdminContextType } from '@/types/admin';
 
 export const AdminContext = createContext<AdminContextType | undefined>(undefined);
 

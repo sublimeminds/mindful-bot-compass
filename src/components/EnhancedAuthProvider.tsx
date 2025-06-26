@@ -3,6 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { checkReactSafety } from '@/utils/reactSafetyChecker';
+import { AuthError } from '@/types/auth';
 
 interface SecurityEvent {
   type: string;
@@ -90,10 +91,8 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
     };
     
     try {
-      // Log to security events table or service
       console.log('Security Event:', securityEvent);
       
-      // Update user security state
       setUserSecurity(prev => prev ? {
         ...prev,
         suspiciousActivity: [...prev.suspiciousActivity, securityEvent]
@@ -105,7 +104,6 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
 
   const initializeUserSecurity = useCallback(async (userId: string) => {
     try {
-      // Initialize or fetch user security data
       const mockSecurity: UserSecurity = {
         twoFactorEnabled: false,
         lastPasswordChange: null,
@@ -192,9 +190,10 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
 
       console.log('EnhancedAuthProvider: Login successful');
       return { error: null };
-    } catch (error: any) {
-      console.error('EnhancedAuthProvider: Unexpected login error:', error);
-      return { error: new Error(error.message || 'Login failed') };
+    } catch (error: unknown) {
+      const authError = error as AuthError;
+      console.error('EnhancedAuthProvider: Unexpected login error:', authError);
+      return { error: new Error(authError.message || 'Login failed') };
     }
   }, [logSecurityEvent]);
 
@@ -216,9 +215,10 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
 
       console.log('EnhancedAuthProvider: Registration successful');
       return { error: null };
-    } catch (error: any) {
-      console.error('EnhancedAuthProvider: Unexpected registration error:', error);
-      return { error: new Error(error.message || 'Registration failed') };
+    } catch (error: unknown) {
+      const authError = error as AuthError;
+      console.error('EnhancedAuthProvider: Unexpected registration error:', authError);
+      return { error: new Error(authError.message || 'Registration failed') };
     }
   }, []);
 
@@ -262,9 +262,10 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       });
 
       return { error: null };
-    } catch (error: any) {
-      console.error('Unexpected error updating profile:', error);
-      return { error: new Error(error.message || 'Profile update failed') };
+    } catch (error: unknown) {
+      const authError = error as AuthError;
+      console.error('Unexpected error updating profile:', authError);
+      return { error: new Error(authError.message || 'Profile update failed') };
     }
   }, [user]);
 
@@ -291,15 +292,15 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       });
 
       return { error: null };
-    } catch (error: any) {
-      console.error('Unexpected error changing password:', error);
-      return { error: new Error(error.message || 'Password change failed') };
+    } catch (error: unknown) {
+      const authError = error as AuthError;
+      console.error('Unexpected error changing password:', authError);
+      return { error: new Error(authError.message || 'Password change failed') };
     }
   }, [logSecurityEvent, toast]);
 
   const enableTwoFactor = useCallback(async () => {
     try {
-      // Mock 2FA enable
       const qrCode = 'MOCK_QR_CODE';
       
       setUserSecurity(prev => prev ? { ...prev, twoFactorEnabled: true } : null);
@@ -310,15 +311,15 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       });
       
       return { error: null, qrCode };
-    } catch (error: any) {
-      console.error('Error enabling two-factor authentication:', error);
-      return { error: new Error(error.message || 'Failed to enable two-factor authentication') };
+    } catch (error: unknown) {
+      const authError = error as AuthError;
+      console.error('Error enabling two-factor authentication:', authError);
+      return { error: new Error(authError.message || 'Failed to enable two-factor authentication') };
     }
   }, [toast]);
 
   const disableTwoFactor = useCallback(async (token: string) => {
     try {
-      // Mock 2FA disable
       setUserSecurity(prev => prev ? { ...prev, twoFactorEnabled: false } : null);
       
       toast({
@@ -327,24 +328,25 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       });
       
       return { error: null };
-    } catch (error: any) {
-      console.error('Error disabling two-factor authentication:', error);
-      return { error: new Error(error.message || 'Failed to disable two-factor authentication') };
+    } catch (error: unknown) {
+      const authError = error as AuthError;
+      console.error('Error disabling two-factor authentication:', authError);
+      return { error: new Error(authError.message || 'Failed to disable two-factor authentication') };
     }
   }, [toast]);
 
   const verifyTwoFactor = useCallback(async (token: string) => {
     try {
-      // Mock 2FA verify
       toast({
         title: "Two-Factor Authentication Verified",
         description: "Your two-factor authentication has been verified.",
       });
       
       return { error: null };
-    } catch (error: any) {
-      console.error('Error verifying two-factor authentication:', error);
-      return { error: new Error(error.message || 'Failed to verify two-factor authentication') };
+    } catch (error: unknown) {
+      const authError = error as AuthError;
+      console.error('Error verifying two-factor authentication:', authError);
+      return { error: new Error(authError.message || 'Failed to verify two-factor authentication') };
     }
   }, [toast]);
 
@@ -368,9 +370,10 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
       });
 
       return { error: null };
-    } catch (error: any) {
-      console.error('Unexpected error resetting password:', error);
-      return { error: new Error(error.message || 'Password reset failed') };
+    } catch (error: unknown) {
+      const authError = error as AuthError;
+      console.error('Unexpected error resetting password:', authError);
+      return { error: new Error(authError.message || 'Password reset failed') };
     }
   }, [toast]);
 

@@ -5,7 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Mic, MicOff, Volume2, VolumeX, Settings, Activity } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { VoiceMetadata, EmotionData, CustomSpeechRecognitionEvent, CustomSpeechRecognitionErrorEvent } from '@/types/voiceInteraction';
+import { 
+  VoiceMetadata, 
+  EmotionData, 
+  SpeechRecognitionEvent, 
+  SpeechRecognitionErrorEvent 
+} from '@/types/voiceInteraction';
 
 interface VoiceSettings {
   pitch: number;
@@ -24,24 +29,20 @@ interface VoiceInteractionState {
   settings: VoiceSettings;
 }
 
-interface SpeechRecognitionResult {
-  transcript: string;
-  confidence: number;
-  isFinal: boolean;
-}
-
 interface EnhancedVoiceInteractionProps {
   onTranscript?: (transcript: string, metadata: VoiceMetadata) => void;
   onEmotion?: (emotion: EmotionData) => void;
   autoStart?: boolean;
   language?: string;
+  className?: string;
 }
 
 const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
   onTranscript,
   onEmotion,
   autoStart = false,
-  language = 'en-US'
+  language = 'en-US',
+  className = ''
 }) => {
   const { toast } = useToast();
   const recognitionRef = useRef<SpeechRecognition | null>(null);
@@ -109,13 +110,14 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
       setState(prevState => ({ ...prevState, isListening: true, isProcessing: false }));
     });
 
-    recognitionRef.current.addEventListener('result', (event: any) => {
+    recognitionRef.current.addEventListener('result', (event: Event) => {
+      const speechEvent = event as unknown as SpeechRecognitionEvent;
       let interimTranscript = '';
       let finalTranscript = '';
       let currentConfidence = 0;
 
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        const result = event.results[i];
+      for (let i = speechEvent.resultIndex; i < speechEvent.results.length; ++i) {
+        const result = speechEvent.results[i];
         const alternative = result[0];
         currentConfidence = alternative.confidence;
 
@@ -146,11 +148,12 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
       setState(prevState => ({ ...prevState, isListening: false }));
     });
 
-    recognitionRef.current.addEventListener('error', (event: any) => {
-      console.error('Speech recognition error:', event.error);
+    recognitionRef.current.addEventListener('error', (event: Event) => {
+      const errorEvent = event as unknown as SpeechRecognitionErrorEvent;
+      console.error('Speech recognition error:', errorEvent.error);
       toast({
         title: "Speech Recognition Error",
-        description: `Error: ${event.error}`,
+        description: `Error: ${errorEvent.error}`,
         variant: "destructive",
       });
       setState(prevState => ({ ...prevState, isListening: false }));
@@ -203,7 +206,7 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
   }, [autoStart, startSpeechRecognition, stopSpeechRecognition]);
 
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Voice Interaction</span>
