@@ -22,6 +22,7 @@ import Integrations from '@/pages/Integrations';
 import Settings from '@/pages/Settings';
 import Analytics from '@/pages/Analytics';
 import EnhancedIntegrations from '@/pages/EnhancedIntegrations';
+import VoiceAI from '@/pages/VoiceAI';
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/integrations" element={<Integrations />} />
                 <Route path="/enhanced-integrations" element={<EnhancedIntegrations />} />
+                <Route path="/voice-ai" element={<VoiceAI />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/analytics" element={<Analytics />} />
               </Routes>

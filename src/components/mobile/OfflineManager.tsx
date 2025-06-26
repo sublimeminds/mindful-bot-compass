@@ -93,7 +93,7 @@ const OfflineManager = () => {
           }
           return total;
         }, 0);
-        setSyncStatus(prev => ({ ...prev, pendingUploads: pending }));
+        setSyncStatus(prev => ({ ...prev, pendingUploads: pending as number }));
       }
     } catch (error) {
       console.error('Failed to load offline data:', error);
