@@ -33,6 +33,7 @@ import EnhancedIntegrations from "./pages/EnhancedIntegrations";
 import ContentLibrary from "./pages/ContentLibrary";
 import LiveCollaboration from "./pages/LiveCollaboration";
 import AIPersonalization from "./pages/AIPersonalization";
+import AdvancedAnalytics from "./pages/AdvancedAnalytics";
 import { EnhancedAuthProvider } from "./components/EnhancedAuthProvider";
 
 const queryClient = new QueryClient();
@@ -62,6 +63,7 @@ const App = () => {
                 <Route path="/techniques" element={<Techniques />} />
                 <Route path="/techniques/:id" element={<TechniqueSession />} />
                 <Route path="/analytics" element={<Analytics />} />
+                <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
                 <Route path="/integrations" element={<Integrations />} />
                 <Route path="/enhanced-integrations" element={<EnhancedIntegrations />} />
                 <Route path="/content-library" element={<ContentLibrary />} />
