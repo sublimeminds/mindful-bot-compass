@@ -3,9 +3,11 @@ import React from 'react';
 import Header from '@/components/Header';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 import ComprehensiveNotificationSettings from '@/components/notifications/ComprehensiveNotificationSettings';
+import EnhancedPushNotificationManager from '@/components/mobile/EnhancedPushNotificationManager';
+import OfflineManager from '@/components/mobile/OfflineManager';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Settings as SettingsIcon, Bell, Shield, User } from 'lucide-react';
+import { Settings as SettingsIcon, Bell, Shield, User, Smartphone, WifiOff } from 'lucide-react';
 
 const Settings = () => {
   return (
@@ -20,10 +22,18 @@ const Settings = () => {
         </div>
 
         <Tabs defaultValue="notifications" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="notifications" className="flex items-center">
               <Bell className="h-4 w-4 mr-2" />
               Notifications
+            </TabsTrigger>
+            <TabsTrigger value="mobile" className="flex items-center">
+              <Smartphone className="h-4 w-4 mr-2" />
+              Mobile
+            </TabsTrigger>
+            <TabsTrigger value="offline" className="flex items-center">
+              <WifiOff className="h-4 w-4 mr-2" />
+              Offline
             </TabsTrigger>
             <TabsTrigger value="privacy" className="flex items-center">
               <Shield className="h-4 w-4 mr-2" />
@@ -40,7 +50,21 @@ const Settings = () => {
           </TabsList>
 
           <TabsContent value="notifications" className="mt-6">
-            <ComprehensiveNotificationSettings />
+            <div className="space-y-6">
+              <ComprehensiveNotificationSettings />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="mobile" className="mt-6">
+            <div className="space-y-6">
+              <EnhancedPushNotificationManager />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="offline" className="mt-6">
+            <div className="space-y-6">
+              <OfflineManager />
+            </div>
           </TabsContent>
 
           <TabsContent value="privacy" className="mt-6">
