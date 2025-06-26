@@ -18,6 +18,12 @@
       "filter": ["**/*"]
     }
   ],
+  "publish": {
+    "provider": "github",
+    "owner": "sublimeminds",
+    "repo": "mindful-bot-compass",
+    "releaseType": "release"
+  },
   "mac": {
     "category": "public.app-category.medical",
     "icon": "public/icons/icon.icns",
