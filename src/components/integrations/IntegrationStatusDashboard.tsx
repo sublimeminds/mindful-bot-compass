@@ -5,283 +5,211 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { 
-  CheckCircle, 
+  Activity, 
   AlertTriangle, 
-  XCircle, 
+  CheckCircle, 
+  Clock, 
   RefreshCw,
-  Activity,
-  Clock,
-  Zap
+  TrendingUp,
+  Zap,
+  Wifi,
+  WifiOff
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 
 interface IntegrationStatus {
   id: string;
   name: string;
-  status: 'connected' | 'error' | 'disconnected' | 'testing';
-  lastChecked: Date;
+  status: 'connected' | 'disconnected' | 'error' | 'syncing';
+  lastSync: string;
+  syncSuccess: number;
   responseTime: number;
   uptime: number;
   errorCount: number;
-  successRate: number;
 }
 
 const IntegrationStatusDashboard = () => {
-  const { toast } = useToast();
-  const [integrations, setIntegrations] = useState<IntegrationStatus[]>([]);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  useEffect(() => {
-    loadIntegrationStatus();
-    
-    // Set up auto-refresh every 30 seconds
-    const interval = setInterval(loadIntegrationStatus, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadIntegrationStatus = async () => {
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const mockStatuses: IntegrationStatus[] = [
-        {
-          id: 'whatsapp',
-          name: 'WhatsApp Business',
-          status: 'connected',
-          lastChecked: new Date(),
-          responseTime: 120,
-          uptime: 99.8,
-          errorCount: 2,
-          successRate: 98.5
-        },
-        {
-          id: 'stripe',
-          name: 'Stripe Payments',
-          status: 'connected',
-          lastChecked: new Date(Date.now() - 60000),
-          responseTime: 85,
-          uptime: 100,
-          errorCount: 0,
-          successRate: 100
-        },
-        {
-          id: 'calendar',
-          name: 'Google Calendar',
-          status: 'error',
-          lastChecked: new Date(Date.now() - 300000),
-          responseTime: 0,
-          uptime: 95.2,
-          errorCount: 12,
-          successRate: 87.3
-        },
-        {
-          id: 'email',
-          name: 'Email Service',
-          status: 'connected',
-          lastChecked: new Date(Date.now() - 30000),
-          responseTime: 200,
-          uptime: 99.5,
-          errorCount: 1,
-          successRate: 99.2
-        }
-      ];
-      
-      setIntegrations(mockStatuses);
-    } catch (error) {
-      console.error('Failed to load integration status:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load integration status",
-        variant: "destructive",
-      });
+  const [integrations, setIntegrations] = useState<IntegrationStatus[]>([
+    {
+      id: 'whatsapp',
+      name: 'WhatsApp Business',
+      status: 'connected',
+      lastSync: '2 minutes ago',
+      syncSuccess: 98.5,
+      responseTime: 245,
+      uptime: 99.8,
+      errorCount: 2
+    },
+    {
+      id: 'stripe',
+      name: 'Stripe Payments',
+      status: 'connected',
+      lastSync: '5 minutes ago',
+      syncSuccess: 99.9,
+      responseTime: 120,
+      uptime: 99.9,
+      errorCount: 0
+    },
+    {
+      id: 'google-calendar',
+      name: 'Google Calendar',
+      status: 'syncing',
+      lastSync: '1 minute ago',
+      syncSuccess: 97.2,
+      responseTime: 890,
+      uptime: 98.5,
+      errorCount: 5
+    },
+    {
+      id: 'ehr-system',
+      name: 'EHR Integration',
+      status: 'error',
+      lastSync: '30 minutes ago',
+      syncSuccess: 85.3,
+      responseTime: 1200,
+      uptime: 95.2,
+      errorCount: 15
     }
-  };
+  ]);
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const refreshStatus = async () => {
     setIsRefreshing(true);
-    await loadIntegrationStatus();
-    setIsRefreshing(false);
-    toast({
-      title: "Status Updated",
-      description: "Integration status has been refreshed",
-    });
-  };
-
-  const testIntegration = async (integrationId: string) => {
-    setIntegrations(prev => prev.map(int => 
-      int.id === integrationId 
-        ? { ...int, status: 'testing' as const }
-        : int
-    ));
-
-    try {
-      // Simulate test
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const isSuccess = Math.random() > 0.3; // 70% success rate
-      
-      setIntegrations(prev => prev.map(int => 
-        int.id === integrationId 
-          ? { 
-              ...int, 
-              status: isSuccess ? 'connected' as const : 'error' as const,
-              lastChecked: new Date(),
-              responseTime: isSuccess ? Math.floor(Math.random() * 200) + 50 : 0
-            }
-          : int
-      ));
-
-      toast({
-        title: isSuccess ? "Test Successful" : "Test Failed",
-        description: isSuccess 
-          ? "Integration is working correctly" 
-          : "Integration test failed. Please check configuration.",
-        variant: isSuccess ? "default" : "destructive"
-      });
-    } catch (error) {
-      setIntegrations(prev => prev.map(int => 
-        int.id === integrationId 
-          ? { ...int, status: 'error' as const }
-          : int
-      ));
-    }
+    // Simulate API call
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 2000);
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'connected':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case 'syncing':
+        return <RefreshCw className="h-5 w-5 text-blue-500 animate-spin" />;
       case 'error':
-        return <XCircle className="h-4 w-4 text-red-500" />;
-      case 'testing':
-        return <RefreshCw className="h-4 w-4 animate-spin text-blue-500" />;
+        return <AlertTriangle className="h-5 w-5 text-red-500" />;
       default:
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+        return <WifiOff className="h-5 w-5 text-gray-500" />;
     }
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'connected':
-        return <Badge className="bg-green-100 text-green-800">Connected</Badge>;
+        return 'bg-green-100 text-green-800';
+      case 'syncing':
+        return 'bg-blue-100 text-blue-800';
       case 'error':
-        return <Badge variant="destructive">Error</Badge>;
-      case 'testing':
-        return <Badge className="bg-blue-100 text-blue-800">Testing</Badge>;
+        return 'bg-red-100 text-red-800';
       default:
-        return <Badge variant="outline">Disconnected</Badge>;
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const overallHealth = integrations.length > 0 
-    ? integrations.filter(i => i.status === 'connected').length / integrations.length * 100
-    : 0;
+  const overallHealth = integrations.reduce((acc, int) => acc + int.uptime, 0) / integrations.length;
 
   return (
     <div className="space-y-6">
-      {/* Overall Health */}
+      {/* Overall Status */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Activity className="h-5 w-5 text-therapy-600" />
-              <span>Integration Health Dashboard</span>
-            </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={refreshStatus}
-              disabled={isRefreshing}
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="flex items-center space-x-2">
+            <Activity className="h-6 w-6 text-therapy-600" />
+            <span>Integration Health Overview</span>
           </CardTitle>
+          <Button variant="outline" size="sm" onClick={refreshStatus} disabled={isRefreshing}>
+            <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-therapy-600">{Math.round(overallHealth)}%</div>
-              <p className="text-sm text-muted-foreground">Overall Health</p>
-              <Progress value={overallHealth} className="h-2 mt-2" />
+              <div className="text-2xl font-bold text-green-600">{Math.round(overallHealth)}%</div>
+              <div className="text-sm text-muted-foreground">Overall Uptime</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">
+              <div className="text-2xl font-bold text-blue-600">
                 {integrations.filter(i => i.status === 'connected').length}
               </div>
-              <p className="text-sm text-muted-foreground">Active</p>
+              <div className="text-sm text-muted-foreground">Active Integrations</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-yellow-600">
+                {integrations.filter(i => i.status === 'syncing').length}
+              </div>
+              <div className="text-sm text-muted-foreground">Syncing</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-red-600">
                 {integrations.filter(i => i.status === 'error').length}
               </div>
-              <p className="text-sm text-muted-foreground">Errors</p>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">
-                {integrations.length}
-              </div>
-              <p className="text-sm text-muted-foreground">Total</p>
+              <div className="text-sm text-muted-foreground">Issues</div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Integration Status Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Individual Integration Status */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {integrations.map((integration) => (
-          <Card key={integration.id} className="hover:shadow-lg transition-shadow">
+          <Card key={integration.id}>
             <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
                   {getStatusIcon(integration.status)}
-                  <span>{integration.name}</span>
+                  <div>
+                    <CardTitle className="text-lg">{integration.name}</CardTitle>
+                    <Badge className={getStatusColor(integration.status)}>
+                      {integration.status}
+                    </Badge>
+                  </div>
                 </div>
-                {getStatusBadge(integration.status)}
-              </CardTitle>
+                <div className="text-right">
+                  <div className="text-sm text-muted-foreground">Last sync</div>
+                  <div className="text-sm font-medium">{integration.lastSync}</div>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Metrics */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm">Success Rate</span>
+                    <span className="text-sm font-medium">{integration.syncSuccess}%</span>
+                  </div>
+                  <Progress value={integration.syncSuccess} className="h-2" />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm">Uptime</span>
+                    <span className="text-sm font-medium">{integration.uptime}%</span>
+                  </div>
+                  <Progress value={integration.uptime} className="h-2" />
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <div className="flex items-center space-x-1 text-muted-foreground">
-                    <Clock className="h-3 w-3" />
-                    <span>Response Time</span>
-                  </div>
-                  <div className="font-medium">{integration.responseTime}ms</div>
+                <div className="flex items-center space-x-2">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <span>Response: {integration.responseTime}ms</span>
                 </div>
-                <div>
-                  <div className="flex items-center space-x-1 text-muted-foreground">
-                    <Zap className="h-3 w-3" />
-                    <span>Success Rate</span>
-                  </div>
-                  <div className="font-medium">{integration.successRate}%</div>
-                </div>
-                <div>
-                  <div className="text-muted-foreground">Uptime</div>
-                  <div className="font-medium">{integration.uptime}%</div>
-                </div>
-                <div>
-                  <div className="text-muted-foreground">Errors (24h)</div>
-                  <div className="font-medium">{integration.errorCount}</div>
+                <div className="flex items-center space-x-2">
+                  <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                  <span>Errors: {integration.errorCount}</span>
                 </div>
               </div>
 
-              {/* Last Checked */}
-              <div className="text-xs text-muted-foreground">
-                Last checked: {integration.lastChecked.toLocaleString()}
-              </div>
-
-              {/* Actions */}
               <div className="flex space-x-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => testIntegration(integration.id)}
-                  disabled={integration.status === 'testing'}
-                >
-                  {integration.status === 'testing' ? 'Testing...' : 'Test Connection'}
+                <Button size="sm" variant="outline">
+                  View Logs
+                </Button>
+                <Button size="sm" variant="outline">
+                  Test Connection
+                </Button>
+                <Button size="sm" variant="outline">
+                  Configure
                 </Button>
               </div>
             </CardContent>

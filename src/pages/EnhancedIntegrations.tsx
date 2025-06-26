@@ -27,8 +27,11 @@ const EnhancedIntegrations = () => {
       <div className="p-6">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Enhanced Integrations</h1>
-          <p className="text-gray-600 mt-2">Advanced integration management with real-time monitoring and webhook support</p>
+          <p className="text-gray-600 mt-2">
+            Advanced integration management with real-time monitoring, webhook configuration, and API key management
+          </p>
         </div>
+
         <EnhancedIntegrationsHub />
       </div>
     </DashboardLayoutWithSidebar>
