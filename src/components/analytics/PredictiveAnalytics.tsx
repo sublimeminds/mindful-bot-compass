@@ -170,8 +170,7 @@ const PredictiveAnalytics = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {insights.map((insight) => (
           <Card key={insight.id} className="hover:shadow-lg transition-shadow">
-            <CardHead>
-r>
+            <CardHeader>
               <CardTitle className="flex items-center justify-between text-lg">
                 <div className="flex items-center space-x-2">
                   {getTypeIcon(insight.type)}
