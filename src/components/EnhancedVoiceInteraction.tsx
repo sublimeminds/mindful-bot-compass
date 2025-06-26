@@ -1,9 +1,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Mic, MicOff, Volume2, VolumeX, Settings, Activity } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { 
   VoiceMetadata, 
@@ -11,6 +8,10 @@ import {
   SpeechRecognitionEvent, 
   SpeechRecognitionErrorEvent 
 } from '@/types/voiceInteraction';
+import VoiceControls from '@/components/voice/VoiceControls';
+import VoiceTranscript from '@/components/voice/VoiceTranscript';
+import VoiceEmotionAnalysis from '@/components/voice/VoiceEmotionAnalysis';
+import VoiceStatus from '@/components/voice/VoiceStatus';
 
 interface VoiceSettings {
   pitch: number;
@@ -35,14 +36,6 @@ interface EnhancedVoiceInteractionProps {
   autoStart?: boolean;
   language?: string;
   className?: string;
-}
-
-// Extend Window interface for SpeechRecognition
-declare global {
-  interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
-  }
 }
 
 const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
@@ -108,7 +101,7 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
       return;
     }
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
     recognitionRef.current.continuous = false;
     recognitionRef.current.interimResults = true;
@@ -216,48 +209,32 @@ const EnhancedVoiceInteraction: React.FC<EnhancedVoiceInteractionProps> = ({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span>Voice Interaction</span>
-          <Badge variant={state.isListening ? "default" : "secondary"}>
-            {state.isListening ? 'Listening' : 'Inactive'}
-          </Badge>
+        <CardTitle>
+          <VoiceStatus 
+            isListening={state.isListening}
+            isProcessing={state.isProcessing}
+            confidence={state.confidence}
+          />
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium">Transcript</label>
-          <div className="border rounded-md p-2 bg-gray-50">
-            {state.transcript || 'No transcript available.'}
-          </div>
+          <VoiceTranscript 
+            transcript={state.transcript}
+            confidence={state.confidence}
+          />
         </div>
 
-        <div className="flex items-center space-x-4">
-          <Button
-            onClick={toggleListening}
-            disabled={state.isProcessing}
-            className="flex-1"
-          >
-            {state.isListening ? (
-              <>
-                <MicOff className="h-4 w-4 mr-2" />
-                Stop Listening
-              </>
-            ) : (
-              <>
-                <Mic className="h-4 w-4 mr-2" />
-                Start Listening
-              </>
-            )}
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => speak(state.transcript)}
-            disabled={!state.transcript}
-          >
-            <Volume2 className="h-4 w-4 mr-2" />
-            Speak
-          </Button>
-        </div>
+        <VoiceControls
+          isListening={state.isListening}
+          isProcessing={state.isProcessing}
+          transcript={state.transcript}
+          onToggleListening={toggleListening}
+          onSpeak={speak}
+        />
+
+        <VoiceEmotionAnalysis emotion={state.emotion} />
       </CardContent>
     </Card>
   );
