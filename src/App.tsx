@@ -1,67 +1,86 @@
 
-import { Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { TherapistProvider } from '@/contexts/TherapistContext';
-import { TutorialProvider } from '@/components/tutorial/TutorialProvider';
-import MobileNavigationTabs from '@/components/mobile/MobileNavigationTabs';
-import OfflineIndicator from '@/components/OfflineIndicator';
-import Index from '@/pages/Index';
-import Auth from '@/pages/Auth';
-import Dashboard from '@/pages/Dashboard';
-import Goals from '@/pages/Goals';
-import MoodTracker from '@/pages/MoodTracker';
-import CommunityHub from '@/pages/CommunityHub';
-import Profile from '@/pages/Profile';
-import TherapyChat from '@/pages/TherapyChat';
-import SessionPage from '@/pages/SessionPage';
-import Help from '@/pages/Help';
-import Admin from '@/pages/Admin';
-import Integrations from '@/pages/Integrations';
-import Settings from '@/pages/Settings';
-import Analytics from '@/pages/Analytics';
-import EnhancedIntegrations from '@/pages/EnhancedIntegrations';
-import VoiceAI from '@/pages/VoiceAI';
-import ContentLibrary from '@/pages/ContentLibrary';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HelmetProvider } from 'react-helmet-async';
+import Index from "./pages/Index";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import Auth from "./pages/Auth";
+import Chat from "./pages/Chat";
+import MoodTracker from "./pages/MoodTracker";
+import Goals from "./pages/Goals";
+import SessionHistory from "./pages/SessionHistory";
+import Settings from "./pages/Settings";
+import VoiceAI from "./pages/VoiceAI";
+import TherapyChat from "./pages/TherapyChat";
+import Techniques from "./pages/Techniques";
+import TechniqueSession from "./pages/TechniqueSession";
+import Analytics from "./pages/Analytics";
+import Integrations from "./pages/Integrations";
+import OnboardingPage from "./pages/OnboardingPage";
+import Admin from "./pages/Admin";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminUsers from "./pages/AdminUsers";
+import AdminAnalytics from "./pages/AdminAnalytics";
+import AdminSystem from "./pages/AdminSystem";
+import AdminContent from "./pages/AdminContent";
+import AdminIntegrations from "./pages/AdminIntegrations";
+import CrisisManagement from "./pages/CrisisManagement";
+import EnhancedIntegrations from "./pages/EnhancedIntegrations";
+import ContentLibrary from "./pages/ContentLibrary";
+import LiveCollaboration from "./pages/LiveCollaboration";
+import { EnhancedAuthProvider } from "./components/EnhancedAuthProvider";
 
 const queryClient = new QueryClient();
 
-function App() {
+const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <TherapistProvider>
-          <TutorialProvider>
-            <div className="min-h-screen bg-background">
-              <OfflineIndicator />
+      <HelmetProvider>
+        <TooltipProvider>
+          <EnhancedAuthProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/onboarding" element={<OnboardingPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/goals" element={<Goals />} />
-                <Route path="/mood" element={<MoodTracker />} />
-                <Route path="/community" element={<CommunityHub />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/chat" element={<TherapyChat />} />
-                <Route path="/session" element={<SessionPage />} />
-                <Route path="/help" element={<Help />} />
-                <Route path="/admin" element={<Admin />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/mood-tracker" element={<MoodTracker />} />
+                <Route path="/goals" element={<Goals />} />
+                <Route path="/session-history" element={<SessionHistory />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/voice-ai" element={<VoiceAI />} />
+                <Route path="/therapy-chat" element={<TherapyChat />} />
+                <Route path="/techniques" element={<Techniques />} />
+                <Route path="/techniques/:id" element={<TechniqueSession />} />
+                <Route path="/analytics" element={<Analytics />} />
                 <Route path="/integrations" element={<Integrations />} />
                 <Route path="/enhanced-integrations" element={<EnhancedIntegrations />} />
-                <Route path="/voice-ai" element={<VoiceAI />} />
                 <Route path="/content-library" element={<ContentLibrary />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/live-collaboration" element={<LiveCollaboration />} />
+                <Route path="/crisis-management" element={<CrisisManagement />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/users" element={<AdminUsers />} />
+                <Route path="/admin/analytics" element={<AdminAnalytics />} />
+                <Route path="/admin/system" element={<AdminSystem />} />
+                <Route path="/admin/content" element={<AdminContent />} />
+                <Route path="/admin/integrations" element={<AdminIntegrations />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
-              <MobileNavigationTabs />
-              <Toaster />
-            </div>
-          </TutorialProvider>
-        </TherapistProvider>
-      </TooltipProvider>
+            </BrowserRouter>
+          </EnhancedAuthProvider>
+        </TooltipProvider>
+      </HelmetProvider>
     </QueryClientProvider>
   );
-}
+};
 
 export default App;
