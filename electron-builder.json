@@ -1,4 +1,3 @@
-
 {
   "appId": "com.yourcompany.therapy-app",
   "productName": "Therapy App",
@@ -52,6 +51,7 @@
   "linux": {
     "icon": "public/icons/icon.png",
     "category": "Office",
+    "maintainer": "Your Name <your.email@example.com>",
     "target": [
       {
         "target": "AppImage",
@@ -72,10 +72,5 @@
     "allowToChangeInstallationDirectory": true,
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true
-  },
-  "publish": {
-    "provider": "github",
-    "owner": "your-github-username",
-    "repo": "your-repo-name"
   }
 }
