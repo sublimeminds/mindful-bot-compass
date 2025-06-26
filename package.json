@@ -92,7 +92,6 @@
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
   }
-}
 "scripts": {
   "dev": "vite",
   "build": "vite build",
@@ -106,3 +105,4 @@
   "electron:build:win": "npm run build && electron-builder --win",
   "electron:build:mac": "npm run build && electron-builder --mac"
 }
+    }
