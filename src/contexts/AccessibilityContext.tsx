@@ -1,7 +1,19 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+interface AccessibilitySettings {
+  reducedMotion: boolean;
+  highContrast: boolean;
+  largeText: boolean;
+  screenReaderOptimized: boolean;
+  keyboardNavigation: boolean;
+  focusIndicators: boolean;
+}
+
 interface AccessibilityContextType {
+  settings: AccessibilitySettings;
+  updateSetting: (key: keyof AccessibilitySettings, value: boolean) => void;
+  announceToScreenReader: (message: string) => void;
   highContrast: boolean;
   toggleHighContrast: () => void;
   fontSize: 'small' | 'medium' | 'large';
@@ -21,55 +33,86 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     return <div>{children}</div>;
   }
 
-  const [highContrast, setHighContrast] = useState(false);
+  const [settings, setSettings] = useState<AccessibilitySettings>({
+    reducedMotion: false,
+    highContrast: false,
+    largeText: false,
+    screenReaderOptimized: false,
+    keyboardNavigation: false,
+    focusIndicators: false,
+  });
+
   const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large'>('medium');
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [screenReader, setScreenReader] = useState(false);
 
   useEffect(() => {
     // Load preferences from localStorage
-    const savedHighContrast = localStorage.getItem('accessibility-high-contrast');
+    const savedSettings = localStorage.getItem('accessibility-settings');
     const savedFontSize = localStorage.getItem('accessibility-font-size');
-    const savedReducedMotion = localStorage.getItem('accessibility-reduced-motion');
-    const savedScreenReader = localStorage.getItem('accessibility-screen-reader');
 
-    if (savedHighContrast) setHighContrast(JSON.parse(savedHighContrast));
-    if (savedFontSize) setFontSize(savedFontSize as 'small' | 'medium' | 'large');
-    if (savedReducedMotion) setReducedMotion(JSON.parse(savedReducedMotion));
-    if (savedScreenReader) setScreenReader(JSON.parse(savedScreenReader));
+    if (savedSettings) {
+      try {
+        setSettings(JSON.parse(savedSettings));
+      } catch (error) {
+        console.error('Error loading accessibility settings:', error);
+      }
+    }
+
+    if (savedFontSize) {
+      setFontSize(savedFontSize as 'small' | 'medium' | 'large');
+    }
   }, []);
 
+  const updateSetting = (key: keyof AccessibilitySettings, value: boolean) => {
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
+    localStorage.setItem('accessibility-settings', JSON.stringify(newSettings));
+  };
+
+  const announceToScreenReader = (message: string) => {
+    // Create a live region for screen reader announcements
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.style.position = 'absolute';
+    announcement.style.left = '-10000px';
+    announcement.textContent = message;
+    
+    document.body.appendChild(announcement);
+    
+    setTimeout(() => {
+      document.body.removeChild(announcement);
+    }, 1000);
+  };
+
   const toggleHighContrast = () => {
-    const newValue = !highContrast;
-    setHighContrast(newValue);
-    localStorage.setItem('accessibility-high-contrast', JSON.stringify(newValue));
+    updateSetting('highContrast', !settings.highContrast);
   };
 
   const handleSetFontSize = (size: 'small' | 'medium' | 'large') => {
     setFontSize(size);
     localStorage.setItem('accessibility-font-size', size);
+    updateSetting('largeText', size === 'large');
   };
 
   const toggleReducedMotion = () => {
-    const newValue = !reducedMotion;
-    setReducedMotion(newValue);
-    localStorage.setItem('accessibility-reduced-motion', JSON.stringify(newValue));
+    updateSetting('reducedMotion', !settings.reducedMotion);
   };
 
   const toggleScreenReader = () => {
-    const newValue = !screenReader;
-    setScreenReader(newValue);
-    localStorage.setItem('accessibility-screen-reader', JSON.stringify(newValue));
+    updateSetting('screenReaderOptimized', !settings.screenReaderOptimized);
   };
 
   const value: AccessibilityContextType = {
-    highContrast,
+    settings,
+    updateSetting,
+    announceToScreenReader,
+    highContrast: settings.highContrast,
     toggleHighContrast,
     fontSize,
     setFontSize: handleSetFontSize,
-    reducedMotion,
+    reducedMotion: settings.reducedMotion,
     toggleReducedMotion,
-    screenReader,
+    screenReader: settings.screenReaderOptimized,
     toggleScreenReader,
   };
 
