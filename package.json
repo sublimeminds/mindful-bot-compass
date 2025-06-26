@@ -6,7 +6,7 @@
   "main": "public/electron.cjs",
   "homepage": "./",
   "description": "A modern therapy and mental health application built with React, Vite, and Electron",
- "author": "MindfulAI Team <support@mindfulai.app>",
+  "author": "MindfulAI Team <support@mindfulai.app>",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -65,6 +65,7 @@
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
+    "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.53.0",
     "react-i18next": "^15.5.3",
     "react-resizable-panels": "^2.1.3",

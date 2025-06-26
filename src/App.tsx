@@ -32,6 +32,7 @@ import CrisisManagement from "./pages/CrisisManagement";
 import EnhancedIntegrations from "./pages/EnhancedIntegrations";
 import ContentLibrary from "./pages/ContentLibrary";
 import LiveCollaboration from "./pages/LiveCollaboration";
+import AIPersonalization from "./pages/AIPersonalization";
 import { EnhancedAuthProvider } from "./components/EnhancedAuthProvider";
 
 const queryClient = new QueryClient();
@@ -65,6 +66,7 @@ const App = () => {
                 <Route path="/enhanced-integrations" element={<EnhancedIntegrations />} />
                 <Route path="/content-library" element={<ContentLibrary />} />
                 <Route path="/live-collaboration" element={<LiveCollaboration />} />
+                <Route path="/ai-personalization" element={<AIPersonalization />} />
                 <Route path="/crisis-management" element={<CrisisManagement />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
