@@ -1,22 +1,54 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import VoiceSettings from '@/components/voice/VoiceSettings';
+import VoiceSettingsComponent from '@/components/voice/VoiceSettings';
 
 const VoiceSettingsPage = () => {
-  const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+  const [settings, setSettings] = useState({
+    pitch: 1,
+    rate: 1,
+    volume: 1,
+    voice: null as SpeechSynthesisVoice | null
+  });
+  
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
 
-  const handleVoiceToggle = (enabled: boolean) => {
-    setIsVoiceEnabled(enabled);
-    // Store the preference in localStorage
-    localStorage.setItem('voice_enabled', enabled.toString());
+  useEffect(() => {
+    const populateVoices = () => {
+      const voices = speechSynthesis.getVoices();
+      setAvailableVoices(voices);
+      if (voices.length > 0 && !settings.voice) {
+        setSettings(prev => ({ ...prev, voice: voices[0] }));
+      }
+    };
+
+    if (speechSynthesis.getVoices().length > 0) {
+      populateVoices();
+    } else {
+      speechSynthesis.addEventListener('voiceschanged', populateVoices);
+    }
+
+    return () => {
+      speechSynthesis.removeEventListener('voiceschanged', populateVoices);
+    };
+  }, [settings.voice]);
+
+  const handleSettingsChange = (newSettings: typeof settings) => {
+    setSettings(newSettings);
+    // Store preferences in localStorage
+    localStorage.setItem('voice_settings', JSON.stringify(newSettings));
   };
 
-  // Load initial state from localStorage
-  React.useEffect(() => {
-    const stored = localStorage.getItem('voice_enabled');
+  // Load initial settings from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem('voice_settings');
     if (stored) {
-      setIsVoiceEnabled(stored === 'true');
+      try {
+        const parsedSettings = JSON.parse(stored);
+        setSettings(prev => ({ ...prev, ...parsedSettings }));
+      } catch (error) {
+        console.error('Error loading voice settings:', error);
+      }
     }
   }, []);
 
@@ -25,17 +57,11 @@ const VoiceSettingsPage = () => {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-therapy-600 mb-8">Voice Settings</h1>
         
-        <Card>
-          <CardHeader>
-            <CardTitle>Voice Interaction Preferences</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <VoiceSettings 
-              isEnabled={isVoiceEnabled}
-              onToggle={handleVoiceToggle}
-            />
-          </CardContent>
-        </Card>
+        <VoiceSettingsComponent 
+          settings={settings}
+          availableVoices={availableVoices}
+          onSettingsChange={handleSettingsChange}
+        />
       </div>
     </div>
   );
