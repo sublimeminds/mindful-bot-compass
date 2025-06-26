@@ -7,6 +7,10 @@ export interface AuthContextType {
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
+  // Add aliases for compatibility
+  register: (email: string, password: string) => Promise<{ error: Error | null }>;
+  login: (email: string, password: string) => Promise<{ error: Error | null }>;
+  logout: () => Promise<void>;
 }
 
 export interface AuthError {
@@ -29,5 +33,5 @@ export interface SecurityEventDetails {
   user_agent?: string;
   location?: string;
   device_info?: string;
-  additional_context?: Record<string, unknown>;
+  additional_context?: Record<string, any>;
 }

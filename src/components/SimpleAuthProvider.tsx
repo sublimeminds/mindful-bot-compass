@@ -16,16 +16,16 @@ export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getInitialSession = async () => {
+    const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
       setLoading(false);
     };
 
-    getInitialSession();
+    getSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         setUser(session?.user ?? null);
         setLoading(false);
       }
@@ -54,21 +54,29 @@ export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) =>
     await supabase.auth.signOut();
   };
 
-  const value = {
+  // Provide aliases for compatibility
+  const register = signUp;
+  const login = signIn;
+  const logout = signOut;
+
+  const value: AuthContextType = {
     user,
     loading,
     signUp,
     signIn,
-    signOut
+    signOut,
+    register,
+    login,
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useSimpleAuth = () => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useSimpleAuth must be used within a SimpleAuthProvider');
+  if (context === undefined) {
+    throw new Error('useAuth must be used within a SimpleAuthProvider');
   }
   return context;
 };
