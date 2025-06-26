@@ -20,9 +20,25 @@ contextBridge.exposeInMainWorld('electronAPI', {
   minimize: () => ipcRenderer.invoke('minimize-window'),
   maximize: () => ipcRenderer.invoke('maximize-window'),
   close: () => ipcRenderer.invoke('close-window'),
+
+  // Debug helpers
+  isElectron: true,
+  log: (message) => console.log('[Electron]', message),
+});
+
+// Add global error handler for debugging
+window.addEventListener('error', (event) => {
+  console.error('[Electron Renderer Error]:', event.error);
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('[Electron Unhandled Rejection]:', event.reason);
 });
 
 // Security: Remove access to Node.js APIs in renderer
 delete window.require;
 delete window.exports;
 delete window.module;
+
+// Log that preload script loaded successfully
+console.log('[Electron] Preload script loaded successfully');

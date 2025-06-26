@@ -1,98 +1,62 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { HelmetProvider } from 'react-helmet-async';
-import ReactSafeWrapper from "./components/ReactSafeWrapper";
-import { AccessibilityProvider } from "./contexts/AccessibilityContext";
-import Index from "./pages/Index";
-import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile";
-import Auth from "./pages/Auth";
-import Chat from "./pages/Chat";
-import MoodTracker from "./pages/MoodTracker";
-import Goals from "./pages/Goals";
-import SessionHistory from "./pages/SessionHistory";
-import Settings from "./pages/Settings";
-import VoiceAI from "./pages/VoiceAI";
-import TherapyChat from "./pages/TherapyChat";
-import Techniques from "./pages/Techniques";
-import TechniqueSession from "./pages/TechniqueSession";
-import Analytics from "./pages/Analytics";
-import Integrations from "./pages/Integrations";
-import OnboardingPage from "./pages/OnboardingPage";
-import Admin from "./pages/Admin";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminUsers from "./pages/AdminUsers";
-import AdminAnalytics from "./pages/AdminAnalytics";
-import AdminSystem from "./pages/AdminSystem";
-import AdminContent from "./pages/AdminContent";
-import AdminIntegrations from "./pages/AdminIntegrations";
-import CrisisManagement from "./pages/CrisisManagement";
-import EnhancedIntegrations from "./pages/EnhancedIntegrations";
-import ContentLibrary from "./pages/ContentLibrary";
-import LiveCollaboration from "./pages/LiveCollaboration";
-import AIPersonalization from "./pages/AIPersonalization";
-import AdvancedAnalytics from "./pages/AdvancedAnalytics";
-import { EnhancedAuthProvider } from "./components/EnhancedAuthProvider";
-import AuthErrorBoundary from "./components/auth/AuthErrorBoundary";
 
-const queryClient = new QueryClient();
+import { Suspense, lazy } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import ElectronErrorBoundary from '@/components/electron/ElectronErrorBoundary';
+import ElectronAppWrapper from '@/components/electron/ElectronAppWrapper';
+import { SafeAccessibilityProvider } from '@/contexts/SafeAccessibilityContext';
+import './App.css';
 
-const App = () => {
+// Lazy load the main router to prevent blocking
+const AppRouter = lazy(() => import('@/components/AppRouter'));
+
+// Create a stable query client instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        // Don't retry in Electron offline mode
+        if (window.location.protocol === 'file:' && failureCount >= 1) {
+          return false;
+        }
+        return failureCount < 3;
+      },
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnWindowFocus: false, // Disable in Electron
+    },
+  },
+});
+
+// Simple loading fallback for Electron
+const ElectronLoadingFallback = () => (
+  <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
+      <p className="text-therapy-600 font-medium">Loading TherapySync...</p>
+    </div>
+  </div>
+);
+
+function App() {
+  console.log('App component rendering');
+  
   return (
-    <ReactSafeWrapper>
+    <ElectronErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <HelmetProvider>
-          <TooltipProvider>
-            <AccessibilityProvider>
-              <EnhancedAuthProvider>
-                <AuthErrorBoundary>
-                  <Toaster />
-                  <Sonner />
-                  <BrowserRouter>
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/auth" element={<Auth />} />
-                      <Route path="/onboarding" element={<OnboardingPage />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/profile" element={<Profile />} />
-                      <Route path="/chat" element={<Chat />} />
-                      <Route path="/mood-tracker" element={<MoodTracker />} />
-                      <Route path="/goals" element={<Goals />} />
-                      <Route path="/session-history" element={<SessionHistory />} />
-                      <Route path="/settings" element={<Settings />} />
-                      <Route path="/voice-ai" element={<VoiceAI />} />
-                      <Route path="/therapy-chat" element={<TherapyChat />} />
-                      <Route path="/techniques" element={<Techniques />} />
-                      <Route path="/techniques/:id" element={<TechniqueSession />} />
-                      <Route path="/analytics" element={<Analytics />} />
-                      <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
-                      <Route path="/integrations" element={<Integrations />} />
-                      <Route path="/enhanced-integrations" element={<EnhancedIntegrations />} />
-                      <Route path="/content-library" element={<ContentLibrary />} />
-                      <Route path="/live-collaboration" element={<LiveCollaboration />} />
-                      <Route path="/ai-personalization" element={<AIPersonalization />} />
-                      <Route path="/crisis-management" element={<CrisisManagement />} />
-                      <Route path="/admin" element={<Admin />} />
-                      <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                      <Route path="/admin/users" element={<AdminUsers />} />
-                      <Route path="/admin/analytics" element={<AdminAnalytics />} />
-                      <Route path="/admin/system" element={<AdminSystem />} />
-                      <Route path="/admin/content" element={<AdminContent />} />
-                      <Route path="/admin/integrations" element={<AdminIntegrations />} />
-                      <Route path="*" element={<Navigate to="/" replace />} />
-                    </Routes>
-                  </BrowserRouter>
-                </AuthErrorBoundary>
-              </EnhancedAuthProvider>
-            </AccessibilityProvider>
-          </TooltipProvider>
-        </HelmetProvider>
+        <TooltipProvider>
+          <SafeAccessibilityProvider>
+            <ElectronAppWrapper>
+              <Suspense fallback={<ElectronLoadingFallback />}>
+                <AppRouter />
+              </Suspense>
+              <Toaster />
+            </ElectronAppWrapper>
+          </SafeAccessibilityProvider>
+        </TooltipProvider>
       </QueryClientProvider>
-    </ReactSafeWrapper>
+    </ElectronErrorBoundary>
   );
-};
+}
 
 export default App;

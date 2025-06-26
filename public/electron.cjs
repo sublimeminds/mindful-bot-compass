@@ -1,3 +1,4 @@
+
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const path = require('path');
 
@@ -18,7 +19,8 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      webSecurity: false // Temporarily disable for debugging
     },
     icon: path.join(__dirname, 'icon.png'), // Add your app icon
     show: false, // Don't show until ready
@@ -30,16 +32,29 @@ function createWindow() {
     ? 'http://localhost:5173' 
     : `file://${path.join(__dirname, '../dist/index.html')}`;
   
+  console.log('Loading URL:', startUrl);
   mainWindow.loadURL(startUrl);
+
+  // Add error handling for the renderer process
+  mainWindow.webContents.on('crashed', (event, killed) => {
+    console.error('Renderer process crashed:', { killed });
+  });
+
+  mainWindow.webContents.on('unresponsive', () => {
+    console.error('Renderer process became unresponsive');
+  });
+
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
+    console.error('Failed to load:', { errorCode, errorDescription, validatedURL });
+  });
 
   // Show window when ready to prevent visual flash
   mainWindow.once('ready-to-show', () => {
+    console.log('Window ready to show');
     mainWindow.show();
     
-    // Focus on window (in case it's hidden behind other windows)
-    if (isDev) {
-      mainWindow.webContents.openDevTools();
-    }
+    // Always open DevTools in Electron for debugging
+    mainWindow.webContents.openDevTools();
   });
 
   // Handle window closed
@@ -57,6 +72,11 @@ function createWindow() {
   mainWindow.webContents.on('new-window', (event, navigationUrl) => {
     event.preventDefault();
     shell.openExternal(navigationUrl);
+  });
+
+  // Log console messages from renderer
+  mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+    console.log(`Renderer Console [${level}]:`, message);
   });
 }
 
