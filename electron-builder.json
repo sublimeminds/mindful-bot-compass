@@ -1,3 +1,4 @@
+
 {
   "appId": "com.yourcompany.therapy-app",
   "productName": "Therapy App",
@@ -36,14 +37,12 @@
   },
   "win": {
     "icon": "public/icons/icon.ico",
-    "publisherName": "Your Company Name",
+    "signtoolOptions": {
+      "publisherName": "Your Company Name"
+    },
     "target": [
       {
         "target": "nsis",
-        "arch": ["x64", "ia32"]
-      },
-      {
-        "target": "msi",
         "arch": ["x64", "ia32"]
       }
     ]

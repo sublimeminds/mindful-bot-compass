@@ -29,6 +29,12 @@ jobs:
       - name: Clear npm cache
         run: npm cache clean --force
       
+      - name: Create icons directory if missing
+        run: |
+          mkdir -p public/icons
+          echo "Icons directory created or already exists"
+        shell: bash
+      
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       
@@ -74,7 +80,6 @@ jobs:
           name: windows-build
           path: |
             dist-electron/*.exe
-            dist-electron/*.msi
           retention-days: 7
       
       - name: Upload macOS artifacts
