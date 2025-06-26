@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ContentManager from '@/components/content/ContentManager';
 import ResourceLibrary from '@/components/content/ResourceLibrary';
-import { Library, BookOpen, Collection } from 'lucide-react';
+import { Library, BookOpen } from 'lucide-react';
 
 const ContentLibrary = () => {
   const { user, loading } = useAuth();
