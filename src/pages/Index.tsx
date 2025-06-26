@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -129,7 +130,7 @@ const Index = () => {
               <Button 
                 size="lg"
                 className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white px-8 py-4 text-lg"
-                onClick={() => navigate('/register')}
+                onClick={() => navigate('/auth')}
               >
                 <Heart className="h-5 w-5 mr-2" />
                 Start Your Journey
@@ -139,7 +140,7 @@ const Index = () => {
                 size="lg" 
                 variant="outline"
                 className="border-therapy-300 text-therapy-700 hover:bg-therapy-50 px-8 py-4 text-lg"
-                onClick={() => navigate('/therapysync-ai')}
+                onClick={() => navigate('/therapy-chat')}
               >
                 <Brain className="h-5 w-5 mr-2" />
                 Try TherapySync AI
@@ -269,7 +270,7 @@ const Index = () => {
             <Button 
               size="lg"
               className="bg-white text-blue-600 hover:bg-blue-50"
-              onClick={() => navigate('/voice-technology')}
+              onClick={() => navigate('/voice-ai')}
             >
               <Volume2 className="h-5 w-5 mr-2" />
               Explore Voice Technology
@@ -322,7 +323,7 @@ const Index = () => {
             <Button 
               size="lg"
               className="bg-white text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg"
-              onClick={() => navigate('/register')}
+              onClick={() => navigate('/auth')}
             >
               <Heart className="h-5 w-5 mr-2" />
               Start Free Trial
@@ -331,10 +332,10 @@ const Index = () => {
               size="lg" 
               variant="outline"
               className="border-white text-white hover:bg-white/10 px-8 py-4 text-lg"
-              onClick={() => navigate('/plans')}
+              onClick={() => navigate('/dashboard')}
             >
               <Crown className="h-5 w-5 mr-2" />
-              View Plans
+              View Dashboard
             </Button>
           </div>
         </div>
