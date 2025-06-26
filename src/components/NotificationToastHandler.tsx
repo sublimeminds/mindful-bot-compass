@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
@@ -77,7 +78,7 @@ const NotificationToastHandler = () => {
       }
       isSubscribedRef.current = false;
     };
-  }, [user]); // Added user dependency
+  }, [user]);
 
   return null; // This is a utility component that doesn't render anything
 };

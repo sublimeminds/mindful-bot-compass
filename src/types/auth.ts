@@ -14,3 +14,20 @@ export interface AuthError {
   code?: string;
   status?: number;
 }
+
+export interface SecurityEvent {
+  type: string;
+  description: string;
+  timestamp: string;
+  ip_address?: string;
+  user_agent?: string;
+  risk_level: 'low' | 'medium' | 'high' | 'critical';
+}
+
+export interface SecurityEventDetails {
+  ip_address?: string;
+  user_agent?: string;
+  location?: string;
+  device_info?: string;
+  additional_context?: Record<string, any>;
+}

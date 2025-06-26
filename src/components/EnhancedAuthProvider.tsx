@@ -3,16 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { checkReactSafety } from '@/utils/reactSafetyChecker';
-import { AuthError } from '@/types/auth';
-
-interface SecurityEvent {
-  type: string;
-  description: string;
-  timestamp: string;
-  ip_address?: string;
-  user_agent?: string;
-  risk_level: 'low' | 'medium' | 'high' | 'critical';
-}
+import { AuthError, SecurityEvent } from '@/types/auth';
 
 interface UserSecurity {
   twoFactorEnabled: boolean;
