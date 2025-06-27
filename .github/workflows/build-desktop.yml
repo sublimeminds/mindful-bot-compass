@@ -29,35 +29,43 @@ jobs:
       - name: Clear npm cache
         run: npm cache clean --force
       
-      - name: Create icons directory if missing
+      - name: Create icons directory and placeholder files
         run: |
           mkdir -p public/icons
-          echo "Icons directory created or already exists"
+          echo "Creating placeholder icon files for build"
+          # Create minimal placeholder files
+          touch public/icons/icon.png
+          touch public/icons/icon.icns
+          touch public/icons/icon.ico
         shell: bash
       
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       
-      - name: Build web application
+      - name: Build web application for Electron
         run: npm run build
         env:
           NODE_OPTIONS: '--max-old-space-size=4096'
+          ELECTRON: 'true'
+      
+      - name: Install Electron dependencies
+        run: npm install electron electron-builder --save-dev
       
       - name: Build Electron app (Linux)
         if: matrix.os == 'ubuntu-latest'
-        run: npm run electron:build:linux
+        run: npx electron-builder --linux
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Build Electron app (Windows)
         if: matrix.os == 'windows-latest'
-        run: npm run electron:build:win
+        run: npx electron-builder --win
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Build Electron app (macOS)
         if: matrix.os == 'macos-latest'
-        run: npm run electron:build:mac
+        run: npx electron-builder --mac
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false

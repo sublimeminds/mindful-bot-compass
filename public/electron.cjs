@@ -1,8 +1,7 @@
-
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const path = require('path');
 
-// Replace electron-is-dev with a simple environment check
+// Environment detection
 const isDev = process.env.NODE_ENV === 'development' || process.env.ELECTRON_IS_DEV === 'true' || process.argv.includes('--dev');
 
 // Keep a global reference of the window object
@@ -20,41 +19,63 @@ function createWindow() {
       contextIsolation: true,
       enableRemoteModule: false,
       preload: path.join(__dirname, 'preload.js'),
-      webSecurity: false // Temporarily disable for debugging
+      webSecurity: true, // Re-enabled for security
+      allowRunningInsecureContent: false,
     },
-    icon: path.join(__dirname, 'icon.png'), // Add your app icon
-    show: false, // Don't show until ready
+    icon: path.join(__dirname, 'icons', 'icon.png'),
+    show: false,
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default'
   });
 
-  // Load the app
-  const startUrl = isDev 
-    ? 'http://localhost:5173' 
-    : `file://${path.join(__dirname, '../dist/index.html')}`;
+  // Load the app with proper URL handling
+  let startUrl;
+  if (isDev) {
+    startUrl = 'http://localhost:5173';
+  } else {
+    // Use file protocol for production builds
+    startUrl = `file://${path.join(__dirname, '../dist/index.html')}`;
+  }
   
-  console.log('Loading URL:', startUrl);
-  mainWindow.loadURL(startUrl);
+  console.log('Electron: Loading URL:', startUrl);
+  console.log('Electron: isDev:', isDev);
+  console.log('Electron: __dirname:', __dirname);
 
-  // Add error handling for the renderer process
+  // Enhanced error handling for loading
+  mainWindow.loadURL(startUrl).catch(error => {
+    console.error('Electron: Failed to load URL:', error);
+    
+    // Fallback for production builds
+    if (!isDev) {
+      const fallbackPath = path.join(__dirname, '../dist/index.html');
+      console.log('Electron: Trying fallback path:', fallbackPath);
+      mainWindow.loadFile(fallbackPath).catch(fallbackError => {
+        console.error('Electron: Fallback also failed:', fallbackError);
+      });
+    }
+  });
+
+  // Enhanced error handling for the renderer process
   mainWindow.webContents.on('crashed', (event, killed) => {
-    console.error('Renderer process crashed:', { killed });
+    console.error('Electron: Renderer process crashed:', { killed });
   });
 
   mainWindow.webContents.on('unresponsive', () => {
-    console.error('Renderer process became unresponsive');
+    console.error('Electron: Renderer process became unresponsive');
   });
 
   mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
-    console.error('Failed to load:', { errorCode, errorDescription, validatedURL });
+    console.error('Electron: Failed to load:', { errorCode, errorDescription, validatedURL });
   });
 
   // Show window when ready to prevent visual flash
   mainWindow.once('ready-to-show', () => {
-    console.log('Window ready to show');
+    console.log('Electron: Window ready to show');
     mainWindow.show();
     
-    // Always open DevTools in Electron for debugging
-    mainWindow.webContents.openDevTools();
+    // Only open DevTools in development
+    if (isDev) {
+      mainWindow.webContents.openDevTools();
+    }
   });
 
   // Handle window closed
@@ -62,7 +83,7 @@ function createWindow() {
     mainWindow = null;
   });
 
-  // Handle external links
+  // Handle external links securely
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
@@ -74,41 +95,47 @@ function createWindow() {
     shell.openExternal(navigationUrl);
   });
 
-  // Log console messages from renderer
+  // Enhanced console logging
   mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-    console.log(`Renderer Console [${level}]:`, message);
+    console.log(`Electron Renderer Console [${level}]:`, message);
+    if (line && sourceId) {
+      console.log(`  at ${sourceId}:${line}`);
+    }
   });
 }
 
-// This method will be called when Electron has finished initialization
+// App event handlers
 app.whenReady().then(() => {
+  console.log('Electron: App ready, creating window');
   createWindow();
 
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
   });
 
-  // Set up the menu
   createMenu();
 });
 
-// Quit when all windows are closed, except on macOS
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
-// Security: Prevent navigation to external websites
+// Enhanced security: Navigation control
 app.on('web-contents-created', (event, contents) => {
   contents.on('will-navigate', (event, navigationUrl) => {
     const parsedUrl = new URL(navigationUrl);
-
-    if (parsedUrl.origin !== 'http://localhost:5173' && !navigationUrl.startsWith('file://')) {
+    
+    // Allow localhost in development and file protocol in production
+    const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080'];
+    const isFileProtocol = navigationUrl.startsWith('file://');
+    const isAllowedOrigin = allowedOrigins.includes(parsedUrl.origin);
+    
+    if (!isFileProtocol && !isAllowedOrigin && !isDev) {
+      console.log('Electron: Preventing navigation to:', navigationUrl);
       event.preventDefault();
     }
   });
@@ -123,9 +150,7 @@ function createMenu() {
         {
           label: 'Quit',
           accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
-          click: () => {
-            app.quit();
-          }
+          click: () => app.quit()
         }
       ]
     },
@@ -179,26 +204,57 @@ function createMenu() {
         { label: 'Quit', accelerator: 'Command+Q', click: () => app.quit() }
       ]
     });
-
-    // Window menu
-    template[4].submenu = [
-      { label: 'Close', accelerator: 'CmdOrCtrl+W', role: 'close' },
-      { label: 'Minimize', accelerator: 'CmdOrCtrl+M', role: 'minimize' },
-      { label: 'Zoom', role: 'zoom' },
-      { type: 'separator' },
-      { label: 'Bring All to Front', role: 'front' }
-    ];
   }
 
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 }
 
-// IPC handlers for communication with renderer process
+// Enhanced IPC handlers
 ipcMain.handle('app-version', () => {
   return app.getVersion();
 });
 
 ipcMain.handle('platform', () => {
   return process.platform;
+});
+
+ipcMain.handle('open-external', async (event, url) => {
+  return shell.openExternal(url);
+});
+
+ipcMain.handle('show-notification', async (event, { title, body }) => {
+  // Implementation for notifications if needed
+  console.log('Notification:', title, body);
+});
+
+ipcMain.handle('minimize-window', async () => {
+  if (mainWindow) {
+    mainWindow.minimize();
+  }
+});
+
+ipcMain.handle('maximize-window', async () => {
+  if (mainWindow) {
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  }
+});
+
+ipcMain.handle('close-window', async () => {
+  if (mainWindow) {
+    mainWindow.close();
+  }
+});
+
+// Error handling
+process.on('uncaughtException', (error) => {
+  console.error('Electron: Uncaught Exception:', error);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('Electron: Unhandled Promise Rejection:', reason);
 });
