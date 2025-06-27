@@ -13,35 +13,45 @@ import './App.css';
 // Lazy load the main router to prevent blocking
 const AppRouter = lazy(() => import('@/components/AppRouter'));
 
-// Create a stable query client instance
+// Create a stable query client instance with Electron-friendly settings
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: (failureCount, error) => {
-        // Don't retry in Electron offline mode
-        if (window.location.protocol === 'file:' && failureCount >= 1) {
+        // Don't retry in Electron offline mode or file protocol
+        const isElectron = window.location.protocol === 'file:' || 
+                          window.navigator.userAgent.toLowerCase().includes('electron');
+        
+        if (isElectron && failureCount >= 1) {
+          console.log('QueryClient: Skipping retry in Electron mode');
           return false;
         }
         return failureCount < 3;
       },
       staleTime: 5 * 60 * 1000, // 5 minutes
       refetchOnWindowFocus: false, // Disable in Electron
+      refetchOnReconnect: false, // Disable auto-refetch in Electron
     },
   },
 });
 
-// Simple loading fallback for Electron
-const ElectronLoadingFallback = () => (
-  <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
-    <div className="text-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
-      <p className="text-therapy-600 font-medium">Loading TherapySync...</p>
+// Enhanced loading fallback for Electron with timeout
+const ElectronLoadingFallback = () => {
+  console.log('App: Showing loading fallback');
+  
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
+        <p className="text-therapy-600 font-medium">Loading TherapySync...</p>
+        <p className="text-sm text-therapy-500 mt-2">Initializing your mental health companion</p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 function App() {
-  console.log('App component rendering');
+  console.log('App: Component rendering');
   
   return (
     <ElectronErrorBoundary>

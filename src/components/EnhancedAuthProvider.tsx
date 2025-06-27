@@ -11,8 +11,15 @@ interface EnhancedAuthProviderProps {
 }
 
 export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ children }) => {
+  console.log('EnhancedAuthProvider: Rendering provider');
+  
   const { user, loading } = useAuthState();
   const authActions = useAuthActions();
+
+  console.log('EnhancedAuthProvider: Auth state -', { 
+    user: user ? 'Present' : 'None', 
+    loading 
+  });
 
   const value: AuthContextType = {
     user,
@@ -26,6 +33,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
+    console.error('useAuth must be used within an EnhancedAuthProvider');
     throw new Error('useAuth must be used within an EnhancedAuthProvider');
   }
   return context;
