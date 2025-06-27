@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -35,6 +34,7 @@ import Footer from '@/components/Footer';
 import HowItWorksSection from '@/components/landing/HowItWorksSection';
 import FeaturesSection from '@/components/FeaturesSection';
 import PricingSection from '@/components/PricingSection';
+import LiveChatAgent from '@/components/LiveChatAgent';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -188,7 +188,7 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
                 <Button 
                   size="lg"
-                  className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-therapy-500/25 transition-all duration-300 hover:scale-105 border-0"
+                  className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-therapy-500/25 transition-all duration-300 border-0"
                   onClick={() => navigate('/auth')}
                 >
                   <Heart className="h-6 w-6 mr-3" />
@@ -394,7 +394,7 @@ const Index = () => {
               <Button 
                 size="lg"
                 className="bg-white text-therapy-600 hover:bg-therapy-50 px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-white/20 transition-all duration-300 hover:scale-105"
-                onClick={() => navigate('/voice-technology')}
+                onClick={() => navigate('/cultural-ai-features')}
               >
                 <Volume2 className="h-6 w-6 mr-3" />
                 Explore Voice Technology
@@ -480,6 +480,9 @@ const Index = () => {
 
         <Footer />
       </div>
+      
+      {/* Live Chat Agent */}
+      <LiveChatAgent />
     </div>
   );
 };

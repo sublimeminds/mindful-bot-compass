@@ -1,158 +1,167 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Check, Sparkles, Crown, Zap, Star } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { Check, Crown, Star, Heart, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import RegionalPricingDisplay from '@/components/regional/RegionalPricingDisplay';
+import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
+import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
 
 const PricingSection = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [regionalPricing, setRegionalPricing] = useState({
-    currency: 'USD',
-    symbol: '$',
-    free: '0',
-    premium: '19',
-    professional: '49'
-  });
+  const { currentLanguage } = useEnhancedLanguage();
+  const [userCurrency, setUserCurrency] = React.useState('USD');
 
-  const handleGetStarted = (plan: string) => {
-    if (user) {
-      navigate('/dashboard');
-    } else {
-      navigate('/onboarding');
-    }
+  React.useEffect(() => {
+    const detectCurrency = async () => {
+      try {
+        const location = await enhancedCurrencyService.detectUserLocation();
+        if (location) {
+          setUserCurrency(location.currency);
+        }
+      } catch (error) {
+        console.warn('Could not detect currency');
+      }
+    };
+    detectCurrency();
+  }, []);
+
+  const formatPrice = (price: number) => {
+    return enhancedCurrencyService.formatCurrency(price, userCurrency, currentLanguage.code);
   };
 
-  const plans = [
+  const pricingPlans = [
     {
-      name: 'Free',
-      price: regionalPricing.symbol + regionalPricing.free,
-      period: 'forever',
-      description: 'Perfect for getting started with your mental wellness journey',
+      name: 'Basic',
+      price: 29,
+      period: 'month',
+      description: 'Perfect for getting started with AI therapy',
+      popular: false,
       features: [
-        '3 AI therapy sessions per month',
-        'Basic mood tracking',
-        'Community access',
-        'Essential wellness tools',
-        'Email support'
+        'AI Therapy Sessions (Unlimited)',
+        'Basic Mood Tracking',
+        'Text-based Conversations',
+        'Crisis Support Access',
+        'Progress Analytics'
       ],
-      buttonText: 'Get Started Free',
-      popular: false
+      color: 'from-therapy-500 to-calm-500',
+      icon: Heart
+    },
+    {
+      name: 'Pro',
+      price: 49,
+      period: 'month',
+      description: 'Advanced features for serious improvement',
+      popular: true,
+      hasTrial: true,
+      features: [
+        'Everything in Basic',
+        'Voice Conversations (29 Languages)',
+        'Advanced Emotion Detection',
+        'Personalized AI Therapist Selection',
+        'Advanced Analytics & Insights',
+        'Priority Crisis Support'
+      ],
+      color: 'from-therapy-600 to-calm-600',
+      icon: Star
     },
     {
       name: 'Premium',
-      price: regionalPricing.symbol + regionalPricing.premium,
+      price: 99,
       period: 'month',
-      description: 'For dedicated users seeking comprehensive mental health support',
+      description: 'Complete solution with human support',
+      popular: false,
       features: [
-        'Unlimited AI therapy sessions',
-        'Advanced mood analytics',
-        'Personalized insights',
-        'Goal tracking & recommendations',
-        'Crisis support resources',
-        'Priority email support',
-        'Export your data'
+        'Everything in Pro',
+        'Human Therapist Consultations',
+        'Crisis Intervention Team',
+        'Family Therapy Sessions',
+        'Personalized Treatment Plans',
+        'Dedicated Support Manager'
       ],
-      buttonText: 'Start Premium',
-      popular: true
-    },
-    {
-      name: 'Professional',
-      price: regionalPricing.symbol + regionalPricing.professional,
-      period: 'month',
-      description: 'Advanced features for mental health professionals and coaches',
-      features: [
-        'Everything in Premium',
-        'Client management tools',
-        'Advanced analytics dashboard',
-        'Custom therapy protocols',
-        'API access',
-        'Phone support',
-        'White-label options'
-      ],
-      buttonText: 'Go Professional',
-      popular: false
+      color: 'from-therapy-700 to-calm-700',
+      icon: Crown
     }
   ];
 
   return (
-    <section id="pricing" className="py-24 bg-gradient-to-br from-therapy-50 to-calm-50">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-therapy-900 mb-4">
-            Choose Your <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">Wellness Plan</span>
-          </h2>
-          <p className="text-xl text-therapy-600 max-w-3xl mx-auto mb-6">
-            Start free and upgrade as your mental wellness journey evolves. All plans include our core AI therapy features.
-          </p>
-          <RegionalPricingDisplay />
-        </div>
+    <div className="container mx-auto px-4">
+      <div className="text-center mb-16">
+        <h2 className="text-3xl md:text-5xl font-bold mb-6">
+          <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+            Simple, Transparent Pricing
+          </span>
+        </h2>
+        <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
+          Choose the perfect plan for your mental health journey. All plans include crisis support and satisfaction guarantee.
+        </p>
+        
+        <Button
+          onClick={() => navigate('/pricing')}
+          className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white px-8 py-3 text-lg font-semibold rounded-xl shadow-xl hover:shadow-therapy-500/25 transition-all duration-300 hover:scale-105 border-0 mb-8"
+        >
+          View Complete Pricing Details
+          <ArrowRight className="h-5 w-5 ml-2" />
+        </Button>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {plans.map((plan, index) => (
-            <Card key={index} className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl ${
-              plan.popular 
-                ? 'ring-2 ring-therapy-500 shadow-therapy-500/20 scale-105' 
-                : 'hover:shadow-therapy-500/10'
-            }`}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        {pricingPlans.map((plan, index) => {
+          const IconComponent = plan.icon;
+          return (
+            <Card key={index} className={`relative overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105 ${plan.popular ? 'border-2 border-therapy-500 shadow-xl' : 'border-0 shadow-lg'} bg-white/90 backdrop-blur-sm`}>
               {plan.popular && (
-                <Badge className="absolute top-4 right-4 bg-gradient-to-r from-therapy-500 to-therapy-600 text-white">
+                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-therapy-500 to-calm-500 text-white text-center py-2 text-sm font-semibold">
                   Most Popular
-                </Badge>
+                </div>
               )}
               
-              <CardHeader className="text-center pb-8">
-                <CardTitle className="text-2xl font-bold text-therapy-900 mb-2">
-                  {plan.name}
-                </CardTitle>
-                <div className="mb-4">
-                  <span className="text-4xl font-bold text-therapy-800">{plan.price}</span>
-                  <span className="text-therapy-600">/{plan.period}</span>
+              <CardHeader className={`text-center ${plan.popular ? 'pt-12' : 'pt-6'}`}>
+                <div className={`w-16 h-16 bg-gradient-to-r ${plan.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                  <IconComponent className="h-8 w-8 text-white" />
                 </div>
-                <p className="text-therapy-600 text-sm">
-                  {plan.description}
-                </p>
+                <CardTitle className="text-2xl font-bold text-slate-800">{plan.name}</CardTitle>
+                <div className="flex items-center justify-center space-x-2 mb-4">
+                  <span className="text-4xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                    {formatPrice(plan.price)}
+                  </span>
+                  <span className="text-slate-500">/{plan.period}</span>
+                </div>
+                <p className="text-slate-600">{plan.description}</p>
+                {plan.hasTrial && (
+                  <Badge className="mt-2 bg-gradient-to-r from-therapy-500 to-calm-500 text-white">
+                    7-Day Free Trial
+                  </Badge>
+                )}
               </CardHeader>
-
-              <CardContent className="pt-0">
+              
+              <CardContent className="p-6">
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start gap-3">
-                      <Check className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-therapy-700 text-sm">{feature}</span>
+                    <li key={featureIndex} className="flex items-center space-x-3">
+                      <Check className="h-5 w-5 text-therapy-500 flex-shrink-0" />
+                      <span className="text-slate-600">{feature}</span>
                     </li>
                   ))}
                 </ul>
-
+                
                 <Button 
-                  className={`w-full ${
+                  className={`w-full py-3 text-lg font-semibold rounded-xl shadow-xl transition-all duration-300 hover:scale-105 ${
                     plan.popular 
-                      ? 'bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white' 
-                      : 'bg-therapy-100 text-therapy-800 hover:bg-therapy-200'
-                  } transition-all duration-300`}
-                  onClick={() => handleGetStarted(plan.name)}
+                      ? 'bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white border-0' 
+                      : 'border-2 border-therapy-300 text-therapy-700 hover:bg-gradient-to-r hover:from-therapy-50 hover:to-calm-50 bg-white'
+                  }`}
+                  onClick={() => navigate('/auth')}
                 >
-                  {plan.buttonText}
+                  {plan.hasTrial ? 'Start Free Trial' : 'Get Started'}
                 </Button>
               </CardContent>
             </Card>
-          ))}
-        </div>
-
-        <div className="text-center mt-12">
-          <p className="text-therapy-600 mb-4">
-            All plans include a 7-day free trial. No credit card required.
-          </p>
-          <p className="text-sm text-therapy-500">
-            Questions about our pricing? <Button variant="link" className="p-0 h-auto text-therapy-600 hover:text-therapy-700">Contact our support team</Button>
-          </p>
-        </div>
+          );
+        })}
       </div>
-    </section>
+    </div>
   );
 };
 
