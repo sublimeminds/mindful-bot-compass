@@ -50,25 +50,25 @@ const Index = () => {
       icon: Brain,
       title: "Advanced AI Technology",
       description: "Cutting-edge AI that understands emotions, context, and therapeutic nuances with 98% accuracy",
-      color: "from-blue-500 via-purple-500 to-cyan-500"
+      color: "from-therapy-500 to-calm-500"
     },
     {
       icon: Volume2,
       title: "Advanced Voice Technology",
       description: "Natural, emotionally-aware voice conversations with real-time emotion detection in 29 languages",
-      color: "from-purple-500 via-pink-500 to-red-500"
+      color: "from-therapy-500 to-calm-500"
     },
     {
       icon: Shield,
       title: "24/7 Crisis Management",
       description: "Real-time crisis detection with automatic escalation and emergency intervention protocols",
-      color: "from-red-500 via-orange-500 to-yellow-500"
+      color: "from-therapy-500 to-calm-500"
     },
     {
       icon: Users,
       title: "Personalized Therapist Matching",
       description: "AI-powered matching to connect you with the perfect therapist for your unique needs",
-      color: "from-green-500 via-teal-500 to-blue-500"
+      color: "from-therapy-500 to-calm-500"
     }
   ];
 
@@ -143,13 +143,13 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50 relative overflow-hidden">
       {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 opacity-70"></div>
-      <div className="absolute inset-0 bg-gradient-to-tr from-cyan-50 via-transparent to-violet-50 opacity-60"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-therapy-50 via-calm-50 to-therapy-100 opacity-70"></div>
+      <div className="absolute inset-0 bg-gradient-to-tr from-calm-50 via-transparent to-therapy-50 opacity-60"></div>
       
-      {/* Floating gradient orbs */}
-      <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-20 blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 blur-3xl animate-pulse delay-1000"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full opacity-10 blur-3xl animate-pulse delay-2000"></div>
+      {/* Floating gradient orbs with brand colors */}
+      <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-therapy-400 to-calm-400 rounded-full opacity-20 blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-to-r from-calm-400 to-therapy-400 rounded-full opacity-20 blur-3xl animate-pulse delay-1000"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-therapy-400 to-calm-400 rounded-full opacity-10 blur-3xl animate-pulse delay-2000"></div>
       
       <div className="relative z-10">
         <Header />
@@ -158,37 +158,37 @@ const Index = () => {
         <section id="hero" className="relative py-20 lg:py-32">
           <div className="container mx-auto px-4">
             <div className="text-center">
-              <Badge className="mb-6 bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 text-white px-8 py-3 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border-0">
+              <Badge className="mb-6 bg-gradient-to-r from-therapy-500 to-calm-500 text-white px-8 py-3 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border-0">
                 <Sparkles className="h-4 w-4 mr-2" />
                 Revolutionary AI Voice Technology
                 <Zap className="h-4 w-4 ml-2" />
               </Badge>
               
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
-                <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
                   Transform Your
                 </span>
                 <br />
-                <span className="bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-calm-600 to-therapy-600 bg-clip-text text-transparent">
                   Mental Health
                 </span>
                 <br />
-                <span className="bg-gradient-to-r from-emerald-600 via-green-600 to-lime-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
                   Journey
                 </span>
               </h1>
               
               <p className="text-xl md:text-2xl text-slate-700 mb-12 max-w-4xl mx-auto leading-relaxed font-medium">
                 Experience the future of mental wellness with 
-                <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent font-bold"> AI-powered therapy</span>,
-                <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent font-bold"> natural voice conversations</span>, 
-                and <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent font-bold">24/7 crisis support</span>
+                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent font-bold"> AI-powered therapy</span>,
+                <span className="bg-gradient-to-r from-calm-600 to-therapy-600 bg-clip-text text-transparent font-bold"> natural voice conversations</span>, 
+                and <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent font-bold">24/7 crisis support</span>
               </p>
               
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
                 <Button 
                   size="lg"
-                  className="bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 text-white px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 border-0"
+                  className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-therapy-500/25 transition-all duration-300 hover:scale-105 border-0"
                   onClick={() => navigate('/auth')}
                 >
                   <Heart className="h-6 w-6 mr-3" />
@@ -198,7 +198,7 @@ const Index = () => {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  className="border-2 border-purple-300 text-purple-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 px-12 py-6 text-xl font-bold rounded-2xl shadow-xl hover:shadow-purple-500/20 transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm"
+                  className="border-2 border-therapy-300 text-therapy-700 hover:bg-gradient-to-r hover:from-therapy-50 hover:to-calm-50 px-12 py-6 text-xl font-bold rounded-2xl shadow-xl hover:shadow-therapy-500/20 transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm"
                   onClick={() => navigate('/therapy-chat')}
                 >
                   <Brain className="h-6 w-6 mr-3" />
@@ -209,20 +209,20 @@ const Index = () => {
               {/* Trust Indicators */}
               <div className="flex flex-wrap justify-center gap-8 text-sm font-semibold">
                 <div className="flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md">
-                  <CheckCircle className="h-5 w-5 mr-2 text-green-500" />
-                  <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">HIPAA Compliant</span>
+                  <CheckCircle className="h-5 w-5 mr-2 text-therapy-500" />
+                  <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">HIPAA Compliant</span>
                 </div>
                 <div className="flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md">
-                  <CheckCircle className="h-5 w-5 mr-2 text-blue-500" />
-                  <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">End-to-End Encryption</span>
+                  <CheckCircle className="h-5 w-5 mr-2 text-calm-500" />
+                  <span className="bg-gradient-to-r from-calm-600 to-therapy-600 bg-clip-text text-transparent">End-to-End Encryption</span>
                 </div>
                 <div className="flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md">
-                  <CheckCircle className="h-5 w-5 mr-2 text-purple-500" />
-                  <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Evidence-Based</span>
+                  <CheckCircle className="h-5 w-5 mr-2 text-therapy-500" />
+                  <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">Evidence-Based</span>
                 </div>
                 <div className="flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md">
-                  <CheckCircle className="h-5 w-5 mr-2 text-red-500" />
-                  <span className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">24/7 Support</span>
+                  <CheckCircle className="h-5 w-5 mr-2 text-calm-500" />
+                  <span className="bg-gradient-to-r from-calm-600 to-therapy-600 bg-clip-text text-transparent">24/7 Support</span>
                 </div>
               </div>
             </div>
@@ -231,18 +231,18 @@ const Index = () => {
 
         {/* Stats Section */}
         <section className="py-20 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-purple-50/60 to-white/60 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-therapy-50/60 to-white/60 backdrop-blur-sm"></div>
           <div className="container mx-auto px-4 relative">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {stats.map((stat, index) => {
                 const IconComponent = stat.icon;
                 return (
                   <div key={index} className="text-center group">
-                    <div className="relative inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 rounded-2xl shadow-2xl group-hover:shadow-purple-500/30 transition-all duration-300 group-hover:scale-110 mb-6">
+                    <div className="relative inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-2xl shadow-2xl group-hover:shadow-therapy-500/30 transition-all duration-300 group-hover:scale-110 mb-6">
                       <IconComponent className="h-10 w-10 text-white" />
                       <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl"></div>
                     </div>
-                    <div className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-2">{stat.number}</div>
+                    <div className="text-4xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent mb-2">{stat.number}</div>
                     <div className="text-slate-600 font-medium">{stat.label}</div>
                   </div>
                 );
@@ -253,11 +253,11 @@ const Index = () => {
 
         {/* How It Works Section */}
         <section id="how-it-works" className="py-20 relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-50/80 via-purple-50/80 to-pink-50/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-therapy-50/80 via-calm-50/80 to-therapy-50/80"></div>
           <div className="container mx-auto px-4 relative">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
                   How TherapySync Works
                 </span>
               </h2>
@@ -270,21 +270,15 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {howItWorksSteps.map((step, index) => {
                 const IconComponent = step.icon;
-                const gradients = [
-                  'from-violet-500 to-purple-500',
-                  'from-blue-500 to-cyan-500',
-                  'from-green-500 to-teal-500',
-                  'from-orange-500 to-red-500'
-                ];
                 return (
                   <div key={index} className="relative">
                     <Card className="h-full hover:shadow-2xl transition-all duration-500 group hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl">
                       <CardContent className="p-8">
                         <div className="text-center mb-6">
-                          <div className={`w-20 h-20 bg-gradient-to-r ${gradients[index]} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse shadow-2xl group-hover:shadow-purple-500/30`}>
+                          <div className="w-20 h-20 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse shadow-2xl group-hover:shadow-therapy-500/30">
                             <IconComponent className="h-10 w-10 text-white" />
                           </div>
-                          <div className="text-sm font-bold text-purple-500 mb-3">STEP {step.number}</div>
+                          <div className="text-sm font-bold text-therapy-500 mb-3">STEP {step.number}</div>
                           <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">{step.title}</h3>
                           <p className="text-slate-600 text-sm mb-6 leading-relaxed">{step.description}</p>
                         </div>
@@ -292,7 +286,7 @@ const Index = () => {
                         <div className="space-y-3">
                           {step.features.map((feature, featureIndex) => (
                             <div key={featureIndex} className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                              <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0" />
                               <span className="text-sm text-slate-600 font-medium">{feature}</span>
                             </div>
                           ))}
@@ -303,7 +297,7 @@ const Index = () => {
                     {/* Arrow connector for desktop */}
                     {index < howItWorksSteps.length - 1 && (
                       <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-                        <ArrowRight className="h-8 w-8 text-purple-400" />
+                        <ArrowRight className="h-8 w-8 text-therapy-400" />
                       </div>
                     )}
                   </div>
@@ -315,11 +309,11 @@ const Index = () => {
 
         {/* Features Section */}
         <section id="features" className="py-20 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-blue-50/50 to-white"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-calm-50/50 to-white"></div>
           <div className="container mx-auto px-4 relative">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
                   Comprehensive Mental Health Platform
                 </span>
               </h2>
@@ -350,7 +344,7 @@ const Index = () => {
 
         {/* Voice Technology Showcase */}
         <section className="py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-therapy-600 to-calm-600"></div>
           <div className="absolute inset-0 bg-gradient-to-br from-transparent via-black/10 to-transparent"></div>
           <div className="container mx-auto px-4 relative text-white">
             <div className="text-center mb-16">
@@ -360,7 +354,7 @@ const Index = () => {
               <h2 className="text-4xl md:text-6xl font-bold mb-6">
                 Advanced Voice Technology
               </h2>
-              <p className="text-xl text-blue-100 max-w-3xl mx-auto font-medium">
+              <p className="text-xl text-therapy-100 max-w-3xl mx-auto font-medium">
                 Experience natural, emotionally-aware conversations with our cutting-edge voice synthesis technology. 
                 Real-time emotion detection and 29-language support provide truly personalized therapy.
               </p>
@@ -371,7 +365,7 @@ const Index = () => {
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 shadow-2xl">
                   <Mic className="h-16 w-16 mx-auto mb-6" />
                   <h3 className="text-2xl font-bold mb-4">Natural Conversations</h3>
-                  <p className="text-blue-100 leading-relaxed">
+                  <p className="text-therapy-100 leading-relaxed">
                     Engage in natural, flowing conversations with AI therapists that understand context and emotion.
                   </p>
                 </div>
@@ -380,7 +374,7 @@ const Index = () => {
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 shadow-2xl">
                   <Eye className="h-16 w-16 mx-auto mb-6" />
                   <h3 className="text-2xl font-bold mb-4">Emotion Detection</h3>
-                  <p className="text-blue-100 leading-relaxed">
+                  <p className="text-therapy-100 leading-relaxed">
                     Real-time analysis of voice patterns to detect emotional states and provide appropriate support.
                   </p>
                 </div>
@@ -389,7 +383,7 @@ const Index = () => {
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 shadow-2xl">
                   <Globe className="h-16 w-16 mx-auto mb-6" />
                   <h3 className="text-2xl font-bold mb-4">Global Accessibility</h3>
-                  <p className="text-blue-100 leading-relaxed">
+                  <p className="text-therapy-100 leading-relaxed">
                     Support for 29 languages with cultural sensitivity and regional voice adaptations.
                   </p>
                 </div>
@@ -399,7 +393,7 @@ const Index = () => {
             <div className="text-center mt-12">
               <Button 
                 size="lg"
-                className="bg-white text-blue-600 hover:bg-blue-50 px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-white/20 transition-all duration-300 hover:scale-105"
+                className="bg-white text-therapy-600 hover:bg-therapy-50 px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-white/20 transition-all duration-300 hover:scale-105"
                 onClick={() => navigate('/voice-technology')}
               >
                 <Volume2 className="h-6 w-6 mr-3" />
@@ -411,11 +405,11 @@ const Index = () => {
 
         {/* Testimonials */}
         <section className="py-20 relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-50/80 via-teal-50/80 to-blue-50/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-therapy-50/80 via-calm-50/80 to-therapy-50/80"></div>
           <div className="container mx-auto px-4 relative">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-green-600 via-teal-600 to-blue-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
                   Trusted by Thousands
                 </span>
               </h2>
@@ -445,7 +439,7 @@ const Index = () => {
 
         {/* Pricing Section */}
         <section id="pricing" className="py-20 relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-50/80 via-pink-50/80 to-violet-50/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-calm-50/80 via-therapy-50/80 to-calm-50/80"></div>
           <div className="relative">
             <PricingSection />
           </div>
@@ -453,19 +447,19 @@ const Index = () => {
 
         {/* CTA Section */}
         <section className="py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-therapy-600 to-calm-600"></div>
           <div className="absolute inset-0 bg-gradient-to-br from-transparent via-black/10 to-transparent"></div>
           <div className="container mx-auto px-4 text-center relative text-white">
             <h2 className="text-4xl md:text-6xl font-bold mb-8">
               Ready to Transform Your Mental Health?
             </h2>
-            <p className="text-xl text-purple-100 mb-12 max-w-3xl mx-auto font-medium">
+            <p className="text-xl text-therapy-100 mb-12 max-w-3xl mx-auto font-medium">
               Join thousands who have found healing, growth, and peace through our AI-powered therapy platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Button 
                 size="lg"
-                className="bg-white text-purple-600 hover:bg-purple-50 px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-white/20 transition-all duration-300 hover:scale-105"
+                className="bg-white text-therapy-600 hover:bg-therapy-50 px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-white/20 transition-all duration-300 hover:scale-105"
                 onClick={() => navigate('/auth')}
               >
                 <Heart className="h-6 w-6 mr-3" />
