@@ -10,6 +10,16 @@ const Header = () => {
   const navigate = useNavigate();
   const { user, loading } = useSimpleApp();
 
+  const handleSmoothScroll = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   if (loading) {
     return (
       <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
@@ -30,15 +40,24 @@ const Header = () => {
           <Logo />
           
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-gray-600 hover:text-therapy-600 transition-colors">
-              Features
-            </a>
-            <a href="#pricing" className="text-gray-600 hover:text-therapy-600 transition-colors">
-              Pricing
-            </a>
-            <a href="#how-it-works" className="text-gray-600 hover:text-therapy-600 transition-colors">
+            <button 
+              onClick={() => handleSmoothScroll('how-it-works')}
+              className="text-gray-600 hover:text-therapy-600 transition-colors"
+            >
               How It Works
-            </a>
+            </button>
+            <button 
+              onClick={() => handleSmoothScroll('features')}
+              className="text-gray-600 hover:text-therapy-600 transition-colors"
+            >
+              Features
+            </button>
+            <button 
+              onClick={() => handleSmoothScroll('pricing')}
+              className="text-gray-600 hover:text-therapy-600 transition-colors"
+            >
+              Pricing
+            </button>
           </nav>
           
           <div className="flex items-center space-x-4">

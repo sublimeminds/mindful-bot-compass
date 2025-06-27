@@ -21,12 +21,18 @@ import {
   Mic,
   Eye,
   BarChart3,
-  Crown
+  Crown,
+  UserCheck,
+  Headphones,
+  Calendar
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import HowItWorksSection from '@/components/landing/HowItWorksSection';
+import FeaturesSection from '@/components/FeaturesSection';
+import PricingSection from '@/components/PricingSection';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -71,6 +77,37 @@ const Index = () => {
     { number: "8", label: "AI Therapists", icon: Users }
   ];
 
+  const howItWorksSteps = [
+    {
+      number: "01",
+      title: "Quick Assessment",
+      description: "Complete our personalized mental health assessment to understand your unique needs and goals.",
+      icon: UserCheck,
+      features: ["5-minute setup", "Privacy-focused", "Personalized matching"]
+    },
+    {
+      number: "02", 
+      title: "Choose Your AI Therapist",
+      description: "Select from different therapeutic approaches and AI personalities that resonate with you.",
+      icon: Brain,
+      features: ["Multiple approaches", "Personality matching", "Instant availability"]
+    },
+    {
+      number: "03",
+      title: "Start Voice Sessions",
+      description: "Begin personalized therapy with natural voice conversations or text-based sessions.",
+      icon: Headphones,
+      features: ["Voice & text options", "Real-time emotion detection", "29 languages"]
+    },
+    {
+      number: "04",
+      title: "Track Progress",
+      description: "Monitor your journey with detailed analytics, mood tracking, and personalized insights.",
+      icon: BarChart3,
+      features: ["Visual progress", "Goal achievement", "Adaptive recommendations"]
+    }
+  ];
+
   const testimonials = [
     {
       name: "Sarah M.",
@@ -106,7 +143,7 @@ const Index = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32">
+      <section id="hero" className="relative py-20 lg:py-32">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <Badge className="mb-6 bg-gradient-to-r from-therapy-500 to-calm-500 text-white px-6 py-2">
@@ -190,8 +227,61 @@ const Index = () => {
         </div>
       </section>
 
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-20 bg-gradient-to-br from-harmony-50 via-balance-50 to-flow-100">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-therapy-900 mb-6">
+              How TherapySync Works
+            </h2>
+            <p className="text-xl text-therapy-600 max-w-3xl mx-auto">
+              Get started on your mental health journey in just four simple steps. 
+              Our AI-powered platform makes professional therapy support accessible anytime, anywhere.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {howItWorksSteps.map((step, index) => {
+              const IconComponent = step.icon;
+              return (
+                <div key={index} className="relative">
+                  <Card className="h-full hover:shadow-xl transition-all duration-300 group hover:scale-105 bg-white/90 backdrop-blur-sm">
+                    <CardContent className="p-6">
+                      <div className="text-center mb-6">
+                        <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:animate-pulse shadow-lg">
+                          <IconComponent className="h-8 w-8 text-white" />
+                        </div>
+                        <div className="text-sm font-bold text-therapy-500 mb-2">STEP {step.number}</div>
+                        <h3 className="text-xl font-semibold mb-3 text-therapy-800">{step.title}</h3>
+                        <p className="text-therapy-600 text-sm mb-4">{step.description}</p>
+                      </div>
+
+                      <div className="space-y-2">
+                        {step.features.map((feature, featureIndex) => (
+                          <div key={featureIndex} className="flex items-center space-x-2">
+                            <CheckCircle className="h-4 w-4 text-therapy-500 flex-shrink-0" />
+                            <span className="text-sm text-therapy-600">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Arrow connector for desktop */}
+                  {index < howItWorksSteps.length - 1 && (
+                    <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                      <ArrowRight className="h-6 w-6 text-therapy-500" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
-      <section className="py-20">
+      <section id="features" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-therapy-900 mb-6">
@@ -308,6 +398,11 @@ const Index = () => {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="py-20 bg-gradient-to-br from-therapy-50 to-calm-50">
+        <PricingSection />
       </section>
 
       {/* CTA Section */}
