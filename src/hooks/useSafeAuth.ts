@@ -1,16 +1,19 @@
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/components/EnhancedAuthProvider';
 
 export const useSafeAuth = () => {
   try {
     return useAuth();
   } catch (error) {
-    console.warn('Auth context not available, returning null user');
+    console.warn('Auth context not available, returning safe defaults');
     return {
       user: null,
       loading: false,
-      login: async () => { throw new Error('Auth not available'); },
-      register: async () => { throw new Error('Auth not available'); },
+      signIn: async () => ({ error: new Error('Auth not available') }),
+      signUp: async () => ({ error: new Error('Auth not available') }),
+      signOut: async () => { throw new Error('Auth not available'); },
+      register: async () => ({ error: new Error('Auth not available') }),
+      login: async () => ({ error: new Error('Auth not available') }),
       logout: async () => { throw new Error('Auth not available'); }
     };
   }
