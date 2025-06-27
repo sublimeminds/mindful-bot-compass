@@ -64,9 +64,9 @@ const Footer = () => {
               <li><Link to="/features" className="text-slate-300 hover:text-therapy-400 transition-colors">Features</Link></li>
               <li><Link to="/how-it-works" className="text-slate-300 hover:text-therapy-400 transition-colors">How It Works</Link></li>
               <li><Link to="/pricing" className="text-slate-300 hover:text-therapy-400 transition-colors">Pricing</Link></li>
-              <li><Link to="/therapy-chat" className="text-slate-300 hover:text-therapy-400 transition-colors">Try AI Therapy</Link></li>
-              <li><Link to="/voice-ai" className="text-slate-300 hover:text-therapy-400 transition-colors">Voice Technology</Link></li>
-              <li><Link to="/dashboard" className="text-slate-300 hover:text-therapy-400 transition-colors">Dashboard</Link></li>
+              <li><Link to="/therapy-chat" className="text-slate-300 hover:text-therapy-400 transition-colors">TherapySync AI</Link></li>
+              <li><Link to="/voice-technology" className="text-slate-300 hover:text-therapy-400 transition-colors">Voice Technology</Link></li>
+              <li><Link to="/downloads" className="text-slate-300 hover:text-therapy-400 transition-colors">Downloads</Link></li>
             </ul>
           </div>
 
@@ -77,9 +77,9 @@ const Footer = () => {
               <li><Link to="/help" className="text-slate-300 hover:text-therapy-400 transition-colors">Help Center</Link></li>
               <li><Link to="/crisis-resources" className="text-slate-300 hover:text-therapy-400 transition-colors">Crisis Support</Link></li>
               <li><Link to="/community" className="text-slate-300 hover:text-therapy-400 transition-colors">Community</Link></li>
+              <li><Link to="/downloads" className="text-slate-300 hover:text-therapy-400 transition-colors">Mobile & Desktop Apps</Link></li>
+              <li><Link to="/faq" className="text-slate-300 hover:text-therapy-400 transition-colors">FAQ</Link></li>
               <li><Link to="/blog" className="text-slate-300 hover:text-therapy-400 transition-colors">Blog</Link></li>
-              <li><Link to="/research" className="text-slate-300 hover:text-therapy-400 transition-colors">Research</Link></li>
-              <li><Link to="/webinars" className="text-slate-300 hover:text-therapy-400 transition-colors">Webinars</Link></li>
             </ul>
           </div>
 
@@ -101,10 +101,10 @@ const Footer = () => {
               </li>
             </ul>
             <ul className="space-y-3">
+              <li><Link to="/contact" className="text-slate-300 hover:text-therapy-400 transition-colors">Contact Us</Link></li>
               <li><Link to="/privacy" className="text-slate-300 hover:text-therapy-400 transition-colors">Privacy Policy</Link></li>
               <li><Link to="/terms" className="text-slate-300 hover:text-therapy-400 transition-colors">Terms of Service</Link></li>
               <li><Link to="/security" className="text-slate-300 hover:text-therapy-400 transition-colors">Security</Link></li>
-              <li><Link to="/accessibility" className="text-slate-300 hover:text-therapy-400 transition-colors">Accessibility</Link></li>
             </ul>
           </div>
         </div>

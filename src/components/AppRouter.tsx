@@ -65,6 +65,7 @@ import PerformanceDashboard from '@/pages/PerformanceDashboard';
 import Integrations from '@/pages/Integrations';
 import RealIntegrations from '@/pages/RealIntegrations';
 import Downloads from '@/pages/Downloads';
+import HowItWorks from '@/pages/HowItWorks';
 import NotFound from '@/pages/NotFound';
 import AdminLayout from '@/components/admin/AdminLayout';
 
@@ -77,6 +78,7 @@ const AppRouter = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/features" element={<FeaturesOverview />} />
+      <Route path="/how-it-works" element={<HowItWorks />} />
       <Route path="/plans" element={<Plans />} />
       <Route path="/compare-plans" element={<ComparePlans />} />
       <Route path="/downloads" element={<Downloads />} />
