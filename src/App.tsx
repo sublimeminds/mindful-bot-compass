@@ -7,6 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import ElectronErrorBoundary from '@/components/electron/ElectronErrorBoundary';
 import ElectronAppWrapper from '@/components/electron/ElectronAppWrapper';
 import { SafeAccessibilityProvider } from '@/contexts/SafeAccessibilityContext';
+import { EnhancedAuthProvider } from '@/components/EnhancedAuthProvider';
 import './App.css';
 
 // Lazy load the main router to prevent blocking
@@ -47,14 +48,16 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <SafeAccessibilityProvider>
-            <ElectronAppWrapper>
-              <HashRouter>
-                <Suspense fallback={<ElectronLoadingFallback />}>
-                  <AppRouter />
-                </Suspense>
-              </HashRouter>
-              <Toaster />
-            </ElectronAppWrapper>
+            <EnhancedAuthProvider>
+              <ElectronAppWrapper>
+                <HashRouter>
+                  <Suspense fallback={<ElectronLoadingFallback />}>
+                    <AppRouter />
+                  </Suspense>
+                </HashRouter>
+                <Toaster />
+              </ElectronAppWrapper>
+            </EnhancedAuthProvider>
           </SafeAccessibilityProvider>
         </TooltipProvider>
       </QueryClientProvider>
