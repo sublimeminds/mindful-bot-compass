@@ -1,5 +1,6 @@
 
 import { Suspense, lazy } from 'react';
+import { HashRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -47,9 +48,11 @@ function App() {
         <TooltipProvider>
           <SafeAccessibilityProvider>
             <ElectronAppWrapper>
-              <Suspense fallback={<ElectronLoadingFallback />}>
-                <AppRouter />
-              </Suspense>
+              <HashRouter>
+                <Suspense fallback={<ElectronLoadingFallback />}>
+                  <AppRouter />
+                </Suspense>
+              </HashRouter>
               <Toaster />
             </ElectronAppWrapper>
           </SafeAccessibilityProvider>
