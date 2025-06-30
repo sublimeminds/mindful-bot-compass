@@ -17,7 +17,21 @@ export interface AdminContextType {
   hasPermission: (permission: string) => boolean;
 }
 
+interface Therapist {
+  id: string;
+  name: string;
+  title: string;
+  description: string;
+  approach: string;
+  specialties: string[];
+  communicationStyle: string;
+  icon: string;
+  colorScheme: string;
+}
+
 export interface TherapistContextType {
-  selectedTherapist: string | null;
-  setSelectedTherapist: (id: string) => void;
+  therapist: any;
+  isLoading: boolean;
+  selectedTherapist: Therapist | null;
+  therapists: Therapist[];
 }

@@ -7,7 +7,7 @@ import ElectronErrorBoundary from '@/components/electron/ElectronErrorBoundary';
 import ElectronAppWrapper from '@/components/electron/ElectronAppWrapper';
 import { SafeAccessibilityProvider } from '@/contexts/SafeAccessibilityContext';
 import { EnhancedAuthProvider } from '@/components/EnhancedAuthProvider';
-import { SimpleTherapistProvider } from '@/components/SimpleTherapistProvider';
+import { TherapistProvider } from '@/contexts/TherapistContext';
 import AppRouter from '@/components/AppRouter';
 import './App.css';
 
@@ -42,14 +42,14 @@ function App() {
         <TooltipProvider>
           <SafeAccessibilityProvider>
             <EnhancedAuthProvider>
-              <SimpleTherapistProvider>
+              <TherapistProvider>
                 <ElectronAppWrapper>
                   <HashRouter>
                     <AppRouter />
                   </HashRouter>
                   <Toaster />
                 </ElectronAppWrapper>
-              </SimpleTherapistProvider>
+              </TherapistProvider>
             </EnhancedAuthProvider>
           </SafeAccessibilityProvider>
         </TooltipProvider>
