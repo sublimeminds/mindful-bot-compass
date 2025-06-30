@@ -1,13 +1,11 @@
 
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Languages, Globe, Info } from 'lucide-react';
+import { Languages } from 'lucide-react';
 import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useTranslation } from 'react-i18next';
+import LanguageConfirmationDialog from './LanguageConfirmationDialog';
 
 const EnhancedLanguageSelector = () => {
-  const { t } = useTranslation();
   const {
     currentLanguage,
     supportedLanguages,
@@ -16,14 +14,30 @@ const EnhancedLanguageSelector = () => {
     getLanguagesByRegion
   } = useEnhancedLanguage();
 
+  const [showLanguageDialog, setShowLanguageDialog] = React.useState(false);
+
+  // Show language confirmation dialog when suggested language is detected
+  React.useEffect(() => {
+    if (suggestedLanguage && suggestedLanguage.code !== currentLanguage.code) {
+      setShowLanguageDialog(true);
+    }
+  }, [suggestedLanguage, currentLanguage.code]);
+
   const languagesByRegion = getLanguagesByRegion();
 
+  const handleLanguageConfirm = () => {
+    if (suggestedLanguage) {
+      changeLanguage(suggestedLanguage.code);
+    }
+    setShowLanguageDialog(false);
+  };
+
   return (
-    <div className="space-y-2">
+    <>
       <div className="flex items-center space-x-2">
         <Languages className="h-4 w-4 text-muted-foreground" />
         <Select value={currentLanguage.code} onValueChange={changeLanguage}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-40 border-therapy-200 hover:border-therapy-300 focus:border-therapy-500 focus:ring-therapy-500/20">
             <SelectValue>
               <div className="flex items-center space-x-2">
                 <span>{currentLanguage.flag}</span>
@@ -35,7 +49,7 @@ const EnhancedLanguageSelector = () => {
           <SelectContent className="bg-white border shadow-lg z-50 max-h-80 overflow-y-auto">
             {Object.entries(languagesByRegion).map(([region, languages]) => (
               <div key={region}>
-                <div className="px-2 py-1 text-xs font-semibold text-muted-foreground border-b">
+                <div className="px-2 py-1 text-xs font-semibold text-therapy-600 border-b border-therapy-100">
                   {region}
                 </div>
                 {languages.map((language) => (
@@ -57,22 +71,17 @@ const EnhancedLanguageSelector = () => {
         </Select>
       </div>
 
-      {/* Language Suggestion */}
+      {/* Language Confirmation Dialog */}
       {suggestedLanguage && (
-        <Alert className="p-2">
-          <Globe className="h-3 w-3" />
-          <AlertDescription className="text-xs">
-            We detected you might prefer {suggestedLanguage.name} ({suggestedLanguage.nativeName})
-            <button
-              onClick={() => changeLanguage(suggestedLanguage.code)}
-              className="ml-2 text-primary hover:underline font-medium"
-            >
-              Switch
-            </button>
-          </AlertDescription>
-        </Alert>
+        <LanguageConfirmationDialog
+          isOpen={showLanguageDialog}
+          onClose={() => setShowLanguageDialog(false)}
+          onConfirm={handleLanguageConfirm}
+          suggestedLanguage={suggestedLanguage}
+          currentLanguage={currentLanguage}
+        />
       )}
-    </div>
+    </>
   );
 };
 

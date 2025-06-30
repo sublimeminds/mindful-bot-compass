@@ -7,6 +7,7 @@ import { Check, Star, Heart, ArrowRight, Zap, Crown, Gift } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
 import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
+import CurrencySelector from '@/components/ui/CurrencySelector';
 
 const PricingSection = () => {
   const navigate = useNavigate();
@@ -31,15 +32,11 @@ const PricingSection = () => {
 
   const formatPrice = async (baseUsdPrice: number) => {
     try {
-      // Convert from USD to user's currency
       const convertedAmount = enhancedCurrencyService.convertAmount(baseUsdPrice, 'USD', userCurrency);
-      
-      // Apply regional pricing if location is available
       let finalAmount = convertedAmount;
       if (userLocation) {
         finalAmount = await enhancedCurrencyService.getRegionalPricing(baseUsdPrice, userCurrency, userLocation.region);
       }
-      
       return enhancedCurrencyService.formatCurrency(finalAmount, userCurrency, currentLanguage.code);
     } catch (error) {
       console.error('Error formatting price:', error);
@@ -146,6 +143,15 @@ const PricingSection = () => {
         <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
           From free basic support to comprehensive premium care - find the perfect plan for your mental health journey.
         </p>
+        
+        {/* Currency Selector */}
+        <div className="flex justify-center mb-6">
+          <CurrencySelector
+            value={userCurrency}
+            onChange={setUserCurrency}
+            className="max-w-sm"
+          />
+        </div>
         
         {userLocation && userCurrency !== 'USD' && (
           <div className="inline-flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md mb-6">

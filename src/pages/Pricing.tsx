@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
 import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
 import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
+import CurrencySelector from '@/components/ui/CurrencySelector';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -39,15 +40,11 @@ const Pricing = () => {
 
   const formatPrice = async (baseUsdPrice: number) => {
     try {
-      // Convert from USD to user's currency
       const convertedAmount = enhancedCurrencyService.convertAmount(baseUsdPrice, 'USD', userCurrency);
-      
-      // Apply regional pricing if location is available
       let finalAmount = convertedAmount;
       if (userLocation) {
         finalAmount = await enhancedCurrencyService.getRegionalPricing(baseUsdPrice, userCurrency, userLocation.region);
       }
-      
       return enhancedCurrencyService.formatCurrency(finalAmount, userCurrency, currentLanguage.code);
     } catch (error) {
       console.error('Error formatting price:', error);
@@ -208,6 +205,15 @@ const Pricing = () => {
               and upgrade as your mental health journey grows.
             </p>
 
+            {/* Currency Selector */}
+            <div className="flex justify-center mb-8">
+              <CurrencySelector
+                value={userCurrency}
+                onChange={setUserCurrency}
+                className="max-w-sm"
+              />
+            </div>
+
             {userLocation && (
               <div className="inline-flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md mb-4">
                 <span className="text-sm text-slate-600">
@@ -345,7 +351,7 @@ const Pricing = () => {
             </div>
           </div>
 
-          {/* FAQ Section */}
+          {/* CTA Section */}
           <div className="text-center">
             <Card className="therapy-gradient-bg text-white p-12 shadow-2xl">
               <h2 className="text-3xl font-bold mb-6">Have Questions?</h2>

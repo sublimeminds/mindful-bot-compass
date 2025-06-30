@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Brain, Heart, Globe, Menu, X, ChevronDown, User, Settings, Crown, MessageSquare, Headphones, LifeBuoy, Users, BookOpen, Zap } from 'lucide-react';
+import { Brain, Heart, Globe, Menu, X, ChevronDown, User, Settings, Crown, MessageSquare, Headphones, LifeBuoy, Users, BookOpen, Zap, DollarSign } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
@@ -36,12 +36,14 @@ const Header = () => {
     { label: 'Dashboard', path: '/dashboard', icon: Brain, description: 'Your personalized dashboard' },
     { label: 'Features Overview', path: '/features-overview', icon: Zap, description: 'All platform capabilities' },
     { label: 'How It Works', path: '/how-it-works', icon: BookOpen, description: 'Learn how to get started' },
+    { label: 'Pricing', path: '/pricing', icon: DollarSign, description: 'View our pricing plans' },
   ];
 
   const aiTherapyMenuItems = [
     { label: 'TherapySync AI', path: '/therapy-chat', icon: Brain, description: 'Start AI therapy session' },
     { label: 'Voice Technology', path: '/voice-technology', icon: Headphones, description: 'Advanced voice features' },
     { label: 'Cultural AI Features', path: '/cultural-ai-features', icon: Globe, description: 'Culturally aware support' },
+    { label: 'LGBTQ+ Therapy', path: '/lgbtq-therapy', icon: Heart, description: 'Inclusive therapy support' },
   ];
 
   const resourcesMenuItems = [
@@ -119,19 +121,6 @@ const Header = () => {
             <DropdownNavItem title="AI Therapy" items={aiTherapyMenuItems} icon={MessageSquare} />
             <DropdownNavItem title="Resources" items={resourcesMenuItems} icon={LifeBuoy} />
             {user && <DropdownNavItem title="Account" items={accountMenuItems} icon={User} />}
-            
-            {/* Direct Pricing Link */}
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/pricing')}
-              className={`text-sm font-medium transition-all duration-300 hover:text-therapy-600 hover:bg-therapy-50/50 rounded-lg px-3 py-2 ${
-                isActive('/pricing') 
-                  ? 'text-therapy-600 bg-therapy-50' 
-                  : 'text-slate-600'
-              }`}
-            >
-              Pricing
-            </Button>
           </nav>
 
           {/* Right Side */}
@@ -276,21 +265,6 @@ const Header = () => {
                   );
                 })}
               </div>
-
-              {/* Pricing */}
-              <button
-                onClick={() => {
-                  navigate('/pricing');
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`text-left py-2 px-6 rounded-lg transition-all duration-200 ${
-                  isActive('/pricing')
-                    ? 'bg-therapy-50 text-therapy-600 font-medium'
-                    : 'text-slate-600 hover:bg-therapy-50 hover:text-therapy-600'
-                }`}
-              >
-                Pricing
-              </button>
               
               {/* Language Selector in Mobile */}
               <div className="py-2 px-3">
