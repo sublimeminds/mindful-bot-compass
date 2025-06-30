@@ -13,6 +13,12 @@ export interface TherapistVoice {
   emotionalContext: string;
 }
 
+export interface VoiceConfig {
+  voiceId: string;
+  stability?: number;
+  similarityBoost?: number;
+}
+
 class EnhancedVoiceService {
   private apiKey: string | null = null;
   private voices: Voice[] = [];
@@ -71,19 +77,37 @@ class EnhancedVoiceService {
     return this.isPlaying;
   }
 
-  // Add missing playText method
-  async playText(text: string, voiceId?: string): Promise<void> {
+  // Updated playText method to handle both string and object voiceId
+  async playText(text: string, voiceId?: string | VoiceConfig): Promise<void> {
     if (this.hasApiKey()) {
-      // Use ElevenLabs for better voice quality
-      const selectedVoiceId = voiceId || 'EXAVITQu4vr4xnSDxMaL'; // Default to Sarah
-      await this.playWithElevenLabs(text, selectedVoiceId);
+      // Handle voice configuration
+      let selectedVoiceId: string;
+      let voiceSettings: any = {
+        stability: 0.5,
+        similarity_boost: 0.5
+      };
+
+      if (typeof voiceId === 'object' && voiceId !== null) {
+        selectedVoiceId = voiceId.voiceId;
+        if (voiceId.stability !== undefined) {
+          voiceSettings.stability = voiceId.stability;
+        }
+        if (voiceId.similarityBoost !== undefined) {
+          voiceSettings.similarity_boost = voiceId.similarityBoost;
+        }
+      } else {
+        selectedVoiceId = voiceId || 'EXAVITQu4vr4xnSDxMaL'; // Default to Sarah
+      }
+
+      await this.playWithElevenLabs(text, selectedVoiceId, voiceSettings);
     } else {
       // Fallback to web speech
-      await this.playWithWebSpeech(text, voiceId);
+      const webVoiceId = typeof voiceId === 'object' ? voiceId.voiceId : voiceId;
+      await this.playWithWebSpeech(text, webVoiceId);
     }
   }
 
-  async playWithElevenLabs(text: string, voiceId: string): Promise<void> {
+  async playWithElevenLabs(text: string, voiceId: string, voiceSettings?: any): Promise<void> {
     if (!this.apiKey) {
       console.warn('ElevenLabs API key not available');
       return;
@@ -102,7 +126,7 @@ class EnhancedVoiceService {
         body: JSON.stringify({
           text: text,
           model_id: 'eleven_multilingual_v2',
-          voice_settings: {
+          voice_settings: voiceSettings || {
             stability: 0.5,
             similarity_boost: 0.5
           }
