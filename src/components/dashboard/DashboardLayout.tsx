@@ -2,54 +2,43 @@
 import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import WelcomeWidget from './widgets/WelcomeWidget';
-import QuickStatsWidget from './widgets/QuickStatsWidget';
-import WeeklyOverviewWidget from './widgets/WeeklyOverviewWidget';
-import RecentActivityWidget from './widgets/RecentActivityWidget';
-import MoodTrendWidget from './widgets/MoodTrendWidget';
-import SessionStarterWidget from './widgets/SessionStarterWidget';
 import QuickActionsWidget from './widgets/QuickActionsWidget';
+import MoodTrackerWidget from './widgets/MoodTrackerWidget';
+import SessionHistoryWidget from './widgets/SessionHistoryWidget';
 import GoalsWidget from './widgets/GoalsWidget';
-import TherapistWidget from './widgets/TherapistWidget';
 import AnalyticsWidget from './widgets/AnalyticsWidget';
-import InsightsWidget from './widgets/InsightsWidget';
+import PremiumAudioShowcase from './PremiumAudioShowcase';
+import type { User as UserType } from '@/types/user';
 
 const DashboardLayout = () => {
   const { user } = useAuth();
+  const userPlan = (user as UserType)?.subscription_plan || 'free';
+  const isPremium = userPlan === 'premium' || userPlan === 'pro';
 
   return (
-    <div className="flex-1 p-6 space-y-6">
+    <div className="p-6 space-y-6">
       {/* Welcome Section */}
       <WelcomeWidget />
 
       {/* Main Dashboard Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Left Column - Quick Stats and Weekly Overview */}
-        <div className="space-y-6">
-          <QuickStatsWidget />
-          <WeeklyOverviewWidget />
-        </div>
-
-        {/* Center Column - Main Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column */}
         <div className="lg:col-span-2 space-y-6">
-          <SessionStarterWidget />
+          <QuickActionsWidget />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <MoodTrendWidget />
+            <MoodTrackerWidget />
             <GoalsWidget />
           </div>
+          <SessionHistoryWidget />
         </div>
 
-        {/* Right Column - Secondary Content */}
+        {/* Right Column */}
         <div className="space-y-6">
-          <TherapistWidget />
-          <QuickActionsWidget />
           <AnalyticsWidget />
+          
+          {/* Premium Audio Showcase */}
+          <PremiumAudioShowcase />
         </div>
-      </div>
-
-      {/* Bottom Section - Activity and Insights */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RecentActivityWidget />
-        <InsightsWidget />
       </div>
     </div>
   );

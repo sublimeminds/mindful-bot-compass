@@ -3,7 +3,7 @@ import React from 'react';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AudioContentLibrary from '@/components/audio/AudioContentLibrary';
+import EnhancedAudioLibrary from '@/components/audio/EnhancedAudioLibrary';
 import { useAuth } from '@/hooks/useAuth';
 
 const AudioLibrary = () => {
@@ -20,7 +20,7 @@ const AudioLibrary = () => {
       <Header />
       
       <main className="container mx-auto px-4 py-8">
-        <AudioContentLibrary userId={user?.id} />
+        <EnhancedAudioLibrary userId={user?.id} />
       </main>
       
       <Footer />
