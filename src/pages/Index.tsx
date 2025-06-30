@@ -141,15 +141,15 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50 relative overflow-hidden">
+    <div className="min-h-screen hero-bg-gradient relative overflow-hidden">
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-therapy-50 via-calm-50 to-therapy-100 opacity-70"></div>
       <div className="absolute inset-0 bg-gradient-to-tr from-calm-50 via-transparent to-therapy-50 opacity-60"></div>
       
       {/* Floating gradient orbs with brand colors */}
-      <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-therapy-400 to-calm-400 rounded-full opacity-20 blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-to-r from-calm-400 to-therapy-400 rounded-full opacity-20 blur-3xl animate-pulse delay-1000"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-therapy-400 to-calm-400 rounded-full opacity-10 blur-3xl animate-pulse delay-2000"></div>
+      <div className="absolute top-20 left-10 w-96 h-96 brand-logo-bg rounded-full opacity-20 blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-20 right-10 w-80 h-80 brand-logo-bg rounded-full opacity-20 blur-3xl animate-pulse delay-1000"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 brand-logo-bg rounded-full opacity-10 blur-3xl animate-pulse delay-2000"></div>
       
       <div className="relative z-10">
         <Header />
@@ -158,37 +158,37 @@ const Index = () => {
         <section id="hero" className="relative py-20 lg:py-32">
           <div className="container mx-auto px-4">
             <div className="text-center">
-              <Badge className="mb-6 bg-gradient-to-r from-therapy-500 to-calm-500 text-white px-8 py-3 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border-0">
+              <Badge className="mb-6 brand-button-gradient text-white px-8 py-3 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border-0">
                 <Sparkles className="h-4 w-4 mr-2" />
                 Revolutionary AI Voice Technology
                 <Zap className="h-4 w-4 ml-2" />
               </Badge>
               
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
-                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                <span className="hero-title-gradient">
                   Transform Your
                 </span>
                 <br />
-                <span className="bg-gradient-to-r from-calm-600 to-therapy-600 bg-clip-text text-transparent">
+                <span className="hero-title-gradient">
                   Mental Health
                 </span>
                 <br />
-                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                <span className="hero-title-gradient">
                   Journey
                 </span>
               </h1>
               
               <p className="text-xl md:text-2xl text-slate-700 mb-12 max-w-4xl mx-auto leading-relaxed font-medium">
                 Experience the future of mental wellness with 
-                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent font-bold"> AI-powered therapy</span>,
-                <span className="bg-gradient-to-r from-calm-600 to-therapy-600 bg-clip-text text-transparent font-bold"> natural voice conversations</span>, 
-                and <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent font-bold">24/7 crisis support</span>
+                <span className="brand-text-gradient font-bold"> AI-powered therapy</span>,
+                <span className="brand-text-gradient font-bold"> natural voice conversations</span>, 
+                and <span className="brand-text-gradient font-bold">24/7 crisis support</span>
               </p>
               
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
                 <Button 
                   size="lg"
-                  className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-therapy-500/25 transition-all duration-300 border-0"
+                  className="brand-button-gradient text-white px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-therapy-500/25 transition-all duration-300 border-0"
                   onClick={() => navigate('/auth')}
                 >
                   <Heart className="h-6 w-6 mr-3" />
@@ -210,19 +210,19 @@ const Index = () => {
               <div className="flex flex-wrap justify-center gap-8 text-sm font-semibold">
                 <div className="flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md">
                   <CheckCircle className="h-5 w-5 mr-2 text-therapy-500" />
-                  <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">HIPAA Compliant</span>
+                  <span className="brand-text-gradient">HIPAA Compliant</span>
                 </div>
                 <div className="flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md">
                   <CheckCircle className="h-5 w-5 mr-2 text-calm-500" />
-                  <span className="bg-gradient-to-r from-calm-600 to-therapy-600 bg-clip-text text-transparent">End-to-End Encryption</span>
+                  <span className="brand-text-gradient">End-to-End Encryption</span>
                 </div>
                 <div className="flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md">
                   <CheckCircle className="h-5 w-5 mr-2 text-therapy-500" />
-                  <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">Evidence-Based</span>
+                  <span className="brand-text-gradient">Evidence-Based</span>
                 </div>
                 <div className="flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md">
                   <CheckCircle className="h-5 w-5 mr-2 text-calm-500" />
-                  <span className="bg-gradient-to-r from-calm-600 to-therapy-600 bg-clip-text text-transparent">24/7 Support</span>
+                  <span className="brand-text-gradient">24/7 Support</span>
                 </div>
               </div>
             </div>
@@ -238,11 +238,11 @@ const Index = () => {
                 const IconComponent = stat.icon;
                 return (
                   <div key={index} className="text-center group">
-                    <div className="relative inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-2xl shadow-2xl group-hover:shadow-therapy-500/30 transition-all duration-300 group-hover:scale-110 mb-6">
+                    <div className="relative inline-flex items-center justify-center w-20 h-20 brand-logo-bg rounded-2xl shadow-2xl group-hover:shadow-therapy-500/30 transition-all duration-300 group-hover:scale-110 mb-6">
                       <IconComponent className="h-10 w-10 text-white" />
                       <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl"></div>
                     </div>
-                    <div className="text-4xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent mb-2">{stat.number}</div>
+                    <div className="text-4xl font-bold brand-text-gradient mb-2">{stat.number}</div>
                     <div className="text-slate-600 font-medium">{stat.label}</div>
                   </div>
                 );
@@ -257,7 +257,7 @@ const Index = () => {
           <div className="container mx-auto px-4 relative">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                <span className="hero-title-gradient">
                   How TherapySync Works
                 </span>
               </h2>
@@ -275,7 +275,7 @@ const Index = () => {
                     <Card className="h-full hover:shadow-2xl transition-all duration-500 group hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl">
                       <CardContent className="p-8">
                         <div className="text-center mb-6">
-                          <div className="w-20 h-20 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse shadow-2xl group-hover:shadow-therapy-500/30">
+                          <div className="w-20 h-20 brand-logo-bg rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse shadow-2xl group-hover:shadow-therapy-500/30">
                             <IconComponent className="h-10 w-10 text-white" />
                           </div>
                           <div className="text-sm font-bold text-therapy-500 mb-3">STEP {step.number}</div>
@@ -313,7 +313,7 @@ const Index = () => {
           <div className="container mx-auto px-4 relative">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                <span className="hero-title-gradient">
                   Comprehensive Mental Health Platform
                 </span>
               </h2>
@@ -344,7 +344,7 @@ const Index = () => {
 
         {/* Voice Technology Showcase */}
         <section className="py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-therapy-600 to-calm-600"></div>
+          <div className="absolute inset-0 brand-logo-bg"></div>
           <div className="absolute inset-0 bg-gradient-to-br from-transparent via-black/10 to-transparent"></div>
           <div className="container mx-auto px-4 relative text-white">
             <div className="text-center mb-16">
@@ -409,7 +409,7 @@ const Index = () => {
           <div className="container mx-auto px-4 relative">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                <span className="hero-title-gradient">
                   Trusted by Thousands
                 </span>
               </h2>
@@ -447,7 +447,7 @@ const Index = () => {
 
         {/* CTA Section */}
         <section className="py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-therapy-600 to-calm-600"></div>
+          <div className="absolute inset-0 brand-logo-bg"></div>
           <div className="absolute inset-0 bg-gradient-to-br from-transparent via-black/10 to-transparent"></div>
           <div className="container mx-auto px-4 text-center relative text-white">
             <h2 className="text-4xl md:text-6xl font-bold mb-8">

@@ -37,6 +37,39 @@
   animation: swirl-breathe 4s ease-in-out infinite;
 }
 
+/* Critical Branding Classes - Always visible */
+.brand-logo-bg {
+  background: linear-gradient(135deg, #ff6b35, #4ecdc4) !important;
+}
+
+.brand-text-gradient {
+  background: linear-gradient(135deg, #ff6b35, #4ecdc4) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.brand-button-gradient {
+  background: linear-gradient(135deg, #ff6b35, #4ecdc4) !important;
+}
+
+.brand-button-gradient:hover {
+  background: linear-gradient(135deg, #e55a2b, #3db8b0) !important;
+}
+
+.hero-title-gradient {
+  background: linear-gradient(135deg, #ff6b35, #4ecdc4, #ff6b9d) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.hero-bg-gradient {
+  background: linear-gradient(135deg, #fef7f5, #ffffff, #f0fffe) !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

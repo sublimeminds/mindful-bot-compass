@@ -39,10 +39,10 @@ const Header = () => {
             className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={() => navigate('/')}
           >
-            <div className="w-10 h-10 bg-gradient-to-r from-therapy-600 to-calm-600 rounded-lg flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 brand-logo-bg rounded-lg flex items-center justify-center shadow-lg">
               <Brain className="h-6 w-6 text-white" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold brand-text-gradient">
               TherapySync
             </span>
           </div>
@@ -100,7 +100,7 @@ const Header = () => {
                 </Button>
                 <Button
                   onClick={() => navigate('/auth')}
-                  className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="brand-button-gradient text-white shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   Get Started
                 </Button>
@@ -186,7 +186,7 @@ const Header = () => {
                       navigate('/auth');
                       setIsMobileMenuOpen(false);
                     }}
-                    className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white"
+                    className="brand-button-gradient text-white"
                   >
                     Get Started
                   </Button>
