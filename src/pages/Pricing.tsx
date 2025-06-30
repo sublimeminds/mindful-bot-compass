@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,11 +17,12 @@ const Pricing = () => {
   const { currentLanguage } = useEnhancedLanguage();
   const [userCurrency, setUserCurrency] = React.useState('USD');
   const [userLocation, setUserLocation] = React.useState(null);
+  const [billingCycle, setBillingCycle] = React.useState<'monthly' | 'yearly'>('monthly');
 
   useSafeSEO({
     title: 'Pricing Plans - TherapySync AI Platform',
-    description: 'Choose from Free, Pro ($9), or Premium ($19) plans. Affordable AI therapy with voice technology, crisis support, and personalized care.',
-    keywords: 'AI therapy pricing, mental health plans, therapy subscription, crisis support, free therapy'
+    description: 'Choose from Free, Pro, or Premium plans. Affordable AI therapy with voice technology, crisis support, and personalized care. Save up to 35% with yearly billing.',
+    keywords: 'AI therapy pricing, mental health plans, therapy subscription, crisis support, free therapy, yearly discount'
   });
 
   React.useEffect(() => {
@@ -38,35 +40,52 @@ const Pricing = () => {
     detectLocation();
   }, []);
 
-  const formatPrice = async (baseUsdPrice: number) => {
+  const formatPrice = async (monthlyPrice: number, isYearly: boolean = false) => {
     try {
-      const convertedAmount = enhancedCurrencyService.convertAmount(baseUsdPrice, 'USD', userCurrency);
-      let finalAmount = convertedAmount;
-      if (userLocation) {
-        finalAmount = await enhancedCurrencyService.getRegionalPricing(baseUsdPrice, userCurrency, userLocation.region);
+      let finalPrice = monthlyPrice;
+      
+      if (isYearly) {
+        // Apply yearly discounts: Pro $79/year, Premium $149/year
+        const yearlyPrices = { 9: 79, 19: 149 };
+        finalPrice = yearlyPrices[monthlyPrice] || monthlyPrice * 10;
       }
-      return enhancedCurrencyService.formatCurrency(finalAmount, userCurrency, currentLanguage.code);
+
+      const convertedAmount = enhancedCurrencyService.convertAmount(finalPrice, 'USD', userCurrency);
+      let adjustedAmount = convertedAmount;
+      
+      if (userLocation) {
+        adjustedAmount = await enhancedCurrencyService.getRegionalPricing(finalPrice, userCurrency, userLocation.region);
+      }
+      
+      return enhancedCurrencyService.formatCurrency(adjustedAmount, userCurrency, currentLanguage.code);
     } catch (error) {
       console.error('Error formatting price:', error);
-      return enhancedCurrencyService.formatCurrency(baseUsdPrice, 'USD', currentLanguage.code);
+      return enhancedCurrencyService.formatCurrency(monthlyPrice, 'USD', currentLanguage.code);
     }
   };
 
   const [formattedPrices, setFormattedPrices] = React.useState({
     free: 'Free',
-    pro: '$9',
-    premium: '$19'
+    proMonthly: '$9',
+    proYearly: '$79',
+    premiumMonthly: '$19',
+    premiumYearly: '$149'
   });
 
   React.useEffect(() => {
     const updatePrices = async () => {
       try {
-        const proPrice = await formatPrice(9);
-        const premiumPrice = await formatPrice(19);
+        const proMonthly = await formatPrice(9, false);
+        const proYearly = await formatPrice(9, true);
+        const premiumMonthly = await formatPrice(19, false);
+        const premiumYearly = await formatPrice(19, true);
+        
         setFormattedPrices({
           free: 'Free',
-          pro: proPrice,
-          premium: premiumPrice
+          proMonthly,
+          proYearly,
+          premiumMonthly,
+          premiumYearly
         });
       } catch (error) {
         console.error('Error updating prices:', error);
@@ -76,13 +95,21 @@ const Pricing = () => {
     if (userCurrency) {
       updatePrices();
     }
-  }, [userCurrency, userLocation, currentLanguage.code]);
+  }, [userCurrency, userLocation, currentLanguage.code, billingCycle]);
+
+  const getSavingsInfo = (plan: string) => {
+    if (plan === 'pro') return { percentage: 26, yearlyTotal: 79, monthlyTotal: 108 };
+    if (plan === 'premium') return { percentage: 35, yearlyTotal: 149, monthlyTotal: 228 };
+    return { percentage: 0, yearlyTotal: 0, monthlyTotal: 0 };
+  };
 
   const pricingPlans = [
     {
       name: 'Free',
-      price: formattedPrices.free,
-      baseUsdPrice: 0,
+      monthlyPrice: formattedPrices.free,
+      yearlyPrice: formattedPrices.free,
+      baseUsdMonthly: 0,
+      baseUsdYearly: 0,
       period: 'forever',
       description: 'Get started with essential AI therapy features',
       popular: false,
@@ -101,12 +128,14 @@ const Pricing = () => {
     },
     {
       name: 'Pro',
-      price: formattedPrices.pro,
-      baseUsdPrice: 9,
-      period: 'month',
+      monthlyPrice: formattedPrices.proMonthly,
+      yearlyPrice: formattedPrices.proYearly,
+      baseUsdMonthly: 9,
+      baseUsdYearly: 79,
+      period: billingCycle,
       description: 'Perfect for regular therapy and meaningful progress',
       popular: true,
-      hasTrial: true,
+      hasTrial: false,
       features: [
         'Unlimited AI Therapy Sessions',
         'Voice Conversations (29 Languages)',
@@ -120,13 +149,16 @@ const Pricing = () => {
       ],
       color: 'from-therapy-500 to-calm-500',
       icon: Star,
-      bestFor: 'Regular mental health maintenance and improvement'
+      bestFor: 'Regular mental health maintenance and improvement',
+      savings: getSavingsInfo('pro')
     },
     {
       name: 'Premium',
-      price: formattedPrices.premium,
-      baseUsdPrice: 19,
-      period: 'month',
+      monthlyPrice: formattedPrices.premiumMonthly,
+      yearlyPrice: formattedPrices.premiumYearly,
+      baseUsdMonthly: 19,
+      baseUsdYearly: 149,
+      period: billingCycle,
       description: 'Comprehensive mental wellness with advanced features',
       popular: false,
       features: [
@@ -144,7 +176,9 @@ const Pricing = () => {
       ],
       color: 'from-therapy-600 to-harmony-600',
       icon: Crown,
-      bestFor: 'Comprehensive mental health transformation'
+      bestFor: 'Comprehensive mental health transformation',
+      hasTrial: billingCycle === 'yearly', // Only yearly Premium gets 7-day trial
+      savings: getSavingsInfo('premium')
     }
   ];
 
@@ -168,10 +202,10 @@ const Pricing = () => {
       premium: '24/7 Priority + Prevention AI'
     },
     {
-      category: 'Analytics & Reports',
-      free: 'Basic',
-      pro: 'Advanced',
-      premium: 'Expert-level + Insights'
+      category: 'Free Trial',
+      free: '❌',
+      pro: '❌',
+      premium: billingCycle === 'yearly' ? '✅ 7 Days' : '❌'
     },
     {
       category: 'Support',
@@ -202,16 +236,43 @@ const Pricing = () => {
             
             <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
               From free basic support to comprehensive premium care. Start with our free plan 
-              and upgrade as your mental health journey grows.
+              and upgrade as your mental health journey grows. Save up to 35% with yearly billing.
             </p>
 
             {/* Currency Selector */}
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-center mb-6">
               <CurrencySelector
                 value={userCurrency}
                 onChange={setUserCurrency}
                 className="max-w-sm"
               />
+            </div>
+
+            {/* Billing Toggle */}
+            <div className="flex items-center justify-center space-x-4 mb-8">
+              <span className={`text-sm font-medium ${billingCycle === 'monthly' ? 'text-slate-900' : 'text-slate-500'}`}>
+                Monthly
+              </span>
+              <button
+                onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-therapy-500 focus:ring-offset-2 ${
+                  billingCycle === 'yearly' ? 'bg-therapy-600' : 'bg-slate-200'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+              <span className={`text-sm font-medium ${billingCycle === 'yearly' ? 'text-slate-900' : 'text-slate-500'}`}>
+                Yearly
+              </span>
+              {billingCycle === 'yearly' && (
+                <Badge className="bg-therapy-100 text-therapy-700 border-therapy-200">
+                  Save up to 35%
+                </Badge>
+              )}
             </div>
 
             {userLocation && (
@@ -228,6 +289,9 @@ const Pricing = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-20">
             {pricingPlans.map((plan, index) => {
               const IconComponent = plan.icon;
+              const currentPrice = billingCycle === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice;
+              const currentBasePrice = billingCycle === 'monthly' ? plan.baseUsdMonthly : plan.baseUsdYearly;
+              
               return (
                 <Card key={index} className={`relative overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105 ${plan.popular ? 'border-2 border-therapy-500 shadow-xl scale-105' : 'border-0 shadow-lg'} bg-white/90 backdrop-blur-sm`}>
                   {plan.popular && (
@@ -243,13 +307,22 @@ const Pricing = () => {
                     <CardTitle className="text-2xl font-bold text-slate-800">{plan.name}</CardTitle>
                     <div className="flex items-center justify-center space-x-2 mb-4">
                       <span className={`text-4xl font-bold ${plan.name === 'Free' ? 'text-slate-600' : 'therapy-text-gradient'}`}>
-                        {plan.price}
+                        {currentPrice}
                       </span>
-                      {plan.name !== 'Free' && <span className="text-slate-500">/{plan.period}</span>}
+                      {plan.name !== 'Free' && (
+                        <div className="flex flex-col items-start">
+                          <span className="text-slate-500">/{billingCycle === 'monthly' ? 'month' : 'year'}</span>
+                          {billingCycle === 'yearly' && plan.savings && plan.savings.percentage > 0 && (
+                            <Badge className="text-xs bg-green-100 text-green-700 border-green-200">
+                              Save {plan.savings.percentage}%
+                            </Badge>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    {userCurrency !== 'USD' && plan.baseUsdPrice > 0 && (
+                    {userCurrency !== 'USD' && currentBasePrice > 0 && (
                       <div className="text-xs text-slate-500 mb-2">
-                        Base price: ${plan.baseUsdPrice} USD
+                        Base price: ${currentBasePrice} USD {billingCycle === 'yearly' ? '/year' : '/month'}
                       </div>
                     )}
                     <p className="text-slate-600 mb-4">{plan.description}</p>
@@ -260,6 +333,11 @@ const Pricing = () => {
                       <Badge className="mt-2 therapy-gradient-bg text-white mb-4">
                         7-Day Free Trial
                       </Badge>
+                    )}
+                    {billingCycle === 'yearly' && plan.savings && plan.savings.percentage > 0 && (
+                      <div className="text-xs text-green-600 bg-green-50 p-2 rounded-lg mb-4">
+                        Save ${plan.savings.monthlyTotal - plan.savings.yearlyTotal} compared to monthly billing
+                      </div>
                     )}
                   </CardHeader>
                   
