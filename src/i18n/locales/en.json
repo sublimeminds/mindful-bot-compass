@@ -1,45 +1,280 @@
 
 {
   "common": {
-    "welcome": "Welcome",
-    "next": "Next",
-    "back": "Back",
-    "continue": "Continue",
-    "save": "Save",
-    "cancel": "Cancel",
     "loading": "Loading...",
     "error": "Error",
-    "success": "Success"
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "welcome": "Welcome"
   },
-  "onboarding": {
-    "title": "Welcome to TherapySync",
-    "subtitle": "Let's personalize your wellness experience",
-    "steps": {
-      "welcome": "Welcome",
-      "goals": "Goals & Challenges",
-      "preferences": "Therapy Preferences",
-      "mood": "Mood Baseline",
-      "therapist": "Choose Your Therapist",
-      "notifications": "Notification Preferences",
-      "plan": "Select Your Plan",
-      "payment": "Payment",
-      "profile": "Profile Setup",
-      "complete": "Complete Setup"
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "therapy": "Therapy",
+    "profile": "Profile",
+    "settings": "Settings",
+    "help": "Help",
+    "logout": "Logout",
+    "login": "Login"
+  },
+  "support": {
+    "title": "AI Support",
+    "welcome": "Hello! I'm your AI assistant for {{pageTitle}}. I can help you with: {{features}}. What would you like to know?",
+    "quickActions": "Quick Actions",
+    "placeholder": "Ask me anything...",
+    "thinking": "Thinking...",
+    "error": {
+      "title": "Support Error",
+      "description": "Unable to get AI response. Please try again."
     },
-    "smartAnalysis": {
-      "title": "Your Enhanced Personalized Analysis",
-      "subtitle": "AI-powered insights with cultural intelligence and personalized recommendations",
-      "analyzing": "Enhanced AI Analysis in Progress",
-      "analyzingSubtext": "Our advanced AI is creating your personalized therapy plan with cultural considerations...",
-      "planTitle": "Your Personalized Therapy Plan",
-      "riskAssessment": "Risk Assessment & Duration",
-      "insights": "Personalized Insights",
-      "cultural": "Cultural Considerations",
-      "recommendations": "Recommended Interventions",
-      "continueToMatching": "Continue to Therapist Matching"
+    "contexts": {
+      "home": {
+        "title": "Welcome to TherapySync",
+        "features": {
+          "therapy": "AI Therapy Sessions",
+          "progress": "Progress Tracking",
+          "community": "Community Support"
+        },
+        "actions": {
+          "start": "Start First Session",
+          "explore": "Explore Features",
+          "pricing": "View Pricing"
+        },
+        "help": {
+          "getting_started": "Getting Started",
+          "account": "Account Setup",
+          "features": "Feature Overview"
+        }
+      },
+      "dashboard": {
+        "title": "Your Dashboard",
+        "features": {
+          "overview": "Progress Overview",
+          "sessions": "Recent Sessions",
+          "goals": "Goals Tracking"
+        },
+        "actions": {
+          "session": "Start New Session",
+          "goals": "Set New Goal",
+          "progress": "View Progress"
+        },
+        "help": {
+          "navigation": "Dashboard Navigation",
+          "widgets": "Understanding Widgets",
+          "customization": "Customization Options"
+        }
+      },
+      "therapy": {
+        "title": "AI Therapy Session",
+        "features": {
+          "ai": "AI Therapist",
+          "techniques": "Therapeutic Techniques",
+          "progress": "Session Progress"
+        },
+        "actions": {
+          "techniques": "Learn Techniques",
+          "crisis": "Crisis Support",
+          "specialist": "Find Specialist"
+        },
+        "help": {
+          "communication": "How to Communicate",
+          "techniques": "Available Techniques",
+          "privacy": "Privacy & Safety"
+        }
+      },
+      "profile": {
+        "title": "Profile Settings",
+        "features": {
+          "personal": "Personal Info",
+          "preferences": "Therapy Preferences",
+          "privacy": "Privacy Settings"
+        },
+        "actions": {
+          "update": "Update Profile",
+          "security": "Security Settings",
+          "preferences": "Set Preferences"
+        },
+        "help": {
+          "setup": "Profile Setup",
+          "privacy": "Privacy Controls",
+          "data": "Data Management"
+        }
+      },
+      "default": {
+        "title": "TherapySync Help",
+        "features": {
+          "general": "General Support"
+        },
+        "actions": {
+          "help": "Get Help",
+          "contact": "Contact Support"
+        },
+        "help": {
+          "general": "General Help",
+          "contact": "Contact Support"
+        }
+      }
     }
   },
-  "currency": {
-    "pricesIn": "Prices in {{currency}}"
+  "couplesTherapy": {
+    "badge": "Couples Therapy",
+    "title": "Strengthen Your Relationship Together",
+    "subtitle": "AI-powered couples therapy designed to improve communication, resolve conflicts, and build deeper connection between partners.",
+    "cta": {
+      "start": "Start Couples Session",
+      "learn": "Learn More"
+    },
+    "features": {
+      "communication": {
+        "title": "Communication Enhancement",
+        "description": "Learn effective communication techniques and practice active listening skills"
+      },
+      "conflictResolution": {
+        "title": "Conflict Resolution",
+        "description": "Develop healthy ways to handle disagreements and find common ground"
+      },
+      "intimacy": {
+        "title": "Intimacy Building",
+        "description": "Strengthen emotional and physical connection between partners"
+      },
+      "teamwork": {
+        "title": "Partnership Strengthening",
+        "description": "Build a stronger partnership through shared goals and mutual support"
+      }
+    },
+    "sessions": {
+      "title": "Session Options",
+      "joint": {
+        "title": "Joint Sessions",
+        "description": "Work together with AI guidance on shared relationship goals"
+      },
+      "individual": {
+        "title": "Individual Preparation",
+        "description": "Private sessions to prepare for couple discussions"
+      },
+      "crisis": {
+        "title": "Crisis Support",
+        "description": "Immediate support during relationship emergencies"
+      }
+    },
+    "benefits": {
+      "title": "Why Choose AI Couples Therapy?",
+      "available": "24/7 availability for crisis moments",
+      "privacy": "Complete privacy and confidentiality",
+      "affordable": "More affordable than traditional therapy",
+      "personalized": "Personalized approaches for your relationship",
+      "multilingual": "Available in 29+ languages",
+      "evidenceBased": "Evidence-based therapeutic techniques",
+      "progress": "Track relationship progress over time",
+      "flexible": "Flexible scheduling for busy couples"
+    }
+  },
+  "adhdTherapy": {
+    "badge": "ADHD Support",
+    "title": "ADHD-Focused Therapy & Support",
+    "subtitle": "Specialized AI therapy designed specifically for ADHD minds. Improve focus, manage time better, and develop executive function skills.",
+    "cta": {
+      "start": "Start ADHD Session",
+      "learn": "Learn More"
+    },
+    "features": {
+      "focus": {
+        "title": "Focus Enhancement",
+        "description": "Techniques to improve concentration and reduce distractibility"
+      },
+      "timeManagement": {
+        "title": "Time Management",
+        "description": "Strategies for better time awareness and organization"
+      },
+      "executiveFunction": {
+        "title": "Executive Function",
+        "description": "Support for planning, prioritizing, and task completion"
+      },
+      "hyperactivity": {
+        "title": "Hyperactivity Management",
+        "description": "Techniques to channel energy productively and manage restlessness"
+      }
+    },
+    "strategies": {
+      "title": "ADHD Management Strategies",
+      "pomodoro": {
+        "title": "Pomodoro Technique",
+        "description": "Break work into focused intervals with breaks"
+      },
+      "mindfulness": {
+        "title": "Mindfulness Training",
+        "description": "Develop present-moment awareness and emotional regulation"
+      },
+      "organization": {
+        "title": "Organization Systems",
+        "description": "Create structure and systems for daily tasks"
+      }
+    },
+    "benefits": {
+      "title": "Why Our ADHD Support Works",
+      "immediate": "Immediate access during hyperfocus or distraction",
+      "repetition": "Repetition-friendly learning approach",
+      "visual": "Visual and interactive therapy elements",
+      "pacing": "Self-paced sessions that match your energy",
+      "noJudgment": "Non-judgmental AI understands ADHD challenges",
+      "techniques": "Evidence-based ADHD management techniques",
+      "tracking": "Track focus patterns and improvements",
+      "reminders": "Built-in reminders and scheduling support"
+    }
+  },
+  "footer": {
+    "description": "Empowering mental wellness through AI-driven therapy and personalized support.",
+    "copyright": "All rights reserved.",
+    "platform": {
+      "title": "Platform",
+      "features": "Features",
+      "pricing": "Pricing",
+      "howItWorks": "How It Works",
+      "culturalAI": "Cultural AI"
+    },
+    "support": {
+      "title": "Support",
+      "help": "Help Center",
+      "contact": "Contact Support",
+      "crisis": "Crisis Resources",
+      "community": "Community"
+    },
+    "therapy": {
+      "title": "Specialized Therapy",
+      "couples": "Couples Therapy",
+      "relationship": "Relationship Therapy",
+      "adhd": "ADHD Support",
+      "autism": "Autism Support"
+    },
+    "legal": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy"
+    }
+  },
+  "onboarding": {
+    "title": "Getting Started",
+    "steps": {
+      "welcome": "Welcome",
+      "goals": "Your Goals",
+      "preferences": "Preferences",
+      "cultural": "Cultural Context",
+      "analysis": "AI Analysis",
+      "therapist": "Therapist Selection",
+      "plan": "Choose Plan",
+      "notifications": "Notifications"
+    }
   }
 }

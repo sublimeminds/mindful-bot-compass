@@ -1,151 +1,185 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Shield, Globe, Mail, Phone, MapPin, Twitter, Facebook, Linkedin, Instagram } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import GradientLogo from '@/components/ui/GradientLogo';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
-  return (
-    <footer className="bg-slate-900 text-white">
-      <div className="container mx-auto px-4 py-16">
-        {/* Newsletter Section */}
-        <div className="bg-gradient-to-r from-therapy-600 to-calm-600 rounded-2xl p-8 mb-16">
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold mb-4">Stay Connected to Your Wellness Journey</h3>
-            <p className="text-therapy-100 mb-6">
-              Get weekly mental health tips, guided exercises, and exclusive content delivered to your inbox.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <Input 
-                type="email" 
-                placeholder="Enter your email" 
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
-              />
-              <Button className="bg-white text-therapy-600 hover:bg-therapy-50">
-                Subscribe
-              </Button>
-            </div>
-          </div>
-        </div>
+  const { t } = useTranslation();
 
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {/* Company Info */}
+  return (
+    <footer className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <GradientLogo size="sm" />
-              <span className="text-xl font-bold">TherapySync</span>
+              <div className="w-8 h-8 bg-gradient-to-r from-therapy-500 to-therapy-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">T</span>
+              </div>
+              <span className="text-xl font-bold therapy-text-gradient">TherapySync</span>
             </div>
-            <p className="text-slate-300 leading-relaxed">
-              Transform your mental health journey with AI-powered therapy, personalized care, and 24/7 support.
+            <p className="text-slate-600 dark:text-slate-400 text-sm">
+              {t('footer.description', 'Empowering mental wellness through AI-driven therapy and personalized support.')}
             </p>
+            
+            {/* Social Media Links */}
             <div className="flex space-x-4">
-              <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white p-2">
-                <Twitter className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white p-2">
-                <Facebook className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white p-2">
-                <Linkedin className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white p-2">
-                <Instagram className="h-4 w-4" />
-              </Button>
+              <a
+                href="https://instagram.com/therapysync"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-gradient-to-r from-pink-500 to-pink-600 rounded-lg flex items-center justify-center hover:from-pink-600 hover:to-pink-700 transition-all duration-300"
+                aria-label="Follow us on Instagram"
+              >
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+              
+              <a
+                href="https://facebook.com/therapysync"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg flex items-center justify-center hover:from-blue-700 hover:to-blue-800 transition-all duration-300"
+                aria-label="Follow us on Facebook"
+              >
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              
+              <a
+                href="https://twitter.com/therapysync"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-gradient-to-r from-slate-800 to-slate-900 rounded-lg flex items-center justify-center hover:from-slate-900 hover:to-black transition-all duration-300"
+                aria-label="Follow us on Twitter"
+              >
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              
+              <a
+                href="https://linkedin.com/company/therapysync"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-gradient-to-r from-blue-700 to-blue-800 rounded-lg flex items-center justify-center hover:from-blue-800 hover:to-blue-900 transition-all duration-300"
+                aria-label="Follow us on LinkedIn"
+              >
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </a>
             </div>
           </div>
 
-          {/* Platform */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Platform</h4>
-            <ul className="space-y-3">
-              <li><Link to="/features" className="text-slate-300 hover:text-therapy-400 transition-colors">Features</Link></li>
-              <li><Link to="/how-it-works" className="text-slate-300 hover:text-therapy-400 transition-colors">How It Works</Link></li>
-              <li><Link to="/pricing" className="text-slate-300 hover:text-therapy-400 transition-colors">Pricing</Link></li>
-              <li><Link to="/therapy-chat" className="text-slate-300 hover:text-therapy-400 transition-colors">TherapySync AI</Link></li>
-              <li><Link to="/voice-technology" className="text-slate-300 hover:text-therapy-400 transition-colors">Voice Technology</Link></li>
-              <li><Link to="/downloads" className="text-slate-300 hover:text-therapy-400 transition-colors">Downloads</Link></li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Resources</h4>
-            <ul className="space-y-3">
-              <li><Link to="/help" className="text-slate-300 hover:text-therapy-400 transition-colors">Help Center</Link></li>
-              <li><Link to="/crisis-resources" className="text-slate-300 hover:text-therapy-400 transition-colors">Crisis Support</Link></li>
-              <li><Link to="/community" className="text-slate-300 hover:text-therapy-400 transition-colors">Community</Link></li>
-              <li><Link to="/downloads" className="text-slate-300 hover:text-therapy-400 transition-colors">Mobile & Desktop Apps</Link></li>
-              <li><Link to="/faq" className="text-slate-300 hover:text-therapy-400 transition-colors">FAQ</Link></li>
-              <li><Link to="/blog" className="text-slate-300 hover:text-therapy-400 transition-colors">Blog</Link></li>
-            </ul>
-          </div>
-
-          {/* Contact & Legal */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Contact & Legal</h4>
-            <ul className="space-y-3 mb-6">
-              <li className="flex items-center space-x-2 text-slate-300">
-                <Mail className="h-4 w-4" />
-                <span>support@therapysync.com</span>
+          {/* Platform Links */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              {t('footer.platform.title', 'Platform')}
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/features-overview" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.platform.features', 'Features')}
+                </Link>
               </li>
-              <li className="flex items-center space-x-2 text-slate-300">
-                <Phone className="h-4 w-4" />
-                <span>1-800-THERAPY</span>
+              <li>
+                <Link to="/pricing" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.platform.pricing', 'Pricing')}
+                </Link>
               </li>
-              <li className="flex items-center space-x-2 text-slate-300">
-                <MapPin className="h-4 w-4" />
-                <span>San Francisco, CA</span>
+              <li>
+                <Link to="/how-it-works" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.platform.howItWorks', 'How It Works')}
+                </Link>
               </li>
-            </ul>
-            <ul className="space-y-3">
-              <li><Link to="/contact" className="text-slate-300 hover:text-therapy-400 transition-colors">Contact Us</Link></li>
-              <li><Link to="/privacy" className="text-slate-300 hover:text-therapy-400 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/terms" className="text-slate-300 hover:text-therapy-400 transition-colors">Terms of Service</Link></li>
-              <li><Link to="/security" className="text-slate-300 hover:text-therapy-400 transition-colors">Security</Link></li>
+              <li>
+                <Link to="/cultural-ai-features" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.platform.culturalAI', 'Cultural AI')}
+                </Link>
+              </li>
             </ul>
           </div>
-        </div>
 
-        {/* Trust Indicators */}
-        <div className="border-t border-slate-800 pt-8 mb-8">
-          <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-slate-400">
-            <div className="flex items-center space-x-2">
-              <Shield className="h-4 w-4" />
-              <span>HIPAA Compliant</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Shield className="h-4 w-4" />
-              <span>SOC 2 Type II</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Globe className="h-4 w-4" />
-              <span>256-bit SSL Encryption</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Heart className="h-4 w-4" />
-              <span>Evidence-Based Therapy</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Shield className="h-4 w-4" />
-              <span>24/7 Crisis Support</span>
-            </div>
+          {/* Support Links */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              {t('footer.support.title', 'Support')}
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/help" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.support.help', 'Help Center')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/support" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.support.contact', 'Contact Support')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/crisis-resources" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.support.crisis', 'Crisis Resources')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/community" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.support.community', 'Community')}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Specialized Therapy */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              {t('footer.therapy.title', 'Specialized Therapy')}
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/couples-therapy" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.therapy.couples', 'Couples Therapy')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/relationship-therapy" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.therapy.relationship', 'Relationship Therapy')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/adhd-therapy" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.therapy.adhd', 'ADHD Support')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/autism-therapy" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                  {t('footer.therapy.autism', 'Autism Support')}
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-slate-800 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-slate-400 text-sm mb-4 md:mb-0">
-              © 2024 TherapySync, Inc. All rights reserved. Made with ❤️ for mental wellness.
+        <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex items-center space-x-6">
+              <p className="text-slate-600 dark:text-slate-400 text-sm">
+                © {new Date().getFullYear()} TherapySync. {t('footer.copyright', 'All rights reserved.')}
+              </p>
             </div>
-            <div className="flex items-center space-x-4 text-sm text-slate-400">
-              <span>Version 2.1.0</span>
-              <span>•</span>
-              <span>Status: All Systems Operational</span>
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <div className="flex items-center space-x-6">
+              <Link to="/privacy" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                {t('footer.legal.privacy', 'Privacy Policy')}
+              </Link>
+              <Link to="/terms" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                {t('footer.legal.terms', 'Terms of Service')}
+              </Link>
+              <Link to="/cookies" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                {t('footer.legal.cookies', 'Cookie Policy')}
+              </Link>
             </div>
           </div>
         </div>

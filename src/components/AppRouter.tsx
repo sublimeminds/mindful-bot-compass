@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -21,6 +22,8 @@ import Support from '@/pages/Support';
 import CrisisSupport from '@/pages/CrisisSupport';
 import Progress from '@/pages/Progress';
 import OnboardingPage from '@/pages/OnboardingPage';
+import CouplesTherapy from '@/pages/CouplesTherapy';
+import ADHDTherapy from '@/pages/ADHDTherapy';
 
 const AppRouter = () => {
   return (
@@ -46,6 +49,10 @@ const AppRouter = () => {
       <Route path="/support" element={<Support />} />
       <Route path="/crisis-support" element={<CrisisSupport />} />
       <Route path="/progress" element={<Progress />} />
+      <Route path="/couples-therapy" element={<CouplesTherapy />} />
+      <Route path="/relationship-therapy" element={<CouplesTherapy />} />
+      <Route path="/adhd-therapy" element={<ADHDTherapy />} />
+      <Route path="/autism-therapy" element={<ADHDTherapy />} />
     </Routes>
   );
 };
