@@ -79,7 +79,7 @@ class EnhancedVoiceService {
   // Updated playText method to handle both string and object voiceId
   async playText(text: string, voiceId?: string | VoiceConfig): Promise<void> {
     if (this.hasApiKey()) {
-      // Handle voice configuration for ElevenLabs
+      // Handle voice configuration for ElevenLabs - extract string voiceId properly
       let selectedVoiceId: string;
       let voiceSettings: any = {
         stability: 0.5,
