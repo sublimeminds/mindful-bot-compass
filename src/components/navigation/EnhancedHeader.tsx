@@ -26,11 +26,16 @@ import {
   Crown,
   Phone,
   FileText,
-  Mail
+  Mail,
+  Mic,
+  Target,
+  Zap,
+  Settings
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import GradientButton from '@/components/ui/GradientButton';
 import GradientLogo from '@/components/ui/GradientLogo';
+import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 
 const EnhancedHeader = () => {
   const { user } = useAuth();
@@ -38,34 +43,44 @@ const EnhancedHeader = () => {
   const location = useLocation();
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
 
-  const platformFeatures = [
+  const aiFeatures = [
     {
       icon: Brain,
-      title: "AI Therapy Sessions",
+      title: "AI Therapy Chat",
       description: "Advanced AI-powered therapy conversations with personalized treatment approaches",
       href: "/therapy-chat",
       gradient: "from-therapy-500 to-calm-500"
     },
+    {
+      icon: Mic,
+      title: "Voice AI Technology",
+      description: "Natural voice conversations in 29 languages with emotion detection",
+      href: "/voice-technology",
+      gradient: "from-flow-500 to-balance-500"
+    },
+    {
+      icon: Globe,
+      title: "Cultural AI",
+      description: "Culturally sensitive AI trained to understand diverse backgrounds and contexts",
+      href: "/cultural-ai-features",
+      gradient: "from-balance-500 to-flow-500"
+    },
+    {
+      icon: Target,
+      title: "AI Personalization",
+      description: "Personalized therapy approaches adapted to your unique needs and preferences",
+      href: "/features-overview",
+      gradient: "from-harmony-500 to-therapy-500"
+    }
+  ];
+
+  const platformFeatures = [
     {
       icon: Users,
       title: "Family Plans",
       description: "Comprehensive family mental health support with adaptive pricing and parental controls",
       href: "/family-dashboard",
       gradient: "from-harmony-500 to-balance-500"
-    },
-    {
-      icon: Heart,
-      title: "Mood Tracking",
-      description: "Track your emotional journey with AI-powered insights and progress analytics",
-      href: "/mood-tracking",
-      gradient: "from-calm-500 to-therapy-500"
-    },
-    {
-      icon: Headphones,
-      title: "Voice Therapy",
-      description: "Natural voice conversations in 29 languages with emotion detection technology",
-      href: "/voice-technology",
-      gradient: "from-flow-500 to-balance-500"
     },
     {
       icon: Shield,
@@ -75,11 +90,18 @@ const EnhancedHeader = () => {
       gradient: "from-therapy-600 to-harmony-600"
     },
     {
-      icon: Globe,
-      title: "Cultural AI",
-      description: "Culturally sensitive AI trained to understand diverse backgrounds and contexts",
-      href: "/cultural-ai-features",
-      gradient: "from-balance-500 to-flow-500"
+      icon: Heart,
+      title: "Mood Tracking",
+      description: "Track your emotional journey with AI-powered insights and progress analytics",
+      href: "/mood-tracking",
+      gradient: "from-calm-500 to-therapy-500"
+    },
+    {
+      icon: Calculator,
+      title: "Pricing",
+      description: "Flexible pricing plans designed for individuals, families, and organizations",
+      href: "/pricing",
+      gradient: "from-therapy-500 to-calm-500"
     }
   ];
 
@@ -115,11 +137,13 @@ const EnhancedHeader = () => {
   ];
 
   const IconWrapper = ({ icon: Icon, gradient, isHovered }: { icon: any, gradient: string, isHovered: boolean }) => (
-    <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
-      isHovered ? `bg-gradient-to-r ${gradient} shadow-lg scale-110` : 'bg-gray-100'
+    <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 transform ${
+      isHovered 
+        ? `bg-gradient-to-r ${gradient} shadow-lg scale-110 animate-pulse` 
+        : `bg-gradient-to-r ${gradient} opacity-70 hover:opacity-100`
     }`}>
       <Icon className={`h-5 w-5 transition-all duration-300 ${
-        isHovered ? 'text-white animate-pulse' : 'text-gray-600'
+        isHovered ? 'text-white scale-110' : 'text-white'
       }`} />
     </div>
   );
@@ -136,16 +160,62 @@ const EnhancedHeader = () => {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
+            {/* AI Features Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                  <Brain className="h-4 w-4 text-therapy-500" />
+                  <span>AI</span>
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-96 p-4 bg-white shadow-xl border-0">
+                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+                  <Brain className="h-5 w-5 mr-2 text-therapy-500" />
+                  AI Features
+                </DropdownMenuLabel>
+                <div className="grid grid-cols-2 gap-3">
+                  {aiFeatures.map((feature, index) => (
+                    <Link
+                      key={feature.title}
+                      to={feature.href}
+                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
+                      onMouseEnter={() => setHoveredIcon(feature.title)}
+                      onMouseLeave={() => setHoveredIcon(null)}
+                    >
+                      <IconWrapper 
+                        icon={feature.icon} 
+                        gradient={feature.gradient}
+                        isHovered={hoveredIcon === feature.title}
+                      />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
+                          {feature.title}
+                        </h4>
+                        <p className="text-xs text-gray-600 mt-1 leading-tight">
+                          {feature.description}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {/* Platform Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                  <Settings className="h-4 w-4 text-therapy-500" />
                   <span>Platform</span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-96 p-4 bg-white shadow-xl border-0">
-                <DropdownMenuLabel className="text-lg font-semibold mb-4">Platform Features</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+                  <Settings className="h-5 w-5 mr-2 text-therapy-500" />
+                  Platform Features
+                </DropdownMenuLabel>
                 <div className="grid grid-cols-2 gap-3">
                   {platformFeatures.map((feature, index) => (
                     <Link
@@ -174,24 +244,20 @@ const EnhancedHeader = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Pricing */}
-            <Link 
-              to="/pricing" 
-              className="text-gray-700 hover:text-therapy-600 font-medium transition-colors"
-            >
-              Pricing
-            </Link>
-
             {/* Help Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                  <HelpCircle className="h-4 w-4 text-therapy-500" />
                   <span>Help</span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-80 p-4 bg-white shadow-xl border-0">
-                <DropdownMenuLabel className="text-lg font-semibold mb-4">Help & Support</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+                  <HelpCircle className="h-5 w-5 mr-2 text-therapy-500" />
+                  Help & Support
+                </DropdownMenuLabel>
                 <div className="space-y-2">
                   {helpResources.map((resource, index) => (
                     <Link
@@ -223,6 +289,11 @@ const EnhancedHeader = () => {
 
           {/* Action Buttons */}
           <div className="flex items-center space-x-3">
+            {/* Language Selector */}
+            <div className="hidden md:block">
+              <EnhancedLanguageSelector />
+            </div>
+
             {user ? (
               <div className="flex items-center space-x-3">
                 <Button 
