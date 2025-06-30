@@ -16,14 +16,15 @@ import {
   Heart,
   TrendingUp,
   Calendar,
-  MessageSquare
+  MessageSquare,
+  Calculator
 } from 'lucide-react';
 import { familyService, type Household, type HouseholdMember, type FamilyAlert } from '@/services/familyService';
 import { useToast } from '@/hooks/use-toast';
 import FamilyMemberCard from './FamilyMemberCard';
 import InviteMemberDialog from './InviteMemberDialog';
 import FamilyAlertsPanel from './FamilyAlertsPanel';
-import FamilyPlanUpgrade from './FamilyPlanUpgrade';
+import FamilyPlanSelector from './FamilyPlanSelector';
 
 const FamilyDashboard = () => {
   const { toast } = useToast();
@@ -32,7 +33,7 @@ const FamilyDashboard = () => {
   const [alerts, setAlerts] = useState<FamilyAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [showInviteDialog, setShowInviteDialog] = useState(false);
-  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
+  const [showPlanSelector, setShowPlanSelector] = useState(false);
 
   useEffect(() => {
     loadFamilyData();
@@ -121,6 +122,7 @@ const FamilyDashboard = () => {
 
   const canAddMembers = household && members.length < household.max_members;
   const isFamilyPlan = household?.plan_type.includes('family');
+  const isAdaptivePlan = household?.plan_type.includes('adaptive') || household?.plan_type.includes('pro') || household?.plan_type.includes('premium');
 
   if (loading) {
     return (
@@ -147,11 +149,22 @@ const FamilyDashboard = () => {
         <div className="flex items-center space-x-3">
           {!isFamilyPlan && (
             <Button
-              onClick={() => setShowUpgradeDialog(true)}
+              onClick={() => setShowPlanSelector(true)}
               className="bg-gradient-to-r from-therapy-500 to-calm-500 text-white"
             >
               <Crown className="h-4 w-4 mr-2" />
-              Upgrade to Family Plan
+              Get Family Plan
+            </Button>
+          )}
+          
+          {isFamilyPlan && !isAdaptivePlan && (
+            <Button
+              onClick={() => setShowPlanSelector(true)}
+              variant="outline"
+              className="border-therapy-500 text-therapy-600 hover:bg-therapy-50"
+            >
+              <Calculator className="h-4 w-4 mr-2" />
+              Upgrade to Adaptive Plan
             </Button>
           )}
           
@@ -173,9 +186,16 @@ const FamilyDashboard = () => {
                 <Shield className="h-5 w-5 text-therapy-500" />
                 <span>{household.name}</span>
               </CardTitle>
-              <Badge variant={isFamilyPlan ? "default" : "secondary"}>
-                {household.plan_type.replace('_', ' ').toUpperCase()}
-              </Badge>
+              <div className="flex items-center space-x-2">
+                <Badge variant={isFamilyPlan ? "default" : "secondary"}>
+                  {household.plan_type.replace('_', ' ').toUpperCase()}
+                </Badge>
+                {isAdaptivePlan && (
+                  <Badge className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+                    Adaptive
+                  </Badge>
+                )}
+              </div>
             </div>
           </CardHeader>
           <CardContent>
@@ -190,7 +210,9 @@ const FamilyDashboard = () => {
                 <div className="text-2xl font-bold text-therapy-600">
                   {household.max_members}
                 </div>
-                <div className="text-sm text-gray-600">Max Members</div>
+                <div className="text-sm text-gray-600">
+                  {isAdaptivePlan ? 'Current Limit' : 'Max Members'}
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-red-500">
@@ -199,6 +221,21 @@ const FamilyDashboard = () => {
                 <div className="text-sm text-gray-600">Active Alerts</div>
               </div>
             </div>
+            
+            {isAdaptivePlan && (
+              <div className="mt-4 p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div className="text-sm">
+                    <span className="font-medium">Adaptive Pricing Active</span>
+                    <p className="text-gray-600">You're only paying for {members.length} active members</p>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => setShowPlanSelector(true)}>
+                    <Calculator className="h-4 w-4 mr-2" />
+                    Adjust Plan
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -258,7 +295,10 @@ const FamilyDashboard = () => {
                   <Plus className="h-12 w-12 text-gray-400 mb-4" />
                   <p className="text-gray-600 font-medium">Invite Family Member</p>
                   <p className="text-sm text-gray-500 mt-2">
-                    {household.max_members - members.length} spots remaining
+                    {isAdaptivePlan 
+                      ? 'Add members as needed' 
+                      : `${household.max_members - members.length} spots remaining`
+                    }
                   </p>
                 </CardContent>
               </Card>
@@ -337,10 +377,18 @@ const FamilyDashboard = () => {
                   <label className="text-sm font-medium text-gray-700">Plan Type</label>
                   <p className="text-gray-600 mt-1">{household?.plan_type.replace('_', ' ')}</p>
                 </div>
-                <Button variant="outline">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Manage Settings
-                </Button>
+                <div className="flex space-x-3">
+                  <Button variant="outline">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Manage Settings
+                  </Button>
+                  {isAdaptivePlan && (
+                    <Button variant="outline" onClick={() => setShowPlanSelector(true)}>
+                      <Calculator className="h-4 w-4 mr-2" />
+                      Adjust Pricing
+                    </Button>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -356,9 +404,9 @@ const FamilyDashboard = () => {
         currentMembers={members.length}
       />
 
-      <FamilyPlanUpgrade
-        isOpen={showUpgradeDialog}
-        onClose={() => setShowUpgradeDialog(false)}
+      <FamilyPlanSelector
+        isOpen={showPlanSelector}
+        onClose={() => setShowPlanSelector(false)}
         currentPlan={household?.plan_type || 'individual'}
       />
     </div>

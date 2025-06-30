@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 import FamilyDashboard from '@/components/family/FamilyDashboard';
 
 const FamilyDashboardPage = () => {
@@ -12,9 +12,9 @@ const FamilyDashboardPage = () => {
   });
 
   return (
-    <DashboardLayout>
+    <DashboardLayoutWithSidebar>
       <FamilyDashboard />
-    </DashboardLayout>
+    </DashboardLayoutWithSidebar>
   );
 };
 

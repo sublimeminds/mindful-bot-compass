@@ -105,7 +105,12 @@ export const familyService = {
       return [];
     }
 
-    return data || [];
+    return (data || []).map(member => ({
+      ...member,
+      member_type: member.member_type as 'primary' | 'adult' | 'teen' | 'child',
+      permission_level: member.permission_level as 'full' | 'limited' | 'basic' | 'view_only',
+      invitation_status: member.invitation_status as 'pending' | 'active' | 'inactive'
+    }));
   },
 
   async inviteFamilyMember(invitation: {
@@ -166,10 +171,12 @@ export const familyService = {
       return [];
     }
 
-    return data?.map(alert => ({
+    return (data || []).map(alert => ({
       ...alert,
+      alert_type: alert.alert_type as 'mood_decline' | 'crisis_risk' | 'concerning_pattern' | 'missed_sessions',
+      severity: alert.severity as 'low' | 'medium' | 'high' | 'critical',
       member_profile: alert.profiles
-    })) || [];
+    }));
   },
 
   async acknowledgeAlert(alertId: string): Promise<boolean> {
