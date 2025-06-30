@@ -2,33 +2,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import GradientLogo from '@/components/ui/GradientLogo';
 
 const Footer = () => {
   const { t } = useTranslation();
 
   return (
-    <footer className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+    <footer className="bg-gradient-to-br from-slate-50 via-therapy-50/30 to-calm-50/30 border-t border-slate-200/50">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-therapy-500 to-therapy-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">T</span>
-              </div>
-              <span className="text-xl font-bold therapy-text-gradient">TherapySync</span>
+            <div className="flex items-center space-x-3">
+              <GradientLogo size="sm" className="animate-swirl-breathe" />
+              <span className="text-2xl font-bold bg-gradient-to-r from-therapy-600 via-calm-500 to-therapy-700 bg-clip-text text-transparent">
+                TherapySync
+              </span>
             </div>
-            <p className="text-slate-600 dark:text-slate-400 text-sm">
-              {t('footer.description', 'Empowering mental wellness through AI-driven therapy and personalized support.')}
+            <p className="text-slate-600 text-sm leading-relaxed">
+              {t('footer.description', 'Empowering mental wellness through AI-driven therapy and personalized support with cutting-edge technology.')}
             </p>
             
             {/* Social Media Links */}
-            <div className="flex space-x-4">
+            <div className="flex space-x-3">
               <a
                 href="https://instagram.com/therapysync"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-gradient-to-r from-pink-500 to-pink-600 rounded-lg flex items-center justify-center hover:from-pink-600 hover:to-pink-700 transition-all duration-300"
+                className="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl flex items-center justify-center hover:from-pink-600 hover:to-rose-600 transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-pink-200"
                 aria-label="Follow us on Instagram"
               >
                 <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -40,7 +41,7 @@ const Footer = () => {
                 href="https://facebook.com/therapysync"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg flex items-center justify-center hover:from-blue-700 hover:to-blue-800 transition-all duration-300"
+                className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-blue-200"
                 aria-label="Follow us on Facebook"
               >
                 <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -52,7 +53,7 @@ const Footer = () => {
                 href="https://twitter.com/therapysync"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-gradient-to-r from-slate-800 to-slate-900 rounded-lg flex items-center justify-center hover:from-slate-900 hover:to-black transition-all duration-300"
+                className="w-10 h-10 bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl flex items-center justify-center hover:from-slate-900 hover:to-black transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-slate-300"
                 aria-label="Follow us on Twitter"
               >
                 <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -64,7 +65,7 @@ const Footer = () => {
                 href="https://linkedin.com/company/therapysync"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-gradient-to-r from-blue-700 to-blue-800 rounded-lg flex items-center justify-center hover:from-blue-800 hover:to-blue-900 transition-all duration-300"
+                className="w-10 h-10 bg-gradient-to-r from-blue-700 to-blue-800 rounded-xl flex items-center justify-center hover:from-blue-800 hover:to-blue-900 transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-blue-200"
                 aria-label="Follow us on LinkedIn"
               >
                 <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -76,27 +77,27 @@ const Footer = () => {
 
           {/* Platform Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+            <h3 className="text-lg font-semibold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
               {t('footer.platform.title', 'Platform')}
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               <li>
-                <Link to="/features-overview" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
-                  {t('footer.platform.features', 'Features')}
+                <Link to="/features-showcase" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
+                  {t('footer.platform.features', 'New Features')}
                 </Link>
               </li>
               <li>
-                <Link to="/pricing" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                <Link to="/pricing" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
                   {t('footer.platform.pricing', 'Pricing')}
                 </Link>
               </li>
               <li>
-                <Link to="/how-it-works" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                <Link to="/how-it-works" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
                   {t('footer.platform.howItWorks', 'How It Works')}
                 </Link>
               </li>
               <li>
-                <Link to="/cultural-ai-features" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                <Link to="/cultural-ai-features" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
                   {t('footer.platform.culturalAI', 'Cultural AI')}
                 </Link>
               </li>
@@ -105,27 +106,27 @@ const Footer = () => {
 
           {/* Support Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+            <h3 className="text-lg font-semibold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
               {t('footer.support.title', 'Support')}
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               <li>
-                <Link to="/help" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                <Link to="/help" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
                   {t('footer.support.help', 'Help Center')}
                 </Link>
               </li>
               <li>
-                <Link to="/support" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                <Link to="/support" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
                   {t('footer.support.contact', 'Contact Support')}
                 </Link>
               </li>
               <li>
-                <Link to="/crisis-resources" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                <Link to="/crisis-resources" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
                   {t('footer.support.crisis', 'Crisis Resources')}
                 </Link>
               </li>
               <li>
-                <Link to="/community" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                <Link to="/community" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
                   {t('footer.support.community', 'Community')}
                 </Link>
               </li>
@@ -134,28 +135,28 @@ const Footer = () => {
 
           {/* Specialized Therapy */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+            <h3 className="text-lg font-semibold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
               {t('footer.therapy.title', 'Specialized Therapy')}
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               <li>
-                <Link to="/couples-therapy" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                <Link to="/therapy-types" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
+                  {t('footer.therapy.types', 'All Therapy Types')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/couples-therapy" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
                   {t('footer.therapy.couples', 'Couples Therapy')}
                 </Link>
               </li>
               <li>
-                <Link to="/relationship-therapy" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
-                  {t('footer.therapy.relationship', 'Relationship Therapy')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/adhd-therapy" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+                <Link to="/adhd-therapy" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
                   {t('footer.therapy.adhd', 'ADHD Support')}
                 </Link>
               </li>
               <li>
-                <Link to="/autism-therapy" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
-                  {t('footer.therapy.autism', 'Autism Support')}
+                <Link to="/lgbtq-therapy" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
+                  {t('footer.therapy.lgbtq', 'LGBTQ+ Support')}
                 </Link>
               </li>
             </ul>
@@ -163,21 +164,21 @@ const Footer = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+        <div className="mt-12 pt-8 border-t border-gradient-to-r from-therapy-200/50 to-calm-200/50">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex items-center space-x-6">
-              <p className="text-slate-600 dark:text-slate-400 text-sm">
+              <p className="text-slate-600 text-sm">
                 © {new Date().getFullYear()} TherapySync. {t('footer.copyright', 'All rights reserved.')}
               </p>
             </div>
             <div className="flex items-center space-x-6">
-              <Link to="/privacy" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+              <Link to="/privacy" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200">
                 {t('footer.legal.privacy', 'Privacy Policy')}
               </Link>
-              <Link to="/terms" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+              <Link to="/terms" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200">
                 {t('footer.legal.terms', 'Terms of Service')}
               </Link>
-              <Link to="/cookies" className="text-slate-600 dark:text-slate-400 hover:text-therapy-600 dark:hover:text-therapy-400 text-sm transition-colors duration-200">
+              <Link to="/cookies" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200">
                 {t('footer.legal.cookies', 'Cookie Policy')}
               </Link>
             </div>

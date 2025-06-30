@@ -11,6 +11,7 @@ import Pricing from '@/pages/Pricing';
 import CulturalAIFeatures from '@/pages/CulturalAIFeatures';
 import HowItWorks from '@/pages/HowItWorks';
 import FeaturesOverview from '@/pages/FeaturesOverview';
+import FeaturesShowcase from '@/pages/FeaturesShowcase';
 import VoiceTechnology from '@/pages/VoiceTechnology';
 import Help from '@/pages/Help';
 import Community from '@/pages/Community';
@@ -45,6 +46,7 @@ const AppRouter = () => {
       <Route path="/cultural-ai-features" element={<CulturalAIFeatures />} />
       <Route path="/how-it-works" element={<HowItWorks />} />
       <Route path="/features-overview" element={<FeaturesOverview />} />
+      <Route path="/features-showcase" element={<FeaturesShowcase />} />
       <Route path="/voice-technology" element={<VoiceTechnology />} />
       <Route path="/help" element={<Help />} />
       <Route path="/community" element={<Community />} />
