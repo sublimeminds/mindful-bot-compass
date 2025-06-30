@@ -1,4 +1,5 @@
 
+
 import { EmotionAnalyzer } from './emotionAnalyzer';
 
 export interface Voice {
@@ -101,7 +102,7 @@ class EnhancedVoiceService {
 
       await this.playWithElevenLabs(text, selectedVoiceId, voiceSettings);
     } else {
-      // Extract string voiceId for web speech - ensure it's always a string
+      // Extract string voiceId for web speech - ensure it's always a string or undefined
       let webVoiceId: string | undefined;
       if (typeof voiceId === 'object' && voiceId !== null) {
         webVoiceId = voiceId.voiceId;
