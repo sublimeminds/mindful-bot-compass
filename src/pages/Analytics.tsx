@@ -202,8 +202,7 @@ const Analytics = () => {
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
-                      >
-                      </Pie>
+                      />
                       <Tooltip />
                     </PieChart>
                   </ResponsiveContainer>
@@ -411,7 +410,7 @@ const Analytics = () => {
                   <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-semibold text-blue-700">Anxiety Reduction</h4>
-                      <Badge className="bg-blue-100 text-blue-800">Target: <5</Badge>
+                      <Badge className="bg-blue-100 text-blue-800">Target: Less than 5</Badge>
                     </div>
                     <p className="text-sm text-blue-600">Current average: 3.2/10 (Excellent!)</p>
                   </div>
@@ -419,7 +418,7 @@ const Analytics = () => {
                   <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-semibold text-orange-700">Sleep Quality</h4>
-                      <Badge className="bg-orange-100 text-orange-800">Target: >7</Badge>
+                      <Badge className="bg-orange-100 text-orange-800">Target: Greater than 7</Badge>
                     </div>
                     <p className="text-sm text-orange-600">Current average: 7.4/10 (On track!)</p>
                   </div>
