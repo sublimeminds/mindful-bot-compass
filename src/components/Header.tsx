@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Brain, Heart, Globe, Menu, X, ChevronDown, User, Settings, Crown, MessageSquare, Headphones, LifeBuoy, Users, BookOpen, Zap, DollarSign, BarChart3, Target, Calendar, Notebook, Settings2 } from 'lucide-react';
+import { Brain, Heart, Globe, Menu, X, ChevronDown, User, Settings, Crown, MessageSquare, Headphones, LifeBuoy, Users, BookOpen, Zap, DollarSign, BarChart3, Target, Calendar, Notebook, Settings2, Volume2 } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useRef, useEffect } from 'react';
@@ -46,14 +45,16 @@ const Header = () => {
     { label: 'LGBTQ+ Therapy', path: '/lgbtq-therapy', icon: Users, description: 'Inclusive and affirming support' },
     { label: 'Crisis Support', path: '/crisis-support', icon: LifeBuoy, description: '24/7 emergency assistance' },
     { label: 'Voice Technology', path: '/voice-technology', icon: Headphones, description: 'Natural voice conversations' },
-    { label: 'Cultural AI Features', path: '/cultural-ai-features', icon: Globe, description: 'Culturally sensitive therapy' }
+    { label: 'Cultural AI Features', path: '/cultural-ai-features', icon: Globe, description: 'Culturally sensitive therapy' },
+    { label: 'Audio Library', path: '/audio-library', icon: Volume2, description: 'Therapeutic podcasts & meditations' }
   ];
 
   const platformDropdownItems = [
     { label: 'New Features Showcase', path: '/features-showcase', icon: Zap, description: 'Latest platform capabilities' },
     { label: 'Features Overview', path: '/features-overview', icon: BookOpen, description: 'Complete feature breakdown' },
     { label: 'How It Works', path: '/how-it-works', icon: Settings, description: 'Platform walkthrough' },
-    { label: 'Pricing', path: '/pricing', icon: DollarSign, description: 'Plans and pricing options' }
+    { label: 'Pricing', path: '/pricing', icon: DollarSign, description: 'Plans and pricing options' },
+    { label: 'Audio Content', path: '/audio-library', icon: Headphones, description: 'Premium therapeutic audio library' }
   ];
 
   const isActive = (path: string) => location.pathname === path;

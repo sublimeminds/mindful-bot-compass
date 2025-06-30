@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -31,6 +30,7 @@ import Goals from '@/pages/Goals';
 import MoodTracking from '@/pages/MoodTracking';
 import Notebook from '@/pages/Notebook';
 import Integrations from '@/pages/Integrations';
+import AudioLibrary from '@/pages/AudioLibrary';
 
 const AppRouter = () => {
   return (
@@ -69,6 +69,9 @@ const AppRouter = () => {
       <Route path="/mood-tracking" element={<MoodTracking />} />
       <Route path="/notebook" element={<Notebook />} />
       <Route path="/integrations" element={<Integrations />} />
+      
+      {/* New audio library route */}
+      <Route path="/audio-library" element={<AudioLibrary />} />
     </Routes>
   );
 };

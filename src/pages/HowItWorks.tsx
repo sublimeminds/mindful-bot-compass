@@ -1,57 +1,14 @@
 
 import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { 
-  Brain, 
-  Heart, 
-  Shield, 
-  Users, 
-  Star,
-  ArrowRight,
-  CheckCircle,
-  MessageSquare,
-  Zap,
-  Clock,
-  Globe,
-  Award,
-  TrendingUp,
-  Volume2,
-  Mic,
-  Eye,
-  BarChart3,
-  Crown,
-  UserCheck,
-  Headphones,
-  Calendar,
-  Smartphone,
-  Lock,
-  Target,
-  Lightbulb,
-  Sparkles,
-  Play,
-  Settings,
-  Home,
-  BookOpen,
-  FileText,
-  Download,
-  HelpCircle,
-  AlertCircle,
-  ChevronRight,
-  Monitor,
-  Bell,
-  User,
-  CreditCard,
-  Search,
-  Filter,
-  Menu,
-  Camera,
-  Video,
-  Phone,
-  Mail
+  Brain, Heart, Target, BookOpen, BarChart3, Calendar, Users, Globe,
+  Headphones, Play, Pause, Download, Star, CheckCircle, ArrowRight,
+  MessageSquare, Zap, Shield, Smartphone, Clock, Volume2, Mic,
+  Settings, Trophy, TrendingUp, User, Eye, Lightbulb
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
@@ -60,794 +17,653 @@ import Footer from '@/components/Footer';
 
 const HowItWorks = () => {
   const navigate = useNavigate();
-  const [activeGuideSection, setActiveGuideSection] = useState('getting-started');
-  
+  const [activeAudioTab, setActiveAudioTab] = useState('podcasts');
+
   useSafeSEO({
-    title: 'Complete Start Guide - TherapySync AI Platform',
-    description: 'Comprehensive guide to using TherapySync - from account setup to advanced features. Everything you need to know to get the most from our AI therapy platform.',
-    keywords: 'TherapySync guide, AI therapy tutorial, mental health platform help, therapy app instructions'
+    title: 'How TherapySync Works - Complete Guide to AI Therapy Platform',
+    description: 'Comprehensive guide to using TherapySync for mental health support. Learn about therapy types, advanced features, audio content, and personalized AI assistance.',
+    keywords: 'how therapy works, AI therapy guide, mental health platform, therapy types, mood tracking, digital notebook, meditation, therapy podcasts'
   });
 
   const quickStartSteps = [
     {
       number: "01",
-      title: "Create Your Account",
-      description: "Sign up with email or social login and complete your secure profile setup.",
-      icon: UserCheck,
-      time: "2 minutes",
-      details: [
-        "Choose a secure password",
-        "Verify your email address", 
-        "Set up two-factor authentication (recommended)",
-        "Review privacy settings"
-      ]
+      title: "Create Your Profile",
+      description: "Complete our personalized assessment to understand your unique needs, therapy preferences, and mental health goals.",
+      features: ["5-minute setup", "Privacy-focused", "Personalized matching", "Cultural preferences"],
+      icon: User
     },
     {
       number: "02", 
-      title: "Complete Assessment",
-      description: "Take our comprehensive mental health assessment to personalize your experience.",
-      icon: FileText,
-      time: "5-7 minutes",
-      details: [
-        "Answer questions about your mental health goals",
-        "Share relevant background information",
-        "Indicate preferred communication styles",
-        "Set therapy focus areas"
-      ]
+      title: "Choose Your Therapy Path",
+      description: "Select from specialized approaches including couples therapy, ADHD support, LGBTQ+ affirming care, and crisis intervention.",
+      features: ["Multiple specializations", "AI-powered matching", "Cultural sensitivity", "Instant availability"],
+      icon: Brain
     },
     {
       number: "03",
-      title: "Choose Your AI Therapist",
-      description: "Browse and select from our diverse range of specialized AI therapists.",
-      icon: Brain,
-      time: "3-5 minutes",
-      details: [
-        "Review therapist specializations (CBT, DBT, etc.)",
-        "Read personality profiles and approaches",
-        "Preview voice samples and interaction styles",
-        "Make your selection (you can change anytime)"
-      ]
+      title: "Start Your Journey",
+      description: "Begin with personalized sessions, mood tracking, goal setting, and access to our comprehensive audio content library.",
+      features: ["24/7 availability", "Voice & text options", "Progress tracking", "Audio content"],
+      icon: Heart
     },
     {
       number: "04",
-      title: "Start Your First Session",
-      description: "Begin your mental health journey with your first personalized therapy session.",
-      icon: Play,
-      time: "15-30 minutes",
-      details: [
-        "Choose voice or text communication",
-        "Start with introductory conversation",
-        "Explore platform features during session",
-        "Set up ongoing session schedule"
-      ]
+      title: "Track & Grow",
+      description: "Monitor your progress with advanced analytics, AI insights, and personalized recommendations for continued growth.",
+      features: ["Visual progress", "AI insights", "Goal achievement", "Continuous support"],
+      icon: TrendingUp
     }
   ];
 
-  const detailedGuides = [
+  const therapyTypes = [
     {
-      id: 'getting-started',
-      title: 'Getting Started',
-      icon: UserCheck,
-      content: {
-        overview: "Everything you need to know to create your account and begin your therapy journey.",
-        sections: [
-          {
-            title: "Account Creation & Setup",
-            content: [
-              "Visit therapysync.com and click 'Get Started'",
-              "Choose registration method: email/password or social login",
-              "Complete profile information including name, age, location",
-              "Verify your email address through the confirmation link",
-              "Set up security preferences including two-factor authentication",
-              "Review and accept our privacy policy and terms of service"
-            ]
-          },
-          {
-            title: "Initial Assessment Process",
-            content: [
-              "The assessment takes 5-7 minutes and is completely private",
-              "Questions cover mental health history, current concerns, and goals",
-              "Indicate any crisis risk factors or immediate concerns",
-              "Select preferred therapy approaches (CBT, DBT, mindfulness, etc.)",
-              "Choose communication preferences (voice, text, or both)",
-              "Set availability and preferred session times"
-            ]
-          },
-          {
-            title: "Platform Overview Tour",
-            content: [
-              "Dashboard: Your central hub for sessions, progress, and insights",
-              "Chat Interface: Where you'll conduct therapy sessions",
-              "Progress Tracker: Visual analytics of your mental health journey",
-              "Resource Library: Educational materials and tools",
-              "Settings: Customize your experience and privacy controls",
-              "Crisis Support: 24/7 emergency resources and contacts"
-            ]
-          }
-        ]
-      }
+      title: "Couples & Relationship Therapy",
+      description: "Strengthen relationships through communication skills, conflict resolution, and intimacy building.",
+      icon: Heart,
+      color: "from-rose-500 to-pink-500",
+      features: [
+        "Communication enhancement exercises",
+        "Conflict resolution frameworks",
+        "Intimacy and connection building",
+        "Trust rebuilding strategies",
+        "Individual and joint sessions",
+        "Relationship goal setting"
+      ],
+      audioContent: ["Communication Skills Podcast", "Relationship Meditations", "Conflict Resolution Guides"]
     },
     {
-      id: 'navigation',
-      title: 'Platform Navigation',
-      icon: Monitor,
-      content: {
-        overview: "Master the TherapySync interface and find everything you need quickly.",
-        sections: [
-          {
-            title: "Dashboard Overview",
-            content: [
-              "Welcome section with quick session start options",
-              "Recent activity feed showing your therapy progress",
-              "Mood tracker widget for daily emotional check-ins",
-              "Upcoming appointments and session reminders",
-              "Quick stats on session count, goals achieved, and streaks",
-              "Recommended actions based on your activity patterns"
-            ]
-          },
-          {
-            title: "Main Navigation Menu",
-            content: [
-              "Home: Return to dashboard from anywhere",
-              "Sessions: View history, schedule new sessions, and manage appointments",
-              "Progress: Detailed analytics, mood patterns, and goal tracking",
-              "Resources: Educational content, exercises, and self-help tools",
-              "Community: Connect with others in moderated support groups",
-              "Settings: Account, privacy, notifications, and preferences"
-            ]
-          },
-          {
-            title: "Mobile Navigation",
-            content: [
-              "Bottom tab bar for easy thumb navigation",
-              "Swipe gestures for quick actions",
-              "Offline mode indicators and sync status",
-              "Emergency contacts readily accessible",
-              "One-tap session start from any screen",
-              "Voice commands for hands-free navigation"
-            ]
-          }
-        ]
-      }
+      title: "ADHD & Neurodivergent Support",
+      description: "Specialized support for executive function, focus, organization, and emotional regulation.",
+      icon: Target,
+      color: "from-blue-500 to-indigo-500",
+      features: [
+        "Executive function coaching",
+        "Focus and attention strategies",
+        "Organization and time management",
+        "Emotional regulation techniques",
+        "Sensory processing support",
+        "Workplace accommodation guidance"
+      ],
+      audioContent: ["ADHD Focus Techniques", "Executive Function Podcasts", "Calming Soundscapes"]
     },
     {
-      id: 'ai-therapist',
-      title: 'AI Therapist Selection',
-      icon: Brain,
-      content: {
-        overview: "Choose the perfect AI therapist match for your needs and preferences.",
-        sections: [
-          {
-            title: "Available AI Therapists",
-            content: [
-              "Dr. Sarah Chen - CBT specialist for anxiety and depression",
-              "Dr. Marcus Williams - DBT expert for emotional regulation",
-              "Dr. Elena Rodriguez - Mindfulness and stress reduction focus",
-              "Dr. James Park - Trauma-informed therapy and PTSD support",
-              "Dr. Amara Singh - Cultural competency and identity issues",
-              "Dr. David Thompson - Addiction counseling and recovery support",
-              "Dr. Lisa Anderson - Relationship and family therapy",
-              "Dr. Ahmed Hassan - Crisis intervention and suicide prevention"
-            ]
-          },
-          {
-            title: "Matching Process",
-            content: [
-              "AI analyzes your assessment responses for optimal matching",
-              "Consider therapeutic approach preferences (CBT, DBT, humanistic)",
-              "Personality compatibility scores based on communication style",
-              "Specialization alignment with your specific concerns",
-              "Cultural and linguistic preferences consideration",
-              "Availability and timezone compatibility"
-            ]
-          },
-          {
-            title: "Switching Therapists",
-            content: [
-              "You can change therapists at any time without penalty",
-              "Progress and session history transfers to new therapist",
-              "Transition sessions help maintain continuity of care",
-              "Feedback system to improve future matching",
-              "No limit on therapist changes during subscription",
-              "Seamless handoff of treatment plans and goals"
-            ]
-          }
-        ]
-      }
+      title: "LGBTQ+ Affirming Therapy",
+      description: "Inclusive, affirming support for identity exploration, coming out, and community connection.",
+      icon: Users,
+      color: "from-purple-500 to-violet-500",
+      features: [
+        "Identity exploration and affirmation",
+        "Coming out support and guidance",
+        "Family and relationship dynamics",
+        "Community connection resources",
+        "Transition support (if applicable)",
+        "Intersectionality considerations"
+      ],
+      audioContent: ["Pride & Identity Podcasts", "Affirming Meditations", "Community Stories"]
     },
     {
-      id: 'sessions',
-      title: 'Session Management',
-      icon: MessageSquare,
-      content: {
-        overview: "Learn how to start, manage, and get the most from your therapy sessions.",
-        sections: [
-          {
-            title: "Starting a Session",
-            content: [
-              "Click 'Start Session' from dashboard or sessions page",
-              "Choose immediate session or schedule for later",
-              "Select communication method: voice, text, or video",
-              "Set session duration (15, 30, 45, or 60 minutes)",
-              "Choose private or shareable session (for family therapy)",
-              "Enable recording if desired (encrypted and private)"
-            ]
-          },
-          {
-            title: "During Your Session",
-            content: [
-              "Natural conversation - no scripts or rigid structure",
-              "AI responds to emotional cues and adapts in real-time",
-              "Use pause feature to collect thoughts or take notes",
-              "Access crisis support button if needed during session",
-              "Session timer and break reminders for longer sessions",
-              "Live emotional state tracking with privacy controls"
-            ]
-          },
-          {
-            title: "Session Controls & Features",
-            content: [
-              "Pause/Resume: Take breaks without ending session",
-              "Volume/Speed: Adjust audio to your preferences",
-              "Transcript: Real-time text of voice conversations",
-              "Emotional Insights: See detected emotional patterns",
-              "Crisis Alert: Immediate escalation to human support",
-              "Session Notes: Private notes visible only to you"
-            ]
-          },
-          {
-            title: "Ending Sessions",
-            content: [
-              "Natural conclusion or manual session end",
-              "Automatic session summary and key insights",
-              "Homework assignments and follow-up actions",
-              "Next session scheduling suggestions",
-              "Session rating and feedback collection",
-              "Progress updates and goal tracking"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      id: 'progress',
-      title: 'Progress Tracking',
-      icon: BarChart3,
-      content: {
-        overview: "Monitor your mental health journey with comprehensive analytics and insights.",
-        sections: [
-          {
-            title: "Mood Tracking",
-            content: [
-              "Daily mood check-ins with customizable prompts",
-              "Emotional range tracking (anxiety, depression, stress, joy)",
-              "Trigger identification and pattern recognition",
-              "Weekly and monthly mood trend analysis",
-              "Correlation with activities, weather, and life events",
-              "Export mood data for external healthcare providers"
-            ]
-          },
-          {
-            title: "Goal Setting & Achievement",
-            content: [
-              "SMART goals framework for mental health objectives",
-              "Weekly and monthly milestone tracking",
-              "Progress visualization with charts and graphs",
-              "Achievement badges and motivation system",
-              "Goal adjustment based on progress and circumstances",
-              "Celebration of milestones and breakthroughs"
-            ]
-          },
-          {
-            title: "Session Analytics",
-            content: [
-              "Session frequency and consistency tracking",
-              "Time spent in different therapeutic activities",
-              "Emotional state progression throughout sessions",
-              "Topic focus areas and therapeutic approach effectiveness",
-              "Engagement levels and participation metrics",
-              "Comparative analysis of different therapist approaches"
-            ]
-          },
-          {
-            title: "Insights & Recommendations",
-            content: [
-              "AI-generated insights from your progress data",
-              "Personalized recommendations for continued growth",
-              "Early warning systems for mental health concerns",
-              "Optimal session timing based on your patterns",
-              "Suggested coping strategies based on successful techniques",
-              "Integration opportunities with lifestyle factors"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      id: 'crisis-support',
-      title: 'Crisis Support Features',
+      title: "Crisis Intervention & Support",
+      description: "Immediate support for mental health crises with 24/7 availability and safety planning.",
       icon: Shield,
-      content: {
-        overview: "Understand our comprehensive crisis management and emergency support systems.",
-        sections: [
-          {
-            title: "24/7 Crisis Detection",
-            content: [
-              "Real-time analysis of conversation for crisis indicators",
-              "Automatic escalation protocols for high-risk situations",
-              "Immediate connection to human crisis counselors",
-              "Integration with local emergency services when appropriate",
-              "Safety planning tools and crisis resource library",
-              "Family/friend notification systems (with your permission)"
-            ]
-          },
-          {
-            title: "Emergency Contacts & Resources",
-            content: [
-              "Pre-configured emergency contact list",
-              "Local crisis hotline numbers and chat services",
-              "Nearest emergency room and mental health facilities",
-              "Crisis text line integration (text HOME to 741741)",
-              "National Suicide Prevention Lifeline (988)",
-              "LGBTQ+, veteran, and specialized crisis resources"
-            ]
-          },
-          {
-            title: "Safety Planning Tools",
-            content: [
-              "Personalized safety plan creation and updates",
-              "Warning sign identification and coping strategies",
-              "Reason for living reminders and motivational content",
-              "Emergency contact quick-dial from any screen",
-              "Location sharing with trusted contacts during crisis",
-              "Automated check-ins during high-risk periods"
-            ]
-          }
-        ]
-      }
+      color: "from-red-500 to-orange-500",
+      features: [
+        "24/7 crisis hotline access",
+        "Safety planning and risk assessment",
+        "Immediate coping strategies",
+        "Emergency contact integration",
+        "Crisis de-escalation techniques",
+        "Follow-up support protocols"
+      ],
+      audioContent: ["Crisis Calming Techniques", "Emergency Grounding Exercises", "Safety Affirmations"]
     },
     {
-      id: 'settings',
-      title: 'Settings & Preferences',
+      title: "Cultural AI Features",
+      description: "Culturally sensitive therapy adapted to 29+ languages and diverse cultural backgrounds.",
+      icon: Globe,
+      color: "from-green-500 to-teal-500",
+      features: [
+        "29+ language support",
+        "Cultural context adaptation",
+        "Traditional healing integration",
+        "Family dynamics consideration",
+        "Religious/spiritual sensitivity",
+        "Immigration and identity support"
+      ],
+      audioContent: ["Multicultural Wellness", "Traditional Healing Sounds", "Language-Specific Content"]
+    }
+  ];
+
+  const advancedFeatures = [
+    {
+      title: "AI-Powered Mood Tracking",
+      description: "Advanced mood analytics with pattern recognition and personalized insights.",
+      icon: BarChart3,
+      color: "from-pink-500 to-rose-500",
+      steps: [
+        "Daily mood check-ins with detailed emotions",
+        "Pattern recognition across weeks/months",
+        "Trigger identification and analysis",
+        "Correlation with activities and events",
+        "Predictive insights for mood changes",
+        "Personalized intervention recommendations"
+      ]
+    },
+    {
+      title: "Digital Notebook & Journaling",
+      description: "AI-enhanced journaling with voice-to-text and therapeutic prompts.",
+      icon: BookOpen,
+      color: "from-blue-500 to-cyan-500",
+      steps: [
+        "Voice-to-text journaling capabilities",
+        "AI-suggested therapeutic prompts",
+        "Mood correlation with entries",
+        "Progress tracking through writing",
+        "Export and sharing options",
+        "Privacy-first encrypted storage"
+      ]
+    },
+    {
+      title: "Comprehensive Goal Tracking",
+      description: "SMART goals framework with AI-powered progress monitoring.",
+      icon: Trophy,
+      color: "from-green-500 to-emerald-500",
+      steps: [
+        "SMART goals creation wizard",
+        "Milestone tracking and celebration",
+        "Progress visualization charts",
+        "AI-powered recommendations",
+        "Accountability reminders",
+        "Goal adjustment based on progress"
+      ]
+    },
+    {
+      title: "Integrations Hub",
+      description: "Connect with health apps, wearables, and productivity tools.",
       icon: Settings,
-      content: {
-        overview: "Customize your TherapySync experience for optimal privacy and usability.",
-        sections: [
-          {
-            title: "Privacy Controls",
-            content: [
-              "Data retention settings and automatic deletion options",
-              "Session recording preferences and encrypted storage",
-              "Third-party integration permissions and data sharing",
-              "Anonymous usage analytics opt-in/opt-out",
-              "Right to delete account and all associated data",
-              "Export personal data in standard formats"
-            ]
-          },
-          {
-            title: "Notification Management",
-            content: [
-              "Session reminders and appointment notifications",
-              "Progress milestone alerts and achievement notifications",
-              "Crisis support check-ins and safety notifications",
-              "Platform updates and feature announcements",
-              "Community activity and support group notifications",
-              "Quiet hours and do-not-disturb scheduling"
-            ]
-          },
-          {
-            title: "Accessibility Options",
-            content: [
-              "Text size and contrast adjustments for visual impairments",
-              "Screen reader compatibility and keyboard navigation",
-              "Voice command integration for hands-free operation",
-              "Language translation for non-English speakers",
-              "Cognitive accessibility features for focus and attention",
-              "Motor accessibility for users with physical limitations"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      id: 'mobile-app',
-      title: 'Mobile App Usage',
-      icon: Smartphone,
-      content: {
-        overview: "Get the most from TherapySync on your mobile device with our native apps.",
-        sections: [
-          {
-            title: "Download & Installation",
-            content: [
-              "iOS App Store: Search 'TherapySync' or use direct link",
-              "Google Play Store: Available for Android 8.0 and higher",
-              "System requirements: 2GB RAM, 1GB storage space",
-              "Automatic updates enabled by default",
-              "Offline mode capabilities for limited connectivity",
-              "Cross-device synchronization with web platform"
-            ]
-          },
-          {
-            title: "Mobile-Specific Features",
-            content: [
-              "Biometric login (fingerprint, face recognition)",
-              "Push notifications for sessions and reminders",
-              "Voice recording optimization for mobile microphones",
-              "Background app refresh for real-time notifications",
-              "Location-based crisis resource suggestions",
-              "Integration with health apps (Apple Health, Google Fit)"
-            ]
-          },
-          {
-            title: "Offline Capabilities",
-            content: [
-              "Download sessions for offline review and reflection",
-              "Offline mood tracking with sync when connected",
-              "Cached resource library for emergency access",
-              "Crisis contact information always accessible",
-              "Offline note-taking with automatic sync",
-              "Limited AI responses cached for emergency situations"
-            ]
-          }
-        ]
-      }
+      color: "from-purple-500 to-indigo-500",
+      steps: [
+        "Health app synchronization",
+        "Wearable data integration",
+        "Calendar and scheduling sync",
+        "Third-party API connections",
+        "Data visualization dashboard",
+        "Automated progress updates"
+      ]
     }
   ];
 
-  const troubleshootingFAQs = [
-    {
-      question: "I can't hear the AI therapist during voice sessions",
-      answer: "Check your device volume settings, ensure TherapySync has microphone permissions, and try switching to a different audio output device. If using headphones, check the connection. You can also switch to text mode temporarily while troubleshooting."
-    },
-    {
-      question: "My sessions keep disconnecting or freezing",
-      answer: "This is usually due to internet connectivity issues. Try switching to a stronger WiFi network, closing other apps using bandwidth, or restarting your device. The platform automatically saves your progress every 30 seconds to prevent data loss."
-    },
-    {
-      question: "The AI doesn't seem to understand my concerns",
-      answer: "Try being more specific about your feelings and situations. The AI learns from your interactions, so it may take a few sessions to fully understand your communication style. You can also try switching to a different AI therapist whose approach might be more compatible."
-    },
-    {
-      question: "How do I change my AI therapist?",
-      answer: "Go to Settings > Therapist Selection, browse available options, and select 'Switch Therapist.' Your session history and progress will automatically transfer to maintain continuity of care."
-    },
-    {
-      question: "I'm having a mental health crisis - what should I do?",
-      answer: "Click the 'Crisis Support' button available on every page for immediate help. You can also call 988 (Suicide & Crisis Lifeline) or text HOME to 741741. Our platform automatically detects crisis language and can connect you with human counselors immediately."
-    },
-    {
-      question: "Can I use TherapySync offline?",
-      answer: "Limited offline functionality is available through our mobile apps, including mood tracking, accessing crisis contacts, and reviewing downloaded session notes. However, live AI therapy sessions require an internet connection."
-    },
-    {
-      question: "Is my therapy data private and secure?",
-      answer: "Yes, all data is encrypted end-to-end, HIPAA compliant, and stored on secure servers. We never share personal information without explicit consent. You can review our privacy policy and delete your account at any time."
-    },
-    {
-      question: "How much does TherapySync cost?",
-      answer: "We offer a 7-day free trial, then plans start at $29/month for basic AI therapy, $49/month for premium features, or $99/month for hybrid AI/human therapy. All plans include crisis support and progress tracking."
-    }
-  ];
-
-  const bestPractices = [
-    {
-      title: "Optimize Your Session Environment",
-      tips: [
-        "Find a quiet, private space where you won't be interrupted",
-        "Use headphones for better audio quality and privacy",
-        "Ensure good lighting if using video sessions",
-        "Have water nearby and tissues if needed",
-        "Turn off notifications on other devices during sessions"
-      ]
-    },
-    {
-      title: "Maximize Therapeutic Benefit",
-      tips: [
-        "Be honest and open - the AI is designed to be non-judgmental",
-        "Take notes during or after sessions for later reflection",
-        "Complete mood check-ins daily for better progress tracking",
-        "Practice suggested coping techniques between sessions",
-        "Set specific, measurable goals for your mental health journey"
-      ]
-    },
-    {
-      title: "Build Consistent Habits",
-      tips: [
-        "Schedule regular session times that work with your routine",
-        "Use calendar reminders and platform notifications",
-        "Start with shorter, more frequent sessions rather than long, infrequent ones",
-        "Engage with the platform's educational resources between sessions",
-        "Connect with the community features for additional support"
-      ]
-    }
-  ];
+  const audioContent = {
+    podcasts: [
+      {
+        title: "Understanding Your Mind",
+        description: "Educational series covering anxiety, depression, and mental health fundamentals.",
+        episodes: 24,
+        duration: "15-20 min",
+        voice: "Sarah",
+        category: "Education"
+      },
+      {
+        title: "Relationship Wisdom",
+        description: "Communication skills, conflict resolution, and intimacy building for couples.",
+        episodes: 18,
+        duration: "12-18 min",
+        voice: "Laura",
+        category: "Relationships"
+      },
+      {
+        title: "ADHD Success Strategies",
+        description: "Executive function, focus techniques, and productivity tips for neurodivergent minds.",
+        episodes: 15,
+        duration: "10-15 min",
+        voice: "Charlotte",
+        category: "ADHD"
+      },
+      {
+        title: "Cultural Healing Wisdom",
+        description: "Traditional healing practices integrated with modern therapy approaches.",
+        episodes: 20,
+        duration: "18-25 min",
+        voice: "Jessica",
+        category: "Cultural"
+      }
+    ],
+    meditations: [
+      {
+        title: "Daily Mindfulness",
+        description: "10-minute guided meditations for starting your day with intention.",
+        sessions: 30,
+        duration: "10 min",
+        voice: "Aria",
+        category: "Mindfulness"
+      },
+      {
+        title: "Sleep Stories",
+        description: "Calming bedtime stories and relaxation techniques for better sleep.",
+        sessions: 25,
+        duration: "20-30 min",
+        voice: "Charlotte",
+        category: "Sleep"
+      },
+      {
+        title: "Anxiety Relief",
+        description: "Breathing exercises and grounding techniques for managing anxiety.",
+        sessions: 40,
+        duration: "5-15 min",
+        voice: "River",
+        category: "Anxiety"
+      },
+      {
+        title: "Crisis Calming",
+        description: "Immediate calming techniques for crisis situations and emotional regulation.",
+        sessions: 12,
+        duration: "3-8 min",
+        voice: "Aria",
+        category: "Crisis"
+      }
+    ],
+    techniques: [
+      {
+        title: "CBT Skill Building",
+        description: "Cognitive Behavioral Therapy techniques for thought pattern recognition.",
+        exercises: 35,
+        duration: "8-12 min",
+        voice: "Laura",
+        category: "CBT"
+      },
+      {
+        title: "DBT Emotional Regulation",
+        description: "Dialectical Behavior Therapy skills for emotional management.",
+        exercises: 28,
+        duration: "10-15 min",
+        voice: "Sarah",
+        category: "DBT"
+      },
+      {
+        title: "Grounding Techniques",
+        description: "5-4-3-2-1 and other grounding methods for anxiety and panic.",
+        exercises: 20,
+        duration: "3-7 min",
+        voice: "River",
+        category: "Grounding"
+      }
+    ]
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50 relative overflow-hidden">
-      {/* Animated background gradients */}
-      <div className="absolute inset-0 bg-gradient-to-br from-therapy-50 via-calm-50 to-therapy-100 opacity-70"></div>
-      <div className="absolute inset-0 bg-gradient-to-tr from-calm-50 via-transparent to-therapy-50 opacity-60"></div>
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
+      <Header />
       
-      {/* Floating gradient orbs */}
-      <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-therapy-400 to-calm-400 rounded-full opacity-20 blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-to-r from-calm-400 to-therapy-400 rounded-full opacity-20 blur-3xl animate-pulse delay-1000"></div>
-      
-      <div className="relative z-10">
-        <Header />
-        
-        {/* Hero Section */}
-        <section className="relative py-20 lg:py-32">
-          <div className="container mx-auto px-4">
-            <div className="text-center max-w-4xl mx-auto">
-              <Badge className="mb-8 bg-gradient-to-r from-therapy-500 to-calm-500 text-white px-8 py-3 text-sm font-semibold shadow-lg border-0">
-                <BookOpen className="h-5 w-5 mr-2" />
-                Complete Start Guide
-                <Lightbulb className="h-5 w-5 ml-2" />
-              </Badge>
-              
-              <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-                Master
-                <span className="block bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
-                  TherapySync
-                </span>
-              </h1>
-              
-              <p className="text-xl md:text-2xl text-slate-700 mb-12 leading-relaxed font-medium">
-                Your comprehensive guide to using TherapySync effectively. From setup to advanced features, 
-                everything you need to transform your mental health journey.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                <Button 
-                  size="lg"
-                  className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white px-12 py-6 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-therapy-500/25 transition-all duration-300 hover:scale-105 border-0"
-                  onClick={() => navigate('/auth')}
-                >
-                  <Play className="h-6 w-6 mr-3" />
-                  Start Your Journey
-                  <ArrowRight className="h-6 w-6 ml-3" />
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="border-2 border-therapy-300 text-therapy-700 hover:bg-gradient-to-r hover:from-therapy-50 hover:to-calm-50 px-12 py-6 text-xl font-bold rounded-2xl shadow-xl hover:shadow-therapy-500/20 transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm"
-                  onClick={() => navigate('/downloads')}
-                >
-                  <Download className="h-6 w-6 mr-3" />
-                  Download App
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Quick Start Guide */}
-        <section className="py-20 bg-white/50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold text-therapy-900 mb-6">
-                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
-                  Quick Start Guide
-                </span>
-              </h2>
-              <p className="text-xl text-therapy-600 max-w-3xl mx-auto">
-                Get up and running with TherapySync in under 15 minutes with our streamlined setup process.
-              </p>
-            </div>
+      {/* Hero Section */}
+      <section className="py-20 lg:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-therapy-100/30 to-calm-100/30"></div>
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center mb-16">
+            <Badge className="mb-6 bg-gradient-to-r from-therapy-500 to-calm-500 text-white px-8 py-3 text-sm font-semibold shadow-lg border-0">
+              <Brain className="h-4 w-4 mr-2" />
+              Complete Platform Guide
+              <Lightbulb className="h-4 w-4 ml-2" />
+            </Badge>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {quickStartSteps.map((step, index) => {
-                const IconComponent = step.icon;
-                return (
-                  <div key={index} className="relative">
-                    <Card className="h-full hover:shadow-xl transition-all duration-300 group hover:scale-105 bg-white">
-                      <CardContent className="p-6">
-                        <div className="text-center mb-6">
-                          <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:animate-pulse shadow-lg">
-                            <IconComponent className="h-8 w-8 text-white" />
-                          </div>
-                          <div className="text-sm font-bold text-therapy-500 mb-2">STEP {step.number}</div>
-                          <h3 className="text-xl font-semibold mb-3 text-therapy-800">{step.title}</h3>
-                          <p className="text-therapy-600 text-sm mb-2">{step.description}</p>
-                          <div className="flex items-center justify-center text-xs text-therapy-500 mb-4">
-                            <Clock className="h-3 w-3 mr-1" />
-                            {step.time}
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          {step.details.map((detail, detailIndex) => (
-                            <div key={detailIndex} className="flex items-center space-x-2">
-                              <CheckCircle className="h-4 w-4 text-therapy-500 flex-shrink-0" />
-                              <span className="text-sm text-therapy-600">{detail}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Arrow connector for desktop */}
-                    {index < quickStartSteps.length - 1 && (
-                      <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-                        <ArrowRight className="h-6 w-6 text-therapy-500" />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                How TherapySync Works
+              </span>
+            </h1>
+            
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
+              Your complete guide to AI-powered mental health support. From quick start to advanced features, 
+              discover how to maximize your therapeutic journey with our comprehensive platform.
+            </p>
+            
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white border-0 px-8 py-6 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+              onClick={() => navigate('/auth')}
+            >
+              <Heart className="h-5 w-5 mr-2" />
+              Start Your Journey
+            </Button>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Detailed Guide Sections */}
-        <section className="py-20 bg-gradient-to-br from-calm-50 via-therapy-50 to-calm-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold text-therapy-900 mb-6">
-                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
-                  Comprehensive User Guide
-                </span>
-              </h2>
-              <p className="text-xl text-therapy-600 max-w-3xl mx-auto">
-                Deep dive into every aspect of TherapySync to maximize your mental health journey.
-              </p>
-            </div>
-
-            <Tabs defaultValue="getting-started" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-8 mb-8">
-                {detailedGuides.map((guide) => {
-                  const IconComponent = guide.icon;
-                  return (
-                    <TabsTrigger 
-                      key={guide.id} 
-                      value={guide.id}
-                      className="flex items-center space-x-2 text-xs md:text-sm"
-                    >
-                      <IconComponent className="h-4 w-4" />
-                      <span className="hidden md:inline">{guide.title}</span>
-                    </TabsTrigger>
-                  );
-                })}
-              </TabsList>
-
-              {detailedGuides.map((guide) => (
-                <TabsContent key={guide.id} value={guide.id}>
-                  <Card className="bg-white/90 backdrop-blur-sm">
-                    <CardContent className="p-8">
-                      <div className="flex items-center space-x-4 mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-lg flex items-center justify-center">
-                          {React.createElement(guide.icon, { className: "h-6 w-6 text-white" })}
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-bold text-therapy-900">{guide.title}</h3>
-                          <p className="text-therapy-600">{guide.content.overview}</p>
-                        </div>
+      {/* Quick Start Guide */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                Quick Start Guide
+              </span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Get started with TherapySync in just four simple steps
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {quickStartSteps.map((step, index) => {
+              const IconComponent = step.icon;
+              return (
+                <div key={index} className="relative">
+                  <Card className="h-full hover:shadow-xl transition-all duration-300 group hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-lg">
+                    <CardHeader className="text-center">
+                      <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:animate-pulse shadow-lg">
+                        <span className="text-2xl font-bold text-white">{step.number}</span>
                       </div>
-
-                      <div className="space-y-6">
-                        {guide.content.sections.map((section, sectionIndex) => (
-                          <div key={sectionIndex} className="border-l-4 border-therapy-200 pl-6">
-                            <h4 className="text-lg font-semibold text-therapy-800 mb-3">{section.title}</h4>
-                            <ul className="space-y-2">
-                              {section.content.map((item, itemIndex) => (
-                                <li key={itemIndex} className="flex items-start space-x-3">
-                                  <ChevronRight className="h-4 w-4 text-therapy-500 mt-0.5 flex-shrink-0" />
-                                  <span className="text-therapy-600">{item}</span>
-                                </li>
-                              ))}
-                            </ul>
+                      <div className="w-12 h-12 bg-gradient-to-r from-therapy-400 to-calm-400 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <IconComponent className="h-6 w-6 text-white" />
+                      </div>
+                      <CardTitle className="text-xl font-bold text-slate-800">{step.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-slate-600 mb-4">{step.description}</p>
+                      <div className="space-y-2">
+                        {step.features.map((feature, featureIndex) => (
+                          <div key={featureIndex} className="flex items-center space-x-2">
+                            <CheckCircle className="h-4 w-4 text-therapy-500 flex-shrink-0" />
+                            <span className="text-sm text-slate-600">{feature}</span>
                           </div>
                         ))}
                       </div>
                     </CardContent>
                   </Card>
-                </TabsContent>
-              ))}
-            </Tabs>
-          </div>
-        </section>
 
-        {/* Troubleshooting & FAQ */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold text-therapy-900 mb-6">
-                <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
-                  Troubleshooting & FAQ
-                </span>
-              </h2>
-              <p className="text-xl text-therapy-600 max-w-3xl mx-auto">
-                Common questions and solutions to help you resolve issues quickly.
-              </p>
-            </div>
-            
-            <div className="max-w-4xl mx-auto">
-              <Accordion type="single" collapsible className="w-full space-y-4">
-                {troubleshootingFAQs.map((faq, index) => (
-                  <AccordionItem key={index} value={`item-${index}`} className="bg-white border border-therapy-200 rounded-lg">
-                    <AccordionTrigger className="px-6 py-4 text-left hover:bg-therapy-50">
-                      <div className="flex items-center space-x-3">
-                        <HelpCircle className="h-5 w-5 text-therapy-500 flex-shrink-0" />
-                        <span className="font-medium text-therapy-800">{faq.question}</span>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="px-6 pb-4">
-                      <p className="text-therapy-600 leading-relaxed">{faq.answer}</p>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
+                  {/* Arrow connector */}
+                  {index < quickStartSteps.length - 1 && (
+                    <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                      <ArrowRight className="h-6 w-6 text-therapy-500" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Best Practices */}
-        <section className="py-20 bg-gradient-to-r from-therapy-500 to-calm-500 text-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">
-                Best Practices for Success
-              </h2>
-              <p className="text-xl text-therapy-100 max-w-3xl mx-auto">
-                Expert tips and strategies to maximize the effectiveness of your TherapySync experience.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {bestPractices.map((practice, index) => (
-                <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20">
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-bold mb-4 text-white">{practice.title}</h3>
-                    <ul className="space-y-3">
-                      {practice.tips.map((tip, tipIndex) => (
-                        <li key={tipIndex} className="flex items-start space-x-3">
-                          <Star className="h-4 w-4 text-yellow-300 mt-0.5 flex-shrink-0" />
-                          <span className="text-therapy-100 text-sm">{tip}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-br from-therapy-50 via-calm-50 to-therapy-50">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-5xl font-bold mb-6">
+      {/* Therapy Types Deep Dive */}
+      <section className="py-20 bg-gradient-to-r from-therapy-50/50 to-calm-50/50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
               <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
-                Ready to Begin Your Journey?
+                Specialized Therapy Types
               </span>
             </h2>
-            <p className="text-xl text-therapy-600 mb-8 max-w-3xl mx-auto">
-              Now that you understand how TherapySync works, take the first step toward better mental health.
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Discover our comprehensive approach to different therapeutic specializations
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg"
-                className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-xl hover:shadow-therapy-500/25 transition-all duration-300"
-                onClick={() => navigate('/auth')}
-              >
-                <Heart className="h-5 w-5 mr-2" />
-                Start Free Trial
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-2 border-therapy-300 text-therapy-700 hover:bg-therapy-50 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-therapy-500/20 transition-all duration-300"
-                onClick={() => navigate('/downloads')}
-              >
-                <Download className="h-5 w-5 mr-2" />
-                Download App
-              </Button>
-            </div>
           </div>
-        </section>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {therapyTypes.map((therapy, index) => {
+              const IconComponent = therapy.icon;
+              return (
+                <Card key={index} className="overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl">
+                  <div className={`h-32 bg-gradient-to-r ${therapy.color} relative overflow-hidden`}>
+                    <div className="absolute inset-0 bg-black/10"></div>
+                    <div className="absolute top-6 left-6">
+                      <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <IconComponent className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-slate-800">{therapy.title}</CardTitle>
+                    <p className="text-slate-600 text-lg">{therapy.description}</p>
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-6">
+                    <div>
+                      <h4 className="font-semibold text-slate-800 mb-3">Key Features:</h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        {therapy.features.map((feature, featureIndex) => (
+                          <div key={featureIndex} className="flex items-center gap-2 text-sm text-slate-600">
+                            <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                            {feature}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                        <Headphones className="h-4 w-4" />
+                        Audio Content Available:
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {therapy.audioContent.map((content, contentIndex) => (
+                          <Badge key={contentIndex} variant="secondary" className="text-xs">
+                            {content}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
-        <Footer />
-      </div>
+      {/* Advanced Features */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                Advanced Platform Features
+              </span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Master our powerful tools for enhanced therapeutic outcomes
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {advancedFeatures.map((feature, index) => {
+              const IconComponent = feature.icon;
+              return (
+                <Card key={index} className="hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-lg">
+                  <CardHeader>
+                    <div className={`w-12 h-12 bg-gradient-to-r ${feature.color} rounded-xl flex items-center justify-center mb-4 shadow-lg`}>
+                      <IconComponent className="h-6 w-6 text-white" />
+                    </div>
+                    <CardTitle className="text-xl font-bold text-slate-800">{feature.title}</CardTitle>
+                    <p className="text-slate-600">{feature.description}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {feature.steps.map((step, stepIndex) => (
+                        <div key={stepIndex} className="flex items-start gap-3">
+                          <div className="w-6 h-6 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-xs font-bold text-white">{stepIndex + 1}</span>
+                          </div>
+                          <span className="text-sm text-slate-600">{step}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Audio Content Library */}
+      <section className="py-20 bg-gradient-to-r from-therapy-50/50 to-calm-50/50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                Audio Content Library
+              </span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Premium therapeutic audio content powered by ElevenLabs AI voices
+            </p>
+          </div>
+          
+          <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-8">
+              <Tabs value={activeAudioTab} onValueChange={setActiveAudioTab}>
+                <TabsList className="grid w-full grid-cols-3 mb-8">
+                  <TabsTrigger value="podcasts" className="flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4" />
+                    Podcasts
+                  </TabsTrigger>
+                  <TabsTrigger value="meditations" className="flex items-center gap-2">
+                    <Heart className="h-4 w-4" />
+                    Meditations
+                  </TabsTrigger>
+                  <TabsTrigger value="techniques" className="flex items-center gap-2">
+                    <Brain className="h-4 w-4" />
+                    Techniques
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="podcasts" className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {audioContent.podcasts.map((podcast, index) => (
+                      <Card key={index} className="hover:shadow-lg transition-all duration-300">
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-lg font-bold">{podcast.title}</CardTitle>
+                            <Badge variant="secondary">{podcast.category}</Badge>
+                          </div>
+                          <p className="text-slate-600 text-sm">{podcast.description}</p>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="flex items-center justify-between text-sm text-slate-500 mb-4">
+                            <span>{podcast.episodes} episodes</span>
+                            <span>{podcast.duration}</span>
+                            <span>Voice: {podcast.voice}</span>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button size="sm" className="flex-1">
+                              <Play className="h-4 w-4 mr-2" />
+                              Play Latest
+                            </Button>
+                            <Button size="sm" variant="outline">
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="meditations" className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {audioContent.meditations.map((meditation, index) => (
+                      <Card key={index} className="hover:shadow-lg transition-all duration-300">
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-lg font-bold">{meditation.title}</CardTitle>
+                            <Badge variant="secondary">{meditation.category}</Badge>
+                          </div>
+                          <p className="text-slate-600 text-sm">{meditation.description}</p>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="flex items-center justify-between text-sm text-slate-500 mb-4">
+                            <span>{meditation.sessions} sessions</span>
+                            <span>{meditation.duration}</span>
+                            <span>Voice: {meditation.voice}</span>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button size="sm" className="flex-1">
+                              <Play className="h-4 w-4 mr-2" />
+                              Start Session
+                            </Button>
+                            <Button size="sm" variant="outline">
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="techniques" className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {audioContent.techniques.map((technique, index) => (
+                      <Card key={index} className="hover:shadow-lg transition-all duration-300">
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-lg font-bold">{technique.title}</CardTitle>
+                            <Badge variant="secondary">{technique.category}</Badge>
+                          </div>
+                          <p className="text-slate-600 text-sm">{technique.description}</p>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="flex items-center justify-between text-sm text-slate-500 mb-4">
+                            <span>{technique.exercises} exercises</span>
+                            <span>{technique.duration}</span>
+                            <span>Voice: {technique.voice}</span>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button size="sm" className="flex-1">
+                              <Play className="h-4 w-4 mr-2" />
+                              Practice
+                            </Button>
+                            <Button size="sm" variant="outline">
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <Card className="bg-gradient-to-r from-therapy-500 to-calm-500 text-white p-12 shadow-2xl border-0">
+            <div className="text-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                Ready to Begin Your Journey?
+              </h2>
+              <p className="text-xl mb-8 text-therapy-100 max-w-2xl mx-auto">
+                Join thousands who are transforming their mental health with our comprehensive AI-powered platform.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  size="lg"
+                  className="bg-white text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                  onClick={() => navigate('/auth')}
+                >
+                  <Heart className="h-5 w-5 mr-2" />
+                  Start Free Today
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  className="border-2 border-white text-white hover:bg-white/10 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+                  onClick={() => navigate('/pricing')}
+                >
+                  <TrendingUp className="h-5 w-5 mr-2" />
+                  View Pricing
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 };
