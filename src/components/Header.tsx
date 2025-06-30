@@ -54,8 +54,8 @@ const Header = () => {
     { label: 'Features Overview', path: '/features-overview', icon: BookOpen, description: 'Complete feature breakdown' },
     { label: 'How It Works', path: '/how-it-works', icon: Settings, description: 'Platform walkthrough' },
     { label: 'Community Features', path: '/community-features', icon: Users, description: 'Social support & connections' },
-    { label: 'Pricing', path: '/pricing', icon: DollarSign, description: 'Plans and pricing options' },
-    { label: 'Audio Content', path: '/audio-library', icon: Headphones, description: 'Premium therapeutic audio library' }
+    { label: 'Audio Library', path: '/audio-library', icon: Headphones, description: 'Therapeutic podcasts & meditations' },
+    { label: 'Pricing', path: '/pricing', icon: DollarSign, description: 'Plans and pricing options' }
   ];
 
   const isActive = (path: string) => location.pathname === path;

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -32,6 +33,7 @@ import MoodTracking from '@/pages/MoodTracking';
 import Notebook from '@/pages/Notebook';
 import Integrations from '@/pages/Integrations';
 import AudioLibrary from '@/pages/AudioLibrary';
+import AudioLibraryInfo from '@/pages/AudioLibraryInfo';
 
 const AppRouter = () => {
   return (
@@ -64,7 +66,7 @@ const AppRouter = () => {
       <Route path="/adhd-therapy" element={<ADHDTherapy />} />
       <Route path="/autism-therapy" element={<ADHDTherapy />} />
       
-      {/* New therapy and platform routes */}
+      {/* Therapy and platform routes */}
       <Route path="/therapy-types" element={<TherapyTypes />} />
       <Route path="/techniques" element={<Techniques />} />
       <Route path="/goals" element={<Goals />} />
@@ -72,8 +74,9 @@ const AppRouter = () => {
       <Route path="/notebook" element={<Notebook />} />
       <Route path="/integrations" element={<Integrations />} />
       
-      {/* New audio library route */}
-      <Route path="/audio-library" element={<AudioLibrary />} />
+      {/* Audio library routes */}
+      <Route path="/audio-library" element={<AudioLibraryInfo />} />
+      <Route path="/dashboard/audio-library" element={<AudioLibrary />} />
     </Routes>
   );
 };

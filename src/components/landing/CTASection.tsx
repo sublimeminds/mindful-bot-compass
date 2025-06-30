@@ -56,6 +56,14 @@ const CTASection = () => {
               Start Your Free Trial
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
+            <Button 
+              variant="outline"
+              size="lg"
+              className="border-2 border-white text-white hover:bg-white hover:text-therapy-700 px-10 py-6 text-lg rounded-full transition-all duration-300"
+              onClick={() => navigate('/audio-library')}
+            >
+              Explore Audio Library
+            </Button>
           </div>
 
           {/* Security Notice */}
