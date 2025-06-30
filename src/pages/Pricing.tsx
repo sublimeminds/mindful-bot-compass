@@ -38,14 +38,53 @@ const Pricing = () => {
     detectLocation();
   }, []);
 
-  const formatPrice = (price: number) => {
-    return enhancedCurrencyService.formatCurrency(price, userCurrency, currentLanguage.code);
+  const formatPrice = async (baseUsdPrice: number) => {
+    try {
+      // Convert from USD to user's currency
+      const convertedAmount = enhancedCurrencyService.convertAmount(baseUsdPrice, 'USD', userCurrency);
+      
+      // Apply regional pricing if location is available
+      let finalAmount = convertedAmount;
+      if (userLocation) {
+        finalAmount = await enhancedCurrencyService.getRegionalPricing(baseUsdPrice, userCurrency, userLocation.region);
+      }
+      
+      return enhancedCurrencyService.formatCurrency(finalAmount, userCurrency, currentLanguage.code);
+    } catch (error) {
+      console.error('Error formatting price:', error);
+      return enhancedCurrencyService.formatCurrency(baseUsdPrice, 'USD', currentLanguage.code);
+    }
   };
+
+  const [formattedPrices, setFormattedPrices] = React.useState({
+    basic: '$9',
+    pro: '$19'
+  });
+
+  React.useEffect(() => {
+    const updatePrices = async () => {
+      try {
+        const basicPrice = await formatPrice(9);
+        const proPrice = await formatPrice(19);
+        setFormattedPrices({
+          basic: basicPrice,
+          pro: proPrice
+        });
+      } catch (error) {
+        console.error('Error updating prices:', error);
+      }
+    };
+    
+    if (userCurrency) {
+      updatePrices();
+    }
+  }, [userCurrency, userLocation, currentLanguage.code]);
 
   const pricingPlans = [
     {
       name: 'Basic',
-      price: 9,
+      price: formattedPrices.basic,
+      baseUsdPrice: 9,
       period: 'month',
       description: 'Perfect for getting started with AI therapy',
       popular: false,
@@ -62,7 +101,8 @@ const Pricing = () => {
     },
     {
       name: 'Pro',
-      price: 19,
+      price: formattedPrices.pro,
+      baseUsdPrice: 19,
       period: 'month',
       description: 'Advanced features for serious mental health improvement',
       popular: true,
@@ -107,9 +147,10 @@ const Pricing = () => {
             </p>
 
             {userLocation && (
-              <div className="inline-flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md">
+              <div className="inline-flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md mb-4">
                 <span className="text-sm text-slate-600">
                   Pricing for {userLocation.country} in {userCurrency}
+                  {userCurrency !== 'USD' && ' • Converted from USD base pricing'}
                 </span>
               </div>
             )}
@@ -133,10 +174,15 @@ const Pricing = () => {
                     <CardTitle className="text-2xl font-bold text-slate-800">{plan.name}</CardTitle>
                     <div className="flex items-center justify-center space-x-2 mb-4">
                       <span className="text-4xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
-                        {formatPrice(plan.price)}
+                        {plan.price}
                       </span>
                       <span className="text-slate-500">/{plan.period}</span>
                     </div>
+                    {userCurrency !== 'USD' && (
+                      <div className="text-xs text-slate-500 mb-2">
+                        Base price: ${plan.baseUsdPrice} USD
+                      </div>
+                    )}
                     <p className="text-slate-600">{plan.description}</p>
                     {plan.hasTrial && (
                       <Badge className="mt-2 bg-gradient-to-r from-therapy-500 to-calm-500 text-white">
