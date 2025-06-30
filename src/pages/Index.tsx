@@ -8,6 +8,7 @@ import GradientButton from '@/components/ui/GradientButton';
 import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
 import ProgressTracker from '@/components/landing/ProgressTracker';
 import EnhancedPricingSection from '@/components/pricing/EnhancedPricingSection';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
