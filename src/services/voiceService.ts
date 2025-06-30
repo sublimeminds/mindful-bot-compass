@@ -1,4 +1,3 @@
-
 import { EmotionAnalyzer } from './emotionAnalyzer';
 
 export interface Voice {
