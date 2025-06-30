@@ -6,7 +6,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSelector from '@/components/LanguageSelector';
+import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import Logo from '@/components/navigation/Logo';
 
 const Header = () => {
@@ -143,7 +143,7 @@ const Header = () => {
 
           {/* Right Side - Auth & Language */}
           <div className="hidden md:flex items-center space-x-4">
-            <LanguageSelector />
+            <EnhancedLanguageSelector />
             
             {user ? (
               <div className="flex items-center space-x-3">
@@ -240,7 +240,7 @@ const Header = () => {
             </div>
 
             <div className="px-4 pt-4 border-t border-slate-200/50">
-              <LanguageSelector />
+              <EnhancedLanguageSelector />
               
               {user ? (
                 <div className="space-y-2 mt-4">
