@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import AnimatedOnboardingIntro from './AnimatedOnboardingIntro';
 import WelcomeStep from './WelcomeStep';
@@ -10,10 +9,12 @@ import InternationalizedEnhancedSmartAnalysisStep from './InternationalizedEnhan
 import TherapistPersonalityStep from './TherapistPersonalityStep';
 import PlanSelectionStep from './PlanSelectionStep';
 import NotificationPreferencesStep from './NotificationPreferencesStep';
-import LanguageSelector from '@/components/ui/LanguageSelector';
+import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import CurrencySelector from '@/components/ui/CurrencySelector';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { useSEO } from '@/hooks/useSEO';
+import { useAuth } from '@/components/EnhancedAuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 interface EnhancedSmartOnboardingFlowProps {
   onComplete: (data: any) => void;
@@ -21,9 +22,12 @@ interface EnhancedSmartOnboardingFlowProps {
 
 const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlowProps) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [showIntro, setShowIntro] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [onboardingData, setOnboardingData] = useState<any>({
     culturalPreferences: {
       primaryLanguage: 'en',
@@ -41,6 +45,30 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     description: 'Begin your personalized mental wellness journey with TherapySync\'s guided onboarding process.',
     keywords: 'mental health assessment, therapy onboarding, wellness setup'
   });
+
+  // Check for pre-selected plan from pricing
+  useEffect(() => {
+    const savedPlan = localStorage.getItem('selectedPlan');
+    if (savedPlan) {
+      try {
+        const planData = JSON.parse(savedPlan);
+        setSelectedPlan(planData);
+        setOnboardingData(prev => ({
+          ...prev,
+          selectedPlan: planData
+        }));
+      } catch (error) {
+        console.error('Error parsing saved plan:', error);
+      }
+    }
+  }, []);
+
+  // Redirect to auth if user is not logged in
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth');
+    }
+  }, [user, navigate]);
 
   const steps = [
     { component: WelcomeStep, titleKey: 'onboarding.steps.welcome' },
@@ -65,6 +93,8 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      // Clear saved plan from localStorage
+      localStorage.removeItem('selectedPlan');
       onComplete(onboardingData);
     }
   };
@@ -83,6 +113,10 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       culturalPreferences: preferences
     }));
   };
+
+  if (!user) {
+    return null; // Will redirect to auth
+  }
 
   if (showIntro) {
     return <AnimatedOnboardingIntro onGetStarted={handleGetStarted} />;
@@ -106,6 +140,14 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       };
     }
 
+    // Add pre-selected plan for Plan Selection step
+    if (currentStep === 6 && selectedPlan) { // Plan Selection step
+      return {
+        ...baseProps,
+        preSelectedPlan: selectedPlan
+      };
+    }
+
     return baseProps;
   };
 
@@ -115,13 +157,18 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
         {/* Header with Controls */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-4">
-            <LanguageSelector />
+            <EnhancedLanguageSelector />
             <CurrencySelector 
               value={selectedCurrency}
               onChange={setSelectedCurrency}
             />
             <ThemeToggle />
           </div>
+          {selectedPlan && (
+            <div className="text-sm text-therapy-600 font-medium">
+              Selected: {selectedPlan.name}
+            </div>
+          )}
         </div>
 
         {/* Progress Indicator */}

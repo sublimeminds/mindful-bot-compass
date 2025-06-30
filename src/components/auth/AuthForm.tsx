@@ -3,12 +3,18 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { SignUpForm } from '@/components/auth/SignUpForm';
+import SocialLoginButtons from '@/components/auth/SocialLoginButtons';
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   const toggleMode = () => {
     setIsLogin(!isLogin);
+  };
+
+  const handleSocialSuccess = () => {
+    // Social login success is handled by redirect
+    console.log('Social login initiated');
   };
 
   return (
@@ -19,7 +25,11 @@ const AuthForm = () => {
             {isLogin ? 'Welcome Back' : 'Create Account'}
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
+          {/* Social Login Buttons */}
+          <SocialLoginButtons onSuccess={handleSocialSuccess} />
+          
+          {/* Traditional Email/Password Forms */}
           {isLogin ? (
             <LoginForm onToggleMode={toggleMode} />
           ) : (

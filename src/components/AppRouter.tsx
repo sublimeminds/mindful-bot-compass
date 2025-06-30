@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -21,12 +20,14 @@ import Sessions from '@/pages/Sessions';
 import Support from '@/pages/Support';
 import CrisisSupport from '@/pages/CrisisSupport';
 import Progress from '@/pages/Progress';
+import OnboardingPage from '@/pages/OnboardingPage';
 
 const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/auth" element={<Auth />} />
+      <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/therapy-chat" element={<TherapyChat />} />
       <Route path="/profile" element={<Profile />} />
