@@ -1,8 +1,6 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DollarSign, Info } from 'lucide-react';
-import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
 import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
 
 interface CurrencySelectorProps {
@@ -11,64 +9,70 @@ interface CurrencySelectorProps {
   className?: string;
 }
 
-const CurrencySelector: React.FC<CurrencySelectorProps> = ({ value, onChange, className = '' }) => {
-  const { currentLanguage } = useEnhancedLanguage();
+interface CurrencyOption {
+  code: string;
+  name: string;
+  symbol: string;
+  region: string;
+}
 
-  const supportedCurrencies = [
-    { code: 'USD', name: 'US Dollar', symbol: '$', flag: '🇺🇸' },
-    { code: 'EUR', name: 'Euro', symbol: '€', flag: '🇪🇺' },
-    { code: 'GBP', name: 'British Pound', symbol: '£', flag: '🇬🇧' },
-    { code: 'JPY', name: 'Japanese Yen', symbol: '¥', flag: '🇯🇵' },
-    { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$', flag: '🇨🇦' },
-    { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', flag: '🇦🇺' },
-    { code: 'CHF', name: 'Swiss Franc', symbol: '₣', flag: '🇨🇭' },
-    { code: 'CNY', name: 'Chinese Yuan', symbol: '¥', flag: '🇨🇳' },
-    { code: 'INR', name: 'Indian Rupee', symbol: '₹', flag: '🇮🇳' },
-    { code: 'BRL', name: 'Brazilian Real', symbol: 'R$', flag: '🇧🇷' },
-  ];
+const CurrencySelector = ({ value, onChange, className }: CurrencySelectorProps) => {
+  const [currencies, setCurrencies] = useState<CurrencyOption[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const currentCurrency = supportedCurrencies.find(c => c.code === value) || supportedCurrencies[0];
+  useEffect(() => {
+    const loadCurrencies = async () => {
+      try {
+        const supportedCurrencies = await enhancedCurrencyService.getSupportedCurrencies();
+        setCurrencies(supportedCurrencies.map(curr => ({
+          code: curr.code,
+          name: curr.name,
+          symbol: curr.symbol,
+          region: curr.region
+        })));
+      } catch (error) {
+        console.error('Failed to load currencies:', error);
+        // Fallback currencies
+        setCurrencies([
+          { code: 'USD', name: 'US Dollar', symbol: '$', region: 'Americas' },
+          { code: 'IDR', name: 'Indonesian Rupiah', symbol: 'Rp', region: 'Asia' },
+          { code: 'EUR', name: 'Euro', symbol: '€', region: 'Europe' },
+          { code: 'GBP', name: 'British Pound', symbol: '£', region: 'Europe' }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCurrencies();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className={`animate-pulse bg-gray-200 h-10 rounded-md ${className}`} />
+    );
+  }
 
   return (
-    <div className={`space-y-2 ${className}`}>
-      <div className="flex items-center space-x-2">
-        <DollarSign className="h-4 w-4 text-therapy-500" />
-        <Select value={value} onValueChange={onChange}>
-          <SelectTrigger className="w-44 border-therapy-200 hover:border-therapy-300 focus:border-therapy-500 focus:ring-therapy-500/20">
-            <SelectValue>
-              <div className="flex items-center space-x-2">
-                <span>{currentCurrency.flag}</span>
-                <span className="font-medium">{currentCurrency.code}</span>
-                <span className="text-sm text-slate-500">({currentCurrency.symbol})</span>
-              </div>
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent className="bg-white border shadow-lg z-50">
-            {supportedCurrencies.map((currency) => (
-              <SelectItem key={currency.code} value={currency.code}>
-                <div className="flex items-center space-x-2">
-                  <span>{currency.flag}</span>
-                  <div className="flex flex-col">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-medium">{currency.code}</span>
-                      <span className="text-sm text-slate-500">({currency.symbol})</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">{currency.name}</span>
-                  </div>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      
-      {value !== 'USD' && (
-        <div className="flex items-center gap-2 text-xs text-slate-500 bg-therapy-50/50 p-2 rounded-lg">
-          <Info className="h-3 w-3 flex-shrink-0" />
-          <span>Prices converted from USD base pricing</span>
-        </div>
-      )}
-    </div>
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger className={className}>
+        <SelectValue placeholder="Select currency">
+          {currencies.find(c => c.code === value)?.symbol} {value}
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        {currencies.map((currency) => (
+          <SelectItem key={currency.code} value={currency.code}>
+            <div className="flex items-center space-x-2">
+              <span className="font-mono text-sm">{currency.symbol}</span>
+              <span>{currency.code}</span>
+              <span className="text-gray-500">- {currency.name}</span>
+              <span className="text-xs text-gray-400">({currency.region})</span>
+            </div>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 };
 

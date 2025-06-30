@@ -8,12 +8,19 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const logStep = (step: string, details?: any) => {
+  const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
+  console.log(`[CREATE-CHECKOUT] ${step}${detailsStr}`);
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    logStep("Function started");
+
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_ANON_KEY") ?? ""
@@ -28,9 +35,11 @@ serve(async (req) => {
       throw new Error("User not authenticated");
     }
 
-    const { planId, billingCycle } = await req.json();
+    logStep("User authenticated", { userId: user.id, email: user.email });
 
-    // Get plan details
+    const { planId, billingCycle, redirectUrl } = await req.json();
+
+    // Get plan details from database
     const { data: plan, error: planError } = await supabaseClient
       .from('subscription_plans')
       .select('*')
@@ -41,6 +50,8 @@ serve(async (req) => {
       throw new Error("Invalid plan selected");
     }
 
+    logStep("Plan found", { planName: plan.name, planId });
+
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2023-10-16",
     });
@@ -50,15 +61,18 @@ serve(async (req) => {
     let customerId;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
+      logStep("Existing customer found", { customerId });
     } else {
       const customer = await stripe.customers.create({
         email: user.email,
         metadata: { user_id: user.id }
       });
       customerId = customer.id;
+      logStep("New customer created", { customerId });
     }
 
     const price = billingCycle === 'yearly' ? plan.price_yearly : plan.price_monthly;
+    const trialPeriodDays = plan.trial_days || 7;
     
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
@@ -68,8 +82,8 @@ serve(async (req) => {
           price_data: {
             currency: "usd",
             product_data: { 
-              name: `${plan.name} Plan`,
-              description: `MindfulAI ${plan.name} subscription - ${billingCycle} billing`
+              name: `TherapySync ${plan.name} Plan`,
+              description: `TherapySync ${plan.name} subscription - ${billingCycle} billing`
             },
             unit_amount: Math.round(price * 100),
             recurring: {
@@ -80,8 +94,16 @@ serve(async (req) => {
         },
       ],
       mode: "subscription",
-      success_url: `${req.headers.get("origin")}/profile?success=true`,
-      cancel_url: `${req.headers.get("origin")}/profile?canceled=true`,
+      success_url: redirectUrl || `${req.headers.get("origin")}/onboarding?success=true&plan=${plan.name}`,
+      cancel_url: `${req.headers.get("origin")}/pricing?canceled=true`,
+      subscription_data: {
+        trial_period_days: trialPeriodDays,
+        metadata: {
+          user_id: user.id,
+          plan_id: planId,
+          billing_cycle: billingCycle
+        }
+      },
       metadata: {
         user_id: user.id,
         plan_id: planId,
@@ -89,13 +111,16 @@ serve(async (req) => {
       }
     });
 
+    logStep("Checkout session created", { sessionId: session.id });
+
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
-    console.error('Checkout error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logStep("ERROR in create-checkout", { message: errorMessage });
+    return new Response(JSON.stringify({ error: errorMessage }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });

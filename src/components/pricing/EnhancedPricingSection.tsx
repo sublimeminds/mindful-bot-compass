@@ -4,146 +4,255 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Check, Star, Heart, Crown, Users, Calculator } from 'lucide-react';
+import { Check, Star, Heart, Crown, Users, Calculator, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
+import { useAuth } from '@/hooks/useAuth';
 import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import CurrencySelector from '@/components/ui/CurrencySelector';
 import GradientButton from '@/components/ui/GradientButton';
 import FamilyPlanSelector from '@/components/family/FamilyPlanSelector';
 
+interface SubscriptionPlan {
+  id: string;
+  name: string;
+  price_monthly: number;
+  price_yearly: number;
+  features: Record<string, string>;
+  limits: Record<string, any>;
+  trial_days: number;
+  stripe_price_id_monthly?: string;
+  stripe_price_id_yearly?: string;
+}
+
 const EnhancedPricingSection = () => {
   const navigate = useNavigate();
-  const { currentLanguage } = useEnhancedLanguage();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  
   const [userCurrency, setUserCurrency] = useState('USD');
   const [userLocation, setUserLocation] = useState(null);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [activeTab, setActiveTab] = useState('individual');
   const [showFamilySelector, setShowFamilySelector] = useState(false);
+  const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [processingPlan, setProcessingPlan] = useState<string | null>(null);
 
   useEffect(() => {
-    const detectCurrency = async () => {
+    const initializeCurrency = async () => {
       try {
         const location = await enhancedCurrencyService.detectUserLocation();
         if (location) {
           setUserCurrency(location.currency);
-          setUserLocation(location);
+          setUserLocation(location as any);
         }
       } catch (error) {
-        console.warn('Could not detect currency');
-      }
-    };
-    detectCurrency();
-  }, []);
-
-  const formatPrice = async (usdPrice: number, isYearly: boolean = false) => {
-    try {
-      let finalPrice = usdPrice;
-      
-      if (isYearly) {
-        const yearlyDiscounts = { 9: 79, 19: 149 };
-        finalPrice = yearlyDiscounts[usdPrice] || usdPrice * 10;
-      }
-
-      const convertedAmount = enhancedCurrencyService.convertAmount(finalPrice, 'USD', userCurrency);
-      let adjustedAmount = convertedAmount;
-      
-      if (userLocation) {
-        adjustedAmount = await enhancedCurrencyService.getRegionalPricing(finalPrice, userCurrency, userLocation.region);
-      }
-      
-      return enhancedCurrencyService.formatCurrency(adjustedAmount, userCurrency, currentLanguage.code);
-    } catch (error) {
-      return enhancedCurrencyService.formatCurrency(usdPrice, 'USD', currentLanguage.code);
-    }
-  };
-
-  const [formattedPrices, setFormattedPrices] = useState({
-    free: 'Free',
-    proMonthly: '$9',
-    proYearly: '$79',
-    premiumMonthly: '$19',
-    premiumYearly: '$149'
-  });
-
-  useEffect(() => {
-    const updatePrices = async () => {
-      try {
-        const prices = {
-          free: 'Free',
-          proMonthly: await formatPrice(9, false),
-          proYearly: await formatPrice(9, true),
-          premiumMonthly: await formatPrice(19, false),
-          premiumYearly: await formatPrice(19, true)
-        };
-        setFormattedPrices(prices);
-      } catch (error) {
-        console.error('Error updating prices:', error);
+        console.warn('Could not detect currency:', error);
       }
     };
     
-    if (userCurrency) {
-      updatePrices();
-    }
-  }, [userCurrency, userLocation, currentLanguage.code, billingCycle]);
+    initializeCurrency();
+    loadPlans();
+  }, []);
 
-  const individualPlans = [
-    {
-      name: 'Free',
-      price: formattedPrices.free,
-      period: 'forever',
-      description: 'Get started with basic AI therapy features',
-      popular: false,
-      features: [
-        '3 AI Therapy Sessions per month',
-        'Basic Mood Tracking',
-        'Text-based Conversations Only',
-        'Community Access',
-        'Crisis Resources Access'
-      ],
-      color: 'from-slate-500 to-slate-600',
-      icon: Heart
-    },
-    {
-      name: 'Pro',
-      price: billingCycle === 'monthly' ? formattedPrices.proMonthly : formattedPrices.proYearly,
-      period: billingCycle,
-      description: 'Perfect for regular therapy and progress tracking',
-      popular: true,
-      features: [
-        'Unlimited AI Therapy Sessions',
-        'Voice Conversations (29 Languages)',
-        'Advanced Mood Analytics',
-        'Personalized AI Therapist Selection',
-        'Progress Tracking & Goals',
-        'Priority Crisis Support',
-        'Mobile App Access'
-      ],
-      color: 'from-therapy-500 to-calm-500',
-      icon: Star,
-      savings: billingCycle === 'yearly' ? 26 : 0
-    },
-    {
-      name: 'Premium',
-      price: billingCycle === 'monthly' ? formattedPrices.premiumMonthly : formattedPrices.premiumYearly,
-      period: billingCycle,
-      description: 'Advanced features for comprehensive mental wellness',
-      popular: false,
-      features: [
-        'Everything in Pro',
-        'Advanced Emotion Detection',
-        'Personalized Treatment Plans',
-        'Advanced Analytics & Insights',
-        'Priority Support (24/7)',
-        'Custom AI Therapist Training',
-        'Integration with Health Apps',
-        'Exclusive Wellness Content'
-      ],
-      color: 'from-therapy-600 to-harmony-600',
-      icon: Crown,
-      savings: billingCycle === 'yearly' ? 35 : 0
+  const loadPlans = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('subscription_plans')
+        .select('*')
+        .eq('is_active', true)
+        .order('price_monthly', { ascending: true });
+
+      if (error) throw error;
+      setPlans(data || []);
+    } catch (error) {
+      console.error('Error loading plans:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load subscription plans.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const formatPrice = async (usdPrice: number): Promise<string> => {
+    try {
+      await enhancedCurrencyService.updateExchangeRates();
+      
+      let convertedAmount = enhancedCurrencyService.convertAmount(usdPrice, 'USD', userCurrency);
+      
+      if (userLocation) {
+        convertedAmount = await enhancedCurrencyService.getRegionalPricing(
+          convertedAmount, 
+          userCurrency, 
+          (userLocation as any).region
+        );
+      }
+      
+      return enhancedCurrencyService.formatCurrency(convertedAmount, userCurrency);
+    } catch (error) {
+      console.error('Error formatting price:', error);
+      return enhancedCurrencyService.formatCurrency(usdPrice, 'USD');
+    }
+  };
+
+  const handlePlanSelection = async (plan: SubscriptionPlan) => {
+    if (!user) {
+      navigate('/auth?redirect=/pricing');
+      return;
+    }
+
+    if (plan.name === 'Free') {
+      navigate('/onboarding');
+      return;
+    }
+
+    setProcessingPlan(plan.id);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: {
+          planId: plan.id,
+          billingCycle,
+          redirectUrl: `${window.location.origin}/onboarding?success=true&plan=${plan.name}`
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.url) {
+        window.open(data.url, '_blank');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to start checkout process. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setProcessingPlan(null);
+    }
+  };
+
+  const individualPlans = plans.filter(plan => !plan.name.includes('Family'));
+  const familyPlans = plans.filter(plan => plan.name.includes('Family'));
+
+  const PlanCard = ({ plan, isPopular = false }: { plan: SubscriptionPlan; isPopular?: boolean }) => {
+    const [monthlyPrice, setMonthlyPrice] = useState('$0');
+    const [yearlyPrice, setYearlyPrice] = useState('$0');
+
+    useEffect(() => {
+      const updatePrices = async () => {
+        const monthly = await formatPrice(plan.price_monthly);
+        const yearly = await formatPrice(plan.price_yearly);
+        setMonthlyPrice(monthly);
+        setYearlyPrice(yearly);
+      };
+      updatePrices();
+    }, [plan, userCurrency, userLocation]);
+
+    const currentPrice = billingCycle === 'yearly' ? yearlyPrice : monthlyPrice;
+    const savings = billingCycle === 'yearly' && plan.price_yearly > 0 
+      ? Math.round(((plan.price_monthly * 12 - plan.price_yearly) / (plan.price_monthly * 12)) * 100)
+      : 0;
+
+    const getIcon = () => {
+      if (plan.name.includes('Premium')) return Crown;
+      if (plan.name.includes('Pro') || plan.name.includes('Family')) return Star;
+      return Heart;
+    };
+
+    const IconComponent = getIcon();
+
+    return (
+      <Card 
+        className={`relative overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 ${
+          isPopular ? 'ring-2 ring-therapy-500 shadow-xl scale-105' : 'shadow-lg'
+        }`}
+      >
+        {isPopular && (
+          <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-therapy-500 to-calm-500 text-white text-center py-2 text-sm font-medium">
+            Most Popular
+          </div>
+        )}
+        
+        <CardHeader className={isPopular ? 'pt-12' : ''}>
+          <div className={`w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-xl flex items-center justify-center mb-4 mx-auto`}>
+            <IconComponent className="h-6 w-6 text-white" />
+          </div>
+          
+          <CardTitle className="text-2xl text-center">{plan.name}</CardTitle>
+          
+          <div className="text-center">
+            <div className="flex items-baseline justify-center space-x-2">
+              <span className="text-4xl font-bold therapy-text-gradient">
+                {currentPrice}
+              </span>
+              {plan.name !== 'Free' && (
+                <span className="text-gray-500">/{billingCycle}</span>
+              )}
+            </div>
+            
+            {savings > 0 && (
+              <Badge className="bg-green-100 text-green-800 border-green-200 mt-2">
+                Save {savings}%
+              </Badge>
+            )}
+
+            {plan.trial_days > 0 && (
+              <Badge variant="outline" className="mt-2 border-therapy-200 text-therapy-600">
+                {plan.trial_days}-day free trial
+              </Badge>
+            )}
+          </div>
+        </CardHeader>
+
+        <CardContent>
+          <ul className="space-y-3 mb-8">
+            {Object.entries(plan.features).map(([key, feature]) => (
+              <li key={key} className="flex items-start space-x-2">
+                <Check className="h-4 w-4 text-therapy-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm">{feature}</span>
+              </li>
+            ))}
+          </ul>
+
+          <GradientButton 
+            className="w-full"
+            onClick={() => handlePlanSelection(plan)}
+            disabled={processingPlan === plan.id}
+          >
+            {processingPlan === plan.id ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                Processing...
+              </>
+            ) : plan.name === 'Free' ? (
+              'Get Started Free'
+            ) : (
+              <>
+                <Sparkles className="h-4 w-4 mr-2" />
+                Choose {plan.name}
+              </>
+            )}
+          </GradientButton>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="py-20 flex justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="py-20" id="pricing">
@@ -208,117 +317,49 @@ const EnhancedPricingSection = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {individualPlans.map((plan, index) => {
-                const IconComponent = plan.icon;
-                return (
-                  <Card 
-                    key={plan.name}
-                    className={`relative overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 ${
-                      plan.popular ? 'ring-2 ring-therapy-500 shadow-xl scale-105' : 'shadow-lg'
-                    }`}
-                  >
-                    {plan.popular && (
-                      <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-therapy-500 to-calm-500 text-white text-center py-2 text-sm font-medium">
-                        Most Popular
-                      </div>
-                    )}
-                    
-                    <CardHeader className={plan.popular ? 'pt-12' : ''}>
-                      <div className={`w-12 h-12 bg-gradient-to-r ${plan.color} rounded-xl flex items-center justify-center mb-4 mx-auto`}>
-                        <IconComponent className="h-6 w-6 text-white" />
-                      </div>
-                      
-                      <CardTitle className="text-2xl text-center">{plan.name}</CardTitle>
-                      
-                      <div className="text-center">
-                        <div className="flex items-baseline justify-center space-x-2">
-                          <span className="text-4xl font-bold therapy-text-gradient">
-                            {plan.price}
-                          </span>
-                          {plan.name !== 'Free' && (
-                            <span className="text-gray-500">/{plan.period}</span>
-                          )}
-                        </div>
-                        
-                        {plan.savings > 0 && (
-                          <Badge className="bg-green-100 text-green-800 border-green-200 mt-2">
-                            Save {plan.savings}%
-                          </Badge>
-                        )}
-                      </div>
-                      
-                      <p className="text-center text-gray-600 mt-4">{plan.description}</p>
-                    </CardHeader>
-
-                    <CardContent>
-                      <ul className="space-y-3 mb-8">
-                        {plan.features.map((feature, featureIndex) => (
-                          <li key={featureIndex} className="flex items-center space-x-2">
-                            <Check className="h-4 w-4 text-therapy-500 flex-shrink-0" />
-                            <span className="text-sm">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <GradientButton 
-                        className="w-full"
-                        onClick={() => navigate('/auth')}
-                      >
-                        {plan.name === 'Free' ? 'Get Started Free' : `Choose ${plan.name}`}
-                      </GradientButton>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+              {individualPlans.map((plan, index) => (
+                <PlanCard 
+                  key={plan.id} 
+                  plan={plan} 
+                  isPopular={plan.name === 'Pro'}
+                />
+              ))}
             </div>
           </TabsContent>
 
           <TabsContent value="family">
             <div className="text-center mb-12">
-              <div className="max-w-4xl mx-auto">
-                <h3 className="text-2xl font-bold mb-4">Adaptive Family Plans</h3>
-                <p className="text-lg text-gray-600 mb-8">
-                  Perfect for families who want flexible pricing that scales with their needs. 
-                  Pay only for active family members with our intelligent seat-based pricing.
-                </p>
-                
-                <Card className="max-w-2xl mx-auto mb-8">
-                  <CardContent className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="text-center">
-                        <div className="bg-gradient-to-r from-therapy-500 to-calm-500 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3">
-                          <Users className="h-6 w-6 text-white" />
-                        </div>
-                        <h4 className="font-semibold mb-2">Family Pro</h4>
-                        <p className="text-2xl font-bold text-therapy-600 mb-1">$39 base + $15/seat</p>
-                        <p className="text-sm text-gray-600">Perfect for most families</p>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="bg-gradient-to-r from-purple-500 to-purple-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3">
-                          <Crown className="h-6 w-6 text-white" />
-                        </div>
-                        <h4 className="font-semibold mb-2">Family Premium</h4>
-                        <p className="text-2xl font-bold text-purple-600 mb-1">$59 base + $20/seat</p>
-                        <p className="text-sm text-gray-600">Ultimate family support</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              <h3 className="text-2xl font-bold mb-4">Family Mental Health Plans</h3>
+              <p className="text-lg text-gray-600 mb-8">
+                Complete mental health support for your entire family with parental controls, 
+                shared progress tracking, and crisis monitoring.
+              </p>
+            </div>
 
-                <GradientButton
-                  size="lg"
-                  onClick={() => setShowFamilySelector(true)}
-                  className="px-8"
-                >
-                  <Calculator className="h-5 w-5 mr-2" />
-                  Build Your Family Plan
-                </GradientButton>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+              {familyPlans.map((plan) => (
+                <PlanCard 
+                  key={plan.id} 
+                  plan={plan} 
+                  isPopular={plan.name === 'Family Pro'}
+                />
+              ))}
+            </div>
+
+            <div className="text-center">
+              <GradientButton
+                size="lg"
+                onClick={() => setShowFamilySelector(true)}
+                className="px-8"
+              >
+                <Calculator className="h-5 w-5 mr-2" />
+                Build Custom Family Plan
+              </GradientButton>
             </div>
           </TabsContent>
         </Tabs>
 
+        {/* Family Plan Selector Modal */}
         <FamilyPlanSelector
           isOpen={showFamilySelector}
           onClose={() => setShowFamilySelector(false)}

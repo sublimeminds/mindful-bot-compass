@@ -164,10 +164,10 @@ const Index = () => {
               <GradientButton 
                 size="lg" 
                 className="px-8 py-4 text-lg font-bold"
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/pricing')}
               >
                 <Heart className="h-5 w-5 mr-2" />
-                Get Started Free
+                Start Free Trial
               </GradientButton>
               <GradientButton 
                 size="lg" 
@@ -341,19 +341,19 @@ const Index = () => {
                 <Button 
                   size="lg"
                   className="bg-white text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                  onClick={() => navigate('/auth')}
+                  onClick={() => navigate('/pricing')}
                 >
                   <Heart className="h-5 w-5 mr-2" />
-                  Start Your Journey
+                  Choose Your Plan
                 </Button>
                 <Button 
                   size="lg" 
                   variant="outline"
                   className="border-2 border-white text-white hover:bg-white/10 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm"
-                  onClick={() => navigate('/features-overview')}
+                  onClick={() => navigate('/onboarding')}
                 >
                   <Zap className="h-5 w-5 mr-2" />
-                  Explore Features
+                  Start Onboarding
                 </Button>
               </div>
             </Card>
