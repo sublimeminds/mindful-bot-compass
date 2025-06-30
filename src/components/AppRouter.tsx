@@ -14,6 +14,7 @@ import FeaturesShowcase from '@/pages/FeaturesShowcase';
 import VoiceTechnology from '@/pages/VoiceTechnology';
 import Help from '@/pages/Help';
 import Community from '@/pages/Community';
+import CommunityFeatures from '@/pages/CommunityFeatures';
 import CrisisResources from '@/pages/CrisisResources';
 import LGBTQTherapy from '@/pages/LGBTQTherapy';
 import Analytics from '@/pages/Analytics';
@@ -50,6 +51,7 @@ const AppRouter = () => {
       <Route path="/voice-technology" element={<VoiceTechnology />} />
       <Route path="/help" element={<Help />} />
       <Route path="/community" element={<Community />} />
+      <Route path="/community-features" element={<CommunityFeatures />} />
       <Route path="/crisis-resources" element={<CrisisResources />} />
       <Route path="/lgbtq-therapy" element={<LGBTQTherapy />} />
       <Route path="/analytics" element={<Analytics />} />

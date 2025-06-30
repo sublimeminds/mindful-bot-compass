@@ -1,4 +1,3 @@
-
 import { enhancedVoiceService } from './voiceService';
 
 export interface AudioContent {
@@ -17,6 +16,7 @@ export interface AudioContent {
   tags: string[];
   therapyType?: string;
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  tier?: 'free' | 'premium' | 'pro';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -54,120 +54,112 @@ class AudioContentService {
     return !!this.apiKey;
   }
 
-  // Initialize default content library
+  // Initialize default content library with tier restrictions
   private initializeDefaultContent(): void {
     this.contentLibrary = [
-      // Meditation Content
+      // Free Content (limited)
       {
         id: 'meditation-daily-mindfulness-01',
-        title: 'Morning Mindfulness',
-        description: 'Start your day with intention and calm awareness',
+        title: 'Morning Mindfulness (Free Sample)',
+        description: 'Start your day with intention and calm awareness - 5 minute sample',
         category: 'meditation',
         subcategory: 'mindfulness',
-        duration: '10:00',
-        voiceId: '9BWtsMINqrJLrRacOk9x', // Aria
+        duration: '5:00',
+        voiceId: '9BWtsMINqrJLrRacOk9x',
         voiceName: 'Aria',
         model: 'eleven_multilingual_v2',
-        script: 'Welcome to your morning mindfulness practice. Find a comfortable position and close your eyes gently. Take a deep breath in through your nose, filling your lungs completely. Hold for a moment, and then exhale slowly through your mouth. As you continue breathing naturally, bring your attention to the present moment...',
+        script: 'Welcome to your morning mindfulness practice sample. Find a comfortable position and close your eyes gently. Take a deep breath in through your nose...',
         isGenerated: false,
-        tags: ['morning', 'mindfulness', 'breathing', 'awareness'],
+        tags: ['morning', 'mindfulness', 'breathing', 'free'],
         difficulty: 'beginner',
+        tier: 'free',
         createdAt: new Date(),
         updatedAt: new Date()
       },
+      
+      // Premium Content
       {
-        id: 'meditation-sleep-story-01',
-        title: 'Peaceful Forest Journey',
-        description: 'A calming bedtime story to help you drift into restful sleep',
+        id: 'meditation-daily-mindfulness-full',
+        title: 'Complete Morning Mindfulness',
+        description: 'Full 15-minute morning mindfulness practice with body scan and intention setting',
         category: 'meditation',
-        subcategory: 'sleep',
-        duration: '25:00',
-        voiceId: 'XB0fDUnXU5powFXDhCwa', // Charlotte
-        voiceName: 'Charlotte',
+        subcategory: 'mindfulness',
+        duration: '15:00',
+        voiceId: '9BWtsMINqrJLrRacOk9x',
+        voiceName: 'Aria',
         model: 'eleven_multilingual_v2',
-        script: 'As you settle into your comfortable bed, imagine yourself walking along a gentle forest path. The evening light filters through the trees, casting soft shadows on the ground. The air is fresh and clean, filled with the scent of pine and earth...',
+        script: 'Welcome to your complete morning mindfulness practice. Find a comfortable position and close your eyes gently. We will begin with breath awareness, move through a gentle body scan, and conclude with intention setting for your day...',
         isGenerated: false,
-        tags: ['sleep', 'story', 'relaxation', 'forest', 'bedtime'],
-        difficulty: 'beginner',
+        tags: ['morning', 'mindfulness', 'body scan', 'intention', 'premium'],
+        difficulty: 'intermediate',
+        tier: 'premium',
         createdAt: new Date(),
         updatedAt: new Date()
       },
-      // Podcast Content
+      
       {
-        id: 'podcast-understanding-anxiety-01',
-        title: 'Understanding Anxiety: What Your Mind Is Telling You',
-        description: 'Learn about anxiety symptoms, triggers, and coping strategies',
+        id: 'podcast-anxiety-deep-dive',
+        title: 'Understanding Anxiety: Complete Guide',
+        description: 'Comprehensive exploration of anxiety causes, symptoms, and evidence-based treatments',
         category: 'podcast',
         subcategory: 'education',
-        duration: '18:00',
-        voiceId: 'EXAVITQu4vr4xnSDxMaL', // Sarah
+        duration: '35:00',
+        voiceId: 'EXAVITQu4vr4xnSDxMaL',
         voiceName: 'Sarah',
         model: 'eleven_multilingual_v2',
-        script: 'Welcome to Understanding Your Mind. I\'m your host, and today we\'re exploring anxiety - what it is, why it happens, and most importantly, how you can work with it rather than against it. Anxiety is one of the most common mental health experiences...',
+        script: 'Welcome to a comprehensive exploration of anxiety. Today we will dive deep into the neuroscience of anxiety, explore various types of anxiety disorders, and discuss evidence-based treatment approaches...',
         isGenerated: false,
-        tags: ['anxiety', 'education', 'coping', 'mental health'],
+        tags: ['anxiety', 'education', 'neuroscience', 'treatment', 'premium'],
         therapyType: 'general',
-        difficulty: 'beginner',
+        difficulty: 'advanced',
+        tier: 'premium',
         createdAt: new Date(),
         updatedAt: new Date()
       },
+
+      // Pro Content
       {
-        id: 'podcast-adhd-focus-01',
-        title: 'ADHD Focus Strategies That Actually Work',
-        description: 'Practical techniques for improving focus and attention with ADHD',
-        category: 'podcast',
-        subcategory: 'adhd',
-        duration: '15:00',
-        voiceId: 'XB0fDUnXU5powFXDhCwa', // Charlotte
-        voiceName: 'Charlotte',
-        model: 'eleven_multilingual_v2',
-        script: 'If you have ADHD, you know that focus can feel like trying to catch smoke with your bare hands. Today, we\'re diving into evidence-based strategies that actually work for ADHD brains. These aren\'t generic productivity tips - they\'re specifically designed for how your mind works...',
-        isGenerated: false,
-        tags: ['adhd', 'focus', 'attention', 'productivity', 'executive function'],
-        therapyType: 'adhd',
-        difficulty: 'intermediate',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      // Technique Content
-      {
-        id: 'technique-cbt-thought-challenging-01',
-        title: 'CBT Thought Challenging Exercise',
-        description: 'Learn to identify and challenge negative thought patterns',
+        id: 'technique-advanced-dbt-skills',
+        title: 'Advanced DBT Skills Masterclass',
+        description: 'Master-level dialectical behavior therapy techniques for emotional regulation',
         category: 'technique',
-        subcategory: 'cbt',
-        duration: '12:00',
-        voiceId: 'FGY2WhTYpPnrIDTdsKH5', // Laura
+        subcategory: 'dbt',
+        duration: '45:00',
+        voiceId: 'FGY2WhTYpPnrIDTdsKH5',
         voiceName: 'Laura',
         model: 'eleven_multilingual_v2',
-        script: 'In this exercise, we\'ll practice identifying and challenging unhelpful thought patterns using Cognitive Behavioral Therapy techniques. Start by thinking of a recent situation that caused you stress or anxiety. Notice what thoughts came up for you...',
+        script: 'Welcome to advanced DBT skills training. Today we will explore complex distress tolerance techniques, advanced interpersonal effectiveness strategies, and sophisticated emotional regulation skills...',
         isGenerated: false,
-        tags: ['cbt', 'thoughts', 'challenging', 'cognitive', 'therapy'],
-        therapyType: 'cbt',
-        difficulty: 'intermediate',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: 'technique-grounding-5-4-3-2-1',
-        title: '5-4-3-2-1 Grounding Technique',
-        description: 'Quick grounding exercise for anxiety and panic',
-        category: 'technique',
-        subcategory: 'grounding',
-        duration: '5:00',
-        voiceId: 'SAz9YHcvj6GT2YYXdXww', // River
-        voiceName: 'River',
-        model: 'eleven_multilingual_v2',
-        script: 'When you\'re feeling overwhelmed or anxious, this grounding technique can help bring you back to the present moment. Find a comfortable position and take a deep breath. Now, look around you and identify 5 things you can see...',
-        isGenerated: false,
-        tags: ['grounding', 'anxiety', 'panic', 'present moment', 'senses'],
-        difficulty: 'beginner',
+        tags: ['dbt', 'advanced', 'emotional regulation', 'distress tolerance', 'pro'],
+        therapyType: 'dbt',
+        difficulty: 'advanced',
+        tier: 'pro',
         createdAt: new Date(),
         updatedAt: new Date()
       }
     ];
 
     this.initializeDefaultPlaylists();
+  }
+
+  // Filter content by user's subscription tier
+  getContentByTier(userTier: string = 'free'): AudioContent[] {
+    const accessibleTiers = this.getAccessibleTiers(userTier);
+    return this.contentLibrary.filter(content => 
+      accessibleTiers.includes(content.tier || 'free')
+    );
+  }
+
+  private getAccessibleTiers(userTier: string): string[] {
+    switch (userTier) {
+      case 'pro':
+        return ['free', 'premium', 'pro'];
+      case 'premium':
+        return ['free', 'premium'];
+      case 'free':
+      default:
+        return ['free'];
+    }
   }
 
   // Initialize default playlists
@@ -296,8 +288,11 @@ class AudioContentService {
   }
 
   // Get content by category
-  getContentByCategory(category: string): AudioContent[] {
-    return this.contentLibrary.filter(content => content.category === category);
+  getContentByCategory(category: string, userTier: string = 'free'): AudioContent[] {
+    const accessibleContent = this.getContentByTier(userTier);
+    return category === 'all' 
+      ? accessibleContent 
+      : accessibleContent.filter(content => content.category === category);
   }
 
   // Get content by therapy type

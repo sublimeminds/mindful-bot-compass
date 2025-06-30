@@ -53,6 +53,7 @@ const Header = () => {
     { label: 'New Features Showcase', path: '/features-showcase', icon: Zap, description: 'Latest platform capabilities' },
     { label: 'Features Overview', path: '/features-overview', icon: BookOpen, description: 'Complete feature breakdown' },
     { label: 'How It Works', path: '/how-it-works', icon: Settings, description: 'Platform walkthrough' },
+    { label: 'Community Features', path: '/community-features', icon: Users, description: 'Social support & connections' },
     { label: 'Pricing', path: '/pricing', icon: DollarSign, description: 'Plans and pricing options' },
     { label: 'Audio Content', path: '/audio-library', icon: Headphones, description: 'Premium therapeutic audio library' }
   ];

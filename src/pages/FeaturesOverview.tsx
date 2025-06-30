@@ -45,9 +45,9 @@ const FeaturesOverview = () => {
     },
     {
       icon: Headphones,
-      title: "Voice Technology",
-      description: "Natural voice conversations with emotion detection and 29-language support for truly accessible mental health care.",
-      features: ["Natural Voice Synthesis", "Emotion Detection", "29 Languages", "Real-time Processing"],
+      title: "Premium Audio Content",
+      description: "Therapeutic podcasts, guided meditations, and technique exercises powered by ElevenLabs AI voice technology.",
+      features: ["Therapeutic Podcasts", "Guided Meditations", "Technique Exercises", "29 Languages Support"],
       color: "from-calm-500 to-therapy-500"
     },
     {
