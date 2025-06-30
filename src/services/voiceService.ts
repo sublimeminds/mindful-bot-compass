@@ -100,8 +100,8 @@ class EnhancedVoiceService {
 
       await this.playWithElevenLabs(text, selectedVoiceId, voiceSettings);
     } else {
-      // Fallback to web speech
-      const webVoiceId = typeof voiceId === 'object' ? voiceId.voiceId : voiceId;
+      // Extract string voiceId for web speech
+      const webVoiceId = typeof voiceId === 'object' && voiceId !== null ? voiceId.voiceId : voiceId;
       await this.playWithWebSpeech(text, webVoiceId);
     }
   }
@@ -157,7 +157,7 @@ class EnhancedVoiceService {
     }
   }
 
-  // Make this method public
+  // Make this method public and ensure it only accepts string voiceId
   async playWithWebSpeech(text: string, voiceId?: string): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!window.speechSynthesis) {
