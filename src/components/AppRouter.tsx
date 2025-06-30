@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from '@/pages/Index';
 import Auth from '@/pages/Auth';
+import LandingPage from '@/pages/LandingPage';
 import Dashboard from '@/pages/Dashboard';
 import TherapyChat from '@/pages/TherapyChat';
 import Profile from '@/pages/Profile';
@@ -39,6 +40,7 @@ const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/dashboard" element={<Dashboard />} />
