@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Brain, Heart, Globe, Menu, X, ChevronDown, User, Settings, Crown, MessageSquare, Headphones, LifeBuoy, Users, BookOpen, Zap, DollarSign } from 'lucide-react';
+import { Brain, Heart, Globe, Menu, X, ChevronDown, User, Settings, Crown, MessageSquare, Headphones, LifeBuoy, Users, BookOpen, Zap, DollarSign, BarChart3, Target, Calendar, TrendingUp, Heart as HeartIcon, BookOpen as BookOpenIcon, Lightbulb, Shield } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
@@ -37,19 +36,32 @@ const Header = () => {
     { label: 'Features Overview', path: '/features-overview', icon: Zap, description: 'All platform capabilities' },
     { label: 'How It Works', path: '/how-it-works', icon: BookOpen, description: 'Learn how to get started' },
     { label: 'Pricing', path: '/pricing', icon: DollarSign, description: 'View our pricing plans' },
+    { label: 'Analytics Dashboard', path: '/analytics', icon: BarChart3, description: 'Track your progress' },
+    { label: 'Goal Tracking', path: '/goals', icon: Target, description: 'Set and achieve goals' },
+    { label: 'Session History', path: '/sessions', icon: Calendar, description: 'View past sessions' },
+    { label: 'Progress Reports', path: '/progress', icon: TrendingUp, description: 'Detailed progress analysis' },
+    { label: 'Mood Tracker', path: '/mood-tracking', icon: HeartIcon, description: 'Track emotional wellness' },
+    { label: 'Digital Notebook', path: '/notebook', icon: BookOpenIcon, description: 'AI-enhanced journaling' },
+    { label: 'Integrations', path: '/integrations', icon: Zap, description: 'Connect your apps' }
   ];
 
   const aiTherapyMenuItems = [
-    { label: 'TherapySync AI', path: '/therapy-chat', icon: Brain, description: 'Start AI therapy session' },
+    { label: 'Therapy Types Overview', path: '/therapy-types', icon: Brain, description: 'Explore all therapy options' },
+    { label: 'TherapySync AI', path: '/therapy-chat', icon: MessageSquare, description: 'Start AI therapy session' },
     { label: 'Voice Technology', path: '/voice-technology', icon: Headphones, description: 'Advanced voice features' },
     { label: 'Cultural AI Features', path: '/cultural-ai-features', icon: Globe, description: 'Culturally aware support' },
-    { label: 'LGBTQ+ Therapy', path: '/lgbtq-therapy', icon: Heart, description: 'Inclusive therapy support' },
+    { label: 'LGBTQ+ Therapy', path: '/lgbtq-therapy', icon: HeartIcon, description: 'Inclusive therapy support' },
+    { label: 'Couples Therapy', path: '/couples-therapy', icon: Users, description: 'Relationship counseling' },
+    { label: 'ADHD Support', path: '/adhd-therapy', icon: Target, description: 'Focus and attention support' },
+    { label: 'Autism Support', path: '/autism-therapy', icon: Users, description: 'Autism-friendly therapy' },
+    { label: 'Crisis Support', path: '/crisis-support', icon: Shield, description: '24/7 emergency support' },
+    { label: 'Therapy Techniques', path: '/techniques', icon: Lightbulb, description: 'Learn therapeutic skills' }
   ];
 
   const resourcesMenuItems = [
     { label: 'Help Center', path: '/help', icon: LifeBuoy, description: 'Get support and answers' },
     { label: 'Community', path: '/community', icon: Users, description: 'Connect with others' },
-    { label: 'Crisis Resources', path: '/crisis-resources', icon: Heart, description: '24/7 emergency support' },
+    { label: 'Crisis Resources', path: '/crisis-resources', icon: HeartIcon, description: '24/7 emergency support' },
   ];
 
   const accountMenuItems = user ? [

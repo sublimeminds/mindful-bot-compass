@@ -24,6 +24,12 @@ import Progress from '@/pages/Progress';
 import OnboardingPage from '@/pages/OnboardingPage';
 import CouplesTherapy from '@/pages/CouplesTherapy';
 import ADHDTherapy from '@/pages/ADHDTherapy';
+import TherapyTypes from '@/pages/TherapyTypes';
+import Techniques from '@/pages/Techniques';
+import Goals from '@/pages/Goals';
+import MoodTracking from '@/pages/MoodTracking';
+import Notebook from '@/pages/Notebook';
+import Integrations from '@/pages/Integrations';
 
 const AppRouter = () => {
   return (
@@ -53,6 +59,14 @@ const AppRouter = () => {
       <Route path="/relationship-therapy" element={<CouplesTherapy />} />
       <Route path="/adhd-therapy" element={<ADHDTherapy />} />
       <Route path="/autism-therapy" element={<ADHDTherapy />} />
+      
+      {/* New therapy and platform routes */}
+      <Route path="/therapy-types" element={<TherapyTypes />} />
+      <Route path="/techniques" element={<Techniques />} />
+      <Route path="/goals" element={<Goals />} />
+      <Route path="/mood-tracking" element={<MoodTracking />} />
+      <Route path="/notebook" element={<Notebook />} />
+      <Route path="/integrations" element={<Integrations />} />
     </Routes>
   );
 };
