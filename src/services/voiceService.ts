@@ -23,6 +23,9 @@ class EnhancedVoiceService {
   constructor() {
     this.emotionAnalyzer = new EmotionAnalyzer();
     this.initializeVoices();
+    
+    // Load API key from localStorage if available
+    this.apiKey = localStorage.getItem('elevenlabs_api_key');
   }
 
   private async initializeVoices(): Promise<void> {
@@ -63,6 +66,23 @@ class EnhancedVoiceService {
     return this.voices;
   }
 
+  // Add missing isCurrentlyPlaying getter
+  get isCurrentlyPlaying(): boolean {
+    return this.isPlaying;
+  }
+
+  // Add missing playText method
+  async playText(text: string, voiceId?: string): Promise<void> {
+    if (this.hasApiKey()) {
+      // Use ElevenLabs for better voice quality
+      const selectedVoiceId = voiceId || 'EXAVITQu4vr4xnSDxMaL'; // Default to Sarah
+      await this.playWithElevenLabs(text, selectedVoiceId);
+    } else {
+      // Fallback to web speech
+      await this.playWithWebSpeech(text, voiceId);
+    }
+  }
+
   async playWithElevenLabs(text: string, voiceId: string): Promise<void> {
     if (!this.apiKey) {
       console.warn('ElevenLabs API key not available');
@@ -70,6 +90,8 @@ class EnhancedVoiceService {
     }
 
     try {
+      this.isPlaying = true;
+      
       const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
         method: 'POST',
         headers: {
@@ -79,7 +101,7 @@ class EnhancedVoiceService {
         },
         body: JSON.stringify({
           text: text,
-          model_id: 'eleven_multilingual_v1',
+          model_id: 'eleven_multilingual_v2',
           voice_settings: {
             stability: 0.5,
             similarity_boost: 0.5
@@ -94,9 +116,21 @@ class EnhancedVoiceService {
       const audioBlob = await response.blob();
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
+      
+      audio.onended = () => {
+        this.isPlaying = false;
+        URL.revokeObjectURL(audioUrl);
+      };
+      
+      audio.onerror = () => {
+        this.isPlaying = false;
+        URL.revokeObjectURL(audioUrl);
+      };
+      
       await audio.play();
     } catch (error) {
       console.error('Error playing with ElevenLabs:', error);
+      this.isPlaying = false;
     }
   }
 
@@ -133,7 +167,6 @@ class EnhancedVoiceService {
     });
   }
 
-  // Add missing methods that components are trying to use
   async generateGuidedSession(sessionType: string, duration: number, therapistId?: string): Promise<string[]> {
     // Generate guided session steps based on session type
     const steps: { [key: string]: string[] } = {
