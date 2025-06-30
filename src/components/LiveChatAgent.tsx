@@ -14,10 +14,16 @@ import {
   BarChart3,
   Settings,
   Shield,
-  Bot,
-  User
+  HeadphonesIcon,
+  User,
+  ArrowRight,
+  Play,
+  TrendingUp,
+  CreditCard,
+  Users
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 interface ChatMessage {
   id: string;
@@ -27,6 +33,7 @@ interface ChatMessage {
   actions?: Array<{
     label: string;
     action: () => void;
+    icon?: React.ElementType;
   }>;
 }
 
@@ -37,137 +44,133 @@ const LiveChatAgent = () => {
   const [currentMessage, setCurrentMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      // Initial greeting
+      // Initial greeting from Alex - Platform Support
       const greeting: ChatMessage = {
         id: '1',
         type: 'agent',
-        message: `Hi ${user?.user_metadata?.full_name || 'there'}! 👋 I'm your TherapySync AI Assistant. I can help you navigate the platform, show your recent sessions, or answer any questions about our features. How can I assist you today?`,
+        message: `Hi ${user?.user_metadata?.full_name || 'there'}! 👋 I'm Alex, your TherapySync platform guide. I'm here to help you navigate the platform, find features, and get technical support.\n\nFor personal support and therapy sessions, I'll direct you to our AI therapists. How can I help you with the platform today?`,
         timestamp: new Date(),
         actions: [
-          { label: 'Show Recent Sessions', action: () => handleShowSessions() },
-          { label: 'Platform Tour', action: () => handlePlatformTour() },
-          { label: 'Crisis Support', action: () => handleCrisisSupport() }
+          { label: 'Start Therapy Session', action: () => handleStartTherapy(), icon: Play },
+          { label: 'Platform Tour', action: () => handlePlatformTour(), icon: HelpCircle },
+          { label: 'Need Help?', action: () => handleGetHelp(), icon: HeadphonesIcon }
         ]
       };
       setMessages([greeting]);
     }
   }, [isOpen, user]);
 
-  const handleShowSessions = () => {
-    const sessionMessage: ChatMessage = {
+  const handleStartTherapy = () => {
+    const therapyMessage: ChatMessage = {
       id: Date.now().toString(),
       type: 'agent',
-      message: 'Here are your recent therapy sessions:\n\n• Session with Dr. Sarah Chen - 2 days ago (Anxiety management)\n• Session with Dr. Marcus Williams - 5 days ago (Emotional regulation)\n• Session with Dr. Elena Rodriguez - 1 week ago (Mindfulness practice)\n\nWould you like to continue with any of these therapists or explore new approaches?',
+      message: 'Perfect! Let me get you to your therapy session. 🎯\n\nI\'ll take you to our therapy chat where you can:\n• Choose your AI therapist\n• Start voice or text sessions\n• Access crisis support if needed\n• Continue previous conversations\n\nReady to begin your session?',
       timestamp: new Date(),
       actions: [
-        { label: 'Book New Session', action: () => handleBookSession() },
-        { label: 'View Progress', action: () => handleViewProgress() }
+        { label: 'Go to Therapy Chat', action: () => navigate('/therapy-chat'), icon: ArrowRight },
+        { label: 'Learn About Therapists', action: () => handleTherapistInfo(), icon: Users }
       ]
     };
-    setMessages(prev => [...prev, sessionMessage]);
+    setMessages(prev => [...prev, therapyMessage]);
   };
 
   const handlePlatformTour = () => {
     const tourMessage: ChatMessage = {
       id: Date.now().toString(),
       type: 'agent',
-      message: 'I\'d be happy to give you a tour! Our platform has several key areas:\n\n🏠 Dashboard - Your therapy hub\n💬 Chat Interface - Where therapy happens\n📊 Progress Tracker - Monitor your journey\n📚 Resource Library - Educational content\n⚙️ Settings - Customize your experience\n🆘 Crisis Support - 24/7 emergency help\n\nWhich area would you like to explore first?',
+      message: 'Great! Let me show you around TherapySync! 🏠\n\n**Key Platform Areas:**\n• **Dashboard** - Your mental health hub with progress tracking\n• **Therapy Chat** - Where you connect with AI therapists\n• **Analytics** - Track your mood and progress over time\n• **Settings** - Customize your experience\n• **Profile** - Manage your account and preferences\n\nWhich area would you like to explore first?',
       timestamp: new Date(),
       actions: [
-        { label: 'Dashboard Overview', action: () => handleDashboardTour() },
-        { label: 'Start Therapy Session', action: () => handleStartSession() }
+        { label: 'Visit Dashboard', action: () => navigate('/dashboard'), icon: BarChart3 },
+        { label: 'Go to Settings', action: () => navigate('/settings'), icon: Settings },
+        { label: 'View Profile', action: () => navigate('/profile'), icon: User }
       ]
     };
     setMessages(prev => [...prev, tourMessage]);
   };
 
-  const handleCrisisSupport = () => {
+  const handleGetHelp = () => {
+    const helpMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: 'agent',
+      message: 'I\'m here to help with platform questions! 🤝\n\n**Common Support Topics:**\n• Account and billing questions\n• Technical issues or bugs\n• Feature explanations\n• Navigation help\n• Privacy and security\n\n**For Personal Support:** Please use our therapy chat for emotional support, mental health conversations, or crisis situations.\n\nWhat can I help you with?',
+      timestamp: new Date(),
+      actions: [
+        { label: 'Account & Billing', action: () => handleBillingHelp(), icon: CreditCard },
+        { label: 'Technical Issues', action: () => handleTechnicalHelp(), icon: Settings },
+        { label: 'Crisis Support', action: () => handleCrisisRedirect(), icon: Shield }
+      ]
+    };
+    setMessages(prev => [...prev, helpMessage]);
+  };
+
+  const handleTherapistInfo = () => {
+    const therapistMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: 'agent',
+      message: 'Our AI therapists are specially trained for different approaches! 🧠\n\n**Available Therapists:**\n• Dr. Sarah Chen - Cognitive Behavioral Therapy (CBT)\n• Dr. Marcus Williams - Dialectical Behavior Therapy (DBT)\n• Dr. Elena Rodriguez - Mindfulness-Based Therapy\n• Dr. James Park - Trauma-Focused Therapy\n\nEach therapist adapts to your needs and provides personalized support. Ready to meet them?',
+      timestamp: new Date(),
+      actions: [
+        { label: 'Start Therapy Session', action: () => navigate('/therapy-chat'), icon: Play }
+      ]
+    };
+    setMessages(prev => [...prev, therapistMessage]);
+  };
+
+  const handleBillingHelp = () => {
+    const billingMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: 'agent',
+      message: 'I can help with account and billing questions! 💳\n\n**Common Solutions:**\n• Check your subscription status in Settings\n• Update payment methods in your profile\n• View billing history and invoices\n• Cancel or upgrade your plan\n\nFor complex billing issues, I can connect you with our support team.',
+      timestamp: new Date(),
+      actions: [
+        { label: 'Go to Settings', action: () => navigate('/settings'), icon: Settings },
+        { label: 'View Pricing', action: () => navigate('/pricing'), icon: CreditCard }
+      ]
+    };
+    setMessages(prev => [...prev, billingMessage]);
+  };
+
+  const handleTechnicalHelp = () => {
+    const techMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: 'agent',
+      message: 'Let me help troubleshoot technical issues! 🔧\n\n**Quick Fixes:**\n• Refresh the page for loading issues\n• Check your internet connection\n• Clear browser cache if needed\n• Try using a different browser\n\n**Still having problems?** I can help you contact our technical support team.',
+      timestamp: new Date(),
+      actions: [
+        { label: 'Test Therapy Chat', action: () => navigate('/therapy-chat'), icon: Play },
+        { label: 'Check Dashboard', action: () => navigate('/dashboard'), icon: BarChart3 }
+      ]
+    };
+    setMessages(prev => [...prev, techMessage]);
+  };
+
+  const handleCrisisRedirect = () => {
     const crisisMessage: ChatMessage = {
       id: Date.now().toString(),
       type: 'agent',
-      message: '🚨 Crisis Support is available 24/7. If you\'re experiencing a mental health emergency:\n\n• Call 988 (Suicide & Crisis Lifeline)\n• Text HOME to 741741 (Crisis Text Line)\n• Use our Crisis Chat feature for immediate support\n• Contact emergency services if in immediate danger\n\nOur AI monitors conversations for crisis indicators and can connect you with human counselors instantly. Your safety is our priority.',
+      message: '🚨 **Crisis Support Available**\n\nI\'m redirecting you to immediate help:\n\n**Emergency Resources:**\n• Call 988 (Suicide & Crisis Lifeline)\n• Text HOME to 741741 (Crisis Text Line)\n• Contact emergency services if in immediate danger\n\n**Platform Support:**\nOur AI therapists provide 24/7 crisis support and can escalate to human counselors when needed.',
       timestamp: new Date(),
       actions: [
-        { label: 'Crisis Chat', action: () => handleCrisisChat() },
-        { label: 'Emergency Contacts', action: () => handleEmergencyContacts() }
+        { label: 'Start Crisis Session', action: () => navigate('/therapy-chat'), icon: Shield },
+        { label: 'Emergency Contacts', action: () => handleEmergencyContacts(), icon: HeadphonesIcon }
       ]
     };
     setMessages(prev => [...prev, crisisMessage]);
   };
 
-  const handleBookSession = () => {
-    const bookMessage: ChatMessage = {
-      id: Date.now().toString(),
-      type: 'agent',
-      message: 'Great! I can help you book a new session. Based on your recent sessions, I recommend:\n\n1. Dr. Sarah Chen (CBT) - Available today at 3 PM\n2. Dr. Marcus Williams (DBT) - Available tomorrow at 10 AM\n3. Try a new therapist - Dr. James Park (Trauma-focused)\n\nWould you like to book with one of these or explore other options?',
-      timestamp: new Date()
-    };
-    setMessages(prev => [...prev, bookMessage]);
-  };
-
-  const handleViewProgress = () => {
-    const progressMessage: ChatMessage = {
-      id: Date.now().toString(),
-      type: 'agent',
-      message: 'Your progress looks great! 📈\n\n• 15 sessions completed this month\n• Mood improvement: +32%\n• Anxiety levels: Decreased by 28%\n• Goals achieved: 7 out of 10\n• Consistency streak: 12 days\n\nYou\'re making excellent progress! Keep up the great work with your mental health journey.',
-      timestamp: new Date(),
-      actions: [
-        { label: 'Detailed Analytics', action: () => handleDetailedAnalytics() },
-        { label: 'Set New Goals', action: () => handleSetGoals() }
-      ]
-    };
-    setMessages(prev => [...prev, progressMessage]);
-  };
-
-  const handleDashboardTour = () => {
-    const dashboardMessage: ChatMessage = {
-      id: Date.now().toString(),
-      type: 'agent',
-      message: 'Let me show you around the Dashboard! 🏠\n\nYour dashboard is designed to be your mental health command center:\n\n• Quick session start buttons at the top\n• Recent activity feed shows your progress\n• Mood tracker for daily check-ins\n• Upcoming appointments and reminders\n• Progress stats and achievement badges\n• Recommended actions based on your patterns\n\nThe dashboard adapts to your usage patterns and provides personalized recommendations.',
-      timestamp: new Date()
-    };
-    setMessages(prev => [...prev, dashboardMessage]);
-  };
-
-  const handleStartSession = () => {
-    const sessionMessage: ChatMessage = {
-      id: Date.now().toString(),
-      type: 'agent',
-      message: 'Perfect! Let\'s start a therapy session. 🎯\n\nI can help you:\n• Choose the right AI therapist for your current mood\n• Set up voice or text-based conversation\n• Configure session duration (15-60 minutes)\n• Enable privacy settings and recording preferences\n\nWhat type of session would you like today?',
-      timestamp: new Date(),
-      actions: [
-        { label: 'Quick Session (15 min)', action: () => handleQuickSession() },
-        { label: 'Full Session (45 min)', action: () => handleFullSession() }
-      ]
-    };
-    setMessages(prev => [...prev, sessionMessage]);
-  };
-
-  const handleCrisisChat = () => {
-    console.log('Opening crisis chat...');
-  };
-
   const handleEmergencyContacts = () => {
-    console.log('Opening emergency contacts...');
-  };
-
-  const handleDetailedAnalytics = () => {
-    console.log('Opening detailed analytics...');
-  };
-
-  const handleSetGoals = () => {
-    console.log('Opening goal setting...');
-  };
-
-  const handleQuickSession = () => {
-    console.log('Starting quick session...');
-  };
-
-  const handleFullSession = () => {
-    console.log('Starting full session...');
+    const emergencyMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: 'agent',
+      message: '📞 **Emergency Contacts:**\n\n**US Crisis Lines:**\n• 988 - Suicide & Crisis Lifeline\n• 1-800-366-8288 - Self-Injury Outreach\n• 1-866-488-7386 - Trevor Project (LGBTQ+)\n\n**Text Support:**\n• Text HOME to 741741 - Crisis Text Line\n\n**Remember:** Our AI therapists are also available 24/7 for immediate support.',
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, emergencyMessage]);
   };
 
   const handleSendMessage = () => {
@@ -184,20 +187,35 @@ const LiveChatAgent = () => {
     setCurrentMessage('');
     setIsTyping(true);
 
-    // Simulate AI response
+    // Simulate platform support responses
     setTimeout(() => {
-      const responses = [
-        "I understand you're looking for help with that. Let me provide you with some guidance...",
-        "That's a great question! Based on your usage patterns, I recommend...",
-        "I can definitely help you with that. Here are some options...",
-        "Thanks for reaching out! Let me walk you through the process..."
+      let response = '';
+      const lowerMessage = currentMessage.toLowerCase();
+
+      if (lowerMessage.includes('therapy') || lowerMessage.includes('talk') || lowerMessage.includes('help me') || lowerMessage.includes('depressed') || lowerMessage.includes('anxious')) {
+        response = "I can see you're looking for personal support. Let me connect you with our AI therapists who are specially trained to help with emotional and mental health concerns. I'll guide you there! 🤗";
+      } else if (lowerMessage.includes('dashboard') || lowerMessage.includes('progress')) {
+        response = "I can help you navigate to your dashboard where you'll find your progress tracking, mood analytics, and session history. Would you like me to take you there?";
+      } else if (lowerMessage.includes('billing') || lowerMessage.includes('payment') || lowerMessage.includes('subscription')) {
+        response = "I can help with billing questions! You can manage your subscription, payment methods, and view billing history in your account settings. Let me guide you there.";
+      } else if (lowerMessage.includes('settings') || lowerMessage.includes('account')) {
+        response = "I can help you navigate to your settings where you can customize your experience, manage notifications, and update your account preferences.";
+      } else {
+        response = "I'm here to help you navigate the TherapySync platform! I can assist with account questions, feature explanations, or guide you to the right area. For personal support, our AI therapists are available 24/7 in the therapy chat.";
+      }
+
+      const supportActions = [
+        { label: 'Start Therapy Session', action: () => navigate('/therapy-chat'), icon: Play },
+        { label: 'Visit Dashboard', action: () => navigate('/dashboard'), icon: BarChart3 },
+        { label: 'Go to Settings', action: () => navigate('/settings'), icon: Settings }
       ];
 
       const aiResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'agent',
-        message: responses[Math.floor(Math.random() * responses.length)],
-        timestamp: new Date()
+        message: response,
+        timestamp: new Date(),
+        actions: supportActions
       };
 
       setMessages(prev => [...prev, aiResponse]);
@@ -212,10 +230,10 @@ const LiveChatAgent = () => {
           onClick={() => setIsOpen(true)}
           className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white rounded-full w-16 h-16 shadow-2xl hover:shadow-therapy-500/25 transition-all duration-300 hover:scale-110 border-0"
         >
-          <MessageSquare className="h-6 w-6" />
+          <HeadphonesIcon className="h-6 w-6" />
         </Button>
         <div className="absolute -top-12 right-0 bg-black/80 text-white px-3 py-1 rounded-lg text-sm whitespace-nowrap">
-          Need help? Chat with AI Assistant
+          Need help? Chat with Alex
         </div>
       </div>
     );
@@ -227,10 +245,10 @@ const LiveChatAgent = () => {
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-therapy-600 to-calm-600 text-white rounded-t-lg">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-              <Bot className="h-4 w-4" />
+              <HeadphonesIcon className="h-4 w-4" />
             </div>
             <div>
-              <CardTitle className="text-sm font-semibold">AI Assistant</CardTitle>
+              <CardTitle className="text-sm font-semibold">Alex - Platform Support</CardTitle>
               <div className="flex items-center space-x-1">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                 <span className="text-xs opacity-90">Online</span>
@@ -268,25 +286,29 @@ const LiveChatAgent = () => {
                       : 'bg-gray-100 text-gray-800 mr-4'
                   }`}>
                     <div className="flex items-center space-x-2 mb-1">
-                      {message.type === 'agent' ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
+                      {message.type === 'agent' ? <HeadphonesIcon className="h-4 w-4" /> : <User className="h-4 w-4" />}
                       <span className="text-xs opacity-75">
-                        {message.type === 'agent' ? 'AI Assistant' : 'You'}
+                        {message.type === 'agent' ? 'Alex (Support)' : 'You'}
                       </span>
                     </div>
                     <p className="text-sm whitespace-pre-line">{message.message}</p>
                     {message.actions && (
                       <div className="mt-2 space-y-1">
-                        {message.actions.map((action, index) => (
-                          <Button
-                            key={index}
-                            variant="outline"
-                            size="sm"
-                            onClick={action.action}
-                            className="text-xs h-6 px-2 bg-white/20 border-white/30 text-gray-700 hover:bg-white/30"
-                          >
-                            {action.label}
-                          </Button>
-                        ))}
+                        {message.actions.map((action, index) => {
+                          const IconComponent = action.icon;
+                          return (
+                            <Button
+                              key={index}
+                              variant="outline"
+                              size="sm"
+                              onClick={action.action}
+                              className="text-xs h-6 px-2 bg-white/20 border-white/30 text-gray-700 hover:bg-white/30 flex items-center space-x-1"
+                            >
+                              {IconComponent && <IconComponent className="h-3 w-3" />}
+                              <span>{action.label}</span>
+                            </Button>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
@@ -297,8 +319,8 @@ const LiveChatAgent = () => {
                 <div className="flex justify-start">
                   <div className="bg-gray-100 text-gray-800 p-3 rounded-lg mr-4 max-w-xs">
                     <div className="flex items-center space-x-2">
-                      <Bot className="h-4 w-4" />
-                      <span className="text-xs opacity-75">AI Assistant</span>
+                      <HeadphonesIcon className="h-4 w-4" />
+                      <span className="text-xs opacity-75">Alex (Support)</span>
                     </div>
                     <div className="flex space-x-1 mt-1">
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
@@ -317,7 +339,7 @@ const LiveChatAgent = () => {
                   value={currentMessage}
                   onChange={(e) => setCurrentMessage(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Type your message..."
+                  placeholder="Ask about platform features..."
                   className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-therapy-500 text-sm"
                 />
                 <Button
