@@ -1,31 +1,106 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom animations for loading states */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* Enhanced Therapy Brand Gradient Scheme */
+:root {
+  --therapy-gradient: linear-gradient(135deg, #ff6b35 0%, #4ecdc4 50%, #ff6b9d 100%);
+  --therapy-gradient-strong: linear-gradient(135deg, #ff6b35 0%, #4ecdc4 30%, #ff6b9d 60%, #ff6b35 100%);
+  --therapy-gradient-soft: linear-gradient(135deg, #ff6b35 20%, #4ecdc4 80%);
+}
+
+/* Enhanced Brand Classes */
+.therapy-gradient-bg {
+  background: var(--therapy-gradient) !important;
+  background-size: 200% 200% !important;
+  animation: gradient-flow 4s ease-in-out infinite !important;
+}
+
+.therapy-gradient-bg-soft {
+  background: var(--therapy-gradient-soft) !important;
+}
+
+.therapy-text-gradient {
+  background: var(--therapy-gradient) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.therapy-text-gradient-animated {
+  background: var(--therapy-gradient-strong) !important;
+  background-size: 300% 300% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  animation: gradient-text-flow 3s ease-in-out infinite !important;
+}
+
+.therapy-gradient-border {
+  border: 2px solid transparent !important;
+  background: linear-gradient(white, white) padding-box, var(--therapy-gradient) border-box !important;
+  border-radius: 12px !important;
+}
+
+/* Enhanced Animations */
+@keyframes gradient-flow {
+  0%, 100% { 
+    background-position: 0% 50%;
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  25% { 
+    background-position: 50% 0%;
+    filter: hue-rotate(15deg) brightness(1.1);
+  }
+  50% { 
+    background-position: 100% 50%;
+    filter: hue-rotate(30deg) brightness(1.05);
+  }
+  75% { 
+    background-position: 50% 100%;
+    filter: hue-rotate(15deg) brightness(1.1);
+  }
+}
+
+@keyframes gradient-text-flow {
+  0%, 100% { 
+    background-position: 0% 50%;
+  }
+  33% { 
+    background-position: 50% 0%;
+  }
+  66% { 
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes swirl-breathe {
   0%, 100% { 
     transform: rotate(0deg) scale(1);
-    filter: hue-rotate(0deg);
+    filter: hue-rotate(0deg) drop-shadow(0 0 10px rgba(255, 107, 53, 0.3));
   }
   25% { 
     transform: rotate(90deg) scale(1.05);
-    filter: hue-rotate(45deg);
+    filter: hue-rotate(45deg) drop-shadow(0 0 15px rgba(78, 205, 196, 0.4));
   }
   50% { 
     transform: rotate(180deg) scale(1.1);
-    filter: hue-rotate(90deg);
+    filter: hue-rotate(90deg) drop-shadow(0 0 20px rgba(255, 107, 157, 0.3));
   }
   75% { 
     transform: rotate(270deg) scale(1.05);
-    filter: hue-rotate(135deg);
+    filter: hue-rotate(135deg) drop-shadow(0 0 15px rgba(78, 205, 196, 0.4));
   }
+}
+
+/* Loading Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .animate-spin {
@@ -36,39 +111,67 @@
   animation: swirl-breathe 4s ease-in-out infinite;
 }
 
-/* Critical Branding Classes - Always visible */
+/* Legacy Brand Classes - Enhanced */
 .brand-logo-bg {
-  background: linear-gradient(135deg, #ff6b35, #4ecdc4) !important;
+  background: var(--therapy-gradient) !important;
 }
 
 .brand-text-gradient {
-  background: linear-gradient(135deg, #ff6b35, #4ecdc4) !important;
+  background: var(--therapy-gradient) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
 }
 
+.brand-text-gradient-strong {
+  background: var(--therapy-gradient-strong) !important;
+  background-size: 200% 200% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  animation: gradient-flow 3s ease infinite !important;
+}
+
 .brand-button-gradient {
-  background: linear-gradient(135deg, #ff6b35, #4ecdc4) !important;
+  background: var(--therapy-gradient) !important;
 }
 
 .brand-button-gradient:hover {
   background: linear-gradient(135deg, #e55a2b, #3db8b0) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3) !important;
+}
+
+.brand-button-gradient-strong {
+  background: var(--therapy-gradient-strong) !important;
+  background-size: 200% 200% !important;
+  animation: gradient-flow 3s ease infinite !important;
+}
+
+.brand-button-gradient-strong:hover {
+  background: linear-gradient(135deg, #e55a2b 0%, #3db8b0 50%, #e55a89 100%) !important;
+  background-size: 200% 200% !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3) !important;
 }
 
 .hero-title-gradient {
-  background: linear-gradient(135deg, #ff6b35, #4ecdc4, #ff6b9d) !important;
+  background: var(--therapy-gradient-strong) !important;
+  background-size: 300% 300% !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
+  animation: gradient-text-flow 4s ease-in-out infinite !important;
 }
 
 .hero-bg-gradient {
   background: linear-gradient(135deg, #fef7f5, #ffffff, #f0fffe) !important;
 }
 
+/* Tailwind CSS Variables */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -215,70 +318,4 @@
 .harmony-fallback {
   background: linear-gradient(135deg, #ff6b9d, #c44569);
   color: white;
-}
-
-/* Enhanced Critical Branding Classes - Always visible with stronger gradients */
-.brand-logo-bg {
-  background: linear-gradient(135deg, #ff6b35, #4ecdc4) !important;
-}
-
-.brand-text-gradient {
-  background: linear-gradient(135deg, #ff6b35, #4ecdc4) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  color: transparent !important;
-}
-
-.brand-text-gradient-strong {
-  background: linear-gradient(135deg, #ff6b35 0%, #4ecdc4 50%, #ff6b9d 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  color: transparent !important;
-  background-size: 200% 200% !important;
-  animation: gradient-shift 3s ease infinite !important;
-}
-
-.brand-button-gradient {
-  background: linear-gradient(135deg, #ff6b35, #4ecdc4) !important;
-}
-
-.brand-button-gradient:hover {
-  background: linear-gradient(135deg, #e55a2b, #3db8b0) !important;
-}
-
-.brand-button-gradient-strong {
-  background: linear-gradient(135deg, #ff6b35 0%, #4ecdc4 50%, #ff6b9d 100%) !important;
-  background-size: 200% 200% !important;
-  animation: gradient-shift 3s ease infinite !important;
-}
-
-.brand-button-gradient-strong:hover {
-  background: linear-gradient(135deg, #e55a2b 0%, #3db8b0 50%, #e55a89 100%) !important;
-  background-size: 200% 200% !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3) !important;
-}
-
-.hero-title-gradient {
-  background: linear-gradient(135deg, #ff6b35, #4ecdc4, #ff6b9d) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  color: transparent !important;
-}
-
-.hero-bg-gradient {
-  background: linear-gradient(135deg, #fef7f5, #ffffff, #f0fffe) !important;
-}
-
-/* Enhanced gradient animation */
-@keyframes gradient-shift {
-  0%, 100% { 
-    background-position: 0% 50%;
-  }
-  50% { 
-    background-position: 100% 50%;
-  }
 }

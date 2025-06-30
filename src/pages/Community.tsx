@@ -1,42 +1,68 @@
+
 import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Users, Heart, MessageSquare, Shield, Star, UserPlus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import CommunityDashboard from '@/components/community/CommunityDashboard';
-import { useAuth } from '@/hooks/useAuth';
 
 const Community = () => {
-  const { user } = useAuth();
-
-  if (!user) {
-    return (
-      <div className="min-h-screen">
-        <Header />
-        <div className="bg-gradient-to-br from-therapy-50 to-harmony-50 py-16">
-          <div className="max-w-4xl mx-auto px-4 text-center">
-            <h1 className="text-4xl font-bold text-therapy-900 mb-4">Join Our Community</h1>
-            <p className="text-xl text-therapy-600 mb-8">
-              Connect with others on their mental health journey in a safe, supportive environment.
-            </p>
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <p className="text-lg text-gray-700 mb-6">
-                Please log in to access the community features and connect with others.
-              </p>
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
+  const navigate = useNavigate();
+  
+  useSafeSEO({
+    title: 'Community - TherapySync Support Groups',
+    description: 'Join supportive communities, connect with others on similar journeys, and find peer support for mental health.',
+    keywords: 'mental health community, support groups, peer support, therapy community'
+  });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
       <Header />
-      <div className="bg-gradient-to-br from-therapy-50 to-harmony-50 py-8">
-        <div className="max-w-7xl mx-auto px-4">
-          <CommunityDashboard />
+      
+      <section className="py-20 lg:py-32">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Badge className="mb-6 therapy-gradient-bg text-white px-8 py-3 text-sm font-semibold shadow-lg border-0">
+              <Users className="h-4 w-4 mr-2" />
+              Community Support
+            </Badge>
+            
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              <span className="therapy-text-gradient-animated">
+                Connect & Heal Together
+              </span>
+            </h1>
+            
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
+              Join a supportive community of individuals on their mental health journey. 
+              Share experiences, find encouragement, and build meaningful connections.
+            </p>
+          </div>
+
+          <div className="text-center mb-16">
+            <Card className="therapy-gradient-bg text-white p-12 shadow-2xl">
+              <Users className="h-16 w-16 mx-auto mb-6 opacity-80" />
+              <h2 className="text-3xl font-bold mb-6">Community Coming Soon</h2>
+              <p className="text-therapy-100 mb-8 max-w-2xl mx-auto">
+                We're building a safe, supportive community space where you can connect with others, 
+                share your journey, and find peer support. Join our waitlist to be notified when it launches.
+              </p>
+              <Button 
+                size="lg"
+                className="bg-white text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg font-bold rounded-xl"
+                onClick={() => navigate('/auth')}
+              >
+                <UserPlus className="h-5 w-5 mr-2" />
+                Join Waitlist
+              </Button>
+            </Card>
+          </div>
         </div>
-      </div>
+      </section>
+
       <Footer />
     </div>
   );

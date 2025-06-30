@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Check, Star, Heart, ArrowRight } from 'lucide-react';
+import { Check, Star, Heart, ArrowRight, Zap, Crown, Gift } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
 import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
@@ -48,18 +48,20 @@ const PricingSection = () => {
   };
 
   const [formattedPrices, setFormattedPrices] = React.useState({
-    basic: '$9',
-    pro: '$19'
+    free: 'Free',
+    pro: '$9', 
+    premium: '$19'
   });
 
   React.useEffect(() => {
     const updatePrices = async () => {
       try {
-        const basicPrice = await formatPrice(9);
-        const proPrice = await formatPrice(19);
+        const proPrice = await formatPrice(9);
+        const premiumPrice = await formatPrice(19);
         setFormattedPrices({
-          basic: basicPrice,
-          pro: proPrice
+          free: 'Free',
+          pro: proPrice,
+          premium: premiumPrice
         });
       } catch (error) {
         console.error('Error updating prices:', error);
@@ -73,40 +75,63 @@ const PricingSection = () => {
 
   const pricingPlans = [
     {
-      name: 'Basic',
-      price: formattedPrices.basic,
-      baseUsdPrice: 9,
-      period: 'month',
-      description: 'Perfect for getting started with AI therapy',
+      name: 'Free',
+      price: formattedPrices.free,
+      baseUsdPrice: 0,
+      period: 'forever',
+      description: 'Get started with basic AI therapy features',
       popular: false,
       features: [
-        'AI Therapy Sessions (Unlimited)',
-        'Basic Mood Tracking', 
-        'Text-based Conversations',
-        'Crisis Support Access',
-        'Progress Analytics'
+        '3 AI Therapy Sessions per month',
+        'Basic Mood Tracking',
+        'Text-based Conversations Only',
+        'Community Access',
+        'Crisis Resources Access'
       ],
-      color: 'from-therapy-500 to-calm-500',
-      icon: Heart
+      color: 'from-slate-500 to-slate-600',
+      icon: Gift,
+      limitations: true
     },
     {
       name: 'Pro',
       price: formattedPrices.pro,
-      baseUsdPrice: 19,
+      baseUsdPrice: 9,
       period: 'month',
-      description: 'Advanced features for serious improvement',
+      description: 'Perfect for regular therapy and progress tracking',
       popular: true,
       hasTrial: true,
       features: [
-        'Everything in Basic',
+        'Unlimited AI Therapy Sessions',
         'Voice Conversations (29 Languages)',
-        'Advanced Emotion Detection',
+        'Advanced Mood Analytics',
         'Personalized AI Therapist Selection',
-        'Advanced Analytics & Insights',
-        'Priority Crisis Support'
+        'Progress Tracking & Goals',
+        'Priority Crisis Support',
+        'Mobile App Access'
       ],
-      color: 'from-therapy-600 to-calm-600',
+      color: 'from-therapy-500 to-calm-500',
       icon: Star
+    },
+    {
+      name: 'Premium',
+      price: formattedPrices.premium,
+      baseUsdPrice: 19,
+      period: 'month',
+      description: 'Advanced features for comprehensive mental wellness',
+      popular: false,
+      features: [
+        'Everything in Pro',
+        'Advanced Emotion Detection',
+        'Personalized Treatment Plans',
+        'Advanced Analytics & Insights',
+        'Priority Support (24/7)',
+        'Custom AI Therapist Training',
+        'Integration with Health Apps',
+        'Family Account Sharing (up to 4)',
+        'Exclusive Wellness Content'
+      ],
+      color: 'from-therapy-600 to-harmony-600',
+      icon: Crown
     }
   ];
 
@@ -114,12 +139,12 @@ const PricingSection = () => {
     <div className="container mx-auto px-4">
       <div className="text-center mb-16">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
-          <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
-            Simple, Transparent Pricing
+          <span className="therapy-text-gradient-animated">
+            Choose Your Mental Health Plan
           </span>
         </h2>
         <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
-          Choose the perfect plan for your mental health journey. All plans include crisis support and satisfaction guarantee.
+          From free basic support to comprehensive premium care - find the perfect plan for your mental health journey.
         </p>
         
         {userLocation && userCurrency !== 'USD' && (
@@ -132,20 +157,20 @@ const PricingSection = () => {
         
         <Button
           onClick={() => navigate('/pricing')}
-          className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white px-8 py-3 text-lg font-semibold rounded-xl shadow-xl hover:shadow-therapy-500/25 transition-all duration-300 hover:scale-105 border-0 mb-8"
+          className="therapy-gradient-bg text-white px-8 py-3 text-lg font-semibold rounded-xl shadow-xl hover:shadow-therapy-500/25 transition-all duration-300 hover:scale-105 border-0 mb-8"
         >
           View Complete Pricing Details
           <ArrowRight className="h-5 w-5 ml-2" />
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {pricingPlans.map((plan, index) => {
           const IconComponent = plan.icon;
           return (
-            <Card key={index} className={`relative overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105 ${plan.popular ? 'border-2 border-therapy-500 shadow-xl' : 'border-0 shadow-lg'} bg-white/90 backdrop-blur-sm`}>
+            <Card key={index} className={`relative overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105 ${plan.popular ? 'border-2 border-therapy-500 shadow-xl scale-105' : 'border-0 shadow-lg'} bg-white/90 backdrop-blur-sm`}>
               {plan.popular && (
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-therapy-500 to-calm-500 text-white text-center py-2 text-sm font-semibold">
+                <div className="absolute top-0 left-0 right-0 therapy-gradient-bg text-white text-center py-2 text-sm font-semibold">
                   Most Popular
                 </div>
               )}
@@ -156,20 +181,25 @@ const PricingSection = () => {
                 </div>
                 <CardTitle className="text-2xl font-bold text-slate-800">{plan.name}</CardTitle>
                 <div className="flex items-center justify-center space-x-2 mb-4">
-                  <span className="text-4xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                  <span className={`text-4xl font-bold ${plan.name === 'Free' ? 'text-slate-600' : 'therapy-text-gradient'}`}>
                     {plan.price}
                   </span>
-                  <span className="text-slate-500">/{plan.period}</span>
+                  {plan.name !== 'Free' && <span className="text-slate-500">/{plan.period}</span>}
                 </div>
-                {userCurrency !== 'USD' && (
+                {userCurrency !== 'USD' && plan.baseUsdPrice > 0 && (
                   <div className="text-xs text-slate-500 mb-2">
                     Base price: ${plan.baseUsdPrice} USD
                   </div>
                 )}
                 <p className="text-slate-600">{plan.description}</p>
                 {plan.hasTrial && (
-                  <Badge className="mt-2 bg-gradient-to-r from-therapy-500 to-calm-500 text-white">
+                  <Badge className="mt-2 therapy-gradient-bg text-white">
                     7-Day Free Trial
+                  </Badge>
+                )}
+                {plan.limitations && (
+                  <Badge variant="outline" className="mt-2 border-slate-300 text-slate-600">
+                    Limited Features
                   </Badge>
                 )}
               </CardHeader>
@@ -177,22 +207,24 @@ const PricingSection = () => {
               <CardContent className="p-6">
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center space-x-3">
-                      <Check className="h-5 w-5 text-therapy-500 flex-shrink-0" />
-                      <span className="text-slate-600">{feature}</span>
+                    <li key={featureIndex} className="flex items-start space-x-3">
+                      <Check className={`h-5 w-5 mt-0.5 flex-shrink-0 ${plan.name === 'Free' ? 'text-slate-500' : 'text-therapy-500'}`} />
+                      <span className="text-slate-600 text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 
                 <Button 
                   className={`w-full py-3 text-lg font-semibold rounded-xl shadow-xl transition-all duration-300 hover:scale-105 ${
-                    plan.popular 
-                      ? 'bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white border-0' 
-                      : 'border-2 border-therapy-300 text-therapy-700 hover:bg-gradient-to-r hover:from-therapy-50 hover:to-calm-50 bg-white'
+                    plan.popular || plan.name === 'Premium'
+                      ? 'therapy-gradient-bg text-white border-0' 
+                      : plan.name === 'Free'
+                      ? 'border-2 border-slate-300 text-slate-700 hover:bg-slate-50 bg-white'
+                      : 'border-2 border-therapy-300 text-therapy-700 hover:bg-therapy-50 bg-white'
                   }`}
                   onClick={() => navigate('/auth')}
                 >
-                  {plan.hasTrial ? 'Start Free Trial' : 'Get Started'}
+                  {plan.name === 'Free' ? 'Get Started Free' : plan.hasTrial ? 'Start Free Trial' : 'Get Started'}
                 </Button>
               </CardContent>
             </Card>

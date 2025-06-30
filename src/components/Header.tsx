@@ -53,39 +53,40 @@ const Header = () => {
   const accountMenuItems = user ? [
     { label: 'Profile', path: '/profile', icon: User, description: 'Manage your profile' },
     { label: 'Settings', path: '/settings', icon: Settings, description: 'Account preferences' },
-    { label: 'Upgrade Plan', path: '/plans', icon: Crown, description: 'Unlock premium features' },
+    { label: 'Upgrade Plan', path: '/pricing', icon: Crown, description: 'Unlock premium features' },
   ] : [];
 
   const DropdownNavItem = ({ title, items, icon: Icon }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant="ghost" 
-          className="text-sm font-medium transition-colors hover:text-therapy-600 text-slate-600 flex items-center gap-1 px-3 py-2"
-        >
-          <Icon className="h-4 w-4" />
+        <Button variant="ghost" className="text-sm font-medium transition-all duration-300 hover:text-therapy-600 text-slate-600 flex items-center gap-1 px-3 py-2 hover:bg-therapy-50/50 rounded-lg group">
+          <Icon className="h-4 w-4 text-therapy-500 group-hover:text-therapy-600 transition-colors" />
           {title}
-          <ChevronDown className="h-3 w-3" />
+          <ChevronDown className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-64 bg-white/95 backdrop-blur-sm border border-therapy-100 shadow-xl">
-        <DropdownMenuLabel className="font-semibold text-therapy-700">{title}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+      <DropdownMenuContent className="w-72 bg-white/95 backdrop-blur-md border-0 shadow-2xl rounded-xl p-2 therapy-gradient-border z-50">
+        <DropdownMenuLabel className="font-semibold text-therapy-700 px-3 py-2 text-sm">
+          {title}
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator className="bg-therapy-200/50 my-2" />
         {items.map((item) => {
           const ItemIcon = item.icon;
           return (
             <DropdownMenuItem
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 ${
+              className={`cursor-pointer hover:bg-therapy-50 focus:bg-therapy-50 rounded-lg mx-1 p-3 transition-all duration-200 group ${
                 isActive(item.path) ? 'bg-therapy-50 text-therapy-600' : ''
               }`}
             >
               <div className="flex items-start gap-3 w-full">
-                <ItemIcon className="h-4 w-4 mt-0.5 text-therapy-500" />
-                <div>
-                  <div className="font-medium text-sm">{item.label}</div>
-                  <div className="text-xs text-slate-500">{item.description}</div>
+                <div className="w-8 h-8 rounded-lg therapy-gradient-bg flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <ItemIcon className="h-4 w-4 text-white" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-medium text-sm text-slate-800">{item.label}</div>
+                  <div className="text-xs text-slate-500 mt-0.5">{item.description}</div>
                 </div>
               </div>
             </DropdownMenuItem>
@@ -96,22 +97,24 @@ const Header = () => {
   );
 
   return (
-    <header className="bg-white/95 backdrop-blur-sm border-b border-therapy-100 sticky top-0 z-50 shadow-sm">
+    <header className="bg-white/95 backdrop-blur-md border-b border-therapy-100/50 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Beautiful Animated Logo */}
           <div 
-            className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity"
+            className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity group"
             onClick={() => navigate('/')}
           >
-            <GradientLogo size="sm" />
-            <span className="text-2xl font-bold brand-text-gradient-strong">
+            <div className="relative">
+              <GradientLogo size="sm" className="group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <span className="text-2xl font-bold therapy-text-gradient-animated">
               TherapySync
             </span>
           </div>
 
           {/* Desktop Dropdown Navigation */}
-          <nav className="hidden md:flex items-center space-x-2">
+          <nav className="hidden md:flex items-center space-x-1">
             <DropdownNavItem title="Platform" items={platformMenuItems} icon={Brain} />
             <DropdownNavItem title="AI Therapy" items={aiTherapyMenuItems} icon={MessageSquare} />
             <DropdownNavItem title="Resources" items={resourcesMenuItems} icon={LifeBuoy} />
@@ -121,9 +124,9 @@ const Header = () => {
             <Button
               variant="ghost"
               onClick={() => navigate('/pricing')}
-              className={`text-sm font-medium transition-colors hover:text-therapy-600 ${
+              className={`text-sm font-medium transition-all duration-300 hover:text-therapy-600 hover:bg-therapy-50/50 rounded-lg px-3 py-2 ${
                 isActive('/pricing') 
-                  ? 'text-therapy-600 border-b-2 border-therapy-600 pb-1' 
+                  ? 'text-therapy-600 bg-therapy-50' 
                   : 'text-slate-600'
               }`}
             >
@@ -144,14 +147,14 @@ const Header = () => {
                 <Button
                   variant="outline"
                   onClick={() => navigate('/dashboard')}
-                  className="border-therapy-300 text-therapy-700 hover:bg-therapy-50"
+                  className="border-therapy-300 text-therapy-700 hover:bg-therapy-50 transition-all duration-300"
                 >
                   Dashboard
                 </Button>
                 <Button
                   variant="ghost"
                   onClick={handleSignOut}
-                  className="text-slate-600 hover:text-slate-800"
+                  className="text-slate-600 hover:text-slate-800 hover:bg-slate-100 transition-all duration-300"
                 >
                   Sign Out
                 </Button>
@@ -161,13 +164,13 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   onClick={() => navigate('/auth')}
-                  className="text-slate-600 hover:text-slate-800"
+                  className="text-slate-600 hover:text-slate-800 hover:bg-slate-100 transition-all duration-300"
                 >
                   Sign In
                 </Button>
                 <Button
                   onClick={() => navigate('/auth')}
-                  className="brand-button-gradient-strong text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="therapy-gradient-bg text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-0"
                 >
                   Get Started
                 </Button>
@@ -178,7 +181,7 @@ const Header = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden"
+              className="md:hidden hover:bg-therapy-50 transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -188,11 +191,14 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-therapy-100">
-            <nav className="flex flex-col space-y-3">
+          <div className="md:hidden py-4 border-t border-therapy-100/50 bg-white/95 backdrop-blur-md">
+            <nav className="flex flex-col space-y-2">
               {/* Platform Section */}
               <div className="px-3 py-2">
-                <div className="text-sm font-semibold text-therapy-700 mb-2">Platform</div>
+                <div className="text-sm font-semibold text-therapy-700 mb-3 flex items-center gap-2">
+                  <Brain className="h-4 w-4" />
+                  Platform
+                </div>
                 {platformMenuItems.map((item) => {
                   const ItemIcon = item.icon;
                   return (
@@ -202,7 +208,7 @@ const Header = () => {
                         navigate(item.path);
                         setIsMobileMenuOpen(false);
                       }}
-                      className={`w-full text-left py-2 px-3 rounded-lg transition-colors flex items-center gap-3 ${
+                      className={`w-full text-left py-2 px-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
                         isActive(item.path)
                           ? 'bg-therapy-50 text-therapy-600 font-medium'
                           : 'text-slate-600 hover:bg-therapy-50 hover:text-therapy-600'
@@ -217,7 +223,10 @@ const Header = () => {
 
               {/* AI Therapy Section */}
               <div className="px-3 py-2">
-                <div className="text-sm font-semibold text-therapy-700 mb-2">AI Therapy</div>
+                <div className="text-sm font-semibold text-therapy-700 mb-3 flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  AI Therapy
+                </div>
                 {aiTherapyMenuItems.map((item) => {
                   const ItemIcon = item.icon;
                   return (
@@ -227,7 +236,7 @@ const Header = () => {
                         navigate(item.path);
                         setIsMobileMenuOpen(false);
                       }}
-                      className={`w-full text-left py-2 px-3 rounded-lg transition-colors flex items-center gap-3 ${
+                      className={`w-full text-left py-2 px-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
                         isActive(item.path)
                           ? 'bg-therapy-50 text-therapy-600 font-medium'
                           : 'text-slate-600 hover:bg-therapy-50 hover:text-therapy-600'
@@ -242,7 +251,10 @@ const Header = () => {
 
               {/* Resources Section */}
               <div className="px-3 py-2">
-                <div className="text-sm font-semibold text-therapy-700 mb-2">Resources</div>
+                <div className="text-sm font-semibold text-therapy-700 mb-3 flex items-center gap-2">
+                  <LifeBuoy className="h-4 w-4" />
+                  Resources
+                </div>
                 {resourcesMenuItems.map((item) => {
                   const ItemIcon = item.icon;
                   return (
@@ -252,7 +264,7 @@ const Header = () => {
                         navigate(item.path);
                         setIsMobileMenuOpen(false);
                       }}
-                      className={`w-full text-left py-2 px-3 rounded-lg transition-colors flex items-center gap-3 ${
+                      className={`w-full text-left py-2 px-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
                         isActive(item.path)
                           ? 'bg-therapy-50 text-therapy-600 font-medium'
                           : 'text-slate-600 hover:bg-therapy-50 hover:text-therapy-600'
@@ -271,7 +283,7 @@ const Header = () => {
                   navigate('/pricing');
                   setIsMobileMenuOpen(false);
                 }}
-                className={`text-left py-2 px-6 rounded-lg transition-colors ${
+                className={`text-left py-2 px-6 rounded-lg transition-all duration-200 ${
                   isActive('/pricing')
                     ? 'bg-therapy-50 text-therapy-600 font-medium'
                     : 'text-slate-600 hover:bg-therapy-50 hover:text-therapy-600'
@@ -287,7 +299,7 @@ const Header = () => {
 
               {/* Mobile Auth */}
               {user ? (
-                <div className="flex flex-col space-y-2 pt-2 px-3">
+                <div className="flex flex-col space-y-2 pt-2 px-3 border-t border-therapy-100/50 mt-4">
                   {accountMenuItems.map((item) => {
                     const ItemIcon = item.icon;
                     return (
@@ -297,7 +309,7 @@ const Header = () => {
                           navigate(item.path);
                           setIsMobileMenuOpen(false);
                         }}
-                        className={`w-full text-left py-2 px-3 rounded-lg transition-colors flex items-center gap-3 ${
+                        className={`w-full text-left py-2 px-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
                           isActive(item.path)
                             ? 'bg-therapy-50 text-therapy-600 font-medium'
                             : 'text-slate-600 hover:bg-therapy-50 hover:text-therapy-600'
@@ -320,7 +332,7 @@ const Header = () => {
                   </Button>
                 </div>
               ) : (
-                <div className="flex flex-col space-y-2 pt-2 px-3">
+                <div className="flex flex-col space-y-2 pt-2 px-3 border-t border-therapy-100/50 mt-4">
                   <Button
                     variant="ghost"
                     onClick={() => {
@@ -336,7 +348,7 @@ const Header = () => {
                       navigate('/auth');
                       setIsMobileMenuOpen(false);
                     }}
-                    className="brand-button-gradient-strong text-white justify-start"
+                    className="therapy-gradient-bg text-white justify-start border-0"
                   >
                     Get Started
                   </Button>

@@ -1,164 +1,115 @@
 
 import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { LifeBuoy, MessageSquare, Book, Phone, Mail, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import { BookOpen, ArrowRight, Clock, Star } from 'lucide-react';
 
 const Help = () => {
   const navigate = useNavigate();
+  
+  useSafeSEO({
+    title: 'Help Center - TherapySync Support',
+    description: 'Get help with TherapySync. Find answers, contact support, and access resources for your mental health journey.',
+    keywords: 'TherapySync help, mental health support, AI therapy help, customer service'
+  });
 
-  const helpTopics = [
+  const supportOptions = [
     {
-      title: 'Getting Started',
-      description: 'Learn how to set up your account and begin your mental wellness journey.',
-      items: ['Account creation', 'Profile setup', 'First session']
+      icon: MessageSquare,
+      title: "Live Chat Support",
+      description: "Get instant help from our support team",
+      action: "Start Chat",
+      available: "24/7"
     },
     {
-      title: 'Using AI Therapy',
-      description: 'Understand how our AI-powered therapy sessions work.',
-      items: ['Starting a session', 'Communication tips', 'Session features']
+      icon: Mail,
+      title: "Email Support",
+      description: "Send us detailed questions or feedback",
+      action: "Send Email",
+      available: "Response within 24hrs"
     },
     {
-      title: 'Crisis Support',
-      description: 'Important information about crisis management and emergency resources.',
-      items: ['Crisis hotlines', 'Emergency contacts', 'Safety planning']
-    },
-    {
-      title: 'Account & Billing',
-      description: 'Manage your subscription and account settings.',
-      items: ['Subscription plans', 'Billing questions', 'Account settings']
-    }
-  ];
-
-  const featuredArticles = [
-    {
-      id: '1',
-      title: 'Understanding Your Mental Health Journey',
-      excerpt: 'A comprehensive guide to starting your mental wellness journey with TherapySync.',
-      readTime: '5 min read',
-      category: 'Getting Started'
-    },
-    {
-      id: '2',
-      title: 'Maximizing Your AI Therapy Sessions',
-      excerpt: 'Tips and strategies for getting the most out of your therapeutic conversations with our AI.',
-      readTime: '7 min read',
-      category: 'AI Therapy'
-    },
-    {
-      id: '3',
-      title: 'Building Healthy Coping Strategies',
-      excerpt: 'Learn evidence-based techniques for managing stress, anxiety, and difficult emotions.',
-      readTime: '10 min read',
-      category: 'Techniques'
-    },
-    {
-      id: '4',
-      title: 'Privacy and Security in Digital Therapy',
-      excerpt: 'Understanding how your data is protected and what privacy measures we have in place.',
-      readTime: '4 min read',
-      category: 'Security'
+      icon: Phone,
+      title: "Crisis Hotline",
+      description: "Immediate support for mental health emergencies",
+      action: "Call Now",
+      available: "24/7 Emergency"
     }
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
       <Header />
-      <div className="container mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-therapy-900 mb-4">Help Center</h1>
-          <p className="text-xl text-therapy-600 max-w-2xl mx-auto">
-            Find answers to common questions and learn how to make the most of TherapySync.
-          </p>
-        </div>
-
-        {/* Featured Articles Section */}
-        <div className="mb-16">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-therapy-900">Featured Articles</h2>
-            <Button 
-              variant="outline"
-              onClick={() => navigate('/help/articles')}
-              className="flex items-center"
-            >
-              <BookOpen className="h-4 w-4 mr-2" />
-              View All Articles
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </Button>
+      
+      <section className="py-20 lg:py-32">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Badge className="mb-6 therapy-gradient-bg text-white px-8 py-3 text-sm font-semibold shadow-lg border-0">
+              <LifeBuoy className="h-4 w-4 mr-2" />
+              Help Center
+            </Badge>
+            
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              <span className="therapy-text-gradient-animated">
+                We're Here to Help
+              </span>
+            </h1>
+            
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
+              Get the support you need for your mental health journey. Our team is available 24/7 
+              to help you make the most of TherapySync.
+            </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {featuredArticles.map((article) => (
-              <Card key={article.id} className="hover:shadow-lg transition-shadow cursor-pointer"
-                    onClick={() => navigate(`/help/articles/${article.id}`)}>
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs bg-therapy-100 text-therapy-700 px-2 py-1 rounded">
-                      {article.category}
-                    </span>
-                    <div className="flex items-center text-xs text-therapy-500">
-                      <Clock className="h-3 w-3 mr-1" />
-                      {article.readTime}
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            {supportOptions.map((option, index) => {
+              const IconComponent = option.icon;
+              return (
+                <Card key={index} className="text-center hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-lg">
+                  <CardHeader>
+                    <div className="w-16 h-16 therapy-gradient-bg rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <IconComponent className="h-8 w-8 text-white" />
                     </div>
-                  </div>
-                  <CardTitle className="text-therapy-800 hover:text-therapy-600 transition-colors">
-                    {article.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-therapy-600 text-sm">{article.excerpt}</p>
-                </CardContent>
-              </Card>
-            ))}
+                    <CardTitle className="text-xl font-bold text-slate-800">{option.title}</CardTitle>
+                    <p className="text-slate-600">{option.description}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-center gap-2 text-sm text-therapy-600 mb-4">
+                      <Clock className="h-4 w-4" />
+                      {option.available}
+                    </div>
+                    <Button className="therapy-gradient-bg text-white border-0 w-full">
+                      {option.action}
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
-        </div>
 
-        {/* Help Topics Section */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-therapy-900 mb-8">Help Topics</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {helpTopics.map((topic, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-therapy-800">{topic.title}</CardTitle>
-                  <p className="text-therapy-600">{topic.description}</p>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {topic.items.map((item, itemIndex) => (
-                      <li key={itemIndex} className="text-therapy-700 text-sm">
-                        • {item}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        <div className="text-center">
-          <Card className="max-w-md mx-auto">
-            <CardHeader>
-              <CardTitle className="text-therapy-800">Need More Help?</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-therapy-600">
-                Can't find what you're looking for? Get in touch with our support team.
+          <div className="text-center">
+            <Card className="therapy-gradient-bg text-white p-12 shadow-2xl">
+              <h2 className="text-3xl font-bold mb-6">Need Immediate Support?</h2>
+              <p className="text-therapy-100 mb-8">
+                If you're experiencing a mental health crisis, please reach out immediately.
               </p>
               <Button 
-                onClick={() => navigate('/auth')}
-                className="w-full bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700"
+                size="lg"
+                className="bg-white text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg font-bold rounded-xl"
+                onClick={() => navigate('/crisis-resources')}
               >
-                Sign In for Support
+                Crisis Resources
               </Button>
-            </CardContent>
-          </Card>
+            </Card>
+          </div>
         </div>
-      </div>
+      </section>
+
       <Footer />
     </div>
   );
