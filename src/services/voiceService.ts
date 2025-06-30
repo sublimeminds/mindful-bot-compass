@@ -1,9 +1,16 @@
+
 import { EmotionAnalyzer } from './emotionAnalyzer';
 
 export interface Voice {
   id: string;
   name: string;
   synthVoice: SpeechSynthesisVoice;
+}
+
+export interface TherapistVoice {
+  voiceId: string;
+  voiceName: string;
+  emotionalContext: string;
 }
 
 class EnhancedVoiceService {
@@ -126,6 +133,81 @@ class EnhancedVoiceService {
     });
   }
 
+  // Add missing methods that components are trying to use
+  async generateGuidedSession(sessionType: string, duration: number, therapistId?: string): Promise<string[]> {
+    // Generate guided session steps based on session type
+    const steps: { [key: string]: string[] } = {
+      meditation: [
+        "Welcome to your guided meditation session. Find a comfortable position and close your eyes.",
+        "Take a deep breath in through your nose, and slowly exhale through your mouth.",
+        "Focus on your breathing, letting each breath bring you deeper into relaxation.",
+        "Notice any thoughts that arise, and gently let them pass like clouds in the sky.",
+        "Continue breathing deeply, feeling more peaceful with each breath."
+      ],
+      breathing: [
+        "Let's begin with a simple breathing exercise. Sit comfortably with your back straight.",
+        "Inhale slowly for 4 counts, feeling your lungs fill with air.",
+        "Hold your breath gently for 7 counts.",
+        "Exhale slowly through your mouth for 8 counts, releasing all tension.",
+        "Repeat this cycle, allowing your body to relax with each breath."
+      ],
+      relaxation: [
+        "Welcome to progressive muscle relaxation. Let's start by getting comfortable.",
+        "Begin by tensing your feet and toes, hold for 5 seconds, then release.",
+        "Move to your calves and thighs, tense them, hold, then relax completely.",
+        "Continue up to your hands and arms, creating tension, then letting go.",
+        "Finish with your face and head, then feel the complete relaxation throughout your body."
+      ],
+      sleep: [
+        "It's time to prepare your mind and body for restful sleep.",
+        "Let go of the day's worries and thoughts, they can wait until tomorrow.",
+        "Feel your body sinking into comfort, heavy and relaxed.",
+        "Your breathing becomes slower and more peaceful with each moment.",
+        "Allow sleep to come naturally as you drift into peaceful rest."
+      ]
+    };
+
+    return steps[sessionType] || steps.meditation;
+  }
+
+  async playTherapistMessage(text: string, therapistId?: string, emotion?: string, isCrisis?: boolean): Promise<void> {
+    if (this.hasApiKey()) {
+      // Use ElevenLabs for better voice quality
+      const voiceId = this.getTherapistVoiceId(therapistId);
+      await this.playWithElevenLabs(text, voiceId);
+    } else {
+      // Fallback to web speech
+      await this.playWithWebSpeech(text);
+    }
+  }
+
+  getTherapistVoice(therapistId: string): TherapistVoice | null {
+    const therapistVoices: { [key: string]: TherapistVoice } = {
+      'dr-sarah-chen': {
+        voiceId: 'EXAVITQu4vr4xnSDxMaL', // Sarah
+        voiceName: 'Sarah',
+        emotionalContext: 'supportive'
+      },
+      'dr-marcus-williams': {
+        voiceId: 'onwK4e9ZLuTAKqWW03F9', // Daniel
+        voiceName: 'Daniel',
+        emotionalContext: 'analytical'
+      },
+      'dr-elena-rodriguez': {
+        voiceId: '9BWtsMINqrJLrRacOk9x', // Aria
+        voiceName: 'Aria',
+        emotionalContext: 'compassionate'
+      }
+    };
+
+    return therapistVoices[therapistId] || therapistVoices['dr-sarah-chen'];
+  }
+
+  private getTherapistVoiceId(therapistId?: string): string {
+    const voice = this.getTherapistVoice(therapistId || 'dr-sarah-chen');
+    return voice?.voiceId || 'EXAVITQu4vr4xnSDxMaL';
+  }
+
   stop(): void {
     if (this.isPlaying && this.currentUtterance) {
       window.speechSynthesis.cancel();
@@ -140,3 +222,5 @@ class EnhancedVoiceService {
 }
 
 export const enhancedVoiceService = new EnhancedVoiceService();
+// Also export as voiceService for backward compatibility
+export const voiceService = enhancedVoiceService;

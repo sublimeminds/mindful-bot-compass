@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import type { User as UserType } from '@/types/user';
 
 const EnhancedDashboardSidebar = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const EnhancedDashboardSidebar = () => {
   const { user } = useAuth();
   
   // Mock subscription check - in real app, get from user profile
-  const userPlan = user?.subscription_plan || 'free';
+  const userPlan = (user as UserType)?.subscription_plan || 'free';
   const isPremium = userPlan === 'premium' || userPlan === 'pro';
   const isPro = userPlan === 'pro';
 

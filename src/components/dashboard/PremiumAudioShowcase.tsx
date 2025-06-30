@@ -15,12 +15,13 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import type { User as UserType } from '@/types/user';
 
 const PremiumAudioShowcase = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   
-  const userPlan = user?.subscription_plan || 'free';
+  const userPlan = (user as UserType)?.subscription_plan || 'free';
   const isPremium = userPlan === 'premium' || userPlan === 'pro';
 
   const featuredContent = [
