@@ -30,7 +30,14 @@ import {
   Mic,
   Target,
   Zap,
-  Settings
+  Settings,
+  Lightbulb,
+  Star,
+  UserPlus,
+  Activity,
+  Stethoscope,
+  Link as LinkIcon,
+  LifeBuoy
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import GradientButton from '@/components/ui/GradientButton';
@@ -71,6 +78,20 @@ const EnhancedHeader = () => {
       description: "Personalized therapy approaches adapted to your unique needs and preferences",
       href: "/features-overview",
       gradient: "from-harmony-500 to-therapy-500"
+    },
+    {
+      icon: Lightbulb,
+      title: "How It Works",
+      description: "Discover how our AI therapy technology works and helps you heal",
+      href: "/how-it-works",
+      gradient: "from-therapy-500 to-calm-500"
+    },
+    {
+      icon: Star,
+      title: "Features Showcase",
+      description: "Explore all the powerful features that make TherapySync unique",
+      href: "/features-showcase",
+      gradient: "from-calm-500 to-harmony-500"
     }
   ];
 
@@ -102,6 +123,27 @@ const EnhancedHeader = () => {
       description: "Flexible pricing plans designed for individuals, families, and organizations",
       href: "/pricing",
       gradient: "from-therapy-500 to-calm-500"
+    },
+    {
+      icon: UserPlus,
+      title: "Community Features",
+      description: "Connect with peers and join supportive communities for shared healing",
+      href: "/community-features",
+      gradient: "from-flow-500 to-balance-500"
+    },
+    {
+      icon: Stethoscope,
+      title: "Therapy Types",
+      description: "Explore different therapeutic approaches including CBT, DBT, and mindfulness",
+      href: "/therapy-types",
+      gradient: "from-balance-500 to-therapy-500"
+    },
+    {
+      icon: LinkIcon,
+      title: "Integrations",
+      description: "Connect with your favorite health and wellness apps for seamless care",
+      href: "/integrations",
+      gradient: "from-harmony-500 to-calm-500"
     }
   ];
 
@@ -133,6 +175,20 @@ const EnhancedHeader = () => {
       description: "Get in touch with our support team directly",
       href: "/support",
       gradient: "from-flow-500 to-balance-500"
+    },
+    {
+      icon: LifeBuoy,
+      title: "Crisis Resources",
+      description: "Emergency mental health resources and immediate crisis support",
+      href: "/crisis-resources",
+      gradient: "from-therapy-600 to-harmony-600"
+    },
+    {
+      icon: Users,
+      title: "Community",
+      description: "Join our supportive community and connect with others on similar journeys",
+      href: "/community",
+      gradient: "from-balance-500 to-calm-500"
     }
   ];
 
@@ -169,7 +225,7 @@ const EnhancedHeader = () => {
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-96 p-4 bg-white shadow-xl border-0">
+              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
                 <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
                   <Brain className="h-5 w-5 mr-2 text-therapy-500" />
                   AI Features
@@ -211,7 +267,7 @@ const EnhancedHeader = () => {
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-96 p-4 bg-white shadow-xl border-0">
+              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
                 <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
                   <Settings className="h-5 w-5 mr-2 text-therapy-500" />
                   Platform Features
@@ -253,12 +309,12 @@ const EnhancedHeader = () => {
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 p-4 bg-white shadow-xl border-0">
+              <DropdownMenuContent className="w-96 p-4 bg-white shadow-xl border-0">
                 <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
                   <HelpCircle className="h-5 w-5 mr-2 text-therapy-500" />
                   Help & Support
                 </DropdownMenuLabel>
-                <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-3">
                   {helpResources.map((resource, index) => (
                     <Link
                       key={resource.title}
