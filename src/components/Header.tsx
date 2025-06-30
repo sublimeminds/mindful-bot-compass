@@ -46,7 +46,8 @@ const Header = () => {
     { label: 'Crisis Support', path: '/crisis-support', icon: LifeBuoy, description: '24/7 emergency assistance' },
     { label: 'Voice Technology', path: '/voice-technology', icon: Headphones, description: 'Natural voice conversations' },
     { label: 'Cultural AI Features', path: '/cultural-ai-features', icon: Globe, description: 'Culturally sensitive therapy' },
-    { label: 'Audio Library', path: '/audio-library', icon: Volume2, description: 'Therapeutic podcasts & meditations' }
+    { label: 'Audio Library', path: '/audio-library', icon: Volume2, description: 'Therapeutic podcasts & meditations' },
+    { label: 'Family Plans', path: '/family', icon: Users, description: 'Multi-user family mental health' }
   ];
 
   const platformDropdownItems = [

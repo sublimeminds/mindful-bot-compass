@@ -923,6 +923,173 @@ export type Database = {
         }
         Relationships: []
       }
+      family_alerts: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          alert_data: Json | null
+          alert_type: string
+          created_at: string
+          description: string
+          household_id: string
+          id: string
+          is_acknowledged: boolean | null
+          member_user_id: string
+          severity: string
+          title: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_data?: Json | null
+          alert_type: string
+          created_at?: string
+          description: string
+          household_id: string
+          id?: string
+          is_acknowledged?: boolean | null
+          member_user_id: string
+          severity?: string
+          title: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_data?: Json | null
+          alert_type?: string
+          created_at?: string
+          description?: string
+          household_id?: string
+          id?: string
+          is_acknowledged?: boolean | null
+          member_user_id?: string
+          severity?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_alerts_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_invitations: {
+        Row: {
+          age: number | null
+          created_at: string
+          expires_at: string
+          household_id: string
+          id: string
+          invitation_token: string
+          invited_by_id: string
+          invited_email: string
+          member_type: string
+          permission_level: string
+          relationship: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          age?: number | null
+          created_at?: string
+          expires_at: string
+          household_id: string
+          id?: string
+          invitation_token: string
+          invited_by_id: string
+          invited_email: string
+          member_type?: string
+          permission_level?: string
+          relationship?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          age?: number | null
+          created_at?: string
+          expires_at?: string
+          household_id?: string
+          id?: string
+          invitation_token?: string
+          invited_by_id?: string
+          invited_email?: string
+          member_type?: string
+          permission_level?: string
+          relationship?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_invitations_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_permissions: {
+        Row: {
+          created_at: string
+          granted: boolean | null
+          granted_by: string
+          household_id: string
+          id: string
+          member_id: string
+          permission_type: string
+          target_member_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          granted?: boolean | null
+          granted_by: string
+          household_id: string
+          id?: string
+          member_id: string
+          permission_type: string
+          target_member_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          granted?: boolean | null
+          granted_by?: string
+          household_id?: string
+          id?: string
+          member_id?: string
+          permission_type?: string
+          target_member_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_permissions_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "family_permissions_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "household_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "family_permissions_target_member_id_fkey"
+            columns: ["target_member_id"]
+            isOneToOne: false
+            referencedRelation: "household_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       faq_items: {
         Row: {
           answer: string
@@ -1225,6 +1392,104 @@ export type Database = {
           title?: string
           updated_at?: string
           view_count?: number
+        }
+        Relationships: []
+      }
+      household_members: {
+        Row: {
+          age: number | null
+          can_receive_alerts: boolean | null
+          can_view_mood_data: boolean | null
+          can_view_progress: boolean | null
+          created_at: string
+          household_id: string
+          id: string
+          invitation_status: string | null
+          invited_at: string | null
+          invited_email: string | null
+          joined_at: string | null
+          member_type: string
+          permission_level: string
+          relationship: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          age?: number | null
+          can_receive_alerts?: boolean | null
+          can_view_mood_data?: boolean | null
+          can_view_progress?: boolean | null
+          created_at?: string
+          household_id: string
+          id?: string
+          invitation_status?: string | null
+          invited_at?: string | null
+          invited_email?: string | null
+          joined_at?: string | null
+          member_type?: string
+          permission_level?: string
+          relationship?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          age?: number | null
+          can_receive_alerts?: boolean | null
+          can_view_mood_data?: boolean | null
+          can_view_progress?: boolean | null
+          created_at?: string
+          household_id?: string
+          id?: string
+          invitation_status?: string | null
+          invited_at?: string | null
+          invited_email?: string | null
+          joined_at?: string | null
+          member_type?: string
+          permission_level?: string
+          relationship?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "household_members_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      households: {
+        Row: {
+          created_at: string
+          current_members: number
+          id: string
+          max_members: number
+          name: string
+          plan_type: string
+          primary_account_holder_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_members?: number
+          id?: string
+          max_members?: number
+          name: string
+          plan_type?: string
+          primary_account_holder_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_members?: number
+          id?: string
+          max_members?: number
+          name?: string
+          plan_type?: string
+          primary_account_holder_id?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -3391,6 +3656,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_access_member_data: {
+        Args: {
+          requesting_user_id: string
+          target_user_id: string
+          data_type: string
+        }
+        Returns: boolean
+      }
       can_user_perform_action: {
         Args: {
           user_id_param: string
@@ -3398,6 +3671,10 @@ export type Database = {
           current_usage?: number
         }
         Returns: boolean
+      }
+      generate_invitation_token: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_user_plan_limits: {
         Args: { user_id_param: string }

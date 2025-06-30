@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -34,6 +33,7 @@ import Notebook from '@/pages/Notebook';
 import Integrations from '@/pages/Integrations';
 import AudioLibrary from '@/pages/AudioLibrary';
 import AudioLibraryInfo from '@/pages/AudioLibraryInfo';
+import FamilyDashboard from '@/pages/FamilyDashboard';
 
 const AppRouter = () => {
   return (
@@ -77,6 +77,10 @@ const AppRouter = () => {
       {/* Audio library routes */}
       <Route path="/audio-library" element={<AudioLibraryInfo />} />
       <Route path="/dashboard/audio-library" element={<AudioLibrary />} />
+      
+      {/* Family Dashboard route */}
+      <Route path="/family" element={<FamilyDashboard />} />
+      <Route path="/family-dashboard" element={<FamilyDashboard />} />
     </Routes>
   );
 };

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -71,9 +70,10 @@ const EnhancedDashboardSidebar = () => {
     },
     {
       icon: Users,
-      label: 'Community',
-      path: '/community',
-      tier: 'free'
+      label: 'Family Dashboard',
+      path: '/family',
+      tier: 'premium',
+      isPremium: true
     },
     {
       icon: Zap,
