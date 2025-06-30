@@ -1,5 +1,3 @@
-
-
 import { EmotionAnalyzer } from './emotionAnalyzer';
 
 export interface Voice {
@@ -96,8 +94,10 @@ class EnhancedVoiceService {
         if (voiceId.similarityBoost !== undefined) {
           voiceSettings.similarity_boost = voiceId.similarityBoost;
         }
+      } else if (typeof voiceId === 'string') {
+        selectedVoiceId = voiceId;
       } else {
-        selectedVoiceId = voiceId || 'EXAVITQu4vr4xnSDxMaL'; // Default to Sarah
+        selectedVoiceId = 'EXAVITQu4vr4xnSDxMaL'; // Default to Sarah
       }
 
       await this.playWithElevenLabs(text, selectedVoiceId, voiceSettings);
@@ -106,8 +106,10 @@ class EnhancedVoiceService {
       let webVoiceId: string | undefined;
       if (typeof voiceId === 'object' && voiceId !== null) {
         webVoiceId = voiceId.voiceId;
-      } else {
+      } else if (typeof voiceId === 'string') {
         webVoiceId = voiceId;
+      } else {
+        webVoiceId = undefined;
       }
       
       await this.playWithWebSpeech(text, webVoiceId);
