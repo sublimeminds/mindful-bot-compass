@@ -88,10 +88,10 @@ const ContextualAISupport = () => {
     if (isOpen && pageContext && messages.length === 0) {
       const welcomeMessage: Message = {
         id: Date.now().toString(),
-        content: t('support.welcome', {
+        content: t('support.welcome', `Hello! I'm your AI assistant for ${pageContext.title}. I can help you with: ${pageContext.features.join(', ')}. What would you like to know?`, {
           pageTitle: pageContext.title,
           features: pageContext.features.join(', ')
-        }, `Hello! I'm your AI assistant for ${pageContext.title}. I can help you with: ${pageContext.features.join(', ')}. What would you like to know?`),
+        }),
         sender: 'ai',
         timestamp: new Date(),
         context: pageContext.route

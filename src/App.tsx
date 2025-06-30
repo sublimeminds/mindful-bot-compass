@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import AppRouter from "./components/AppRouter";
-import EnhancedAuthProvider from "./components/EnhancedAuthProvider";
+import { EnhancedAuthProvider } from "./components/EnhancedAuthProvider";
 import ContextualAISupport from "./components/ai/ContextualAISupport";
 import "./i18n";
 
