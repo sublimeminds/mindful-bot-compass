@@ -89,14 +89,7 @@ export const familyService = {
   async getHouseholdMembers(householdId: string): Promise<HouseholdMember[]> {
     const { data, error } = await supabase
       .from('household_members')
-      .select(`
-        *,
-        profiles (
-          name,
-          email,  
-          avatar_url
-        )
-      `)
+      .select('*')
       .eq('household_id', householdId)
       .order('created_at');
 
@@ -105,11 +98,23 @@ export const familyService = {
       return [];
     }
 
+    // Get profile data separately to avoid relation issues
+    const memberIds = data?.map(member => member.user_id) || [];
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, name, email, avatar_url')
+      .in('id', memberIds);
+
     return (data || []).map(member => ({
       ...member,
       member_type: member.member_type as 'primary' | 'adult' | 'teen' | 'child',
       permission_level: member.permission_level as 'full' | 'limited' | 'basic' | 'view_only',
-      invitation_status: member.invitation_status as 'pending' | 'active' | 'inactive'
+      invitation_status: member.invitation_status as 'pending' | 'active' | 'inactive',
+      profiles: profiles?.find(p => p.id === member.user_id) ? {
+        name: profiles.find(p => p.id === member.user_id)!.name,
+        email: profiles.find(p => p.id === member.user_id)!.email,
+        avatar_url: profiles.find(p => p.id === member.user_id)?.avatar_url
+      } : undefined
     }));
   },
 
@@ -155,13 +160,7 @@ export const familyService = {
   async getFamilyAlerts(householdId: string): Promise<FamilyAlert[]> {
     const { data, error } = await supabase
       .from('family_alerts')
-      .select(`
-        *,
-        profiles!family_alerts_member_user_id_fkey (
-          name,
-          email
-        )
-      `)
+      .select('*')
       .eq('household_id', householdId)
       .eq('is_acknowledged', false)
       .order('created_at', { ascending: false });
@@ -171,11 +170,22 @@ export const familyService = {
       return [];
     }
 
+    // Get profile data separately for members
+    const memberIds = data?.map(alert => alert.member_user_id) || [];
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, name, email')
+      .in('id', memberIds);
+
     return (data || []).map(alert => ({
       ...alert,
       alert_type: alert.alert_type as 'mood_decline' | 'crisis_risk' | 'concerning_pattern' | 'missed_sessions',
       severity: alert.severity as 'low' | 'medium' | 'high' | 'critical',
-      member_profile: alert.profiles
+      alert_data: (alert.alert_data as any) || {},
+      member_profile: profiles?.find(p => p.id === alert.member_user_id) ? {
+        name: profiles.find(p => p.id === alert.member_user_id)!.name,
+        email: profiles.find(p => p.id === alert.member_user_id)!.email
+      } : undefined
     }));
   },
 

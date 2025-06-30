@@ -111,18 +111,22 @@ export const adaptivePricingService = {
       const pricing = this.calculatePricing(plan, seats);
       const amount = billingCycle === 'yearly' ? pricing.yearlyPrice : pricing.monthlyPrice;
 
-      // Store subscription intent
+      // Store in user_subscriptions table with plan details in metadata
       const { error } = await supabase
-        .from('adaptive_subscriptions')
-        .insert({
+        .from('user_subscriptions')
+        .upsert({
           user_id: user.id,
           plan_id: planId,
-          seats: pricing.seats,
+          status: 'pending',
           billing_cycle: billingCycle,
-          monthly_price: pricing.monthlyPrice,
-          yearly_price: pricing.yearlyPrice,
-          total_amount: amount,
-          status: 'pending'
+          // Store adaptive plan details in stripe_customer_id as metadata for now
+          stripe_customer_id: JSON.stringify({
+            adaptive_plan: planId,
+            seats: pricing.seats,
+            monthly_price: pricing.monthlyPrice,
+            yearly_price: pricing.yearlyPrice,
+            total_amount: amount
+          })
         });
 
       if (error) throw error;
