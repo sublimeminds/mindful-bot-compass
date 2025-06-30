@@ -16,6 +16,11 @@ import Help from '@/pages/Help';
 import Community from '@/pages/Community';
 import CrisisResources from '@/pages/CrisisResources';
 import LGBTQTherapy from '@/pages/LGBTQTherapy';
+import Analytics from '@/pages/Analytics';
+import Sessions from '@/pages/Sessions';
+import Support from '@/pages/Support';
+import CrisisSupport from '@/pages/CrisisSupport';
+import Progress from '@/pages/Progress';
 
 const AppRouter = () => {
   return (
@@ -35,6 +40,11 @@ const AppRouter = () => {
       <Route path="/community" element={<Community />} />
       <Route path="/crisis-resources" element={<CrisisResources />} />
       <Route path="/lgbtq-therapy" element={<LGBTQTherapy />} />
+      <Route path="/analytics" element={<Analytics />} />
+      <Route path="/sessions" element={<Sessions />} />
+      <Route path="/support" element={<Support />} />
+      <Route path="/crisis-support" element={<CrisisSupport />} />
+      <Route path="/progress" element={<Progress />} />
     </Routes>
   );
 };
