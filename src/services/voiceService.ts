@@ -79,7 +79,7 @@ class EnhancedVoiceService {
   // Updated playText method to handle both string and object voiceId
   async playText(text: string, voiceId?: string | VoiceConfig): Promise<void> {
     if (this.hasApiKey()) {
-      // Handle voice configuration
+      // Handle voice configuration for ElevenLabs
       let selectedVoiceId: string;
       let voiceSettings: any = {
         stability: 0.5,
@@ -101,7 +101,7 @@ class EnhancedVoiceService {
       await this.playWithElevenLabs(text, selectedVoiceId, voiceSettings);
     } else {
       // Extract string voiceId for web speech
-      const webVoiceId = typeof voiceId === 'object' && voiceId !== null ? voiceId.voiceId : voiceId;
+      const webVoiceId = typeof voiceId === 'object' && voiceId !== null ? voiceId.voiceId : (voiceId || undefined);
       await this.playWithWebSpeech(text, webVoiceId);
     }
   }
