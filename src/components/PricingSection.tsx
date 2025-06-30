@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Check, Crown, Star, Heart, ArrowRight } from 'lucide-react';
+import { Check, Star, Heart, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
 import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
@@ -34,13 +34,13 @@ const PricingSection = () => {
   const pricingPlans = [
     {
       name: 'Basic',
-      price: 29,
+      price: 9,
       period: 'month',
       description: 'Perfect for getting started with AI therapy',
       popular: false,
       features: [
         'AI Therapy Sessions (Unlimited)',
-        'Basic Mood Tracking',
+        'Basic Mood Tracking', 
         'Text-based Conversations',
         'Crisis Support Access',
         'Progress Analytics'
@@ -50,7 +50,7 @@ const PricingSection = () => {
     },
     {
       name: 'Pro',
-      price: 49,
+      price: 19,
       period: 'month',
       description: 'Advanced features for serious improvement',
       popular: true,
@@ -65,23 +65,6 @@ const PricingSection = () => {
       ],
       color: 'from-therapy-600 to-calm-600',
       icon: Star
-    },
-    {
-      name: 'Premium',
-      price: 99,
-      period: 'month',
-      description: 'Complete solution with human support',
-      popular: false,
-      features: [
-        'Everything in Pro',
-        'Human Therapist Consultations',
-        'Crisis Intervention Team',
-        'Family Therapy Sessions',
-        'Personalized Treatment Plans',
-        'Dedicated Support Manager'
-      ],
-      color: 'from-therapy-700 to-calm-700',
-      icon: Crown
     }
   ];
 
@@ -106,7 +89,7 @@ const PricingSection = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
         {pricingPlans.map((plan, index) => {
           const IconComponent = plan.icon;
           return (

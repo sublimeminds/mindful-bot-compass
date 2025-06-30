@@ -468,7 +468,7 @@ const Index = () => {
               <Button 
                 size="lg" 
                 variant="outline"
-                className="border-2 border-white text-white hover:bg-white/10 px-12 py-6 text-xl font-bold rounded-2xl shadow-xl hover:shadow-white/20 transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+                className="border-2 border-white text-white hover:bg-white/10 hover:text-white px-12 py-6 text-xl font-bold rounded-2xl shadow-xl hover:shadow-white/20 transition-all duration-300 hover:scale-105 backdrop-blur-sm"
                 onClick={() => navigate('/dashboard')}
               >
                 <Crown className="h-6 w-6 mr-3" />

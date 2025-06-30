@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Check, Crown, Star, Heart, Shield, Zap } from 'lucide-react';
+import { Check, Star, Heart, Shield, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
 import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
@@ -19,7 +19,7 @@ const Pricing = () => {
 
   useSafeSEO({
     title: 'Pricing Plans - TherapySync AI Platform',
-    description: 'Choose the perfect plan for your mental health journey. Flexible pricing with AI therapy, crisis support, and personalized care.',
+    description: 'Choose the perfect plan for your mental health journey. Affordable pricing with AI therapy, crisis support, and personalized care.',
     keywords: 'AI therapy pricing, mental health plans, therapy subscription, crisis support'
   });
 
@@ -45,7 +45,7 @@ const Pricing = () => {
   const pricingPlans = [
     {
       name: 'Basic',
-      price: 29,
+      price: 9,
       period: 'month',
       description: 'Perfect for getting started with AI therapy',
       popular: false,
@@ -62,7 +62,7 @@ const Pricing = () => {
     },
     {
       name: 'Pro',
-      price: 49,
+      price: 19,
       period: 'month',
       description: 'Advanced features for serious mental health improvement',
       popular: true,
@@ -79,25 +79,6 @@ const Pricing = () => {
       ],
       color: 'from-therapy-600 to-calm-600',
       icon: Star
-    },
-    {
-      name: 'Premium',
-      price: 99,
-      period: 'month',
-      description: 'Complete mental health solution with human support',
-      popular: false,
-      features: [
-        'Everything in Pro',
-        'Human Therapist Consultations (2/month)',
-        'Crisis Intervention Team',
-        'Family Therapy Sessions',
-        'Personalized Treatment Plans',
-        'White-label Mobile App',
-        'Advanced Cultural AI Features',
-        'Dedicated Support Manager'
-      ],
-      color: 'from-therapy-700 to-calm-700',
-      icon: Crown
     }
   ];
 
@@ -110,7 +91,7 @@ const Pricing = () => {
           <div className="text-center mb-16">
             <Badge className="mb-6 bg-gradient-to-r from-therapy-500 to-calm-500 text-white px-8 py-3 text-sm font-semibold shadow-lg border-0">
               <Shield className="h-4 w-4 mr-2" />
-              Flexible Pricing Plans
+              Simple & Affordable Pricing
               <Zap className="h-4 w-4 ml-2" />
             </Badge>
             
@@ -121,7 +102,7 @@ const Pricing = () => {
             </h1>
             
             <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
-              Start your mental health journey with flexible pricing designed for every need. 
+              Start your mental health journey with affordable pricing designed for everyone. 
               All plans include crisis support and are backed by our satisfaction guarantee.
             </p>
 
@@ -134,7 +115,7 @@ const Pricing = () => {
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {pricingPlans.map((plan, index) => {
               const IconComponent = plan.icon;
               return (
