@@ -21,6 +21,7 @@ import AIAvatarPage from '@/pages/AIAvatarPage';
 import GoalsPage from '@/pages/GoalsPage';
 import NotificationCenterPage from '@/pages/NotificationCenter';
 import ComprehensiveSettingsPage from '@/pages/ComprehensiveSettingsPage';
+import Analytics from '@/pages/Analytics';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -39,7 +40,6 @@ function App() {
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/family-features" element={<FamilyFeaturesPage />} />
-                  <Route path="/analytics" element={<DashboardPage />} />
                   <Route path="/sessions" element={<SessionsPage />} />
                   <Route path="/goals" element={<GoalsPage />} />
                   <Route path="/settings" element={<ComprehensiveSettingsPage />} />
@@ -52,6 +52,7 @@ function App() {
                   <Route path="/mood-tracker" element={<DashboardPage />} />
                   <Route path="/ai-avatar" element={<AIAvatarPage />} />
                   <Route path="/notifications" element={<NotificationCenterPage />} />
+                  <Route path="/analytics" element={<Analytics />} />
                 </Routes>
                 <NotificationToastHandler />
                 <Toaster />

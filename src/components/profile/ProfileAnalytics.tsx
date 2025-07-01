@@ -1,10 +1,15 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { TrendingUp, Activity, Heart, Brain } from 'lucide-react';
+import { TrendingUp, Activity, Heart, Brain, BarChart3 } from 'lucide-react';
+import { useAdvancedAnalytics } from '@/hooks/useAdvancedAnalytics';
+import { useNavigate } from 'react-router-dom';
 
 const ProfileAnalytics = () => {
+  const navigate = useNavigate();
+  const { data, predictiveInsights } = useAdvancedAnalytics('30d');
   const moodData = [
     { date: '2024-01-01', mood: 6, anxiety: 4, stress: 5 },
     { date: '2024-01-02', mood: 7, anxiety: 3, stress: 4 },
@@ -114,30 +119,59 @@ const ProfileAnalytics = () => {
       {/* Progress Metrics */}
       <Card className="lg:col-span-2">
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <TrendingUp className="h-5 w-5 mr-2" />
-            Progress Metrics
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center">
+              <TrendingUp className="h-5 w-5 mr-2" />
+              Progress Metrics
+            </div>
+            <Button 
+              onClick={() => navigate('/analytics')} 
+              variant="outline" 
+              size="sm"
+              className="flex items-center"
+            >
+              <BarChart3 className="h-4 w-4 mr-2" />
+              View Details
+            </Button>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-therapy-600">85%</div>
-              <p className="text-sm text-muted-foreground">Session Completion</p>
+              <div className="text-3xl font-bold text-therapy-600">
+                {data.sessionEffectiveness.overall_rating.toFixed(1) || '8.5'}
+              </div>
+              <p className="text-sm text-muted-foreground">Session Rating</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-calm-600">7.2</div>
-              <p className="text-sm text-muted-foreground">Avg Mood Rating</p>
+              <div className="text-3xl font-bold text-calm-600">
+                {data.goalAnalytics.completion_rate.toFixed(0) || '72'}%
+              </div>
+              <p className="text-sm text-muted-foreground">Goal Completion</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-flow-600">12</div>
-              <p className="text-sm text-muted-foreground">Days Streak</p>
+              <div className="text-3xl font-bold text-flow-600">
+                {predictiveInsights.predictedOutcomes.confidence.toFixed(0) || '85'}%
+              </div>
+              <p className="text-sm text-muted-foreground">Prediction Confidence</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-harmony-600">68%</div>
-              <p className="text-sm text-muted-foreground">Goal Progress</p>
+              <div className="text-3xl font-bold text-harmony-600">
+                {data.sessionEffectiveness.mood_improvement_rate.toFixed(0) || '68'}%
+              </div>
+              <p className="text-sm text-muted-foreground">Mood Improvement</p>
             </div>
           </div>
+
+          {/* Quick Insights */}
+          {predictiveInsights.recommendations.length > 0 && (
+            <div className="mt-6 p-4 bg-therapy-50 rounded-lg border border-therapy-200">
+              <h4 className="font-medium text-therapy-900 mb-2">AI Insight</h4>
+              <p className="text-sm text-therapy-700">
+                {predictiveInsights.recommendations[0]}
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
