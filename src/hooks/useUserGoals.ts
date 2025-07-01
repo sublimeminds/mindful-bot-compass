@@ -39,11 +39,11 @@ export const useUserGoals = () => {
         id: goal.id,
         title: goal.title,
         description: goal.description,
-        targetValue: goal.target_progress || 100,
+        targetValue: goal.target_value || 100,
         currentValue: goal.current_progress || 0,
         category: goal.category || 'general',
         status: goal.is_completed ? 'completed' : 'active',
-        dueDate: goal.due_date,
+        dueDate: goal.target_date,
         createdAt: goal.created_at,
         updatedAt: goal.updated_at,
       }));
