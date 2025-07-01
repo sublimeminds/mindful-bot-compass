@@ -66,10 +66,10 @@ const EnhancedPricingSection = () => {
 
       if (error) throw error;
       
-      // Transform the data to ensure trial_days is included
+      // Transform the data to ensure all required fields are present
       const transformedPlans = (data || []).map(plan => ({
         ...plan,
-        trial_days: plan.trial_days || 0, // Default to 0 if not provided
+        trial_days: (plan as any).trial_days || 0, // Use type assertion to access trial_days
         features: plan.features as Record<string, string>,
         limits: plan.limits as Record<string, any>
       }));
