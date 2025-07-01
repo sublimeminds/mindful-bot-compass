@@ -142,7 +142,15 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     if (currentStep === 4) { // Cultural Preferences step (adjusted for auth step)
       return {
         ...baseProps,
-        preferences: onboardingData.culturalPreferences,
+        preferences: onboardingData.culturalPreferences || {
+          primaryLanguage: 'en',
+          culturalBackground: '',
+          familyStructure: 'individual',
+          communicationStyle: 'direct',
+          religiousConsiderations: false,
+          therapyApproachPreferences: [],
+          culturalSensitivities: []
+        },
         onPreferencesChange: handleCulturalPreferencesChange
       };
     }

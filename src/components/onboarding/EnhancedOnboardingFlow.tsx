@@ -197,7 +197,15 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
     if (currentStepConfig.component === CulturalPreferencesStep) {
       return {
         ...baseProps,
-        preferences: onboardingData.culturalPreferences,
+        preferences: onboardingData.culturalPreferences || {
+          primaryLanguage: 'en',
+          culturalBackground: '',
+          familyStructure: 'individual',
+          communicationStyle: 'direct',
+          religiousConsiderations: false,
+          therapyApproachPreferences: [],
+          culturalSensitivities: []
+        },
         onPreferencesChange: handleCulturalPreferencesChange
       };
     }

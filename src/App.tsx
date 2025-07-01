@@ -15,6 +15,7 @@ import FamilyFeaturesPage from '@/pages/FamilyFeaturesPage';
 import ProfilePage from '@/pages/ProfilePage';
 import DashboardPage from '@/pages/DashboardPage';
 import TherapyChatPage from '@/pages/TherapyChatPage';
+import SessionsPage from '@/pages/SessionsPage';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -34,7 +35,7 @@ function App() {
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/family-features" element={<FamilyFeaturesPage />} />
                   <Route path="/analytics" element={<DashboardPage />} />
-                  <Route path="/sessions" element={<DashboardPage />} />
+                  <Route path="/sessions" element={<SessionsPage />} />
                   <Route path="/goals" element={<DashboardPage />} />
                   <Route path="/settings" element={<ProfilePage />} />
                   <Route path="/billing" element={<ProfilePage />} />
