@@ -14,7 +14,8 @@ import {
   HeadphonesIcon,
   Bot,
   Heart,
-  Users
+  Users,
+  Brain
 } from 'lucide-react';
 import {
   Sidebar,
@@ -34,6 +35,7 @@ import UserMenu from '@/components/navigation/UserMenu';
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'AI Avatar', href: '/ai-avatar', icon: Bot },
+  { name: 'AI Personalization', href: '/ai-personalization', icon: Brain },
   { name: 'Therapy Chat', href: '/therapy-chat', icon: MessageCircle },
   { name: 'Sessions', href: '/sessions', icon: Calendar },
   { name: 'Mood Tracker', href: '/mood-tracker', icon: Heart },

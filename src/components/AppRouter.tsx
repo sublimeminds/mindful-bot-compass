@@ -8,6 +8,8 @@ import EnhancedOnboardingPage from "../pages/EnhancedOnboardingPage";
 import OnboardingPage from "../pages/OnboardingPage";
 import Onboarding from "../pages/Onboarding";
 import Dashboard from "../pages/Dashboard";
+import GoalsPage from "../pages/GoalsPage";
+import EnhancedAIPersonalization from "../pages/EnhancedAIPersonalization";
 
 const AppRouter = () => {
   return (
@@ -20,6 +22,8 @@ const AppRouter = () => {
       <Route path="/onboarding-old" element={<OnboardingPage />} />
       <Route path="/onboarding-legacy" element={<Onboarding />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/goals" element={<GoalsPage />} />
+      <Route path="/ai-personalization" element={<EnhancedAIPersonalization />} />
     </Routes>
   );
 };
