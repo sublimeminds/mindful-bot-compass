@@ -31,66 +31,66 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
 
-    /* TherapySync brand colors */
-    --therapy-50: 220 60% 97%;
-    --therapy-100: 220 60% 92%;
-    --therapy-200: 220 60% 83%;
-    --therapy-300: 220 60% 71%;
-    --therapy-400: 220 60% 58%;
-    --therapy-500: 220 60% 45%;
-    --therapy-600: 220 60% 36%;
-    --therapy-700: 220 60% 27%;
-    --therapy-800: 220 60% 18%;
-    --therapy-900: 220 60% 9%;
-    --therapy-950: 220 60% 5%;
+    /* Restored TherapySync mental health therapy colors */
+    --therapy-50: 14 100% 97%;
+    --therapy-100: 14 100% 92%;
+    --therapy-200: 14 100% 84%;
+    --therapy-300: 14 100% 74%;
+    --therapy-400: 14 100% 64%;
+    --therapy-500: 14 82% 59%;
+    --therapy-600: 14 82% 49%;
+    --therapy-700: 14 82% 39%;
+    --therapy-800: 14 82% 29%;
+    --therapy-900: 14 82% 19%;
+    --therapy-950: 14 82% 9%;
 
-    --calm-50: 200 100% 95%;
-    --calm-100: 200 100% 89%;
-    --calm-200: 200 100% 78%;
-    --calm-300: 200 100% 67%;
-    --calm-400: 200 100% 56%;
-    --calm-500: 200 100% 45%;
-    --calm-600: 200 100% 36%;
-    --calm-700: 200 100% 27%;
-    --calm-800: 200 100% 18%;
-    --calm-900: 200 100% 9%;
-    --calm-950: 200 100% 5%;
+    --calm-50: 180 100% 97%;
+    --calm-100: 180 100% 92%;
+    --calm-200: 180 100% 84%;
+    --calm-300: 180 100% 74%;
+    --calm-400: 180 100% 64%;
+    --calm-500: 180 68% 54%;
+    --calm-600: 180 68% 44%;
+    --calm-700: 180 68% 34%;
+    --calm-800: 180 68% 24%;
+    --calm-900: 180 68% 14%;
+    --calm-950: 180 68% 7%;
 
-    --harmony-50: 180 100% 95%;
-    --harmony-100: 180 100% 89%;
-    --harmony-200: 180 100% 78%;
-    --harmony-300: 180 100% 67%;
-    --harmony-400: 180 100% 56%;
-    --harmony-500: 180 100% 45%;
-    --harmony-600: 180 100% 36%;
-    --harmony-700: 180 100% 27%;
-    --harmony-800: 180 100% 18%;
-    --harmony-900: 180 100% 9%;
-    --harmony-950: 180 100% 5%;
+    --harmony-50: 180 100% 97%;
+    --harmony-100: 180 100% 92%;
+    --harmony-200: 180 100% 84%;
+    --harmony-300: 180 100% 74%;
+    --harmony-400: 180 100% 64%;
+    --harmony-500: 180 68% 54%;
+    --harmony-600: 180 68% 44%;
+    --harmony-700: 180 68% 34%;
+    --harmony-800: 180 68% 24%;
+    --harmony-900: 180 68% 14%;
+    --harmony-950: 180 68% 7%;
 
-    --balance-50: 160 100% 95%;
-    --balance-100: 160 100% 89%;
-    --balance-200: 160 100% 78%;
-    --balance-300: 160 100% 67%;
-    --balance-400: 160 100% 56%;
-    --balance-500: 160 100% 45%;
-    --balance-600: 160 100% 36%;
-    --balance-700: 160 100% 27%;
-    --balance-800: 160 100% 18%;
-    --balance-900: 160 100% 9%;
-    --balance-950: 160 100% 5%;
+    --balance-50: 330 100% 97%;
+    --balance-100: 330 100% 92%;
+    --balance-200: 330 100% 84%;
+    --balance-300: 330 100% 74%;
+    --balance-400: 330 100% 64%;
+    --balance-500: 330 72% 59%;
+    --balance-600: 330 72% 49%;
+    --balance-700: 330 72% 39%;
+    --balance-800: 330 72% 29%;
+    --balance-900: 330 72% 19%;
+    --balance-950: 330 72% 9%;
 
-    --flow-50: 140 100% 95%;
-    --flow-100: 140 100% 89%;
-    --flow-200: 140 100% 78%;
-    --flow-300: 140 100% 67%;
-    --flow-400: 140 100% 56%;
-    --flow-500: 140 100% 45%;
-    --flow-600: 140 100% 36%;
-    --flow-700: 140 100% 27%;
-    --flow-800: 140 100% 18%;
-    --flow-900: 140 100% 9%;
-    --flow-950: 140 100% 5%;
+    --flow-50: 160 100% 97%;
+    --flow-100: 160 100% 92%;
+    --flow-200: 160 100% 84%;
+    --flow-300: 160 100% 74%;
+    --flow-400: 160 100% 64%;
+    --flow-500: 160 65% 49%;
+    --flow-600: 160 65% 39%;
+    --flow-700: 160 65% 29%;
+    --flow-800: 160 65% 19%;
+    --flow-900: 160 65% 14%;
+    --flow-950: 160 65% 7%;
   }
 
   .dark {
@@ -117,7 +117,7 @@
 }
 
 @layer components {
-  /* Enhanced gradient utilities */
+  /* Enhanced gradient utilities for mental health therapy theme */
   .gradient-primary {
     background: linear-gradient(135deg, hsl(var(--therapy-500)), hsl(var(--harmony-500)));
   }
@@ -132,6 +132,10 @@
   
   .gradient-calm {
     background: linear-gradient(135deg, hsl(var(--calm-500)), hsl(var(--balance-500)));
+  }
+  
+  .gradient-therapy {
+    background: linear-gradient(135deg, hsl(var(--therapy-500)), hsl(var(--balance-500)));
   }
   
   .gradient-animated {
@@ -204,7 +208,7 @@
 }
 
 @layer utilities {
-  /* Gradient background utilities */
+  /* Enhanced gradient background utilities for therapy theme */
   .bg-gradient-therapy {
     background: linear-gradient(135deg, hsl(var(--therapy-50)), hsl(var(--therapy-100)));
   }
@@ -292,10 +296,28 @@ body {
   width: 100%;
 }
 
-/* Therapy gradient text */
+/* Enhanced therapy gradient text */
 .therapy-text-gradient {
   background: linear-gradient(135deg, hsl(var(--therapy-500)), hsl(var(--harmony-500)));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Enhanced mental health therapy gradients */
+.therapy-gradient-warm {
+  background: linear-gradient(135deg, hsl(var(--therapy-500)), hsl(var(--balance-500)));
+}
+
+.therapy-gradient-cool {
+  background: linear-gradient(135deg, hsl(var(--harmony-500)), hsl(var(--flow-500)));
+}
+
+.therapy-gradient-full {
+  background: linear-gradient(135deg, 
+    hsl(var(--therapy-500)), 
+    hsl(var(--harmony-500)), 
+    hsl(var(--balance-500)), 
+    hsl(var(--flow-500))
+  );
 }
