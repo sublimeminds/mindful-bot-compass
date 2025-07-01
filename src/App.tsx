@@ -16,6 +16,7 @@ import ProfilePage from '@/pages/ProfilePage';
 import DashboardPage from '@/pages/DashboardPage';
 import TherapyChatPage from '@/pages/TherapyChatPage';
 import SessionsPage from '@/pages/SessionsPage';
+import AIAvatarPage from '@/pages/AIAvatarPage';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -42,6 +43,10 @@ function App() {
                   <Route path="/help" element={<DashboardPage />} />
                   <Route path="/support" element={<DashboardPage />} />
                   <Route path="/therapy-chat" element={<TherapyChatPage />} />
+                  <Route path="/chat" element={<TherapyChatPage />} />
+                  <Route path="/mood" element={<DashboardPage />} />
+                  <Route path="/mood-tracker" element={<DashboardPage />} />
+                  <Route path="/ai-avatar" element={<AIAvatarPage />} />
                 </Routes>
                 <Toaster />
                 <Sonner />
