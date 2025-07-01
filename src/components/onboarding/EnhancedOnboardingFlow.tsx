@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
@@ -6,17 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import AnimatedOnboardingIntro from './AnimatedOnboardingIntro';
 import WelcomeStep from './WelcomeStep';
 import EmbeddedAuthStep from './EmbeddedAuthStep';
-import IntakeAssessmentStep from './IntakeAssessmentStep';
-import MentalHealthScreeningStep from './MentalHealthScreeningStep';
+import ComprehensiveMentalHealthStep from './ComprehensiveMentalHealthStep';
 import CulturalPreferencesStep from './CulturalPreferencesStep';
 import InternationalizedEnhancedSmartAnalysisStep from './InternationalizedEnhancedSmartAnalysisStep';
 import TherapistPersonalityStep from './TherapistPersonalityStep';
-import PlanSelectionStep from './PlanSelectionStep';
+import EnhancedPlanSelectionStep from './EnhancedPlanSelectionStep';
 import NotificationPreferencesStep from './NotificationPreferencesStep';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import CurrencySelector from '@/components/ui/CurrencySelector';
 import ThemeToggle from '@/components/ui/ThemeToggle';
-import { useSEO } from '@/hooks/useSEO';
+import { useSafeSEO } from '@/hooks/useSafeSEO';
 
 interface EnhancedOnboardingFlowProps {
   onComplete: (data: any) => void;
@@ -42,7 +40,7 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
     }
   });
 
-  useSEO({
+  useSafeSEO({
     title: 'Get Started - TherapySync',
     description: 'Begin your personalized mental wellness journey with TherapySync\'s guided onboarding process.',
     keywords: 'mental health assessment, therapy onboarding, wellness setup'
@@ -69,12 +67,11 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
   const allSteps = [
     { component: WelcomeStep, titleKey: 'onboarding.steps.welcome', shouldShow: () => true },
     { component: EmbeddedAuthStep, titleKey: 'Create Your Account', shouldShow: () => !user },
-    { component: IntakeAssessmentStep, titleKey: 'onboarding.steps.goals', shouldShow: () => true },
-    { component: MentalHealthScreeningStep, titleKey: 'onboarding.steps.preferences', shouldShow: () => true },
+    { component: ComprehensiveMentalHealthStep, titleKey: 'Mental Health Assessment', shouldShow: () => true },
     { component: CulturalPreferencesStep, titleKey: 'onboarding.steps.cultural', shouldShow: () => true },
     { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'onboarding.steps.analysis', shouldShow: () => true },
     { component: TherapistPersonalityStep, titleKey: 'onboarding.steps.therapist', shouldShow: () => true },
-    { component: PlanSelectionStep, titleKey: 'onboarding.steps.plan', shouldShow: () => !selectedPlan },
+    { component: EnhancedPlanSelectionStep, titleKey: 'Choose Your Plan', shouldShow: () => !selectedPlan },
     { component: NotificationPreferencesStep, titleKey: 'onboarding.steps.notifications', shouldShow: () => true }
   ];
 
@@ -201,11 +198,12 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
       };
     }
 
-    // Add pre-selected plan for Plan Selection step (if we reach it)
-    if (currentStepConfig.component === PlanSelectionStep && selectedPlan) {
+    // Add pre-selected plan and assessment data for Plan Selection step
+    if (currentStepConfig.component === EnhancedPlanSelectionStep) {
       return {
         ...baseProps,
-        preSelectedPlan: selectedPlan
+        preSelectedPlan: selectedPlan,
+        onboardingData
       };
     }
 
@@ -217,7 +215,7 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
   const progressPercentage = ((currentVisibleStepIndex + 1) / visibleSteps.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50 dark:from-harmony-950 dark:to-flow-950 p-4 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-harmony-50 via-therapy-50 to-flow-50 dark:from-harmony-950 dark:to-flow-950 p-4 transition-colors duration-300">
       <div className="max-w-4xl mx-auto">
         {/* Header with Controls */}
         <div className="flex justify-between items-center mb-6">
@@ -246,7 +244,7 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
             <div 
-              className="bg-gradient-to-r from-harmony-500 to-flow-500 h-2 rounded-full transition-all duration-500 ease-out"
+              className="bg-gradient-to-r from-harmony-500 via-therapy-500 to-flow-500 h-2 rounded-full transition-all duration-500 ease-out animate-pulse-glow"
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
