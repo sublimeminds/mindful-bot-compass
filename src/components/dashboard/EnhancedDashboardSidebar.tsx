@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +18,19 @@ import {
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
+  SidebarFooter,
+} from '@/components/ui/sidebar';
+import GradientLogo from '@/components/ui/GradientLogo';
 import type { User as UserType } from '@/types/user';
 
 const EnhancedDashboardSidebar = () => {
@@ -71,7 +85,7 @@ const EnhancedDashboardSidebar = () => {
     {
       icon: Users,
       label: 'Family Dashboard',
-      path: '/family',
+      path: '/family-dashboard',
       tier: 'premium',
       isPremium: true
     },
@@ -125,48 +139,56 @@ const EnhancedDashboardSidebar = () => {
   };
 
   return (
-    <div className="w-64 bg-white border-r border-slate-200 h-screen overflow-y-auto">
-      <div className="p-6">
-        <div className="flex items-center space-x-3 mb-8">
-          <div className="w-8 h-8 therapy-gradient-bg rounded-lg flex items-center justify-center">
-            <Brain className="h-5 w-5 text-white" />
-          </div>
+    <Sidebar className="border-r border-slate-200 bg-white dark:bg-gray-900">
+      <SidebarHeader className="p-6">
+        <div className="flex items-center space-x-3">
+          <GradientLogo size="sm" />
           <div>
-            <h2 className="font-bold text-slate-800">TherapySync</h2>
-            <p className="text-xs text-slate-500">Mental Health Platform</p>
+            <h2 className="font-bold text-slate-800 dark:text-white">TherapySync</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Mental Health Platform</p>
           </div>
         </div>
+      </SidebarHeader>
 
-        <nav className="space-y-2">
-          {sidebarItems.map((item, index) => {
-            const IconComponent = item.icon;
-            const hasAccess = canAccess(item);
-            
-            return (
-              <Button
-                key={index}
-                variant={isActive(item.path) ? "default" : "ghost"}
-                className={`w-full justify-start ${
-                  isActive(item.path) 
-                    ? 'therapy-gradient-bg text-white shadow-lg' 
-                    : hasAccess 
-                      ? 'text-slate-600 hover:text-therapy-600 hover:bg-therapy-50' 
-                      : 'text-slate-400 hover:bg-slate-50'
-                }`}
-                onClick={() => handleItemClick(item)}
-              >
-                <IconComponent className="h-4 w-4 mr-3" />
-                <span className="flex-1 text-left">{item.label}</span>
-                {!hasAccess && <Lock className="h-3 w-3 ml-2" />}
-                {hasAccess && item.tier !== 'free' && getTierBadge(item.tier)}
-              </Button>
-            );
-          })}
-        </nav>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarItems.map((item, index) => {
+                const IconComponent = item.icon;
+                const hasAccess = canAccess(item);
+                
+                return (
+                  <SidebarMenuItem key={index}>
+                    <SidebarMenuButton
+                      onClick={() => handleItemClick(item)}
+                      isActive={isActive(item.path)}
+                      className={
+                        isActive(item.path) 
+                          ? 'bg-gradient-to-r from-therapy-500 to-harmony-500 text-white shadow-lg' 
+                          : hasAccess 
+                            ? 'text-slate-600 hover:text-therapy-600 hover:bg-therapy-50 dark:text-slate-300 dark:hover:text-therapy-400 dark:hover:bg-therapy-900/20' 
+                            : 'text-slate-400 hover:bg-slate-50 dark:text-slate-500 dark:hover:bg-slate-800'
+                      }
+                    >
+                      <IconComponent className="h-4 w-4" />
+                      <span className="flex-1">{item.label}</span>
+                      {!hasAccess && <Lock className="h-3 w-3" />}
+                      {hasAccess && item.tier !== 'free' && getTierBadge(item.tier)}
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
+      <SidebarFooter className="p-4">
         {/* Upgrade Section */}
         {!isPro && (
-          <div className="mt-8 p-4 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-lg text-white">
+          <div className="p-4 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-lg text-white">
             <div className="flex items-center space-x-2 mb-2">
               <Crown className="h-4 w-4" />
               <span className="font-semibold text-sm">Upgrade to Pro</span>
@@ -183,8 +205,8 @@ const EnhancedDashboardSidebar = () => {
             </Button>
           </div>
         )}
-      </div>
-    </div>
+      </SidebarFooter>
+    </Sidebar>
   );
 };
 
