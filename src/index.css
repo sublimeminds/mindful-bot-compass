@@ -3,72 +3,46 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Root CSS Variables for Therapeutic Colors */
+/* Simplified Therapeutic Color Palette */
 :root {
-  /* Therapeutic Color Palette */
-  --therapy-50: 14 85% 95%;
-  --therapy-100: 14 85% 90%;
-  --therapy-200: 14 85% 80%;
-  --therapy-300: 14 85% 70%;
-  --therapy-400: 14 85% 60%;
-  --therapy-500: 14 85% 50%;
-  --therapy-600: 14 85% 45%;
-  --therapy-700: 14 85% 40%;
-  --therapy-800: 14 85% 35%;
-  --therapy-900: 14 85% 30%;
-  --therapy-950: 14 85% 25%;
+  /* Primary Therapeutic Colors - Soft Blue-Green */
+  --therapy-50: 204 86% 97%;
+  --therapy-100: 204 86% 94%;
+  --therapy-200: 204 86% 86%;
+  --therapy-300: 204 86% 77%;
+  --therapy-400: 204 86% 65%;
+  --therapy-500: 204 86% 53%;
+  --therapy-600: 204 86% 45%;
+  --therapy-700: 204 86% 37%;
+  --therapy-800: 204 86% 29%;
+  --therapy-900: 204 86% 21%;
+  --therapy-950: 204 86% 13%;
 
-  /* Calm Colors */
-  --calm-50: 180 75% 95%;
-  --calm-100: 180 75% 90%;
-  --calm-200: 180 75% 80%;
-  --calm-300: 180 75% 70%;
-  --calm-400: 180 75% 60%;
-  --calm-500: 180 75% 50%;
-  --calm-600: 180 75% 45%;
-  --calm-700: 180 75% 40%;
-  --calm-800: 180 75% 35%;
-  --calm-900: 180 75% 30%;
-  --calm-950: 180 75% 25%;
+  /* Secondary Calming Colors - Gentle Green */
+  --calm-50: 158 70% 96%;
+  --calm-100: 158 70% 92%;
+  --calm-200: 158 70% 84%;
+  --calm-300: 158 70% 76%;
+  --calm-400: 158 70% 64%;
+  --calm-500: 158 70% 52%;
+  --calm-600: 158 70% 44%;
+  --calm-700: 158 70% 36%;
+  --calm-800: 158 70% 28%;
+  --calm-900: 158 70% 20%;
+  --calm-950: 158 70% 12%;
 
-  /* Harmony Colors */
-  --harmony-50: 158 70% 95%;
-  --harmony-100: 158 70% 90%;
-  --harmony-200: 158 70% 80%;
-  --harmony-300: 158 70% 70%;
-  --harmony-400: 158 70% 60%;
-  --harmony-500: 158 70% 50%;
-  --harmony-600: 158 70% 45%;
-  --harmony-700: 158 70% 40%;
-  --harmony-800: 158 70% 35%;
-  --harmony-900: 158 70% 30%;
-  --harmony-950: 158 70% 25%;
-
-  /* Balance Colors */
-  --balance-50: 330 78% 95%;
-  --balance-100: 330 78% 90%;
-  --balance-200: 330 78% 80%;
-  --balance-300: 330 78% 70%;
-  --balance-400: 330 78% 60%;
-  --balance-500: 330 78% 50%;
-  --balance-600: 330 78% 45%;
-  --balance-700: 330 78% 40%;
-  --balance-800: 330 78% 35%;
-  --balance-900: 330 78% 30%;
-  --balance-950: 330 78% 25%;
-
-  /* Flow Colors */
-  --flow-50: 270 70% 95%;
-  --flow-100: 270 70% 90%;
-  --flow-200: 270 70% 80%;
-  --flow-300: 270 70% 70%;
-  --flow-400: 270 70% 60%;
-  --flow-500: 270 70% 50%;
-  --flow-600: 270 70% 45%;
-  --flow-700: 270 70% 40%;
-  --flow-800: 270 70% 35%;
-  --flow-900: 270 70% 30%;
-  --flow-950: 270 70% 25%;
+  /* Accent Colors - Warm Coral */
+  --accent-50: 14 85% 97%;
+  --accent-100: 14 85% 94%;
+  --accent-200: 14 85% 86%;
+  --accent-300: 14 85% 77%;
+  --accent-400: 14 85% 65%;
+  --accent-500: 14 85% 53%;
+  --accent-600: 14 85% 45%;
+  --accent-700: 14 85% 37%;
+  --accent-800: 14 85% 29%;
+  --accent-900: 14 85% 21%;
+  --accent-950: 14 85% 13%;
 
   /* Standard Shadcn Variables */
   --background: 0 0% 100%;
@@ -77,7 +51,7 @@
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
-  --primary: 222.2 47.4% 11.2%;
+  --primary: 204 86% 45%;
   --primary-foreground: 210 40% 98%;
   --secondary: 210 40% 96%;
   --secondary-foreground: 222.2 84% 4.9%;
@@ -89,104 +63,87 @@
   --destructive-foreground: 210 40% 98%;
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
+  --ring: 204 86% 45%;
   --radius: 0.5rem;
 }
 
-/* Therapeutic Gradient Backgrounds */
+/* Clean Background Gradients */
 .therapy-gradient-bg {
   background: linear-gradient(135deg, 
-    hsl(var(--therapy-500)) 0%, 
-    hsl(var(--calm-500)) 25%, 
-    hsl(var(--harmony-500)) 50%, 
-    hsl(var(--balance-500)) 75%, 
-    hsl(var(--flow-500)) 100%);
-  background-size: 400% 400%;
-  animation: gradient-flow 8s ease-in-out infinite;
+    hsl(var(--therapy-50)) 0%, 
+    hsl(var(--calm-50)) 100%);
 }
 
 .therapy-card {
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.95) 0%, 
-    rgba(255, 255, 255, 0.9) 100%);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
   border: 1px solid hsl(var(--therapy-200));
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .therapy-button {
   background: linear-gradient(135deg, 
     hsl(var(--therapy-500)) 0%, 
-    hsl(var(--harmony-500)) 50%, 
-    hsl(var(--balance-500)) 100%);
+    hsl(var(--calm-500)) 100%);
   color: white;
   border: none;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .therapy-button:hover {
   background: linear-gradient(135deg, 
     hsl(var(--therapy-600)) 0%, 
-    hsl(var(--harmony-600)) 50%, 
-    hsl(var(--balance-600)) 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    hsl(var(--calm-600)) 100%);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Therapeutic Text Gradients */
+/* Clean Text Gradients */
 .therapy-text-gradient {
   background: linear-gradient(135deg, 
     hsl(var(--therapy-600)) 0%, 
-    hsl(var(--harmony-600)) 50%, 
-    hsl(var(--balance-600)) 100%);
+    hsl(var(--calm-600)) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-size: 200% 200%;
 }
 
 .therapy-text-gradient-animated {
   background: linear-gradient(135deg, 
     hsl(var(--therapy-600)) 0%, 
-    hsl(var(--calm-600)) 25%, 
-    hsl(var(--harmony-600)) 50%, 
-    hsl(var(--balance-600)) 75%, 
-    hsl(var(--flow-600)) 100%);
+    hsl(var(--calm-600)) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-size: 400% 400%;
-  animation: gradient-flow 6s ease-in-out infinite;
 }
 
-/* Floating Particles Animation */
+/* Simplified Floating Elements */
 .floating-particles {
   position: relative;
   overflow: hidden;
 }
 
-.floating-particles::before,
+.floating-particles::before {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: hsl(var(--therapy-200) / 0.3);
+  top: 20%;
+  left: 10%;
+  animation: gentle-float 6s ease-in-out infinite;
+}
+
 .floating-particles::after {
   content: '';
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, 
-    hsl(var(--therapy-400) / 0.1) 0%, 
-    hsl(var(--harmony-400) / 0.1) 100%);
-  animation: float 8s ease-in-out infinite;
-}
-
-.floating-particles::before {
-  top: 20%;
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.floating-particles::after {
+  background: hsl(var(--calm-200) / 0.2);
   top: 60%;
   right: 15%;
-  animation-delay: 4s;
+  animation: gentle-float 8s ease-in-out infinite reverse;
 }
 
 /* Base styles */
@@ -203,9 +160,43 @@ body {
   width: 100%;
 }
 
-/* Ensure no dark mode styles */
-* {
-  box-sizing: border-box;
+/* Simplified animations */
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translateY(0px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-8px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    transform: scale(0.98);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Accessibility and animations */
@@ -217,13 +208,7 @@ body {
   }
 }
 
-/* Loading spinner */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Accessibility */
+/* Clean utility classes */
 .reduce-motion * {
   animation-duration: 0.01ms !important;
   animation-iteration-count: 1 !important;
@@ -231,11 +216,11 @@ body {
 }
 
 .high-contrast {
-  filter: contrast(150%);
+  filter: contrast(120%);
 }
 
 .large-text {
-  font-size: 120% !important;
+  font-size: 110% !important;
 }
 
 .screen-reader-optimized .sr-only {

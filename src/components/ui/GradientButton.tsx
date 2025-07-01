@@ -17,14 +17,14 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   className,
   ...props 
 }) => {
-  const baseClasses = "bg-gradient-to-r from-therapy-500 to-calm-500 text-white hover:from-therapy-600 hover:to-calm-600 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl border-0";
+  const baseClasses = "bg-gradient-to-r from-therapy-500 to-calm-500 text-white hover:from-therapy-600 hover:to-calm-600 transition-all duration-200 shadow-sm hover:shadow-md border-0";
   
   if (variant === 'outline') {
     return (
       <Button
         variant="outline"
         size={size}
-        className={cn("border-2 border-therapy-300 text-therapy-700 hover:bg-gradient-to-r hover:from-therapy-50 hover:to-calm-50 transition-all duration-300 hover:scale-105", className)}
+        className={cn("border-2 border-therapy-300 text-therapy-700 hover:bg-therapy-50 hover:text-therapy-800 transition-all duration-200", className)}
         {...props}
       >
         {children}

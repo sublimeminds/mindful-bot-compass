@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -52,7 +53,7 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// TherapySync brand colors
+				// Simplified TherapySync brand colors
 				therapy: {
 					50: 'hsl(var(--therapy-50))',
 					100: 'hsl(var(--therapy-100))',
@@ -78,45 +79,6 @@ export default {
 					800: 'hsl(var(--calm-800))',
 					900: 'hsl(var(--calm-900))',
 					950: 'hsl(var(--calm-950))',
-				},
-				harmony: {
-					50: 'hsl(var(--harmony-50))',
-					100: 'hsl(var(--harmony-100))',
-					200: 'hsl(var(--harmony-200))',
-					300: 'hsl(var(--harmony-300))',
-					400: 'hsl(var(--harmony-400))',
-					500: 'hsl(var(--harmony-500))',
-					600: 'hsl(var(--harmony-600))',
-					700: 'hsl(var(--harmony-700))',
-					800: 'hsl(var(--harmony-800))',
-					900: 'hsl(var(--harmony-900))',
-					950: 'hsl(var(--harmony-950))',
-				},
-				balance: {
-					50: 'hsl(var(--balance-50))',
-					100: 'hsl(var(--balance-100))',
-					200: 'hsl(var(--balance-200))',
-					300: 'hsl(var(--balance-300))',
-					400: 'hsl(var(--balance-400))',
-					500: 'hsl(var(--balance-500))',
-					600: 'hsl(var(--balance-600))',
-					700: 'hsl(var(--balance-700))',
-					800: 'hsl(var(--balance-800))',
-					900: 'hsl(var(--balance-900))',
-					950: 'hsl(var(--balance-950))',
-				},
-				flow: {
-					50: 'hsl(var(--flow-50))',
-					100: 'hsl(var(--flow-100))',
-					200: 'hsl(var(--flow-200))',
-					300: 'hsl(var(--flow-300))',
-					400: 'hsl(var(--flow-400))',
-					500: 'hsl(var(--flow-500))',
-					600: 'hsl(var(--flow-600))',
-					700: 'hsl(var(--flow-700))',
-					800: 'hsl(var(--flow-800))',
-					900: 'hsl(var(--flow-900))',
-					950: 'hsl(var(--flow-950))',
 				}
 			},
 			borderRadius: {
@@ -151,67 +113,9 @@ export default {
 						transform: 'translateY(0)'
 					}
 				},
-				'swirl-breathe': {
-					'0%, 100%': { 
-						transform: 'rotate(0deg) scale(1)',
-						filter: 'hue-rotate(0deg)'
-					},
-					'25%': { 
-						transform: 'rotate(90deg) scale(1.05)',
-						filter: 'hue-rotate(45deg)'
-					},
-					'50%': { 
-						transform: 'rotate(180deg) scale(1.1)',
-						filter: 'hue-rotate(90deg)'
-					},
-					'75%': { 
-						transform: 'rotate(270deg) scale(1.05)',
-						filter: 'hue-rotate(135deg)'
-					}
-				},
-				'gradient-flow': {
-					'0%, 100%': {
-						backgroundPosition: '0% 50%'
-					},
-					'50%': {
-						backgroundPosition: '100% 50%'
-					}
-				},
-				'swirl-grow': {
-					'0%': {
-						transform: 'rotate(0deg) scale(0.8)',
-						opacity: '0.8'
-					},
-					'50%': {
-						transform: 'rotate(180deg) scale(1.1)',
-						opacity: '1'
-					},
-					'100%': {
-						transform: 'rotate(360deg) scale(0.8)',
-						opacity: '0.8'
-					}
-				},
-				'float': {
-					'0%, 100%': {
-						transform: 'translateY(0px)',
-						opacity: '0.7'
-					},
-					'50%': {
-						transform: 'translateY(-10px)',
-						opacity: '1'
-					}
-				},
-				'shimmer': {
-					'0%': {
-						backgroundPosition: '-200% 0'
-					},
-					'100%': {
-						backgroundPosition: '200% 0'
-					}
-				},
 				'scale-in': {
 					'0%': {
-						transform: 'scale(0.95)',
+						transform: 'scale(0.98)',
 						opacity: '0'
 					},
 					'100%': {
@@ -219,26 +123,23 @@ export default {
 						opacity: '1'
 					}
 				},
-				'pulse-glow': {
+				'gentle-float': {
 					'0%, 100%': {
-						boxShadow: '0 0 5px hsl(var(--harmony-500) / 0.5)'
+						transform: 'translateY(0px)',
+						opacity: '0.6'
 					},
 					'50%': {
-						boxShadow: '0 0 20px hsl(var(--harmony-500) / 0.8), 0 0 30px hsl(var(--flow-500) / 0.6)'
+						transform: 'translateY(-8px)',
+						opacity: '0.8'
 					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'fade-in': 'fade-in 0.5s ease-out',
-				'swirl-breathe': 'swirl-breathe 4s ease-in-out infinite',
-				'gradient-flow': 'gradient-flow 6s ease-in-out infinite',
-				'swirl-grow': 'swirl-grow 3s ease-in-out infinite',
-				'float': 'float 3s ease-in-out infinite',
-				'shimmer': 'shimmer 2s linear infinite',
-				'scale-in': 'scale-in 0.5s ease-out',
-				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
+				'fade-in': 'fade-in 0.3s ease-out',
+				'scale-in': 'scale-in 0.3s ease-out',
+				'gentle-float': 'gentle-float 6s ease-in-out infinite'
 			}
 		}
 	},
