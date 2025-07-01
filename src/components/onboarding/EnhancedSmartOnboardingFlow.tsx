@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import AnimatedOnboardingIntro from './AnimatedOnboardingIntro';
@@ -89,7 +88,6 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Clear saved plan from localStorage
       localStorage.removeItem('selectedPlan');
       onComplete(onboardingData);
     }

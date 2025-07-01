@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
@@ -79,7 +78,6 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
     { component: NotificationPreferencesStep, titleKey: 'onboarding.steps.notifications', shouldShow: () => true }
   ];
 
-  // Get the visible steps for progress calculation
   const visibleSteps = allSteps.filter(step => step.shouldShow());
 
   const handleGetStarted = () => {
