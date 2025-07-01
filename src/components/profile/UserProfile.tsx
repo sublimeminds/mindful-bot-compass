@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, CreditCard, Bell, Shield, TrendingUp, Target, Calendar, Activity, Headphones, MessageSquare, Accessibility } from 'lucide-react';
+import { User, CreditCard, Bell, Shield, TrendingUp, Target, Calendar, Activity, Headphones, MessageSquare, Accessibility, Sparkles, Settings } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserStats } from '@/hooks/useUserStats';
 import { useUserSessions } from '@/hooks/useUserSessions';
@@ -14,6 +14,8 @@ import SessionSettings from '@/components/settings/SessionSettings';
 import PrivacySettings from '@/components/settings/PrivacySettings';
 import NotificationSettings from '@/components/settings/NotificationSettings';
 import AccessibilitySettings from '@/components/settings/AccessibilitySettings';
+import PersonalizationSettings from '@/components/settings/PersonalizationSettings';
+import AdvancedSettings from '@/components/settings/AdvancedSettings';
 
 const UserProfile = () => {
   const { user } = useAuth();
@@ -147,7 +149,7 @@ const UserProfile = () => {
 
         {/* Profile Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-9">
             <TabsTrigger value="account" className="flex items-center space-x-1">
               <User className="h-4 w-4" />
               <span className="hidden sm:inline">Account</span>
@@ -175,6 +177,14 @@ const UserProfile = () => {
             <TabsTrigger value="accessibility" className="flex items-center space-x-1">
               <Accessibility className="h-4 w-4" />
               <span className="hidden sm:inline">Accessibility</span>
+            </TabsTrigger>
+            <TabsTrigger value="personalization" className="flex items-center space-x-1">
+              <Sparkles className="h-4 w-4" />
+              <span className="hidden sm:inline">AI</span>
+            </TabsTrigger>
+            <TabsTrigger value="advanced" className="flex items-center space-x-1">
+              <Settings className="h-4 w-4" />
+              <span className="hidden sm:inline">Advanced</span>
             </TabsTrigger>
           </TabsList>
 
@@ -204,6 +214,14 @@ const UserProfile = () => {
 
           <TabsContent value="accessibility" className="space-y-6">
             <AccessibilitySettings />
+          </TabsContent>
+
+          <TabsContent value="personalization" className="space-y-6">
+            <PersonalizationSettings />
+          </TabsContent>
+
+          <TabsContent value="advanced" className="space-y-6">
+            <AdvancedSettings />
           </TabsContent>
         </Tabs>
       </div>
