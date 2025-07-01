@@ -448,6 +448,39 @@ export type Database = {
           },
         ]
       }
+      conversation_memories: {
+        Row: {
+          conversation_flow: Json
+          created_at: string
+          emotional_context: Json
+          id: string
+          learnings: Json
+          session_id: string | null
+          timestamp: string
+          user_id: string
+        }
+        Insert: {
+          conversation_flow?: Json
+          created_at?: string
+          emotional_context?: Json
+          id?: string
+          learnings?: Json
+          session_id?: string | null
+          timestamp?: string
+          user_id: string
+        }
+        Update: {
+          conversation_flow?: Json
+          created_at?: string
+          emotional_context?: Json
+          id?: string
+          learnings?: Json
+          session_id?: string | null
+          timestamp?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       conversation_memory: {
         Row: {
           content: string
@@ -2737,6 +2770,36 @@ export type Database = {
           status?: string
           subject?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      technique_effectiveness: {
+        Row: {
+          context: Json | null
+          created_at: string
+          effectiveness_score: number
+          id: string
+          technique: string
+          tracked_at: string
+          user_id: string
+        }
+        Insert: {
+          context?: Json | null
+          created_at?: string
+          effectiveness_score: number
+          id?: string
+          technique: string
+          tracked_at?: string
+          user_id: string
+        }
+        Update: {
+          context?: Json | null
+          created_at?: string
+          effectiveness_score?: number
+          id?: string
+          technique?: string
+          tracked_at?: string
           user_id?: string
         }
         Relationships: []

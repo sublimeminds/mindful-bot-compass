@@ -86,9 +86,24 @@ export class EnhancedPersonalizationService {
       return (data || []).map(item => ({
         userId: item.user_id,
         sessionId: item.session_id,
-        emotionalContext: item.emotional_context,
-        conversationFlow: item.conversation_flow,
-        learnings: item.learnings,
+        emotionalContext: item.emotional_context as any || {
+          dominantEmotion: 'neutral',
+          intensity: 5,
+          triggers: [],
+          copingStrategies: []
+        },
+        conversationFlow: item.conversation_flow as any || {
+          topics: [],
+          breakthroughs: [],
+          resistance: [],
+          engagement: 5
+        },
+        learnings: item.learnings as any || {
+          effectiveTechniques: [],
+          ineffectiveTechniques: [],
+          preferredApproaches: [],
+          communicationStyle: 'supportive'
+        },
         timestamp: item.timestamp
       }));
     } catch (error) {
