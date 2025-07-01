@@ -3,7 +3,7 @@ import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
-import GoalTracker from '@/components/goals/GoalTracker';
+import EnhancedGoalTracker from '@/components/goals/EnhancedGoalTracker';
 
 const GoalsPage = () => {
   const { user, loading } = useAuth();
@@ -39,7 +39,7 @@ const GoalsPage = () => {
             Set and track your personal goals for mental wellness and personal growth
           </p>
         </div>
-        <GoalTracker />
+        <EnhancedGoalTracker />
       </div>
     </DashboardLayoutWithSidebar>
   );

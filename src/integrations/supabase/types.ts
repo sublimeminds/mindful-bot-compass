@@ -1132,6 +1132,93 @@ export type Database = {
         }
         Relationships: []
       }
+      goal_achievements: {
+        Row: {
+          achievement_type: string
+          description: string
+          goal_id: string | null
+          icon: string
+          id: string
+          metadata: Json | null
+          points_earned: number | null
+          title: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          achievement_type: string
+          description: string
+          goal_id?: string | null
+          icon: string
+          id?: string
+          metadata?: Json | null
+          points_earned?: number | null
+          title: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          achievement_type?: string
+          description?: string
+          goal_id?: string | null
+          icon?: string
+          id?: string
+          metadata?: Json | null
+          points_earned?: number | null
+          title?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      goal_insights: {
+        Row: {
+          acted_upon_at: string | null
+          action_items: string[] | null
+          confidence_score: number | null
+          created_at: string
+          description: string
+          expires_at: string | null
+          goal_id: string | null
+          id: string
+          insight_type: string
+          priority: number | null
+          title: string
+          user_id: string
+          viewed_at: string | null
+        }
+        Insert: {
+          acted_upon_at?: string | null
+          action_items?: string[] | null
+          confidence_score?: number | null
+          created_at?: string
+          description: string
+          expires_at?: string | null
+          goal_id?: string | null
+          id?: string
+          insight_type: string
+          priority?: number | null
+          title: string
+          user_id: string
+          viewed_at?: string | null
+        }
+        Update: {
+          acted_upon_at?: string | null
+          action_items?: string[] | null
+          confidence_score?: number | null
+          created_at?: string
+          description?: string
+          expires_at?: string | null
+          goal_id?: string | null
+          id?: string
+          insight_type?: string
+          priority?: number | null
+          title?: string
+          user_id?: string
+          viewed_at?: string | null
+        }
+        Relationships: []
+      }
       goal_milestones: {
         Row: {
           completed_at: string | null
@@ -1208,63 +1295,213 @@ export type Database = {
           },
         ]
       }
+      goal_progress_history: {
+        Row: {
+          change_amount: number
+          context_data: Json | null
+          created_at: string
+          goal_id: string
+          id: string
+          mood_rating: number | null
+          new_value: number
+          notes: string | null
+          previous_value: number
+          progress_type: string
+        }
+        Insert: {
+          change_amount: number
+          context_data?: Json | null
+          created_at?: string
+          goal_id: string
+          id?: string
+          mood_rating?: number | null
+          new_value: number
+          notes?: string | null
+          previous_value: number
+          progress_type?: string
+        }
+        Update: {
+          change_amount?: number
+          context_data?: Json | null
+          created_at?: string
+          goal_id?: string
+          id?: string
+          mood_rating?: number | null
+          new_value?: number
+          notes?: string | null
+          previous_value?: number
+          progress_type?: string
+        }
+        Relationships: []
+      }
+      goal_sharing: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          goal_id: string
+          id: string
+          is_active: boolean | null
+          permission_level: string
+          shared_by: string
+          shared_with: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          goal_id: string
+          id?: string
+          is_active?: boolean | null
+          permission_level?: string
+          shared_by: string
+          shared_with: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          goal_id?: string
+          id?: string
+          is_active?: boolean | null
+          permission_level?: string
+          shared_by?: string
+          shared_with?: string
+        }
+        Relationships: []
+      }
+      goal_templates: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          difficulty_level: string
+          estimated_duration_days: number | null
+          icon: string | null
+          id: string
+          is_featured: boolean | null
+          name: string
+          success_rate: number | null
+          tags: string[] | null
+          target_value: number
+          unit: string
+          updated_at: string
+          usage_count: number | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          difficulty_level?: string
+          estimated_duration_days?: number | null
+          icon?: string | null
+          id?: string
+          is_featured?: boolean | null
+          name: string
+          success_rate?: number | null
+          tags?: string[] | null
+          target_value?: number
+          unit?: string
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          difficulty_level?: string
+          estimated_duration_days?: number | null
+          icon?: string | null
+          id?: string
+          is_featured?: boolean | null
+          name?: string
+          success_rate?: number | null
+          tags?: string[] | null
+          target_value?: number
+          unit?: string
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Relationships: []
+      }
       goals: {
         Row: {
+          best_streak: number | null
           category: string
           created_at: string
           current_progress: number
           description: string | null
+          difficulty_level: string | null
           id: string
           is_completed: boolean
+          last_progress_date: string | null
+          motivation_level: number | null
           notes: string | null
+          parent_goal_id: string | null
           priority: string
           start_date: string
+          streak_count: number | null
           tags: string[] | null
           target_date: string
           target_value: number
+          template_id: string | null
           title: string
           type: string
           unit: string
           updated_at: string
           user_id: string
+          visibility: string | null
         }
         Insert: {
+          best_streak?: number | null
           category: string
           created_at?: string
           current_progress?: number
           description?: string | null
+          difficulty_level?: string | null
           id?: string
           is_completed?: boolean
+          last_progress_date?: string | null
+          motivation_level?: number | null
           notes?: string | null
+          parent_goal_id?: string | null
           priority?: string
           start_date?: string
+          streak_count?: number | null
           tags?: string[] | null
           target_date: string
           target_value?: number
+          template_id?: string | null
           title: string
           type: string
           unit?: string
           updated_at?: string
           user_id: string
+          visibility?: string | null
         }
         Update: {
+          best_streak?: number | null
           category?: string
           created_at?: string
           current_progress?: number
           description?: string | null
+          difficulty_level?: string | null
           id?: string
           is_completed?: boolean
+          last_progress_date?: string | null
+          motivation_level?: number | null
           notes?: string | null
+          parent_goal_id?: string | null
           priority?: string
           start_date?: string
+          streak_count?: number | null
           tags?: string[] | null
           target_date?: string
           target_value?: number
+          template_id?: string | null
           title?: string
           type?: string
           unit?: string
           updated_at?: string
           user_id?: string
+          visibility?: string | null
         }
         Relationships: []
       }
@@ -3736,6 +3973,10 @@ export type Database = {
       is_admin: {
         Args: { _user_id: string }
         Returns: boolean
+      }
+      update_goal_streak: {
+        Args: { goal_id_param: string }
+        Returns: undefined
       }
     }
     Enums: {
