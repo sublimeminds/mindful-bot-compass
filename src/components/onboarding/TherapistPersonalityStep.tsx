@@ -94,73 +94,49 @@ const therapistPersonalities: TherapistPersonality[] = [
 ];
 
 interface TherapistPersonalityStepProps {
-  onNext: (data?: any) => void;
+  selectedPersonality: string | null;
+  selectedGoals: string[];
+  selectedPreferences: string[];
+  onPersonalitySelect: (personalityId: string) => void;
+  onNext: () => void;
   onBack: () => void;
-  onboardingData?: any;
 }
 
 const TherapistPersonalityStep = ({ 
+  selectedPersonality, 
+  selectedGoals,
+  selectedPreferences,
+  onPersonalitySelect, 
   onNext, 
-  onBack,
-  onboardingData
+  onBack 
 }: TherapistPersonalityStepProps) => {
-  const [selectedPersonality, setSelectedPersonality] = useState<string | null>(null);
-  
-  // Safely extract arrays with default values
-  const selectedGoals = onboardingData?.goals || onboardingData?.selectedGoals || [];
-  const selectedPreferences = onboardingData?.preferences || onboardingData?.selectedPreferences || [];
-
   const getMatchScore = (therapist: TherapistPersonality) => {
     let score = 0;
-    
-    // Ensure arrays exist before using array methods
-    if (Array.isArray(selectedGoals) && selectedGoals.length > 0) {
-      const goalMatches = therapist.matchingGoals.filter(goal => 
-        selectedGoals.some(selected => 
-          typeof selected === 'string' && selected.toLowerCase().includes(goal)
-        )
-      ).length;
-      score += goalMatches;
-    }
-    
-    if (Array.isArray(selectedPreferences) && selectedPreferences.length > 0) {
-      const prefMatches = therapist.matchingPreferences.filter(pref => 
-        selectedPreferences.some(selected => 
-          typeof selected === 'string' && selected.toLowerCase().includes(pref)
-        )
-      ).length;
-      score += prefMatches;
-    }
-    
-    return score;
+    const goalMatches = therapist.matchingGoals.filter(goal => 
+      selectedGoals.some(selected => selected.toLowerCase().includes(goal))
+    ).length;
+    const prefMatches = therapist.matchingPreferences.filter(pref => 
+      selectedPreferences.some(selected => selected.toLowerCase().includes(pref))
+    ).length;
+    return goalMatches + prefMatches;
   };
 
   const sortedTherapists = [...therapistPersonalities].sort((a, b) => getMatchScore(b) - getMatchScore(a));
   const bestMatch = sortedTherapists[0];
 
-  const handleNext = () => {
-    if (selectedPersonality) {
-      const selectedTherapist = therapistPersonalities.find(t => t.id === selectedPersonality);
-      onNext({ 
-        selectedTherapist: selectedTherapist,
-        therapistPersonality: selectedPersonality 
-      });
-    }
-  };
-
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-gray-200">Choose Your AI Therapist</h2>
-        <p className="text-gray-600 dark:text-gray-400">
+        <h2 className="text-2xl font-bold mb-2">Choose Your AI Therapist</h2>
+        <p className="text-muted-foreground">
           We've matched therapists based on your goals and preferences
         </p>
       </div>
 
-      <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800 mb-6">
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
         <div className="flex items-start space-x-2">
-          <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-blue-800 dark:text-blue-200">
+          <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+          <div className="text-sm text-blue-800">
             <p className="font-medium mb-1">Flexible choice:</p>
             <p>You can easily switch to any therapist anytime in your profile settings. Each has a unique approach to help you.</p>
           </div>
@@ -179,10 +155,10 @@ const TherapistPersonalityStep = ({
               key={personality.id}
               className={`cursor-pointer transition-all duration-200 hover:shadow-lg relative ${
                 isSelected 
-                  ? 'ring-2 ring-harmony-500 bg-harmony-50 dark:bg-harmony-900/20' 
-                  : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                  ? 'ring-2 ring-harmony-500 bg-harmony-50' 
+                  : 'hover:bg-gray-50'
               }`}
-              onClick={() => setSelectedPersonality(personality.id)}
+              onClick={() => onPersonalitySelect(personality.id)}
             >
               {isBestMatch && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
@@ -199,8 +175,8 @@ const TherapistPersonalityStep = ({
                     <IconComponent className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <CardTitle className="text-lg text-gray-800 dark:text-gray-200">{personality.name}</CardTitle>
-                    <p className="text-sm text-harmony-600 dark:text-harmony-400 font-medium">
+                    <CardTitle className="text-lg">{personality.name}</CardTitle>
+                    <p className="text-sm text-harmony-600 font-medium">
                       {personality.title}
                     </p>
                   </div>
@@ -208,12 +184,12 @@ const TherapistPersonalityStep = ({
               </CardHeader>
               
               <CardContent className="space-y-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-muted-foreground">
                   {personality.description}
                 </p>
                 
                 <div>
-                  <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <p className="text-xs font-medium text-gray-700 mb-2">
                     Approach: {personality.approach}
                   </p>
                 </div>
@@ -227,8 +203,8 @@ const TherapistPersonalityStep = ({
                 </div>
 
                 {matchScore > 0 && (
-                  <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                    <p className="text-xs text-harmony-600 dark:text-harmony-400 font-medium">
+                  <div className="pt-2 border-t">
+                    <p className="text-xs text-harmony-600 font-medium">
                       ✨ Matches {matchScore} of your preferences
                     </p>
                   </div>
@@ -250,9 +226,9 @@ const TherapistPersonalityStep = ({
           Back
         </Button>
         <Button 
-          onClick={handleNext}
+          onClick={onNext}
           disabled={!selectedPersonality}
-          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600 text-white"
+          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
         >
           Continue with {selectedPersonality ? sortedTherapists.find(t => t.id === selectedPersonality)?.name : 'Therapist'}
         </Button>

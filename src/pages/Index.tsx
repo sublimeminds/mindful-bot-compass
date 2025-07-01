@@ -1,14 +1,16 @@
 
 import React from 'react';
-import { useSafeSEO, SEOHelmet } from '@/hooks/useSafeSEO';
+import { useSafeSEO } from '@/hooks/useSafeSEO';
 import EnhancedHeader from '@/components/navigation/EnhancedHeader';
 import Footer from '@/components/Footer';
 import GradientLogo from '@/components/ui/GradientLogo';
 import GradientButton from '@/components/ui/GradientButton';
+import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
+import ProgressTracker from '@/components/landing/ProgressTracker';
+import EnhancedPricingSection from '@/components/pricing/EnhancedPricingSection';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import { 
   Brain, 
   Heart, 
@@ -135,59 +137,48 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen therapy-gradient-bg">
-      <SEOHelmet
-        title="TherapySync - AI-Powered Mental Health Support"
-        description="Experience personalized AI therapy with voice technology, 24/7 crisis support, and culturally sensitive care. Start your mental health journey today."
-        keywords="AI therapy, mental health, online therapy, voice therapy, crisis support, mental wellness"
-      />
-      
-      <ErrorBoundary>
-        <EnhancedHeader />
-      </ErrorBoundary>
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
+      <EnhancedHeader />
+      <ProgressTracker />
       
       {/* Hero Section */}
       <section id="hero" className="py-20 lg:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 floating-particles opacity-20"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center animate-fade-in">
+        <div className="absolute inset-0 therapy-gradient-bg opacity-10"></div>
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center">
             <div className="flex justify-center mb-8">
-              <ErrorBoundary>
-                <GradientLogo size="xl" className="animate-swirl-breathe" />
-              </ErrorBoundary>
+              <GradientLogo size="xl" className="animate-swirl-breathe" />
             </div>
             
-            <Badge className="mb-6 therapy-gradient-bg text-white px-8 py-3 text-sm font-semibold shadow-lg border-0 animate-scale-in">
+            <Badge className="mb-6 therapy-gradient-bg text-white px-8 py-3 text-sm font-semibold shadow-lg border-0 animate-fade-in">
               <Sparkles className="h-4 w-4 mr-2" />
               AI-Powered Mental Health
               <Heart className="h-4 w-4 ml-2" />
             </Badge>
             
-            <h1 className="text-4xl md:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in">
               <span className="therapy-text-gradient-animated">
                 Your AI Therapy Companion
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-therapy-600 max-w-4xl mx-auto mb-8 leading-relaxed">
+            <p className="text-xl md:text-2xl text-slate-600 max-w-4xl mx-auto mb-8 leading-relaxed animate-fade-in">
               Experience personalized mental health support with advanced AI therapy, 
               voice technology, and 24/7 crisis support. Start your healing journey today.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <ErrorBoundary>
-                <GradientButton 
-                  size="lg" 
-                  className="px-8 py-4 text-lg font-bold animate-pulse-glow"
-                  onClick={() => navigate('/onboarding')}
-                >
-                  <Heart className="h-5 w-5 mr-2" />
-                  Start Free Trial
-                </GradientButton>
-              </ErrorBoundary>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-in">
+              <GradientButton 
+                size="lg" 
+                className="px-8 py-4 text-lg font-bold"
+                onClick={() => navigate('/onboarding')}
+              >
+                <Heart className="h-5 w-5 mr-2" />
+                Start Free Trial
+              </GradientButton>
               <Button 
                 size="lg" 
-                className="bg-white border-2 border-therapy-300 text-therapy-700 hover:bg-therapy-50 hover:border-therapy-400 px-8 py-4 text-lg font-bold transition-all duration-300 hover:scale-105"
+                className="bg-white border-2 border-therapy-300 text-therapy-700 hover:bg-therapy-50 hover:border-therapy-400 px-8 py-4 text-lg font-bold transition-all duration-300"
                 onClick={scrollToDemo}
               >
                 <MessageSquare className="h-5 w-5 mr-2" />
@@ -203,11 +194,11 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center animate-scale-in">
-                <div className="text-3xl md:text-4xl font-bold therapy-text-gradient mb-2">
+              <div key={index} className="text-center">
+                <div className="text-3xl md:text-4xl font-bold therapy-text-gradient mb-2 animate-scale-in">
                   {stat.number}
                 </div>
-                <div className="text-therapy-600 font-medium">{stat.label}</div>
+                <div className="text-slate-600 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -217,13 +208,13 @@ const Index = () => {
       {/* Features Section */}
       <section id="features" className="py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 animate-fade-in">
+          <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
               <span className="therapy-text-gradient">
                 Advanced Mental Health Features
               </span>
             </h2>
-            <p className="text-xl text-therapy-600 max-w-3xl mx-auto">
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
               Discover the comprehensive features designed to support your mental health journey with cutting-edge technology.
             </p>
           </div>
@@ -232,19 +223,17 @@ const Index = () => {
             {features.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
-                <ErrorBoundary key={index}>
-                  <Card className="overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 therapy-card animate-fade-in group">
-                    <CardHeader>
-                      <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mb-4 shadow-lg transition-transform duration-300 group-hover:scale-110`}>
-                        <IconComponent className="h-8 w-8 text-white" />
-                      </div>
-                      <CardTitle className="text-2xl font-bold text-therapy-800">{feature.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-therapy-600 text-lg leading-relaxed">{feature.description}</p>
-                    </CardContent>
-                  </Card>
-                </ErrorBoundary>
+                <Card key={index} className="overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl group">
+                  <CardHeader>
+                    <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mb-4 shadow-lg transition-transform duration-300 group-hover:scale-110`}>
+                      <IconComponent className="h-8 w-8 text-white" />
+                    </div>
+                    <CardTitle className="text-2xl font-bold text-slate-800">{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-slate-600 text-lg leading-relaxed">{feature.description}</p>
+                  </CardContent>
+                </Card>
               );
             })}
           </div>
@@ -254,53 +243,25 @@ const Index = () => {
       {/* Demo Section */}
       <section id="demo" className="py-20 bg-gradient-to-r from-therapy-50/50 to-calm-50/50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 animate-fade-in">
+          <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               <span className="therapy-text-gradient">
                 Experience AI Therapy
               </span>
             </h2>
-            <p className="text-xl text-therapy-600 max-w-3xl mx-auto">
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
               See how our AI therapist provides personalized, empathetic support through natural conversations.
             </p>
           </div>
           
-          <ErrorBoundary fallback={
-            <div className="bg-white rounded-2xl p-8 shadow-xl max-w-4xl mx-auto">
-              <div className="text-center">
-                <MessageSquare className="h-16 w-16 text-therapy-500 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Interactive Demo</h3>
-                <p className="text-therapy-600">Try our AI therapy assistant to see how it works!</p>
-                <Button 
-                  className="mt-4 therapy-button"
-                  onClick={() => navigate('/therapy-chat')}
-                >
-                  Start Chat Demo
-                </Button>
-              </div>
-            </div>
-          }>
-            <div className="bg-white rounded-2xl p-8 shadow-xl max-w-4xl mx-auto animate-scale-in">
-              <div className="text-center">
-                <MessageSquare className="h-16 w-16 text-therapy-500 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Interactive Demo</h3>
-                <p className="text-therapy-600 mb-4">Try our AI therapy assistant to see how it works!</p>
-                <Button 
-                  className="therapy-button"
-                  onClick={() => navigate('/therapy-chat')}
-                >
-                  Start Chat Demo
-                </Button>
-              </div>
-            </div>
-          </ErrorBoundary>
+          <InteractiveChatDemo />
         </div>
       </section>
 
       {/* Additional Features */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 animate-fade-in">
+          <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               <span className="therapy-text-gradient">
                 Why Choose TherapySync?
@@ -312,20 +273,18 @@ const Index = () => {
             {additionalFeatures.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
-                <ErrorBoundary key={index}>
-                  <Card className="text-center hover:shadow-xl transition-all duration-300 hover:scale-105 therapy-card animate-fade-in">
-                    <CardContent className="p-8">
-                      <div className="w-16 h-16 therapy-gradient-bg rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <IconComponent className="h-8 w-8 text-white" />
-                      </div>
-                      <h3 className="text-xl font-bold mb-4 text-therapy-800">{feature.title}</h3>
-                      <p className="text-therapy-600 mb-4">{feature.description}</p>
-                      <Badge variant="outline" className="bg-therapy-50 text-therapy-700 border-therapy-200">
-                        {feature.stats}
-                      </Badge>
-                    </CardContent>
-                  </Card>
-                </ErrorBoundary>
+                <Card key={index} className="text-center hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-lg">
+                  <CardContent className="p-8">
+                    <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <IconComponent className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-4">{feature.title}</h3>
+                    <p className="text-slate-600 mb-4">{feature.description}</p>
+                    <Badge variant="outline" className="bg-therapy-50 text-therapy-700 border-therapy-200">
+                      {feature.stats}
+                    </Badge>
+                  </CardContent>
+                </Card>
               );
             })}
           </div>
@@ -335,48 +294,49 @@ const Index = () => {
       {/* Testimonials Section */}
       <section id="testimonials" className="py-20 bg-gradient-to-r from-therapy-50/50 to-calm-50/50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 animate-fade-in">
+          <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               <span className="therapy-text-gradient">
                 What Our Users Say
               </span>
             </h2>
-            <p className="text-xl text-therapy-600">
+            <p className="text-xl text-slate-600">
               Join thousands who have transformed their mental health with TherapySync
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {testimonials.map((testimonial, index) => (
-              <ErrorBoundary key={index}>
-                <Card className="text-center hover:shadow-xl transition-all duration-300 hover:scale-105 therapy-card animate-fade-in">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 therapy-gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-white font-semibold">{testimonial.avatar}</span>
-                    </div>
-                    <div className="flex justify-center mb-4">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="h-5 w-5 text-therapy-500 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-therapy-600 mb-4 italic">"{testimonial.text}"</p>
-                    <div>
-                      <div className="font-semibold text-therapy-800">{testimonial.name}</div>
-                      <div className="text-sm text-therapy-500">{testimonial.role}</div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </ErrorBoundary>
+              <Card key={index} className="text-center hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-lg">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-white font-semibold">{testimonial.avatar}</span>
+                  </div>
+                  <div className="flex justify-center mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 text-therapy-500 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-slate-600 mb-4 italic">"{testimonial.text}"</p>
+                  <div>
+                    <div className="font-semibold text-slate-800">{testimonial.name}</div>
+                    <div className="text-sm text-slate-500">{testimonial.role}</div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <EnhancedPricingSection />
+
       {/* CTA Section */}
       <section id="cta" className="py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center animate-fade-in">
-            <Card className="therapy-gradient-bg text-white p-12 shadow-2xl border-0 animate-pulse-glow">
+          <div className="text-center">
+            <Card className="therapy-gradient-bg text-white p-12 shadow-2xl border-0">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 Ready to Transform Your Mental Health?
               </h2>
@@ -406,9 +366,7 @@ const Index = () => {
         </div>
       </section>
 
-      <ErrorBoundary>
-        <Footer />
-      </ErrorBoundary>
+      <Footer />
     </div>
   );
 };

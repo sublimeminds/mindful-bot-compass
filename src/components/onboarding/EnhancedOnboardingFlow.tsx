@@ -217,60 +217,49 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
   const progressPercentage = ((currentVisibleStepIndex + 1) / visibleSteps.length) * 100;
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Enhanced animated gradient background */}
-      <div className="absolute inset-0 gradient-animated"></div>
-      <div className="absolute inset-0 bg-gradient-to-br from-harmony-50/80 via-flow-50/60 to-balance-50/80 dark:from-harmony-950/80 dark:via-flow-950/60 dark:to-balance-950/80"></div>
-      
-      {/* Floating background elements */}
-      <div className="absolute top-20 left-20 w-64 h-64 bg-harmony-200/20 dark:bg-harmony-800/20 rounded-full animate-float opacity-60" />
-      <div className="absolute bottom-20 right-20 w-96 h-96 bg-flow-200/20 dark:bg-flow-800/20 rounded-full animate-float opacity-60" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-10 w-32 h-32 bg-balance-200/20 dark:bg-balance-800/20 rounded-full animate-float opacity-40" style={{ animationDelay: '2s' }} />
-      
-      <div className="relative z-10 p-4 transition-colors duration-300">
-        <div className="max-w-4xl mx-auto">
-          {/* Header with Controls */}
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex items-center space-x-4">
-              <EnhancedLanguageSelector />
-              <CurrencySelector 
-                value={selectedCurrency}
-                onChange={setSelectedCurrency}
-              />
-              <ThemeToggle />
-            </div>
-            {selectedPlan && (
-              <div className="text-sm text-therapy-600 dark:text-therapy-400 font-medium bg-therapy-50/80 dark:bg-therapy-900/80 px-3 py-1 rounded-full backdrop-blur-sm border border-therapy-200/50 dark:border-therapy-700/50">
-                Selected: {selectedPlan.name}
-              </div>
-            )}
+    <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50 dark:from-harmony-950 dark:to-flow-950 p-4 transition-colors duration-300">
+      <div className="max-w-4xl mx-auto">
+        {/* Header with Controls */}
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center space-x-4">
+            <EnhancedLanguageSelector />
+            <CurrencySelector 
+              value={selectedCurrency}
+              onChange={setSelectedCurrency}
+            />
+            <ThemeToggle />
           </div>
+          {selectedPlan && (
+            <div className="text-sm text-therapy-600 font-medium bg-therapy-50 px-3 py-1 rounded-full">
+              Selected: {selectedPlan.name}
+            </div>
+          )}
+        </div>
 
-          {/* Progress Indicator */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h1 className="text-lg font-semibold gradient-text">{t('onboarding.title')}</h1>
-              <span className="text-sm text-muted-foreground bg-white/50 dark:bg-gray-900/50 px-2 py-1 rounded-full backdrop-blur-sm">
-                Step {currentVisibleStepIndex + 1} of {visibleSteps.length}
-              </span>
-            </div>
-            <div className="w-full bg-gray-200/50 dark:bg-gray-700/50 rounded-full h-3 backdrop-blur-sm border border-white/20 dark:border-gray-600/20">
-              <div 
-                className="gradient-primary h-3 rounded-full transition-all duration-500 ease-out animate-shimmer shadow-lg"
-                style={{ width: `${progressPercentage}%` }}
-              />
-            </div>
-            <p className="text-center text-sm font-medium gradient-text mt-2">
-              {typeof currentStepConfig.titleKey === 'string' && currentStepConfig.titleKey.startsWith('onboarding.') 
-                ? t(currentStepConfig.titleKey) 
-                : currentStepConfig.titleKey}
-            </p>
+        {/* Progress Indicator */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-lg font-semibold text-harmony-600 dark:text-harmony-400">{t('onboarding.title')}</h1>
+            <span className="text-sm text-muted-foreground">
+              Step {currentVisibleStepIndex + 1} of {visibleSteps.length}
+            </span>
           </div>
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div 
+              className="bg-gradient-to-r from-harmony-500 to-flow-500 h-2 rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+          <p className="text-center text-sm font-medium text-harmony-600 dark:text-harmony-400 mt-2">
+            {typeof currentStepConfig.titleKey === 'string' && currentStepConfig.titleKey.startsWith('onboarding.') 
+              ? t(currentStepConfig.titleKey) 
+              : currentStepConfig.titleKey}
+          </p>
+        </div>
 
-          {/* Step Content */}
-          <div className="animate-fade-in">
-            <CurrentStepComponent {...getStepProps()} />
-          </div>
+        {/* Step Content */}
+        <div className="animate-fade-in">
+          <CurrentStepComponent {...getStepProps()} />
         </div>
       </div>
     </div>
