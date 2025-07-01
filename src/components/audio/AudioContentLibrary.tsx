@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,7 @@ import {
   Shuffle, Repeat, SkipBack, SkipForward, Volume, List
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import audioContentService, { AudioContent, AudioPlaylist } from '@/services/audioContentService';
+import { audioContentService, AudioContent, AudioPlaylist } from '@/services/audioContentService';
 
 interface AudioContentLibraryProps {
   userId?: string;
@@ -48,8 +47,9 @@ const AudioContentLibrary: React.FC<AudioContentLibraryProps> = ({
     filterContent();
   }, [content, searchQuery, selectedCategory, selectedDifficulty, activeTab]);
 
-  const loadContent = () => {
-    setContent(audioContentService.getContentByCategory('all'));
+  const loadContent = async () => {
+    const audioContent = await audioContentService.getAudioContent();
+    setContent(audioContent);
   };
 
   const loadPlaylists = () => {

@@ -1,16 +1,19 @@
 
-interface AudioContent {
+export interface AudioContent {
   id: string;
   title: string;
   description: string;
-  duration: number;
+  duration: string;
   category: string;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   audioUrl?: string;
   script?: string;
+  tier?: 'free' | 'premium' | 'pro';
+  voiceName: string;
+  tags: string[];
 }
 
-interface GuidedTechnique {
+export interface GuidedTechnique {
   id: string;
   name: string;
   description: string;
@@ -20,34 +23,75 @@ interface GuidedTechnique {
   audioScript?: string;
 }
 
+export interface AudioPlaylist {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  audioContent: AudioContent[];
+  totalDuration: string;
+  isPersonalized?: boolean;
+}
+
 class AudioContentServiceClass {
   private audioContent: AudioContent[] = [
     {
       id: '1',
       title: 'Deep Breathing Exercise',
       description: 'A calming breathing technique to reduce anxiety',
-      duration: 300, // 5 minutes
-      category: 'Breathing',
+      duration: '5 min',
+      category: 'meditation',
       difficulty: 'beginner',
+      tier: 'free',
+      voiceName: 'Dr. Sarah Chen',
+      tags: ['breathing', 'anxiety', 'relaxation'],
       script: 'Find a comfortable position and close your eyes. Take a slow, deep breath in through your nose for 4 counts...'
     },
     {
       id: '2',
       title: 'Progressive Muscle Relaxation',
       description: 'Systematic relaxation of muscle groups',
-      duration: 600, // 10 minutes
-      category: 'Relaxation',
+      duration: '10 min',
+      category: 'technique',
       difficulty: 'intermediate',
+      tier: 'premium',
+      voiceName: 'Dr. Michael Thompson',
+      tags: ['relaxation', 'muscle', 'stress'],
       script: 'Start by tensing the muscles in your toes for 5 seconds, then release...'
     },
     {
       id: '3',
       title: 'Mindfulness Meditation',
       description: 'Present moment awareness practice',
-      duration: 720, // 12 minutes
-      category: 'Mindfulness',
+      duration: '12 min',
+      category: 'meditation',
       difficulty: 'beginner',
+      tier: 'free',
+      voiceName: 'Dr. Elena Rodriguez',
+      tags: ['mindfulness', 'awareness', 'meditation'],
       script: 'Sit comfortably and focus on your breath. Notice each inhale and exhale...'
+    },
+    {
+      id: '4',
+      title: 'Sleep Stories - Forest Journey',
+      description: 'A peaceful journey through an enchanted forest',
+      duration: '25 min',
+      category: 'sleep',
+      difficulty: 'beginner',
+      tier: 'premium',
+      voiceName: 'Dr. Sarah Chen',
+      tags: ['sleep', 'story', 'relaxation']
+    },
+    {
+      id: '5',
+      title: 'Anxiety Management Podcast',
+      description: 'Expert insights on managing daily anxiety',
+      duration: '18 min',
+      category: 'podcast',
+      difficulty: 'intermediate',
+      tier: 'pro',
+      voiceName: 'Dr. Michael Thompson',
+      tags: ['anxiety', 'education', 'coping']
     }
   ];
 
@@ -88,8 +132,19 @@ class AudioContentServiceClass {
     }
   ];
 
+  private playlists: AudioPlaylist[] = [
+    {
+      id: 'daily-meditation',
+      name: 'Daily Meditation Pack',
+      description: 'Essential meditations for daily practice',
+      category: 'meditation',
+      audioContent: [],
+      totalDuration: '45 min',
+      isPersonalized: false
+    }
+  ];
+
   async getAudioContent(): Promise<AudioContent[]> {
-    // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
     return this.audioContent;
   }
@@ -109,23 +164,34 @@ class AudioContentServiceClass {
     return technique || null;
   }
 
-  async getContentByCategory(category: string): Promise<AudioContent[]> {
+  getContentByCategory(category: string): AudioContent[] {
+    if (category === 'all') return this.audioContent;
     return this.audioContent.filter(item => item.category === category);
   }
 
-  async searchContent(query: string): Promise<AudioContent[]> {
+  getContentByTier(tier: string): AudioContent[] {
+    if (tier === 'pro') return this.audioContent;
+    if (tier === 'premium') return this.audioContent.filter(item => item.tier !== 'pro');
+    return this.audioContent.filter(item => item.tier === 'free');
+  }
+
+  searchContent(query: string): AudioContent[] {
     const lowercaseQuery = query.toLowerCase();
     return this.audioContent.filter(item => 
       item.title.toLowerCase().includes(lowercaseQuery) ||
       item.description.toLowerCase().includes(lowercaseQuery) ||
-      item.category.toLowerCase().includes(lowercaseQuery)
+      item.category.toLowerCase().includes(lowercaseQuery) ||
+      item.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
     );
+  }
+
+  getAllPlaylists(): AudioPlaylist[] {
+    return this.playlists;
   }
 
   async playAudioContent(contentId: string): Promise<void> {
     const content = await this.getContentById(contentId);
     if (content && content.script) {
-      // Use voice service to play the script
       const { enhancedVoiceService } = await import('./voiceService');
       await enhancedVoiceService.playText(content.script);
     }
@@ -138,6 +204,20 @@ class AudioContentServiceClass {
       await enhancedVoiceService.playText(technique.audioScript);
     }
   }
+
+  async generateAudioContent(content: AudioContent): Promise<void> {
+    // Simulate audio generation
+    console.log('Generating audio for:', content.title);
+  }
+
+  hasApiKey(): boolean {
+    return true; // Simplified for demo
+  }
+
+  setApiKey(key: string): void {
+    console.log('API key set:', key);
+  }
 }
 
 export const audioContentService = new AudioContentServiceClass();
+export default audioContentService;

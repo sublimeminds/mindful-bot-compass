@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import type { User as UserType } from '@/types/user';
-import audioContentService, { AudioContent } from '@/services/audioContentService';
+import { audioContentService, AudioContent } from '@/services/audioContentService';
 import AudioPlayer from './AudioPlayer';
 import PremiumAudioShowcase from '../dashboard/PremiumAudioShowcase';
 
@@ -46,12 +46,16 @@ const EnhancedAudioLibrary: React.FC<EnhancedAudioLibraryProps> = ({ userId }) =
   ];
 
   useEffect(() => {
-    // Load content based on user tier
-    const content = audioContentService.getContentByTier(userPlan);
-    setPlaylist(content);
+    loadContent();
+  }, [userPlan, selectedCategory, searchTerm]);
+
+  const loadContent = async () => {
+    const content = await audioContentService.getAudioContent();
+    const tierContent = audioContentService.getContentByTier(userPlan);
+    setPlaylist(tierContent);
     
     // Apply filters
-    let filtered = content;
+    let filtered = tierContent;
     
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(item => item.category === selectedCategory);
@@ -59,12 +63,12 @@ const EnhancedAudioLibrary: React.FC<EnhancedAudioLibraryProps> = ({ userId }) =
     
     if (searchTerm) {
       filtered = audioContentService.searchContent(searchTerm).filter(item => 
-        audioContentService.getContentByTier(userPlan).includes(item)
+        tierContent.includes(item)
       );
     }
     
     setFilteredContent(filtered);
-  }, [userPlan, selectedCategory, searchTerm]);
+  };
 
   const handlePlayPause = async () => {
     if (!currentTrack) return;
