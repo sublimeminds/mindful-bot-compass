@@ -16,6 +16,7 @@ import NotificationPreferencesStep from './NotificationPreferencesStep';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import CurrencySelector from '@/components/ui/CurrencySelector';
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import EnhancedButton from '@/components/ui/EnhancedButton';
 import { useSEO } from '@/hooks/useSEO';
 
 interface EnhancedOnboardingFlowProps {
@@ -217,9 +218,9 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
   const progressPercentage = ((currentVisibleStepIndex + 1) / visibleSteps.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50 dark:from-harmony-950 dark:to-flow-950 p-4 transition-colors duration-300">
-      <div className="max-w-4xl mx-auto">
-        {/* Header with Controls */}
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50 transition-colors duration-300">
+      <div className="max-w-4xl mx-auto p-4">
+        {/* Header with Controls - Enhanced Design */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-4">
             <EnhancedLanguageSelector />
@@ -230,36 +231,42 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
             <ThemeToggle />
           </div>
           {selectedPlan && (
-            <div className="text-sm text-therapy-600 font-medium bg-therapy-50 px-3 py-1 rounded-full">
+            <div className="text-sm text-white font-medium bg-gradient-to-r from-therapy-500 to-calm-500 px-4 py-2 rounded-full shadow-lg">
               Selected: {selectedPlan.name}
             </div>
           )}
         </div>
 
-        {/* Progress Indicator */}
+        {/* Enhanced Progress Indicator */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-lg font-semibold text-harmony-600 dark:text-harmony-400">{t('onboarding.title')}</h1>
-            <span className="text-sm text-muted-foreground">
+            <h1 className="text-2xl font-bold therapy-text-gradient-animated">
+              {t('onboarding.title')}
+            </h1>
+            <span className="text-sm text-muted-foreground bg-therapy-50 px-3 py-1 rounded-full">
               Step {currentVisibleStepIndex + 1} of {visibleSteps.length}
             </span>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 shadow-inner">
             <div 
-              className="bg-gradient-to-r from-harmony-500 to-flow-500 h-2 rounded-full transition-all duration-500 ease-out"
+              className="bg-gradient-to-r from-therapy-500 via-calm-500 to-harmony-500 h-3 rounded-full transition-all duration-700 ease-out shadow-lg"
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
-          <p className="text-center text-sm font-medium text-harmony-600 dark:text-harmony-400 mt-2">
+          
+          <p className="text-center text-lg font-semibold therapy-text-gradient mt-3">
             {typeof currentStepConfig.titleKey === 'string' && currentStepConfig.titleKey.startsWith('onboarding.') 
               ? t(currentStepConfig.titleKey) 
               : currentStepConfig.titleKey}
           </p>
         </div>
 
-        {/* Step Content */}
+        {/* Step Content with Enhanced Styling */}
         <div className="animate-fade-in">
-          <CurrentStepComponent {...getStepProps()} />
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-therapy-100 p-8">
+            <CurrentStepComponent {...getStepProps()} />
+          </div>
         </div>
       </div>
     </div>

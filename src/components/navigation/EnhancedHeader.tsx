@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -40,9 +39,11 @@ import {
   LifeBuoy
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import GradientButton from '@/components/ui/GradientButton';
 import GradientLogo from '@/components/ui/GradientLogo';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
+import EnhancedUserMenu from './EnhancedUserMenu';
+import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
+import EnhancedButton from '@/components/ui/EnhancedButton';
 
 const EnhancedHeader = () => {
   const { user } = useAuth();
@@ -352,32 +353,25 @@ const EnhancedHeader = () => {
 
             {user ? (
               <div className="flex items-center space-x-3">
-                <Button 
-                  variant="ghost" 
-                  onClick={() => navigate('/dashboard')}
-                  className="hover:bg-therapy-50"
-                >
-                  Dashboard
-                </Button>
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500 flex items-center justify-center">
-                  <span className="text-white text-sm font-semibold">
-                    {user.email?.charAt(0).toUpperCase()}
-                  </span>
-                </div>
+                {/* Notification Center */}
+                <EnhancedNotificationCenter />
+                
+                {/* Enhanced User Menu */}
+                <EnhancedUserMenu />
               </div>
             ) : (
               <div className="flex items-center space-x-3">
                 <Button 
                   variant="ghost" 
                   onClick={() => navigate('/auth')}
-                  className="hover:bg-therapy-50"
+                  className="hover:bg-therapy-50 transition-all duration-200"
                 >
                   Sign In
                 </Button>
-                <GradientButton onClick={() => navigate('/auth')}>
+                <EnhancedButton onClick={() => navigate('/auth')}>
                   <Sparkles className="h-4 w-4 mr-2" />
                   Get Started
-                </GradientButton>
+                </EnhancedButton>
               </div>
             )}
           </div>
