@@ -1,20 +1,20 @@
 
-interface TherapyResponse {
+export interface TherapyResponse {
   message: string;
   emotion?: string;
+  techniques?: string[];
+  insights?: string[];
 }
 
-interface ChatMessage {
+export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
 }
 
-class OpenAIService {
+class OpenAIServiceClass {
   private apiKey: string | null = null;
 
   constructor() {
-    // In a real implementation, this would come from environment variables
-    // For now, we'll simulate responses
     this.apiKey = 'demo-key';
   }
 
@@ -26,34 +26,43 @@ class OpenAIService {
   ): Promise<TherapyResponse> {
     console.log('Sending therapy message:', userMessage);
     
-    // Simulate AI processing time
     await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
 
-    // Generate a contextual response based on the user's message
     const response = this.generateTherapyResponse(userMessage, therapist);
     
     return {
       message: response.message,
-      emotion: response.emotion
+      emotion: response.emotion,
+      techniques: response.techniques || [],
+      insights: response.insights || []
     };
   }
 
   private generateTherapyResponse(userMessage: string, therapist?: any): TherapyResponse {
     const lowerMessage = userMessage.toLowerCase();
     
-    // Detect emotional content
     let emotion = 'neutral';
+    let techniques: string[] = [];
+    let insights: string[] = [];
+
     if (lowerMessage.includes('sad') || lowerMessage.includes('depressed') || lowerMessage.includes('down')) {
       emotion = 'empathetic';
+      techniques = ['Active Listening', 'Cognitive Restructuring'];
+      insights = ['Recognizing emotional patterns'];
     } else if (lowerMessage.includes('angry') || lowerMessage.includes('frustrated') || lowerMessage.includes('mad')) {
       emotion = 'calming';
+      techniques = ['Breathing Exercises', 'Mindfulness'];
+      insights = ['Managing anger responses'];
     } else if (lowerMessage.includes('anxious') || lowerMessage.includes('worried') || lowerMessage.includes('nervous')) {
       emotion = 'reassuring';
+      techniques = ['Grounding Techniques', 'Progressive Relaxation'];
+      insights = ['Understanding anxiety triggers'];
     } else if (lowerMessage.includes('happy') || lowerMessage.includes('good') || lowerMessage.includes('great')) {
       emotion = 'encouraging';
+      techniques = ['Positive Reinforcement', 'Gratitude Practice'];
+      insights = ['Building on positive experiences'];
     }
 
-    // Generate contextual responses
     const responses = {
       empathetic: [
         "I can hear that you're going through a difficult time. It's completely normal to feel this way, and I want you to know that your feelings are valid.",
@@ -87,7 +96,9 @@ class OpenAIService {
 
     return {
       message: randomResponse,
-      emotion
+      emotion,
+      techniques,
+      insights
     };
   }
 
@@ -96,4 +107,4 @@ class OpenAIService {
   }
 }
 
-export const OpenAIService = new OpenAIService();
+export const OpenAIService = new OpenAIServiceClass();

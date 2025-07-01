@@ -10,12 +10,12 @@ class EnhancedVoiceService {
   private voices: Map<string, TherapistVoice> = new Map();
   private synthesis: SpeechSynthesis;
   private isSupported: boolean;
+  private apiKey: string | null = null;
 
   constructor() {
     this.synthesis = window.speechSynthesis;
     this.isSupported = 'speechSynthesis' in window;
     
-    // Initialize therapist voices
     this.initializeTherapistVoices();
   }
 
@@ -42,6 +42,39 @@ class EnhancedVoiceService {
     });
   }
 
+  setApiKey(key: string): void {
+    this.apiKey = key;
+  }
+
+  async playText(text: string, voiceId?: string): Promise<void> {
+    if (!this.isSupported) {
+      console.log('Speech synthesis not supported');
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voiceConfig = this.voices.get('dr-sarah-chen')!;
+    
+    utterance.pitch = voiceConfig.pitch;
+    utterance.rate = voiceConfig.rate;
+    utterance.volume = voiceConfig.volume;
+    
+    const availableVoices = this.synthesis.getVoices();
+    const selectedVoice = availableVoices.find(voice => 
+      voice.name.includes('English') && voice.name.includes('US')
+    ) || availableVoices[0];
+    
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+
+    this.synthesis.speak(utterance);
+  }
+
+  async playWithWebSpeech(text: string): Promise<void> {
+    return this.playText(text);
+  }
+
   async playTherapistMessage(
     text: string,
     therapistId: string,
@@ -56,12 +89,10 @@ class EnhancedVoiceService {
     const utterance = new SpeechSynthesisUtterance(text);
     const voiceConfig = this.voices.get(therapistId) || this.voices.get('dr-sarah-chen')!;
     
-    // Adjust voice based on emotion
     utterance.pitch = this.adjustPitchForEmotion(voiceConfig.pitch, emotion);
     utterance.rate = this.adjustRateForEmotion(voiceConfig.rate, emotion, isUrgent);
     utterance.volume = voiceConfig.volume;
     
-    // Try to find the specified voice
     const availableVoices = this.synthesis.getVoices();
     const selectedVoice = availableVoices.find(voice => 
       voice.name.includes('English') && voice.name.includes('US')
@@ -104,19 +135,24 @@ class EnhancedVoiceService {
     }
   }
 
+  stop(): void {
+    if (this.isSupported) {
+      this.synthesis.cancel();
+    }
+  }
+
   getTherapistVoice(therapistId: string): TherapistVoice | undefined {
     return this.voices.get(therapistId);
   }
 
   hasApiKey(): boolean {
-    return this.isSupported;
+    return this.apiKey !== null || this.isSupported;
   }
 
   stopSpeaking(): void {
-    if (this.isSupported) {
-      this.synthesis.cancel();
-    }
+    this.stop();
   }
 }
 
 export const enhancedVoiceService = new EnhancedVoiceService();
+export const voiceService = enhancedVoiceService; // Export alias for compatibility

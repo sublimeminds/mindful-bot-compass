@@ -7,6 +7,9 @@ interface SimpleAppContextType {
   user: User | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  logout: () => Promise<void>; // Added logout alias
+  register: (email: string, password: string) => Promise<{ error: any }>;
+  login: (email: string, password: string) => Promise<{ error: any }>;
 }
 
 const SimpleAppContext = createContext<SimpleAppContextType | undefined>(undefined);
@@ -16,7 +19,6 @@ export const SimpleAppProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
     const getInitialSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
@@ -25,7 +27,6 @@ export const SimpleAppProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     getInitialSession();
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setUser(session?.user ?? null);
@@ -40,8 +41,31 @@ export const SimpleAppProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     await supabase.auth.signOut();
   };
 
+  const register = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({ 
+      email, 
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/dashboard`
+      }
+    });
+    return { error };
+  };
+
+  const login = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    return { error };
+  };
+
   return (
-    <SimpleAppContext.Provider value={{ user, loading, signOut }}>
+    <SimpleAppContext.Provider value={{ 
+      user, 
+      loading, 
+      signOut, 
+      logout: signOut, // Alias for compatibility
+      register,
+      login
+    }}>
       {children}
     </SimpleAppContext.Provider>
   );
