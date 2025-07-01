@@ -39,6 +39,7 @@ const navigation = [
   { name: 'Mood Tracker', href: '/mood-tracker', icon: Heart },
   { name: 'Analytics', href: '/analytics', icon: TrendingUp },
   { name: 'Goals', href: '/goals', icon: Target },
+  { name: 'Community', href: '/community', icon: Users },
 ];
 
 const secondaryNavigation = [
