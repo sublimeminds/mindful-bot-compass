@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -66,7 +65,16 @@ const EnhancedPricingSection = () => {
         .order('price_monthly', { ascending: true });
 
       if (error) throw error;
-      setPlans(data || []);
+      
+      // Transform the data to ensure trial_days is included
+      const transformedPlans = (data || []).map(plan => ({
+        ...plan,
+        trial_days: plan.trial_days || 0, // Default to 0 if not provided
+        features: plan.features as Record<string, string>,
+        limits: plan.limits as Record<string, any>
+      }));
+      
+      setPlans(transformedPlans);
     } catch (error) {
       console.error('Error loading plans:', error);
       toast({

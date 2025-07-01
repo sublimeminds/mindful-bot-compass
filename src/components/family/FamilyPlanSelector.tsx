@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -13,9 +12,10 @@ import { useNavigate } from 'react-router-dom';
 interface FamilyPlanSelectorProps {
   isOpen: boolean;
   onClose: () => void;
+  currentPlan?: string;
 }
 
-const FamilyPlanSelector = ({ isOpen, onClose }: FamilyPlanSelectorProps) => {
+const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelectorProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [memberCount, setMemberCount] = useState(4);
@@ -80,6 +80,11 @@ const FamilyPlanSelector = ({ isOpen, onClose }: FamilyPlanSelectorProps) => {
           <DialogTitle className="text-2xl font-bold text-center therapy-text-gradient">
             Build Your Custom Family Plan
           </DialogTitle>
+          {currentPlan && (
+            <p className="text-center text-gray-600 mt-2">
+              Current plan: <span className="font-semibold">{currentPlan}</span>
+            </p>
+          )}
         </DialogHeader>
 
         <div className="space-y-6">
