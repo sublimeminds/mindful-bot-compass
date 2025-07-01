@@ -40,6 +40,7 @@ const navigation = [
   { name: 'Analytics', href: '/analytics', icon: TrendingUp },
   { name: 'Goals', href: '/goals', icon: Target },
   { name: 'Community', href: '/community', icon: Users },
+  { name: 'Therapy Settings', href: '/therapy-settings', icon: Settings },
 ];
 
 const secondaryNavigation = [

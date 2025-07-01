@@ -24,6 +24,7 @@ import ComprehensiveSettingsPage from '@/pages/ComprehensiveSettingsPage';
 import Analytics from '@/pages/Analytics';
 import MoodDashboard from '@/pages/MoodDashboard';
 import CommunityHub from '@/pages/CommunityHub';
+import TherapySettingsPage from '@/pages/TherapySettingsPage';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -57,6 +58,7 @@ function App() {
                   <Route path="/notifications" element={<NotificationCenterPage />} />
                   <Route path="/analytics" element={<Analytics />} />
                   <Route path="/community" element={<CommunityHub />} />
+                  <Route path="/therapy-settings" element={<TherapySettingsPage />} />
                 </Routes>
                 <NotificationToastHandler />
                 <Toaster />
