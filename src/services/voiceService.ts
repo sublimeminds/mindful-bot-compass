@@ -11,6 +11,7 @@ class EnhancedVoiceService {
   private synthesis: SpeechSynthesis;
   private isSupported: boolean;
   private apiKey: string | null = null;
+  private currentUtterance: SpeechSynthesisUtterance | null = null;
 
   constructor() {
     this.synthesis = window.speechSynthesis;
@@ -68,6 +69,7 @@ class EnhancedVoiceService {
       utterance.voice = selectedVoice;
     }
 
+    this.currentUtterance = utterance;
     this.synthesis.speak(utterance);
   }
 
@@ -102,6 +104,7 @@ class EnhancedVoiceService {
       utterance.voice = selectedVoice;
     }
 
+    this.currentUtterance = utterance;
     this.synthesis.speak(utterance);
   }
 
@@ -138,7 +141,12 @@ class EnhancedVoiceService {
   stop(): void {
     if (this.isSupported) {
       this.synthesis.cancel();
+      this.currentUtterance = null;
     }
+  }
+
+  get isCurrentlyPlaying(): boolean {
+    return this.synthesis.speaking || this.synthesis.pending;
   }
 
   getTherapistVoice(therapistId: string): TherapistVoice | undefined {
@@ -155,4 +163,4 @@ class EnhancedVoiceService {
 }
 
 export const enhancedVoiceService = new EnhancedVoiceService();
-export const voiceService = enhancedVoiceService; // Export alias for compatibility
+export const voiceService = enhancedVoiceService;
