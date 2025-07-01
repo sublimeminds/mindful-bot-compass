@@ -29,25 +29,11 @@ export const useUserStats = () => {
         };
       }
 
-      // For now, we'll return default stats since user_stats table doesn't exist in types yet
-      // This prevents the build error while maintaining the interface
-      console.log('User stats functionality pending database schema update');
-      return {
-        currentStreak: 0,
-        longestStreak: 0,
-        totalSessions: 0,
-        totalMinutes: 0,
-        averageMood: 0,
-        lastSessionDate: null,
-      };
-
-      // This code will be activated once the database types are regenerated:
-      /*
       const { data, error } = await supabase
         .from('user_stats')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {
         console.error('Error fetching user stats:', error);
@@ -73,7 +59,6 @@ export const useUserStats = () => {
         averageMood: data.average_mood || 0,
         lastSessionDate: data.last_session_date,
       };
-      */
     },
     enabled: !!user,
   });

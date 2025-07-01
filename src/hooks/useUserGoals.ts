@@ -24,13 +24,6 @@ export const useUserGoals = () => {
     queryFn: async (): Promise<UserGoal[]> => {
       if (!user) return [];
 
-      // For now, we'll return empty array since user_goals table doesn't exist in types yet
-      // This prevents the build error while maintaining the interface
-      console.log('User goals functionality pending database schema update');
-      return [];
-
-      // This code will be activated once the database types are regenerated:
-      /*
       const { data, error } = await supabase
         .from('user_goals')
         .select('*')
@@ -54,7 +47,6 @@ export const useUserGoals = () => {
         createdAt: goal.created_at,
         updatedAt: goal.updated_at,
       }));
-      */
     },
     enabled: !!user,
   });

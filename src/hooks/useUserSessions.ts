@@ -22,13 +22,6 @@ export const useUserSessions = () => {
     queryFn: async (): Promise<UserSession[]> => {
       if (!user) return [];
 
-      // For now, we'll return empty array since user_sessions table doesn't exist in types yet
-      // This prevents the build error while maintaining the interface
-      console.log('User sessions functionality pending database schema update');
-      return [];
-
-      // This code will be activated once the database types are regenerated:
-      /*
       const { data, error } = await supabase
         .from('user_sessions')
         .select('*')
@@ -50,7 +43,6 @@ export const useUserSessions = () => {
         completed: session.completed,
         createdAt: session.created_at,
       }));
-      */
     },
     enabled: !!user,
   });
