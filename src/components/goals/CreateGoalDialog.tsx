@@ -14,9 +14,10 @@ import { useQueryClient } from '@tanstack/react-query';
 interface CreateGoalDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onGoalCreated?: () => void;
 }
 
-const CreateGoalDialog = ({ open, onOpenChange }: CreateGoalDialogProps) => {
+const CreateGoalDialog = ({ open, onOpenChange, onGoalCreated }: CreateGoalDialogProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -90,6 +91,9 @@ const CreateGoalDialog = ({ open, onOpenChange }: CreateGoalDialogProps) => {
       
       // Invalidate and refetch the goals query
       queryClient.invalidateQueries({ queryKey: ['userGoals'] });
+      
+      // Call the optional callback
+      onGoalCreated?.();
     } catch (error) {
       console.error('Error creating goal:', error);
       toast({

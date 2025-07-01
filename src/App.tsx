@@ -7,6 +7,7 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { EnhancedAuthProvider } from '@/components/EnhancedAuthProvider';
 import { SimpleAppProvider } from '@/hooks/useSimpleApp';
+import NotificationToastHandler from '@/components/NotificationToastHandler';
 import LandingPage from '@/components/LandingPage';
 import EnhancedOnboardingPage from '@/pages/EnhancedOnboardingPage';
 import OnboardingPage from '@/pages/OnboardingPage';
@@ -49,6 +50,7 @@ function App() {
                   <Route path="/mood-tracker" element={<DashboardPage />} />
                   <Route path="/ai-avatar" element={<AIAvatarPage />} />
                 </Routes>
+                <NotificationToastHandler />
                 <Toaster />
                 <Sonner />
               </div>
