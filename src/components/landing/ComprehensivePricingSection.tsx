@@ -5,24 +5,25 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { Check, X, Crown, Zap, Star } from 'lucide-react';
+import { Check, Crown, Zap, Star, Users } from 'lucide-react';
+import { useEnhancedCurrency } from '@/hooks/useEnhancedCurrency';
 import GradientLogo from '@/components/ui/GradientLogo';
+import FamilyPlanSelector from '@/components/family/FamilyPlanSelector';
 
 const ComprehensivePricingSection = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { formatPrice } = useEnhancedCurrency();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  const [showFamilyPlans, setShowFamilyPlans] = useState(false);
 
   const handleGetStarted = (plan: string) => {
-    // Store plan selection for onboarding
     const planSelection = {
       name: plan,
       selectedAt: new Date().toISOString()
     };
     
     localStorage.setItem('selectedPlan', JSON.stringify(planSelection));
-    
-    // Always go to onboarding first
     navigate('/onboarding');
   };
 
@@ -46,7 +47,7 @@ const ComprehensivePricingSection = () => {
       buttonText: 'Get Started Free',
       popular: false,
       gradient: 'from-slate-500 to-slate-600',
-      trialDays: null
+      trialInfo: 'No trial needed'
     },
     {
       id: 'premium',
@@ -69,9 +70,9 @@ const ComprehensivePricingSection = () => {
       ],
       limitations: [],
       buttonText: 'Start Premium',
-      popular: false,
+      popular: true,
       gradient: 'from-therapy-500 to-therapy-600',
-      trialDays: null
+      trialInfo: billingCycle === 'yearly' ? '7-day free trial included' : 'No trial'
     },
     {
       id: 'professional',
@@ -82,7 +83,6 @@ const ComprehensivePricingSection = () => {
       description: 'Advanced features for mental health professionals and coaches',
       features: [
         'Everything in Premium',
-        '7-day free trial included',
         'Client management tools',
         'Advanced analytics dashboard',
         'Custom therapy protocols',
@@ -95,15 +95,16 @@ const ComprehensivePricingSection = () => {
       ],
       limitations: [],
       buttonText: 'Start 7-Day Free Trial',
-      popular: true,
+      popular: false,
       gradient: 'from-harmony-500 to-harmony-600',
-      trialDays: 7
+      trialInfo: '7-day free trial'
     }
   ];
 
   const getPrice = (plan: typeof plans[0]) => {
-    if (plan.monthlyPrice === 0) return '$0';
-    return billingCycle === 'monthly' ? `$${plan.monthlyPrice}` : `$${Math.floor(plan.yearlyPrice / 12)}`;
+    if (plan.monthlyPrice === 0) return formatPrice(0);
+    const price = billingCycle === 'monthly' ? plan.monthlyPrice : Math.floor(plan.yearlyPrice / 12);
+    return formatPrice(price);
   };
 
   const getSavings = (plan: typeof plans[0]) => {
@@ -158,7 +159,7 @@ const ComprehensivePricingSection = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-12">
           {plans.map((plan, index) => {
             const IconComponent = plan.icon;
             const savings = getSavings(plan);
@@ -168,19 +169,13 @@ const ComprehensivePricingSection = () => {
                 key={plan.id} 
                 className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl ${
                   plan.popular 
-                    ? 'ring-4 ring-harmony-400 shadow-harmony-500/30 scale-105 bg-gradient-to-br from-harmony-50 to-balance-50 border-harmony-200' 
+                    ? 'ring-4 ring-therapy-400 shadow-therapy-500/30 scale-105 bg-gradient-to-br from-therapy-50 to-calm-50 border-therapy-200' 
                     : 'hover:shadow-therapy-500/10 bg-white/80 backdrop-blur-sm border-slate-200'
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-500 text-white text-center py-3 text-sm font-bold tracking-wide">
-                    ⭐ MOST POPULAR - START FREE TRIAL ⭐
-                  </div>
-                )}
-                
-                {plan.trialDays && (
-                  <div className="absolute top-2 right-2 bg-gradient-to-r from-harmony-500 to-balance-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                    {plan.trialDays} Days FREE
+                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-therapy-500 via-calm-500 to-therapy-600 text-white text-center py-3 text-sm font-bold tracking-wide">
+                    ⭐ MOST POPULAR ⭐
                   </div>
                 )}
                 
@@ -205,16 +200,20 @@ const ComprehensivePricingSection = () => {
                     )}
                   </div>
                   
-                  <p className={`text-slate-600 ${plan.popular ? 'text-sm' : 'text-sm'}`}>
+                  <p className={`text-slate-600 ${plan.popular ? 'text-sm' : 'text-sm'} mb-2`}>
                     {plan.description}
                   </p>
+
+                  <div className="text-xs text-slate-500 font-medium">
+                    {plan.trialInfo}
+                  </div>
                 </CardHeader>
 
                 <CardContent className="pt-0 px-6 pb-8">
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-start gap-3">
-                        <Check className={`${plan.popular ? 'h-5 w-5 text-harmony-500' : 'h-5 w-5 text-therapy-500'} flex-shrink-0 mt-0.5`} />
+                        <Check className={`${plan.popular ? 'h-5 w-5 text-therapy-500' : 'h-5 w-5 text-therapy-500'} flex-shrink-0 mt-0.5`} />
                         <span className={`text-slate-700 ${plan.popular ? 'text-sm' : 'text-sm'}`}>{feature}</span>
                       </li>
                     ))}
@@ -228,14 +227,13 @@ const ComprehensivePricingSection = () => {
                     ))}
                   </ul>
 
-                  {/* FIXED: Proper contrast for secondary CTA buttons */}
                   <Button 
                     className={`w-full font-semibold text-base py-3 transition-all duration-300 ${
                       plan.popular 
-                        ? 'bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-500 hover:from-harmony-600 hover:via-balance-600 hover:to-flow-600 text-white shadow-lg hover:shadow-xl hover:scale-105 ring-2 ring-harmony-300' 
-                        : plan.id === 'premium'
-                        ? 'bg-gradient-to-r from-therapy-500 via-harmony-500 to-balance-500 hover:from-therapy-600 hover:via-harmony-600 hover:to-balance-600 text-white shadow-lg hover:shadow-lg hover:scale-105'
-                        : 'bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white shadow-md hover:shadow-lg hover:scale-105'
+                        ? 'bg-gradient-to-r from-therapy-500 via-calm-500 to-therapy-600 hover:from-therapy-600 hover:via-calm-600 hover:to-therapy-700 text-white shadow-lg hover:shadow-xl hover:scale-105 ring-2 ring-therapy-300' 
+                        : plan.id === 'professional'
+                        ? 'bg-gradient-to-r from-harmony-500 to-harmony-600 hover:from-harmony-600 hover:to-harmony-700 text-white shadow-lg hover:shadow-lg hover:scale-105'
+                        : 'bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white shadow-md hover:shadow-lg hover:scale-105'
                     }`}
                     onClick={() => handleGetStarted(plan.name)}
                   >
@@ -245,6 +243,28 @@ const ComprehensivePricingSection = () => {
               </Card>
             );
           })}
+        </div>
+
+        {/* Family Plans Section */}
+        <div className="text-center mb-12">
+          <Card className="max-w-2xl mx-auto bg-gradient-to-r from-harmony-50 to-balance-50 border-harmony-200">
+            <CardContent className="p-8">
+              <div className="flex items-center justify-center mb-4">
+                <Users className="h-8 w-8 text-harmony-600 mr-3" />
+                <h3 className="text-2xl font-bold text-harmony-700">Family Plans Available</h3>
+              </div>
+              <p className="text-harmony-600 mb-6">
+                Get comprehensive mental health support for your entire family with custom pricing based on your needs.
+              </p>
+              <Button
+                onClick={() => setShowFamilyPlans(true)}
+                className="bg-gradient-to-r from-harmony-500 to-balance-500 hover:from-harmony-600 hover:to-balance-600 text-white px-8 py-3 font-semibold"
+              >
+                <Users className="h-5 w-5 mr-2" />
+                Customize Family Plan
+              </Button>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="text-center mt-12">
@@ -259,6 +279,11 @@ const ComprehensivePricingSection = () => {
           </div>
         </div>
       </div>
+
+      <FamilyPlanSelector
+        isOpen={showFamilyPlans}
+        onClose={() => setShowFamilyPlans(false)}
+      />
     </section>
   );
 };

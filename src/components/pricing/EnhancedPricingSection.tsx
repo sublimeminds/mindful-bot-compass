@@ -1,55 +1,30 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { Check, Crown, Zap, Star, Users, Plus, Minus, Calculator } from 'lucide-react';
+import { Check, Crown, Zap, Star, Users } from 'lucide-react';
 import { useEnhancedCurrency } from '@/hooks/useEnhancedCurrency';
-import CurrencySelector from '@/components/ui/CurrencySelector';
-import { Separator } from '@/components/ui/separator';
 import GradientLogo from '@/components/ui/GradientLogo';
-
-interface FamilyPlanTier {
-  name: string;
-  basePrice: number;
-  pricePerMember: number;
-  features: string[];
-  icon: React.ComponentType<{ className?: string }>;
-  color: string;
-}
+import FamilyPlanSelector from '@/components/family/FamilyPlanSelector';
 
 const EnhancedPricingSection = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const {
-    currency,
-    supportedCurrencies,
-    loading: currencyLoading,
-    isLoadingRates,
-    changeCurrency,
-    formatPrice
-  } = useEnhancedCurrency();
-  
+  const { formatPrice } = useEnhancedCurrency();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-  const [showFamilyBuilder, setShowFamilyBuilder] = useState(false);
-  const [familyMemberCount, setFamilyMemberCount] = useState(4);
-  const [selectedFamilyTier, setSelectedFamilyTier] = useState<'pro' | 'premium'>('pro');
+  const [showFamilyPlans, setShowFamilyPlans] = useState(false);
 
-  const handleGetStarted = (plan: string, planData?: any) => {
-    // Store plan selection for onboarding
+  const handleGetStarted = (plan: string) => {
     const planSelection = {
       name: plan,
-      data: planData,
-      billingCycle,
       selectedAt: new Date().toISOString()
     };
     
     localStorage.setItem('selectedPlan', JSON.stringify(planSelection));
-    
-    // Always go to onboarding first
     navigate('/onboarding');
   };
 
@@ -73,10 +48,10 @@ const EnhancedPricingSection = () => {
       buttonText: 'Get Started Free',
       popular: false,
       gradient: 'from-slate-500 to-slate-600',
-      trialDays: null
+      trialInfo: 'No trial needed'
     },
     {
-      id: 'premium',  
+      id: 'premium',
       name: 'Premium',
       icon: Zap,
       monthlyPrice: 9.90,
@@ -96,9 +71,9 @@ const EnhancedPricingSection = () => {
       ],
       limitations: [],
       buttonText: 'Start Premium',
-      popular: false,
+      popular: true,
       gradient: 'from-therapy-500 to-therapy-600',
-      trialDays: null
+      trialInfo: billingCycle === 'yearly' ? '7-day free trial included' : 'No trial'
     },
     {
       id: 'professional',
@@ -109,7 +84,6 @@ const EnhancedPricingSection = () => {
       description: 'Advanced features for mental health professionals and coaches',
       features: [
         'Everything in Premium',
-        '7-day free trial included',
         'Client management tools',
         'Advanced analytics dashboard',
         'Custom therapy protocols',
@@ -122,47 +96,11 @@ const EnhancedPricingSection = () => {
       ],
       limitations: [],
       buttonText: 'Start 7-Day Free Trial',
-      popular: true,
+      popular: false,
       gradient: 'from-harmony-500 to-harmony-600',
-      trialDays: 7
+      trialInfo: '7-day free trial'
     }
   ];
-
-  const familyTiers: Record<'pro' | 'premium', FamilyPlanTier> = {
-    pro: {
-      name: 'Family Pro',
-      basePrice: 29.99,
-      pricePerMember: 9.99,
-      icon: Star,
-      color: 'from-therapy-500 to-calm-500',
-      features: [
-        'Unlimited AI therapy sessions for all members',
-        'Voice conversations in 29 languages',
-        'Family dashboard with shared insights',
-        'Parental controls and safety features',
-        'Crisis alerts and intervention',
-        'Progress sharing with permissions',
-        'Mobile app for all members'
-      ]
-    },
-    premium: {
-      name: 'Family Premium',
-      basePrice: 49.99,
-      pricePerMember: 14.99,
-      icon: Crown,
-      color: 'from-therapy-600 to-harmony-600',
-      features: [
-        'Everything in Family Pro',
-        'Advanced emotion detection for all',
-        'Personalized treatment plans per member',
-        'Dedicated family support specialist',
-        '24/7 priority crisis intervention',
-        'Advanced family analytics & insights',
-        'Custom AI therapist training',
-        'Integration with health apps'
-      ]
-    }
-  };
 
   const getPrice = (plan: typeof plans[0]) => {
     if (plan.monthlyPrice === 0) return formatPrice(0);
@@ -176,26 +114,6 @@ const EnhancedPricingSection = () => {
     const yearlySavings = monthlyCost - plan.yearlyPrice;
     return Math.round((yearlySavings / monthlyCost) * 100);
   };
-
-  const selectedTierData = familyTiers[selectedFamilyTier];
-  const familyMonthlyPrice = selectedTierData.basePrice + (familyMemberCount * selectedTierData.pricePerMember);
-  const familyYearlyPrice = familyMonthlyPrice * 12 * 0.8; // 20% discount for yearly
-  const familySavings = (familyMonthlyPrice * 12) - familyYearlyPrice;
-
-  if (currencyLoading) {
-    return (
-      <section className="py-24 bg-gradient-to-br from-slate-50 via-therapy-50 to-calm-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <div className="animate-pulse">
-              <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded w-96 mx-auto"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section id="pricing" className="py-24 bg-gradient-to-br from-slate-50 via-therapy-50 to-calm-50">
@@ -214,28 +132,23 @@ const EnhancedPricingSection = () => {
             Start free and upgrade as your mental wellness journey evolves. All plans include our core AI therapy features with enterprise-grade security.
           </p>
 
-          {/* Currency Selector */}
-          <div className="flex items-center justify-center space-x-4 mb-8">
-            <span className="text-sm font-medium text-slate-600">Currency:</span>
-            <CurrencySelector 
-              value={currency.code}
-              onChange={changeCurrency}
-              className="w-48"
-            />
-            {isLoadingRates && (
-              <div className="text-sm text-slate-500">Updating rates...</div>
-            )}
-          </div>
-
           {/* Billing Toggle */}
           <div className="flex items-center justify-center space-x-4 mb-8">
             <span className={`text-sm font-medium ${billingCycle === 'monthly' ? 'text-slate-900' : 'text-slate-500'}`}>
               Monthly
             </span>
-            <Switch
-              checked={billingCycle === 'yearly'}
-              onCheckedChange={(checked) => setBillingCycle(checked ? 'yearly' : 'monthly')}
-            />
+            <button
+              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-therapy-500 focus:ring-offset-2 ${
+                billingCycle === 'yearly' ? 'bg-therapy-600' : 'bg-slate-200'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
             <span className={`text-sm font-medium ${billingCycle === 'yearly' ? 'text-slate-900' : 'text-slate-500'}`}>
               Yearly
             </span>
@@ -247,7 +160,7 @@ const EnhancedPricingSection = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-12">
           {plans.map((plan, index) => {
             const IconComponent = plan.icon;
             const savings = getSavings(plan);
@@ -257,19 +170,13 @@ const EnhancedPricingSection = () => {
                 key={plan.id} 
                 className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl ${
                   plan.popular 
-                    ? 'ring-4 ring-harmony-400 shadow-harmony-500/30 scale-105 bg-gradient-to-br from-harmony-50 to-balance-50 border-harmony-200' 
+                    ? 'ring-4 ring-therapy-400 shadow-therapy-500/30 scale-105 bg-gradient-to-br from-therapy-50 to-calm-50 border-therapy-200' 
                     : 'hover:shadow-therapy-500/10 bg-white/80 backdrop-blur-sm border-slate-200'
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-500 text-white text-center py-3 text-sm font-bold tracking-wide">
-                    ⭐ MOST POPULAR - START FREE TRIAL ⭐
-                  </div>
-                )}
-                
-                {plan.trialDays && (
-                  <div className="absolute top-2 right-2 bg-gradient-to-r from-harmony-500 to-balance-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                    {plan.trialDays} Days FREE
+                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-therapy-500 via-calm-500 to-therapy-600 text-white text-center py-3 text-sm font-bold tracking-wide">
+                    ⭐ MOST POPULAR ⭐
                   </div>
                 )}
                 
@@ -294,16 +201,20 @@ const EnhancedPricingSection = () => {
                     )}
                   </div>
                   
-                  <p className={`text-slate-600 ${plan.popular ? 'text-sm' : 'text-sm'}`}>
+                  <p className={`text-slate-600 ${plan.popular ? 'text-sm' : 'text-sm'} mb-2`}>
                     {plan.description}
                   </p>
+
+                  <div className="text-xs text-slate-500 font-medium">
+                    {plan.trialInfo}
+                  </div>
                 </CardHeader>
 
                 <CardContent className="pt-0 px-6 pb-8">
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-start gap-3">
-                        <Check className={`${plan.popular ? 'h-5 w-5 text-harmony-500' : 'h-5 w-5 text-therapy-500'} flex-shrink-0 mt-0.5`} />
+                        <Check className={`${plan.popular ? 'h-5 w-5 text-therapy-500' : 'h-5 w-5 text-therapy-500'} flex-shrink-0 mt-0.5`} />
                         <span className={`text-slate-700 ${plan.popular ? 'text-sm' : 'text-sm'}`}>{feature}</span>
                       </li>
                     ))}
@@ -320,12 +231,12 @@ const EnhancedPricingSection = () => {
                   <Button 
                     className={`w-full font-semibold text-base py-3 transition-all duration-300 ${
                       plan.popular 
-                        ? 'bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-500 hover:from-harmony-600 hover:via-balance-600 hover:to-flow-600 text-white shadow-lg hover:shadow-xl hover:scale-105 ring-2 ring-harmony-300' 
-                        : plan.id === 'premium'
-                        ? 'bg-gradient-to-r from-therapy-500 via-harmony-500 to-balance-500 hover:from-therapy-600 hover:via-harmony-600 hover:to-balance-600 text-white shadow-lg hover:shadow-lg hover:scale-105'
-                        : 'bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white shadow-md hover:shadow-lg hover:scale-105'
+                        ? 'bg-gradient-to-r from-therapy-500 via-calm-500 to-therapy-600 hover:from-therapy-600 hover:via-calm-600 hover:to-therapy-700 text-white shadow-lg hover:shadow-xl hover:scale-105 ring-2 ring-therapy-300' 
+                        : plan.id === 'professional'
+                        ? 'bg-gradient-to-r from-harmony-500 to-harmony-600 hover:from-harmony-600 hover:to-harmony-700 text-white shadow-lg hover:shadow-lg hover:scale-105'
+                        : 'bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white shadow-md hover:shadow-lg hover:scale-105'
                     }`}
-                    onClick={() => handleGetStarted(plan.name, plan)}
+                    onClick={() => handleGetStarted(plan.name)}
                   >
                     {plan.buttonText}
                   </Button>
@@ -336,158 +247,23 @@ const EnhancedPricingSection = () => {
         </div>
 
         {/* Family Plans Section */}
-        <div className="max-w-6xl mx-auto mb-16">
-          <Card className="bg-gradient-to-r from-harmony-50 via-balance-50 to-flow-50 border-2 border-harmony-200">
-            <CardHeader className="text-center pb-6">
+        <div className="text-center mb-12">
+          <Card className="max-w-2xl mx-auto bg-gradient-to-r from-harmony-50 to-balance-50 border-harmony-200">
+            <CardContent className="p-8">
               <div className="flex items-center justify-center mb-4">
                 <Users className="h-8 w-8 text-harmony-600 mr-3" />
-                <CardTitle className="text-3xl font-bold text-harmony-700">
-                  Family Plans
-                </CardTitle>
+                <h3 className="text-2xl font-bold text-harmony-700">Family Plans Available</h3>
               </div>
-              <p className="text-lg text-harmony-600 max-w-2xl mx-auto">
-                Support your entire family's mental wellness journey with customizable plans that grow with your needs.
+              <p className="text-harmony-600 mb-6">
+                Get comprehensive mental health support for your entire family with custom pricing based on your needs.
               </p>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              {!showFamilyBuilder ? (
-                <div className="text-center">
-                  <Button 
-                    onClick={() => setShowFamilyBuilder(true)}
-                    className="bg-gradient-to-r from-harmony-500 to-balance-500 hover:from-harmony-600 hover:to-balance-600 text-white px-8 py-4 text-lg font-semibold"
-                  >
-                    <Users className="h-5 w-5 mr-2" />
-                    Build Your Custom Family Plan
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {/* Member Count Selector */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
-                        <Users className="h-5 w-5" />
-                        <span>How many family members?</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-center space-x-4">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => setFamilyMemberCount(Math.max(2, familyMemberCount - 1))}
-                          disabled={familyMemberCount <= 2}
-                        >
-                          <Minus className="h-4 w-4" />
-                        </Button>
-                        
-                        <div className="text-center">
-                          <div className="text-3xl font-bold therapy-text-gradient">{familyMemberCount}</div>
-                          <div className="text-sm text-gray-500">family members</div>
-                        </div>
-                        
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => setFamilyMemberCount(Math.min(12, familyMemberCount + 1))}
-                          disabled={familyMemberCount >= 12}
-                        >
-                          <Plus className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Tier Selection */}
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Choose Your Plan Level</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {Object.entries(familyTiers).map(([key, tier]) => {
-                        const IconComponent = tier.icon;
-                        const isSelected = selectedFamilyTier === key;
-                        
-                        return (
-                          <Card 
-                            key={key}
-                            className={`cursor-pointer transition-all duration-200 ${
-                              isSelected 
-                                ? 'ring-2 ring-therapy-500 shadow-lg' 
-                                : 'hover:shadow-md'
-                            }`}
-                            onClick={() => setSelectedFamilyTier(key as 'pro' | 'premium')}
-                          >
-                            <CardHeader>
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-3">
-                                  <div className={`w-10 h-10 bg-gradient-to-r ${tier.color} rounded-lg flex items-center justify-center`}>
-                                    <IconComponent className="h-5 w-5 text-white" />
-                                  </div>
-                                  <div>
-                                    <CardTitle className="text-lg">{tier.name}</CardTitle>
-                                    <div className="text-sm text-gray-500">
-                                      {formatPrice(tier.basePrice)} base + {formatPrice(tier.pricePerMember)}/member
-                                    </div>
-                                  </div>
-                                </div>
-                                {isSelected && (
-                                  <Badge className="bg-therapy-500 text-white">Selected</Badge>
-                                )}
-                              </div>
-                            </CardHeader>
-                          </Card>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Pricing Summary */}
-                  <Card className="bg-gradient-to-r from-therapy-50 to-calm-50">
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
-                        <Calculator className="h-5 w-5" />
-                        <span>Your Custom Plan Pricing</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex justify-between text-lg">
-                        <span>Monthly Total:</span>
-                        <span className="font-bold">{formatPrice(familyMonthlyPrice)}/month</span>
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span>Yearly Total:</span>
-                          <span className="font-bold">{formatPrice(familyYearlyPrice)}/year</span>
-                        </div>
-                        <div className="flex justify-between text-green-600">
-                          <span>Annual Savings:</span>
-                          <span className="font-bold">-{formatPrice(familySavings)}</span>
-                        </div>
-                      </div>
-
-                      <div className="text-center pt-4">
-                        <Button 
-                          onClick={() => handleGetStarted(selectedTierData.name, {
-                            ...selectedTierData,
-                            memberCount: familyMemberCount,
-                            monthlyPrice: familyMonthlyPrice,
-                            yearlyPrice: familyYearlyPrice
-                          })}
-                          className="w-full bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white"
-                        >
-                          Get Started with {selectedTierData.name}
-                        </Button>
-                        <div className="text-sm text-gray-500 mt-2">
-                          7-day free trial • Cancel anytime
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
+              <Button
+                onClick={() => setShowFamilyPlans(true)}
+                className="bg-gradient-to-r from-harmony-500 to-balance-500 hover:from-harmony-600 hover:to-balance-600 text-white px-8 py-3 font-semibold"
+              >
+                <Users className="h-5 w-5 mr-2" />
+                Customize Family Plan
+              </Button>
             </CardContent>
           </Card>
         </div>
@@ -504,6 +280,11 @@ const EnhancedPricingSection = () => {
           </div>
         </div>
       </div>
+
+      <FamilyPlanSelector
+        isOpen={showFamilyPlans}
+        onClose={() => setShowFamilyPlans(false)}
+      />
     </section>
   );
 };

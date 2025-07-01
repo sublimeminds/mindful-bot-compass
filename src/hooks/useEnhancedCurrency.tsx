@@ -65,6 +65,9 @@ export const useEnhancedCurrency = () => {
     try {
       setLoading(true);
       
+      // Ensure exchange rates are loaded first
+      await enhancedCurrencyService.ensureExchangeRatesLoaded();
+      
       let selectedCurrency;
       
       if (user) {
@@ -72,10 +75,16 @@ export const useEnhancedCurrency = () => {
         const savedCurrency = await enhancedCurrencyService.getUserCurrencyPreference(user.id);
         selectedCurrency = await enhancedCurrencyService.getCurrencyData(savedCurrency);
       } else {
-        // For non-authenticated users, try to detect from location
-        const location = await enhancedCurrencyService.detectUserLocation();
-        const currencyCode = location?.currency || 'USD';
-        selectedCurrency = await enhancedCurrencyService.getCurrencyData(currencyCode);
+        // Check localStorage for non-authenticated users
+        const localCurrency = localStorage.getItem('preferred-currency');
+        if (localCurrency) {
+          selectedCurrency = await enhancedCurrencyService.getCurrencyData(localCurrency);
+        } else {
+          // Try to detect from location
+          const location = await enhancedCurrencyService.detectUserLocation();
+          const currencyCode = location?.currency || 'USD';
+          selectedCurrency = await enhancedCurrencyService.getCurrencyData(currencyCode);
+        }
       }
       
       setCurrency(selectedCurrency);
@@ -99,6 +108,7 @@ export const useEnhancedCurrency = () => {
   const changeCurrency = async (currencyCode: string) => {
     try {
       setIsLoadingRates(true);
+      await enhancedCurrencyService.ensureExchangeRatesLoaded();
       const newCurrency = await enhancedCurrencyService.getCurrencyData(currencyCode);
       setCurrency(newCurrency);
 
@@ -121,6 +131,10 @@ export const useEnhancedCurrency = () => {
   };
 
   const formatPrice = (amount: number, fromCurrency: string = 'USD', locale?: string) => {
+    if (loading || isLoadingRates) {
+      return `${currency.symbol}${amount.toFixed(2)}`;
+    }
+    
     const convertedAmount = convertPrice(amount, fromCurrency);
     return enhancedCurrencyService.formatCurrency(convertedAmount, currency.code, locale);
   };

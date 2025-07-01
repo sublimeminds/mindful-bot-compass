@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import AnimatedOnboardingIntro from './AnimatedOnboardingIntro';
 import WelcomeStep from './WelcomeStep';
+import EmbeddedAuthStep from './EmbeddedAuthStep';
 import IntakeAssessmentStep from './IntakeAssessmentStep';
 import MentalHealthScreeningStep from './MentalHealthScreeningStep';
 import CulturalPreferencesStep from './CulturalPreferencesStep';
@@ -13,7 +15,7 @@ import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import CurrencySelector from '@/components/ui/CurrencySelector';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { useSEO } from '@/hooks/useSEO';
-import { useAuth } from '@/components/EnhancedAuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 interface EnhancedSmartOnboardingFlowProps {
@@ -63,15 +65,9 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     }
   }, []);
 
-  // Redirect to auth if user is not logged in
-  useEffect(() => {
-    if (!user) {
-      navigate('/auth');
-    }
-  }, [user, navigate]);
-
   const steps = [
     { component: WelcomeStep, titleKey: 'onboarding.steps.welcome' },
+    { component: EmbeddedAuthStep, titleKey: 'Create Your Account' },
     { component: IntakeAssessmentStep, titleKey: 'onboarding.steps.goals' },
     { component: MentalHealthScreeningStep, titleKey: 'onboarding.steps.preferences' },
     { component: CulturalPreferencesStep, titleKey: 'onboarding.steps.cultural' },
@@ -114,9 +110,12 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     }));
   };
 
-  if (!user) {
-    return null; // Will redirect to auth
-  }
+  // If user is authenticated, skip auth step
+  useEffect(() => {
+    if (user && currentStep === 1) {
+      setCurrentStep(2);
+    }
+  }, [user, currentStep]);
 
   if (showIntro) {
     return <AnimatedOnboardingIntro onGetStarted={handleGetStarted} />;
@@ -131,8 +130,16 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       onboardingData
     };
 
+    // Add selected plan for auth step
+    if (currentStep === 1) {
+      return {
+        ...baseProps,
+        selectedPlan
+      };
+    }
+
     // Add specific props for Cultural Preferences step
-    if (currentStep === 3) { // Cultural Preferences step
+    if (currentStep === 4) { // Cultural Preferences step (adjusted for auth step)
       return {
         ...baseProps,
         preferences: onboardingData.culturalPreferences,
@@ -141,7 +148,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     }
 
     // Add pre-selected plan for Plan Selection step
-    if (currentStep === 6 && selectedPlan) { // Plan Selection step
+    if (currentStep === 7 && selectedPlan) { // Plan Selection step (adjusted for auth step)
       return {
         ...baseProps,
         preSelectedPlan: selectedPlan
@@ -186,7 +193,9 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
             />
           </div>
           <p className="text-center text-sm font-medium text-harmony-600 dark:text-harmony-400 mt-2">
-            {t(steps[currentStep].titleKey)}
+            {typeof steps[currentStep].titleKey === 'string' && steps[currentStep].titleKey.startsWith('onboarding.') 
+              ? t(steps[currentStep].titleKey) 
+              : steps[currentStep].titleKey}
           </p>
         </div>
 

@@ -129,6 +129,13 @@ const Index = () => {
     }
   ];
 
+  const scrollToDemo = () => {
+    const demoElement = document.getElementById('demo');
+    if (demoElement) {
+      demoElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
       <EnhancedHeader />
@@ -164,20 +171,19 @@ const Index = () => {
               <GradientButton 
                 size="lg" 
                 className="px-8 py-4 text-lg font-bold"
-                onClick={() => navigate('/pricing')}
+                onClick={() => navigate('/onboarding')}
               >
                 <Heart className="h-5 w-5 mr-2" />
                 Start Free Trial
               </GradientButton>
-              <GradientButton 
+              <Button 
                 size="lg" 
-                variant="outline"
-                className="px-8 py-4 text-lg font-bold"
-                onClick={() => navigate('/therapy-chat')}
+                className="bg-white border-2 border-therapy-300 text-therapy-700 hover:bg-therapy-50 hover:border-therapy-400 px-8 py-4 text-lg font-bold transition-all duration-300"
+                onClick={scrollToDemo}
               >
                 <MessageSquare className="h-5 w-5 mr-2" />
                 Try Demo
-              </GradientButton>
+              </Button>
             </div>
           </div>
         </div>
@@ -340,16 +346,15 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   size="lg"
-                  className="bg-white text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                  onClick={() => navigate('/pricing')}
+                  className="bg-white text-therapy-600 hover:bg-therapy-50 border-2 border-white hover:border-therapy-200 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                  onClick={() => navigate('/onboarding')}
                 >
                   <Heart className="h-5 w-5 mr-2" />
                   Choose Your Plan
                 </Button>
                 <Button 
                   size="lg" 
-                  variant="outline"
-                  className="border-2 border-white text-white hover:bg-white/10 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+                  className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-therapy-600 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
                   onClick={() => navigate('/onboarding')}
                 >
                   <Zap className="h-5 w-5 mr-2" />

@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 
 interface ExchangeRate {
@@ -27,6 +28,7 @@ class EnhancedCurrencyService {
   private exchangeRates: Map<string, number> = new Map();
   private lastUpdate: Date = new Date(0);
   private readonly UPDATE_INTERVAL = 1000 * 60 * 60; // 1 hour
+  private isLoading: boolean = false;
 
   // Expanded currency symbols and names with more major currencies
   private readonly currencyInfo = {
@@ -53,8 +55,11 @@ class EnhancedCurrencyService {
   };
 
   async updateExchangeRates(): Promise<void> {
+    if (this.isLoading) return;
+    this.isLoading = true;
+
     try {
-      // Try to get live rates from exchangerate-api.io (free tier allows 1500 requests/month)
+      // Try to get live rates from exchangerate-api.io
       const response = await fetch('https://api.exchangerate-api.io/v4/latest/USD');
       const data = await response.json();
       
@@ -72,49 +77,33 @@ class EnhancedCurrencyService {
 
       this.lastUpdate = new Date();
     } catch (error) {
-      console.error('Failed to update live exchange rates, using fallback:', error);
+      console.error('Failed to update live exchange rates, using static fallback:', error);
       
-      // Try Supabase as fallback
-      try {
-        const { data, error: supabaseError } = await supabase
-          .from('exchange_rates')
-          .select('*')
-          .eq('base_currency', 'USD');
-
-        if (!supabaseError && data) {
-          data.forEach((rate: ExchangeRate) => {
-            this.exchangeRates.set(rate.target_currency, rate.rate);
-          });
-          console.log('Supabase exchange rates updated:', this.exchangeRates);
-        } else {
-          throw new Error('Supabase rates also failed');
-        }
-      } catch (supabaseError) {
-        console.error('Both live API and Supabase failed, using static fallback rates');
-        // Enhanced fallback rates with accurate values
-        this.exchangeRates.set('USD', 1.0);
-        this.exchangeRates.set('IDR', 15750.0);
-        this.exchangeRates.set('EUR', 0.85);
-        this.exchangeRates.set('GBP', 0.73);
-        this.exchangeRates.set('JPY', 110.0);
-        this.exchangeRates.set('CAD', 1.25);
-        this.exchangeRates.set('AUD', 1.35);
-        this.exchangeRates.set('CHF', 0.92);
-        this.exchangeRates.set('CNY', 6.45);
-        this.exchangeRates.set('INR', 74.0);
-        this.exchangeRates.set('SGD', 1.35);
-        this.exchangeRates.set('MYR', 4.15);
-        this.exchangeRates.set('THB', 33.0);
-        this.exchangeRates.set('KRW', 1180.0);
-        this.exchangeRates.set('BRL', 5.2);
-        this.exchangeRates.set('MXN', 20.0);
-        this.exchangeRates.set('ZAR', 14.5);
-        this.exchangeRates.set('PLN', 3.9);
-        this.exchangeRates.set('SEK', 8.5);
-        this.exchangeRates.set('NOK', 8.8);
-      }
+      // Enhanced fallback rates with accurate values
+      this.exchangeRates.set('USD', 1.0);
+      this.exchangeRates.set('IDR', 15750.0);
+      this.exchangeRates.set('EUR', 0.85);
+      this.exchangeRates.set('GBP', 0.73);
+      this.exchangeRates.set('JPY', 110.0);
+      this.exchangeRates.set('CAD', 1.25);
+      this.exchangeRates.set('AUD', 1.35);
+      this.exchangeRates.set('CHF', 0.92);
+      this.exchangeRates.set('CNY', 6.45);
+      this.exchangeRates.set('INR', 74.0);
+      this.exchangeRates.set('SGD', 1.35);
+      this.exchangeRates.set('MYR', 4.15);
+      this.exchangeRates.set('THB', 33.0);
+      this.exchangeRates.set('KRW', 1180.0);
+      this.exchangeRates.set('BRL', 5.2);
+      this.exchangeRates.set('MXN', 20.0);
+      this.exchangeRates.set('ZAR', 14.5);
+      this.exchangeRates.set('PLN', 3.9);
+      this.exchangeRates.set('SEK', 8.5);
+      this.exchangeRates.set('NOK', 8.8);
       
       this.lastUpdate = new Date();
+    } finally {
+      this.isLoading = false;
     }
   }
 
@@ -166,7 +155,6 @@ class EnhancedCurrencyService {
     const fromRate = this.exchangeRates.get(fromCurrency) || 1;
     const toRate = this.exchangeRates.get(toCurrency) || 1;
 
-    // FIXED: Correct conversion logic
     // Convert from source currency to USD first, then to target currency
     let usdAmount: number;
     if (fromCurrency === 'USD') {
@@ -194,8 +182,8 @@ class EnhancedCurrencyService {
         maximumFractionDigits: ['IDR', 'JPY', 'KRW'].includes(currencyCode) ? 0 : 2,
       }).format(amount);
     } catch (error) {
-      // Fallback formatting
-      const symbol = info?.symbol || currencyCode;
+      // Fallback formatting - prevent double currency code display
+      const symbol = info?.symbol || '';
       const formattedAmount = ['IDR', 'JPY', 'KRW'].includes(currencyCode)
         ? Math.round(amount).toLocaleString()
         : amount.toFixed(2);
