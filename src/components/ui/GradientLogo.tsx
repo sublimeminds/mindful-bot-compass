@@ -37,7 +37,7 @@ const GradientLogo = ({
         className="w-full h-full object-contain animate-swirl-breathe drop-shadow-lg"
         onError={handleImageError}
       />
-      {/* Enhanced SVG Fallback Logo with restored therapy colors */}
+      {/* Enhanced SVG Fallback Logo with restored vibrant therapy colors */}
       <svg 
         className="w-full h-full object-contain animate-swirl-breathe drop-shadow-lg hidden"
         viewBox="0 0 100 100" 
@@ -46,19 +46,21 @@ const GradientLogo = ({
       >
         <defs>
           <linearGradient id="therapyGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsl(14, 82%, 59%)" />
-            <stop offset="50%" stopColor="hsl(180, 68%, 54%)" />
-            <stop offset="100%" stopColor="hsl(330, 72%, 59%)" />
+            <stop offset="0%" stopColor="hsl(14, 85%, 59%)" />
+            <stop offset="30%" stopColor="hsl(180, 75%, 54%)" />
+            <stop offset="70%" stopColor="hsl(158, 70%, 49%)" />
+            <stop offset="100%" stopColor="hsl(330, 78%, 59%)" />
           </linearGradient>
           <linearGradient id="therapyGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsl(14, 82%, 69%)" />
-            <stop offset="50%" stopColor="hsl(180, 68%, 64%)" />
-            <stop offset="100%" stopColor="hsl(330, 72%, 69%)" />
+            <stop offset="0%" stopColor="hsl(14, 85%, 69%)" />
+            <stop offset="50%" stopColor="hsl(180, 75%, 64%)" />
+            <stop offset="100%" stopColor="hsl(330, 78%, 69%)" />
           </linearGradient>
           <radialGradient id="therapyGlowGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="hsl(14, 82%, 59%)" stopOpacity="0.3" />
-            <stop offset="70%" stopColor="hsl(180, 68%, 54%)" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="hsl(330, 72%, 59%)" stopOpacity="0" />
+            <stop offset="0%" stopColor="hsl(14, 85%, 59%)" stopOpacity="0.4" />
+            <stop offset="40%" stopColor="hsl(180, 75%, 54%)" stopOpacity="0.2" />
+            <stop offset="80%" stopColor="hsl(158, 70%, 49%)" stopOpacity="0.1" />
+            <stop offset="100%" stopColor="hsl(330, 78%, 59%)" stopOpacity="0" />
           </radialGradient>
         </defs>
         
@@ -78,8 +80,8 @@ const GradientLogo = ({
         />
         
         {/* Additional healing elements */}
-        <circle cx="42" cy="38" r="2" fill="url(#therapyGrad1)" opacity="0.7" />
-        <circle cx="58" cy="38" r="2" fill="url(#therapyGrad1)" opacity="0.7" />
+        <circle cx="42" cy="38" r="2" fill="hsl(14, 85%, 59%)" opacity="0.8" />
+        <circle cx="58" cy="38" r="2" fill="hsl(180, 75%, 54%)" opacity="0.8" />
         <circle cx="50" cy="45" r="1.5" fill="white" opacity="0.9" />
       </svg>
     </div>

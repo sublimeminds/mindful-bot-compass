@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -31,66 +30,70 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
 
-    /* Restored TherapySync mental health therapy colors */
+    /* Restored original TherapySync mental health therapy colors */
     --therapy-50: 14 100% 97%;
     --therapy-100: 14 100% 92%;
     --therapy-200: 14 100% 84%;
     --therapy-300: 14 100% 74%;
     --therapy-400: 14 100% 64%;
-    --therapy-500: 14 82% 59%;
-    --therapy-600: 14 82% 49%;
-    --therapy-700: 14 82% 39%;
-    --therapy-800: 14 82% 29%;
-    --therapy-900: 14 82% 19%;
-    --therapy-950: 14 82% 9%;
+    --therapy-500: 14 85% 59%;
+    --therapy-600: 14 85% 49%;
+    --therapy-700: 14 85% 39%;
+    --therapy-800: 14 85% 29%;
+    --therapy-900: 14 85% 19%;
+    --therapy-950: 14 85% 9%;
 
-    --calm-50: 180 100% 97%;
-    --calm-100: 180 100% 92%;
-    --calm-200: 180 100% 84%;
-    --calm-300: 180 100% 74%;
-    --calm-400: 180 100% 64%;
-    --calm-500: 180 68% 54%;
-    --calm-600: 180 68% 44%;
-    --calm-700: 180 68% 34%;
-    --calm-800: 180 68% 24%;
-    --calm-900: 180 68% 14%;
-    --calm-950: 180 68% 7%;
+    /* Calm colors - softer blue-green, distinct from harmony */
+    --calm-50: 188 100% 97%;
+    --calm-100: 188 100% 92%;
+    --calm-200: 188 100% 84%;
+    --calm-300: 188 100% 74%;
+    --calm-400: 188 100% 64%;
+    --calm-500: 188 72% 54%;
+    --calm-600: 188 72% 44%;
+    --calm-700: 188 72% 34%;
+    --calm-800: 188 72% 24%;
+    --calm-900: 188 72% 14%;
+    --calm-950: 188 72% 7%;
 
+    /* Harmony colors - vibrant teal/turquoise */
     --harmony-50: 180 100% 97%;
     --harmony-100: 180 100% 92%;
     --harmony-200: 180 100% 84%;
     --harmony-300: 180 100% 74%;
     --harmony-400: 180 100% 64%;
-    --harmony-500: 180 68% 54%;
-    --harmony-600: 180 68% 44%;
-    --harmony-700: 180 68% 34%;
-    --harmony-800: 180 68% 24%;
-    --harmony-900: 180 68% 14%;
-    --harmony-950: 180 68% 7%;
+    --harmony-500: 180 75% 54%;
+    --harmony-600: 180 75% 44%;
+    --harmony-700: 180 75% 34%;
+    --harmony-800: 180 75% 24%;
+    --harmony-900: 180 75% 14%;
+    --harmony-950: 180 75% 7%;
 
+    /* Balance colors - vibrant pink/magenta */
     --balance-50: 330 100% 97%;
     --balance-100: 330 100% 92%;
     --balance-200: 330 100% 84%;
     --balance-300: 330 100% 74%;
     --balance-400: 330 100% 64%;
-    --balance-500: 330 72% 59%;
-    --balance-600: 330 72% 49%;
-    --balance-700: 330 72% 39%;
-    --balance-800: 330 72% 29%;
-    --balance-900: 330 72% 19%;
-    --balance-950: 330 72% 9%;
+    --balance-500: 330 78% 59%;
+    --balance-600: 330 78% 49%;
+    --balance-700: 330 78% 39%;
+    --balance-800: 330 78% 29%;
+    --balance-900: 330 78% 19%;
+    --balance-950: 330 78% 9%;
 
-    --flow-50: 160 100% 97%;
-    --flow-100: 160 100% 92%;
-    --flow-200: 160 100% 84%;
-    --flow-300: 160 100% 74%;
-    --flow-400: 160 100% 64%;
-    --flow-500: 160 65% 49%;
-    --flow-600: 160 65% 39%;
-    --flow-700: 160 65% 29%;
-    --flow-800: 160 65% 19%;
-    --flow-900: 160 65% 14%;
-    --flow-950: 160 65% 7%;
+    /* Flow colors - therapeutic green */
+    --flow-50: 158 100% 97%;
+    --flow-100: 158 100% 92%;
+    --flow-200: 158 100% 84%;
+    --flow-300: 158 100% 74%;
+    --flow-400: 158 100% 64%;
+    --flow-500: 158 70% 49%;
+    --flow-600: 158 70% 39%;
+    --flow-700: 158 70% 29%;
+    --flow-800: 158 70% 19%;
+    --flow-900: 158 70% 14%;
+    --flow-950: 158 70% 7%;
   }
 
   .dark {
