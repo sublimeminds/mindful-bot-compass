@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/components/EnhancedAuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 
 interface PricingCTAProps {
   planName: string;
@@ -33,13 +33,8 @@ const PricingCTA: React.FC<PricingCTAProps> = ({
     
     localStorage.setItem('selectedPlan', JSON.stringify(planSelection));
     
-    if (user) {
-      // User is already logged in, go to onboarding
-      navigate('/onboarding');
-    } else {
-      // User needs to authenticate first, then onboarding
-      navigate('/auth');
-    }
+    // Always go to onboarding regardless of auth status
+    navigate('/onboarding');
   };
 
   return (

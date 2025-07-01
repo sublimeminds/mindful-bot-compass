@@ -99,9 +99,9 @@ const EnhancedHeader = () => {
   const platformFeatures = [
     {
       icon: Users,
-      title: "Family Plans",
-      description: "Comprehensive family mental health support with adaptive pricing and parental controls",
-      href: "/family-dashboard",
+      title: "Family & Account Sharing",
+      description: "Comprehensive family mental health support with account sharing and parental controls",
+      href: "/family-features",
       gradient: "from-harmony-500 to-balance-500"
     },
     {
@@ -310,7 +310,7 @@ const EnhancedHeader = () => {
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-96 p-4 bg-white shadow-xl border-0">
+              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
                 <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
                   <HelpCircle className="h-5 w-5 mr-2 text-therapy-500" />
                   Help & Support
@@ -344,32 +344,28 @@ const EnhancedHeader = () => {
             </DropdownMenu>
           </nav>
 
-          {/* Action Buttons */}
-          <div className="flex items-center space-x-3">
-            {/* Language Selector */}
-            <div className="hidden md:block">
-              <EnhancedLanguageSelector />
-            </div>
-
+          {/* Right Section */}
+          <div className="flex items-center space-x-4">
+            <EnhancedLanguageSelector />
+            
             {user ? (
-              <div className="flex items-center space-x-3">
-                {/* Notification Center */}
+              <>
                 <EnhancedNotificationCenter />
-                
-                {/* Enhanced User Menu */}
                 <EnhancedUserMenu />
-              </div>
+              </>
             ) : (
               <div className="flex items-center space-x-3">
                 <Button 
                   variant="ghost" 
                   onClick={() => navigate('/auth')}
-                  className="hover:bg-therapy-50 transition-all duration-200"
+                  className="text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50"
                 >
                   Sign In
                 </Button>
-                <EnhancedButton onClick={() => navigate('/auth')}>
-                  <Sparkles className="h-4 w-4 mr-2" />
+                <EnhancedButton 
+                  onClick={() => navigate('/onboarding')}
+                  className="px-6 py-2"
+                >
                   Get Started
                 </EnhancedButton>
               </div>
