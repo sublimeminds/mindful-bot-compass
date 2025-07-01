@@ -1,63 +1,77 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, Plus } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 interface CreateGoalDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onGoalCreated: () => void;
 }
 
-const CreateGoalDialog = ({ open, onOpenChange, onGoalCreated }: CreateGoalDialogProps) => {
-  const { user } = useSimpleApp();
+const CreateGoalDialog = ({ open, onOpenChange }: CreateGoalDialogProps) => {
+  const { user } = useAuth();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     category: '',
-    priority: 'medium',
-    targetDate: undefined as Date | undefined,
+    targetValue: '',
+    targetDate: '',
+    unit: 'sessions'
   });
+
+  const categories = [
+    'Mental Health',
+    'Physical Health', 
+    'Personal Growth',
+    'Relationships',
+    'Career',
+    'General'
+  ];
+
+  const units = [
+    'sessions',
+    'days',
+    'weeks',
+    'hours',
+    'times',
+    'points'
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !formData.title || !formData.targetDate) return;
+    if (!user) return;
 
-    setIsLoading(true);
+    setIsSubmitting(true);
     try {
       const { error } = await supabase
         .from('goals')
         .insert({
           user_id: user.id,
           title: formData.title,
-          description: formData.description,
-          category: formData.category || 'general',
-          priority: formData.priority,
-          target_date: formData.targetDate.toISOString(),
-          type: 'personal',
+          description: formData.description || null,
+          category: formData.category,
+          target_value: parseInt(formData.targetValue),
+          current_progress: 0,
+          unit: formData.unit,
+          target_date: formData.targetDate || null,
           is_completed: false,
-          current_progress: 0
+          type: 'personal'
         });
 
       if (error) throw error;
 
       toast({
-        title: "Goal Created",
-        description: "Your goal has been created successfully!",
+        title: "Goal Created!",
+        description: `Your goal "${formData.title}" has been created successfully.`,
       });
 
       // Reset form
@@ -65,115 +79,126 @@ const CreateGoalDialog = ({ open, onOpenChange, onGoalCreated }: CreateGoalDialo
         title: '',
         description: '',
         category: '',
-        priority: 'medium',
-        targetDate: undefined,
+        targetValue: '',
+        targetDate: '',
+        unit: 'sessions'
       });
-
-      onGoalCreated();
+      
       onOpenChange(false);
+      
+      // Refresh the page to show the new goal
+      window.location.reload();
     } catch (error) {
       console.error('Error creating goal:', error);
       toast({
         title: "Error",
         description: "Failed to create goal. Please try again.",
-        variant: "destructive",
+        variant: "destructive"
       });
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Create New Goal</DialogTitle>
         </DialogHeader>
+        
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Goal Title</Label>
+          <div>
+            <Label htmlFor="title">Goal Title *</Label>
             <Input
               id="title"
               value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="Enter your goal..."
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              placeholder="e.g., Complete 30 meditation sessions"
               required
             />
           </div>
 
-          <div className="space-y-2">
+          <div>
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
               value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              placeholder="Describe your goal..."
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="Optional description of your goal..."
               rows={3}
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
-            <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="health">Health & Wellness</SelectItem>
-                <SelectItem value="personal">Personal Growth</SelectItem>
-                <SelectItem value="career">Career</SelectItem>
-                <SelectItem value="relationships">Relationships</SelectItem>
-                <SelectItem value="general">General</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="category">Category *</Label>
+              <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="unit">Unit</Label>
+              <Select value={formData.unit} onValueChange={(value) => setFormData({ ...formData, unit: value })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {units.map((unit) => (
+                    <SelectItem key={unit} value={unit}>
+                      {unit}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="priority">Priority</Label>
-            <Select value={formData.priority} onValueChange={(value) => setFormData(prev => ({ ...prev, priority: value }))}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="targetValue">Target Value *</Label>
+              <Input
+                id="targetValue"
+                type="number"
+                min="1"
+                value={formData.targetValue}
+                onChange={(e) => setFormData({ ...formData, targetValue: e.target.value })}
+                placeholder="e.g., 30"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="targetDate">Target Date</Label>
+              <Input
+                id="targetDate"
+                type="date"
+                value={formData.targetDate}
+                onChange={(e) => setFormData({ ...formData, targetDate: e.target.value })}
+              />
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label>Target Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !formData.targetDate && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.targetDate ? format(formData.targetDate, "PPP") : "Pick a date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={formData.targetDate}
-                  onSelect={(date) => setFormData(prev => ({ ...prev, targetDate: date }))}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end space-x-2 pt-4">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading || !formData.title || !formData.targetDate}>
-              {isLoading ? "Creating..." : "Create Goal"}
+            <Button 
+              type="submit" 
+              disabled={isSubmitting || !formData.title || !formData.category || !formData.targetValue}
+              className="bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white"
+            >
+              {isSubmitting ? 'Creating...' : 'Create Goal'}
             </Button>
           </div>
         </form>

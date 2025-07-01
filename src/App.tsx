@@ -37,7 +37,7 @@ function App() {
                   <Route path="/family-features" element={<FamilyFeaturesPage />} />
                   <Route path="/analytics" element={<DashboardPage />} />
                   <Route path="/sessions" element={<SessionsPage />} />
-                  <Route path="/goals" element={<DashboardPage />} />
+                  <Route path="/goals" element={<GoalsPage />} />
                   <Route path="/settings" element={<ProfilePage />} />
                   <Route path="/billing" element={<ProfilePage />} />
                   <Route path="/help" element={<DashboardPage />} />
