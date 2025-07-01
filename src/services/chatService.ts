@@ -7,7 +7,6 @@ export interface ChatMessage {
   sender: 'user' | 'ai';
   timestamp: Date;
   emotion?: string;
-  sessionId?: string;
 }
 
 export interface ChatSession {
@@ -18,102 +17,61 @@ export interface ChatSession {
   status: 'active' | 'completed' | 'paused';
 }
 
-export const chatService = {
-  async createSession(userId: string): Promise<ChatSession | null> {
-    try {
-      const { data, error } = await supabase
-        .from('therapy_sessions')
-        .insert({
-          user_id: userId,
-          status: 'active',
-          start_time: new Date().toISOString()
-        })
-        .select()
-        .single();
+class ChatService {
+  async createSession(userId: string): Promise<ChatSession> {
+    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // For now, create a local session object since we don't have the table yet
+    const session: ChatSession = {
+      id: sessionId,
+      userId,
+      startTime: new Date(),
+      status: 'active'
+    };
+    
+    // Store in localStorage temporarily
+    localStorage.setItem(`chat_session_${sessionId}`, JSON.stringify(session));
+    
+    console.log('Created new chat session:', sessionId);
+    return session;
+  }
 
-      if (error) throw error;
-
-      return {
-        id: data.id,
-        userId: data.user_id,
-        startTime: new Date(data.start_time),
-        endTime: data.end_time ? new Date(data.end_time) : undefined,
-        status: 'active'
-      };
-    } catch (error) {
-      console.error('Error creating chat session:', error);
-      return null;
+  async endSession(sessionId: string): Promise<void> {
+    const sessionData = localStorage.getItem(`chat_session_${sessionId}`);
+    if (sessionData) {
+      const session = JSON.parse(sessionData);
+      session.endTime = new Date();
+      session.status = 'completed';
+      localStorage.setItem(`chat_session_${sessionId}`, JSON.stringify(session));
     }
-  },
+    console.log('Ended chat session:', sessionId);
+  }
 
-  async sendMessage(sessionId: string, content: string, sender: 'user' | 'ai'): Promise<ChatMessage | null> {
-    try {
-      const { data, error } = await supabase
-        .from('session_messages')
-        .insert({
-          session_id: sessionId,
-          content,
-          sender,
-          timestamp: new Date().toISOString()
-        })
-        .select()
-        .single();
+  async sendMessage(sessionId: string, content: string, sender: 'user' | 'ai'): Promise<void> {
+    const message: ChatMessage = {
+      id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      content,
+      sender,
+      timestamp: new Date()
+    };
 
-      if (error) throw error;
-
-      return {
-        id: data.id,
-        content: data.content,
-        sender: data.sender as 'user' | 'ai',
-        timestamp: new Date(data.timestamp),
-        emotion: data.emotion,
-        sessionId: data.session_id
-      };
-    } catch (error) {
-      console.error('Error sending message:', error);
-      return null;
-    }
-  },
+    // Store message in localStorage temporarily
+    const messagesKey = `chat_messages_${sessionId}`;
+    const existingMessages = JSON.parse(localStorage.getItem(messagesKey) || '[]');
+    existingMessages.push(message);
+    localStorage.setItem(messagesKey, JSON.stringify(existingMessages));
+    
+    console.log('Stored message for session:', sessionId);
+  }
 
   async getSessionMessages(sessionId: string): Promise<ChatMessage[]> {
-    try {
-      const { data, error } = await supabase
-        .from('session_messages')
-        .select('*')
-        .eq('session_id', sessionId)
-        .order('timestamp', { ascending: true });
-
-      if (error) throw error;
-
-      return data.map(msg => ({
-        id: msg.id,
-        content: msg.content,
-        sender: msg.sender as 'user' | 'ai',
-        timestamp: new Date(msg.timestamp),
-        emotion: msg.emotion,
-        sessionId: msg.session_id
-      }));
-    } catch (error) {
-      console.error('Error fetching session messages:', error);
-      return [];
-    }
-  },
-
-  async endSession(sessionId: string): Promise<boolean> {
-    try {
-      const { error } = await supabase
-        .from('therapy_sessions')
-        .update({
-          status: 'completed',
-          end_time: new Date().toISOString()
-        })
-        .eq('id', sessionId);
-
-      if (error) throw error;
-      return true;
-    } catch (error) {
-      console.error('Error ending session:', error);
-      return false;
-    }
+    const messagesKey = `chat_messages_${sessionId}`;
+    const messages = JSON.parse(localStorage.getItem(messagesKey) || '[]');
+    return messages.map((msg: any) => ({
+      ...msg,
+      timestamp: new Date(msg.timestamp)
+    }));
   }
-};
+}
+
+export const chatService = new ChatService();

@@ -1,23 +1,34 @@
 
-import { useState, useEffect, useCallback } from 'react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useState, useCallback } from 'react';
 import { chatService } from '@/services/chatService';
-import { useToast } from '@/hooks/use-toast';
+import { OpenAIService } from '@/services/openAiService';
+import { useSimpleApp } from './useSimpleApp';
 
 interface Message {
   id: string;
   content: string;
-  sender: 'user' | 'assistant';
+  sender: 'user' | 'ai';
   timestamp: Date;
 }
 
-export const useRealTimeSession = () => {
+interface RealTimeSessionHook {
+  messages: Message[];
+  loading: boolean;
+  error: string | null;
+  sessionState: 'idle' | 'active' | 'paused' | 'completed';
+  startSession: () => Promise<void>;
+  endSession: () => Promise<void>;
+  pauseSession: () => void;
+  resumeSession: () => void;
+  sendMessage: (content: string) => Promise<void>;
+}
+
+export const useRealTimeSession = (): RealTimeSessionHook => {
   const { user } = useSimpleApp();
-  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sessionState, setSessionState] = useState<'idle' | 'active' | 'paused' | 'ended'>('idle');
+  const [sessionState, setSessionState] = useState<'idle' | 'active' | 'paused' | 'completed'>('idle');
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
 
   const startSession = useCallback(async () => {
@@ -26,106 +37,91 @@ export const useRealTimeSession = () => {
     try {
       setLoading(true);
       const session = await chatService.createSession(user.id);
-      if (session) {
-        setCurrentSessionId(session.id);
-        setSessionState('active');
-        setMessages([]);
-        toast({
-          title: "Session Started",
-          description: "Your therapy session has begun.",
-        });
-      }
+      setCurrentSessionId(session.id);
+      setSessionState('active');
+      setMessages([]);
+      setError(null);
     } catch (err) {
       setError('Failed to start session');
-      toast({
-        title: "Error",
-        description: "Failed to start session. Please try again.",
-        variant: "destructive",
-      });
+      console.error('Error starting session:', err);
     } finally {
       setLoading(false);
     }
-  }, [user, toast]);
+  }, [user]);
 
   const endSession = useCallback(async () => {
     if (!currentSessionId) return;
     
     try {
       await chatService.endSession(currentSessionId);
-      setSessionState('ended');
+      setSessionState('completed');
       setCurrentSessionId(null);
-      toast({
-        title: "Session Ended",
-        description: "Your therapy session has been completed.",
-      });
     } catch (err) {
       setError('Failed to end session');
+      console.error('Error ending session:', err);
     }
-  }, [currentSessionId, toast]);
+  }, [currentSessionId]);
 
   const pauseSession = useCallback(() => {
     setSessionState('paused');
-    toast({
-      title: "Session Paused",
-      description: "Your session has been paused.",
-    });
-  }, [toast]);
+  }, []);
 
   const resumeSession = useCallback(() => {
     setSessionState('active');
-    toast({
-      title: "Session Resumed",
-      description: "Your session has been resumed.",
-    });
-  }, [toast]);
+  }, []);
 
   const sendMessage = useCallback(async (content: string) => {
     if (!currentSessionId || !user) return;
-
+    
     try {
       setLoading(true);
+      setError(null);
       
-      // Add user message immediately
+      // Add user message
       const userMessage: Message = {
-        id: Date.now().toString(),
+        id: `msg_${Date.now()}`,
         content,
         sender: 'user',
         timestamp: new Date()
       };
+      
       setMessages(prev => [...prev, userMessage]);
-
-      // Send to chat service
+      
+      // Save user message
       await chatService.sendMessage(currentSessionId, content, 'user');
-
-      // Simulate AI response (replace with actual AI service call)
-      setTimeout(() => {
-        const aiMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          content: "Thank you for sharing that with me. How does that make you feel?",
-          sender: 'assistant',
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, aiMessage]);
-      }, 1000);
-
+      
+      // Get AI response
+      const response = await OpenAIService.sendTherapyMessage(
+        content,
+        messages.map(msg => ({ role: msg.sender === 'user' ? 'user' : 'assistant', content: msg.content }))
+      );
+      
+      // Add AI message
+      const aiMessage: Message = {
+        id: `msg_${Date.now() + 1}`,
+        content: response.message,
+        sender: 'ai',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, aiMessage]);
+      
+      // Save AI message
+      await chatService.sendMessage(currentSessionId, response.message, 'ai');
+      
     } catch (err) {
       setError('Failed to send message');
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
+      console.error('Error sending message:', err);
     } finally {
       setLoading(false);
     }
-  }, [currentSessionId, user, toast]);
+  }, [currentSessionId, user, messages]);
 
   return {
     messages,
     loading,
     error,
     sessionState,
-    currentSessionId,
     startSession,
     endSession,
     pauseSession,

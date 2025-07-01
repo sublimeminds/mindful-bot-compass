@@ -1,27 +1,56 @@
 
-import { useAuth } from '@/components/EnhancedAuthProvider';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { User } from '@supabase/supabase-js';
+
+interface SimpleAppContextType {
+  user: User | null;
+  loading: boolean;
+  signOut: () => Promise<void>;
+}
+
+const SimpleAppContext = createContext<SimpleAppContextType | undefined>(undefined);
+
+export const SimpleAppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Get initial session
+    const getInitialSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+      setLoading(false);
+    };
+
+    getInitialSession();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
+
+  return (
+    <SimpleAppContext.Provider value={{ user, loading, signOut }}>
+      {children}
+    </SimpleAppContext.Provider>
+  );
+};
 
 export const useSimpleApp = () => {
-  try {
-    const { user, loading, signIn, signUp, signOut } = useAuth();
-
-    return {
-      user,
-      loading,
-      login: signIn,
-      register: signUp,
-      logout: signOut,
-      isAuthenticated: !!user
-    };
-  } catch (error) {
-    console.warn('Auth context not available in useSimpleApp, returning defaults');
-    return {
-      user: null,
-      loading: true,
-      login: async () => { throw new Error('Auth not available'); },
-      register: async () => { throw new Error('Auth not available'); },
-      logout: async () => { throw new Error('Auth not available'); },
-      isAuthenticated: false
-    };
+  const context = useContext(SimpleAppContext);
+  if (context === undefined) {
+    throw new Error('useSimpleApp must be used within a SimpleAppProvider');
   }
+  return context;
 };

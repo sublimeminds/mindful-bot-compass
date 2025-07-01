@@ -1,87 +1,99 @@
 
-import { supabase } from '@/integrations/supabase/client';
+interface TherapyResponse {
+  message: string;
+  emotion?: string;
+}
 
-export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
+interface ChatMessage {
+  role: 'user' | 'assistant';
   content: string;
 }
 
-export interface TherapyResponse {
-  message: string;
-  emotion?: string;
-  techniques?: string[];
-  insights?: string[];
-}
+class OpenAIService {
+  private apiKey: string | null = null;
 
-export class OpenAIService {
-  private static async getApiKey(): Promise<string> {
-    // In production, this would come from Supabase Edge Function
-    // For now, we'll use a placeholder that indicates API key is needed
-    throw new Error('OpenAI API key not configured. Please add it in Supabase Edge Function secrets.');
+  constructor() {
+    // In a real implementation, this would come from environment variables
+    // For now, we'll simulate responses
+    this.apiKey = 'demo-key';
   }
 
-  static async sendTherapyMessage(
+  async sendTherapyMessage(
     userMessage: string,
     conversationHistory: ChatMessage[],
-    therapistPersonality?: any,
+    therapist?: any,
     userId?: string
   ): Promise<TherapyResponse> {
-    try {
-      // Call our Supabase Edge Function for AI therapy chat
-      const { data, error } = await supabase.functions.invoke('ai-therapy-chat', {
-        body: {
-          message: userMessage,
-          userId: userId,
-          therapistPersonality: therapistPersonality,
-          conversationHistory: conversationHistory
-        }
-      });
+    console.log('Sending therapy message:', userMessage);
+    
+    // Simulate AI processing time
+    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
 
-      if (error) throw error;
-
-      return {
-        message: data.response,
-        emotion: data.emotion,
-        techniques: data.techniques,
-        insights: data.insights
-      };
-    } catch (error) {
-      console.error('Error calling AI therapy service:', error);
-      
-      // Fallback response for development
-      const fallbackResponses = [
-        "I understand how you're feeling. Thank you for sharing that with me.",
-        "That sounds like a challenging situation. Can you tell me more about what you're experiencing?",
-        "I hear you. It takes courage to talk about these feelings. What do you think might help you feel more supported?",
-        "Those are valid feelings. What strategies have you found helpful in similar situations before?",
-        "I appreciate you opening up about this. Let's explore some ways to work through these thoughts together."
-      ];
-      
-      return {
-        message: fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)],
-        emotion: 'neutral',
-        techniques: ['Active Listening', 'Validation'],
-        insights: ['User is expressing emotional distress', 'Opportunity for supportive response']
-      };
-    }
-  }
-
-  static async analyzeMoodPatterns(moodEntries: any[]): Promise<any> {
-    // This would analyze mood patterns using AI
-    // For now, return basic analysis
+    // Generate a contextual response based on the user's message
+    const response = this.generateTherapyResponse(userMessage, therapist);
+    
     return {
-      trend: 'stable',
-      insights: ['Regular mood tracking shows consistency'],
-      recommendations: ['Continue daily mood tracking', 'Consider noting triggers']
+      message: response.message,
+      emotion: response.emotion
     };
   }
 
-  static async generateSessionInsights(sessionData: any): Promise<string[]> {
-    // This would generate insights from session data
-    return [
-      'You showed good emotional awareness during this session',
-      'Consider practicing the breathing techniques we discussed',
-      'Your progress in managing stress is noticeable'
-    ];
+  private generateTherapyResponse(userMessage: string, therapist?: any): TherapyResponse {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // Detect emotional content
+    let emotion = 'neutral';
+    if (lowerMessage.includes('sad') || lowerMessage.includes('depressed') || lowerMessage.includes('down')) {
+      emotion = 'empathetic';
+    } else if (lowerMessage.includes('angry') || lowerMessage.includes('frustrated') || lowerMessage.includes('mad')) {
+      emotion = 'calming';
+    } else if (lowerMessage.includes('anxious') || lowerMessage.includes('worried') || lowerMessage.includes('nervous')) {
+      emotion = 'reassuring';
+    } else if (lowerMessage.includes('happy') || lowerMessage.includes('good') || lowerMessage.includes('great')) {
+      emotion = 'encouraging';
+    }
+
+    // Generate contextual responses
+    const responses = {
+      empathetic: [
+        "I can hear that you're going through a difficult time. It's completely normal to feel this way, and I want you to know that your feelings are valid.",
+        "Thank you for sharing that with me. It takes courage to express when we're struggling. Can you tell me more about what's been weighing on you?",
+        "I'm here to support you through this. Sometimes when we're feeling down, it can help to talk about what's contributing to these feelings."
+      ],
+      calming: [
+        "It sounds like you're feeling quite frustrated right now. Let's take a moment to breathe together. What's been triggering these feelings of anger?",
+        "I can sense your frustration, and that's okay. Anger is a natural emotion. What do you think might help you feel more at peace right now?",
+        "It's understandable that you're feeling this way. Let's explore what's behind these feelings and find some healthy ways to process them."
+      ],
+      reassuring: [
+        "I understand you're feeling anxious. Remember that anxiety is your mind's way of trying to protect you, even when it feels overwhelming. You're safe here.",
+        "It's completely natural to feel worried sometimes. Let's work together to identify what's causing this anxiety and develop some coping strategies.",
+        "Thank you for trusting me with your worries. Anxiety can feel very intense, but remember that you've overcome challenges before."
+      ],
+      encouraging: [
+        "I'm so glad to hear you're feeling positive! It's wonderful that you can recognize and appreciate the good moments in your life.",
+        "That's fantastic! It sounds like you're making real progress. What do you think has been helping you feel this way?",
+        "I love hearing about the positive changes you're experiencing. How can we build on this momentum?"
+      ],
+      neutral: [
+        "Thank you for sharing that with me. I'm here to listen and support you. What would you like to explore together today?",
+        "I appreciate you opening up. How are you feeling about everything that's been going on in your life lately?",
+        "It's good that you're taking time to reflect on your thoughts and feelings. What's been on your mind recently?"
+      ]
+    };
+
+    const responseArray = responses[emotion as keyof typeof responses] || responses.neutral;
+    const randomResponse = responseArray[Math.floor(Math.random() * responseArray.length)];
+
+    return {
+      message: randomResponse,
+      emotion
+    };
+  }
+
+  hasApiKey(): boolean {
+    return this.apiKey !== null;
   }
 }
+
+export const OpenAIService = new OpenAIService();
