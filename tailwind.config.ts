@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -172,12 +171,10 @@ export default {
 				},
 				'gradient-flow': {
 					'0%, 100%': {
-						backgroundSize: '200% 200%',
-						backgroundPosition: 'left center'
+						backgroundPosition: '0% 50%'
 					},
 					'50%': {
-						backgroundSize: '200% 200%',
-						backgroundPosition: 'right center'
+						backgroundPosition: '100% 50%'
 					}
 				},
 				'swirl-grow': {
@@ -212,6 +209,16 @@ export default {
 						backgroundPosition: '200% 0'
 					}
 				},
+				'scale-in': {
+					'0%': {
+						transform: 'scale(0.95)',
+						opacity: '0'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					}
+				},
 				'pulse-glow': {
 					'0%, 100%': {
 						boxShadow: '0 0 5px hsl(var(--harmony-500) / 0.5)'
@@ -230,6 +237,7 @@ export default {
 				'swirl-grow': 'swirl-grow 3s ease-in-out infinite',
 				'float': 'float 3s ease-in-out infinite',
 				'shimmer': 'shimmer 2s linear infinite',
+				'scale-in': 'scale-in 0.5s ease-out',
 				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
 			}
 		}

@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -30,7 +31,7 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
 
-    /* Restored original TherapySync mental health therapy colors */
+    /* Enhanced TherapySync therapeutic colors */
     --therapy-50: 14 100% 97%;
     --therapy-100: 14 100% 92%;
     --therapy-200: 14 100% 84%;
@@ -43,7 +44,7 @@
     --therapy-900: 14 85% 19%;
     --therapy-950: 14 85% 9%;
 
-    /* Calm colors - softer blue-green, distinct from harmony */
+    /* Calm colors - softer blue-green */
     --calm-50: 188 100% 97%;
     --calm-100: 188 100% 92%;
     --calm-200: 188 100% 84%;
@@ -95,32 +96,10 @@
     --flow-900: 158 70% 14%;
     --flow-950: 158 70% 7%;
   }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
 }
 
 @layer components {
-  /* Enhanced gradient utilities for mental health therapy theme */
+  /* Enhanced gradient utilities for therapeutic theme */
   .gradient-primary {
     background: linear-gradient(135deg, hsl(var(--therapy-500)), hsl(var(--harmony-500)));
   }
@@ -152,11 +131,37 @@
     animation: gradient-flow 8s ease-in-out infinite;
   }
   
-  .gradient-text {
+  .therapy-text-gradient {
     background: linear-gradient(135deg, hsl(var(--therapy-600)), hsl(var(--harmony-600)));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+  .therapy-text-gradient-animated {
+    background: linear-gradient(-45deg, 
+      hsl(var(--therapy-600)), 
+      hsl(var(--harmony-600)), 
+      hsl(var(--flow-600)), 
+      hsl(var(--balance-600))
+    );
+    background-size: 400% 400%;
+    animation: gradient-flow 6s ease-in-out infinite;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .therapy-gradient-bg {
+    background: linear-gradient(135deg, 
+      hsl(var(--therapy-50)) 0%, 
+      hsl(var(--harmony-50)) 25%,
+      hsl(var(--flow-50)) 50%,
+      hsl(var(--balance-50)) 75%,
+      hsl(var(--calm-50)) 100%
+    );
+    animation: gradient-flow 10s ease-in-out infinite;
+    background-size: 200% 200%;
   }
   
   .gradient-border {
@@ -170,16 +175,16 @@
     content: '';
     position: absolute;
     inset: 2px;
-    background: hsl(var(--card));
+    background: white;
     border-radius: 6px;
     z-index: -1;
   }
   
-  .shimmer {
+  .shimmer-light {
     background: linear-gradient(
       90deg,
       transparent,
-      hsl(var(--harmony-500) / 0.2),
+      hsl(var(--harmony-200) / 0.4),
       transparent
     );
     background-size: 200% 100%;
@@ -208,83 +213,121 @@
     right: 15%;
     animation-delay: 1.5s;
   }
+
+  .therapy-card {
+    background: linear-gradient(135deg, 
+      hsl(var(--therapy-50)) 0%, 
+      white 50%,
+      hsl(var(--harmony-50)) 100%
+    );
+    border: 1px solid hsl(var(--therapy-200));
+    box-shadow: 0 4px 20px hsl(var(--therapy-500) / 0.1);
+  }
+
+  .therapy-button {
+    background: linear-gradient(135deg, hsl(var(--therapy-500)), hsl(var(--harmony-500)));
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+  }
+
+  .therapy-button:hover {
+    background: linear-gradient(135deg, hsl(var(--therapy-600)), hsl(var(--harmony-600)));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px hsl(var(--therapy-500) / 0.3);
+  }
 }
 
 @layer utilities {
-  /* Enhanced gradient background utilities for therapy theme */
-  .bg-gradient-therapy {
+  /* Light-only gradient backgrounds */
+  .bg-gradient-therapy-light {
     background: linear-gradient(135deg, hsl(var(--therapy-50)), hsl(var(--therapy-100)));
   }
   
-  .bg-gradient-harmony {
+  .bg-gradient-harmony-light {
     background: linear-gradient(135deg, hsl(var(--harmony-50)), hsl(var(--harmony-100)));
   }
   
-  .bg-gradient-flow {
+  .bg-gradient-flow-light {
     background: linear-gradient(135deg, hsl(var(--flow-50)), hsl(var(--flow-100)));
   }
   
-  .bg-gradient-calm {
+  .bg-gradient-calm-light {
     background: linear-gradient(135deg, hsl(var(--calm-50)), hsl(var(--calm-100)));
   }
   
-  .bg-gradient-balance {
+  .bg-gradient-balance-light {
     background: linear-gradient(135deg, hsl(var(--balance-50)), hsl(var(--balance-100)));
   }
-  
-  /* Dark mode gradient backgrounds */
-  .dark .bg-gradient-therapy {
-    background: linear-gradient(135deg, hsl(var(--therapy-950)), hsl(var(--therapy-900)));
+}
+
+/* Enhanced animations */
+@keyframes gradient-flow {
+  0%, 100% {
+    background-position: 0% 50%;
   }
-  
-  .dark .bg-gradient-harmony {
-    background: linear-gradient(135deg, hsl(var(--harmony-950)), hsl(var(--harmony-900)));
-  }
-  
-  .dark .bg-gradient-flow {
-    background: linear-gradient(135deg, hsl(var(--flow-950)), hsl(var(--flow-900)));
-  }
-  
-  .dark .bg-gradient-calm {
-    background: linear-gradient(135deg, hsl(var(--calm-950)), hsl(var(--calm-900)));
-  }
-  
-  .dark .bg-gradient-balance {
-    background: linear-gradient(135deg, hsl(var(--balance-950)), hsl(var(--balance-900)));
+  50% {
+    background-position: 100% 50%;
   }
 }
 
-/* Loading spinner animation */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes swirl-breathe {
+  0%, 100% { 
+    transform: rotate(0deg) scale(1);
+    filter: hue-rotate(0deg);
+  }
+  25% { 
+    transform: rotate(90deg) scale(1.05);
+    filter: hue-rotate(45deg);
+  }
+  50% { 
+    transform: rotate(180deg) scale(1.1);
+    filter: hue-rotate(90deg);
+  }
+  75% { 
+    transform: rotate(270deg) scale(1.05);
+    filter: hue-rotate(135deg);
+  }
 }
 
-/* Accessibility styles */
-.reduce-motion * {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
 }
 
-.high-contrast {
-  filter: contrast(150%);
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
-.large-text {
-  font-size: 120% !important;
+@keyframes scale-in {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-.screen-reader-optimized .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+@keyframes pulse-glow-light {
+  0%, 100% {
+    box-shadow: 0 0 5px hsl(var(--harmony-500) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px hsl(var(--harmony-500) / 0.6), 0 0 30px hsl(var(--flow-500) / 0.4);
+  }
 }
 
 /* Ensure proper styling for the app */
@@ -292,35 +335,21 @@ body {
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
+  background: white;
 }
 
 #root {
   min-height: 100vh;
   width: 100%;
+  background: white;
 }
 
-/* Enhanced therapy gradient text */
-.therapy-text-gradient {
-  background: linear-gradient(135deg, hsl(var(--therapy-500)), hsl(var(--harmony-500)));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Force light mode for all elements */
+* {
+  color-scheme: light;
 }
 
-/* Enhanced mental health therapy gradients */
-.therapy-gradient-warm {
-  background: linear-gradient(135deg, hsl(var(--therapy-500)), hsl(var(--balance-500)));
-}
-
-.therapy-gradient-cool {
-  background: linear-gradient(135deg, hsl(var(--harmony-500)), hsl(var(--flow-500)));
-}
-
-.therapy-gradient-full {
-  background: linear-gradient(135deg, 
-    hsl(var(--therapy-500)), 
-    hsl(var(--harmony-500)), 
-    hsl(var(--balance-500)), 
-    hsl(var(--flow-500))
-  );
+/* Remove any dark mode styling */
+.dark {
+  display: none !important;
 }

@@ -38,7 +38,6 @@ const EnhancedDashboardSidebar = () => {
   const location = useLocation();
   const { user } = useAuth();
   
-  // Mock subscription check - in real app, get from user profile
   const userPlan = (user as UserType)?.subscription_plan || 'free';
   const isPremium = userPlan === 'premium' || userPlan === 'pro';
   const isPro = userPlan === 'pro';
@@ -122,7 +121,7 @@ const EnhancedDashboardSidebar = () => {
   const getTierBadge = (tier: string) => {
     switch (tier) {
       case 'premium':
-        return <Badge variant="outline" className="ml-2 text-xs bg-gradient-to-r from-therapy-500 to-calm-500 text-white border-0">Premium</Badge>;
+        return <Badge variant="outline" className="ml-2 text-xs therapy-button border-0 text-white">Premium</Badge>;
       case 'pro':
         return <Badge variant="outline" className="ml-2 text-xs bg-gradient-to-r from-harmony-500 to-balance-500 text-white border-0">Pro</Badge>;
       default:
@@ -139,20 +138,20 @@ const EnhancedDashboardSidebar = () => {
   };
 
   return (
-    <Sidebar className="border-r border-slate-200 bg-white dark:bg-gray-900">
-      <SidebarHeader className="p-6">
+    <Sidebar className="border-r border-therapy-200 bg-white/95 backdrop-blur-sm shadow-lg">
+      <SidebarHeader className="p-6 bg-gradient-to-br from-therapy-50 to-harmony-50">
         <div className="flex items-center space-x-3">
           <GradientLogo size="sm" />
           <div>
-            <h2 className="font-bold text-slate-800 dark:text-white">TherapySync</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Mental Health Platform</p>
+            <h2 className="font-bold therapy-text-gradient">TherapySync</h2>
+            <p className="text-xs text-therapy-600">Mental Health Platform</p>
           </div>
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="bg-gradient-to-b from-white via-therapy-50/30 to-harmony-50/30">
         <SidebarGroup>
-          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-therapy-700 font-semibold">Dashboard</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarItems.map((item, index) => {
@@ -166,15 +165,15 @@ const EnhancedDashboardSidebar = () => {
                       isActive={isActive(item.path)}
                       className={
                         isActive(item.path) 
-                          ? 'bg-gradient-to-r from-therapy-500 to-harmony-500 text-white shadow-lg' 
+                          ? 'therapy-button text-white shadow-lg transform scale-105' 
                           : hasAccess 
-                            ? 'text-slate-600 hover:text-therapy-600 hover:bg-therapy-50 dark:text-slate-300 dark:hover:text-therapy-400 dark:hover:bg-therapy-900/20' 
-                            : 'text-slate-400 hover:bg-slate-50 dark:text-slate-500 dark:hover:bg-slate-800'
+                            ? 'text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50/70 transition-all duration-200' 
+                            : 'text-therapy-400 hover:bg-therapy-25 transition-colors'
                       }
                     >
                       <IconComponent className="h-4 w-4" />
                       <span className="flex-1">{item.label}</span>
-                      {!hasAccess && <Lock className="h-3 w-3" />}
+                      {!hasAccess && <Lock className="h-3 w-3 text-therapy-400" />}
                       {hasAccess && item.tier !== 'free' && getTierBadge(item.tier)}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -185,20 +184,19 @@ const EnhancedDashboardSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4">
-        {/* Upgrade Section */}
+      <SidebarFooter className="p-4 bg-gradient-to-t from-therapy-50 to-transparent">
         {!isPro && (
-          <div className="p-4 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-lg text-white">
+          <div className="therapy-card p-4 rounded-lg">
             <div className="flex items-center space-x-2 mb-2">
-              <Crown className="h-4 w-4" />
-              <span className="font-semibold text-sm">Upgrade to Pro</span>
+              <Crown className="h-4 w-4 text-therapy-600" />
+              <span className="font-semibold text-sm therapy-text-gradient">Upgrade to Pro</span>
             </div>
-            <p className="text-xs text-therapy-100 mb-3">
+            <p className="text-xs text-therapy-600 mb-3">
               Unlock premium audio content, advanced integrations, and more features.
             </p>
             <Button 
               size="sm" 
-              className="w-full bg-white text-therapy-600 hover:bg-therapy-50 text-xs"
+              className="w-full therapy-button text-xs"
               onClick={() => navigate('/pricing')}
             >
               View Plans
