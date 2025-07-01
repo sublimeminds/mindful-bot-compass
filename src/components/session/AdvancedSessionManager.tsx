@@ -455,16 +455,16 @@ const AdvancedSessionManager = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {Object.entries(getCurrentProtocol()?.session_structure || {}).map(([phase, duration]) => (
-                    <Button
-                      key={phase}
-                      variant={currentPhase === phase ? "default" : "outline"}
-                      size="sm"
-                      className="w-full justify-between"
-                      onClick={() => updateSessionPhase(phase)}
-                    >
-                      <span className="capitalize">{phase.replace('_', ' ')}</span>
-                      <span>{duration} min</span>
+                        {Object.entries(getCurrentProtocol()?.session_structure || {}).map(([phase, duration]) => (
+                          <Button
+                            key={phase}
+                            variant={currentPhase === phase ? "default" : "outline"}
+                            size="sm"
+                            className="w-full justify-between"
+                            onClick={() => updateSessionPhase(phase)}
+                          >
+                            <span className="capitalize">{phase.replace('_', ' ')}</span>
+                            <span>{String(duration)} min</span>
                     </Button>
                   ))}
                 </div>
@@ -588,7 +588,7 @@ const AdvancedSessionManager = () => {
                         <div key={type} className="p-3 border rounded-lg">
                           <div className="font-medium capitalize mb-1">{type}</div>
                           <div className="text-sm text-gray-600">
-                            {Array.isArray(suggestions) ? suggestions.join(', ') : suggestions}
+                            {Array.isArray(suggestions) ? suggestions.join(', ') : String(suggestions)}
                           </div>
                         </div>
                       ))}
