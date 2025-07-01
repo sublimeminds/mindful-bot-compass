@@ -1,15 +1,12 @@
 
 import React from 'react';
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import SessionManager from '@/components/sessions/SessionManager';
 
 const SessionsPage = () => {
   return (
-    <DashboardLayout>
-      <div className="p-6">
-        <SessionManager />
-      </div>
-    </DashboardLayout>
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
+      <SessionManager />
+    </div>
   );
 };
 

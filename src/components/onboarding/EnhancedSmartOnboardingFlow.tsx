@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import AnimatedOnboardingIntro from './AnimatedOnboardingIntro';
@@ -161,7 +162,20 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       };
     }
 
-    return baseProps;
+    // For all other steps, provide default cultural preferences props
+    return {
+      ...baseProps,
+      preferences: onboardingData.culturalPreferences || {
+        primaryLanguage: 'en',
+        culturalBackground: '',
+        familyStructure: 'individual',
+        communicationStyle: 'direct',
+        religiousConsiderations: false,
+        therapyApproachPreferences: [],
+        culturalSensitivities: []
+      },
+      onPreferencesChange: handleCulturalPreferencesChange
+    };
   };
 
   return (

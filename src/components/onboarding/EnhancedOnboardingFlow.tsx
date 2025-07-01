@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
@@ -216,7 +217,20 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
       };
     }
 
-    return baseProps;
+    // For all other steps, ensure we have the required props
+    return {
+      ...baseProps,
+      preferences: onboardingData.culturalPreferences || {
+        primaryLanguage: 'en',
+        culturalBackground: '',
+        familyStructure: 'individual',
+        communicationStyle: 'direct',
+        religiousConsiderations: false,
+        therapyApproachPreferences: [],
+        culturalSensitivities: []
+      },
+      onPreferencesChange: handleCulturalPreferencesChange
+    };
   };
 
   // Calculate progress based on visible steps
