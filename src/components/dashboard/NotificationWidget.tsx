@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,68 +17,25 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-interface NotificationItem {
-  id: string;
-  type: 'reminder' | 'achievement' | 'insight' | 'mood_check' | 'milestone' | 'system';
-  title: string;
-  message: string;
-  priority: 'high' | 'medium' | 'low';
-  isRead: boolean;
-  createdAt: Date;
-}
+import { useNavigate } from 'react-router-dom';
+import { useNotifications } from '@/hooks/useNotifications';
 
 const NotificationWidget = () => {
-  // Mock notifications - same as notification center
-  const [notifications, setNotifications] = useState<NotificationItem[]>([
-    {
-      id: '1',
-      type: 'reminder',
-      title: 'Therapy Session Reminder',
-      message: 'Your scheduled session starts in 30 minutes.',
-      priority: 'high',
-      isRead: false,
-      createdAt: new Date(Date.now() - 30 * 60 * 1000)
-    },
-    {
-      id: '2',
-      type: 'achievement',
-      title: 'Milestone Achieved! 🎉',
-      message: '7 consecutive days of mood tracking completed.',
-      priority: 'medium',
-      isRead: false,
-      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000)
-    },
-    {
-      id: '3',
-      type: 'insight',
-      title: 'Weekly Insight',
-      message: 'Anxiety levels decreased by 15% this week.',
-      priority: 'medium',
-      isRead: true,
-      createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000)
-    }
-  ]);
-
-  const unreadCount = notifications.filter(n => !n.isRead).length;
-  const recentNotifications = notifications.slice(0, 3);
-
-  const handleMarkAsRead = (notificationId: string) => {
-    setNotifications(prev => 
-      prev.map(n => 
-        n.id === notificationId ? { ...n, isRead: true } : n
-      )
-    );
-  };
+  const navigate = useNavigate();
+  const { 
+    recentNotifications, 
+    unreadCount, 
+    isLoading, 
+    markAsRead 
+  } = useNotifications();
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'reminder': return <Calendar className="h-4 w-4 text-therapy-600" />;
-      case 'achievement': return <Award className="h-4 w-4 text-balance-600" />;
-      case 'insight': return <TrendingUp className="h-4 w-4 text-flow-600" />;
+      case 'session_reminder': return <Calendar className="h-4 w-4 text-therapy-600" />;
+      case 'milestone_achieved': return <Award className="h-4 w-4 text-balance-600" />;
+      case 'insight_generated': return <TrendingUp className="h-4 w-4 text-flow-600" />;
       case 'mood_check': return <Heart className="h-4 w-4 text-harmony-600" />;
-      case 'milestone': return <Target className="h-4 w-4 text-calm-600" />;
-      case 'system': return <AlertTriangle className="h-4 w-4 text-orange-600" />;
+      case 'progress_update': return <Target className="h-4 w-4 text-calm-600" />;
       default: return <Bell className="h-4 w-4 text-gray-600" />;
     }
   };
@@ -108,6 +65,7 @@ const NotificationWidget = () => {
           <Button 
             variant="ghost" 
             size="sm"
+            onClick={() => navigate('/notifications')}
             className="text-therapy-600 hover:text-therapy-700 hover:bg-therapy-100"
           >
             View All
@@ -117,7 +75,12 @@ const NotificationWidget = () => {
       </CardHeader>
       
       <CardContent className="p-0">
-        {notifications.length === 0 ? (
+        {isLoading ? (
+          <div className="p-6 text-center">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-therapy-600 mx-auto mb-2"></div>
+            <p className="text-sm text-gray-600">Loading notifications...</p>
+          </div>
+        ) : recentNotifications.length === 0 ? (
           <div className="p-6 text-center text-muted-foreground">
             <BellOff className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No notifications</p>
@@ -164,7 +127,7 @@ const NotificationWidget = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleMarkAsRead(notification.id)}
+                            onClick={() => markAsRead(notification.id)}
                             className="h-5 w-5 p-0 hover:bg-therapy-100 rounded-full"
                           >
                             <Check className="h-3 w-3 text-therapy-600" />

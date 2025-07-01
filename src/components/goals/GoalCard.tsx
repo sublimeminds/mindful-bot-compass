@@ -7,8 +7,10 @@ import { Progress } from '@/components/ui/progress';
 import { Plus, Minus, Target, Calendar, TrendingUp } from 'lucide-react';
 import { UserGoal } from '@/hooks/useUserGoals';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useQueryClient } from '@tanstack/react-query';
+import { IntelligentNotificationService } from '@/services/intelligentNotificationService';
 
 interface GoalCardProps {
   goal: UserGoal;
@@ -16,6 +18,7 @@ interface GoalCardProps {
 
 const GoalCard = ({ goal }: GoalCardProps) => {
   const [isUpdating, setIsUpdating] = useState(false);
+  const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -37,6 +40,18 @@ const GoalCard = ({ goal }: GoalCardProps) => {
         .eq('id', goal.id);
 
       if (error) throw error;
+
+      // Check if goal was just completed
+      if (isCompleted && goal.status !== 'completed' && user) {
+        await IntelligentNotificationService.createCustomNotification(
+          user.id,
+          'milestone_achieved',
+          'Goal Completed! 🎉',
+          `Congratulations! You've completed your goal: ${goal.title}`,
+          'high',
+          { goalId: goal.id, goalTitle: goal.title }
+        );
+      }
 
       toast({
         title: increment > 0 ? "Progress Updated!" : "Progress Adjusted",

@@ -19,6 +19,7 @@ import TherapyChatPage from '@/pages/TherapyChatPage';
 import SessionsPage from '@/pages/SessionsPage';
 import AIAvatarPage from '@/pages/AIAvatarPage';
 import GoalsPage from '@/pages/GoalsPage';
+import NotificationCenterPage from '@/pages/NotificationCenter';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -49,6 +50,7 @@ function App() {
                   <Route path="/mood" element={<DashboardPage />} />
                   <Route path="/mood-tracker" element={<DashboardPage />} />
                   <Route path="/ai-avatar" element={<AIAvatarPage />} />
+                  <Route path="/notifications" element={<NotificationCenterPage />} />
                 </Routes>
                 <NotificationToastHandler />
                 <Toaster />
