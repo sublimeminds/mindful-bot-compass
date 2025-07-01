@@ -25,7 +25,7 @@ export const useUserGoals = () => {
       if (!user) return [];
 
       const { data, error } = await supabase
-        .from('user_goals')
+        .from('goals')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
@@ -39,10 +39,10 @@ export const useUserGoals = () => {
         id: goal.id,
         title: goal.title,
         description: goal.description,
-        targetValue: goal.target_value,
-        currentValue: goal.current_value,
-        category: goal.category,
-        status: goal.status as 'active' | 'completed' | 'paused',
+        targetValue: goal.target_progress || 100,
+        currentValue: goal.current_progress || 0,
+        category: goal.category || 'general',
+        status: goal.is_completed ? 'completed' : 'active',
         dueDate: goal.due_date,
         createdAt: goal.created_at,
         updatedAt: goal.updated_at,

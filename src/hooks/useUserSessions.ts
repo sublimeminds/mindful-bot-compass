@@ -23,7 +23,7 @@ export const useUserSessions = () => {
       if (!user) return [];
 
       const { data, error } = await supabase
-        .from('user_sessions')
+        .from('therapy_sessions')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
@@ -35,12 +35,14 @@ export const useUserSessions = () => {
 
       return (data || []).map(session => ({
         id: session.id,
-        sessionType: session.session_type,
-        durationMinutes: session.duration_minutes,
+        sessionType: 'therapy', // Default type since therapy_sessions doesn't have a type field
+        durationMinutes: session.end_time 
+          ? Math.round((new Date(session.end_time).getTime() - new Date(session.start_time).getTime()) / (1000 * 60))
+          : 0,
         moodBefore: session.mood_before,
         moodAfter: session.mood_after,
         notes: session.notes,
-        completed: session.completed,
+        completed: !!session.end_time,
         createdAt: session.created_at,
       }));
     },

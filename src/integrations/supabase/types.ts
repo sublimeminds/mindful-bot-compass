@@ -3191,6 +3191,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_stats: {
+        Row: {
+          average_mood: number | null
+          current_streak: number | null
+          id: string
+          last_session_date: string | null
+          longest_streak: number | null
+          total_minutes: number | null
+          total_sessions: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          average_mood?: number | null
+          current_streak?: number | null
+          id?: string
+          last_session_date?: string | null
+          longest_streak?: number | null
+          total_minutes?: number | null
+          total_sessions?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          average_mood?: number | null
+          current_streak?: number | null
+          id?: string
+          last_session_date?: string | null
+          longest_streak?: number | null
+          total_minutes?: number | null
+          total_sessions?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_subscriptions: {
         Row: {
           billing_cycle: string
