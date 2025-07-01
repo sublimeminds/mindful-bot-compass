@@ -33,9 +33,9 @@ export const useMoodEntries = () => {
 
       return (data || []).map(entry => ({
         id: entry.id,
-        moodScore: entry.mood_score,
-        energyLevel: entry.energy_level,
-        anxietyLevel: entry.anxiety_level,
+        moodScore: entry.overall, // Map from actual field name
+        energyLevel: entry.energy, // Map from actual field name
+        anxietyLevel: entry.anxiety, // Map from actual field name
         notes: entry.notes,
         createdAt: entry.created_at,
       }));
