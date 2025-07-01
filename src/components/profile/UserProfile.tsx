@@ -2,17 +2,18 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, CreditCard, Bell, Shield, TrendingUp, Target, Calendar, Activity, Headphones, MessageSquare } from 'lucide-react';
+import { User, CreditCard, Bell, Shield, TrendingUp, Target, Calendar, Activity, Headphones, MessageSquare, Accessibility } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserStats } from '@/hooks/useUserStats';
 import { useUserSessions } from '@/hooks/useUserSessions';
 import { useUserGoals } from '@/hooks/useUserGoals';
 import RealBillingHistory from '@/components/subscription/RealBillingHistory';
 import EnhancedAccountSettings from './EnhancedAccountSettings';
-import ComprehensiveNotificationSettings from '@/components/notifications/ComprehensiveNotificationSettings';
-import PrivacySettings from './PrivacySettings';
 import AudioSettings from '@/components/settings/AudioSettings';
 import SessionSettings from '@/components/settings/SessionSettings';
+import PrivacySettings from '@/components/settings/PrivacySettings';
+import NotificationSettings from '@/components/settings/NotificationSettings';
+import AccessibilitySettings from '@/components/settings/AccessibilitySettings';
 
 const UserProfile = () => {
   const { user } = useAuth();
@@ -146,30 +147,34 @@ const UserProfile = () => {
 
         {/* Profile Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="account" className="flex items-center space-x-2">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+            <TabsTrigger value="account" className="flex items-center space-x-1">
               <User className="h-4 w-4" />
-              <span>Account</span>
+              <span className="hidden sm:inline">Account</span>
             </TabsTrigger>
-            <TabsTrigger value="session" className="flex items-center space-x-2">
+            <TabsTrigger value="session" className="flex items-center space-x-1">
               <MessageSquare className="h-4 w-4" />
-              <span>Sessions</span>
+              <span className="hidden sm:inline">Sessions</span>
             </TabsTrigger>
-            <TabsTrigger value="audio" className="flex items-center space-x-2">
+            <TabsTrigger value="audio" className="flex items-center space-x-1">
               <Headphones className="h-4 w-4" />
-              <span>Audio</span>
+              <span className="hidden sm:inline">Audio</span>
             </TabsTrigger>
-            <TabsTrigger value="subscription" className="flex items-center space-x-2">
+            <TabsTrigger value="subscription" className="flex items-center space-x-1">
               <CreditCard className="h-4 w-4" />
-              <span>Billing</span>
+              <span className="hidden sm:inline">Billing</span>
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center space-x-2">
+            <TabsTrigger value="notifications" className="flex items-center space-x-1">
               <Bell className="h-4 w-4" />
-              <span>Notifications</span>
+              <span className="hidden sm:inline">Notifications</span>
             </TabsTrigger>
-            <TabsTrigger value="privacy" className="flex items-center space-x-2">
+            <TabsTrigger value="privacy" className="flex items-center space-x-1">
               <Shield className="h-4 w-4" />
-              <span>Privacy</span>
+              <span className="hidden sm:inline">Privacy</span>
+            </TabsTrigger>
+            <TabsTrigger value="accessibility" className="flex items-center space-x-1">
+              <Accessibility className="h-4 w-4" />
+              <span className="hidden sm:inline">Accessibility</span>
             </TabsTrigger>
           </TabsList>
 
@@ -190,11 +195,15 @@ const UserProfile = () => {
           </TabsContent>
 
           <TabsContent value="notifications" className="space-y-6">
-            <ComprehensiveNotificationSettings />
+            <NotificationSettings />
           </TabsContent>
 
           <TabsContent value="privacy" className="space-y-6">
             <PrivacySettings />
+          </TabsContent>
+
+          <TabsContent value="accessibility" className="space-y-6">
+            <AccessibilitySettings />
           </TabsContent>
         </Tabs>
       </div>
