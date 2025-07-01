@@ -16,7 +16,8 @@ serve(async (req) => {
   }
 
   try {
-    const { message, userId, therapistPersonality, conversationHistory, sessionId } = await req.json();
+    const { message, context } = await req.json();
+    const { user_id: userId, conversation_history: conversationHistory, session_id: sessionId, emotion, stress_level, is_voice } = context || {};
 
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
@@ -27,6 +28,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     console.log('Enhanced AI Therapy Chat - Processing request for user:', userId);
+    console.log('Context:', { emotion, stress_level, is_voice, messageLength: message?.length });
 
     // Fetch enhanced context using memory system
     const { data: recentMemories } = await supabase
@@ -72,8 +74,30 @@ serve(async (req) => {
       .eq('user_id', userId)
       .single();
 
+    // Get selected therapist personality
+    const { data: therapistPersonality } = await supabase
+      .from('therapist_personalities')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
     // Build enhanced system prompt with memory
     let systemPrompt = `You are a compassionate AI therapy assistant with expertise in mental health support. You provide empathetic, evidence-based responses while maintaining professional boundaries.`;
+    
+    // Add context-aware instructions
+    if (emotion && emotion !== 'neutral') {
+      systemPrompt += `\n\nThe user's current emotional state appears to be: ${emotion}. Please respond with appropriate sensitivity to this emotional context.`;
+    }
+    
+    if (stress_level && stress_level > 0.6) {
+      systemPrompt += `\n\nThe user appears to be experiencing elevated stress (${Math.round(stress_level * 100)}%). Focus on grounding and calming techniques.`;
+    }
+    
+    if (is_voice) {
+      systemPrompt += `\n\nThis message was delivered via voice input. The user may prefer more conversational, supportive responses. Keep responses natural and spoken-friendly.`;
+    }
 
     if (therapistPersonality) {
       systemPrompt += `\n\nYour personality: You are ${therapistPersonality.name}, a ${therapistPersonality.title}.
@@ -275,9 +299,14 @@ serve(async (req) => {
 
     return new Response(JSON.stringify({ 
       response: aiResponse,
-      emotion: emotion,
-      techniques: techniques,
-      insights: ['Enhanced memory-based insights', 'Therapeutic rapport building', 'Contextual understanding']
+      metadata: {
+        emotion_detected: emotion,
+        stress_level: stress_level || 0.5,
+        therapeutic_approach: therapistPersonality?.approach || 'Supportive Therapy',
+        confidence: 0.85,
+        techniques_used: techniques,
+        insights: ['Enhanced memory-based insights', 'Therapeutic rapport building', 'Contextual understanding']
+      }
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
