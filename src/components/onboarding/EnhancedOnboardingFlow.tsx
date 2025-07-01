@@ -65,59 +65,70 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
     }
   }, []);
 
-  // Determine which steps to show based on auth status
-  const getSteps = () => {
-    const baseSteps = [
-      { component: WelcomeStep, titleKey: 'onboarding.steps.welcome' }
-    ];
+  // Create a stable steps array that doesn't change based on auth status
+  const allSteps = [
+    { component: WelcomeStep, titleKey: 'onboarding.steps.welcome', shouldShow: () => true },
+    { component: EmbeddedAuthStep, titleKey: 'Create Your Account', shouldShow: () => !user },
+    { component: IntakeAssessmentStep, titleKey: 'onboarding.steps.goals', shouldShow: () => true },
+    { component: MentalHealthScreeningStep, titleKey: 'onboarding.steps.preferences', shouldShow: () => true },
+    { component: CulturalPreferencesStep, titleKey: 'onboarding.steps.cultural', shouldShow: () => true },
+    { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'onboarding.steps.analysis', shouldShow: () => true },
+    { component: TherapistPersonalityStep, titleKey: 'onboarding.steps.therapist', shouldShow: () => true },
+    { component: PlanSelectionStep, titleKey: 'onboarding.steps.plan', shouldShow: () => !selectedPlan },
+    { component: NotificationPreferencesStep, titleKey: 'onboarding.steps.notifications', shouldShow: () => true }
+  ];
 
-    // If user is not authenticated, show auth step early
-    if (!user) {
-      baseSteps.push({ component: EmbeddedAuthStep, titleKey: 'Create Your Account' });
-    }
-
-    // Add the rest of the steps
-    baseSteps.push(
-      { component: IntakeAssessmentStep, titleKey: 'onboarding.steps.goals' },
-      { component: MentalHealthScreeningStep, titleKey: 'onboarding.steps.preferences' },
-      { component: CulturalPreferencesStep, titleKey: 'onboarding.steps.cultural' },
-      { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'onboarding.steps.analysis' },
-      { component: TherapistPersonalityStep, titleKey: 'onboarding.steps.therapist' }
-    );
-
-    // Only show plan selection if no plan was pre-selected
-    if (!selectedPlan) {
-      baseSteps.push({ component: PlanSelectionStep, titleKey: 'onboarding.steps.plan' });
-    }
-
-    baseSteps.push({ component: NotificationPreferencesStep, titleKey: 'onboarding.steps.notifications' });
-
-    return baseSteps;
-  };
-
-  const steps = getSteps();
+  // Get the visible steps for progress calculation
+  const visibleSteps = allSteps.filter(step => step.shouldShow());
 
   const handleGetStarted = () => {
     setShowIntro(false);
   };
 
+  const findNextValidStep = (fromIndex: number) => {
+    for (let i = fromIndex + 1; i < allSteps.length; i++) {
+      if (allSteps[i].shouldShow()) {
+        return i;
+      }
+    }
+    return -1; // No more valid steps
+  };
+
   const handleNext = (stepData?: any) => {
+    console.log('handleNext called with stepData:', stepData, 'currentStep:', currentStep);
+    
     if (stepData) {
       setOnboardingData(prev => ({ ...prev, ...stepData }));
     }
 
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+    const nextStepIndex = findNextValidStep(currentStep);
+    console.log('Next valid step index:', nextStepIndex);
+    
+    if (nextStepIndex !== -1) {
+      setCurrentStep(nextStepIndex);
     } else {
-      // Clear saved plan from localStorage and complete onboarding
+      // No more steps, complete onboarding
+      console.log('Completing onboarding with data:', { ...onboardingData, ...stepData });
       localStorage.removeItem('selectedPlan');
       onComplete({ ...onboardingData, ...stepData });
     }
   };
 
+  const findPreviousValidStep = (fromIndex: number) => {
+    for (let i = fromIndex - 1; i >= 0; i--) {
+      if (allSteps[i].shouldShow()) {
+        return i;
+      }
+    }
+    return -1; // No previous valid steps
+  };
+
   const handleBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+    const prevStepIndex = findPreviousValidStep(currentStep);
+    console.log('Previous valid step index:', prevStepIndex);
+    
+    if (prevStepIndex !== -1) {
+      setCurrentStep(prevStepIndex);
     } else {
       setShowIntro(true);
     }
@@ -130,11 +141,41 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
     }));
   };
 
+  // Auto-advance from auth step when user becomes authenticated
+  useEffect(() => {
+    console.log('Auth state changed. User:', user ? 'authenticated' : 'not authenticated', 'currentStep:', currentStep);
+    
+    // If user just authenticated and we're on the auth step, move to next step
+    if (user && allSteps[currentStep]?.component === EmbeddedAuthStep) {
+      console.log('User authenticated, advancing from auth step');
+      const nextStepIndex = findNextValidStep(currentStep);
+      if (nextStepIndex !== -1) {
+        setCurrentStep(nextStepIndex);
+      }
+    }
+  }, [user, currentStep]);
+
   if (showIntro) {
     return <AnimatedOnboardingIntro onGetStarted={handleGetStarted} />;
   }
 
-  const CurrentStepComponent = steps[currentStep].component;
+  // Ensure we have a valid current step
+  const currentStepConfig = allSteps[currentStep];
+  if (!currentStepConfig || !currentStepConfig.shouldShow()) {
+    console.log('Current step invalid, finding next valid step');
+    const nextValidStep = findNextValidStep(currentStep - 1);
+    if (nextValidStep !== -1) {
+      setCurrentStep(nextValidStep);
+      return null; // Will re-render with valid step
+    }
+  }
+
+  if (!currentStepConfig) {
+    console.error('No valid step found, this should not happen');
+    return <div>Error: No valid step found</div>;
+  }
+
+  const CurrentStepComponent = currentStepConfig.component;
 
   const getStepProps = () => {
     const baseProps = {
@@ -144,7 +185,7 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
     };
 
     // Add selected plan for auth step
-    if (steps[currentStep].component === EmbeddedAuthStep) {
+    if (currentStepConfig.component === EmbeddedAuthStep) {
       return {
         ...baseProps,
         selectedPlan
@@ -152,7 +193,7 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
     }
 
     // Add specific props for Cultural Preferences step
-    if (steps[currentStep].component === CulturalPreferencesStep) {
+    if (currentStepConfig.component === CulturalPreferencesStep) {
       return {
         ...baseProps,
         preferences: onboardingData.culturalPreferences,
@@ -161,7 +202,7 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
     }
 
     // Add pre-selected plan for Plan Selection step (if we reach it)
-    if (steps[currentStep].component === PlanSelectionStep && selectedPlan) {
+    if (currentStepConfig.component === PlanSelectionStep && selectedPlan) {
       return {
         ...baseProps,
         preSelectedPlan: selectedPlan
@@ -170,6 +211,10 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
 
     return baseProps;
   };
+
+  // Calculate progress based on visible steps
+  const currentVisibleStepIndex = visibleSteps.findIndex(step => step.component === currentStepConfig.component);
+  const progressPercentage = ((currentVisibleStepIndex + 1) / visibleSteps.length) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50 dark:from-harmony-950 dark:to-flow-950 p-4 transition-colors duration-300">
@@ -196,19 +241,19 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-lg font-semibold text-harmony-600 dark:text-harmony-400">{t('onboarding.title')}</h1>
             <span className="text-sm text-muted-foreground">
-              Step {currentStep + 1} of {steps.length}
+              Step {currentVisibleStepIndex + 1} of {visibleSteps.length}
             </span>
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
             <div 
               className="bg-gradient-to-r from-harmony-500 to-flow-500 h-2 rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+              style={{ width: `${progressPercentage}%` }}
             />
           </div>
           <p className="text-center text-sm font-medium text-harmony-600 dark:text-harmony-400 mt-2">
-            {typeof steps[currentStep].titleKey === 'string' && steps[currentStep].titleKey.startsWith('onboarding.') 
-              ? t(steps[currentStep].titleKey) 
-              : steps[currentStep].titleKey}
+            {typeof currentStepConfig.titleKey === 'string' && currentStepConfig.titleKey.startsWith('onboarding.') 
+              ? t(currentStepConfig.titleKey) 
+              : currentStepConfig.titleKey}
           </p>
         </div>
 
