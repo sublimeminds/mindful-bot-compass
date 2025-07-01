@@ -3,46 +3,72 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Simplified Therapeutic Color Palette */
+/* Complete 5-Color Therapeutic Palette */
 :root {
-  /* Primary Therapeutic Colors - Soft Blue-Green */
-  --therapy-50: 204 86% 97%;
-  --therapy-100: 204 86% 94%;
-  --therapy-200: 204 86% 86%;
-  --therapy-300: 204 86% 77%;
-  --therapy-400: 204 86% 65%;
-  --therapy-500: 204 86% 53%;
-  --therapy-600: 204 86% 45%;
-  --therapy-700: 204 86% 37%;
-  --therapy-800: 204 86% 29%;
-  --therapy-900: 204 86% 21%;
-  --therapy-950: 204 86% 13%;
+  /* Primary Therapy Colors - Calming Teal-Blue */
+  --therapy-50: 180 85% 97%;
+  --therapy-100: 180 85% 94%;
+  --therapy-200: 180 85% 86%;
+  --therapy-300: 180 85% 77%;
+  --therapy-400: 180 85% 65%;
+  --therapy-500: 180 85% 53%;
+  --therapy-600: 180 85% 45%;
+  --therapy-700: 180 85% 37%;
+  --therapy-800: 180 85% 29%;
+  --therapy-900: 180 85% 21%;
+  --therapy-950: 180 85% 13%;
 
-  /* Secondary Calming Colors - Gentle Green */
-  --calm-50: 158 70% 96%;
-  --calm-100: 158 70% 92%;
-  --calm-200: 158 70% 84%;
-  --calm-300: 158 70% 76%;
-  --calm-400: 158 70% 64%;
-  --calm-500: 158 70% 52%;
-  --calm-600: 158 70% 44%;
-  --calm-700: 158 70% 36%;
-  --calm-800: 158 70% 28%;
-  --calm-900: 158 70% 20%;
-  --calm-950: 158 70% 12%;
+  /* Calm Colors - Mint Green */
+  --calm-50: 155 70% 96%;
+  --calm-100: 155 70% 92%;
+  --calm-200: 155 70% 84%;
+  --calm-300: 155 70% 76%;
+  --calm-400: 155 70% 64%;
+  --calm-500: 155 70% 52%;
+  --calm-600: 155 70% 44%;
+  --calm-700: 155 70% 36%;
+  --calm-800: 155 70% 28%;
+  --calm-900: 155 70% 20%;
+  --calm-950: 155 70% 12%;
 
-  /* Accent Colors - Warm Coral */
-  --accent-50: 14 85% 97%;
-  --accent-100: 14 85% 94%;
-  --accent-200: 14 85% 86%;
-  --accent-300: 14 85% 77%;
-  --accent-400: 14 85% 65%;
-  --accent-500: 14 85% 53%;
-  --accent-600: 14 85% 45%;
-  --accent-700: 14 85% 37%;
-  --accent-800: 14 85% 29%;
-  --accent-900: 14 85% 21%;
-  --accent-950: 14 85% 13%;
+  /* Harmony Colors - Warm Coral-Pink */
+  --harmony-50: 340 75% 97%;
+  --harmony-100: 340 75% 94%;
+  --harmony-200: 340 75% 86%;
+  --harmony-300: 340 75% 77%;
+  --harmony-400: 340 75% 65%;
+  --harmony-500: 340 75% 53%;
+  --harmony-600: 340 75% 45%;
+  --harmony-700: 340 75% 37%;
+  --harmony-800: 340 75% 29%;
+  --harmony-900: 340 75% 21%;
+  --harmony-950: 340 75% 13%;
+
+  /* Balance Colors - Sage Green */
+  --balance-50: 120 40% 97%;
+  --balance-100: 120 40% 94%;
+  --balance-200: 120 40% 86%;
+  --balance-300: 120 40% 77%;
+  --balance-400: 120 40% 65%;
+  --balance-500: 120 40% 53%;
+  --balance-600: 120 40% 45%;
+  --balance-700: 120 40% 37%;
+  --balance-800: 120 40% 29%;
+  --balance-900: 120 40% 21%;
+  --balance-950: 120 40% 13%;
+
+  /* Flow Colors - Deep Calming Blue */
+  --flow-50: 210 85% 97%;
+  --flow-100: 210 85% 94%;
+  --flow-200: 210 85% 86%;
+  --flow-300: 210 85% 77%;
+  --flow-400: 210 85% 65%;
+  --flow-500: 210 85% 53%;
+  --flow-600: 210 85% 45%;
+  --flow-700: 210 85% 37%;
+  --flow-800: 210 85% 29%;
+  --flow-900: 210 85% 21%;
+  --flow-950: 210 85% 13%;
 
   /* Standard Shadcn Variables */
   --background: 0 0% 100%;
@@ -51,7 +77,7 @@
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
-  --primary: 204 86% 45%;
+  --primary: 180 85% 45%;
   --primary-foreground: 210 40% 98%;
   --secondary: 210 40% 96%;
   --secondary-foreground: 222.2 84% 4.9%;
@@ -63,60 +89,127 @@
   --destructive-foreground: 210 40% 98%;
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 204 86% 45%;
+  --ring: 180 85% 45%;
   --radius: 0.5rem;
 }
 
-/* Clean Background Gradients */
+/* Rich Background Gradients */
 .therapy-gradient-bg {
   background: linear-gradient(135deg, 
     hsl(var(--therapy-50)) 0%, 
-    hsl(var(--calm-50)) 100%);
+    hsl(var(--calm-50)) 30%,
+    hsl(var(--harmony-50)) 60%,
+    hsl(var(--flow-50)) 100%);
 }
 
 .therapy-card {
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
   border: 1px solid hsl(var(--therapy-200));
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.therapy-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  border-color: hsl(var(--therapy-300));
 }
 
 .therapy-button {
   background: linear-gradient(135deg, 
     hsl(var(--therapy-500)) 0%, 
-    hsl(var(--calm-500)) 100%);
+    hsl(var(--harmony-500)) 50%,
+    hsl(var(--flow-500)) 100%);
   color: white;
   border: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.therapy-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.therapy-button:hover::before {
+  left: 100%;
 }
 
 .therapy-button:hover {
   background: linear-gradient(135deg, 
     hsl(var(--therapy-600)) 0%, 
-    hsl(var(--calm-600)) 100%);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    hsl(var(--harmony-600)) 50%,
+    hsl(var(--flow-600)) 100%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
 }
 
-/* Clean Text Gradients */
+/* Rich Text Gradients */
 .therapy-text-gradient {
   background: linear-gradient(135deg, 
     hsl(var(--therapy-600)) 0%, 
-    hsl(var(--calm-600)) 100%);
+    hsl(var(--harmony-600)) 50%,
+    hsl(var(--flow-600)) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
 }
 
 .therapy-text-gradient-animated {
   background: linear-gradient(135deg, 
     hsl(var(--therapy-600)) 0%, 
-    hsl(var(--calm-600)) 100%);
+    hsl(var(--harmony-600)) 25%,
+    hsl(var(--balance-600)) 50%,
+    hsl(var(--calm-600)) 75%,
+    hsl(var(--flow-600)) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-size: 300% 300%;
+  animation: gradient-shimmer 4s ease-in-out infinite;
 }
 
-/* Simplified Floating Elements */
+/* Feature-Specific Backgrounds */
+.ai-therapy-bg {
+  background: linear-gradient(135deg, 
+    hsl(var(--therapy-100)) 0%, 
+    hsl(var(--flow-100)) 100%);
+}
+
+.crisis-support-bg {
+  background: linear-gradient(135deg, 
+    hsl(var(--harmony-100)) 0%, 
+    hsl(var(--balance-100)) 100%);
+}
+
+.analytics-bg {
+  background: linear-gradient(135deg, 
+    hsl(var(--balance-100)) 0%, 
+    hsl(var(--calm-100)) 100%);
+}
+
+.audio-library-bg {
+  background: linear-gradient(135deg, 
+    hsl(var(--calm-100)) 0%, 
+    hsl(var(--therapy-100)) 100%);
+}
+
+.family-dashboard-bg {
+  background: linear-gradient(135deg, 
+    hsl(var(--harmony-100)) 0%, 
+    hsl(var(--therapy-100)) 100%);
+}
+
+/* Enhanced Floating Elements */
 .floating-particles {
   position: relative;
   overflow: hidden;
@@ -125,13 +218,15 @@
 .floating-particles::before {
   content: '';
   position: absolute;
-  width: 60px;
-  height: 60px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  background: hsl(var(--therapy-200) / 0.3);
-  top: 20%;
-  left: 10%;
-  animation: gentle-float 6s ease-in-out infinite;
+  background: linear-gradient(135deg, 
+    hsl(var(--therapy-200) / 0.4), 
+    hsl(var(--harmony-200) / 0.3));
+  top: 15%;
+  left: 8%;
+  animation: float-gentle 8s ease-in-out infinite;
 }
 
 .floating-particles::after {
@@ -140,10 +235,39 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: hsl(var(--calm-200) / 0.2);
-  top: 60%;
-  right: 15%;
-  animation: gentle-float 8s ease-in-out infinite reverse;
+  background: linear-gradient(135deg, 
+    hsl(var(--calm-200) / 0.3), 
+    hsl(var(--flow-200) / 0.4));
+  top: 65%;
+  right: 12%;
+  animation: float-gentle 10s ease-in-out infinite reverse;
+}
+
+/* Additional Floating Elements */
+.floating-particles .particle-1 {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, 
+    hsl(var(--balance-200) / 0.2), 
+    hsl(var(--therapy-200) / 0.3));
+  top: 40%;
+  left: 20%;
+  animation: swirl-breathe 12s ease-in-out infinite;
+}
+
+.floating-particles .particle-2 {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, 
+    hsl(var(--flow-200) / 0.3), 
+    hsl(var(--harmony-200) / 0.2));
+  top: 80%;
+  left: 70%;
+  animation: pulse-glow 6s ease-in-out infinite;
 }
 
 /* Base styles */
@@ -160,22 +284,78 @@ body {
   width: 100%;
 }
 
-/* Simplified animations */
+/* Enhanced animations */
 @keyframes gentle-float {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(0deg);
     opacity: 0.6;
   }
   50% {
-    transform: translateY(-8px);
+    transform: translateY(-12px) rotate(5deg);
     opacity: 0.8;
+  }
+}
+
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.5;
+  }
+  33% {
+    transform: translateY(-15px) translateX(8px) scale(1.05);
+    opacity: 0.7;
+  }
+  66% {
+    transform: translateY(-8px) translateX(-5px) scale(0.95);
+    opacity: 0.6;
+  }
+}
+
+@keyframes swirl-breathe {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.4;
+  }
+  25% {
+    transform: rotate(90deg) scale(1.1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: rotate(180deg) scale(0.9);
+    opacity: 0.5;
+  }
+  75% {
+    transform: rotate(270deg) scale(1.05);
+    opacity: 0.7;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+    box-shadow: 0 0 20px hsl(var(--therapy-400) / 0.3);
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.6;
+    box-shadow: 0 0 40px hsl(var(--harmony-400) / 0.5);
+  }
+}
+
+@keyframes gradient-shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
   }
 }
 
 @keyframes fade-in {
   0% {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   100% {
     opacity: 1;
@@ -185,8 +365,36 @@ body {
 
 @keyframes scale-in {
   0% {
-    transform: scale(0.98);
+    transform: scale(0.95);
     opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
   }
   100% {
     transform: scale(1);
@@ -199,6 +407,32 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+/* Hover Effects */
+.hover-scale {
+  transition: all 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-lift {
+  transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px hsl(var(--therapy-400) / 0.4);
+}
+
 /* Accessibility and animations */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -208,7 +442,7 @@ body {
   }
 }
 
-/* Clean utility classes */
+/* Enhanced utility classes */
 .reduce-motion * {
   animation-duration: 0.01ms !important;
   animation-iteration-count: 1 !important;
@@ -216,11 +450,11 @@ body {
 }
 
 .high-contrast {
-  filter: contrast(120%);
+  filter: contrast(130%);
 }
 
 .large-text {
-  font-size: 110% !important;
+  font-size: 115% !important;
 }
 
 .screen-reader-optimized .sr-only {
@@ -233,4 +467,22 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* Navigation Dropdown Hover Effects */
+.nav-dropdown {
+  transition: all 0.2s ease;
+}
+
+.nav-dropdown:hover .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-content {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
 }
