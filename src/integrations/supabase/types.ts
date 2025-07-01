@@ -448,6 +448,48 @@ export type Database = {
           },
         ]
       }
+      clinical_assessments: {
+        Row: {
+          administered_at: string
+          assessment_type: string
+          created_at: string
+          id: string
+          interpretation: string | null
+          questions: Json
+          recommendations: Json | null
+          responses: Json
+          severity_level: string
+          total_score: number
+          user_id: string
+        }
+        Insert: {
+          administered_at?: string
+          assessment_type: string
+          created_at?: string
+          id?: string
+          interpretation?: string | null
+          questions?: Json
+          recommendations?: Json | null
+          responses?: Json
+          severity_level?: string
+          total_score?: number
+          user_id: string
+        }
+        Update: {
+          administered_at?: string
+          assessment_type?: string
+          created_at?: string
+          id?: string
+          interpretation?: string | null
+          questions?: Json
+          recommendations?: Json | null
+          responses?: Json
+          severity_level?: string
+          total_score?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       conversation_memories: {
         Row: {
           conversation_flow: Json
@@ -2224,6 +2266,54 @@ export type Database = {
         }
         Relationships: []
       }
+      professional_oversight: {
+        Row: {
+          completed_at: string | null
+          context_data: Json | null
+          created_at: string
+          id: string
+          notes: string | null
+          oversight_type: string
+          priority_level: string
+          professional_id: string | null
+          reason: string
+          recommendations: Json | null
+          scheduled_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          context_data?: Json | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          oversight_type: string
+          priority_level?: string
+          professional_id?: string | null
+          reason: string
+          recommendations?: Json | null
+          scheduled_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          context_data?: Json | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          oversight_type?: string
+          priority_level?: string
+          professional_id?: string | null
+          reason?: string
+          recommendations?: Json | null
+          scheduled_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -2471,6 +2561,54 @@ export type Database = {
           },
         ]
       }
+      session_analytics_enhanced: {
+        Row: {
+          ai_insights: Json | null
+          clinical_observations: Json | null
+          created_at: string
+          emotional_progression: Json | null
+          engagement_score: number | null
+          id: string
+          intervention_suggestions: Json | null
+          protocol_id: string | null
+          real_time_metrics: Json | null
+          session_id: string
+          technique_effectiveness: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_insights?: Json | null
+          clinical_observations?: Json | null
+          created_at?: string
+          emotional_progression?: Json | null
+          engagement_score?: number | null
+          id?: string
+          intervention_suggestions?: Json | null
+          protocol_id?: string | null
+          real_time_metrics?: Json | null
+          session_id: string
+          technique_effectiveness?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_insights?: Json | null
+          clinical_observations?: Json | null
+          created_at?: string
+          emotional_progression?: Json | null
+          engagement_score?: number | null
+          id?: string
+          intervention_suggestions?: Json | null
+          protocol_id?: string | null
+          real_time_metrics?: Json | null
+          session_id?: string
+          technique_effectiveness?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       session_context: {
         Row: {
           addressed: boolean
@@ -2585,6 +2723,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      session_protocols: {
+        Row: {
+          created_at: string
+          description: string
+          duration_minutes: number
+          id: string
+          is_active: boolean
+          name: string
+          post_session_tasks: Json | null
+          preparation_steps: Json | null
+          session_structure: Json | null
+          therapy_type: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          post_session_tasks?: Json | null
+          preparation_steps?: Json | null
+          session_structure?: Json | null
+          therapy_type: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          post_session_tasks?: Json | null
+          preparation_steps?: Json | null
+          session_structure?: Json | null
+          therapy_type?: string
+        }
+        Relationships: []
       }
       shared_milestones: {
         Row: {
@@ -3143,6 +3320,51 @@ export type Database = {
           trauma_types?: string[] | null
           triggers?: string[] | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      treatment_outcomes: {
+        Row: {
+          baseline_score: number | null
+          clinical_significance: boolean | null
+          created_at: string
+          current_score: number | null
+          goals_met: Json | null
+          id: string
+          improvement_percentage: number | null
+          measured_at: string
+          measurement_period: string
+          measurement_type: string
+          next_targets: Json | null
+          user_id: string
+        }
+        Insert: {
+          baseline_score?: number | null
+          clinical_significance?: boolean | null
+          created_at?: string
+          current_score?: number | null
+          goals_met?: Json | null
+          id?: string
+          improvement_percentage?: number | null
+          measured_at?: string
+          measurement_period: string
+          measurement_type: string
+          next_targets?: Json | null
+          user_id: string
+        }
+        Update: {
+          baseline_score?: number | null
+          clinical_significance?: boolean | null
+          created_at?: string
+          current_score?: number | null
+          goals_met?: Json | null
+          id?: string
+          improvement_percentage?: number | null
+          measured_at?: string
+          measurement_period?: string
+          measurement_type?: string
+          next_targets?: Json | null
           user_id?: string
         }
         Relationships: []
