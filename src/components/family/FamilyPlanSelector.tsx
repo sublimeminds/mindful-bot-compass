@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
   const navigate = useNavigate();
   const [memberCount, setMemberCount] = useState(4);
   const [selectedTier, setSelectedTier] = useState<'pro' | 'premium'>('pro');
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
   const tiers = {
     pro: {
@@ -29,13 +31,12 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
       color: 'from-therapy-500 to-calm-500',
       icon: Star,
       features: [
-        'Unlimited AI therapy sessions for all members',
+        'Unlimited AI therapy sessions',
         'Voice conversations in 29 languages',
         'Family dashboard with shared insights',
         'Parental controls and safety features',
         'Crisis alerts and intervention',
-        'Progress sharing with permissions',
-        'Mobile app for all members'
+        'Progress sharing with permissions'
       ]
     },
     premium: {
@@ -46,13 +47,11 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
       icon: Crown,
       features: [
         'Everything in Family Pro',
-        'Advanced emotion detection for all',
-        'Personalized treatment plans per member',
+        'Advanced emotion detection',
+        'Personalized treatment plans',
         'Dedicated family support specialist',
         '24/7 priority crisis intervention',
-        'Advanced family analytics & insights',
-        'Custom AI therapist training',
-        'Integration with health apps'
+        'Advanced family analytics & insights'
       ]
     }
   };
@@ -61,6 +60,16 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
   const monthlyPrice = selectedTierData.basePrice + (memberCount * selectedTierData.pricePerMember);
   const yearlyPrice = monthlyPrice * 12 * 0.8; // 20% discount for yearly
   const savings = (monthlyPrice * 12) - yearlyPrice;
+  
+  const displayPrice = billingCycle === 'monthly' ? monthlyPrice : yearlyPrice;
+  const priceLabel = billingCycle === 'monthly' ? '/month' : '/year';
+
+  const getTrialInfo = () => {
+    if (selectedTier === 'premium' && billingCycle === 'yearly') {
+      return '7-day free trial • Cancel anytime';
+    }
+    return 'No trial • Cancel anytime';
+  };
 
   const handleGetStarted = () => {
     if (!user) {
@@ -68,169 +77,224 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
       return;
     }
 
-    // Close modal and redirect to checkout with custom family plan
     onClose();
-    navigate(`/pricing?family=true&tier=${selectedTier}&members=${memberCount}`);
+    navigate(`/pricing?family=true&tier=${selectedTier}&members=${memberCount}&billing=${billingCycle}`);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center therapy-text-gradient">
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden">
+        <DialogHeader className="pb-4">
+          <DialogTitle className="text-xl font-bold text-center therapy-text-gradient">
             Build Your Custom Family Plan
           </DialogTitle>
           {currentPlan && (
-            <p className="text-center text-gray-600 mt-2">
+            <p className="text-center text-gray-600 text-sm">
               Current plan: <span className="font-semibold">{currentPlan}</span>
             </p>
           )}
         </DialogHeader>
 
-        <div className="space-y-6">
-          {/* Member Count Selector */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Users className="h-5 w-5" />
-                <span>How many family members?</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-center space-x-4">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setMemberCount(Math.max(2, memberCount - 1))}
-                  disabled={memberCount <= 2}
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                
-                <div className="text-center">
-                  <div className="text-3xl font-bold therapy-text-gradient">{memberCount}</div>
-                  <div className="text-sm text-gray-500">family members</div>
-                </div>
-                
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setMemberCount(Math.min(12, memberCount + 1))}
-                  disabled={memberCount >= 12}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              
-              <div className="text-center mt-4 text-sm text-gray-600">
-                Includes parents, children, teens, and extended family
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Tier Selection */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Choose Your Plan Level</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Object.entries(tiers).map(([key, tier]) => {
-                const IconComponent = tier.icon;
-                const isSelected = selectedTier === key;
-                
-                return (
-                  <Card 
-                    key={key}
-                    className={`cursor-pointer transition-all duration-200 ${
-                      isSelected 
-                        ? 'ring-2 ring-therapy-500 shadow-lg' 
-                        : 'hover:shadow-md'
-                    }`}
-                    onClick={() => setSelectedTier(key as 'pro' | 'premium')}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Configuration */}
+          <div className="lg:col-span-2 space-y-4">
+            {/* Member Count Selector */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center space-x-2 text-base">
+                  <Users className="h-4 w-4" />
+                  <span>Family Members</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="flex items-center justify-center space-x-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setMemberCount(Math.max(2, memberCount - 1))}
+                    disabled={memberCount <= 2}
                   >
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  
+                  <div className="text-center">
+                    <div className="text-2xl font-bold therapy-text-gradient">{memberCount}</div>
+                    <div className="text-xs text-gray-500">members</div>
+                  </div>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setMemberCount(Math.min(12, memberCount + 1))}
+                    disabled={memberCount >= 12}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Billing Cycle Toggle */}
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center justify-center space-x-4">
+                  <span className={`text-sm ${billingCycle === 'monthly' ? 'font-medium' : 'text-gray-500'}`}>
+                    Monthly
+                  </span>
+                  <button
+                    onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+                    className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-therapy-500 focus:ring-offset-2 ${
+                      billingCycle === 'yearly' ? 'bg-therapy-600' : 'bg-gray-200'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
+                        billingCycle === 'yearly' ? 'translate-x-5' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                  <span className={`text-sm ${billingCycle === 'yearly' ? 'font-medium' : 'text-gray-500'}`}>
+                    Yearly
+                  </span>
+                  {billingCycle === 'yearly' && (
+                    <Badge className="bg-therapy-100 text-therapy-700 border-therapy-200 text-xs">
+                      Save 20%
+                    </Badge>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Tier Selection */}
+            <div className="space-y-3">
+              <h3 className="font-semibold text-base">Choose Your Plan Level</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {Object.entries(tiers).map(([key, tier]) => {
+                  const IconComponent = tier.icon;
+                  const isSelected = selectedTier === key;
+                  
+                  return (
+                    <Card 
+                      key={key}
+                      className={`cursor-pointer transition-all duration-200 ${
+                        isSelected 
+                          ? 'ring-2 ring-therapy-500 shadow-lg' 
+                          : 'hover:shadow-md'
+                      }`}
+                      onClick={() => setSelectedTier(key as 'pro' | 'premium')}
+                    >
+                      <CardContent className="p-4">
                         <div className="flex items-center space-x-3">
-                          <div className={`w-10 h-10 bg-gradient-to-r ${tier.color} rounded-lg flex items-center justify-center`}>
-                            <IconComponent className="h-5 w-5 text-white" />
+                          <div className={`w-8 h-8 bg-gradient-to-r ${tier.color} rounded-lg flex items-center justify-center`}>
+                            <IconComponent className="h-4 w-4 text-white" />
                           </div>
-                          <div>
-                            <CardTitle className="text-lg">{tier.name}</CardTitle>
-                            <div className="text-sm text-gray-500">
-                              ${tier.basePrice} base + ${tier.pricePerMember}/member
+                          <div className="flex-1">
+                            <div className="font-medium text-sm">{tier.name}</div>
+                            <div className="text-xs text-gray-500">
+                              ${tier.basePrice} + ${tier.pricePerMember}/member
                             </div>
                           </div>
+                          {isSelected && (
+                            <Badge className="bg-therapy-500 text-white text-xs">Selected</Badge>
+                          )}
                         </div>
-                        {isSelected && (
-                          <Badge className="bg-therapy-500 text-white">Selected</Badge>
-                        )}
-                      </div>
-                    </CardHeader>
-                  </Card>
-                );
-              })}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
+
+            {/* Features Preview - Compact */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center space-x-2 text-base">
+                  <selectedTierData.icon className="h-4 w-4" />
+                  <span>{selectedTierData.name} Features</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+                  {selectedTierData.features.map((feature, index) => (
+                    <div key={index} className="flex items-start space-x-2">
+                      <Heart className="h-3 w-3 text-therapy-500 mt-1 flex-shrink-0" />
+                      <span className="text-xs">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Features Preview */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <selectedTierData.icon className="h-5 w-5" />
-                <span>{selectedTierData.name} Features</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {selectedTierData.features.map((feature, index) => (
-                  <div key={index} className="flex items-start space-x-2">
-                    <Heart className="h-4 w-4 text-therapy-500 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm">{feature}</span>
+          {/* Right Column - Pricing Summary (Sticky) */}
+          <div className="lg:col-span-1">
+            <Card className="bg-gradient-to-r from-therapy-50 to-calm-50 sticky top-0">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center space-x-2 text-base">
+                  <Calculator className="h-4 w-4" />
+                  <span>Pricing Summary</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Price Breakdown */}
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Base Plan:</span>
+                    <span>${selectedTierData.basePrice.toFixed(2)}</span>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Pricing Summary */}
-          <Card className="bg-gradient-to-r from-therapy-50 to-calm-50">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Calculator className="h-5 w-5" />
-                <span>Your Custom Plan Pricing</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex justify-between text-lg">
-                <span>Monthly Total:</span>
-                <span className="font-bold">${monthlyPrice.toFixed(2)}/month</span>
-              </div>
-              
-              <Separator />
-              
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Yearly Total:</span>
-                  <span className="font-bold">${yearlyPrice.toFixed(2)}/year</span>
+                  <div className="flex justify-between">
+                    <span>{memberCount} Members:</span>
+                    <span>${(memberCount * selectedTierData.pricePerMember).toFixed(2)}</span>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between font-medium">
+                    <span>Monthly Total:</span>
+                    <span>${monthlyPrice.toFixed(2)}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between text-green-600">
-                  <span>Annual Savings:</span>
-                  <span className="font-bold">-${savings.toFixed(2)}</span>
-                </div>
-              </div>
 
-              <div className="text-center pt-4">
+                {billingCycle === 'yearly' && (
+                  <>
+                    <Separator />
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span>Yearly Total:</span>
+                        <span className="font-bold">${yearlyPrice.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between text-green-600">
+                        <span>Annual Savings:</span>
+                        <span className="font-bold">-${savings.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Final Price Display */}
+                <div className="text-center pt-2 border-t">
+                  <div className="text-2xl font-bold therapy-text-gradient">
+                    ${displayPrice.toFixed(2)}
+                  </div>
+                  <div className="text-sm text-gray-600">{priceLabel}</div>
+                </div>
+
+                {/* Trial Info */}
+                <div className="text-center">
+                  <div className="text-xs text-gray-500">
+                    {getTrialInfo()}
+                  </div>
+                </div>
+
+                {/* CTA Button */}
                 <GradientButton 
-                  size="lg" 
+                  size="sm" 
                   onClick={handleGetStarted}
                   className="w-full"
                 >
                   Get Started with {selectedTierData.name}
                 </GradientButton>
-                <div className="text-sm text-gray-500 mt-2">
-                  7-day free trial • Cancel anytime
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
