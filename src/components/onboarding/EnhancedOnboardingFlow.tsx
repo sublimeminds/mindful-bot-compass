@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
@@ -181,45 +180,7 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
     const baseProps = {
       onNext: handleNext,
       onBack: handleBack,
-      onboardingData
-    };
-
-    // Add selected plan for auth step
-    if (currentStepConfig.component === EmbeddedAuthStep) {
-      return {
-        ...baseProps,
-        selectedPlan
-      };
-    }
-
-    // Add specific props for Cultural Preferences step
-    if (currentStepConfig.component === CulturalPreferencesStep) {
-      return {
-        ...baseProps,
-        preferences: onboardingData.culturalPreferences || {
-          primaryLanguage: 'en',
-          culturalBackground: '',
-          familyStructure: 'individual',
-          communicationStyle: 'direct',
-          religiousConsiderations: false,
-          therapyApproachPreferences: [],
-          culturalSensitivities: []
-        },
-        onPreferencesChange: handleCulturalPreferencesChange
-      };
-    }
-
-    // Add pre-selected plan for Plan Selection step (if we reach it)
-    if (currentStepConfig.component === PlanSelectionStep && selectedPlan) {
-      return {
-        ...baseProps,
-        preSelectedPlan: selectedPlan
-      };
-    }
-
-    // For all other steps, ensure we have the required props
-    return {
-      ...baseProps,
+      onboardingData,
       preferences: onboardingData.culturalPreferences || {
         primaryLanguage: 'en',
         culturalBackground: '',
@@ -231,6 +192,24 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
       },
       onPreferencesChange: handleCulturalPreferencesChange
     };
+
+    // Add selected plan for auth step
+    if (currentStepConfig.component === EmbeddedAuthStep) {
+      return {
+        ...baseProps,
+        selectedPlan
+      };
+    }
+
+    // Add pre-selected plan for Plan Selection step (if we reach it)
+    if (currentStepConfig.component === PlanSelectionStep && selectedPlan) {
+      return {
+        ...baseProps,
+        preSelectedPlan: selectedPlan
+      };
+    }
+
+    return baseProps;
   };
 
   // Calculate progress based on visible steps

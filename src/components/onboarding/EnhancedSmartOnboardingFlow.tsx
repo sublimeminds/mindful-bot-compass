@@ -126,45 +126,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     const baseProps = {
       onNext: handleNext,
       onBack: handleBack,
-      onboardingData
-    };
-
-    // Add selected plan for auth step
-    if (currentStep === 1) {
-      return {
-        ...baseProps,
-        selectedPlan
-      };
-    }
-
-    // Add specific props for Cultural Preferences step
-    if (currentStep === 4) { // Cultural Preferences step (adjusted for auth step)
-      return {
-        ...baseProps,
-        preferences: onboardingData.culturalPreferences || {
-          primaryLanguage: 'en',
-          culturalBackground: '',
-          familyStructure: 'individual',
-          communicationStyle: 'direct',
-          religiousConsiderations: false,
-          therapyApproachPreferences: [],
-          culturalSensitivities: []
-        },
-        onPreferencesChange: handleCulturalPreferencesChange
-      };
-    }
-
-    // Add pre-selected plan for Plan Selection step
-    if (currentStep === 7 && selectedPlan) { // Plan Selection step (adjusted for auth step)
-      return {
-        ...baseProps,
-        preSelectedPlan: selectedPlan
-      };
-    }
-
-    // For all other steps, provide default cultural preferences props
-    return {
-      ...baseProps,
+      onboardingData,
       preferences: onboardingData.culturalPreferences || {
         primaryLanguage: 'en',
         culturalBackground: '',
@@ -176,6 +138,24 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       },
       onPreferencesChange: handleCulturalPreferencesChange
     };
+
+    // Add selected plan for auth step
+    if (currentStep === 1) {
+      return {
+        ...baseProps,
+        selectedPlan
+      };
+    }
+
+    // Add pre-selected plan for Plan Selection step
+    if (currentStep === 7 && selectedPlan) { // Plan Selection step (adjusted for auth step)
+      return {
+        ...baseProps,
+        preSelectedPlan: selectedPlan
+      };
+    }
+
+    return baseProps;
   };
 
   return (
