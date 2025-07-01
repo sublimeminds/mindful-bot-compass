@@ -23,6 +23,7 @@ const CurrencySelector = ({ value, onChange, className }: CurrencySelectorProps)
   useEffect(() => {
     const loadCurrencies = async () => {
       try {
+        await enhancedCurrencyService.ensureExchangeRatesLoaded();
         const supportedCurrencies = await enhancedCurrencyService.getSupportedCurrencies();
         setCurrencies(supportedCurrencies.map(curr => ({
           code: curr.code,
@@ -32,12 +33,28 @@ const CurrencySelector = ({ value, onChange, className }: CurrencySelectorProps)
         })));
       } catch (error) {
         console.error('Failed to load currencies:', error);
-        // Fallback currencies
+        // Enhanced fallback currencies with all major currencies
         setCurrencies([
           { code: 'USD', name: 'US Dollar', symbol: '$', region: 'Americas' },
           { code: 'IDR', name: 'Indonesian Rupiah', symbol: 'Rp', region: 'Asia' },
           { code: 'EUR', name: 'Euro', symbol: '€', region: 'Europe' },
-          { code: 'GBP', name: 'British Pound', symbol: '£', region: 'Europe' }
+          { code: 'GBP', name: 'British Pound', symbol: '£', region: 'Europe' },
+          { code: 'JPY', name: 'Japanese Yen', symbol: '¥', region: 'Asia' },
+          { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$', region: 'Americas' },
+          { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', region: 'Oceania' },
+          { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF', region: 'Europe' },
+          { code: 'CNY', name: 'Chinese Yuan', symbol: '¥', region: 'Asia' },
+          { code: 'INR', name: 'Indian Rupee', symbol: '₹', region: 'Asia' },
+          { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$', region: 'Asia' },
+          { code: 'MYR', name: 'Malaysian Ringgit', symbol: 'RM', region: 'Asia' },
+          { code: 'THB', name: 'Thai Baht', symbol: '฿', region: 'Asia' },
+          { code: 'KRW', name: 'South Korean Won', symbol: '₩', region: 'Asia' },
+          { code: 'BRL', name: 'Brazilian Real', symbol: 'R$', region: 'Americas' },
+          { code: 'MXN', name: 'Mexican Peso', symbol: '$', region: 'Americas' },
+          { code: 'ZAR', name: 'South African Rand', symbol: 'R', region: 'Africa' },
+          { code: 'PLN', name: 'Polish Zloty', symbol: 'zł', region: 'Europe' },
+          { code: 'SEK', name: 'Swedish Krona', symbol: 'kr', region: 'Europe' },
+          { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr', region: 'Europe' }
         ]);
       } finally {
         setLoading(false);

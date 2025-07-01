@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Check, Star, Heart, Crown, Users, Calculator, Sparkles } from 'lucide-react';
+import { Check, Star, Heart, Crown, Users, Calculator, Sparkles, Plus, Minus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
@@ -11,7 +11,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import CurrencySelector from '@/components/ui/CurrencySelector';
 import GradientButton from '@/components/ui/GradientButton';
-import FamilyPlanSelector from '@/components/family/FamilyPlanSelector';
 
 interface SubscriptionPlan {
   id: string;
@@ -34,14 +33,18 @@ const EnhancedPricingSection = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [activeTab, setActiveTab] = useState('individual');
-  const [showFamilySelector, setShowFamilySelector] = useState(false);
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
   const [loading, setLoading] = useState(true);
   const [processingPlan, setProcessingPlan] = useState<string | null>(null);
+  
+  // Family plan customization state
+  const [familyMemberCount, setFamilyMemberCount] = useState(4);
+  const [familyTier, setFamilyTier] = useState<'pro' | 'premium'>('pro');
 
   useEffect(() => {
     const initializeCurrency = async () => {
       try {
+        await enhancedCurrencyService.ensureExchangeRatesLoaded();
         const location = await enhancedCurrencyService.detectUserLocation();
         if (location) {
           setUserCurrency(location.currency);
@@ -62,14 +65,14 @@ const EnhancedPricingSection = () => {
         .from('subscription_plans')
         .select('*')
         .eq('is_active', true)
+        .not('name', 'like', '%Family%') // Exclude family plans from regular display
         .order('price_monthly', { ascending: true });
 
       if (error) throw error;
       
-      // Transform the data to ensure all required fields are present
       const transformedPlans = (data || []).map(plan => ({
         ...plan,
-        trial_days: (plan as any).trial_days || 0, // Use type assertion to access trial_days
+        trial_days: (plan as any).trial_days || 0,
         features: plan.features as Record<string, string>,
         limits: plan.limits as Record<string, any>
       }));
@@ -87,26 +90,52 @@ const EnhancedPricingSection = () => {
     }
   };
 
-  const formatPrice = async (usdPrice: number): Promise<string> => {
+  const formatPriceSync = (usdPrice: number): string => {
     try {
-      await enhancedCurrencyService.updateExchangeRates();
-      
-      let convertedAmount = enhancedCurrencyService.convertAmount(usdPrice, 'USD', userCurrency);
-      
-      if (userLocation) {
-        convertedAmount = await enhancedCurrencyService.getRegionalPricing(
-          convertedAmount, 
-          userCurrency, 
-          (userLocation as any).region
-        );
-      }
-      
+      const convertedAmount = enhancedCurrencyService.convertAmount(usdPrice, 'USD', userCurrency);
       return enhancedCurrencyService.formatCurrency(convertedAmount, userCurrency);
     } catch (error) {
       console.error('Error formatting price:', error);
       return enhancedCurrencyService.formatCurrency(usdPrice, 'USD');
     }
   };
+
+  // Family plan pricing logic
+  const familyTiers = {
+    pro: {
+      name: 'Family Pro',
+      basePrice: 29.99,
+      pricePerMember: 9.99,
+      features: [
+        'Unlimited AI therapy sessions for all members',
+        'Voice conversations in 29 languages',
+        'Family dashboard with shared insights',
+        'Parental controls and safety features',
+        'Crisis alerts and intervention',
+        'Progress sharing with permissions',
+        'Mobile app for all members'
+      ]
+    },
+    premium: {
+      name: 'Family Premium',
+      basePrice: 49.99,
+      pricePerMember: 14.99,
+      features: [
+        'Everything in Family Pro',
+        'Advanced emotion detection for all',
+        'Personalized treatment plans per member',
+        'Dedicated family support specialist',
+        '24/7 priority crisis intervention',
+        'Advanced family analytics & insights',
+        'Custom AI therapist training',
+        'Integration with health apps'
+      ]
+    }
+  };
+
+  const selectedFamilyTier = familyTiers[familyTier];
+  const familyMonthlyPrice = selectedFamilyTier.basePrice + (familyMemberCount * selectedFamilyTier.pricePerMember);
+  const familyYearlyPrice = familyMonthlyPrice * 12 * 0.8; // 20% discount
 
   const handlePlanSelection = async (plan: SubscriptionPlan) => {
     if (!user) {
@@ -147,31 +176,18 @@ const EnhancedPricingSection = () => {
     }
   };
 
-  const individualPlans = plans.filter(plan => !plan.name.includes('Family'));
-  const familyPlans = plans.filter(plan => plan.name.includes('Family'));
-
   const PlanCard = ({ plan, isPopular = false }: { plan: SubscriptionPlan; isPopular?: boolean }) => {
-    const [monthlyPrice, setMonthlyPrice] = useState('$0');
-    const [yearlyPrice, setYearlyPrice] = useState('$0');
-
-    useEffect(() => {
-      const updatePrices = async () => {
-        const monthly = await formatPrice(plan.price_monthly);
-        const yearly = await formatPrice(plan.price_yearly);
-        setMonthlyPrice(monthly);
-        setYearlyPrice(yearly);
-      };
-      updatePrices();
-    }, [plan, userCurrency, userLocation]);
-
-    const currentPrice = billingCycle === 'yearly' ? yearlyPrice : monthlyPrice;
+    const currentPrice = billingCycle === 'yearly' 
+      ? formatPriceSync(plan.price_yearly) 
+      : formatPriceSync(plan.price_monthly);
+    
     const savings = billingCycle === 'yearly' && plan.price_yearly > 0 
       ? Math.round(((plan.price_monthly * 12 - plan.price_yearly) / (plan.price_monthly * 12)) * 100)
       : 0;
 
     const getIcon = () => {
       if (plan.name.includes('Premium')) return Crown;
-      if (plan.name.includes('Pro') || plan.name.includes('Family')) return Star;
+      if (plan.name.includes('Pro')) return Star;
       return Heart;
     };
 
@@ -325,7 +341,7 @@ const EnhancedPricingSection = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {individualPlans.map((plan, index) => (
+              {plans.map((plan, index) => (
                 <PlanCard 
                   key={plan.id} 
                   plan={plan} 
@@ -336,42 +352,161 @@ const EnhancedPricingSection = () => {
           </TabsContent>
 
           <TabsContent value="family">
-            <div className="text-center mb-12">
-              <h3 className="text-2xl font-bold mb-4">Family Mental Health Plans</h3>
-              <p className="text-lg text-gray-600 mb-8">
-                Complete mental health support for your entire family with parental controls, 
-                shared progress tracking, and crisis monitoring.
-              </p>
-            </div>
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h3 className="text-2xl font-bold mb-4">Build Your Custom Family Plan</h3>
+                <p className="text-lg text-gray-600">
+                  Complete mental health support for your entire family with parental controls, 
+                  shared progress tracking, and crisis monitoring.
+                </p>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
-              {familyPlans.map((plan) => (
-                <PlanCard 
-                  key={plan.id} 
-                  plan={plan} 
-                  isPopular={plan.name === 'Family Pro'}
-                />
-              ))}
-            </div>
+              {/* Family Plan Builder */}
+              <div className="space-y-8">
+                {/* Member Count Selector */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Users className="h-5 w-5" />
+                      <span>How many family members?</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-center space-x-4">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setFamilyMemberCount(Math.max(2, familyMemberCount - 1))}
+                        disabled={familyMemberCount <= 2}
+                      >
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      
+                      <div className="text-center">
+                        <div className="text-3xl font-bold therapy-text-gradient">{familyMemberCount}</div>
+                        <div className="text-sm text-gray-500">family members</div>
+                      </div>
+                      
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setFamilyMemberCount(Math.min(12, familyMemberCount + 1))}
+                        disabled={familyMemberCount >= 12}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            <div className="text-center">
-              <GradientButton
-                size="lg"
-                onClick={() => setShowFamilySelector(true)}
-                className="px-8"
-              >
-                <Calculator className="h-5 w-5 mr-2" />
-                Build Custom Family Plan
-              </GradientButton>
+                {/* Tier Selection */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Choose Your Plan Level</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.entries(familyTiers).map(([key, tier]) => {
+                      const IconComponent = key === 'premium' ? Crown : Star;
+                      const isSelected = familyTier === key;
+                      
+                      return (
+                        <Card 
+                          key={key}
+                          className={`cursor-pointer transition-all duration-200 ${
+                            isSelected 
+                              ? 'ring-2 ring-therapy-500 shadow-lg' 
+                              : 'hover:shadow-md'
+                          }`}
+                          onClick={() => setFamilyTier(key as 'pro' | 'premium')}
+                        >
+                          <CardHeader>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <div className={`w-10 h-10 bg-gradient-to-r ${key === 'premium' ? 'from-therapy-600 to-harmony-600' : 'from-therapy-500 to-calm-500'} rounded-lg flex items-center justify-center`}>
+                                  <IconComponent className="h-5 w-5 text-white" />
+                                </div>
+                                <div>
+                                  <CardTitle className="text-lg">{tier.name}</CardTitle>
+                                  <div className="text-sm text-gray-500">
+                                    {formatPriceSync(tier.basePrice)} base + {formatPriceSync(tier.pricePerMember)}/member
+                                  </div>
+                                </div>
+                              </div>
+                              {isSelected && (
+                                <Badge className="bg-therapy-500 text-white">Selected</Badge>
+                              )}
+                            </div>
+                          </CardHeader>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Pricing Summary */}
+                <Card className="bg-gradient-to-r from-therapy-50 to-calm-50">
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Calculator className="h-5 w-5" />
+                      <span>Your Custom Plan Pricing</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex justify-between text-lg">
+                      <span>Monthly Total:</span>
+                      <span className="font-bold">{formatPriceSync(familyMonthlyPrice)}/month</span>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Yearly Total:</span>
+                        <span className="font-bold">{formatPriceSync(familyYearlyPrice)}/year</span>
+                      </div>
+                      <div className="flex justify-between text-green-600">
+                        <span>Annual Savings:</span>
+                        <span className="font-bold">-{formatPriceSync(familyMonthlyPrice * 12 - familyYearlyPrice)}</span>
+                      </div>
+                    </div>
+
+                    <div className="text-center pt-4">
+                      <GradientButton 
+                        size="lg" 
+                        onClick={() => {
+                          // Handle family plan selection
+                          console.log('Selected family plan:', { tier: familyTier, members: familyMemberCount });
+                        }}
+                        className="w-full"
+                      >
+                        Get Started with {selectedFamilyTier.name}
+                      </GradientButton>
+                      <div className="text-sm text-gray-500 mt-2">
+                        7-day free trial • Cancel anytime
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Features Preview */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <selectedFamilyTier.icon className="h-5 w-5" />
+                      <span>{selectedFamilyTier.name} Features</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {selectedFamilyTier.features.map((feature, index) => (
+                        <div key={index} className="flex items-start space-x-2">
+                          <Heart className="h-4 w-4 text-therapy-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-sm">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </TabsContent>
         </Tabs>
-
-        {/* Family Plan Selector Modal */}
-        <FamilyPlanSelector
-          isOpen={showFamilySelector}
-          onClose={() => setShowFamilySelector(false)}
-        />
       </div>
     </div>
   );

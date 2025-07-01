@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,11 +18,9 @@ const ComprehensivePricingSection = () => {
     if (user) {
       navigate('/onboarding');
     } else {
-      // For premium/professional plans, go to register first, then onboarding
       if (plan === 'Premium' || plan === 'Professional') {
         navigate('/register');
       } else {
-        // For free plan, can go directly to auth (login or register)
         navigate('/auth');
       }
     }
@@ -229,12 +228,13 @@ const ComprehensivePricingSection = () => {
                     ))}
                   </ul>
 
+                  {/* FIXED: Secondary CTA buttons with proper contrast */}
                   <Button 
                     className={`w-full font-semibold text-base py-3 transition-all duration-300 ${
                       plan.popular 
                         ? 'bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-500 hover:from-harmony-600 hover:via-balance-600 hover:to-flow-600 text-white shadow-lg hover:shadow-xl hover:scale-105 ring-2 ring-harmony-300' 
                         : plan.id === 'premium'
-                        ? 'bg-gradient-to-r from-therapy-500 via-harmony-500 to-balance-500 hover:from-therapy-600 hover:via-harmony-600 hover:to-balance-600 text-white shadow-lg hover:shadow-lg hover:scale-105 border border-therapy-300'
+                        ? 'bg-gradient-to-r from-therapy-500 via-harmony-500 to-balance-500 hover:from-therapy-600 hover:via-harmony-600 hover:to-balance-600 text-white shadow-lg hover:shadow-lg hover:scale-105'
                         : 'bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white shadow-md hover:shadow-lg hover:scale-105'
                     }`}
                     onClick={() => handleGetStarted(plan.name)}

@@ -29,7 +29,7 @@ class EnhancedCurrencyService {
   private lastUpdate: Date = new Date(0);
   private readonly UPDATE_INTERVAL = 1000 * 60 * 60; // 1 hour
 
-  // Currency symbols and names
+  // Expanded currency symbols and names with more major currencies
   private readonly currencyInfo = {
     USD: { symbol: '$', name: 'US Dollar', region: 'Americas' },
     IDR: { symbol: 'Rp', name: 'Indonesian Rupiah', region: 'Asia' },
@@ -38,6 +38,19 @@ class EnhancedCurrencyService {
     JPY: { symbol: '¥', name: 'Japanese Yen', region: 'Asia' },
     CAD: { symbol: 'C$', name: 'Canadian Dollar', region: 'Americas' },
     AUD: { symbol: 'A$', name: 'Australian Dollar', region: 'Oceania' },
+    CHF: { symbol: 'CHF', name: 'Swiss Franc', region: 'Europe' },
+    CNY: { symbol: '¥', name: 'Chinese Yuan', region: 'Asia' },
+    INR: { symbol: '₹', name: 'Indian Rupee', region: 'Asia' },
+    SGD: { symbol: 'S$', name: 'Singapore Dollar', region: 'Asia' },
+    MYR: { symbol: 'RM', name: 'Malaysian Ringgit', region: 'Asia' },
+    THB: { symbol: '฿', name: 'Thai Baht', region: 'Asia' },
+    KRW: { symbol: '₩', name: 'South Korean Won', region: 'Asia' },
+    BRL: { symbol: 'R$', name: 'Brazilian Real', region: 'Americas' },
+    MXN: { symbol: '$', name: 'Mexican Peso', region: 'Americas' },
+    ZAR: { symbol: 'R', name: 'South African Rand', region: 'Africa' },
+    PLN: { symbol: 'zł', name: 'Polish Zloty', region: 'Europe' },
+    SEK: { symbol: 'kr', name: 'Swedish Krona', region: 'Europe' },
+    NOK: { symbol: 'kr', name: 'Norwegian Krone', region: 'Europe' },
   };
 
   async updateExchangeRates(): Promise<void> {
@@ -57,17 +70,33 @@ class EnhancedCurrencyService {
       console.log('Exchange rates updated:', this.exchangeRates);
     } catch (error) {
       console.error('Failed to update exchange rates:', error);
-      // Fallback rates
+      // Enhanced fallback rates with more currencies
       this.exchangeRates.set('USD', 1.0);
       this.exchangeRates.set('IDR', 15750.0);
       this.exchangeRates.set('EUR', 0.85);
       this.exchangeRates.set('GBP', 0.73);
+      this.exchangeRates.set('JPY', 110.0);
+      this.exchangeRates.set('CAD', 1.25);
+      this.exchangeRates.set('AUD', 1.35);
+      this.exchangeRates.set('CHF', 0.92);
+      this.exchangeRates.set('CNY', 6.45);
+      this.exchangeRates.set('INR', 74.0);
+      this.exchangeRates.set('SGD', 1.35);
+      this.exchangeRates.set('MYR', 4.15);
+      this.exchangeRates.set('THB', 33.0);
+      this.exchangeRates.set('KRW', 1180.0);
+      this.exchangeRates.set('BRL', 5.2);
+      this.exchangeRates.set('MXN', 20.0);
+      this.exchangeRates.set('ZAR', 14.5);
+      this.exchangeRates.set('PLN', 3.9);
+      this.exchangeRates.set('SEK', 8.5);
+      this.exchangeRates.set('NOK', 8.8);
     }
   }
 
   async ensureExchangeRatesLoaded(): Promise<void> {
     const now = new Date();
-    if (now.getTime() - this.lastUpdate.getTime() > this.UPDATE_INTERVAL) {
+    if (now.getTime() - this.lastUpdate.getTime() > this.UPDATE_INTERVAL || this.exchangeRates.size === 0) {
       await this.updateExchangeRates();
     }
   }
@@ -113,11 +142,21 @@ class EnhancedCurrencyService {
     const fromRate = this.exchangeRates.get(fromCurrency) || 1;
     const toRate = this.exchangeRates.get(toCurrency) || 1;
 
-    // Convert to USD first, then to target currency
-    const usdAmount = fromCurrency === 'USD' ? amount : amount / fromRate;
-    const convertedAmount = toCurrency === 'USD' ? usdAmount : usdAmount * toRate;
+    // FIXED: Correct conversion logic
+    // Convert from source currency to USD first, then to target currency
+    let usdAmount: number;
+    if (fromCurrency === 'USD') {
+      usdAmount = amount;
+    } else {
+      usdAmount = amount / fromRate; // Convert to USD by dividing by the rate
+    }
 
-    return convertedAmount;
+    // Convert from USD to target currency
+    if (toCurrency === 'USD') {
+      return usdAmount;
+    } else {
+      return usdAmount * toRate; // Convert from USD by multiplying by the rate
+    }
   }
 
   formatCurrency(amount: number, currencyCode: string, locale?: string): string {
@@ -127,13 +166,13 @@ class EnhancedCurrencyService {
       return new Intl.NumberFormat(locale || 'en-US', {
         style: 'currency',
         currency: currencyCode,
-        minimumFractionDigits: currencyCode === 'IDR' ? 0 : 2,
-        maximumFractionDigits: currencyCode === 'IDR' ? 0 : 2,
+        minimumFractionDigits: ['IDR', 'JPY', 'KRW'].includes(currencyCode) ? 0 : 2,
+        maximumFractionDigits: ['IDR', 'JPY', 'KRW'].includes(currencyCode) ? 0 : 2,
       }).format(amount);
     } catch (error) {
       // Fallback formatting
       const symbol = info?.symbol || currencyCode;
-      const formattedAmount = currencyCode === 'IDR' 
+      const formattedAmount = ['IDR', 'JPY', 'KRW'].includes(currencyCode)
         ? Math.round(amount).toLocaleString()
         : amount.toFixed(2);
       return `${symbol}${formattedAmount}`;
