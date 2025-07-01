@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useUserStats } from '@/hooks/useUserStats';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,19 +32,11 @@ const EnhancedUserMenu = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const { data: userStats, isLoading } = useUserStats();
 
   if (!user) {
     return null;
   }
-
-  // Mock user stats - in real app, fetch from user profile/analytics
-  const userStats = {
-    sessionsCompleted: 24,
-    currentStreak: 7,
-    moodScore: 8.2,
-    subscriptionPlan: 'Pro',
-    nextSession: 'Today, 3:00 PM'
-  };
 
   const handleLogout = async () => {
     try {
@@ -59,16 +52,8 @@ const EnhancedUserMenu = () => {
            (email.split('@')[0].charAt(1) || '').toUpperCase();
   };
 
-  const getPlanColor = (plan: string) => {
-    switch (plan.toLowerCase()) {
-      case 'pro':
-        return 'from-harmony-500 to-balance-500';
-      case 'premium':
-        return 'from-therapy-500 to-calm-500';
-      default:
-        return 'from-gray-400 to-gray-500';
-    }
-  };
+  // Calculate mood score out of 10 for display
+  const displayMoodScore = userStats?.averageMood ? userStats.averageMood.toFixed(1) : 'N/A';
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -103,9 +88,9 @@ const EnhancedUserMenu = () => {
                 <h4 className="font-semibold text-gray-900">
                   {user.email?.split('@')[0] || 'User'}
                 </h4>
-                <Badge className={`bg-gradient-to-r ${getPlanColor(userStats.subscriptionPlan)} text-white border-0 text-xs`}>
+                <Badge className="bg-gradient-to-r from-therapy-500 to-calm-500 text-white border-0 text-xs">
                   <Crown className="h-3 w-3 mr-1" />
-                  {userStats.subscriptionPlan}
+                  Free
                 </Badge>
               </div>
               <p className="text-sm text-gray-600">{user.email}</p>
@@ -115,36 +100,45 @@ const EnhancedUserMenu = () => {
 
         {/* Quick Stats */}
         <div className="p-4 bg-gradient-to-r from-therapy-25 to-calm-25 border-b border-therapy-100">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center">
-              <div className="flex items-center justify-center space-x-1 mb-1">
-                <Target className="h-4 w-4 text-therapy-600" />
-                <span className="text-lg font-bold text-therapy-700">{userStats.sessionsCompleted}</span>
-              </div>
-              <p className="text-xs text-gray-600">Sessions</p>
+          {isLoading ? (
+            <div className="text-center text-gray-500 py-4">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-therapy-600 mx-auto mb-2"></div>
+              Loading stats...
             </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center space-x-1 mb-1">
-                <Flame className="h-4 w-4 text-orange-500" />
-                <span className="text-lg font-bold text-orange-600">{userStats.currentStreak}</span>
+          ) : (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-1 mb-1">
+                  <Target className="h-4 w-4 text-therapy-600" />
+                  <span className="text-lg font-bold text-therapy-700">{userStats?.totalSessions || 0}</span>
+                </div>
+                <p className="text-xs text-gray-600">Sessions</p>
               </div>
-              <p className="text-xs text-gray-600">Day Streak</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center space-x-1 mb-1">
-                <TrendingUp className="h-4 w-4 text-green-500" />
-                <span className="text-lg font-bold text-green-600">{userStats.moodScore}</span>
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-1 mb-1">
+                  <Flame className="h-4 w-4 text-orange-500" />
+                  <span className="text-lg font-bold text-orange-600">{userStats?.currentStreak || 0}</span>
+                </div>
+                <p className="text-xs text-gray-600">Day Streak</p>
               </div>
-              <p className="text-xs text-gray-600">Mood Score</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center space-x-1 mb-1">
-                <Calendar className="h-4 w-4 text-blue-500" />
-                <span className="text-xs font-semibold text-blue-600">Next</span>
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-1 mb-1">
+                  <TrendingUp className="h-4 w-4 text-green-500" />
+                  <span className="text-lg font-bold text-green-600">{displayMoodScore}</span>
+                </div>
+                <p className="text-xs text-gray-600">Avg Mood</p>
               </div>
-              <p className="text-xs text-gray-600">3:00 PM</p>
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-1 mb-1">
+                  <Calendar className="h-4 w-4 text-blue-500" />
+                  <span className="text-xs font-semibold text-blue-600">
+                    {userStats?.lastSessionDate ? 'Recent' : 'None'}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-600">Last Session</p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Navigation */}

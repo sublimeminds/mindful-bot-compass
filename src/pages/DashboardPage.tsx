@@ -3,6 +3,7 @@ import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
+import RealDashboardContent from '@/components/dashboard/RealDashboardContent';
 
 const DashboardPage = () => {
   const { user, loading } = useAuth();
@@ -10,7 +11,7 @@ const DashboardPage = () => {
 
   React.useEffect(() => {
     if (!loading && !user) {
-      navigate('/auth');
+      navigate('/');
     }
   }, [user, loading, navigate]);
 
@@ -29,7 +30,13 @@ const DashboardPage = () => {
     return null;
   }
 
-  return <DashboardLayoutWithSidebar />;
+  return (
+    <DashboardLayoutWithSidebar>
+      <div className="p-6">
+        <RealDashboardContent />
+      </div>
+    </DashboardLayoutWithSidebar>
+  );
 };
 
 export default DashboardPage;
