@@ -13,6 +13,7 @@ import Dashboard from '@/pages/Dashboard';
 import FamilyFeaturesPage from '@/pages/FamilyFeaturesPage';
 import ProfilePage from '@/pages/ProfilePage';
 import DashboardPage from '@/pages/DashboardPage';
+import TherapyChatPage from '@/pages/TherapyChatPage';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ function App() {
                 <Route path="/billing" element={<ProfilePage />} />
                 <Route path="/help" element={<DashboardPage />} />
                 <Route path="/support" element={<DashboardPage />} />
+                <Route path="/therapy-chat" element={<TherapyChatPage />} />
               </Routes>
               <Toaster />
               <Sonner />
