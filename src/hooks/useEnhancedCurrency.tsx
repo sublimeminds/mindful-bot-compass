@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
@@ -28,6 +29,7 @@ export const useEnhancedCurrency = () => {
     region: 'Americas'
   });
   const [loading, setLoading] = useState(true);
+  const [isLoadingRates, setIsLoadingRates] = useState(false);
   const [supportedCurrencies, setSupportedCurrencies] = useState<CurrencyData[]>([]);
   const [userLocation, setUserLocation] = useState<LocationData | null>(null);
 
@@ -96,6 +98,7 @@ export const useEnhancedCurrency = () => {
 
   const changeCurrency = async (currencyCode: string) => {
     try {
+      setIsLoadingRates(true);
       const newCurrency = await enhancedCurrencyService.getCurrencyData(currencyCode);
       setCurrency(newCurrency);
 
@@ -108,6 +111,8 @@ export const useEnhancedCurrency = () => {
       }
     } catch (error) {
       console.error('Error changing currency:', error);
+    } finally {
+      setIsLoadingRates(false);
     }
   };
 
@@ -138,9 +143,12 @@ export const useEnhancedCurrency = () => {
 
   return {
     currency,
+    selectedCurrency: currency.code,
+    setSelectedCurrency: changeCurrency,
     supportedCurrencies,
     userLocation,
     loading,
+    isLoadingRates,
     changeCurrency,
     convertPrice,
     formatPrice,

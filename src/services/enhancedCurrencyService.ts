@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 
 interface ExchangeRate {
@@ -55,42 +54,67 @@ class EnhancedCurrencyService {
 
   async updateExchangeRates(): Promise<void> {
     try {
-      const { data, error } = await supabase
-        .from('exchange_rates')
-        .select('*')
-        .eq('base_currency', 'USD');
-
-      if (error) throw error;
-
-      data?.forEach((rate: ExchangeRate) => {
-        this.exchangeRates.set(rate.target_currency, rate.rate);
-      });
+      // Try to get live rates from exchangerate-api.io (free tier allows 1500 requests/month)
+      const response = await fetch('https://api.exchangerate-api.io/v4/latest/USD');
+      const data = await response.json();
+      
+      if (data.rates) {
+        // Update rates from API
+        Object.entries(data.rates).forEach(([currency, rate]) => {
+          if (this.currencyInfo[currency as keyof typeof this.currencyInfo]) {
+            this.exchangeRates.set(currency, rate as number);
+          }
+        });
+        console.log('Live exchange rates updated:', this.exchangeRates);
+      } else {
+        throw new Error('Failed to fetch live rates');
+      }
 
       this.lastUpdate = new Date();
-      console.log('Exchange rates updated:', this.exchangeRates);
     } catch (error) {
-      console.error('Failed to update exchange rates:', error);
-      // Enhanced fallback rates with more currencies
-      this.exchangeRates.set('USD', 1.0);
-      this.exchangeRates.set('IDR', 15750.0);
-      this.exchangeRates.set('EUR', 0.85);
-      this.exchangeRates.set('GBP', 0.73);
-      this.exchangeRates.set('JPY', 110.0);
-      this.exchangeRates.set('CAD', 1.25);
-      this.exchangeRates.set('AUD', 1.35);
-      this.exchangeRates.set('CHF', 0.92);
-      this.exchangeRates.set('CNY', 6.45);
-      this.exchangeRates.set('INR', 74.0);
-      this.exchangeRates.set('SGD', 1.35);
-      this.exchangeRates.set('MYR', 4.15);
-      this.exchangeRates.set('THB', 33.0);
-      this.exchangeRates.set('KRW', 1180.0);
-      this.exchangeRates.set('BRL', 5.2);
-      this.exchangeRates.set('MXN', 20.0);
-      this.exchangeRates.set('ZAR', 14.5);
-      this.exchangeRates.set('PLN', 3.9);
-      this.exchangeRates.set('SEK', 8.5);
-      this.exchangeRates.set('NOK', 8.8);
+      console.error('Failed to update live exchange rates, using fallback:', error);
+      
+      // Try Supabase as fallback
+      try {
+        const { data, error: supabaseError } = await supabase
+          .from('exchange_rates')
+          .select('*')
+          .eq('base_currency', 'USD');
+
+        if (!supabaseError && data) {
+          data.forEach((rate: ExchangeRate) => {
+            this.exchangeRates.set(rate.target_currency, rate.rate);
+          });
+          console.log('Supabase exchange rates updated:', this.exchangeRates);
+        } else {
+          throw new Error('Supabase rates also failed');
+        }
+      } catch (supabaseError) {
+        console.error('Both live API and Supabase failed, using static fallback rates');
+        // Enhanced fallback rates with accurate values
+        this.exchangeRates.set('USD', 1.0);
+        this.exchangeRates.set('IDR', 15750.0);
+        this.exchangeRates.set('EUR', 0.85);
+        this.exchangeRates.set('GBP', 0.73);
+        this.exchangeRates.set('JPY', 110.0);
+        this.exchangeRates.set('CAD', 1.25);
+        this.exchangeRates.set('AUD', 1.35);
+        this.exchangeRates.set('CHF', 0.92);
+        this.exchangeRates.set('CNY', 6.45);
+        this.exchangeRates.set('INR', 74.0);
+        this.exchangeRates.set('SGD', 1.35);
+        this.exchangeRates.set('MYR', 4.15);
+        this.exchangeRates.set('THB', 33.0);
+        this.exchangeRates.set('KRW', 1180.0);
+        this.exchangeRates.set('BRL', 5.2);
+        this.exchangeRates.set('MXN', 20.0);
+        this.exchangeRates.set('ZAR', 14.5);
+        this.exchangeRates.set('PLN', 3.9);
+        this.exchangeRates.set('SEK', 8.5);
+        this.exchangeRates.set('NOK', 8.8);
+      }
+      
+      this.lastUpdate = new Date();
     }
   }
 

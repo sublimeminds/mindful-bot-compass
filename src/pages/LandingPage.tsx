@@ -58,6 +58,10 @@ const LandingPage = () => {
     }
   ];
 
+  const scrollToDemo = () => {
+    document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
       {/* Header */}
@@ -72,7 +76,7 @@ const LandingPage = () => {
               <Button variant="ghost" onClick={() => navigate('/auth')}>
                 Sign In
               </Button>
-              <GradientButton onClick={() => navigate('/auth')}>
+              <GradientButton onClick={() => navigate('/onboarding')}>
                 Get Started Free
               </GradientButton>
             </div>
@@ -106,7 +110,7 @@ const LandingPage = () => {
               <GradientButton 
                 size="lg" 
                 className="px-8 py-4 text-lg font-bold"
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/onboarding')}
               >
                 <Heart className="h-5 w-5 mr-2" />
                 Start Free Today
@@ -115,7 +119,7 @@ const LandingPage = () => {
                 size="lg" 
                 variant="outline"
                 className="border-2 border-therapy-300 text-therapy-700 hover:bg-therapy-50 px-8 py-4 text-lg font-bold"
-                onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={scrollToDemo}
               >
                 <MessageSquare className="h-5 w-5 mr-2" />
                 See How It Works
@@ -279,7 +283,7 @@ const LandingPage = () => {
                 </ul>
                 <GradientButton 
                   className="w-full"
-                  onClick={() => navigate('/auth')}
+                  onClick={() => navigate('/onboarding')}
                 >
                   Start Free Now
                 </GradientButton>
@@ -308,7 +312,7 @@ const LandingPage = () => {
               <Button 
                 size="lg"
                 className="bg-white text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg font-bold"
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/onboarding')}
               >
                 <Heart className="h-5 w-5 mr-2" />
                 Get Started Free

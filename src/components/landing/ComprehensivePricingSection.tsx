@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,15 +14,16 @@ const ComprehensivePricingSection = () => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
   const handleGetStarted = (plan: string) => {
-    if (user) {
-      navigate('/onboarding');
-    } else {
-      if (plan === 'Premium' || plan === 'Professional') {
-        navigate('/register');
-      } else {
-        navigate('/auth');
-      }
-    }
+    // Store plan selection for onboarding
+    const planSelection = {
+      name: plan,
+      selectedAt: new Date().toISOString()
+    };
+    
+    localStorage.setItem('selectedPlan', JSON.stringify(planSelection));
+    
+    // Always go to onboarding first
+    navigate('/onboarding');
   };
 
   const plans = [
@@ -228,7 +228,7 @@ const ComprehensivePricingSection = () => {
                     ))}
                   </ul>
 
-                  {/* FIXED: Secondary CTA buttons with proper contrast */}
+                  {/* FIXED: Proper contrast for secondary CTA buttons */}
                   <Button 
                     className={`w-full font-semibold text-base py-3 transition-all duration-300 ${
                       plan.popular 
