@@ -20,6 +20,7 @@ import SessionsPage from '@/pages/SessionsPage';
 import AIAvatarPage from '@/pages/AIAvatarPage';
 import GoalsPage from '@/pages/GoalsPage';
 import NotificationCenterPage from '@/pages/NotificationCenter';
+import ComprehensiveSettingsPage from '@/pages/ComprehensiveSettingsPage';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -41,8 +42,8 @@ function App() {
                   <Route path="/analytics" element={<DashboardPage />} />
                   <Route path="/sessions" element={<SessionsPage />} />
                   <Route path="/goals" element={<GoalsPage />} />
-                  <Route path="/settings" element={<ProfilePage />} />
-                  <Route path="/billing" element={<ProfilePage />} />
+                  <Route path="/settings" element={<ComprehensiveSettingsPage />} />
+                  <Route path="/billing" element={<ComprehensiveSettingsPage />} />
                   <Route path="/help" element={<DashboardPage />} />
                   <Route path="/support" element={<DashboardPage />} />
                   <Route path="/therapy-chat" element={<TherapyChatPage />} />
