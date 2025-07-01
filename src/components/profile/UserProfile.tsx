@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, CreditCard, Bell, Shield, TrendingUp, Target, Calendar, Activity } from 'lucide-react';
+import { User, CreditCard, Bell, Shield, TrendingUp, Target, Calendar, Activity, Headphones, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserStats } from '@/hooks/useUserStats';
 import { useUserSessions } from '@/hooks/useUserSessions';
@@ -11,6 +11,8 @@ import RealBillingHistory from '@/components/subscription/RealBillingHistory';
 import EnhancedAccountSettings from './EnhancedAccountSettings';
 import ComprehensiveNotificationSettings from '@/components/notifications/ComprehensiveNotificationSettings';
 import PrivacySettings from './PrivacySettings';
+import AudioSettings from '@/components/settings/AudioSettings';
+import SessionSettings from '@/components/settings/SessionSettings';
 
 const UserProfile = () => {
   const { user } = useAuth();
@@ -144,10 +146,18 @@ const UserProfile = () => {
 
         {/* Profile Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="account" className="flex items-center space-x-2">
               <User className="h-4 w-4" />
               <span>Account</span>
+            </TabsTrigger>
+            <TabsTrigger value="session" className="flex items-center space-x-2">
+              <MessageSquare className="h-4 w-4" />
+              <span>Sessions</span>
+            </TabsTrigger>
+            <TabsTrigger value="audio" className="flex items-center space-x-2">
+              <Headphones className="h-4 w-4" />
+              <span>Audio</span>
             </TabsTrigger>
             <TabsTrigger value="subscription" className="flex items-center space-x-2">
               <CreditCard className="h-4 w-4" />
@@ -165,6 +175,14 @@ const UserProfile = () => {
 
           <TabsContent value="account" className="space-y-6">
             <EnhancedAccountSettings />
+          </TabsContent>
+
+          <TabsContent value="session" className="space-y-6">
+            <SessionSettings />
+          </TabsContent>
+
+          <TabsContent value="audio" className="space-y-6">
+            <AudioSettings />
           </TabsContent>
 
           <TabsContent value="subscription" className="space-y-6">
