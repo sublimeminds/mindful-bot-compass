@@ -17,6 +17,7 @@ import DashboardPage from '@/pages/DashboardPage';
 import TherapyChatPage from '@/pages/TherapyChatPage';
 import SessionsPage from '@/pages/SessionsPage';
 import AIAvatarPage from '@/pages/AIAvatarPage';
+import GoalsPage from '@/pages/GoalsPage';
 import './App.css';
 
 const queryClient = new QueryClient();

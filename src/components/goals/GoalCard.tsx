@@ -8,6 +8,7 @@ import { Plus, Minus, Target, Calendar, TrendingUp } from 'lucide-react';
 import { UserGoal } from '@/hooks/useUserGoals';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface GoalCardProps {
   goal: UserGoal;
@@ -16,6 +17,7 @@ interface GoalCardProps {
 const GoalCard = ({ goal }: GoalCardProps) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const progressPercentage = Math.min((goal.currentValue / goal.targetValue) * 100, 100);
   
@@ -41,8 +43,8 @@ const GoalCard = ({ goal }: GoalCardProps) => {
         description: `Goal progress: ${newValue}/${goal.targetValue}`,
       });
 
-      // Refresh the page to show updated data
-      window.location.reload();
+      // Invalidate and refetch the goals query
+      queryClient.invalidateQueries({ queryKey: ['userGoals'] });
     } catch (error) {
       console.error('Error updating goal progress:', error);
       toast({

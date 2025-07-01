@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface CreateGoalDialogProps {
   open: boolean;
@@ -18,6 +19,7 @@ interface CreateGoalDialogProps {
 const CreateGoalDialog = ({ open, onOpenChange }: CreateGoalDialogProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -86,8 +88,8 @@ const CreateGoalDialog = ({ open, onOpenChange }: CreateGoalDialogProps) => {
       
       onOpenChange(false);
       
-      // Refresh the page to show the new goal
-      window.location.reload();
+      // Invalidate and refetch the goals query
+      queryClient.invalidateQueries({ queryKey: ['userGoals'] });
     } catch (error) {
       console.error('Error creating goal:', error);
       toast({
