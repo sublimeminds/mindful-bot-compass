@@ -128,7 +128,7 @@ const MoodTrackerWidget = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate('/mood-tracking')}
+            onClick={() => navigate('/mood-tracker')}
             className="w-full"
           >
             <TrendingUp className="h-4 w-4 mr-2" />
@@ -138,7 +138,7 @@ const MoodTrackerWidget = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/mood-tracking')}
+            onClick={() => navigate('/mood-tracker')}
             className="w-full text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50"
           >
             <Plus className="h-4 w-4 mr-2" />

@@ -22,6 +22,7 @@ import GoalsPage from '@/pages/GoalsPage';
 import NotificationCenterPage from '@/pages/NotificationCenter';
 import ComprehensiveSettingsPage from '@/pages/ComprehensiveSettingsPage';
 import Analytics from '@/pages/Analytics';
+import MoodDashboard from '@/pages/MoodDashboard';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -48,8 +49,9 @@ function App() {
                   <Route path="/support" element={<DashboardPage />} />
                   <Route path="/therapy-chat" element={<TherapyChatPage />} />
                   <Route path="/chat" element={<TherapyChatPage />} />
-                  <Route path="/mood" element={<DashboardPage />} />
-                  <Route path="/mood-tracker" element={<DashboardPage />} />
+                  <Route path="/mood" element={<MoodDashboard />} />
+                  <Route path="/mood-tracker" element={<MoodDashboard />} />
+                  <Route path="/mood-tracking" element={<MoodDashboard />} />
                   <Route path="/ai-avatar" element={<AIAvatarPage />} />
                   <Route path="/notifications" element={<NotificationCenterPage />} />
                   <Route path="/analytics" element={<Analytics />} />
