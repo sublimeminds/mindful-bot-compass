@@ -1,9 +1,19 @@
 
-import { useAuth as useEnhancedAuth } from '@/components/EnhancedAuthProvider';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 export const useAuth = () => {
   try {
-    return useEnhancedAuth();
+    const simpleApp = useSimpleApp();
+    return {
+      user: simpleApp.user,
+      loading: simpleApp.loading,
+      signIn: simpleApp.login,
+      signUp: simpleApp.register,
+      signOut: simpleApp.signOut,
+      register: simpleApp.register,
+      login: simpleApp.login,
+      logout: simpleApp.logout,
+    };
   } catch (error) {
     console.warn('Auth context not available, returning null user');
     return {

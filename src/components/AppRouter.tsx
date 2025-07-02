@@ -5,6 +5,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 // Lazy load all pages for code splitting and performance
 const Index = lazy(() => import("../pages/Index"));
+const SimpleIndex = lazy(() => import("../pages/SimpleIndex"));
+const TestPage = lazy(() => import("../pages/TestPage"));
 const GetStarted = lazy(() => import("../pages/GetStarted"));
 const EnhancedAuth = lazy(() => import("../pages/EnhancedAuth"));
 const Auth = lazy(() => import("../pages/Auth"));
@@ -43,7 +45,9 @@ const AppRouter = () => {
   return (
     <Suspense fallback={<PageLoadingFallback />}>
       <Routes>
-        <Route path="/" element={<Index />} />
+        <Route path="/" element={<SimpleIndex />} />
+        <Route path="/original" element={<Index />} />
+        <Route path="/test" element={<TestPage />} />
         <Route path="/get-started" element={<GetStarted />} />
         <Route path="/auth" element={<EnhancedAuth />} />
         <Route path="/auth-old" element={<Auth />} />
