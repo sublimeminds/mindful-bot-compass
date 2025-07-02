@@ -1,3 +1,5 @@
+import { supabase } from '@/integrations/supabase/client';
+
 interface QuantumState {
   superposition: number[];
   entanglement: Record<string, number>;
@@ -22,7 +24,7 @@ class QuantumInspiredAIService {
   private quantumStates: Map<string, QuantumState> = new Map();
   private decisionTrees: Map<string, QuantumDecisionNode[]> = new Map();
 
-  // Quantum-enhanced therapy matching
+  // Quantum-enhanced therapy matching with Supabase integration
   async optimizeTherapyMatching(userId: string, preferences: any): Promise<TherapyQuantumMatch[]> {
     try {
       const userQuantumState = await this.generateUserQuantumState(userId, preferences);
@@ -39,6 +41,19 @@ class QuantumInspiredAIService {
           superpositionStates: [userQuantumState, therapist.state]
         };
       });
+
+      // Save to Supabase
+      const topMatch = matches[0];
+      if (topMatch) {
+        await supabase.from('quantum_therapy_sessions').insert({
+          user_id: userId,
+          therapist_id: topMatch.therapistId,
+          quantum_score: topMatch.quantumScore,
+          entanglement_factors: JSON.stringify(topMatch.entanglementFactors),
+          superposition_states: JSON.stringify(topMatch.superpositionStates),
+          session_data: JSON.stringify({ preferences, timestamp: new Date().toISOString() })
+        });
+      }
 
       return matches.sort((a, b) => b.quantumScore - a.quantumScore);
     } catch (error) {
