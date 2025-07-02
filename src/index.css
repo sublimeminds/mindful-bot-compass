@@ -310,7 +310,23 @@
     --system-600: 180 51% 55%;
     --system-700: 180 41% 46%;
     --system-800: 180 31% 37%;
+    --system-800: 180 31% 37%;
     --system-900: 180 21% 28%;
+
+    /* Enterprise Colors */
+    --enterprise-50: 240 100% 97%;
+    --enterprise-100: 240 96% 94%;
+    --enterprise-200: 240 89% 89%;
+    --enterprise-300: 240 81% 82%;
+    --enterprise-400: 240 71% 73%;
+    --enterprise-500: 240 61% 64%;
+    --enterprise-600: 240 51% 55%;
+    --enterprise-700: 240 41% 46%;
+    --enterprise-800: 240 31% 37%;
+    --enterprise-900: 240 21% 28%;
+    
+    --b2b-50: 260 100% 97%;
+    --b2b-600: 260 51% 55%;
   }
 
   .dark {
