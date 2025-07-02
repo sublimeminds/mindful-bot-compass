@@ -57,7 +57,7 @@ export class SafeAuthProvider extends Component<Props, State> {
       }, 10000); // 10 second timeout
 
       // Set up auth state listener FIRST
-      this.authSubscription = supabase.auth.onAuthStateChange(
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
         (event, session) => {
           console.log('SafeAuthProvider: Auth state changed:', event, session?.user ? 'User present' : 'No user');
           if (this.mounted) {
@@ -71,6 +71,7 @@ export class SafeAuthProvider extends Component<Props, State> {
           }
         }
       );
+      this.authSubscription = subscription;
 
       // Then get initial session
       const { data: { session }, error } = await supabase.auth.getSession();
