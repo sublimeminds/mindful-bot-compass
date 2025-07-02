@@ -347,6 +347,45 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics_events: {
+        Row: {
+          created_at: string
+          event_category: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          referrer: string | null
+          session_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_category: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          referrer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_category?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          referrer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       api_keys: {
         Row: {
           created_at: string
@@ -749,6 +788,45 @@ export type Database = {
           id?: string
           interaction_type?: string
           timestamp?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      custom_reports: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean | null
+          last_generated: string | null
+          report_config: Json
+          report_name: string
+          report_type: string
+          schedule_frequency: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          last_generated?: string | null
+          report_config?: Json
+          report_name: string
+          report_type: string
+          schedule_frequency?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          last_generated?: string | null
+          report_config?: Json
+          report_name?: string
+          report_type?: string
+          schedule_frequency?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -2140,6 +2218,42 @@ export type Database = {
         }
         Relationships: []
       }
+      performance_monitoring: {
+        Row: {
+          created_at: string
+          endpoint: string | null
+          error_message: string | null
+          id: string
+          response_time_ms: number
+          service_name: string
+          status_code: number | null
+          timestamp: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          endpoint?: string | null
+          error_message?: string | null
+          id?: string
+          response_time_ms: number
+          service_name: string
+          status_code?: number | null
+          timestamp?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string | null
+          error_message?: string | null
+          id?: string
+          response_time_ms?: number
+          service_name?: string
+          status_code?: number | null
+          timestamp?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       personalization_configs: {
         Row: {
           adaptation_level: string
@@ -2266,6 +2380,57 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_analytics: {
+        Row: {
+          active_users: number | null
+          average_session_duration: number | null
+          churn_rate: number | null
+          created_at: string
+          crisis_interventions: number | null
+          date: string
+          feature_adoption: Json | null
+          id: string
+          new_signups: number | null
+          revenue_metrics: Json | null
+          subscription_conversions: number | null
+          total_assessments: number | null
+          total_sessions: number | null
+          total_users: number | null
+        }
+        Insert: {
+          active_users?: number | null
+          average_session_duration?: number | null
+          churn_rate?: number | null
+          created_at?: string
+          crisis_interventions?: number | null
+          date?: string
+          feature_adoption?: Json | null
+          id?: string
+          new_signups?: number | null
+          revenue_metrics?: Json | null
+          subscription_conversions?: number | null
+          total_assessments?: number | null
+          total_sessions?: number | null
+          total_users?: number | null
+        }
+        Update: {
+          active_users?: number | null
+          average_session_duration?: number | null
+          churn_rate?: number | null
+          created_at?: string
+          crisis_interventions?: number | null
+          date?: string
+          feature_adoption?: Json | null
+          id?: string
+          new_signups?: number | null
+          revenue_metrics?: Json | null
+          subscription_conversions?: number | null
+          total_assessments?: number | null
+          total_sessions?: number | null
+          total_users?: number | null
+        }
+        Relationships: []
+      }
       professional_oversight: {
         Row: {
           completed_at: string | null
@@ -2374,6 +2539,33 @@ export type Database = {
           subscription_status?: string | null
           timezone?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      real_time_metrics: {
+        Row: {
+          created_at: string
+          id: string
+          metric_metadata: Json | null
+          metric_type: string
+          metric_value: number
+          timestamp: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metric_metadata?: Json | null
+          metric_type: string
+          metric_value: number
+          timestamp?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metric_metadata?: Json | null
+          metric_type?: string
+          metric_value?: number
+          timestamp?: string
         }
         Relationships: []
       }
@@ -3396,6 +3588,60 @@ export type Database = {
         }
         Relationships: []
       }
+      user_behavior_analytics: {
+        Row: {
+          assessments_taken: number | null
+          average_mood: number | null
+          created_at: string
+          date: string
+          engagement_score: number | null
+          feature_usage: Json | null
+          goals_completed: number | null
+          goals_created: number | null
+          id: string
+          mood_entries: number | null
+          retention_score: number | null
+          sessions_count: number | null
+          total_session_minutes: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assessments_taken?: number | null
+          average_mood?: number | null
+          created_at?: string
+          date?: string
+          engagement_score?: number | null
+          feature_usage?: Json | null
+          goals_completed?: number | null
+          goals_created?: number | null
+          id?: string
+          mood_entries?: number | null
+          retention_score?: number | null
+          sessions_count?: number | null
+          total_session_minutes?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assessments_taken?: number | null
+          average_mood?: number | null
+          created_at?: string
+          date?: string
+          engagement_score?: number | null
+          feature_usage?: Json | null
+          goals_completed?: number | null
+          goals_created?: number | null
+          id?: string
+          mood_entries?: number | null
+          retention_score?: number | null
+          sessions_count?: number | null
+          total_session_minutes?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_cultural_profiles: {
         Row: {
           communication_style: string
@@ -4214,6 +4460,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      aggregate_daily_analytics: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       can_access_member_data: {
         Args: {
           requesting_user_id: string
