@@ -41,17 +41,58 @@ export class SafeAuthProvider extends Component<Props, State> {
 
   private initializeAuth = async () => {
     try {
-      // Get initial session
+      console.log('SafeAuthProvider: Initializing auth...');
+      
+      // Set timeout to prevent infinite loading
+      const timeoutId = setTimeout(() => {
+        if (this.mounted && !this.state.isInitialized) {
+          console.warn('SafeAuthProvider: Auth initialization timeout, proceeding without auth');
+          this.setState({ 
+            user: null, 
+            session: null, 
+            loading: false, 
+            isInitialized: true 
+          });
+        }
+      }, 10000); // 10 second timeout
+
+      // Set up auth state listener FIRST
+      this.authSubscription = supabase.auth.onAuthStateChange(
+        (event, session) => {
+          console.log('SafeAuthProvider: Auth state changed:', event, session?.user ? 'User present' : 'No user');
+          if (this.mounted) {
+            clearTimeout(timeoutId);
+            this.setState({
+              user: session?.user ?? null,
+              session: session,
+              loading: false,
+              isInitialized: true
+            });
+          }
+        }
+      );
+
+      // Then get initial session
       const { data: { session }, error } = await supabase.auth.getSession();
       
       if (error) {
-        console.error('Auth session error:', error);
+        console.error('SafeAuthProvider: Session error:', error);
+        clearTimeout(timeoutId);
         if (this.mounted) {
-          this.setState({ error, loading: false, isInitialized: true });
+          this.setState({ 
+            user: null, 
+            session: null, 
+            loading: false, 
+            isInitialized: true,
+            error 
+          });
         }
         return;
       }
 
+      clearTimeout(timeoutId);
+      console.log('SafeAuthProvider: Initial session retrieved:', session ? 'Session found' : 'No session');
+      
       if (this.mounted) {
         this.setState({
           user: session?.user ?? null,
@@ -61,24 +102,12 @@ export class SafeAuthProvider extends Component<Props, State> {
         });
       }
 
-      // Set up auth state listener
-      this.authSubscription = supabase.auth.onAuthStateChange(
-        (event, session) => {
-          console.log('Auth state changed:', event, session?.user ? 'User present' : 'No user');
-          if (this.mounted) {
-            this.setState({
-              user: session?.user ?? null,
-              session: session,
-              loading: false
-            });
-          }
-        }
-      );
-
     } catch (error) {
-      console.error('Auth initialization error:', error);
+      console.error('SafeAuthProvider: Initialization error:', error);
       if (this.mounted) {
         this.setState({ 
+          user: null,
+          session: null,
           error: error as Error, 
           loading: false, 
           isInitialized: true 
