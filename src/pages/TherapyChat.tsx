@@ -21,7 +21,7 @@ import { useTherapist } from "@/contexts/TherapistContext";
 import { chatService } from "@/services/chatService";
 import Header from "@/components/Header";
 import GradientLogo from "@/components/ui/GradientLogo";
-import EnhancedTherapyInterface from "@/components/therapy/EnhancedTherapyInterface";
+import EnhancedTherapyChatInterface from "@/components/therapy/EnhancedTherapyChatInterface";
 
 const TherapyChat = () => {
   const navigate = useNavigate();
@@ -247,10 +247,7 @@ const TherapyChat = () => {
             {/* Active Chat Tab */}
             <TabsContent value="chat" className="space-y-6">
               {currentSession ? (
-                <EnhancedTherapyInterface
-                  sessionId={currentSession.id}
-                  onEndSession={handleEndSession}
-                />
+                <EnhancedTherapyChatInterface />
               ) : (
                 <Card>
                   <CardContent className="p-8 text-center">

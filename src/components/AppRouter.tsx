@@ -11,6 +11,8 @@ import Dashboard from "../pages/Dashboard";
 import GoalsPage from "../pages/GoalsPage";
 import EnhancedAIPersonalization from "../pages/EnhancedAIPersonalization";
 import AdvancedAnalytics from "../pages/AdvancedAnalytics";
+import EnhancedTherapy from "../pages/EnhancedTherapy";
+import DashboardOptimization from "../pages/DashboardOptimization";
 
 const AppRouter = () => {
   return (
@@ -26,6 +28,8 @@ const AppRouter = () => {
       <Route path="/goals" element={<GoalsPage />} />
       <Route path="/ai-personalization" element={<EnhancedAIPersonalization />} />
       <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
+      <Route path="/enhanced-therapy" element={<EnhancedTherapy />} />
+      <Route path="/dashboard-optimization" element={<DashboardOptimization />} />
     </Routes>
   );
 };
