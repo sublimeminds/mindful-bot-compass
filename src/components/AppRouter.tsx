@@ -3,21 +3,15 @@ import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Lazy load pages with error handling
-const SimpleTestPage = lazy(() => import("../components/SimpleTestPage"));
-const SimpleIndex = lazy(() => import("../pages/SimpleIndex"));
+// Lazy load pages
+const Index = lazy(() => import("../pages/Index"));
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const EnhancedAuth = lazy(() => import("../pages/EnhancedAuth"));
+const EnhancedOnboardingPage = lazy(() => import("../pages/EnhancedOnboardingPage"));
+const QuantumTherapy = lazy(() => import("../pages/QuantumTherapy"));
+const BlockchainHealth = lazy(() => import("../pages/BlockchainHealth"));
+const NeuralInterface = lazy(() => import("../pages/NeuralInterface"));
 const TestPage = lazy(() => import("../pages/TestPage"));
-
-// Try to load other components with fallbacks
-const safeImport = (importFn: () => Promise<any>) => {
-  return lazy(() => 
-    importFn().catch(() => Promise.resolve({ default: SimpleTestPage }))
-  );
-};
-
-const Dashboard = safeImport(() => import("../pages/Dashboard"));
-const EnhancedAuth = safeImport(() => import("../pages/EnhancedAuth"));
-const EnhancedOnboardingPage = safeImport(() => import("../pages/EnhancedOnboardingPage"));
 
 // Simple loading fallback
 const PageLoadingFallback = () => (
@@ -33,12 +27,14 @@ const AppRouter = () => {
   return (
     <Suspense fallback={<PageLoadingFallback />}>
       <Routes>
-        <Route path="/" element={<SimpleIndex />} />
-        <Route path="/test" element={<TestPage />} />
-        <Route path="/simple-test" element={<SimpleTestPage />} />
+        <Route path="/" element={<Index />} />
         <Route path="/auth" element={<EnhancedAuth />} />
         <Route path="/onboarding" element={<EnhancedOnboardingPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/quantum-therapy" element={<QuantumTherapy />} />
+        <Route path="/blockchain-health" element={<BlockchainHealth />} />
+        <Route path="/neural-interface" element={<NeuralInterface />} />
+        <Route path="/test" element={<TestPage />} />
       </Routes>
     </Suspense>
   );
