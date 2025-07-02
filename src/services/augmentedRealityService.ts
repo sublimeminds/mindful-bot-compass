@@ -255,13 +255,15 @@ class AugmentedRealityService {
     const session = this.activeSessions.get(sessionId);
     if (!session) return;
 
-    session.interactions.push({
+    const fullInteraction: ARInteraction = {
       timestamp: new Date(),
       ...interaction
-    });
+    };
+
+    session.interactions.push(fullInteraction);
 
     // Trigger real-time analysis
-    this.analyzeInteractionPattern(session, interaction);
+    this.analyzeInteractionPattern(session, fullInteraction);
   }
 
   // Biometric Integration
