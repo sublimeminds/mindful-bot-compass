@@ -27,12 +27,6 @@ interface AccessibilityContextType {
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
 export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Add safety check for React hooks
-  if (!React || typeof React.useState !== 'function') {
-    console.error('React hooks are not available');
-    return <div>{children}</div>;
-  }
-
   const [settings, setSettings] = useState<AccessibilitySettings>({
     reducedMotion: false,
     highContrast: false,
