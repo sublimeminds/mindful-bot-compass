@@ -21,6 +21,10 @@ const ProductionMonitoring = lazy(() => import("../pages/ProductionMonitoring"))
 const GlobalScale = lazy(() => import("../pages/GlobalScale"));
 const EnterpriseB2B = lazy(() => import("../pages/EnterpriseB2B"));
 const InnovationFuture = lazy(() => import("../pages/InnovationFuture"));
+const QuantumTherapyDashboard = lazy(() => import("../pages/QuantumTherapy"));
+const NeuralInterfaceDashboard = lazy(() => import("../pages/NeuralInterface"));
+const BlockchainHealthDashboard = lazy(() => import("../pages/BlockchainHealth"));
+const ARTherapyDashboard = lazy(() => import("../pages/ARTherapy"));
 
 // Loading fallback component
 const PageLoadingFallback = () => (
@@ -56,6 +60,11 @@ const AppRouter = () => {
         <Route path="/global-scale" element={<GlobalScale />} />
         <Route path="/enterprise-b2b" element={<EnterpriseB2B />} />
         <Route path="/innovation-future" element={<InnovationFuture />} />
+        {/* Quantum AI Features */}
+        <Route path="/quantum-therapy" element={<QuantumTherapyDashboard />} />
+        <Route path="/neural-interface" element={<NeuralInterfaceDashboard />} />
+        <Route path="/blockchain-health" element={<BlockchainHealthDashboard />} />
+        <Route path="/ar-therapy" element={<ARTherapyDashboard />} />
       </Routes>
     </Suspense>
   );
