@@ -327,6 +327,21 @@
     
     --b2b-50: 260 100% 97%;
     --b2b-600: 260 51% 55%;
+
+    /* Innovation Colors */
+    --innovation-50: 280 100% 97%;
+    --innovation-100: 280 96% 94%;
+    --innovation-200: 280 89% 89%;
+    --innovation-300: 280 81% 82%;
+    --innovation-400: 280 71% 73%;
+    --innovation-500: 280 61% 64%;
+    --innovation-600: 280 51% 55%;
+    --innovation-700: 280 41% 46%;
+    --innovation-800: 280 31% 37%;
+    --innovation-900: 280 21% 28%;
+    
+    --future-50: 300 100% 97%;
+    --future-600: 300 51% 55%;
   }
 
   .dark {
