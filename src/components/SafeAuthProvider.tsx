@@ -170,9 +170,9 @@ export class SafeAuthProvider extends Component<Props, State> {
       logout: this.signOut,
     };
 
-    // Create context provider using React.createElement to avoid JSX issues
+    // Create context provider using the same AuthContext instance
     return React.createElement(
-      React.createContext<AuthContextType | undefined>(undefined).Provider,
+      AuthContext.Provider,
       { value: contextValue },
       children
     );
