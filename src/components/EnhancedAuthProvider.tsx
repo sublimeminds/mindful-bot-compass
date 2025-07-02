@@ -23,6 +23,7 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
 
   const value: AuthContextType = {
     user,
+    session: null, // Add session property
     loading,
     ...authActions,
   };

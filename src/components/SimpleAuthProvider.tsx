@@ -61,6 +61,7 @@ export const SimpleAuthProvider: React.FC<AuthProviderProps> = ({ children }) =>
 
   const value: AuthContextType = {
     user,
+    session: null, // Add session property
     loading,
     signUp,
     signIn,

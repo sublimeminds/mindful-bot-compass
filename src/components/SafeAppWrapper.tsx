@@ -1,86 +1,66 @@
-
 import React, { Component, ReactNode } from 'react';
-import { SimpleAuthProvider } from '@/components/SimpleAuthProvider';
-import MinimalErrorBoundary from '@/components/MinimalErrorBoundary';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from "@/components/ui/toaster";
+import SafeReactGuard from './SafeReactGuard';
+import SafeAuthProvider from './SafeAuthProvider';
+import ErrorBoundary from './ErrorBoundary';
+import AppRouter from './AppRouter';
 
 interface Props {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 interface State {
-  hasError: boolean;
-  error?: Error;
+  queryClient: QueryClient;
 }
 
-class SafeAppWrapper extends Component<Props, State> {
+// Safe App Wrapper that initializes everything in the correct order
+export class SafeAppWrapper extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = {
+      queryClient: new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 1,
+            staleTime: 5 * 60 * 1000, // 5 minutes
+          },
+        },
+      })
+    };
   }
 
-  static getDerivedStateFromError(error: Error): State {
-    console.error('SafeAppWrapper: Error caught', error);
-    return { hasError: true, error };
-  }
+  public render() {
+    const { queryClient } = this.state;
 
-  componentDidCatch(error: Error, errorInfo: any) {
-    console.error('SafeAppWrapper: Component error details', error, errorInfo);
-  }
+    console.log('SafeAppWrapper: Starting application...');
 
-  private handleRetry = () => {
-    this.setState({ hasError: false, error: undefined });
-  };
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px',
-          fontFamily: 'system-ui, sans-serif',
-          backgroundColor: '#f9fafb'
-        }}>
-          <div style={{
-            maxWidth: '400px',
-            textAlign: 'center',
-            padding: '30px',
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-          }}>
-            <h1 style={{ color: '#dc2626', marginBottom: '20px' }}>
-              Application Error
-            </h1>
-            <p style={{ color: '#6b7280', marginBottom: '20px' }}>
-              Something went wrong with the landing page. Please try again.
-            </p>
-            <button
-              onClick={this.handleRetry}
-              style={{
-                backgroundColor: '#3b82f6',
-                color: 'white',
-                border: 'none',
-                padding: '10px 20px',
-                borderRadius: '6px',
-                cursor: 'pointer'
-              }}
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <MinimalErrorBoundary>
-        <SimpleAuthProvider>
-          {this.props.children}
-        </SimpleAuthProvider>
-      </MinimalErrorBoundary>
+    return React.createElement(
+      SafeReactGuard,
+      null,
+      React.createElement(
+        ErrorBoundary,
+        null,
+        React.createElement(
+          QueryClientProvider,
+          { client: queryClient },
+          React.createElement(
+            Router,
+            null,
+            React.createElement(
+              SafeAuthProvider,
+              null,
+              React.createElement(
+                'div',
+                { className: 'min-h-screen bg-background' },
+                React.createElement(AppRouter),
+                React.createElement(Toaster)
+              )
+            )
+          )
+        )
+      )
     );
   }
 }
