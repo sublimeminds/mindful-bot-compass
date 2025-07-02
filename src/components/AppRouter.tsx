@@ -10,6 +10,7 @@ import Onboarding from "../pages/Onboarding";
 import Dashboard from "../pages/Dashboard";
 import GoalsPage from "../pages/GoalsPage";
 import EnhancedAIPersonalization from "../pages/EnhancedAIPersonalization";
+import AdvancedAnalytics from "../pages/AdvancedAnalytics";
 
 const AppRouter = () => {
   return (
@@ -24,6 +25,7 @@ const AppRouter = () => {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/goals" element={<GoalsPage />} />
       <Route path="/ai-personalization" element={<EnhancedAIPersonalization />} />
+      <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
     </Routes>
   );
 };
