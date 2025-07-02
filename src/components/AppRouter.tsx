@@ -18,6 +18,7 @@ const AdvancedAnalytics = lazy(() => import("../pages/AdvancedAnalytics"));
 const EnhancedTherapy = lazy(() => import("../pages/EnhancedTherapy"));
 const DashboardOptimization = lazy(() => import("../pages/DashboardOptimization"));
 const ProductionMonitoring = lazy(() => import("../pages/ProductionMonitoring"));
+const GlobalScale = lazy(() => import("../pages/GlobalScale"));
 
 // Loading fallback component
 const PageLoadingFallback = () => (
@@ -50,6 +51,7 @@ const AppRouter = () => {
         <Route path="/enhanced-therapy" element={<EnhancedTherapy />} />
         <Route path="/dashboard-optimization" element={<DashboardOptimization />} />
         <Route path="/production-monitoring" element={<ProductionMonitoring />} />
+        <Route path="/global-scale" element={<GlobalScale />} />
       </Routes>
     </Suspense>
   );

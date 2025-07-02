@@ -105,13 +105,7 @@ export default defineConfig(({ mode }) => {
       sourcemap: mode === 'development',
       chunkSizeWarningLimit: 1000,
       target: 'esnext',
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          drop_console: mode === 'production',
-          drop_debugger: mode === 'production',
-        },
-      },
+      minify: 'esbuild',
     }
   };
 });
