@@ -65,9 +65,20 @@ class AppRecoveryManager {
       
       // Use dynamic import with cache busting
       const timestamp = Date.now();
-      const moduleUrl = `/src/components/AppInitializer.tsx?bust=${timestamp}`;
       
-      // Try multiple import strategies
+      // Try progressive app loader first
+      try {
+        const module = await import('@/components/ProgressiveAppLoader');
+        if (module?.default) {
+          console.log('AppRecoveryManager: Successfully loaded ProgressiveAppLoader');
+          return { success: true, module: module.default };
+        }
+      } catch (error) {
+        console.warn('AppRecoveryManager: ProgressiveAppLoader failed, trying AppInitializer:', error);
+      }
+      
+      // Fallback to AppInitializer
+      const moduleUrl = `/src/components/AppInitializer.tsx?bust=${timestamp}`;
       let module;
       try {
         module = await import(/* webpackIgnore: true */ moduleUrl);
@@ -84,7 +95,7 @@ class AppRecoveryManager {
       }
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      console.error('AppRecoveryManager: Failed to load AppInitializer:', errorMsg);
+      console.error('AppRecoveryManager: Failed to load app components:', errorMsg);
       return { success: false, error: errorMsg };
     }
   }
@@ -109,8 +120,20 @@ class AppRecoveryManager {
       this.recoveryState.lastError = result.error;
     }
     
-    // Level 2: Try smart recovery mode
+    // Level 2: Try progressive app loader
     if (this.recoveryState.attempts <= 3) {
+      try {
+        const { default: ProgressiveAppLoader } = await import('@/components/ProgressiveAppLoader');
+        this.recoveryState.level = 'minimal';
+        this.notifyListeners();
+        return { component: ProgressiveAppLoader, level: 'minimal' };
+      } catch (error) {
+        console.warn('AppRecoveryManager: Progressive loader failed:', error);
+      }
+    }
+    
+    // Level 3: Try smart recovery mode
+    if (this.recoveryState.attempts <= 4) {
       try {
         const { default: SmartRecoveryMode } = await import('@/components/SmartRecoveryMode');
         this.recoveryState.level = 'smart';

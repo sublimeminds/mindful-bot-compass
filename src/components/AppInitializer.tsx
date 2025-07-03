@@ -223,24 +223,7 @@ const AppInitializer: React.FC = () => {
 
   return (
     <BulletproofErrorBoundary>
-      <ProgressiveAppLoader>
-        <QueryProviderWrapper client={queryClient}>
-          <QueryClientProvider client={queryClient}>
-            <RouterWrapper>
-              <Router>
-                <AuthProviderWrapper authValue={authValue}>
-                  <AuthContext.Provider value={authValue}>
-                    <div className="min-h-screen css-safe-bg">
-                      <AppRouter />
-                      <Toaster />
-                    </div>
-                  </AuthContext.Provider>
-                </AuthProviderWrapper>
-              </Router>
-            </RouterWrapper>
-          </QueryClientProvider>
-        </QueryProviderWrapper>
-      </ProgressiveAppLoader>
+      <ProgressiveAppLoader />
     </BulletproofErrorBoundary>
   );
 };
