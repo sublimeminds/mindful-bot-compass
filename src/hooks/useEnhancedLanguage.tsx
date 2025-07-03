@@ -59,20 +59,33 @@ export const useEnhancedLanguage = () => {
     document.documentElement.dir = lang.isRTL ? 'rtl' : 'ltr';
     document.documentElement.lang = i18n.language;
 
-    detectLocationLanguage();
+    // Defer location detection to avoid blocking initialization
+    setTimeout(() => {
+      detectLocationLanguage();
+    }, 1000);
   }, [i18n.language]);
 
   const detectLocationLanguage = async () => {
     try {
-      const location = await enhancedCurrencyService.detectUserLocation();
-      if (location && location.countryCode) {
-        const suggestedLang = languageByCountry[location.countryCode];
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout')), 5000)
+      );
+      
+      const location = await Promise.race([
+        enhancedCurrencyService.detectUserLocation(),
+        timeoutPromise
+      ]);
+      
+      if (location && (location as any).countryCode) {
+        const suggestedLang = languageByCountry[(location as any).countryCode];
         if (suggestedLang && suggestedLang !== i18n.language) {
           setSuggestedLanguage(suggestedLang);
         }
       }
     } catch (error) {
-      console.warn('Could not detect location for language suggestion');
+      // Silently fail - location detection is optional
+      console.debug('Location detection skipped:', error.message);
     }
   };
 
