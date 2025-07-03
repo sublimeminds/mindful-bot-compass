@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import React from 'react';
 
 interface SEOProps {
   title?: string;
@@ -8,7 +8,19 @@ interface SEOProps {
 }
 
 export const useSafeSEO = ({ title, description, keywords }: SEOProps) => {
-  useEffect(() => {
+  // Use bulletproof React validation before using hooks
+  if (!React || typeof React.useEffect !== 'function') {
+    console.warn('React useEffect not available, skipping SEO updates');
+    return;
+  }
+
+  React.useEffect(() => {
+    // Additional safety check inside the effect
+    if (typeof document === 'undefined') {
+      console.warn('Document not available, skipping SEO updates');
+      return;
+    }
+
     try {
       if (title) {
         document.title = title;

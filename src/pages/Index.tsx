@@ -334,7 +334,214 @@ const IndexContent = () => {
       </section>
 
       {/* Pricing Section */}
-      <SimplePricingFallback />
+      <section id="pricing" className="py-24 bg-gradient-to-br from-slate-50 via-therapy-50 to-calm-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+              Choose Your <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">Wellness Plan</span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
+              Start free and upgrade as your mental wellness journey evolves. All plans include our core AI therapy features.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+            {/* Free Plan */}
+            <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-2xl bg-white/80 backdrop-blur-sm border-slate-200">
+              <CardHeader className="text-center pb-8">
+                <div className="w-16 h-16 bg-gradient-to-r from-slate-500 to-slate-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <Star className="h-6 w-6 text-white" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-slate-900 mb-2">Free</CardTitle>
+                <div className="mb-4">
+                  <span className="text-4xl font-bold text-slate-800">$0</span>
+                </div>
+                <p className="text-slate-600 text-sm mb-2">Perfect for getting started</p>
+              </CardHeader>
+              <CardContent className="pt-0 px-6 pb-8">
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm">3 AI therapy sessions per month</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm">Basic mood tracking</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm">Community access</span>
+                  </li>
+                </ul>
+                <Button 
+                  className="w-full font-semibold text-base py-3 transition-all duration-300 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white shadow-md hover:shadow-lg hover:scale-105"
+                  onClick={() => navigate('/onboarding')}
+                >
+                  Get Started Free
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Pro Plan */}
+            <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-2xl ring-4 ring-therapy-400 shadow-therapy-500/30 scale-105 bg-gradient-to-br from-therapy-50 to-calm-50 border-therapy-200">
+              <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-therapy-500 via-calm-500 to-therapy-600 text-white text-center py-3 text-sm font-bold tracking-wide">
+                ⭐ MOST POPULAR ⭐
+              </div>
+              <CardHeader className="text-center pt-16 pb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-therapy-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <Zap className="h-6 w-6 text-white" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-slate-900 mb-2">Pro</CardTitle>
+                <div className="mb-4">
+                  <span className="text-4xl font-bold text-slate-800">$19.99</span>
+                  <span className="text-slate-600">/month</span>
+                </div>
+                <p className="text-slate-600 text-sm mb-2">Comprehensive mental health support</p>
+              </CardHeader>
+              <CardContent className="pt-0 px-6 pb-8">
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm">Unlimited AI therapy sessions</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm">Advanced mood analytics</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm">Voice interaction capabilities</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm">Priority support</span>
+                  </li>
+                </ul>
+                <Button 
+                  className="w-full font-semibold text-base py-3 transition-all duration-300 bg-gradient-to-r from-therapy-500 via-calm-500 to-therapy-600 hover:from-therapy-600 hover:via-calm-600 hover:to-therapy-700 text-white shadow-lg hover:shadow-xl hover:scale-105"
+                  onClick={() => navigate('/onboarding')}
+                >
+                  Start Pro
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Premium Plan */}
+            <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-2xl bg-white/80 backdrop-blur-sm border-slate-200">
+              <CardHeader className="text-center pb-8">
+                <div className="w-16 h-16 bg-gradient-to-r from-harmony-500 to-balance-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <Heart className="h-6 w-6 text-white" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-slate-900 mb-2">Premium</CardTitle>
+                <div className="mb-4">
+                  <span className="text-4xl font-bold text-slate-800">$39.99</span>
+                  <span className="text-slate-600">/month</span>
+                </div>
+                <p className="text-slate-600 text-sm mb-2">Advanced features and priority support</p>
+              </CardHeader>
+              <CardContent className="pt-0 px-6 pb-8">
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm">Everything in Pro</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm">Advanced emotion detection</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm">Personalized treatment plans</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm">24/7 priority support</span>
+                  </li>
+                </ul>
+                <Button 
+                  className="w-full font-semibold text-base py-3 transition-all duration-300 bg-gradient-to-r from-harmony-500 to-balance-500 hover:from-harmony-600 hover:to-balance-600 text-white shadow-lg hover:shadow-lg hover:scale-105"
+                  onClick={() => navigate('/onboarding')}
+                >
+                  Start Premium
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Family Plan Configurator */}
+          <div className="max-w-4xl mx-auto">
+            <Card className="bg-gradient-to-br from-harmony-50 to-balance-50 border-harmony-200 shadow-xl">
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-harmony-500 to-balance-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <Users className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-3xl font-bold text-slate-900 mb-4">Family Plans</CardTitle>
+                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                  Mental health support for the whole family with adaptive pricing, parental controls, and shared progress tracking.
+                </p>
+              </CardHeader>
+              <CardContent className="p-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-slate-800 text-lg">Family Features Include:</h4>
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-harmony-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-700">Up to 6 family members</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-harmony-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-700">Parental controls & monitoring</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-harmony-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-700">Family therapy sessions</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-harmony-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-700">Shared progress insights</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-harmony-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-700">Child safety features</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="text-center">
+                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-harmony-200">
+                      <h5 className="text-lg font-semibold text-slate-800 mb-4">Family Plan Pricing</h5>
+                      <div className="text-3xl font-bold text-harmony-600 mb-2">$59.99</div>
+                      <div className="text-slate-600 mb-4">per month for up to 6 members</div>
+                      <div className="text-sm text-slate-500 mb-6">
+                        That's less than $10 per family member!
+                      </div>
+                      <Button 
+                        className="w-full font-semibold py-3 bg-gradient-to-r from-harmony-500 to-balance-500 hover:from-harmony-600 hover:to-balance-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                        onClick={() => navigate('/family-features')}
+                      >
+                        <Users className="h-4 w-4 mr-2" />
+                        Learn More About Family Plans
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-12">
+            <p className="text-slate-600 mb-4">
+              No credit card required for Free plan. Start your journey today.
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-500">
+              <span>🔒 HIPAA Compliant</span>
+              <span>🌍 Available Worldwide</span>
+              <span>💬 24/7 AI Support</span>
+              <span>📱 Mobile & Web Access</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section id="cta" className="py-20">

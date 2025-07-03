@@ -61,6 +61,27 @@ const CleanLanguageSelector = () => {
     try {
       await i18n.changeLanguage(languageCode);
       setIsOpen(false);
+      
+      // Update URL for SEO - navigate to language-specific path
+      const currentPath = window.location.pathname;
+      const languagePrefixes = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ja', 'ko', 'zh'];
+      
+      // Remove existing language prefix if present
+      let cleanPath = currentPath;
+      for (const prefix of languagePrefixes) {
+        if (currentPath.startsWith(`/${prefix}/`) || currentPath === `/${prefix}`) {
+          cleanPath = currentPath.substring(`/${prefix}`.length) || '/';
+          break;
+        }
+      }
+      
+      // Add new language prefix if not English
+      const newPath = languageCode === 'en' ? cleanPath : `/${languageCode}${cleanPath}`;
+      
+      // Update URL without page reload for better UX
+      if (newPath !== currentPath) {
+        window.history.pushState({}, '', newPath);
+      }
     } catch (error) {
       console.error('Error changing language:', error);
     }
