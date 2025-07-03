@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { Check, Crown, Zap, Star } from 'lucide-react';
+import SafeReactWrapper from '@/components/SafeReactWrapper';
 
-const SimplePricingFallback = () => {
+const SimplePricingFallbackContent = () => {
   const navigate = useNavigate();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
@@ -195,6 +196,14 @@ const SimplePricingFallback = () => {
         </div>
       </div>
     </section>
+  );
+};
+
+const SimplePricingFallback = () => {
+  return (
+    <SafeReactWrapper componentName="SimplePricingFallback">
+      <SimplePricingFallbackContent />
+    </SafeReactWrapper>
   );
 };
 

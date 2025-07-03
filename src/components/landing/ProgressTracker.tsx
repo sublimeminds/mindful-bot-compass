@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Circle } from 'lucide-react';
+import SafeReactWrapper from '@/components/SafeReactWrapper';
 
 const sections = [
   { id: 'hero', title: 'Welcome', description: 'Introduction to TherapySync' },
@@ -14,7 +15,7 @@ const sections = [
   { id: 'cta', title: 'Get Started', description: 'Begin your journey' }
 ];
 
-const ProgressTracker = () => {
+const ProgressTrackerContent = () => {
   const [activeSection, setActiveSection] = useState('hero');
   const [completedSections, setCompletedSections] = useState<string[]>([]);
 
@@ -122,6 +123,14 @@ const ProgressTracker = () => {
         </CardContent>
       </Card>
     </div>
+  );
+};
+
+const ProgressTracker = () => {
+  return (
+    <SafeReactWrapper componentName="ProgressTracker">
+      <ProgressTrackerContent />
+    </SafeReactWrapper>
   );
 };
 

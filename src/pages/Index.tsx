@@ -3,6 +3,7 @@ import React from 'react';
 import { useBulletproofSEO } from '@/hooks/useBulletproofSEO';
 import SafeHeader from '@/components/SafeHeader';
 import SafeFooter from '@/components/SafeFooter';
+import SafeReactWrapper from '@/components/SafeReactWrapper';
 import GradientLogo from '@/components/ui/GradientLogo';
 import GradientButton from '@/components/ui/GradientButton';
 import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
@@ -29,7 +30,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const Index = () => {
+const IndexContent = () => {
   const navigate = useNavigate();
   
   useBulletproofSEO({
@@ -368,6 +369,14 @@ const Index = () => {
 
       <SafeFooter />
     </div>
+  );
+};
+
+const Index = () => {
+  return (
+    <SafeReactWrapper componentName="Index">
+      <IndexContent />
+    </SafeReactWrapper>
   );
 };
 
