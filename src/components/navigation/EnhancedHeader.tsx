@@ -38,7 +38,7 @@ import {
   Link as LinkIcon,
   LifeBuoy
 } from 'lucide-react';
-import { AuthContext } from '@/components/SafeAuthProvider';
+import { AuthContext } from '@/contexts/AuthContext';
 import { AuthContextType } from '@/types/auth';
 import GradientLogo from '@/components/ui/GradientLogo';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';

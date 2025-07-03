@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserStats } from '@/hooks/useUserStats';
-import { AuthContext } from '@/components/SafeAuthProvider';
+import { AuthContext } from '@/contexts/AuthContext';
 import { AuthContextType } from '@/types/auth';
 import {
   DropdownMenu,
