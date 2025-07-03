@@ -41,6 +41,7 @@ const NeuralInterface = createSafeLazyComponent(() => import("../pages/NeuralInt
 const TestPage = createSafeLazyComponent(() => import("../pages/TestPage"), "TestPage");
 const ComponentHealthCheck = createSafeLazyComponent(() => import("../pages/ComponentHealthCheck"), "ComponentHealthCheck");
 const UserControlledRecoveryDashboard = createSafeLazyComponent(() => import("../components/UserControlledRecoveryDashboard"), "RecoveryDashboard");
+const RecoveryMonitoringDashboard = createSafeLazyComponent(() => import("../components/analytics/RecoveryMonitoringDashboard"), "RecoveryMonitoring");
 
 // Enhanced loading fallback
 const PageLoadingFallback = () => (
@@ -134,6 +135,11 @@ const AppRouter = () => {
             <Route path="/recovery-dashboard" element={
               <RouteWrapper name="RecoveryDashboard">
                 <UserControlledRecoveryDashboard />
+              </RouteWrapper>
+            } />
+            <Route path="/recovery-monitoring" element={
+              <RouteWrapper name="RecoveryMonitoring">
+                <RecoveryMonitoringDashboard />
               </RouteWrapper>
             } />
           </Routes>

@@ -3,6 +3,7 @@
  */
 import { smartDiagnosticsEngine } from './smartDiagnosticsEngine';
 import { autoRecoverySystem } from './autoRecoverySystem';
+import { recoveryAnalytics } from './recoveryAnalytics';
 
 interface RecoveryLevel {
   name: string;
@@ -67,6 +68,14 @@ class EnhancedRecoveryChain {
     try {
       console.log(`RecoveryChain: Attempting level ${level.name} (attempt ${this.state.attempts[attemptKey]})`);
       
+      // Record recovery attempt
+      recoveryAnalytics.recordEvent('attempt', { 
+        level: level.name, 
+        errorType: 'recovery_attempt' 
+      });
+      
+      const startTime = Date.now();
+      
       // Run diagnostics before attempting recovery
       const healthStatus = await smartDiagnosticsEngine.runDiagnostics();
       console.log(`RecoveryChain: Health status for ${level.name}:`, healthStatus.overall);
@@ -79,6 +88,13 @@ class EnhancedRecoveryChain {
       ]);
 
       this.state.lastSuccessful = level.name;
+      
+      // Record success
+      recoveryAnalytics.recordEvent('success', { 
+        level: level.name, 
+        duration: Date.now() - startTime 
+      });
+      
       console.log(`RecoveryChain: Success at level ${level.name}`);
       return { success: true, component };
 
