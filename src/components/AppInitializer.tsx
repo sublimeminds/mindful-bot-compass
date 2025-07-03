@@ -117,6 +117,19 @@ export class AppInitializer extends Component<Props, State> {
     await supabase.auth.signOut();
   };
 
+  // Aliases for compatibility with useSimpleApp
+  private register = async (email: string, password: string) => {
+    return this.signUp(email, password);
+  };
+
+  private login = async (email: string, password: string) => {
+    return this.signIn(email, password);
+  };
+
+  private logout = async () => {
+    return this.signOut();
+  };
+
   render() {
     const { phase, error } = this.state;
 
@@ -141,9 +154,9 @@ export class AppInitializer extends Component<Props, State> {
       signUp: this.signUp,
       signIn: this.signIn,
       signOut: this.signOut,
-      register: this.signUp,
-      login: this.signIn,
-      logout: this.signOut,
+      register: this.register,
+      login: this.login,
+      logout: this.logout,
     };
 
     // Always render the app

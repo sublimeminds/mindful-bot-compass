@@ -4,6 +4,7 @@ import { Suspense, lazy } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Lazy load pages with safe fallbacks
+const Index = lazy(() => import("../pages/Index"));
 const MinimalIndex = lazy(() => import("../pages/MinimalIndex"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const EnhancedAuth = lazy(() => import("../pages/EnhancedAuth"));
@@ -27,7 +28,8 @@ const AppRouter = () => {
   return (
     <Suspense fallback={<PageLoadingFallback />}>
       <Routes>
-        <Route path="/" element={<MinimalIndex />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/minimal" element={<MinimalIndex />} />
         <Route path="/auth" element={<EnhancedAuth />} />
         <Route path="/onboarding" element={<EnhancedOnboardingPage />} />
         <Route path="/dashboard" element={<Dashboard />} />

@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, User, Home } from 'lucide-react';
 
 const AdminHeader = () => {
-  const { user, logout } = useSimpleApp();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {

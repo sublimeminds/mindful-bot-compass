@@ -7,11 +7,11 @@ import { Target, Plus, TrendingUp, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 
 const GoalsWidget = () => {
   const navigate = useNavigate();
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
 
   const { data: goals = [], isLoading } = useQuery({
     queryKey: ['user-goals', user?.id],
