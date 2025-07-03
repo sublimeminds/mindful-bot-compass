@@ -1,10 +1,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useSimpleApp } from "@/hooks/useSimpleApp";
+import { useAuth } from "@/hooks/useAuth";
 
 export const useSessionStats = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
 
   const { data: stats, isLoading } = useQuery({
     queryKey: ['session-stats', user?.id],

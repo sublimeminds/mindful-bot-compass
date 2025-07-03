@@ -33,11 +33,11 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import GradientLogo from '@/components/ui/GradientLogo';
 import { enhancedVoiceService } from '@/services/voiceService';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 
 const TherapySyncAI = () => {
   const navigate = useNavigate();
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const userPlan = user ? 'premium' : 'free';
   
   const [hasElevenLabsKey, setHasElevenLabsKey] = useState(false);

@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useSimpleApp } from "@/hooks/useSimpleApp";
+import { useAuth } from "@/hooks/useAuth";
 
 export interface SessionSummary {
   id: string;
@@ -17,7 +17,7 @@ export interface SessionSummary {
 }
 
 export const useSessionHistory = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
 
   const { data: sessionSummaries = [], isLoading, error } = useQuery({
     queryKey: ['session-history', user?.id],

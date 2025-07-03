@@ -5,12 +5,12 @@ import { Bell, Settings, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
 import NotificationCenter from '@/components/NotificationCenter';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import Header from '@/components/Header';
 
 const NotificationDashboard = () => {
   const navigate = useNavigate();
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
 
   if (!user) {
     return (

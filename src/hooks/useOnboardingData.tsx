@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
 interface OnboardingData {
@@ -10,7 +10,7 @@ interface OnboardingData {
 }
 
 export const useOnboardingData = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const [onboardingData, setOnboardingData] = useState<OnboardingData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 

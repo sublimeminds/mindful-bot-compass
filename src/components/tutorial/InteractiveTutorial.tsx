@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { X, ArrowRight, ArrowLeft, CheckCircle, Lightbulb } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 
 interface TutorialStep {
   id: string;
@@ -23,7 +23,7 @@ interface InteractiveTutorialProps {
 }
 
 const InteractiveTutorial = ({ steps, onComplete, onSkip, tutorialKey }: InteractiveTutorialProps) => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 

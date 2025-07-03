@@ -21,7 +21,7 @@ interface RiskAssessment {
 }
 
 const AIHealthRiskAssessment = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [assessment, setAssessment] = useState<RiskAssessment | null>(null);
   const [isLoading, setIsLoading] = useState(false);

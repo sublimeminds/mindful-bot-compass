@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { useSimpleApp } from './useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { realAIService, ConversationContext } from '@/services/realAiService';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from './use-toast';
@@ -24,7 +24,7 @@ export interface UserPreferences {
 }
 
 export const useRealEnhancedChat = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);

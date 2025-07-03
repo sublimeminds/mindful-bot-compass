@@ -1,11 +1,11 @@
 
 import { useState, useEffect } from 'react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { NotificationPreferencesService, NotificationPreferences } from '@/services/notificationPreferencesService';
 import { useToast } from '@/hooks/use-toast';
 
 export const useNotificationPreferences = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [preferences, setPreferences] = useState<NotificationPreferences | null>(null);
   const [isLoading, setIsLoading] = useState(false);

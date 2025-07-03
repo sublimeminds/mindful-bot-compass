@@ -1,5 +1,5 @@
 
-import { useSimpleApp } from "@/hooks/useSimpleApp";
+// Note: Services cannot use hooks directly - user auth should be passed as parameter
 import { useOnboardingData } from "@/hooks/useOnboardingData";
 
 interface SessionRecommendation {

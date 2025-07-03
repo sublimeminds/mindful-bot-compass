@@ -11,7 +11,7 @@ import PreferencesStep from '@/components/onboarding/PreferencesStep';
 import PlanSelectionStep from '@/components/onboarding/PlanSelectionStep';
 
 const Onboarding = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
