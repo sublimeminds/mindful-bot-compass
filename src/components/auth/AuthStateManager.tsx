@@ -4,9 +4,11 @@ import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
 export const useAuthState = () => {
+  // CRITICAL: Start with loading: false to prevent blocking
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Changed to false - immediate render
   const [isElectron, setIsElectron] = useState(false);
+  const [debugMode] = useState(() => localStorage.getItem('auth_debug') === 'true');
 
   useEffect(() => {
     // Detect if we're in Electron
@@ -17,69 +19,81 @@ export const useAuthState = () => {
     setIsElectron(electronCheck);
     console.log('AuthStateManager: Electron detected:', electronCheck);
 
-    const initializeAuth = async () => {
-      try {
-        console.log('AuthStateManager: Starting auth initialization');
-        
-        // Set a timeout for Electron to prevent infinite loading
-        const authTimeout = setTimeout(() => {
-          console.warn('AuthStateManager: Auth initialization timed out, continuing with offline mode');
-          setUser(null);
-          setLoading(false);
-        }, electronCheck ? 5000 : 10000); // 5 seconds for Electron, 10 for web
+    // Skip auth completely in debug mode
+    if (debugMode) {
+      console.log('AuthStateManager: Debug mode - skipping auth initialization');
+      return;
+    }
 
-        // Try to get the current session
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        // Clear timeout since we got a response
-        clearTimeout(authTimeout);
-        
-        if (error) {
-          console.error('AuthStateManager: Session error:', error);
-          if (electronCheck) {
-            console.log('AuthStateManager: Continuing in offline mode due to session error');
-            setUser(null);
-            setLoading(false);
-            return;
+    // PHASE 1: Non-blocking background auth initialization
+    const initializeAuthInBackground = () => {
+      console.log('AuthStateManager: Starting background auth initialization');
+      
+      // Start auth state listener FIRST (before getSession)
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        (event, session) => {
+          try {
+            console.log('AuthStateManager: Auth state changed:', event, session ? 'User present' : 'No user');
+            setUser(session?.user ?? null);
+          } catch (error) {
+            console.error('AuthStateManager: Auth state change error:', error);
           }
         }
+      );
 
-        console.log('AuthStateManager: Session retrieved:', session ? 'User logged in' : 'No session');
-        setUser(session?.user ?? null);
-        setLoading(false);
+      // Then check for existing session (non-blocking)
+      setTimeout(async () => {
+        try {
+          console.log('AuthStateManager: Checking for existing session');
+          
+          // Timeout protection
+          const authTimeout = setTimeout(() => {
+            console.warn('AuthStateManager: Session check timed out, continuing without auth');
+          }, electronCheck ? 3000 : 5000);
 
-      } catch (error) {
-        console.error('AuthStateManager: Initialization error:', error);
-        // In Electron, don't block the app if auth fails
-        if (electronCheck) {
-          console.log('AuthStateManager: Auth failed in Electron, continuing in offline mode');
+          const { data: { session }, error } = await supabase.auth.getSession();
+          clearTimeout(authTimeout);
+          
+          if (error) {
+            console.error('AuthStateManager: Session error:', error);
+            // Don't block - just log and continue
+            return;
+          }
+
+          console.log('AuthStateManager: Session check complete:', session ? 'User logged in' : 'No session');
+          setUser(session?.user ?? null);
+
+        } catch (error) {
+          console.error('AuthStateManager: Session check failed:', error);
+          // App continues to work regardless
         }
-        setUser(null);
-        setLoading(false);
-      }
+      }, 100); // Small delay to ensure rendering starts first
+
+      return subscription;
     };
 
-    initializeAuth();
-
-    // Set up auth state listener with error handling
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        try {
-          console.log('AuthStateManager: Auth state changed:', event, session ? 'User present' : 'No user');
-          setUser(session?.user ?? null);
-          setLoading(false);
-        } catch (error) {
-          console.error('AuthStateManager: Auth state change error:', error);
-          setLoading(false);
-        }
-      }
-    );
+    const subscription = initializeAuthInBackground();
 
     return () => {
       console.log('AuthStateManager: Cleaning up auth subscription');
-      subscription.unsubscribe();
+      subscription?.unsubscribe();
     };
-  }, []);
+  }, [debugMode]);
 
-  return { user, loading, setUser };
+  return { 
+    user, 
+    loading, 
+    setUser,
+    // Development helpers
+    skipAuth: () => {
+      console.log('AuthStateManager: Skipping auth for development');
+      localStorage.setItem('auth_debug', 'true');
+      window.location.reload();
+    },
+    enableAuth: () => {
+      console.log('AuthStateManager: Re-enabling auth');
+      localStorage.removeItem('auth_debug');
+      window.location.reload();
+    }
+  };
 };
