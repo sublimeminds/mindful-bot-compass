@@ -6,6 +6,9 @@ import { AuthContext } from '@/contexts/AuthContext'
 import { AuthContextType } from '@/types/auth'
 import { vi } from 'vitest'
 
+// Import testing utilities  
+import { screen, waitFor } from '@testing-library/dom'
+
 // Mock auth context value
 const mockAuthContext: AuthContextType = {
   user: null,
@@ -72,6 +75,7 @@ const customRender = (
   })
 }
 
+// Re-export everything from testing library
 export * from '@testing-library/react'
-export { customRender as render }
+export { customRender as render, screen, waitFor }
 export { mockAuthContext }
