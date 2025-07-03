@@ -101,59 +101,34 @@ class AppRecoveryManager {
   }
 
   /**
-   * Progressive recovery with multiple fallback levels
+   * Progressive recovery with enhanced chain
    */
   async attemptRecovery(): Promise<{ component: React.ComponentType; level: string }> {
     this.recoveryState.attempts++;
     this.recoveryState.timestamp = Date.now();
     
-    console.log(`AppRecoveryManager: Recovery attempt ${this.recoveryState.attempts}`);
+    console.log(`AppRecoveryManager: Enhanced recovery attempt ${this.recoveryState.attempts}`);
     
-    // Level 1: Try full app
-    if (this.recoveryState.attempts <= 2) {
-      const result = await this.loadAppComponent();
-      if (result.success && result.module) {
-        this.recoveryState.level = 'full';
-        this.notifyListeners();
-        return { component: result.module, level: 'full' };
-      }
-      this.recoveryState.lastError = result.error;
+    // Import and use enhanced recovery chain
+    const { enhancedRecoveryChain } = await import('./enhancedRecoveryChain');
+    
+    // Try current level
+    let result = await enhancedRecoveryChain.attemptCurrentLevel();
+    
+    // If failed, escalate through levels
+    while (!result.success && enhancedRecoveryChain.escalate()) {
+      result = await enhancedRecoveryChain.attemptCurrentLevel();
     }
     
-    // Level 2: Try progressive app loader
-    if (this.recoveryState.attempts <= 3) {
-      try {
-        const { default: ProgressiveAppLoader } = await import('@/components/ProgressiveAppLoader');
-        this.recoveryState.level = 'minimal';
-        this.notifyListeners();
-        return { component: ProgressiveAppLoader, level: 'minimal' };
-      } catch (error) {
-        console.warn('AppRecoveryManager: Progressive loader failed:', error);
-      }
-    }
-    
-    // Level 3: Try smart recovery mode
-    if (this.recoveryState.attempts <= 4) {
-      try {
-        const { default: SmartRecoveryMode } = await import('@/components/SmartRecoveryMode');
-        this.recoveryState.level = 'smart';
-        this.notifyListeners();
-        return { component: SmartRecoveryMode, level: 'smart' };
-      } catch (error) {
-        console.warn('AppRecoveryManager: Smart recovery failed:', error);
-      }
-    }
-    
-    // Level 3: Safe minimal app
-    try {
-      const { default: SafeMinimalApp } = await import('@/components/SafeMinimalApp');
-      this.recoveryState.level = 'safe';
+    if (result.success && result.component) {
+      const levelName = enhancedRecoveryChain.getCurrentLevel()?.name || 'unknown';
+      this.recoveryState.level = levelName as any;
       this.notifyListeners();
-      return { component: SafeMinimalApp, level: 'safe' };
-    } catch (error) {
-      console.error('AppRecoveryManager: Even safe mode failed:', error);
-      throw new Error('Complete recovery failure');
+      return { component: result.component, level: levelName };
     }
+    
+    // Complete failure
+    throw new Error('All recovery levels failed');
   }
 
   /**
