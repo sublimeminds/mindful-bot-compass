@@ -27,7 +27,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import GradientLogo from '@/components/ui/GradientLogo';
 import LanguageSelector from '@/components/ui/LanguageSelector';
-import SafeDropdownMenu from './SafeDropdownMenu';
+import PureDropdownMenu from './PureDropdownMenu';
 
 const StableHeader = () => {
   const navigate = useNavigate();
@@ -188,21 +188,21 @@ const StableHeader = () => {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <SafeDropdownMenu
+            <PureDropdownMenu
               trigger={{ icon: Brain, label: "AI" }}
               title="AI Features"
               items={aiFeatures}
               onItemClick={(href) => navigate(href)}
             />
             
-            <SafeDropdownMenu
+            <PureDropdownMenu
               trigger={{ icon: Settings, label: "Platform" }}
               title="Platform Features"
               items={platformFeatures}
               onItemClick={(href) => navigate(href)}
             />
             
-            <SafeDropdownMenu
+            <PureDropdownMenu
               trigger={{ icon: HelpCircle, label: "Help" }}
               title="Help & Support"
               items={helpResources}
