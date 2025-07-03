@@ -1,3 +1,3 @@
 
-// Re-export the enhanced component to maintain compatibility
-export { default } from './EnhancedLanguageSelector';
+// Re-export the simple component to fix initialization errors
+export { default } from './SimpleLanguageSelector';
