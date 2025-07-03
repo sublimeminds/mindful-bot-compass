@@ -1,121 +1,212 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import SmartErrorBoundary from '@/components/SmartErrorBoundary';
+import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import GradientLogo from '@/components/ui/GradientLogo';
+import { Badge } from '@/components/ui/badge';
 import { 
-  ChevronDown, 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator
+} from '@/components/ui/dropdown-menu';
+import { 
   Brain, 
   Heart, 
-  Shield, 
   Users, 
-  Headphones, 
-  Globe,
-  Star,
-  Zap,
-  Award,
+  MessageSquare, 
+  Headphones,
   BookOpen,
-  MessageSquare,
-  Settings,
-  User,
-  LogOut,
   HelpCircle,
-  CreditCard,
-  Activity
+  ChevronDown,
+  Sparkles,
+  Shield,
+  Globe,
+  Calculator,
+  Crown,
+  Phone,
+  FileText,
+  Mail,
+  Mic,
+  Target,
+  Zap,
+  Settings,
+  Lightbulb,
+  Star,
+  UserPlus,
+  Activity,
+  Stethoscope,
+  Link as LinkIcon,
+  LifeBuoy
 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import GradientLogo from '@/components/ui/GradientLogo';
+import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
+import EnhancedUserMenu from './navigation/EnhancedUserMenu';
+import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
+import EnhancedButton from '@/components/ui/EnhancedButton';
+import SafeReactWrapper from './SafeReactWrapper';
 
 const SafeHeaderContent = () => {
-  const [user, setUser] = React.useState(null);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
+  
+  // Safe auth access via bulletproof hook
+  const { user } = useAuth();
 
-  // Safe auth hook with fallback
-  React.useEffect(() => {
-    try {
-      import('@/contexts/AuthContext').then(({ useAuth }) => {
-        try {
-          const { user: authUser } = useAuth();
-          setUser(authUser);
-        } catch (error) {
-          console.warn('SafeHeader: Auth not available');
-        }
-      }).catch(() => {
-        console.warn('SafeHeader: Auth context not available');
-      });
-    } catch (error) {
-      console.warn('SafeHeader: Failed to load auth');
-    }
-  }, []);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setActiveDropdown(null);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const toggleDropdown = (dropdownName: string) => {
-    setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
-  };
-
-  const featuresDropdownItems = [
+  const aiFeatures = [
     {
-      category: "AI Therapy",
-      items: [
-        { name: "Voice Technology", description: "Natural voice conversations", icon: Headphones, href: "/voice-technology" },
-        { name: "AI Analytics", description: "Advanced mood tracking", icon: Brain, href: "/ai-analytics" },
-        { name: "Crisis Support", description: "24/7 emergency assistance", icon: Shield, href: "/crisis-resources" }
-      ]
+      icon: Brain,
+      title: "AI Therapy Chat",
+      description: "Advanced AI-powered therapy conversations with personalized treatment approaches",
+      href: "/therapy-chat",
+      gradient: "from-therapy-500 to-calm-500"
     },
     {
-      category: "Therapy Types",
-      items: [
-        { name: "LGBTQ+ Therapy", description: "Specialized support", icon: Heart, href: "/lgbtq-therapy" },
-        { name: "Couples Therapy", description: "Relationship counseling", icon: Users, href: "/couples-therapy" },
-        { name: "Family Plans", description: "Support for families", icon: Globe, href: "/family-dashboard" }
-      ]
+      icon: Mic,
+      title: "Voice AI Technology",
+      description: "Natural voice conversations in 29 languages with emotion detection",
+      href: "/voice-technology",
+      gradient: "from-flow-500 to-balance-500"
     },
     {
-      category: "Advanced Features",
-      items: [
-        { name: "Neural Interface", description: "Future technology", icon: Zap, href: "/neural-interface" },
-        { name: "Quantum Therapy", description: "Next-gen healing", icon: Star, href: "/quantum-therapy" },
-        { name: "Blockchain Health", description: "Secure health records", icon: Award, href: "/blockchain-health" }
-      ]
+      icon: Globe,
+      title: "Cultural AI",
+      description: "Culturally sensitive AI trained to understand diverse backgrounds and contexts",
+      href: "/cultural-ai-features",
+      gradient: "from-balance-500 to-flow-500"
+    },
+    {
+      icon: Target,
+      title: "AI Personalization",
+      description: "Personalized therapy approaches adapted to your unique needs and preferences",
+      href: "/features-overview",
+      gradient: "from-harmony-500 to-therapy-500"
+    },
+    {
+      icon: Lightbulb,
+      title: "How It Works",
+      description: "Discover how our AI therapy technology works and helps you heal",
+      href: "/how-it-works",
+      gradient: "from-therapy-500 to-calm-500"
+    },
+    {
+      icon: Star,
+      title: "Features Showcase",
+      description: "Explore all the powerful features that make TherapySync unique",
+      href: "/features-showcase",
+      gradient: "from-calm-500 to-harmony-500"
     }
   ];
 
-  const resourcesDropdownItems = [
+  const platformFeatures = [
     {
-      category: "Learning",
-      items: [
-        { name: "Help Center", description: "Get support and answers", icon: HelpCircle, href: "/help" },
-        { name: "Audio Library", description: "Guided sessions", icon: BookOpen, href: "/audio-library" },
-        { name: "How It Works", description: "Learn about our process", icon: Activity, href: "/how-it-works" }
-      ]
+      icon: Users,
+      title: "Family & Account Sharing",
+      description: "Comprehensive family mental health support with account sharing and parental controls",
+      href: "/family-features",
+      gradient: "from-harmony-500 to-balance-500"
     },
     {
-      category: "Community",
-      items: [
-        { name: "Community Hub", description: "Connect with others", icon: MessageSquare, href: "/community" },
-        { name: "Support Groups", description: "Join support networks", icon: Users, href: "/community-features" },
-        { name: "Success Stories", description: "Read testimonials", icon: Star, href: "/" }
-      ]
+      icon: Shield,
+      title: "Crisis Support",
+      description: "24/7 crisis intervention with automated detection and emergency resources",
+      href: "/crisis-support",
+      gradient: "from-therapy-600 to-harmony-600"
+    },
+    {
+      icon: Heart,
+      title: "Mood Tracking",
+      description: "Track your emotional journey with AI-powered insights and progress analytics",
+      href: "/mood-tracking",
+      gradient: "from-calm-500 to-therapy-500"
+    },
+    {
+      icon: Calculator,
+      title: "Pricing",
+      description: "Flexible pricing plans designed for individuals, families, and organizations",
+      href: "/pricing",
+      gradient: "from-therapy-500 to-calm-500"
+    },
+    {
+      icon: UserPlus,
+      title: "Community Features",
+      description: "Connect with peers and join supportive communities for shared healing",
+      href: "/community-features",
+      gradient: "from-flow-500 to-balance-500"
+    },
+    {
+      icon: Stethoscope,
+      title: "Therapy Types",
+      description: "Explore different therapeutic approaches including CBT, DBT, and mindfulness",
+      href: "/therapy-types",
+      gradient: "from-balance-500 to-therapy-500"
+    },
+    {
+      icon: LinkIcon,
+      title: "Integrations",
+      description: "Connect with your favorite health and wellness apps for seamless care",
+      href: "/integrations",
+      gradient: "from-harmony-500 to-calm-500"
     }
   ];
 
-  const userDropdownItems = user ? [
-    { name: "Dashboard", icon: Activity, href: "/dashboard" },
-    { name: "Profile", icon: User, href: "/profile" },
-    { name: "Settings", icon: Settings, href: "/settings" },
-    { name: "Billing", icon: CreditCard, href: "/subscription" },
-    { name: "Sign Out", icon: LogOut, href: "/auth", action: "logout" }
-  ] : [];
+  const helpResources = [
+    {
+      icon: HelpCircle,
+      title: "FAQ",
+      description: "Frequently asked questions and quick answers",
+      href: "/help",
+      gradient: "from-therapy-500 to-calm-500"
+    },
+    {
+      icon: Phone,
+      title: "24/7 Support",
+      description: "Round-the-clock customer support and crisis assistance",
+      href: "/support",
+      gradient: "from-harmony-500 to-balance-500"
+    },
+    {
+      icon: FileText,
+      title: "Documentation",
+      description: "Complete guides and documentation for all features",
+      href: "/help",
+      gradient: "from-calm-500 to-therapy-500"
+    },
+    {
+      icon: Mail,
+      title: "Contact Us",
+      description: "Get in touch with our support team directly",
+      href: "/support",
+      gradient: "from-flow-500 to-balance-500"
+    },
+    {
+      icon: LifeBuoy,
+      title: "Crisis Resources",
+      description: "Emergency mental health resources and immediate crisis support",
+      href: "/crisis-resources",
+      gradient: "from-therapy-600 to-harmony-600"
+    },
+    {
+      icon: Users,
+      title: "Community",
+      description: "Join our supportive community and connect with others on similar journeys",
+      href: "/community",
+      gradient: "from-balance-500 to-calm-500"
+    }
+  ];
+
+  const IconWrapper = ({ icon: Icon, gradient, isHovered }: { icon: any, gradient: string, isHovered: boolean }) => (
+    <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 transform ${
+      isHovered 
+        ? `bg-gradient-to-r ${gradient} shadow-lg scale-110 animate-pulse` 
+        : `bg-gradient-to-r ${gradient} opacity-70 hover:opacity-100`
+    }`}>
+      <Icon className={`h-5 w-5 transition-all duration-300 ${
+        isHovered ? 'text-white scale-110' : 'text-white'
+      }`} />
+    </div>
+  );
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
@@ -123,269 +214,177 @@ const SafeHeaderContent = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-            <SmartErrorBoundary componentName="Logo" fallback={<div className="w-8 h-8 bg-therapy-500 rounded-lg"></div>}>
-              <GradientLogo size="sm" />
-            </SmartErrorBoundary>
+            <GradientLogo size="sm" />
             <span className="text-xl font-bold therapy-text-gradient">TherapySync</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1" ref={dropdownRef}>
-            {/* Features Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown('features')}
-                className="flex items-center space-x-1 px-4 py-2 text-slate-600 hover:text-therapy-600 transition-colors rounded-lg hover:bg-therapy-50"
-              >
-                <span>Features</span>
-                <ChevronDown className={`h-4 w-4 transition-transform ${activeDropdown === 'features' ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {activeDropdown === 'features' && (
-                <div className="absolute top-full left-0 mt-2 w-[720px] bg-white rounded-xl shadow-2xl border border-gray-200 z-50 overflow-hidden">
-                  <div className="p-6">
-                    <div className="grid grid-cols-3 gap-6">
-                      {featuresDropdownItems.map((category, categoryIndex) => (
-                        <div key={categoryIndex}>
-                          <h3 className="font-semibold text-therapy-700 mb-3 text-sm uppercase tracking-wide">
-                            {category.category}
-                          </h3>
-                          <div className="space-y-2">
-                            {category.items.map((item, itemIndex) => (
-                              <Link
-                                key={itemIndex}
-                                to={item.href}
-                                onClick={() => setActiveDropdown(null)}
-                                className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors group"
-                              >
-                                <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                                  <item.icon className="h-4 w-4 text-white" />
-                                </div>
-                                <div>
-                                  <div className="font-medium text-slate-900 group-hover:text-therapy-600 transition-colors">
-                                    {item.name}
-                                  </div>
-                                  <div className="text-sm text-slate-500">
-                                    {item.description}
-                                  </div>
-                                </div>
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="border-t border-gray-100 mt-6 pt-4">
-                      <div className="flex items-center justify-between">
-                        <div className="text-sm text-slate-600">
-                          Explore all our innovative therapy features
-                        </div>
-                        <Link
-                          to="/features-showcase"
-                          onClick={() => setActiveDropdown(null)}
-                          className="text-therapy-600 hover:text-therapy-700 font-medium text-sm flex items-center space-x-1"
-                        >
-                          <span>View all features</span>
-                          <ChevronDown className="h-4 w-4 -rotate-90" />
-                        </Link>
+          {/* Navigation */}
+          <nav className="hidden md:flex items-center space-x-6">
+            {/* AI Features Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                  <Brain className="h-4 w-4 text-therapy-500" />
+                  <span>AI</span>
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0 z-[100]">
+                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+                  <Brain className="h-5 w-5 mr-2 text-therapy-500" />
+                  AI Features
+                </DropdownMenuLabel>
+                <div className="grid grid-cols-2 gap-3">
+                  {aiFeatures.map((feature, index) => (
+                    <Link
+                      key={feature.title}
+                      to={feature.href}
+                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
+                      onMouseEnter={() => setHoveredIcon(feature.title)}
+                      onMouseLeave={() => setHoveredIcon(null)}
+                    >
+                      <IconWrapper 
+                        icon={feature.icon} 
+                        gradient={feature.gradient}
+                        isHovered={hoveredIcon === feature.title}
+                      />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
+                          {feature.title}
+                        </h4>
+                        <p className="text-xs text-gray-600 mt-1 leading-tight">
+                          {feature.description}
+                        </p>
                       </div>
-                    </div>
-                  </div>
+                    </Link>
+                  ))}
                 </div>
-              )}
-            </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-            {/* Resources Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown('resources')}
-                className="flex items-center space-x-1 px-4 py-2 text-slate-600 hover:text-therapy-600 transition-colors rounded-lg hover:bg-therapy-50"
-              >
-                <span>Resources</span>
-                <ChevronDown className={`h-4 w-4 transition-transform ${activeDropdown === 'resources' ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {activeDropdown === 'resources' && (
-                <div className="absolute top-full left-0 mt-2 w-[480px] bg-white rounded-xl shadow-2xl border border-gray-200 z-50 overflow-hidden">
-                  <div className="p-6">
-                    <div className="grid grid-cols-2 gap-6">
-                      {resourcesDropdownItems.map((category, categoryIndex) => (
-                        <div key={categoryIndex}>
-                          <h3 className="font-semibold text-therapy-700 mb-3 text-sm uppercase tracking-wide">
-                            {category.category}
-                          </h3>
-                          <div className="space-y-2">
-                            {category.items.map((item, itemIndex) => (
-                              <Link
-                                key={itemIndex}
-                                to={item.href}
-                                onClick={() => setActiveDropdown(null)}
-                                className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors group"
-                              >
-                                <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                                  <item.icon className="h-4 w-4 text-white" />
-                                </div>
-                                <div>
-                                  <div className="font-medium text-slate-900 group-hover:text-therapy-600 transition-colors">
-                                    {item.name}
-                                  </div>
-                                  <div className="text-sm text-slate-500">
-                                    {item.description}
-                                  </div>
-                                </div>
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+            {/* Platform Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                  <Settings className="h-4 w-4 text-therapy-500" />
+                  <span>Platform</span>
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0 z-[100]">
+                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+                  <Settings className="h-5 w-5 mr-2 text-therapy-500" />
+                  Platform Features
+                </DropdownMenuLabel>
+                <div className="grid grid-cols-2 gap-3">
+                  {platformFeatures.map((feature, index) => (
+                    <Link
+                      key={feature.title}
+                      to={feature.href}
+                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
+                      onMouseEnter={() => setHoveredIcon(feature.title)}
+                      onMouseLeave={() => setHoveredIcon(null)}
+                    >
+                      <IconWrapper 
+                        icon={feature.icon} 
+                        gradient={feature.gradient}
+                        isHovered={hoveredIcon === feature.title}
+                      />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
+                          {feature.title}
+                        </h4>
+                        <p className="text-xs text-gray-600 mt-1 leading-tight">
+                          {feature.description}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              )}
-            </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-            {/* Pricing Link */}
-            <Link 
-              to="/pricing" 
-              className="px-4 py-2 text-slate-600 hover:text-therapy-600 transition-colors rounded-lg hover:bg-therapy-50"
-            >
-              Pricing
-            </Link>
+            {/* Help Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                  <HelpCircle className="h-4 w-4 text-therapy-500" />
+                  <span>Help</span>
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0 z-[100]">
+                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+                  <HelpCircle className="h-5 w-5 mr-2 text-therapy-500" />
+                  Help & Support
+                </DropdownMenuLabel>
+                <div className="grid grid-cols-2 gap-3">
+                  {helpResources.map((resource, index) => (
+                    <Link
+                      key={resource.title}
+                      to={resource.href}
+                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
+                      onMouseEnter={() => setHoveredIcon(resource.title)}
+                      onMouseLeave={() => setHoveredIcon(null)}
+                    >
+                      <IconWrapper 
+                        icon={resource.icon} 
+                        gradient={resource.gradient}
+                        isHovered={hoveredIcon === resource.title}
+                      />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
+                          {resource.title}
+                        </h4>
+                        <p className="text-xs text-gray-600 mt-1 leading-tight">
+                          {resource.description}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
-
-          {/* Mobile Menu Button */}
-          <button 
-            onClick={() => toggleDropdown('mobile')}
-            className="lg:hidden p-2 text-slate-600 hover:text-therapy-600"
-          >
-            <ChevronDown className="h-5 w-5" />
-          </button>
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
+            <EnhancedLanguageSelector />
+            
             {user ? (
-              <div className="relative">
-                <button
-                  onClick={() => toggleDropdown('user')}
-                  className="flex items-center space-x-3 hover:bg-therapy-50 rounded-lg p-2 transition-colors"
-                >
-                  <div className="w-8 h-8 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">
-                      {user.email?.charAt(0).toUpperCase() || 'U'}
-                    </span>
-                  </div>
-                  <ChevronDown className={`h-4 w-4 transition-transform ${activeDropdown === 'user' ? 'rotate-180' : ''}`} />
-                </button>
-
-                {activeDropdown === 'user' && (
-                  <div className="absolute top-full right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 overflow-hidden">
-                    <div className="p-4 border-b border-gray-100">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center">
-                          <span className="text-white font-medium">
-                            {user.email?.charAt(0).toUpperCase() || 'U'}
-                          </span>
-                        </div>
-                        <div>
-                          <div className="font-medium text-slate-900">{user.email}</div>
-                          <div className="text-sm text-slate-500">Premium User</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-2">
-                      {userDropdownItems.map((item, index) => (
-                        <Link
-                          key={index}
-                          to={item.href}
-                          onClick={() => setActiveDropdown(null)}
-                          className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors text-slate-700 hover:text-therapy-600"
-                        >
-                          <item.icon className="h-4 w-4" />
-                          <span>{item.name}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <>
+                <EnhancedNotificationCenter />
+                <EnhancedUserMenu />
+              </>
             ) : (
               <div className="flex items-center space-x-3">
-                <Link to="/auth">
-                  <Button variant="ghost" className="text-therapy-600 hover:text-therapy-700 hidden sm:inline-flex">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link to="/onboarding">
-                  <Button className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white shadow-lg">
-                    Get Started
-                  </Button>
-                </Link>
+                <Button 
+                  variant="ghost" 
+                  onClick={() => navigate('/auth')}
+                  className="text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50"
+                >
+                  Sign In
+                </Button>
+                <EnhancedButton 
+                  onClick={() => navigate('/onboarding')}
+                  className="px-6 py-2"
+                >
+                  Get Started
+                </EnhancedButton>
               </div>
             )}
           </div>
-
-          {/* Mobile Dropdown */}
-          {activeDropdown === 'mobile' && (
-            <div className="absolute top-full left-0 right-0 mt-0 bg-white border-t border-gray-200 shadow-lg z-50 lg:hidden">
-              <div className="p-4 space-y-4">
-                <div className="space-y-2">
-                  <Link to="/features-showcase" className="block py-2 text-slate-600 hover:text-therapy-600" onClick={() => setActiveDropdown(null)}>
-                    Features
-                  </Link>
-                  <Link to="/pricing" className="block py-2 text-slate-600 hover:text-therapy-600" onClick={() => setActiveDropdown(null)}>
-                    Pricing
-                  </Link>
-                  <Link to="/help" className="block py-2 text-slate-600 hover:text-therapy-600" onClick={() => setActiveDropdown(null)}>
-                    Help
-                  </Link>
-                  <Link to="/community" className="block py-2 text-slate-600 hover:text-therapy-600" onClick={() => setActiveDropdown(null)}>
-                    Community
-                  </Link>
-                </div>
-                {!user && (
-                  <div className="pt-4 border-t border-gray-200">
-                    <Link to="/auth" className="block w-full text-center py-2 text-therapy-600 hover:text-therapy-700" onClick={() => setActiveDropdown(null)}>
-                      Sign In
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </header>
   );
 };
 
-// Safe Header with error boundary
 const SafeHeader = () => {
   return (
-    <SmartErrorBoundary 
-      componentName="Header"
-      fallback={
-        <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur">
-          <div className="container mx-auto px-4">
-            <div className="flex h-16 items-center justify-between">
-              <Link to="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-therapy-500 rounded-lg"></div>
-                <span className="text-xl font-bold text-therapy-600">TherapySync</span>
-              </Link>
-              <div className="flex items-center space-x-3">
-                <Link to="/auth">
-                  <Button variant="ghost">Sign In</Button>
-                </Link>
-                <Link to="/onboarding">
-                  <Button>Get Started</Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </header>
-      }
-    >
+    <SafeReactWrapper componentName="SafeHeader">
       <SafeHeaderContent />
-    </SmartErrorBoundary>
+    </SafeReactWrapper>
   );
 };
 
