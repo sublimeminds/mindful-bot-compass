@@ -11,6 +11,13 @@ import './index.css';
 import { CSSProtection } from './utils/cssProtection';
 import { serviceHealthManager } from './utils/serviceHealthManager';
 
+// Import testing infrastructure in development
+if (import.meta.env.DEV) {
+  import('./test/watch-mode').then(({ watchRunner }) => {
+    console.log('🔬 Development testing mode enabled');
+  });
+}
+
 // Initialize CSS protection before anything else
 CSSProtection.init();
 
@@ -98,17 +105,29 @@ const queryClient = new QueryClient({
   },
 });
 
+// Show immediate loading state
+const LoadingFallback = () => (
+  <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
+      <p className="text-therapy-600 font-medium">Loading TherapySync...</p>
+    </div>
+  </div>
+);
+
 root.render(
   <React.StrictMode>
-    <ThemeProvider>
-      <EnhancedAuthProvider>
+    <React.Suspense fallback={<LoadingFallback />}>
+      <ThemeProvider>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <App />
-            <Toaster />
+            <EnhancedAuthProvider>
+              <App />
+              <Toaster />
+            </EnhancedAuthProvider>
           </BrowserRouter>
         </QueryClientProvider>
-      </EnhancedAuthProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </React.Suspense>
   </React.StrictMode>
 );
