@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,7 +38,7 @@ import {
   Link as LinkIcon,
   LifeBuoy
 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import GradientLogo from '@/components/ui/GradientLogo';
 import LanguageSelector from '@/components/ui/LanguageSelector';
 import EnhancedUserMenu from './EnhancedUserMenu';
@@ -46,13 +46,28 @@ import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotif
 import EnhancedButton from '@/components/ui/EnhancedButton';
 import SafeErrorBoundary from '@/components/SafeErrorBoundary';
 
+// Loading component for progressive enhancement
+const LoadingState = () => (
+  <div className="flex items-center space-x-2">
+    <div className="w-8 h-8 rounded-full bg-therapy-100 animate-pulse" />
+  </div>
+);
+
 const EnhancedHeader = () => {
+  console.log('[EnhancedHeader] Rendering header component');
+  
   const navigate = useNavigate();
   const location = useLocation();
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   
-  // Safe auth access via bulletproof hook
-  const { user } = useAuth();
+  // Safe auth access with loading state
+  const { user, loading } = useAuth();
+  
+  console.log('[EnhancedHeader] Auth state:', { 
+    user: user ? 'Present' : 'None', 
+    loading,
+    userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'SSR'
+  });
 
   const aiFeatures = [
     {
@@ -351,15 +366,17 @@ const EnhancedHeader = () => {
           <div className="flex items-center space-x-4">
             <LanguageSelector />
             
-            {user ? (
-              <>
-                <SafeErrorBoundary>
+            {loading ? (
+              <LoadingState />
+            ) : user ? (
+              <Suspense fallback={<LoadingState />}>
+                <SafeErrorBoundary fallback={<LoadingState />}>
                   <EnhancedNotificationCenter />
                 </SafeErrorBoundary>
-                <SafeErrorBoundary>
+                <SafeErrorBoundary fallback={<LoadingState />}>
                   <EnhancedUserMenu />
                 </SafeErrorBoundary>
-              </>
+              </Suspense>
             ) : (
               <div className="flex items-center space-x-3">
                 <Button 
