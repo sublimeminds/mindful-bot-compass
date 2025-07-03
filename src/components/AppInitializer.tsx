@@ -11,6 +11,7 @@ import BulletproofErrorBoundary from './BulletproofErrorBoundary';
 import { AuthProviderWrapper, QueryProviderWrapper, RouterWrapper } from './ProviderWrappers';
 import ProgressiveAppLoader from './ProgressiveAppLoader';
 import MinimalSafeApp from './MinimalSafeApp';
+import { serviceHealthManager } from '@/utils/serviceHealthManager';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,6 +28,7 @@ const AppInitializer: React.FC = () => {
   const [authLoading, setAuthLoading] = useState(true);
   const [initializationComplete, setInitializationComplete] = useState(false);
   const [criticalFailure, setCriticalFailure] = useState(false);
+  const [initStage, setInitStage] = useState<'starting' | 'auth' | 'services' | 'complete'>('starting');
 
   useEffect(() => {
     let mounted = true;
@@ -34,47 +36,105 @@ const AppInitializer: React.FC = () => {
 
     const initializeApp = async () => {
       try {
-        console.log('AppInitializer: Starting minimal initialization...');
+        console.log('AppInitializer: Starting progressive initialization...');
+        setInitStage('starting');
 
-        // Much shorter timeout for faster failure detection
-        const timeoutId = setTimeout(() => {
+        // Stage 1: Core setup (2 second timeout)
+        const coreTimeout = setTimeout(() => {
           if (mounted) {
-            console.log('AppInitializer: Quick timeout, falling back to minimal mode');
-            setCriticalFailure(true);
-            setAuthLoading(false);
-            setInitializationComplete(true);
+            console.warn('AppInitializer: Core timeout, attempting recovery');
+            setInitStage('auth');
           }
-        }, 5000); // Reduced from 8000ms
+        }, 2000);
 
-        // Set up auth listener first
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-          (event, session) => {
+        try {
+          // Test basic functionality first
+          const testConnection = await Promise.race([
+            supabase.from('profiles').select('count').limit(1),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Connection timeout')), 1500))
+          ]);
+          clearTimeout(coreTimeout);
+          console.log('AppInitializer: Connection test passed');
+        } catch (error) {
+          clearTimeout(coreTimeout);
+          console.warn('AppInitializer: Connection test failed, continuing with offline mode:', error);
+        }
+
+        if (!mounted) return;
+        setInitStage('auth');
+
+        // Stage 2: Auth setup with retry logic
+        let authSetupSuccess = false;
+        for (let attempt = 1; attempt <= 3 && !authSetupSuccess; attempt++) {
+          try {
+            console.log(`AppInitializer: Auth setup attempt ${attempt}`);
+            
+            // Set up auth listener
+            const { data: { subscription } } = supabase.auth.onAuthStateChange(
+              (event, session) => {
+                if (mounted) {
+                  console.log('AppInitializer: Auth state changed:', event);
+                  setUser(session?.user ?? null);
+                  setSession(session);
+                  setAuthLoading(false);
+                }
+              }
+            );
+            authSubscription = subscription;
+
+            // Get initial session with timeout
+            const sessionPromise = supabase.auth.getSession();
+            const timeoutPromise = new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('Session timeout')), 3000)
+            );
+            
+            const result = await Promise.race([sessionPromise, timeoutPromise]) as any;
+            const { data: { session }, error } = result;
+            
+            if (error) {
+              console.error(`AppInitializer: Session error on attempt ${attempt}:`, error);
+              if (attempt === 3) throw error;
+              continue;
+            }
+            
             if (mounted) {
-              console.log('AppInitializer: Auth state changed:', event);
               setUser(session?.user ?? null);
               setSession(session);
               setAuthLoading(false);
+              authSetupSuccess = true;
+              console.log('AppInitializer: Auth setup successful');
+            }
+            break;
+          } catch (error) {
+            console.warn(`AppInitializer: Auth attempt ${attempt} failed:`, error);
+            if (attempt === 3) {
+              // Final fallback - continue without auth
+              console.log('AppInitializer: Continuing without auth');
+              if (mounted) {
+                setAuthLoading(false);
+                authSetupSuccess = true;
+              }
+            } else {
+              await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
             }
           }
-        );
-        authSubscription = subscription;
+        }
 
-        // Then get initial session
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        clearTimeout(timeoutId);
+        if (!mounted) return;
+        setInitStage('services');
+
+        // Stage 3: Service initialization (non-blocking)
+        try {
+          const healthSummary = serviceHealthManager.getHealthSummary();
+          console.log('AppInitializer: Service health check:', healthSummary);
+        } catch (error) {
+          console.warn('AppInitializer: Service health check failed:', error);
+        }
 
         if (mounted) {
-          if (error) {
-            console.error('AppInitializer: Session error:', error);
-          }
-          
-          setUser(session?.user ?? null);
-          setSession(session);
-          setAuthLoading(false);
+          setInitStage('complete');
           setInitializationComplete(true);
-          
-          console.log('AppInitializer: Initialization complete');
+          console.log('AppInitializer: Progressive initialization complete');
         }
       } catch (error) {
         console.error('AppInitializer: Critical initialization error:', error);
@@ -122,14 +182,28 @@ const AppInitializer: React.FC = () => {
     return <MinimalSafeApp />;
   }
 
-  // Show loading only briefly
+  // Show loading with stage information
   if (!initializationComplete) {
+    const getStageMessage = () => {
+      switch (initStage) {
+        case 'starting': return 'Starting up...';
+        case 'auth': return 'Setting up authentication...';
+        case 'services': return 'Loading services...';
+        default: return 'Initializing your experience...';
+      }
+    };
+
     return (
       <div className="css-safe-center">
         <div className="css-safe-card" style={{ textAlign: 'center' }}>
           <div className="css-safe-spinner" style={{ margin: '0 auto 16px' }}></div>
           <h2 className="css-safe-heading">Loading TherapySync</h2>
-          <p className="css-safe-text">Initializing your experience...</p>
+          <p className="css-safe-text">{getStageMessage()}</p>
+          {initStage !== 'starting' && (
+            <div style={{ marginTop: '12px', fontSize: '12px', color: '#666' }}>
+              Stage: {initStage}
+            </div>
+          )}
         </div>
       </div>
     );
