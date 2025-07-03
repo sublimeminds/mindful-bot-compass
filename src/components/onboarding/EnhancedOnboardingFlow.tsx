@@ -13,7 +13,7 @@ import InternationalizedEnhancedSmartAnalysisStep from './InternationalizedEnhan
 import TherapistPersonalityStep from './TherapistPersonalityStep';
 import PlanSelectionStep from './PlanSelectionStep';
 import NotificationPreferencesStep from './NotificationPreferencesStep';
-import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
+import LanguageSelector from '@/components/ui/LanguageSelector';
 import CurrencySelector from '@/components/ui/CurrencySelector';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import EnhancedButton from '@/components/ui/EnhancedButton';
@@ -265,7 +265,7 @@ const EnhancedOnboardingFlowContent = ({ onComplete }: EnhancedOnboardingFlowPro
         {/* Header with Controls - Enhanced Design */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-4">
-            <EnhancedLanguageSelector />
+            <LanguageSelector />
             <CurrencySelector 
               value={selectedCurrency}
               onChange={setSelectedCurrency}

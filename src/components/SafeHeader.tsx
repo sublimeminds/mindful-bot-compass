@@ -40,7 +40,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import GradientLogo from '@/components/ui/GradientLogo';
-import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
+import LanguageSelector from '@/components/ui/LanguageSelector';
 import EnhancedUserMenu from './navigation/EnhancedUserMenu';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
 import EnhancedButton from '@/components/ui/EnhancedButton';
@@ -364,7 +364,7 @@ const SafeHeaderContent = () => {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
-            <EnhancedLanguageSelector />
+            <LanguageSelector />
             
             {user ? (
               <>
