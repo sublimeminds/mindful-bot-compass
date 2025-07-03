@@ -38,7 +38,8 @@ import {
   Link as LinkIcon,
   LifeBuoy
 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { AuthContext } from '@/components/SafeAuthProvider';
+import { AuthContextType } from '@/types/auth';
 import GradientLogo from '@/components/ui/GradientLogo';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import EnhancedUserMenu from './EnhancedUserMenu';
@@ -50,15 +51,9 @@ const EnhancedHeader = () => {
   const location = useLocation();
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   
-  // Safe auth access with fallback
-  let user = null;
-  try {
-    const authResult = useAuth();
-    user = authResult?.user || null;
-  } catch (error) {
-    console.log('EnhancedHeader: Auth not ready yet, rendering without user');
-    user = null;
-  }
+  // Safe auth access via context
+  const authContext = React.useContext(AuthContext) as AuthContextType | undefined;
+  const user = authContext?.user || null;
 
   const aiFeatures = [
     {

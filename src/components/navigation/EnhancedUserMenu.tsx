@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
 import { useUserStats } from '@/hooks/useUserStats';
+import { AuthContext } from '@/components/SafeAuthProvider';
+import { AuthContextType } from '@/types/auth';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,15 +33,13 @@ const EnhancedUserMenu = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   
-  // Safe auth access
-  let user = null;
-  let signOut = null;
-  try {
-    const authResult = useAuth();
-    user = authResult?.user || null;
-    signOut = authResult?.signOut;
-  } catch (error) {
-    console.log('EnhancedUserMenu: Auth not ready, hiding menu');
+  // Safe auth access via context
+  const authContext = React.useContext(AuthContext) as AuthContextType | undefined;
+  const user = authContext?.user || null;
+  const signOut = authContext?.signOut;
+  
+  // Hide menu if auth not ready or no user
+  if (!authContext || !user) {
     return null;
   }
 

@@ -1,12 +1,12 @@
 
 import React from 'react';
-import SafeAppWrapper from '@/components/SafeAppWrapper';
+import AppInitializer from '@/components/AppInitializer';
 import './App.css';
 
 function App() {
-  console.log('App: Starting TherapySync application...');
+  console.log('App: Starting TherapySync with unified architecture...');
   
-  return React.createElement(SafeAppWrapper);
+  return <AppInitializer />;
 }
 
 export default App;
