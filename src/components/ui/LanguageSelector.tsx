@@ -1,3 +1,3 @@
 
-// Re-export the simple component to fix initialization errors
-export { default } from './SimpleLanguageSelector';
+// Re-export the clean component with i18next
+export { default } from './CleanLanguageSelector';

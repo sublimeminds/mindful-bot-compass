@@ -37,8 +37,8 @@ const SimplePricingFallbackContent = () => {
       popular: false
     },
     {
-      id: 'premium',
-      name: 'Premium',
+      id: 'pro',
+      name: 'Pro',
       icon: Zap,
       monthlyPrice: 9.90,
       yearlyPrice: 99,
@@ -49,23 +49,23 @@ const SimplePricingFallbackContent = () => {
         'Voice interaction capabilities',
         'Priority support'
       ],
-      buttonText: 'Start Premium',
+      buttonText: 'Start Pro',
       popular: true
     },
     {
-      id: 'professional',
-      name: 'Professional',
+      id: 'family',
+      name: 'Family',
       icon: Crown,
       monthlyPrice: 24.90,
       yearlyPrice: 249,
-      description: 'Advanced features for professionals',
+      description: 'Mental health support for the whole family',
       features: [
-        'Everything in Premium',
-        'Client management tools',
-        'Advanced analytics',
-        'API access'
+        'Everything in Pro',
+        'Up to 6 family members',
+        'Parental controls',
+        'Family insights dashboard'
       ],
-      buttonText: 'Start Trial',
+      buttonText: 'Start Family Plan',
       popular: false
     }
   ];
