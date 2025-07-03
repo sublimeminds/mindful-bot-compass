@@ -119,11 +119,14 @@ class OnboardingService {
       // Save mental health screening results
       if (data.phq9Score !== undefined || data.gad7Score !== undefined) {
         const { error: assessmentError } = await supabase
-          .from('clinical_assessments')
+          .from('mental_health_assessments')
           .insert({
             user_id: userId,
             assessment_type: 'onboarding_screening',
-            scores: {
+            phq9_score: data.phq9Score,
+            gad7_score: data.gad7Score,
+            risk_level: data.riskLevel,
+            responses: {
               phq9: data.phq9Score,
               gad7: data.gad7Score,
               risk_level: data.riskLevel
@@ -140,7 +143,7 @@ class OnboardingService {
       // Save notification preferences
       if (data.notificationPreferences) {
         const { error: notificationError } = await supabase
-          .from('notification_preferences')
+          .from('user_preferences')
           .upsert({
             user_id: userId,
             email_notifications: data.notificationPreferences.emailNotifications,
@@ -193,7 +196,7 @@ class OnboardingService {
         supabase.from('profiles').select('*').eq('id', userId).maybeSingle(),
         supabase.from('user_onboarding').select('*').eq('user_id', userId).maybeSingle(),
         supabase.from('user_cultural_profiles').select('*').eq('user_id', userId).maybeSingle(),
-        supabase.from('clinical_assessments').select('*').eq('user_id', userId).eq('assessment_type', 'onboarding_screening').maybeSingle()
+        supabase.from('mental_health_assessments').select('*').eq('user_id', userId).eq('assessment_type', 'onboarding_screening').maybeSingle()
       ]);
 
       const completedSteps: string[] = [];

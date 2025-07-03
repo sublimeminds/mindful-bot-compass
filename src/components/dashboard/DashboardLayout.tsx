@@ -1,8 +1,8 @@
-
 import React from 'react';
+import { useDashboard } from '@/hooks/useDashboard';
+import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import NotificationWidget from './NotificationWidget';
 import { 
   Brain, 
@@ -13,37 +13,49 @@ import {
   Award,
   Activity,
   Clock,
-  Users,
-  MessageSquare,
-  ArrowRight,
   Sparkles
 } from 'lucide-react';
 
 const DashboardLayout = () => {
-  // Mock data - in real app, fetch from API
-  const dashboardData = {
-    todaysSession: {
-      time: '3:00 PM',
-      type: 'Anxiety Management',
-      duration: '45 minutes'
-    },
-    weeklyStats: {
-      sessionsCompleted: 4,
-      moodAverage: 7.8,
-      streakDays: 12,
-      minutesSpent: 180
-    },
-    recentAchievements: [
-      { id: 1, title: '7-Day Streak', icon: '🔥', date: 'Today' },
-      { id: 2, title: 'Mood Tracker Pro', icon: '📊', date: 'Yesterday' }
-    ],
-    quickActions: [
-      { title: 'Start AI Session', icon: Brain, color: 'from-therapy-500 to-calm-500', path: '/therapy-chat' },
-      { title: 'Mood Check-in', icon: Heart, color: 'from-harmony-500 to-balance-500', path: '/mood-tracker' },
-      { title: 'View Progress', icon: TrendingUp, color: 'from-flow-500 to-therapy-500', path: '/analytics' },
-      { title: 'Schedule Session', icon: Calendar, color: 'from-calm-500 to-harmony-500', path: '/schedule' }
-    ]
+  const { user } = useAuth();
+  const { data: dashboardData, isLoading, error } = useDashboard();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
+          <p className="text-therapy-600 font-medium">Loading Dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
+        <div className="text-center">
+          <p className="text-red-600 font-medium">Error loading dashboard data</p>
+          <p className="text-sm text-gray-600 mt-2">Please try refreshing the page</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Use real data with fallbacks
+  const stats = dashboardData?.userStats || {
+    totalSessions: 0,
+    totalMinutes: 0,
+    currentStreak: 0,
+    averageMood: null
   };
+
+  const quickActions = [
+    { title: 'Start AI Session', icon: Brain, color: 'from-therapy-500 to-calm-500', path: '/therapy-chat' },
+    { title: 'Mood Check-in', icon: Heart, color: 'from-harmony-500 to-balance-500', path: '/mood-tracker' },
+    { title: 'View Progress', icon: TrendingUp, color: 'from-flow-500 to-therapy-500', path: '/analytics' },
+    { title: 'Schedule Session', icon: Calendar, color: 'from-calm-500 to-harmony-500', path: '/schedule' }
+  ];
 
   return (
     <div className="p-6 space-y-6 bg-gradient-to-br from-therapy-25 to-calm-25 min-h-full">
@@ -57,9 +69,9 @@ const DashboardLayout = () => {
             </p>
           </div>
           <div className="text-right">
-            <div className="text-sm text-therapy-100 mb-1">Next Session</div>
-            <div className="text-xl font-bold">{dashboardData.todaysSession.time}</div>
-            <div className="text-sm text-therapy-100">{dashboardData.todaysSession.type}</div>
+            <div className="text-sm text-therapy-100 mb-1">Sessions Completed</div>
+            <div className="text-xl font-bold">{stats.totalSessions}</div>
+            <div className="text-sm text-therapy-100">Total Sessions</div>
           </div>
         </div>
       </div>
@@ -73,8 +85,8 @@ const DashboardLayout = () => {
                 <Target className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-therapy-700">{dashboardData.weeklyStats.sessionsCompleted}</p>
-                <p className="text-sm text-gray-600">Sessions This Week</p>
+                <p className="text-2xl font-bold text-therapy-700">{stats.totalSessions}</p>
+                <p className="text-sm text-gray-600">Total Sessions</p>
               </div>
             </div>
           </CardContent>
@@ -87,7 +99,9 @@ const DashboardLayout = () => {
                 <Heart className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-harmony-700">{dashboardData.weeklyStats.moodAverage}</p>
+                <p className="text-2xl font-bold text-harmony-700">
+                  {stats.averageMood ? stats.averageMood.toFixed(1) : 'N/A'}
+                </p>
                 <p className="text-sm text-gray-600">Average Mood</p>
               </div>
             </div>
@@ -101,8 +115,8 @@ const DashboardLayout = () => {
                 <Activity className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-orange-700">{dashboardData.weeklyStats.streakDays}</p>
-                <p className="text-sm text-gray-600">Day Streak</p>
+                <p className="text-2xl font-bold text-orange-700">{stats.currentStreak}</p>
+                <p className="text-sm text-gray-600">Current Streak</p>
               </div>
             </div>
           </CardContent>
@@ -115,8 +129,8 @@ const DashboardLayout = () => {
                 <Clock className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-flow-700">{dashboardData.weeklyStats.minutesSpent}</p>
-                <p className="text-sm text-gray-600">Minutes This Week</p>
+                <p className="text-2xl font-bold text-flow-700">{stats.totalMinutes}</p>
+                <p className="text-sm text-gray-600">Total Minutes</p>
               </div>
             </div>
           </CardContent>
@@ -136,7 +150,7 @@ const DashboardLayout = () => {
             </CardHeader>
             <CardContent className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {dashboardData.quickActions.map((action, index) => {
+                {quickActions.map((action, index) => {
                   const IconComponent = action.icon;
                   return (
                     <Button
@@ -150,25 +164,31 @@ const DashboardLayout = () => {
                 })}
               </div>
               
-              {/* Recent Achievements */}
+              {/* Recent Activity */}
               <div className="mt-6 pt-6 border-t border-therapy-100">
                 <h3 className="font-semibold text-therapy-800 mb-3 flex items-center">
                   <Award className="h-4 w-4 mr-2" />
-                  Recent Achievements
+                  Recent Activity
                 </h3>
                 <div className="space-y-2">
-                  {dashboardData.recentAchievements.map((achievement) => (
+                  {dashboardData?.recentSessions?.slice(0, 3).map((session: any) => (
                     <div 
-                      key={achievement.id}
+                      key={session.id}
                       className="flex items-center space-x-3 p-3 bg-gradient-to-r from-therapy-25 to-calm-25 rounded-lg hover:shadow-md transition-all duration-200"
                     >
-                      <span className="text-2xl">{achievement.icon}</span>
+                      <div className="w-8 h-8 bg-therapy-500 rounded-full flex items-center justify-center">
+                        <Brain className="h-4 w-4 text-white" />
+                      </div>
                       <div>
-                        <p className="font-medium text-therapy-800">{achievement.title}</p>
-                        <p className="text-sm text-gray-600">{achievement.date}</p>
+                        <p className="font-medium text-therapy-800">Therapy Session</p>
+                        <p className="text-sm text-gray-600">
+                          {new Date(session.start_time).toLocaleDateString()}
+                        </p>
                       </div>
                     </div>
-                  ))}
+                  )) || (
+                    <p className="text-gray-500 text-sm">No recent sessions</p>
+                  )}
                 </div>
               </div>
             </CardContent>
