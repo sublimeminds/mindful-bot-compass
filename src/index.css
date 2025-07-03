@@ -382,18 +382,124 @@
   }
 }
 
-/* Fallback classes for critical components */
-.therapy-fallback {
-  background: linear-gradient(135deg, #ff6b35, #f7931e);
-  color: white;
+/* Critical Component Fallbacks */
+.safe-bg {
+  background-color: #ffffff;
+  background-color: hsl(var(--background, 0 0% 100%));
 }
 
-.calm-fallback {
-  background: linear-gradient(135deg, #4ecdc4, #44a08d);
-  color: white;
+.safe-text {
+  color: #1a1a1a;
+  color: hsl(var(--foreground, 240 10% 3.9%));
 }
 
-.harmony-fallback {
-  background: linear-gradient(135deg, #ff6b9d, #c44569);
-  color: white;
+.safe-border {
+  border-color: #e5e5e5;
+  border-color: hsl(var(--border, 240 5.9% 90%));
+}
+
+.safe-card {
+  background-color: #ffffff;
+  background-color: hsl(var(--card, 0 0% 100%));
+  border: 1px solid #e5e5e5;
+  border: 1px solid hsl(var(--border, 240 5.9% 90%));
+  border-radius: 8px;
+  border-radius: var(--radius, 8px);
+}
+
+.safe-button {
+  background-color: #1a1a1a;
+  background-color: hsl(var(--primary, 240 9% 9%));
+  color: #ffffff;
+  color: hsl(var(--primary-foreground, 0 0% 98%));
+  padding: 8px 16px;
+  border-radius: 6px;
+  border-radius: calc(var(--radius, 8px) - 2px);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.safe-button:hover {
+  opacity: 0.9;
+}
+
+.safe-input {
+  background-color: #ffffff;
+  background-color: hsl(var(--background, 0 0% 100%));
+  border: 1px solid #e5e5e5;
+  border: 1px solid hsl(var(--input, 240 5.9% 90%));
+  border-radius: 6px;
+  border-radius: calc(var(--radius, 8px) - 2px);
+  padding: 8px 12px;
+  color: #1a1a1a;
+  color: hsl(var(--foreground, 240 10% 3.9%));
+}
+
+.safe-input:focus {
+  outline: 2px solid #1a1a1a;
+  outline: 2px solid hsl(var(--ring, 240 10% 3.9%));
+  outline-offset: 2px;
+}
+
+/* Critical Animation Fallbacks */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin,
+  .animate-swirl-breathe,
+  .therapy-gradient-bg,
+  .therapy-text-gradient-animated,
+  .brand-text-gradient-strong,
+  .brand-button-gradient-strong {
+    animation: none !important;
+  }
+}
+
+/* Font Loading Fallbacks */
+@font-face {
+  font-family: 'Inter-fallback';
+  src: local('system-ui'), local('-apple-system'), local('BlinkMacSystemFont'), local('Segoe UI'), local('Roboto');
+  font-display: swap;
+}
+
+/* Critical Layout Fallbacks */
+.safe-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.safe-flex {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.safe-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.safe-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #e5e5e5;
+  border-top: 2px solid #1a1a1a;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Ensure critical styles load even if CSS variables fail */
+@supports not (color: hsl(var(--background))) {
+  :root {
+    --fallback-bg: #ffffff;
+    --fallback-text: #1a1a1a;
+    --fallback-border: #e5e5e5;
+    --fallback-primary: #1a1a1a;
+    --fallback-primary-fg: #ffffff;
+  }
+  
+  body {
+    background-color: var(--fallback-bg) !important;
+    color: var(--fallback-text) !important;
+  }
 }

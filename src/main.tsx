@@ -3,6 +3,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { CSSProtection } from './utils/cssProtection';
+
+// Initialize CSS protection before anything else
+CSSProtection.init();
 
 // Safe service imports with error handling
 let performanceService: any = null;
