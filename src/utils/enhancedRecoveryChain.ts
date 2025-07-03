@@ -1,6 +1,8 @@
 /**
  * Enhanced Recovery Chain - Multiple recovery levels with intelligent fallback
  */
+import { smartDiagnosticsEngine } from './smartDiagnosticsEngine';
+import { autoRecoverySystem } from './autoRecoverySystem';
 
 interface RecoveryLevel {
   name: string;
@@ -51,7 +53,7 @@ class EnhancedRecoveryChain {
   };
 
   /**
-   * Attempt recovery at current level
+   * Attempt recovery at current level with smart diagnostics
    */
   async attemptCurrentLevel(): Promise<{ success: boolean; component?: React.ComponentType; error?: string }> {
     const level = this.levels[this.state.currentLevel];
@@ -64,6 +66,10 @@ class EnhancedRecoveryChain {
 
     try {
       console.log(`RecoveryChain: Attempting level ${level.name} (attempt ${this.state.attempts[attemptKey]})`);
+      
+      // Run diagnostics before attempting recovery
+      const healthStatus = await smartDiagnosticsEngine.runDiagnostics();
+      console.log(`RecoveryChain: Health status for ${level.name}:`, healthStatus.overall);
       
       const component = await Promise.race([
         level.component(),
@@ -81,6 +87,21 @@ class EnhancedRecoveryChain {
       this.state.errors[attemptKey] = errorMsg;
       
       console.warn(`RecoveryChain: Level ${level.name} failed:`, errorMsg);
+      
+      // Attempt auto-recovery before escalating
+      const autoRecovered = await autoRecoverySystem.attemptRecovery(error);
+      if (autoRecovered) {
+        console.log(`RecoveryChain: Auto-recovery successful for ${level.name}, retrying...`);
+        // Retry the current level after auto-recovery
+        try {
+          const component = await level.component();
+          this.state.lastSuccessful = level.name;
+          return { success: true, component };
+        } catch (retryError) {
+          console.warn(`RecoveryChain: Retry after auto-recovery failed:`, retryError);
+        }
+      }
+      
       return { success: false, error: errorMsg };
     }
   }
