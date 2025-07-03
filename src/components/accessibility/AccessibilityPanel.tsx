@@ -15,22 +15,19 @@ import {
   MousePointer,
   Zap
 } from 'lucide-react';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { useSafeAccessibility } from '@/contexts/SafeAccessibilityContext';
 
 const AccessibilityPanel = () => {
-  const { settings, updateSetting, announceToScreenReader } = useAccessibility();
+  const { settings, updateSetting } = useSafeAccessibility();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSettingChange = (key: keyof typeof settings, value: boolean) => {
     updateSetting(key, value);
-    const keyString = String(key);
-    const readableKey = keyString.replace(/([A-Z])/g, ' $1').toLowerCase();
-    announceToScreenReader(`${readableKey} ${value ? 'enabled' : 'disabled'}`);
   };
 
   const accessibilityOptions = [
     {
-      key: 'reducedMotion' as const,
+      key: 'reduceMotion' as const,
       label: 'Reduce Motion',
       description: 'Minimize animations and transitions',
       icon: <Zap className="h-4 w-4" />,
@@ -51,25 +48,11 @@ const AccessibilityPanel = () => {
       category: 'Visual'
     },
     {
-      key: 'screenReaderOptimized' as const,
+      key: 'screenReader' as const,
       label: 'Screen Reader Mode',
       description: 'Optimize interface for screen readers',
       icon: <Volume2 className="h-4 w-4" />,
       category: 'Assistive Technology'
-    },
-    {
-      key: 'keyboardNavigation' as const,
-      label: 'Enhanced Keyboard Navigation',
-      description: 'Improve keyboard-only navigation',
-      icon: <Keyboard className="h-4 w-4" />,
-      category: 'Navigation'
-    },
-    {
-      key: 'focusIndicators' as const,
-      label: 'Enhanced Focus Indicators',
-      description: 'Show clear focus indicators',
-      icon: <Focus className="h-4 w-4" />,
-      category: 'Navigation'
     }
   ];
 
