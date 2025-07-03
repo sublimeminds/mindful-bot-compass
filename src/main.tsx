@@ -134,104 +134,19 @@ const LoadingFallback = () => (
   </div>
 );
 
-// Minimal app to bypass React context issues
-const MinimalApp = () => {
-  return (
-    <div style={{ 
-      minHeight: '100vh', 
-      padding: '20px', 
-      fontFamily: 'system-ui, sans-serif',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      color: 'white'
-    }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '3rem', marginBottom: '2rem', fontWeight: 'bold' }}>
-          🧠 TherapySync AI
-        </h1>
-        <p style={{ fontSize: '1.25rem', marginBottom: '3rem', opacity: 0.9 }}>
-          AI-Powered Mental Health & Therapy Platform
-        </p>
-        
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-          gap: '2rem',
-          marginTop: '3rem'
-        }}>
-          <div style={{ 
-            background: 'rgba(255,255,255,0.1)', 
-            padding: '2rem', 
-            borderRadius: '1rem',
-            backdropFilter: 'blur(10px)'
-          }}>
-            <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>🤖 AI Therapy</h3>
-            <p>Personalized AI-powered therapy sessions tailored to your needs</p>
-          </div>
-          
-          <div style={{ 
-            background: 'rgba(255,255,255,0.1)', 
-            padding: '2rem', 
-            borderRadius: '1rem',
-            backdropFilter: 'blur(10px)'
-          }}>
-            <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>📊 Progress Tracking</h3>
-            <p>Monitor your mental health journey with detailed analytics</p>
-          </div>
-          
-          <div style={{ 
-            background: 'rgba(255,255,255,0.1)', 
-            padding: '2rem', 
-            borderRadius: '1rem',
-            backdropFilter: 'blur(10px)'
-          }}>
-            <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>🎯 Goal Setting</h3>
-            <p>Set and achieve meaningful mental health goals</p>
-          </div>
-        </div>
-        
-        <div style={{ marginTop: '3rem' }}>
-          <button 
-            onClick={() => alert('TherapySync is working! React context issue bypassed.')}
-            style={{ 
-              background: 'rgba(255,255,255,0.2)', 
-              border: '2px solid white',
-              color: 'white',
-              padding: '1rem 2rem',
-              fontSize: '1.1rem',
-              borderRadius: '0.5rem',
-              cursor: 'pointer',
-              marginRight: '1rem'
-            }}
-          >
-            Get Started
-          </button>
-          
-          <button 
-            onClick={() => console.log('App is fully functional now!')}
-            style={{ 
-              background: 'transparent', 
-              border: '2px solid rgba(255,255,255,0.5)',
-              color: 'white',
-              padding: '1rem 2rem',
-              fontSize: '1.1rem',
-              borderRadius: '0.5rem',
-              cursor: 'pointer'
-            }}
-          >
-            Learn More
-          </button>
-        </div>
-        
-        <div style={{ 
-          marginTop: '4rem', 
-          fontSize: '0.9rem', 
-          opacity: 0.7 
-        }}>
-          ✅ App Status: Fully Operational | React Context: Bypassed | No Dependencies Issues
-        </div>
+root.render(
+  <React.StrictMode>
+    <React.Suspense fallback={<LoadingFallback />}>
+      <div className="min-h-screen bg-white">
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <EnhancedAuthProvider>
+              <App />
+              <Toaster />
+            </EnhancedAuthProvider>
+          </BrowserRouter>
+        </QueryClientProvider>
       </div>
-    </div>
-  );
-};
-
-root.render(<MinimalApp />);
+    </React.Suspense>
+  </React.StrictMode>
+);
