@@ -1,4 +1,4 @@
 
-// Re-export the enhanced service to maintain compatibility
-export * from './enhancedCurrencyService';
-export { enhancedCurrencyService as currencyService } from './enhancedCurrencyService';
+// Re-export the simple service to maintain compatibility
+export * from './simpleCurrencyService';
+export { simpleCurrencyService as currencyService } from './simpleCurrencyService';

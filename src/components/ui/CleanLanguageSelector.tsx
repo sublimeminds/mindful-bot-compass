@@ -1,27 +1,20 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 import { Globe, ChevronDown } from 'lucide-react';
 
 const CleanLanguageSelector = () => {
-  const { i18n } = useTranslation();
+  const { currentLanguage, supportedLanguages, changeLanguage } = useSimpleLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const languages = [
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' },
-    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-    { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-    { code: 'pt', name: 'Português', flag: '🇵🇹' },
-    { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-    { code: 'ja', name: '日本語', flag: '🇯🇵' },
-    { code: 'ko', name: '한국어', flag: '🇰🇷' },
-    { code: 'zh', name: '中文', flag: '🇨🇳' },
-  ];
+  const languages = supportedLanguages.map(lang => ({
+    code: lang.code,
+    name: lang.name,
+    flag: lang.flag
+  }));
 
-  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+  const currentLang = languages.find(lang => lang.code === currentLanguage.code) || languages[0];
 
   // Handle click outside
   useEffect(() => {
@@ -59,28 +52,34 @@ const CleanLanguageSelector = () => {
 
   const handleLanguageChange = async (languageCode: string) => {
     try {
-      await i18n.changeLanguage(languageCode);
+      await changeLanguage(languageCode);
       setIsOpen(false);
       
-      // Update URL for SEO - navigate to language-specific path
-      const currentPath = window.location.pathname;
-      const languagePrefixes = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ja', 'ko', 'zh'];
-      
-      // Remove existing language prefix if present
-      let cleanPath = currentPath;
-      for (const prefix of languagePrefixes) {
-        if (currentPath.startsWith(`/${prefix}/`) || currentPath === `/${prefix}`) {
-          cleanPath = currentPath.substring(`/${prefix}`.length) || '/';
-          break;
+      // Simple URL update without complex path manipulation
+      if (typeof window !== 'undefined' && window.history) {
+        try {
+          const currentPath = window.location.pathname;
+          const languagePrefixes = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ja', 'ko', 'zh', 'hi', 'ar', 'nl'];
+          
+          // Remove existing language prefix if present
+          let cleanPath = currentPath;
+          for (const prefix of languagePrefixes) {
+            if (currentPath.startsWith(`/${prefix}/`) || currentPath === `/${prefix}`) {
+              cleanPath = currentPath.substring(`/${prefix}`.length) || '/';
+              break;
+            }
+          }
+          
+          // Add new language prefix if not English
+          const newPath = languageCode === 'en' ? cleanPath : `/${languageCode}${cleanPath}`;
+          
+          // Update URL without page reload
+          if (newPath !== currentPath) {
+            window.history.pushState({}, '', newPath);
+          }
+        } catch (urlError) {
+          // Silent fail on URL update
         }
-      }
-      
-      // Add new language prefix if not English
-      const newPath = languageCode === 'en' ? cleanPath : `/${languageCode}${cleanPath}`;
-      
-      // Update URL without page reload for better UX
-      if (newPath !== currentPath) {
-        window.history.pushState({}, '', newPath);
       }
     } catch (error) {
       console.error('Error changing language:', error);
@@ -96,7 +95,7 @@ const CleanLanguageSelector = () => {
         aria-expanded={isOpen}
       >
         <Globe className="h-4 w-4 text-therapy-600" />
-        <span className="text-therapy-700">{currentLanguage.code.toUpperCase()}</span>
+        <span className="text-therapy-700">{currentLang.code.toUpperCase()}</span>
         <ChevronDown className={`h-3 w-3 text-therapy-600 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
@@ -107,7 +106,7 @@ const CleanLanguageSelector = () => {
               key={language.code}
               onClick={() => handleLanguageChange(language.code)}
               className={`w-full flex items-center space-x-3 px-3 py-2 text-left hover:bg-therapy-50 transition-colors duration-150 ${
-                language.code === i18n.language ? 'bg-therapy-100 text-therapy-800' : 'text-gray-700'
+                language.code === currentLanguage.code ? 'bg-therapy-100 text-therapy-800' : 'text-gray-700'
               }`}
             >
               <span className="text-base">{language.flag}</span>
