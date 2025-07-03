@@ -44,6 +44,7 @@ import LanguageSelector from '@/components/ui/LanguageSelector';
 import EnhancedUserMenu from './EnhancedUserMenu';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
 import EnhancedButton from '@/components/ui/EnhancedButton';
+import SafeErrorBoundary from '@/components/SafeErrorBoundary';
 
 const EnhancedHeader = () => {
   const navigate = useNavigate();
@@ -352,8 +353,12 @@ const EnhancedHeader = () => {
             
             {user ? (
               <>
-                <EnhancedNotificationCenter />
-                <EnhancedUserMenu />
+                <SafeErrorBoundary>
+                  <EnhancedNotificationCenter />
+                </SafeErrorBoundary>
+                <SafeErrorBoundary>
+                  <EnhancedUserMenu />
+                </SafeErrorBoundary>
               </>
             ) : (
               <div className="flex items-center space-x-3">

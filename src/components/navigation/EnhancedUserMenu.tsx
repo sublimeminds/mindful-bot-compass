@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserStats } from '@/hooks/useUserStats';
-import { AuthContext } from '@/contexts/AuthContext';
-import { AuthContextType } from '@/types/auth';
+import { useAuth } from '@/hooks/useAuth';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,27 +32,15 @@ const EnhancedUserMenu = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   
-  // Safe auth access via context
-  const authContext = React.useContext(AuthContext) as AuthContextType | undefined;
-  const user = authContext?.user || null;
-  const signOut = authContext?.signOut;
+  // Use the standardized auth hook
+  const { user, signOut } = useAuth();
   
-  // Hide menu if auth not ready or no user
-  if (!authContext || !user) {
-    return null;
-  }
-
-  // Safe stats access
-  let userStats = null;
-  let isLoading = false;
-  try {
-    const statsResult = useUserStats();
-    userStats = statsResult?.data;
-    isLoading = statsResult?.isLoading || false;
-  } catch (error) {
-    console.log('EnhancedUserMenu: Stats not available');
-  }
-
+  // Always call hooks at the top level - never conditionally
+  const userStatsResult = useUserStats();
+  const userStats = userStatsResult?.data || null;
+  const isStatsLoading = userStatsResult?.isLoading || false;
+  
+  // Hide menu if no user - but hooks must always be called first
   if (!user) {
     return null;
   }
@@ -120,7 +107,7 @@ const EnhancedUserMenu = () => {
 
         {/* Quick Stats */}
         <div className="p-4 bg-gradient-to-r from-therapy-25 to-calm-25 border-b border-therapy-100">
-          {isLoading ? (
+          {isStatsLoading ? (
             <div className="text-center text-gray-500 py-4">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-therapy-600 mx-auto mb-2"></div>
               Loading stats...
