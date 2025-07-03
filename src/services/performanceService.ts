@@ -20,6 +20,7 @@ export interface RateLimitConfig {
 class PerformanceService {
   private performanceObserver?: PerformanceObserver;
   private rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+  private lastSupabaseSend: number = 0;
 
   // Performance Monitoring
   startPerformanceMonitoring() {
@@ -157,6 +158,17 @@ class PerformanceService {
 
   private async sendMetricToSupabase(metric: Omit<PerformanceMetric, 'id'>) {
     try {
+      // Throttle performance monitoring to prevent spam
+      const now = Date.now();
+      const lastSent = this.lastSupabaseSend || 0;
+      const THROTTLE_MS = 30000; // Only send every 30 seconds
+      
+      if (now - lastSent < THROTTLE_MS) {
+        return; // Skip this send
+      }
+      
+      this.lastSupabaseSend = now;
+      
       await supabase
         .from('performance_monitoring')
         .insert({

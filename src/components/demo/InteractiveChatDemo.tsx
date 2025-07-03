@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Bot, User, Play, Pause, RotateCcw, MessageSquare } from 'lucide-react';
+import SafeReactWrapper from '@/components/SafeReactWrapper';
 
 const demoConversation = [
   {
@@ -42,7 +43,7 @@ interface InteractiveChatDemoProps {
   autoStart?: boolean;
 }
 
-const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = ({ autoStart = false }) => {
+const InteractiveChatDemoContent: React.FC<InteractiveChatDemoProps> = ({ autoStart = false }) => {
   const [currentMessage, setCurrentMessage] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoStart);
   const [displayedMessages, setDisplayedMessages] = useState<typeof demoConversation>([]);
@@ -198,6 +199,14 @@ const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = ({ autoStart = f
         </CardContent>
       </Card>
     </div>
+  );
+};
+
+const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = (props) => {
+  return (
+    <SafeReactWrapper componentName="InteractiveChatDemo">
+      <InteractiveChatDemoContent {...props} />
+    </SafeReactWrapper>
   );
 };
 

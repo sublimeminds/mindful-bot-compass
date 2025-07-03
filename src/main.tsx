@@ -13,10 +13,13 @@ import BulletproofReactWrapper from './components/BulletproofReactWrapper';
 import BulletproofErrorBoundary from './components/BulletproofErrorBoundary';
 import i18n from './i18n';
 
-// Import testing infrastructure in development
-if (import.meta.env.DEV) {
+// Skip testing infrastructure entirely in production to prevent resource errors
+if (import.meta.env.DEV && typeof window !== 'undefined' && !window.location.href.includes('lovableproject.com')) {
+  // Only load in true development mode, not on lovable preview
   import('./test/watch-mode').then(({ watchRunner }) => {
     console.log('🔬 Development testing mode enabled');
+  }).catch((error) => {
+    console.warn('Test mode failed to load:', error);
   });
 }
 
