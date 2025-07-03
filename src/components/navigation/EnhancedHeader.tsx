@@ -38,8 +38,7 @@ import {
   Link as LinkIcon,
   LifeBuoy
 } from 'lucide-react';
-import { AuthContext } from '@/contexts/AuthContext';
-import { AuthContextType } from '@/types/auth';
+import { useAuth } from '@/contexts/AuthContext';
 import GradientLogo from '@/components/ui/GradientLogo';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import EnhancedUserMenu from './EnhancedUserMenu';
@@ -51,9 +50,8 @@ const EnhancedHeader = () => {
   const location = useLocation();
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   
-  // Safe auth access via context
-  const authContext = React.useContext(AuthContext) as AuthContextType | undefined;
-  const user = authContext?.user || null;
+  // Safe auth access via bulletproof hook
+  const { user } = useAuth();
 
   const aiFeatures = [
     {

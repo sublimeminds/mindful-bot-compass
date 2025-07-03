@@ -3,18 +3,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { I18nextProvider } from 'react-i18next';
 import { Toaster } from '@/components/ui/toaster';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import { EnhancedAuthProvider } from '@/components/EnhancedAuthProvider';
 import BulletproofAuthProvider from '@/components/auth/BulletproofAuthProvider';
-import { OfflineDetector } from '@/components/auth/OfflineDetector';
 import App from './App.tsx';
 import './index.css';
-import { CSSProtection } from './utils/cssProtection';
-import { serviceHealthManager } from './utils/serviceHealthManager';
 import { bulletproofServiceManager } from './utils/bulletproofServiceManager';
 import BulletproofReactWrapper from './components/BulletproofReactWrapper';
 import BulletproofErrorBoundary from './components/BulletproofErrorBoundary';
+import i18n from './i18n';
 
 // Import testing infrastructure in development
 if (import.meta.env.DEV) {
@@ -78,16 +75,18 @@ root.render(
   <React.StrictMode>
     <BulletproofReactWrapper>
       <React.Suspense fallback={<LoadingFallback />}>
-        <div className="min-h-screen bg-white">
-          <QueryClientProvider client={queryClient}>
-            <BrowserRouter>
-              <BulletproofAuthProvider>
-                <App />
-                <Toaster />
-              </BulletproofAuthProvider>
-            </BrowserRouter>
-          </QueryClientProvider>
-        </div>
+        <I18nextProvider i18n={i18n}>
+          <div className="min-h-screen bg-white">
+            <QueryClientProvider client={queryClient}>
+              <BrowserRouter>
+                <BulletproofAuthProvider>
+                  <App />
+                  <Toaster />
+                </BulletproofAuthProvider>
+              </BrowserRouter>
+            </QueryClientProvider>
+          </div>
+        </I18nextProvider>
       </React.Suspense>
     </BulletproofReactWrapper>
   </React.StrictMode>

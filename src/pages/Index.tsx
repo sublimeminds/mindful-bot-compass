@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { useBulletproofSEO } from '@/hooks/useBulletproofSEO';
-import EnhancedHeader from '@/components/navigation/EnhancedHeader';
-import Footer from '@/components/Footer';
+import SafeHeader from '@/components/SafeHeader';
+import SafeFooter from '@/components/SafeFooter';
 import GradientLogo from '@/components/ui/GradientLogo';
 import GradientButton from '@/components/ui/GradientButton';
 import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
@@ -138,7 +138,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
-      <EnhancedHeader />
+      <SafeHeader />
       <ProgressTracker />
       
       {/* Hero Section */}
@@ -366,7 +366,7 @@ const Index = () => {
         </div>
       </section>
 
-      <Footer />
+      <SafeFooter />
     </div>
   );
 };
