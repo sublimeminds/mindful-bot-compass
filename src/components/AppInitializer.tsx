@@ -9,6 +9,8 @@ import { AuthContextType } from '@/types/auth';
 import AppRouter from './AppRouter';
 import BulletproofErrorBoundary from './BulletproofErrorBoundary';
 import { AuthProviderWrapper, QueryProviderWrapper, RouterWrapper } from './ProviderWrappers';
+import ProgressiveAppLoader from './ProgressiveAppLoader';
+import MinimalSafeApp from './MinimalSafeApp';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,6 +26,7 @@ const AppInitializer: React.FC = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [initializationComplete, setInitializationComplete] = useState(false);
+  const [criticalFailure, setCriticalFailure] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -31,16 +34,17 @@ const AppInitializer: React.FC = () => {
 
     const initializeApp = async () => {
       try {
-        console.log('AppInitializer: Starting initialization...');
+        console.log('AppInitializer: Starting minimal initialization...');
 
-        // Set timeout to prevent infinite loading
+        // Much shorter timeout for faster failure detection
         const timeoutId = setTimeout(() => {
           if (mounted) {
-            console.log('AppInitializer: Initialization timeout, continuing without auth');
+            console.log('AppInitializer: Quick timeout, falling back to minimal mode');
+            setCriticalFailure(true);
             setAuthLoading(false);
             setInitializationComplete(true);
           }
-        }, 8000);
+        }, 5000); // Reduced from 8000ms
 
         // Set up auth listener first
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -73,8 +77,9 @@ const AppInitializer: React.FC = () => {
           console.log('AppInitializer: Initialization complete');
         }
       } catch (error) {
-        console.error('AppInitializer: Initialization error:', error);
+        console.error('AppInitializer: Critical initialization error:', error);
         if (mounted) {
+          setCriticalFailure(true);
           setAuthLoading(false);
           setInitializationComplete(true);
         }
@@ -111,14 +116,20 @@ const AppInitializer: React.FC = () => {
     await supabase.auth.signOut();
   };
 
+  // Critical failure - use minimal safe app
+  if (criticalFailure) {
+    console.log('AppInitializer: Using minimal safe app due to critical failure');
+    return <MinimalSafeApp />;
+  }
+
   // Show loading only briefly
   if (!initializationComplete) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">Loading TherapySync</h2>
-          <p className="text-gray-600">Initializing your experience...</p>
+      <div className="css-safe-center">
+        <div className="css-safe-card" style={{ textAlign: 'center' }}>
+          <div className="css-safe-spinner" style={{ margin: '0 auto 16px' }}></div>
+          <h2 className="css-safe-heading">Loading TherapySync</h2>
+          <p className="css-safe-text">Initializing your experience...</p>
         </div>
       </div>
     );
@@ -138,22 +149,24 @@ const AppInitializer: React.FC = () => {
 
   return (
     <BulletproofErrorBoundary>
-      <QueryProviderWrapper client={queryClient}>
-        <QueryClientProvider client={queryClient}>
-          <RouterWrapper>
-            <Router>
-              <AuthProviderWrapper authValue={authValue}>
-                <AuthContext.Provider value={authValue}>
-                  <div className="min-h-screen bg-background">
-                    <AppRouter />
-                    <Toaster />
-                  </div>
-                </AuthContext.Provider>
-              </AuthProviderWrapper>
-            </Router>
-          </RouterWrapper>
-        </QueryClientProvider>
-      </QueryProviderWrapper>
+      <ProgressiveAppLoader>
+        <QueryProviderWrapper client={queryClient}>
+          <QueryClientProvider client={queryClient}>
+            <RouterWrapper>
+              <Router>
+                <AuthProviderWrapper authValue={authValue}>
+                  <AuthContext.Provider value={authValue}>
+                    <div className="min-h-screen css-safe-bg">
+                      <AppRouter />
+                      <Toaster />
+                    </div>
+                  </AuthContext.Provider>
+                </AuthProviderWrapper>
+              </Router>
+            </RouterWrapper>
+          </QueryClientProvider>
+        </QueryProviderWrapper>
+      </ProgressiveAppLoader>
     </BulletproofErrorBoundary>
   );
 };
