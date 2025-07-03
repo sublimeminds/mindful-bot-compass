@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RefreshCw, Activity, AlertTriangle, CheckCircle, Settings, Download, Play, RotateCcw } from "lucide-react";
 import { appRecoveryManager } from '@/utils/appRecoveryManager';
 import { enhancedRecoveryChain } from '@/utils/enhancedRecoveryChain';
@@ -15,6 +14,7 @@ interface RecoveryDashboardState {
   isRunning: boolean;
   currentOperation?: string;
   lastDiagnostics?: any;
+  activeTab: string;
   recoveryHistory: Array<{
     timestamp: number;
     operation: string;
@@ -26,6 +26,7 @@ interface RecoveryDashboardState {
 const UserControlledRecoveryDashboard: React.FC = () => {
   const [state, setState] = useState<RecoveryDashboardState>({
     isRunning: false,
+    activeTab: 'overview',
     recoveryHistory: []
   });
   const [diagnosticsResults, setDiagnosticsResults] = useState<any>(null);
@@ -33,10 +34,8 @@ const UserControlledRecoveryDashboard: React.FC = () => {
   const [autoRecoveryStats, setAutoRecoveryStats] = useState<any>(null);
 
   useEffect(() => {
-    // Load initial data
     loadDashboardData();
     
-    // Load recovery history from localStorage
     const savedHistory = localStorage.getItem('recovery_history');
     if (savedHistory) {
       try {
@@ -50,16 +49,13 @@ const UserControlledRecoveryDashboard: React.FC = () => {
 
   const loadDashboardData = async () => {
     try {
-      // Get service health
       const services = serviceHealthManager.getAllServices();
       const summary = serviceHealthManager.getHealthSummary();
       setServiceHealth({ services, summary });
 
-      // Get auto-recovery stats
       const stats = autoRecoverySystem.getStats();
       setAutoRecoveryStats(stats);
 
-      // Run quick diagnostics
       const diagnostics = await smartDiagnosticsEngine.runDiagnostics();
       setDiagnosticsResults(diagnostics);
       
@@ -77,9 +73,8 @@ const UserControlledRecoveryDashboard: React.FC = () => {
     };
     
     setState(prev => {
-      const newHistory = [entry, ...prev.recoveryHistory].slice(0, 50); // Keep last 50 entries
+      const newHistory = [entry, ...prev.recoveryHistory].slice(0, 50);
       
-      // Save to localStorage
       try {
         localStorage.setItem('recovery_history', JSON.stringify(newHistory));
       } catch (error) {
@@ -103,7 +98,6 @@ const UserControlledRecoveryDashboard: React.FC = () => {
       throw error;
     } finally {
       setState(prev => ({ ...prev, isRunning: false, currentOperation: undefined }));
-      // Refresh dashboard data
       await loadDashboardData();
     }
   };
@@ -132,16 +126,12 @@ const UserControlledRecoveryDashboard: React.FC = () => {
 
   const handleClearAllCaches = async () => {
     await executeOperation('Clear All Caches', async () => {
-      // Clear browser caches
       if ('caches' in window) {
         const cacheNames = await caches.keys();
         await Promise.all(cacheNames.map(name => caches.delete(name)));
       }
       
-      // Clear localStorage
       localStorage.clear();
-      
-      // Clear sessionStorage
       sessionStorage.clear();
       
       return 'All caches cleared';
@@ -153,26 +143,6 @@ const UserControlledRecoveryDashboard: React.FC = () => {
       enhancedRecoveryChain.reset();
       autoRecoverySystem.reset();
       return 'Recovery systems reset';
-    });
-  };
-
-  const handleSelectiveReload = async (component: string) => {
-    await executeOperation(`Reload ${component}`, async () => {
-      // Dynamic component reloading
-      const moduleMap: Record<string, string> = {
-        'Router': '@/components/AppRouter',
-        'Auth': '@/components/AppInitializer',
-        'Services': '@/utils/serviceHealthManager'
-      };
-      
-      const modulePath = moduleMap[component];
-      if (!modulePath) throw new Error('Unknown component');
-      
-      // Force reload the module
-      const timestamp = Date.now();
-      await import(`${modulePath}?reload=${timestamp}`);
-      
-      return `${component} reloaded`;
     });
   };
 
@@ -235,144 +205,162 @@ const UserControlledRecoveryDashboard: React.FC = () => {
           </CardHeader>
         </Card>
 
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="diagnostics">Diagnostics</TabsTrigger>
-            <TabsTrigger value="recovery">Recovery Tools</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
-          </TabsList>
+        {/* Tab Navigation */}
+        <div className="flex flex-wrap gap-2 border-b">
+          {[
+            { value: 'overview', label: 'Overview' },
+            { value: 'diagnostics', label: 'Diagnostics' },
+            { value: 'recovery', label: 'Recovery Tools' },
+            { value: 'history', label: 'History' }
+          ].map(tab => (
+            <button
+              key={tab.value}
+              className={`px-4 py-2 rounded-t-lg font-medium transition-colors ${
+                state.activeTab === tab.value 
+                  ? 'bg-primary text-primary-foreground border-b-2 border-primary' 
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+              onClick={() => setState(prev => ({ ...prev, activeTab: tab.value }))}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
+        {/* Tab Content */}
+        <div className="space-y-6">
           {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* System Health */}
+          {state.activeTab === 'overview' && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* System Health */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      {getStatusIcon(diagnosticsResults?.overall || 'unknown')}
+                      System Health
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {diagnosticsResults ? (
+                      <>
+                        <div className="text-2xl font-bold mb-2">
+                          {diagnosticsResults.score}%
+                        </div>
+                        <Progress value={diagnosticsResults.score} className="mb-2" />
+                        <div className="text-sm text-muted-foreground">
+                          {diagnosticsResults.overall.charAt(0).toUpperCase() + diagnosticsResults.overall.slice(1)}
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-center text-muted-foreground">
+                        <Activity className="h-8 w-8 mx-auto mb-2" />
+                        Run diagnostics to see health status
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Service Status */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Services</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {serviceHealth ? (
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>Loaded:</span>
+                          <Badge variant="default">{serviceHealth.summary.loaded}</Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Failed:</span>
+                          <Badge variant="destructive">{serviceHealth.summary.failed}</Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Health:</span>
+                          <Badge variant="secondary">{Math.round(serviceHealth.summary.healthy * 100)}%</Badge>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center text-muted-foreground">Loading...</div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Auto-Recovery Stats */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Auto-Recovery</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {autoRecoveryStats ? (
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>Total:</span>
+                          <Badge variant="secondary">{autoRecoveryStats.totalRecoveries}</Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Success Rate:</span>
+                          <Badge variant="default">{Math.round(autoRecoveryStats.successRate || 0)}%</Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Active:</span>
+                          <Badge variant={autoRecoveryStats.isActive ? "default" : "secondary"}>
+                            {autoRecoveryStats.isActive ? "Yes" : "No"}
+                          </Badge>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center text-muted-foreground">Loading...</div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Quick Actions */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    {getStatusIcon(diagnosticsResults?.overall || 'unknown')}
-                    System Health
-                  </CardTitle>
+                  <CardTitle>Quick Actions</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {diagnosticsResults ? (
-                    <>
-                      <div className="text-2xl font-bold mb-2">
-                        {diagnosticsResults.score}%
-                      </div>
-                      <Progress value={diagnosticsResults.score} className="mb-2" />
-                      <div className="text-sm text-muted-foreground">
-                        {diagnosticsResults.overall.charAt(0).toUpperCase() + diagnosticsResults.overall.slice(1)}
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-center text-muted-foreground">
-                      <Activity className="h-8 w-8 mx-auto mb-2" />
-                      Run diagnostics to see health status
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Service Status */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Services</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {serviceHealth ? (
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span>Loaded:</span>
-                        <Badge variant="default">{serviceHealth.summary.loaded}</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Failed:</span>
-                        <Badge variant="destructive">{serviceHealth.summary.failed}</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Health:</span>
-                        <Badge variant="secondary">{Math.round(serviceHealth.summary.healthy * 100)}%</Badge>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-center text-muted-foreground">Loading...</div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Auto-Recovery Stats */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Auto-Recovery</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {autoRecoveryStats ? (
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span>Total:</span>
-                        <Badge variant="secondary">{autoRecoveryStats.totalRecoveries}</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Success Rate:</span>
-                        <Badge variant="default">{Math.round(autoRecoveryStats.successRate || 0)}%</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Active:</span>
-                        <Badge variant={autoRecoveryStats.isActive ? "default" : "secondary"}>
-                          {autoRecoveryStats.isActive ? "Yes" : "No"}
-                        </Badge>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-center text-muted-foreground">Loading...</div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <Button onClick={handleFullDiagnostics} disabled={state.isRunning} className="flex items-center gap-2">
-                    <Play className="h-4 w-4" />
-                    Run Diagnostics
-                  </Button>
-                  <Button onClick={handleSmartRecovery} disabled={state.isRunning} className="flex items-center gap-2">
-                    <RefreshCw className="h-4 w-4" />
-                    Smart Recovery
-                  </Button>
-                  <Button onClick={handleClearAllCaches} disabled={state.isRunning} variant="outline" className="flex items-center gap-2">
-                    <RotateCcw className="h-4 w-4" />
-                    Clear Caches
-                  </Button>
-                  <Button onClick={handleForceRestart} disabled={state.isRunning} variant="destructive" className="flex items-center gap-2">
-                    <RefreshCw className="h-4 w-4" />
-                    Force Restart
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Current Operation */}
-            {state.isRunning && (
-              <Card>
-                <CardContent className="pt-4">
-                  <div className="flex items-center gap-3">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-                    <span>Running: {state.currentOperation}</span>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <Button onClick={handleFullDiagnostics} disabled={state.isRunning} className="flex items-center gap-2">
+                      <Play className="h-4 w-4" />
+                      Run Diagnostics
+                    </Button>
+                    <Button onClick={handleSmartRecovery} disabled={state.isRunning} className="flex items-center gap-2">
+                      <RefreshCw className="h-4 w-4" />
+                      Smart Recovery
+                    </Button>
+                    <Button onClick={handleClearAllCaches} disabled={state.isRunning} variant="outline" className="flex items-center gap-2">
+                      <RotateCcw className="h-4 w-4" />
+                      Clear Caches
+                    </Button>
+                    <Button onClick={handleForceRestart} disabled={state.isRunning} variant="destructive" className="flex items-center gap-2">
+                      <RefreshCw className="h-4 w-4" />
+                      Force Restart
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
-            )}
-          </TabsContent>
+
+              {/* Current Operation */}
+              {state.isRunning && (
+                <Card>
+                  <CardContent className="pt-4">
+                    <div className="flex items-center gap-3">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                      <span>Running: {state.currentOperation}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
 
           {/* Diagnostics Tab */}
-          <TabsContent value="diagnostics" className="space-y-6">
+          {state.activeTab === 'diagnostics' && (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
@@ -386,8 +374,7 @@ const UserControlledRecoveryDashboard: React.FC = () => {
               <CardContent>
                 {diagnosticsResults ? (
                   <div className="space-y-4">
-                    {/* Issues */}
-                    {diagnosticsResults.issues.length > 0 && (
+                    {diagnosticsResults.issues?.length > 0 && (
                       <div>
                         <h4 className="font-semibold mb-3">Issues Found</h4>
                         <div className="space-y-2">
@@ -407,8 +394,7 @@ const UserControlledRecoveryDashboard: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Recommendations */}
-                    {diagnosticsResults.recommendations.length > 0 && (
+                    {diagnosticsResults.recommendations?.length > 0 && (
                       <div>
                         <h4 className="font-semibold mb-3">Recommendations</h4>
                         <div className="space-y-2">
@@ -430,65 +416,26 @@ const UserControlledRecoveryDashboard: React.FC = () => {
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
+          )}
 
           {/* Recovery Tools Tab */}
-          <TabsContent value="recovery" className="space-y-6">
+          {state.activeTab === 'recovery' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Component Recovery */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Component Recovery</CardTitle>
+                  <CardTitle>Recovery Tools</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {['Router', 'Auth', 'Services'].map(component => (
-                      <Button 
-                        key={component}
-                        onClick={() => handleSelectiveReload(component)}
-                        disabled={state.isRunning}
-                        variant="outline"
-                        className="w-full justify-start"
-                      >
-                        <RefreshCw className="h-4 w-4 mr-2" />
-                        Reload {component}
-                      </Button>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* System Recovery */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>System Recovery</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <Button 
-                      onClick={handleResetRecoveryChain}
-                      disabled={state.isRunning}
-                      variant="outline"
-                      className="w-full justify-start"
-                    >
+                    <Button onClick={handleResetRecoveryChain} disabled={state.isRunning} variant="outline" className="w-full justify-start">
                       <RotateCcw className="h-4 w-4 mr-2" />
                       Reset Recovery Chain
                     </Button>
-                    <Button 
-                      onClick={handleClearAllCaches}
-                      disabled={state.isRunning}
-                      variant="outline"
-                      className="w-full justify-start"
-                    >
+                    <Button onClick={handleClearAllCaches} disabled={state.isRunning} variant="outline" className="w-full justify-start">
                       <RotateCcw className="h-4 w-4 mr-2" />
                       Clear All Caches
                     </Button>
-                    <Button 
-                      onClick={handleForceRestart}
-                      disabled={state.isRunning}
-                      variant="destructive"
-                      className="w-full justify-start"
-                    >
+                    <Button onClick={handleForceRestart} disabled={state.isRunning} variant="destructive" className="w-full justify-start">
                       <RefreshCw className="h-4 w-4 mr-2" />
                       Force Application Restart
                     </Button>
@@ -496,10 +443,10 @@ const UserControlledRecoveryDashboard: React.FC = () => {
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
+          )}
 
           {/* History Tab */}
-          <TabsContent value="history" className="space-y-6">
+          {state.activeTab === 'history' && (
             <Card>
               <CardHeader>
                 <CardTitle>Recovery History</CardTitle>
@@ -535,8 +482,8 @@ const UserControlledRecoveryDashboard: React.FC = () => {
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          )}
+        </div>
       </div>
     </div>
   );
