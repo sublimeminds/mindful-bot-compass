@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import SafeErrorBoundary from "@/components/SafeErrorBoundary";
+
+// Lazy load service health dashboard
+const ServiceHealthDashboard = React.lazy(() => import('@/components/ServiceHealthDashboard'));
 
 // Import components to test
 import Header from '@/components/Header';
@@ -157,6 +160,34 @@ const ComponentHealthCheck = () => {
                 </div>
               ))}
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Service Health Monitoring */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Service Health Monitoring</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SafeErrorBoundary 
+              name="ServiceHealthDashboard"
+              fallback={
+                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
+                  <p className="text-yellow-700">Service health dashboard failed to load</p>
+                </div>
+              }
+            >
+              <div className="border p-4 rounded">
+                <Suspense fallback={
+                  <div className="css-safe-loading">
+                    <div className="css-safe-spinner"></div>
+                    <span>Loading service health dashboard...</span>
+                  </div>
+                }>
+                  <ServiceHealthDashboard />
+                </Suspense>
+              </div>
+            </SafeErrorBoundary>
           </CardContent>
         </Card>
       </div>
