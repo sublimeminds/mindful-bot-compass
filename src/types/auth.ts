@@ -14,6 +14,14 @@ export interface AuthContextType {
   logout: () => Promise<void>;
 }
 
+export interface AuthStateHook {
+  user: User | null;
+  loading: boolean;
+  setUser: (user: User | null) => void;
+  skipAuth: () => void;
+  enableAuth: () => void;
+}
+
 export interface AuthError {
   message: string;
   code?: string;
