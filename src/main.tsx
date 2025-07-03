@@ -6,12 +6,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { EnhancedAuthProvider } from '@/components/EnhancedAuthProvider';
+import BulletproofAuthProvider from '@/components/auth/BulletproofAuthProvider';
 import { OfflineDetector } from '@/components/auth/OfflineDetector';
 import App from './App.tsx';
 import './index.css';
 import { CSSProtection } from './utils/cssProtection';
 import { serviceHealthManager } from './utils/serviceHealthManager';
+import { bulletproofServiceManager } from './utils/bulletproofServiceManager';
 import BulletproofReactWrapper from './components/BulletproofReactWrapper';
+import BulletproofErrorBoundary from './components/BulletproofErrorBoundary';
 
 // Import testing infrastructure in development
 if (import.meta.env.DEV) {
@@ -20,42 +23,9 @@ if (import.meta.env.DEV) {
   });
 }
 
-// Initialize CSS protection before anything else
-CSSProtection.init();
-
-// Register services with health monitoring
-serviceHealthManager.registerService({
-  name: 'performanceService',
-  loader: async () => {
-    const module = await import('./services/performanceService');
-    return module.performanceService;
-  },
-  required: false,
-  timeout: 3000,
-  retryAttempts: 2
-});
-
-serviceHealthManager.registerService({
-  name: 'rateLimitService', 
-  loader: async () => {
-    const module = await import('./services/rateLimitService');
-    return module.rateLimitService;
-  },
-  required: false,
-  timeout: 2000,
-  retryAttempts: 1
-});
-
-// Safe i18n initialization with better error handling
-serviceHealthManager.registerService({
-  name: 'i18n',
-  loader: async () => {
-    const module = await import('./i18n');
-    return module;
-  },
-  required: false,
-  timeout: 2000,
-  retryAttempts: 1
+// Initialize bulletproof services (non-blocking)
+bulletproofServiceManager.initializeServices().catch(error => {
+  console.warn('Some services failed to initialize:', error);
 });
 
 const rootElement = document.getElementById('root');
@@ -65,37 +35,6 @@ if (!rootElement) {
 }
 
 const root = ReactDOM.createRoot(rootElement);
-
-// Start health monitoring
-serviceHealthManager.startHealthChecks();
-
-// Initialize services after a short delay to not block initial render
-setTimeout(() => {
-  // Safe service initialization with health manager
-  const performanceService = serviceHealthManager.getService('performanceService');
-  if (performanceService) {
-    try {
-      performanceService.startPerformanceMonitoring?.();
-      performanceService.monitorMemoryUsage?.();
-      performanceService.recordMetric?.('AppStartup', performance.now());
-    } catch (error) {
-      console.warn('Performance service initialization failed:', error);
-    }
-  }
-  
-  const rateLimitService = serviceHealthManager.getService('rateLimitService');
-  if (rateLimitService) {
-    try {
-      rateLimitService.startCleanup?.();
-    } catch (error) {
-      console.warn('Rate limit service initialization failed:', error);
-    }
-  }
-
-  // Log service health summary
-  const healthSummary = serviceHealthManager.getHealthSummary();
-  console.log('Services initialized. Health summary:', healthSummary);
-}, 100);
 
 // Create QueryClient
 const queryClient = new QueryClient({
@@ -142,10 +81,10 @@ root.render(
         <div className="min-h-screen bg-white">
           <QueryClientProvider client={queryClient}>
             <BrowserRouter>
-              <EnhancedAuthProvider>
+              <BulletproofAuthProvider>
                 <App />
                 <Toaster />
-              </EnhancedAuthProvider>
+              </BulletproofAuthProvider>
             </BrowserRouter>
           </QueryClientProvider>
         </div>
