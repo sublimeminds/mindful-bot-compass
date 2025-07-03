@@ -2,6 +2,7 @@
 import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import SafeErrorBoundary from "@/components/SafeErrorBoundary";
 
 // Lazy load pages with safe fallbacks
 const Index = lazy(() => import("../pages/Index"));
@@ -13,6 +14,7 @@ const QuantumTherapy = lazy(() => import("../pages/QuantumTherapy"));
 const BlockchainHealth = lazy(() => import("../pages/BlockchainHealth"));
 const NeuralInterface = lazy(() => import("../pages/NeuralInterface"));
 const TestPage = lazy(() => import("../pages/TestPage"));
+const ComponentHealthCheck = lazy(() => import("../pages/ComponentHealthCheck"));
 
 // Simple loading fallback
 const PageLoadingFallback = () => (
@@ -26,19 +28,62 @@ const PageLoadingFallback = () => (
 
 const AppRouter = () => {
   return (
-    <Suspense fallback={<PageLoadingFallback />}>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/minimal" element={<MinimalIndex />} />
-        <Route path="/auth" element={<EnhancedAuth />} />
-        <Route path="/onboarding" element={<EnhancedOnboardingPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/quantum-therapy" element={<QuantumTherapy />} />
-        <Route path="/blockchain-health" element={<BlockchainHealth />} />
-        <Route path="/neural-interface" element={<NeuralInterface />} />
-        <Route path="/test" element={<TestPage />} />
-      </Routes>
-    </Suspense>
+    <SafeErrorBoundary name="AppRouter">
+      <Suspense fallback={<PageLoadingFallback />}>
+        <Routes>
+          <Route path="/" element={
+            <SafeErrorBoundary name="IndexPage">
+              <Index />
+            </SafeErrorBoundary>
+          } />
+          <Route path="/minimal" element={
+            <SafeErrorBoundary name="MinimalIndexPage">
+              <MinimalIndex />
+            </SafeErrorBoundary>
+          } />
+          <Route path="/auth" element={
+            <SafeErrorBoundary name="AuthPage">
+              <EnhancedAuth />
+            </SafeErrorBoundary>
+          } />
+          <Route path="/onboarding" element={
+            <SafeErrorBoundary name="OnboardingPage">
+              <EnhancedOnboardingPage />
+            </SafeErrorBoundary>
+          } />
+          <Route path="/dashboard" element={
+            <SafeErrorBoundary name="DashboardPage">
+              <Dashboard />
+            </SafeErrorBoundary>
+          } />
+          <Route path="/quantum-therapy" element={
+            <SafeErrorBoundary name="QuantumTherapyPage">
+              <QuantumTherapy />
+            </SafeErrorBoundary>
+          } />
+          <Route path="/blockchain-health" element={
+            <SafeErrorBoundary name="BlockchainHealthPage">
+              <BlockchainHealth />
+            </SafeErrorBoundary>
+          } />
+          <Route path="/neural-interface" element={
+            <SafeErrorBoundary name="NeuralInterfacePage">
+              <NeuralInterface />
+            </SafeErrorBoundary>
+          } />
+          <Route path="/test" element={
+            <SafeErrorBoundary name="TestPage">
+              <TestPage />
+            </SafeErrorBoundary>
+          } />
+          <Route path="/component-health" element={
+            <SafeErrorBoundary name="ComponentHealthPage">
+              <ComponentHealthCheck />
+            </SafeErrorBoundary>
+          } />
+        </Routes>
+      </Suspense>
+    </SafeErrorBoundary>
   );
 };
 
