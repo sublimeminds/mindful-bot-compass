@@ -6,12 +6,12 @@ import { Calendar, Clock, TrendingUp, ArrowRight, MessageSquare } from 'lucide-r
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { format } from 'date-fns';
 
 const SessionHistoryWidget = () => {
   const navigate = useNavigate();
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
 
   const { data: recentSessions = [], isLoading } = useQuery({
     queryKey: ['recent-sessions', user?.id],
