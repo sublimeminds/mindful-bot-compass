@@ -7,6 +7,7 @@ import SafeErrorBoundary from "@/components/SafeErrorBoundary";
 
 // Lazy load service health dashboard
 const ServiceHealthDashboard = React.lazy(() => import('@/components/ServiceHealthDashboard'));
+const AppValidationDashboard = React.lazy(() => import('@/components/AppValidationDashboard'));
 
 // Import components to test
 import Header from '@/components/Header';
@@ -187,6 +188,32 @@ const ComponentHealthCheck = () => {
                   <ServiceHealthDashboard />
                 </Suspense>
               </div>
+            </SafeErrorBoundary>
+          </CardContent>
+        </Card>
+
+        {/* App Validation Dashboard */}
+        <Card>
+          <CardHeader>
+            <CardTitle>App Validation & Testing</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SafeErrorBoundary 
+              name="AppValidationDashboard"
+              fallback={
+                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
+                  <p className="text-yellow-700">App validation dashboard failed to load</p>
+                </div>
+              }
+            >
+              <Suspense fallback={
+                <div className="css-safe-loading">
+                  <div className="css-safe-spinner"></div>
+                  <span>Loading validation dashboard...</span>
+                </div>
+              }>
+                <AppValidationDashboard />
+              </Suspense>
             </SafeErrorBoundary>
           </CardContent>
         </Card>
