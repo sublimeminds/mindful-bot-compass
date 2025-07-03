@@ -137,18 +137,16 @@ const LoadingFallback = () => (
 root.render(
   <React.StrictMode>
     <React.Suspense fallback={<LoadingFallback />}>
-      <OfflineDetector>
-        <ThemeProvider>
-          <QueryClientProvider client={queryClient}>
-            <BrowserRouter>
-              <EnhancedAuthProvider>
-                <App />
-                <Toaster />
-              </EnhancedAuthProvider>
-            </BrowserRouter>
-          </QueryClientProvider>
-        </ThemeProvider>
-      </OfflineDetector>
+      <div className="min-h-screen bg-white">
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <EnhancedAuthProvider>
+              <App />
+              <Toaster />
+            </EnhancedAuthProvider>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </div>
     </React.Suspense>
   </React.StrictMode>
 );
