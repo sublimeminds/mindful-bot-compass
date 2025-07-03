@@ -82,9 +82,17 @@ const SafeMinimalApp: React.FC = () => {
           
           <button 
             className="css-safe-button" 
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              // Force restart with cache clearing
+              import('../utils/appRecoveryManager').then(({ appRecoveryManager }) => {
+                appRecoveryManager.forceRestart();
+              }).catch(() => {
+                // Fallback to simple reload
+                window.location.reload();
+              });
+            }}
           >
-            🔄 Retry Full App
+            🔄 Force Restart
           </button>
           
           <button 
