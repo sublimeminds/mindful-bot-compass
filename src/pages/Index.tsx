@@ -27,10 +27,9 @@ import {
   Zap,
   MessageSquare
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
-  const navigate = useNavigate();
+  // Remove useNavigate temporarily to test routing
   
   useSafeSEO({
     title: 'TherapySync - AI-Powered Mental Health Support',
@@ -171,7 +170,7 @@ const Index = () => {
               <GradientButton 
                 size="lg" 
                 className="px-8 py-4 text-lg font-bold"
-                onClick={() => navigate('/onboarding')}
+                onClick={() => window.location.href = '/onboarding'}
               >
                 <Heart className="h-5 w-5 mr-2" />
                 Start Free Trial
@@ -347,7 +346,7 @@ const Index = () => {
                 <Button 
                   size="lg"
                   className="bg-white text-therapy-600 hover:bg-therapy-50 border-2 border-white hover:border-therapy-200 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                  onClick={() => navigate('/onboarding')}
+                  onClick={() => window.location.href = '/onboarding'}
                 >
                   <Heart className="h-5 w-5 mr-2" />
                   Choose Your Plan
@@ -355,7 +354,7 @@ const Index = () => {
                 <Button 
                   size="lg" 
                   className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-therapy-600 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                  onClick={() => navigate('/onboarding')}
+                  onClick={() => window.location.href = '/onboarding'}
                 >
                   <Zap className="h-5 w-5 mr-2" />
                   Start Onboarding
