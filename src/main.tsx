@@ -135,18 +135,16 @@ const LoadingFallback = () => (
 );
 
 root.render(
-  <React.StrictMode>
-    <React.Suspense fallback={<LoadingFallback />}>
-      <div className="min-h-screen bg-white">
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <EnhancedAuthProvider>
-              <App />
-              <Toaster />
-            </EnhancedAuthProvider>
-          </BrowserRouter>
-        </QueryClientProvider>
-      </div>
-    </React.Suspense>
-  </React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <React.Suspense fallback={<LoadingFallback />}>
+        <div className="min-h-screen bg-white">
+          <EnhancedAuthProvider>
+            <App />
+            <Toaster />
+          </EnhancedAuthProvider>
+        </div>
+      </React.Suspense>
+    </BrowserRouter>
+  </QueryClientProvider>
 );
