@@ -8,6 +8,7 @@ import { AuthContext } from '@/contexts/AuthContext';
 import { AuthContextType } from '@/types/auth';
 import AppRouter from './AppRouter';
 import BulletproofErrorBoundary from './BulletproofErrorBoundary';
+import { AuthProviderWrapper, QueryProviderWrapper, RouterWrapper } from './ProviderWrappers';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -137,16 +138,22 @@ const AppInitializer: React.FC = () => {
 
   return (
     <BulletproofErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <Router>
-          <AuthContext.Provider value={authValue}>
-            <div className="min-h-screen bg-background">
-              <AppRouter />
-              <Toaster />
-            </div>
-          </AuthContext.Provider>
-        </Router>
-      </QueryClientProvider>
+      <QueryProviderWrapper client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <RouterWrapper>
+            <Router>
+              <AuthProviderWrapper authValue={authValue}>
+                <AuthContext.Provider value={authValue}>
+                  <div className="min-h-screen bg-background">
+                    <AppRouter />
+                    <Toaster />
+                  </div>
+                </AuthContext.Provider>
+              </AuthProviderWrapper>
+            </Router>
+          </RouterWrapper>
+        </QueryClientProvider>
+      </QueryProviderWrapper>
     </BulletproofErrorBoundary>
   );
 };

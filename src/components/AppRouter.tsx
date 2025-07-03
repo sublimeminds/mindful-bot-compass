@@ -1,89 +1,139 @@
 
 import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import SafeErrorBoundary from "@/components/SafeErrorBoundary";
+import BulletproofErrorBoundary from "@/components/BulletproofErrorBoundary";
 
-// Lazy load pages with safe fallbacks
-const Index = lazy(() => import("../pages/Index"));
-const MinimalIndex = lazy(() => import("../pages/MinimalIndex"));
-const Dashboard = lazy(() => import("../pages/Dashboard"));
-const EnhancedAuth = lazy(() => import("../pages/EnhancedAuth"));
-const EnhancedOnboardingPage = lazy(() => import("../pages/EnhancedOnboardingPage"));
-const QuantumTherapy = lazy(() => import("../pages/QuantumTherapy"));
-const BlockchainHealth = lazy(() => import("../pages/BlockchainHealth"));
-const NeuralInterface = lazy(() => import("../pages/NeuralInterface"));
-const TestPage = lazy(() => import("../pages/TestPage"));
-const ComponentHealthCheck = lazy(() => import("../pages/ComponentHealthCheck"));
-
-// Simple loading fallback
-const PageLoadingFallback = () => (
-  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-    <div className="text-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-      <p className="text-gray-600">Loading...</p>
+// Safe fallback for failed lazy loads
+const SafeFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="text-center p-8">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">Page Loading Error</h2>
+      <p className="text-gray-600 mb-4">This page couldn't load properly.</p>
+      <button 
+        onClick={() => window.location.href = '/'}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        Go Home
+      </button>
     </div>
   </div>
 );
 
+// Lazy load pages with safe fallbacks
+const createSafeLazyComponent = (importFn: () => Promise<any>, fallbackName: string) => {
+  return lazy(() => 
+    importFn().catch((error) => {
+      console.error(`Failed to load ${fallbackName}:`, error);
+      return { default: SafeFallback };
+    })
+  );
+};
+
+const Index = createSafeLazyComponent(() => import("../pages/Index"), "Index");
+const MinimalIndex = createSafeLazyComponent(() => import("../pages/MinimalIndex"), "MinimalIndex");
+const Dashboard = createSafeLazyComponent(() => import("../pages/Dashboard"), "Dashboard");
+const EnhancedAuth = createSafeLazyComponent(() => import("../pages/EnhancedAuth"), "EnhancedAuth");
+const EnhancedOnboardingPage = createSafeLazyComponent(() => import("../pages/EnhancedOnboardingPage"), "EnhancedOnboardingPage");
+const QuantumTherapy = createSafeLazyComponent(() => import("../pages/QuantumTherapy"), "QuantumTherapy");
+const BlockchainHealth = createSafeLazyComponent(() => import("../pages/BlockchainHealth"), "BlockchainHealth");
+const NeuralInterface = createSafeLazyComponent(() => import("../pages/NeuralInterface"), "NeuralInterface");
+const TestPage = createSafeLazyComponent(() => import("../pages/TestPage"), "TestPage");
+const ComponentHealthCheck = createSafeLazyComponent(() => import("../pages/ComponentHealthCheck"), "ComponentHealthCheck");
+
+// Enhanced loading fallback
+const PageLoadingFallback = () => (
+  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+      <p className="text-gray-600">Loading page...</p>
+    </div>
+  </div>
+);
+
+// Route wrapper with error boundary
+const RouteWrapper: React.FC<{ children: React.ReactNode; name: string }> = ({ children, name }) => (
+  <SafeErrorBoundary 
+    name={`${name}Route`}
+    fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center p-8">
+          <h2 className="text-xl font-semibold text-red-600 mb-4">Route Error</h2>
+          <p className="text-gray-600 mb-4">The {name} page encountered an error.</p>
+          <button 
+            onClick={() => window.location.href = '/'}
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Go Home
+          </button>
+        </div>
+      </div>
+    }
+  >
+    {children}
+  </SafeErrorBoundary>
+);
+
 const AppRouter = () => {
   return (
-    <SafeErrorBoundary name="AppRouter">
-      <Suspense fallback={<PageLoadingFallback />}>
-        <Routes>
-          <Route path="/" element={
-            <SafeErrorBoundary name="IndexPage">
-              <Index />
-            </SafeErrorBoundary>
-          } />
-          <Route path="/minimal" element={
-            <SafeErrorBoundary name="MinimalIndexPage">
-              <MinimalIndex />
-            </SafeErrorBoundary>
-          } />
-          <Route path="/auth" element={
-            <SafeErrorBoundary name="AuthPage">
-              <EnhancedAuth />
-            </SafeErrorBoundary>
-          } />
-          <Route path="/onboarding" element={
-            <SafeErrorBoundary name="OnboardingPage">
-              <EnhancedOnboardingPage />
-            </SafeErrorBoundary>
-          } />
-          <Route path="/dashboard" element={
-            <SafeErrorBoundary name="DashboardPage">
-              <Dashboard />
-            </SafeErrorBoundary>
-          } />
-          <Route path="/quantum-therapy" element={
-            <SafeErrorBoundary name="QuantumTherapyPage">
-              <QuantumTherapy />
-            </SafeErrorBoundary>
-          } />
-          <Route path="/blockchain-health" element={
-            <SafeErrorBoundary name="BlockchainHealthPage">
-              <BlockchainHealth />
-            </SafeErrorBoundary>
-          } />
-          <Route path="/neural-interface" element={
-            <SafeErrorBoundary name="NeuralInterfacePage">
-              <NeuralInterface />
-            </SafeErrorBoundary>
-          } />
-          <Route path="/test" element={
-            <SafeErrorBoundary name="TestPage">
-              <TestPage />
-            </SafeErrorBoundary>
-          } />
-          <Route path="/component-health" element={
-            <SafeErrorBoundary name="ComponentHealthPage">
-              <ComponentHealthCheck />
-            </SafeErrorBoundary>
-          } />
-        </Routes>
-      </Suspense>
-    </SafeErrorBoundary>
+    <BulletproofErrorBoundary>
+      <SafeErrorBoundary name="RouterContainer">
+        <Suspense fallback={<PageLoadingFallback />}>
+          <Routes>
+            <Route path="/" element={
+              <RouteWrapper name="Index">
+                <Index />
+              </RouteWrapper>
+            } />
+            <Route path="/minimal" element={
+              <RouteWrapper name="MinimalIndex">
+                <MinimalIndex />
+              </RouteWrapper>
+            } />
+            <Route path="/auth" element={
+              <RouteWrapper name="Auth">
+                <EnhancedAuth />
+              </RouteWrapper>
+            } />
+            <Route path="/onboarding" element={
+              <RouteWrapper name="Onboarding">
+                <EnhancedOnboardingPage />
+              </RouteWrapper>
+            } />
+            <Route path="/dashboard" element={
+              <RouteWrapper name="Dashboard">
+                <Dashboard />
+              </RouteWrapper>
+            } />
+            <Route path="/quantum-therapy" element={
+              <RouteWrapper name="QuantumTherapy">
+                <QuantumTherapy />
+              </RouteWrapper>
+            } />
+            <Route path="/blockchain-health" element={
+              <RouteWrapper name="BlockchainHealth">
+                <BlockchainHealth />
+              </RouteWrapper>
+            } />
+            <Route path="/neural-interface" element={
+              <RouteWrapper name="NeuralInterface">
+                <NeuralInterface />
+              </RouteWrapper>
+            } />
+            <Route path="/test" element={
+              <RouteWrapper name="Test">
+                <TestPage />
+              </RouteWrapper>
+            } />
+            <Route path="/component-health" element={
+              <RouteWrapper name="ComponentHealth">
+                <ComponentHealthCheck />
+              </RouteWrapper>
+            } />
+          </Routes>
+        </Suspense>
+      </SafeErrorBoundary>
+    </BulletproofErrorBoundary>
   );
 };
 
