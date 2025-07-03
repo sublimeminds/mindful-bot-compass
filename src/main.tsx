@@ -4,10 +4,11 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
+import { SimpleAuthProvider } from '@/components/SimpleAuthProvider';
 import App from './App.tsx';
 import './index.css';
 
-console.log('Starting TherapySync with minimal setup...');
+console.log('Starting TherapySync with simple auth...');
 
 const rootElement = document.getElementById('root');
 
@@ -31,10 +32,12 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <div className="min-h-screen bg-white">
-          <App />
-          <Toaster />
-        </div>
+        <SimpleAuthProvider>
+          <div className="min-h-screen bg-white">
+            <App />
+            <Toaster />
+          </div>
+        </SimpleAuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
