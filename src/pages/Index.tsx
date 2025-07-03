@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useSafeSEO } from '@/hooks/useSafeSEO';
+import { useBulletproofSEO } from '@/hooks/useBulletproofSEO';
 import EnhancedHeader from '@/components/navigation/EnhancedHeader';
 import Footer from '@/components/Footer';
 import GradientLogo from '@/components/ui/GradientLogo';
@@ -32,7 +32,7 @@ import { useNavigate } from 'react-router-dom';
 const Index = () => {
   const navigate = useNavigate();
   
-  useSafeSEO({
+  useBulletproofSEO({
     title: 'TherapySync - AI-Powered Mental Health Support',
     description: 'Experience personalized AI therapy with voice technology, 24/7 crisis support, and culturally sensitive care. Start your mental health journey today.',
     keywords: 'AI therapy, mental health, online therapy, voice therapy, crisis support, mental wellness'

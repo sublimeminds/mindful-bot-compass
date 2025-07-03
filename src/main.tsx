@@ -11,6 +11,7 @@ import App from './App.tsx';
 import './index.css';
 import { CSSProtection } from './utils/cssProtection';
 import { serviceHealthManager } from './utils/serviceHealthManager';
+import BulletproofReactWrapper from './components/BulletproofReactWrapper';
 
 // Import testing infrastructure in development
 if (import.meta.env.DEV) {
@@ -136,17 +137,19 @@ const LoadingFallback = () => (
 
 root.render(
   <React.StrictMode>
-    <React.Suspense fallback={<LoadingFallback />}>
-      <div className="min-h-screen bg-white">
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <EnhancedAuthProvider>
-              <App />
-              <Toaster />
-            </EnhancedAuthProvider>
-          </BrowserRouter>
-        </QueryClientProvider>
-      </div>
-    </React.Suspense>
+    <BulletproofReactWrapper>
+      <React.Suspense fallback={<LoadingFallback />}>
+        <div className="min-h-screen bg-white">
+          <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+              <EnhancedAuthProvider>
+                <App />
+                <Toaster />
+              </EnhancedAuthProvider>
+            </BrowserRouter>
+          </QueryClientProvider>
+        </div>
+      </React.Suspense>
+    </BulletproofReactWrapper>
   </React.StrictMode>
 );

@@ -1,11 +1,10 @@
 
-import React, { createContext, useContext } from 'react';
+import React from 'react';
 import { AuthContextType } from '@/types/auth';
 import { useAuthState } from '@/components/auth/AuthStateManager';
 import { useAuthActions } from '@/components/auth/AuthActions';
 import { DevAuthControls } from '@/components/auth/DevAuthControls';
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { AuthContext } from '@/contexts/AuthContext';
 
 interface EnhancedAuthProviderProps {
   children: React.ReactNode;
@@ -40,11 +39,5 @@ export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ chil
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    console.error('useAuth must be used within an EnhancedAuthProvider');
-    throw new Error('useAuth must be used within an EnhancedAuthProvider');
-  }
-  return context;
-};
+// Export the unified useAuth from AuthContext
+export { useAuth } from '@/contexts/AuthContext';
