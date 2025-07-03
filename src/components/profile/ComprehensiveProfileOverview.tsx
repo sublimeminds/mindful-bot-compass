@@ -20,12 +20,12 @@ import {
   Settings,
   Download
 } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 const ComprehensiveProfileOverview = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const [onboardingData, setOnboardingData] = useState<any>(null);
   const [aiAnalysis, setAiAnalysis] = useState<any>(null);
   const [progressData, setProgressData] = useState<any>(null);

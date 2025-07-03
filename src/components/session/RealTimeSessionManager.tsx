@@ -18,12 +18,12 @@ import {
   Send
 } from 'lucide-react';
 import { useRealTimeSession } from '@/hooks/useRealTimeSession';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import SessionProgressIndicator from './SessionProgressIndicator';
 import SessionRating from './SessionRating';
 
 const RealTimeSessionManager = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const {
     messages,
     loading,

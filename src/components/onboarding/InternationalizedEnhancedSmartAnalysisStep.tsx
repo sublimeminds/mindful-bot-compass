@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Brain, Heart, Target, CheckCircle, Clock, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 
 interface EnhancedSmartAnalysisStepProps {
   onNext: () => void;
@@ -13,7 +13,7 @@ interface EnhancedSmartAnalysisStepProps {
 
 const InternationalizedEnhancedSmartAnalysisStep: React.FC<EnhancedSmartAnalysisStepProps> = ({ onNext, onBack }) => {
   const { t } = useTranslation();
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [analysisComplete, setAnalysisComplete] = useState(false);
 

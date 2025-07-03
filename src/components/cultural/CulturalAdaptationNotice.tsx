@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Globe, Languages, Heart, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { EnhancedCulturalContextService } from '@/services/enhancedCulturalContextService';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 
 const CulturalAdaptationNotice = () => {
   const { t } = useTranslation();
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const [recommendations, setRecommendations] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 

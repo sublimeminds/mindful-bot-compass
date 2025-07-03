@@ -5,7 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { CalendarDays, TrendingUp, Brain, Heart } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 
 interface MoodEntry {
   id: string;
@@ -26,7 +26,7 @@ interface MoodEntry {
 }
 
 const AdvancedMoodAnalytics = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const [timeRange, setTimeRange] = useState('7d');
 
   const { data: moodEntries = [], isLoading } = useQuery({

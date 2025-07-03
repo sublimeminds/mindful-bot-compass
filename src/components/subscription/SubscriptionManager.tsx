@@ -4,11 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, CreditCard, CheckCircle, AlertTriangle } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
 const SubscriptionManager = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [subscription, setSubscription] = useState<any>(null);
   const [loading, setLoading] = useState(true);

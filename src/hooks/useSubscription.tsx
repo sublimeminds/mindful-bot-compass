@@ -1,11 +1,11 @@
 
 import { useState, useEffect } from 'react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { subscriptionService, UserSubscription, SubscriptionPlan, UsageData } from '@/services/subscriptionService';
 import { useToast } from '@/hooks/use-toast';
 
 export const useSubscription = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);

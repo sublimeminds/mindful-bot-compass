@@ -5,7 +5,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { PersonalizationService } from '@/services/personalizationService';
 import { useToast } from '@/hooks/use-toast';
 
@@ -14,7 +14,7 @@ interface PersonalizationWizardProps {
 }
 
 const PersonalizationWizard = ({ onComplete }: PersonalizationWizardProps) => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [step, setStep] = useState(1);
   const [preferences, setPreferences] = useState({

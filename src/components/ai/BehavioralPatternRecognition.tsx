@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Brain, TrendingUp, AlertTriangle, Target, Clock } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
 interface BehavioralPattern {
@@ -17,7 +17,7 @@ interface BehavioralPattern {
 }
 
 const BehavioralPatternRecognition = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [patterns, setPatterns] = useState<BehavioralPattern[]>([]);
   const [isLoading, setIsLoading] = useState(true);

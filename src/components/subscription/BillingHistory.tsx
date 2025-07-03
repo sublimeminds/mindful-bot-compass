@@ -2,10 +2,10 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 
 const BillingHistory = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
 
   // Mock data for now
   const billingHistory = [

@@ -7,12 +7,12 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { AlertTriangle, Shield, Key, Smartphone, Clock, Eye, EyeOff, Check, X, Lock, Users, Globe, Database, FileText, Settings, Bell, Activity, CheckCircle } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 const SecurityDashboard = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);

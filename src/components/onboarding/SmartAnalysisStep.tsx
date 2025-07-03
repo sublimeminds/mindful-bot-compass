@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Brain, Target, Clock, CheckCircle, AlertTriangle, TrendingUp } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { smartTherapyService, IntakeAnalysis } from '@/services/smartTherapyService';
 import { useToast } from '@/hooks/use-toast';
 
@@ -16,7 +16,7 @@ interface SmartAnalysisStepProps {
 }
 
 const SmartAnalysisStep = ({ onNext, onBack }: SmartAnalysisStepProps) => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [isAnalyzing, setIsAnalyzing] = useState(true);
   const [analysis, setAnalysis] = useState<IntakeAnalysis | null>(null);

@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { FileText, Plus, Edit, Trash2, Save } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -27,7 +27,7 @@ interface SimpleNotificationTemplate {
 }
 
 const NotificationTemplateManager = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [templates, setTemplates] = useState<SimpleNotificationTemplate[]>([]);
   const [isLoading, setIsLoading] = useState(false);

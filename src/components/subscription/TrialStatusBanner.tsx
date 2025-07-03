@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 
 const TrialStatusBanner = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
 
   if (!user) return null;
 

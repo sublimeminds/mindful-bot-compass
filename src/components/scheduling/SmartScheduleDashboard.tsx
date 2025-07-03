@@ -5,11 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, Brain, TrendingUp, Target, Bell, BarChart3, Settings, Plus, CheckCircle } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { ToastService } from '@/services/toastService';
 
 const SmartScheduleDashboard = () => {
-  const { user, loading } = useSimpleApp();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [scheduleData, setScheduleData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);

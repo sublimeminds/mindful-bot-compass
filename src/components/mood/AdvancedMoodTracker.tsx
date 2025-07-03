@@ -17,7 +17,7 @@ import {
   CheckCircle,
   AlertTriangle
 } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -33,7 +33,7 @@ interface MoodEntry {
 }
 
 const AdvancedMoodTracker = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const [moodEntry, setMoodEntry] = useState<MoodEntry>({

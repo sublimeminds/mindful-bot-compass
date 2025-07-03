@@ -6,10 +6,10 @@ import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 
 const DetailedMoodTracker = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const [moodData, setMoodData] = useState({

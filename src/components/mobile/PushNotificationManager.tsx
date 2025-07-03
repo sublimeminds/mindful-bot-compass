@@ -5,11 +5,11 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Bell, BellRing, BellOff, Smartphone, Settings, Check, X } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
 const PushNotificationManager = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [pushEnabled, setPushEnabled] = useState(false);
   const [notificationType, setNotificationType] = useState<'all' | 'important' | 'none'>('all');

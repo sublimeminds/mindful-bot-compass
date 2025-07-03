@@ -4,10 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 
 const TrialSignup = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleStartTrial = async () => {

@@ -7,11 +7,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, Send, Mic, MicOff, Volume2, VolumeX, Brain, Heart, Lightbulb } from 'lucide-react';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 import { useEnhancedChat } from '@/hooks/useEnhancedChat';
 
 const TherapyChatInterface = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const {
     messages,
     isLoading,
