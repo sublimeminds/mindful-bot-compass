@@ -1,7 +1,7 @@
 
 import React from 'react';
 import EnhancedOnboardingFlow from '@/components/onboarding/EnhancedOnboardingFlow';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const EnhancedOnboardingPage = () => {

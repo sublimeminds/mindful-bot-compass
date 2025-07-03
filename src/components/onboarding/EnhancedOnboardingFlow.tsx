@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
+import SafeReactWrapper from '@/components/SafeReactWrapper';
 import { useNavigate } from 'react-router-dom';
 import AnimatedOnboardingIntro from './AnimatedOnboardingIntro';
 import WelcomeStep from './WelcomeStep';
@@ -25,6 +26,14 @@ interface EnhancedOnboardingFlowProps {
 }
 
 const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => {
+  return (
+    <SafeReactWrapper componentName="EnhancedOnboardingFlow">
+      <EnhancedOnboardingFlowContent onComplete={onComplete} />
+    </SafeReactWrapper>
+  );
+};
+
+const EnhancedOnboardingFlowContent = ({ onComplete }: EnhancedOnboardingFlowProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
