@@ -61,7 +61,10 @@ const Dashboard = () => {
               <div className="bg-blue-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-blue-900 mb-2">AI Chat</h3>
                 <p className="text-blue-700 text-sm">Start a therapy session with AI</p>
-                <button className="mt-3 text-blue-600 hover:text-blue-800 text-sm font-medium">
+                <button 
+                  onClick={() => window.location.href = '/chat'}
+                  className="mt-3 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                >
                   Launch Chat →
                 </button>
               </div>
@@ -69,7 +72,10 @@ const Dashboard = () => {
               <div className="bg-green-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-green-900 mb-2">Mood Tracking</h3>
                 <p className="text-green-700 text-sm">Track your daily mood</p>
-                <button className="mt-3 text-green-600 hover:text-green-800 text-sm font-medium">
+                <button 
+                  onClick={() => window.location.href = '/mood'}
+                  className="mt-3 text-green-600 hover:text-green-800 text-sm font-medium"
+                >
                   Log Mood →
                 </button>
               </div>
@@ -77,7 +83,10 @@ const Dashboard = () => {
               <div className="bg-purple-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-purple-900 mb-2">Goals</h3>
                 <p className="text-purple-700 text-sm">Set and track your goals</p>
-                <button className="mt-3 text-purple-600 hover:text-purple-800 text-sm font-medium">
+                <button 
+                  onClick={() => window.location.href = '/goals'}
+                  className="mt-3 text-purple-600 hover:text-purple-800 text-sm font-medium"
+                >
                   View Goals →
                 </button>
               </div>
