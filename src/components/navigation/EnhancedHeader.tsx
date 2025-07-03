@@ -9,6 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
+import { useReactContextReady } from '@/hooks/useReactContextReady';
 import { 
   Brain, 
   Heart, 
@@ -63,9 +64,13 @@ const EnhancedHeader = () => {
   // Safe auth access with loading state
   const { user, loading } = useAuth();
   
-  console.log('[EnhancedHeader] Auth state:', { 
+  // Check if React context system is ready for Radix UI components
+  const isReactReady = useReactContextReady();
+  
+  console.log('[EnhancedHeader] State:', { 
     user: user ? 'Present' : 'None', 
     loading,
+    isReactReady,
     userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'SSR'
   });
 
@@ -235,131 +240,163 @@ const EnhancedHeader = () => {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            {/* AI Features Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+            {isReactReady ? (
+              <>
+                {/* AI Features Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                      <Brain className="h-4 w-4 text-therapy-500" />
+                      <span>AI</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
+                    <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+                      <Brain className="h-5 w-5 mr-2 text-therapy-500" />
+                      AI Features
+                    </DropdownMenuLabel>
+                    <div className="grid grid-cols-2 gap-3">
+                      {aiFeatures.map((feature, index) => (
+                        <Link
+                          key={feature.title}
+                          to={feature.href}
+                          className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
+                          onMouseEnter={() => setHoveredIcon(feature.title)}
+                          onMouseLeave={() => setHoveredIcon(null)}
+                        >
+                          <IconWrapper 
+                            icon={feature.icon} 
+                            gradient={feature.gradient}
+                            isHovered={hoveredIcon === feature.title}
+                          />
+                          <div className="flex-1">
+                            <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
+                              {feature.title}
+                            </h4>
+                            <p className="text-xs text-gray-600 mt-1 leading-tight">
+                              {feature.description}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {/* Platform Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                      <Settings className="h-4 w-4 text-therapy-500" />
+                      <span>Platform</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
+                    <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+                      <Settings className="h-5 w-5 mr-2 text-therapy-500" />
+                      Platform Features
+                    </DropdownMenuLabel>
+                    <div className="grid grid-cols-2 gap-3">
+                      {platformFeatures.map((feature, index) => (
+                        <Link
+                          key={feature.title}
+                          to={feature.href}
+                          className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
+                          onMouseEnter={() => setHoveredIcon(feature.title)}
+                          onMouseLeave={() => setHoveredIcon(null)}
+                        >
+                          <IconWrapper 
+                            icon={feature.icon} 
+                            gradient={feature.gradient}
+                            isHovered={hoveredIcon === feature.title}
+                          />
+                          <div className="flex-1">
+                            <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
+                              {feature.title}
+                            </h4>
+                            <p className="text-xs text-gray-600 mt-1 leading-tight">
+                              {feature.description}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {/* Help Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                      <HelpCircle className="h-4 w-4 text-therapy-500" />
+                      <span>Help</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
+                    <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+                      <HelpCircle className="h-5 w-5 mr-2 text-therapy-500" />
+                      Help & Support
+                    </DropdownMenuLabel>
+                    <div className="grid grid-cols-2 gap-3">
+                      {helpResources.map((resource, index) => (
+                        <Link
+                          key={resource.title}
+                          to={resource.href}
+                          className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
+                          onMouseEnter={() => setHoveredIcon(resource.title)}
+                          onMouseLeave={() => setHoveredIcon(null)}
+                        >
+                          <IconWrapper 
+                            icon={resource.icon} 
+                            gradient={resource.gradient}
+                            isHovered={hoveredIcon === resource.title}
+                          />
+                          <div className="flex-1">
+                            <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
+                              {resource.title}
+                            </h4>
+                            <p className="text-xs text-gray-600 mt-1 leading-tight">
+                              {resource.description}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              /* Fallback navigation while React contexts initialize */
+              <>
+                <Button 
+                  variant="ghost" 
+                  onClick={() => navigate('/features-overview')}
+                  className="flex items-center space-x-1 hover:bg-therapy-50"
+                >
                   <Brain className="h-4 w-4 text-therapy-500" />
                   <span>AI</span>
-                  <ChevronDown className="h-4 w-4" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
-                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
-                  <Brain className="h-5 w-5 mr-2 text-therapy-500" />
-                  AI Features
-                </DropdownMenuLabel>
-                <div className="grid grid-cols-2 gap-3">
-                  {aiFeatures.map((feature, index) => (
-                    <Link
-                      key={feature.title}
-                      to={feature.href}
-                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
-                      onMouseEnter={() => setHoveredIcon(feature.title)}
-                      onMouseLeave={() => setHoveredIcon(null)}
-                    >
-                      <IconWrapper 
-                        icon={feature.icon} 
-                        gradient={feature.gradient}
-                        isHovered={hoveredIcon === feature.title}
-                      />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
-                          {feature.title}
-                        </h4>
-                        <p className="text-xs text-gray-600 mt-1 leading-tight">
-                          {feature.description}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Platform Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => navigate('/pricing')}
+                  className="flex items-center space-x-1 hover:bg-therapy-50"
+                >
                   <Settings className="h-4 w-4 text-therapy-500" />
                   <span>Platform</span>
-                  <ChevronDown className="h-4 w-4" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
-                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
-                  <Settings className="h-5 w-5 mr-2 text-therapy-500" />
-                  Platform Features
-                </DropdownMenuLabel>
-                <div className="grid grid-cols-2 gap-3">
-                  {platformFeatures.map((feature, index) => (
-                    <Link
-                      key={feature.title}
-                      to={feature.href}
-                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
-                      onMouseEnter={() => setHoveredIcon(feature.title)}
-                      onMouseLeave={() => setHoveredIcon(null)}
-                    >
-                      <IconWrapper 
-                        icon={feature.icon} 
-                        gradient={feature.gradient}
-                        isHovered={hoveredIcon === feature.title}
-                      />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
-                          {feature.title}
-                        </h4>
-                        <p className="text-xs text-gray-600 mt-1 leading-tight">
-                          {feature.description}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Help Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => navigate('/help')}
+                  className="flex items-center space-x-1 hover:bg-therapy-50"
+                >
                   <HelpCircle className="h-4 w-4 text-therapy-500" />
                   <span>Help</span>
-                  <ChevronDown className="h-4 w-4" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
-                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
-                  <HelpCircle className="h-5 w-5 mr-2 text-therapy-500" />
-                  Help & Support
-                </DropdownMenuLabel>
-                <div className="grid grid-cols-2 gap-3">
-                  {helpResources.map((resource, index) => (
-                    <Link
-                      key={resource.title}
-                      to={resource.href}
-                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
-                      onMouseEnter={() => setHoveredIcon(resource.title)}
-                      onMouseLeave={() => setHoveredIcon(null)}
-                    >
-                      <IconWrapper 
-                        icon={resource.icon} 
-                        gradient={resource.gradient}
-                        isHovered={hoveredIcon === resource.title}
-                      />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
-                          {resource.title}
-                        </h4>
-                        <p className="text-xs text-gray-600 mt-1 leading-tight">
-                          {resource.description}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </>
+            )}
           </nav>
 
           {/* Right Section */}
