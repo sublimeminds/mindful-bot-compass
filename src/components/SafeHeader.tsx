@@ -47,7 +47,22 @@ import EnhancedButton from '@/components/ui/EnhancedButton';
 import SafeReactWrapper from './SafeReactWrapper';
 
 const SafeHeaderContent = () => {
-  const navigate = useNavigate();
+  // Add React safety check
+  if (!React || typeof React.useState !== 'function') {
+    return (
+      <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <div className="container flex h-16 items-center">
+          <div className="flex items-center space-x-2">
+            <Brain className="h-8 w-8 text-therapy-600" />
+            <span className="text-xl font-bold text-therapy-900">TherapySync</span>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
+  try {
+    const navigate = useNavigate();
   const location = useLocation();
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   
@@ -378,6 +393,19 @@ const SafeHeaderContent = () => {
       </div>
     </header>
   );
+  } catch (error) {
+    console.warn('SafeHeader error:', error);
+    return (
+      <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <div className="container flex h-16 items-center">
+          <div className="flex items-center space-x-2">
+            <Brain className="h-8 w-8 text-therapy-600" />
+            <span className="text-xl font-bold text-therapy-900">TherapySync</span>
+          </div>
+        </div>
+      </header>
+    );
+  }
 };
 
 const SafeHeader = () => {
