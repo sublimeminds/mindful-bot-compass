@@ -201,6 +201,14 @@ const SmartRecoveryMode: React.FC = () => {
               </Button>
               
               <Button 
+                onClick={() => window.location.href = '/recovery-dashboard'}
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                🔧 Advanced Recovery
+              </Button>
+              
+              <Button 
                 onClick={() => window.location.href = '/component-health'}
                 variant="outline"
                 className="flex items-center gap-2"

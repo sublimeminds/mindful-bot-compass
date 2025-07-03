@@ -40,6 +40,7 @@ const BlockchainHealth = createSafeLazyComponent(() => import("../pages/Blockcha
 const NeuralInterface = createSafeLazyComponent(() => import("../pages/NeuralInterface"), "NeuralInterface");
 const TestPage = createSafeLazyComponent(() => import("../pages/TestPage"), "TestPage");
 const ComponentHealthCheck = createSafeLazyComponent(() => import("../pages/ComponentHealthCheck"), "ComponentHealthCheck");
+const UserControlledRecoveryDashboard = createSafeLazyComponent(() => import("../components/UserControlledRecoveryDashboard"), "RecoveryDashboard");
 
 // Enhanced loading fallback
 const PageLoadingFallback = () => (
@@ -128,6 +129,11 @@ const AppRouter = () => {
             <Route path="/component-health" element={
               <RouteWrapper name="ComponentHealth">
                 <ComponentHealthCheck />
+              </RouteWrapper>
+            } />
+            <Route path="/recovery-dashboard" element={
+              <RouteWrapper name="RecoveryDashboard">
+                <UserControlledRecoveryDashboard />
               </RouteWrapper>
             } />
           </Routes>
