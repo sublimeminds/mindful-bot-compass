@@ -24,25 +24,25 @@ class EnhancedRecoveryChain {
       name: 'full',
       component: () => import('@/components/ProgressiveAppLoader').then(m => m.default),
       priority: 1,
-      errorTypes: ['import', 'network', 'timeout']
+      errorTypes: ['import', 'network', 'timeout', 'dependency']
     },
     {
       name: 'minimal',
       component: () => import('@/components/AppInitializer').then(m => m.default),
       priority: 2,
-      errorTypes: ['dependency', 'auth', 'routing']
+      errorTypes: ['auth', 'routing', 'component']
     },
     {
       name: 'smart',
       component: () => import('@/components/SmartRecoveryMode').then(m => m.default),
       priority: 3,
-      errorTypes: ['component', 'render', 'runtime']
+      errorTypes: ['render', 'runtime', 'state']
     },
     {
       name: 'safe',
       component: () => import('@/components/SafeMinimalApp').then(m => m.default),
       priority: 4,
-      errorTypes: ['critical', 'complete']
+      errorTypes: ['critical', 'complete', 'fatal']
     }
   ];
 

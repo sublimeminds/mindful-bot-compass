@@ -231,29 +231,34 @@ class DependencyManager {
   }
 
   /**
-   * Reset all dependencies
+   * Clear all dependencies and reset
    */
   reset(): void {
-    for (const [name] of this.dependencies) {
-      const status = this.dependencies.get(name)!;
-      status.status = 'pending';
-      status.attempts = 0;
-      status.dependency = undefined;
-      status.error = undefined;
-      status.loadTime = undefined;
-    }
-    this.notifyListeners();
+    this.dependencies.clear();
+    this.configs.clear();
+    this.listeners.clear();
+    console.log('DependencyManager: Reset complete');
   }
 
   /**
-   * Cleanup resources
+   * Reload a specific dependency
    */
-  cleanup(): void {
-    this.listeners.clear();
-    this.dependencies.clear();
-    this.configs.clear();
+  async reload(name: string): Promise<boolean> {
+    const status = this.dependencies.get(name);
+    if (!status) return false;
+
+    // Reset status
+    status.status = 'pending';
+    status.attempts = 0;
+    status.error = undefined;
+
+    // Reload
+    await this.loadDependency(name);
+    
+    // Check final status after reload
+    const finalStatus = this.dependencies.get(name);
+    return finalStatus?.status === 'loaded' || finalStatus?.status === 'fallback';
   }
 }
 
-// Global dependency manager instance
 export const dependencyManager = new DependencyManager();

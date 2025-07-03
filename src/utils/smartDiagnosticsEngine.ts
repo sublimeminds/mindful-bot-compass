@@ -123,6 +123,29 @@ class SmartDiagnosticsEngine {
       },
       priority: 'low',
       description: 'Checks for PWA capabilities'
+    },
+    {
+      name: 'Dependency Manager',
+      test: async () => {
+        try {
+          const { dependencyManager } = await import('@/utils/dependencyManager');
+          const summary = dependencyManager.getHealthSummary();
+          return summary.healthy > 0.7; // 70% healthy dependencies
+        } catch {
+          return false;
+        }
+      },
+      priority: 'high',
+      autoFix: async () => {
+        try {
+          const { dependencyManager } = await import('@/utils/dependencyManager');
+          dependencyManager.reset();
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      description: 'Verifies dependency loading system health'
     }
   ];
 
@@ -270,11 +293,13 @@ class SmartDiagnosticsEngine {
    */
   private getTestsForErrorType(errorType: string): DiagnosticTest[] {
     const errorTypeMap: Record<string, string[]> = {
-      'import': ['React Runtime', 'Router Functionality', 'Query Client'],
+      'import': ['React Runtime', 'Router Functionality', 'Query Client', 'Dependency Manager'],
       'network': ['Supabase Connection', 'Local Storage'],
       'auth': ['Supabase Connection', 'Local Storage'],
       'component': ['React Runtime', 'Router Functionality'],
-      'runtime': ['React Runtime', 'Local Storage', 'Service Worker']
+      'runtime': ['React Runtime', 'Local Storage', 'Service Worker'],
+      'dependency': ['Dependency Manager', 'React Runtime', 'Query Client'],
+      'timeout': ['Dependency Manager', 'Supabase Connection', 'Query Client']
     };
     
     const relevantTestNames = errorTypeMap[errorType] || Object.keys(errorTypeMap).flat();

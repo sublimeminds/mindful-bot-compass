@@ -67,8 +67,24 @@ class AutoRecoverySystem {
       priority: 1
     },
     {
+      name: 'resetDependencies',
+      condition: (error) => error?.message?.includes('dependency') || error?.message?.includes('module'),
+      action: async () => {
+        try {
+          // Reset dependency manager
+          const { dependencyManager } = await import('./dependencyManager');
+          dependencyManager.reset();
+          
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      priority: 2
+    },
+    {
       name: 'reinitializeServices',
-      condition: (error) => error?.message?.includes('service') || error?.message?.includes('dependency'),
+      condition: (error) => error?.message?.includes('service') || error?.message?.includes('health'),
       action: async () => {
         try {
           // Reinitialize service health manager
@@ -81,7 +97,7 @@ class AutoRecoverySystem {
           return false;
         }
       },
-      priority: 2
+      priority: 3
     },
     {
       name: 'resetModuleCache',
