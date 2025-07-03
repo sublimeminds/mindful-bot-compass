@@ -29,10 +29,31 @@ import {
 } from 'lucide-react';
 
 const EnhancedUserMenu = () => {
-  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const { data: userStats, isLoading } = useUserStats();
+  
+  // Safe auth access
+  let user = null;
+  let signOut = null;
+  try {
+    const authResult = useAuth();
+    user = authResult?.user || null;
+    signOut = authResult?.signOut;
+  } catch (error) {
+    console.log('EnhancedUserMenu: Auth not ready, hiding menu');
+    return null;
+  }
+
+  // Safe stats access
+  let userStats = null;
+  let isLoading = false;
+  try {
+    const statsResult = useUserStats();
+    userStats = statsResult?.data;
+    isLoading = statsResult?.isLoading || false;
+  } catch (error) {
+    console.log('EnhancedUserMenu: Stats not available');
+  }
 
   if (!user) {
     return null;

@@ -45,29 +45,20 @@ export class SafeAuthProvider extends Component<Props, State> {
   private initializeAuth = async () => {
     try {
       console.log('SafeAuthProvider: Starting auth initialization...');
+      console.log('SafeAuthProvider: Component mounted status:', this.mounted);
       
-      // Set up auth state listener FIRST
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(
-        (event, session) => {
-          console.log('SafeAuthProvider: Auth event:', event, session?.user?.email || 'No user');
-          if (this.mounted) {
-            this.setState({
-              user: session?.user ?? null,
-              session: session,
-              loading: false,
-              isInitialized: true
-            });
-          }
-        }
-      );
-      this.authSubscription = subscription;
-
-      // Get initial session immediately
+      // Get initial session FIRST - this is synchronous and faster
+      console.log('SafeAuthProvider: Getting initial session...');
       const { data: { session }, error } = await supabase.auth.getSession();
+      console.log('SafeAuthProvider: Initial session result:', { 
+        hasSession: !!session, 
+        hasUser: !!session?.user, 
+        error: error?.message 
+      });
       
-      console.log('SafeAuthProvider: Initial session check complete');
-      
+      // Set initial state immediately
       if (this.mounted) {
+        console.log('SafeAuthProvider: Setting initial state...');
         this.setState({
           user: session?.user ?? null,
           session: session,
@@ -75,12 +66,46 @@ export class SafeAuthProvider extends Component<Props, State> {
           isInitialized: true,
           error: error || null
         });
+        console.log('SafeAuthProvider: Initial state set successfully');
       }
+      
+      // Set up auth state listener for future changes
+      console.log('SafeAuthProvider: Setting up auth state listener...');
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        (event, session) => {
+          console.log('SafeAuthProvider: Auth state change:', { 
+            event, 
+            hasSession: !!session, 
+            hasUser: !!session?.user,
+            userEmail: session?.user?.email || 'No user'
+          });
+          
+          if (this.mounted) {
+            this.setState({
+              user: session?.user ?? null,
+              session: session,
+              loading: false,
+              isInitialized: true
+            });
+            console.log('SafeAuthProvider: Auth state updated');
+          } else {
+            console.log('SafeAuthProvider: Component unmounted, skipping state update');
+          }
+        }
+      );
+      this.authSubscription = subscription;
+      console.log('SafeAuthProvider: Auth initialization completed successfully');
 
     } catch (error) {
       console.error('SafeAuthProvider: Auth initialization failed:', error);
+      console.error('SafeAuthProvider: Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+      
       if (this.mounted) {
-        // Always initialize, even on error, to prevent infinite loading
+        console.log('SafeAuthProvider: Setting error state...');
         this.setState({ 
           user: null,
           session: null,
@@ -88,6 +113,7 @@ export class SafeAuthProvider extends Component<Props, State> {
           loading: false, 
           isInitialized: true 
         });
+        console.log('SafeAuthProvider: Error state set');
       }
     }
   };

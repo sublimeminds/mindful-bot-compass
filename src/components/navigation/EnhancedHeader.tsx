@@ -46,10 +46,19 @@ import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotif
 import EnhancedButton from '@/components/ui/EnhancedButton';
 
 const EnhancedHeader = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
+  
+  // Safe auth access with fallback
+  let user = null;
+  try {
+    const authResult = useAuth();
+    user = authResult?.user || null;
+  } catch (error) {
+    console.log('EnhancedHeader: Auth not ready yet, rendering without user');
+    user = null;
+  }
 
   const aiFeatures = [
     {
