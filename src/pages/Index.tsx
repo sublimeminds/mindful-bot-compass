@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useBulletproofSEO } from '@/hooks/useBulletproofSEO';
-import SafeHeader from '@/components/SafeHeader';
+import SafeHeader from '@/components/SafeHeaderNew';
 import SafeFooter from '@/components/SafeFooter';
 import SafeReactWrapper from '@/components/SafeReactWrapper';
 import GradientLogo from '@/components/ui/GradientLogo';
