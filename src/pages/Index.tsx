@@ -7,7 +7,7 @@ import GradientLogo from '@/components/ui/GradientLogo';
 import GradientButton from '@/components/ui/GradientButton';
 import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
 import ProgressTracker from '@/components/landing/ProgressTracker';
-import EnhancedPricingSection from '@/components/pricing/EnhancedPricingSection';
+import SimplePricingFallback from '@/components/SimplePricingFallback';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -330,7 +330,7 @@ const Index = () => {
       </section>
 
       {/* Pricing Section */}
-      <EnhancedPricingSection />
+      <SimplePricingFallback />
 
       {/* CTA Section */}
       <section id="cta" className="py-20">

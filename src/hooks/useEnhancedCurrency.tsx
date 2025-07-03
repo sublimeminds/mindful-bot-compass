@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
-import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useAuth } from '@/hooks/useAuth';
 
 interface CurrencyData {
   code: string;
@@ -20,7 +20,7 @@ interface LocationData {
 }
 
 export const useEnhancedCurrency = () => {
-  const { user } = useSimpleApp();
+  const { user } = useAuth();
   const [currency, setCurrency] = useState<CurrencyData>({
     code: 'USD',
     symbol: '$',
@@ -65,32 +65,37 @@ export const useEnhancedCurrency = () => {
     try {
       setLoading(true);
       
-      // Ensure exchange rates are loaded first
-      await enhancedCurrencyService.ensureExchangeRatesLoaded();
-      
-      let selectedCurrency;
-      
-      if (user) {
-        // Get user's saved preference
-        const savedCurrency = await enhancedCurrencyService.getUserCurrencyPreference(user.id);
-        selectedCurrency = await enhancedCurrencyService.getCurrencyData(savedCurrency);
-      } else {
-        // Check localStorage for non-authenticated users
-        const localCurrency = localStorage.getItem('preferred-currency');
-        if (localCurrency) {
-          selectedCurrency = await enhancedCurrencyService.getCurrencyData(localCurrency);
+      // Safe initialization with fallbacks
+      try {
+        await enhancedCurrencyService.ensureExchangeRatesLoaded();
+        
+        let selectedCurrency;
+        
+        if (user) {
+          const savedCurrency = await enhancedCurrencyService.getUserCurrencyPreference(user.id);
+          selectedCurrency = await enhancedCurrencyService.getCurrencyData(savedCurrency);
         } else {
-          // Try to detect from location
-          const location = await enhancedCurrencyService.detectUserLocation();
-          const currencyCode = location?.currency || 'USD';
-          selectedCurrency = await enhancedCurrencyService.getCurrencyData(currencyCode);
+          const localCurrency = localStorage.getItem('preferred-currency');
+          if (localCurrency) {
+            selectedCurrency = await enhancedCurrencyService.getCurrencyData(localCurrency);
+          } else {
+            selectedCurrency = {
+              code: 'USD',
+              symbol: '$',
+              name: 'US Dollar',
+              exchangeRate: 1,
+              region: 'Americas'
+            };
+          }
         }
+        
+        setCurrency(selectedCurrency);
+      } catch (serviceError) {
+        console.warn('Currency service unavailable, using defaults');
+        // Keep safe defaults
       }
-      
-      setCurrency(selectedCurrency);
     } catch (error) {
       console.error('Error initializing currency:', error);
-      // Keep default USD
     } finally {
       setLoading(false);
     }
@@ -131,12 +136,18 @@ export const useEnhancedCurrency = () => {
   };
 
   const formatPrice = (amount: number, fromCurrency: string = 'USD', locale?: string) => {
-    if (loading || isLoadingRates) {
-      return `${currency.symbol}${amount.toFixed(2)}`;
+    // Safe fallback that always works
+    try {
+      if (loading || isLoadingRates) {
+        return `${currency.symbol}${amount.toFixed(2)}`;
+      }
+      
+      const convertedAmount = convertPrice(amount, fromCurrency);
+      return enhancedCurrencyService.formatCurrency(convertedAmount, currency.code, locale);
+    } catch (error) {
+      // Fallback formatting if service fails
+      return `$${amount.toFixed(2)}`;
     }
-    
-    const convertedAmount = convertPrice(amount, fromCurrency);
-    return enhancedCurrencyService.formatCurrency(convertedAmount, currency.code, locale);
   };
 
   const getRegionalPrice = async (basePrice: number, region?: string) => {
