@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from '@/components/Header';
+import EnhancedHeader from '@/components/navigation/EnhancedHeader';
 import Footer from '@/components/Footer';
-import ComprehensivePricingSection from '@/components/landing/ComprehensivePricingSection';
+import SafePricingSection from '@/components/landing/SafePricingSection';
 import { useSimpleSEO } from '@/hooks/useSimpleSEO';
 
 const Pricing = () => {
@@ -13,8 +13,8 @@ const Pricing = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
-      <Header />
-      <ComprehensivePricingSection />
+      <EnhancedHeader />
+      <SafePricingSection />
       <Footer />
     </div>
   );

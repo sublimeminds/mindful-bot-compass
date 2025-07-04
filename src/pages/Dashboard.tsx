@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
+import SafeDashboardSidebar from '@/components/dashboard/SafeDashboardSidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -41,7 +42,42 @@ const Dashboard = () => {
     return null; // Will redirect to auth
   }
 
-  return <DashboardLayoutWithSidebar />;
+  return (
+    <div className="flex h-screen bg-gradient-to-br from-therapy-50 to-calm-50">
+      <SafeDashboardSidebar />
+      <main className="flex-1 p-6">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-3xl font-bold therapy-text-gradient mb-8">Welcome to your Dashboard</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Start</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Begin your mental wellness journey with AI-powered therapy sessions.</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Mood Tracking</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Track your emotional well-being with advanced analytics.</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Progress</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">View your therapy progress and achievements over time.</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
 };
 
 export default Dashboard;

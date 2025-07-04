@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useSimpleSEO } from '@/hooks/useSimpleSEO';
-import MinimalSafeHeader from '@/components/MinimalSafeHeader';
+import EnhancedHeader from '@/components/navigation/EnhancedHeader';
 import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import SafeFooter from '@/components/SafeFooter';
 import GradientLogo from '@/components/ui/GradientLogo';
@@ -164,7 +164,7 @@ const IndexContent = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
       <SimpleErrorBoundary>
-        <MinimalSafeHeader />
+        <EnhancedHeader />
       </SimpleErrorBoundary>
       <ProgressTracker />
       
