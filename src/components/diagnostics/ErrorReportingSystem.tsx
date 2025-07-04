@@ -22,6 +22,10 @@ class ErrorReportingSystem extends React.Component<{}, ErrorReportingSystemState
   private originalConsoleWarn: typeof console.warn;
   private unhandledRejectionHandler: ((event: PromiseRejectionEvent) => void) | null = null;
   private errorHandler: ((event: ErrorEvent) => void) | null = null;
+  private isProcessingError = false;
+  private errorQueue: Array<() => void> = [];
+  private lastErrorTime = 0;
+  private errorDebounceMs = 100;
 
   constructor(props: {}) {
     super(props);
@@ -69,7 +73,7 @@ class ErrorReportingSystem extends React.Component<{}, ErrorReportingSystemState
 
     // Handle unhandled promise rejections
     this.unhandledRejectionHandler = (event: PromiseRejectionEvent) => {
-      this.captureError(
+      this.queueErrorCapture(
         new Error(`Unhandled Promise Rejection: ${event.reason}`),
         'runtime',
         'high',
@@ -80,7 +84,7 @@ class ErrorReportingSystem extends React.Component<{}, ErrorReportingSystemState
 
     // Handle uncaught errors
     this.errorHandler = (event: ErrorEvent) => {
-      this.captureError(
+      this.queueErrorCapture(
         new Error(event.message),
         'runtime',
         'critical',
@@ -112,11 +116,31 @@ class ErrorReportingSystem extends React.Component<{}, ErrorReportingSystemState
   };
 
   private handleConsoleError = (args: any[]) => {
+    // Prevent infinite loops by not processing errors during error processing
+    if (this.isProcessingError) {
+      return;
+    }
+
     const message = args.join(' ');
+    
+    // Skip React development warnings that can cause loops
+    if (message.includes('Warning: Cannot update a component') ||
+        message.includes('Warning: setState') ||
+        message.includes('ErrorReportingSystem') ||
+        message.includes('during an existing state transition')) {
+      return;
+    }
+
+    // Debounce rapid errors
+    const now = Date.now();
+    if (now - this.lastErrorTime < this.errorDebounceMs) {
+      return;
+    }
+    this.lastErrorTime = now;
     
     // Check if it's a React hook error
     if (message.includes('Invalid hook call') || message.includes('useContext') || message.includes('useState')) {
-      this.captureError(
+      this.queueErrorCapture(
         new Error(message),
         'react-hook',
         'critical',
@@ -127,16 +151,18 @@ class ErrorReportingSystem extends React.Component<{}, ErrorReportingSystemState
         }
       );
     } else if (message.includes('Warning:')) {
-      // React warnings
-      this.captureError(
-        new Error(message),
-        'component',
-        'medium',
-        { args, source: 'React Warning' }
-      );
+      // Only capture meaningful React warnings, not development-only ones
+      if (!message.includes('validateDOMNesting') && !message.includes('React.createFactory')) {
+        this.queueErrorCapture(
+          new Error(message),
+          'component',
+          'medium',
+          { args, source: 'React Warning' }
+        );
+      }
     } else {
       // General errors
-      this.captureError(
+      this.queueErrorCapture(
         new Error(message),
         'runtime',
         'high',
@@ -146,14 +172,68 @@ class ErrorReportingSystem extends React.Component<{}, ErrorReportingSystemState
   };
 
   private handleConsoleWarn = (args: any[]) => {
+    // Skip console warnings during error processing to prevent loops
+    if (this.isProcessingError) {
+      return;
+    }
+
     const message = args.join(' ');
     
-    this.captureError(
+    // Skip our own warnings
+    if (message.includes('ErrorReportingSystem')) {
+      return;
+    }
+    
+    this.queueErrorCapture(
       new Error(message),
       'runtime',
       'low',
       { args, source: 'Console Warning' }
     );
+  };
+
+  private queueErrorCapture = (
+    error: Error,
+    type: ErrorReportingSystemState['errors'][0]['type'],
+    severity: ErrorReportingSystemState['errors'][0]['severity'],
+    metadata?: Record<string, any>
+  ) => {
+    // Queue the error capture to avoid setState during render
+    const captureFunction = () => {
+      this.captureError(error, type, severity, metadata);
+    };
+    
+    this.errorQueue.push(captureFunction);
+    
+    // Process queue asynchronously
+    setTimeout(() => {
+      this.processErrorQueue();
+    }, 0);
+  };
+
+  private processErrorQueue = () => {
+    if (this.isProcessingError || this.errorQueue.length === 0) {
+      return;
+    }
+
+    this.isProcessingError = true;
+    
+    try {
+      // Process up to 5 errors at once to prevent overwhelming React
+      const toProcess = this.errorQueue.splice(0, 5);
+      toProcess.forEach(captureFunction => {
+        captureFunction();
+      });
+    } finally {
+      this.isProcessingError = false;
+      
+      // If there are more errors, schedule another processing cycle
+      if (this.errorQueue.length > 0) {
+        setTimeout(() => {
+          this.processErrorQueue();
+        }, 100);
+      }
+    }
   };
 
   private captureError = (
