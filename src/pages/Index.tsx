@@ -5,7 +5,7 @@ import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import SafeFooter from '@/components/SafeFooter';
 import GradientLogo from '@/components/ui/GradientLogo';
 import GradientButton from '@/components/ui/GradientButton';
-import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
+import FunctionalChatDemo from '@/components/demo/FunctionalChatDemo';
 import ProgressTracker from '@/components/landing/ProgressTracker';
 import SimplePricingFallback from '@/components/SimplePricingFallback';
 import { Button } from '@/components/ui/button';
@@ -265,7 +265,7 @@ const IndexContent = () => {
             </p>
           </div>
           
-          <InteractiveChatDemo />
+          <FunctionalChatDemo />
         </div>
       </section>
 

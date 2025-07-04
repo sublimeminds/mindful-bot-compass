@@ -20,7 +20,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import GradientButton from '@/components/ui/GradientButton';
 import GradientLogo from '@/components/ui/GradientLogo';
-import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
+import FunctionalChatDemo from '@/components/demo/FunctionalChatDemo';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -177,7 +177,7 @@ const LandingPage = () => {
             </p>
           </div>
           
-          <InteractiveChatDemo autoStart={false} />
+          <FunctionalChatDemo autoStart={false} />
         </div>
       </section>
 
