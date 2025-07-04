@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import SimplePricingFallback from '@/components/SimplePricingFallback';
+import ComprehensivePricingSection from '@/components/landing/ComprehensivePricingSection';
 import { useSimpleSEO } from '@/hooks/useSimpleSEO';
 
 const Pricing = () => {
@@ -14,7 +14,7 @@ const Pricing = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
       <Header />
-      <SimplePricingFallback />
+      <ComprehensivePricingSection />
       <Footer />
     </div>
   );

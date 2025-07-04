@@ -235,6 +235,11 @@ const AppRouter = () => {
                 <TherapyChatPage />
               </RouteWrapper>
             } />
+            <Route path="/compare-plans" element={
+              <RouteWrapper name="ComparePlans">
+                <Index />
+              </RouteWrapper>
+            } />
           </Routes>
         </Suspense>
     </MinimalErrorBoundary>

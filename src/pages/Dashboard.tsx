@@ -1,17 +1,30 @@
-import React, { useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 
 const Dashboard = () => {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!loading && !user) {
-      navigate('/auth');
-    }
-  }, [user, loading, navigate]);
+    // Safe auth check without hooks
+    const checkAuth = async () => {
+      try {
+        const session = localStorage.getItem('sb-dbwrbjmraodegffupnx-auth-token');
+        if (!session) {
+          window.location.href = '/auth';
+          return;
+        }
+        setUser({ id: 'user' }); // Mock user for now
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        window.location.href = '/auth';
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   if (loading) {
     return (
