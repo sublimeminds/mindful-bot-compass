@@ -5,6 +5,8 @@ import { I18nextProvider } from 'react-i18next';
 import { Toaster } from '@/components/ui/toaster';
 import { MinimalAuthProvider } from '@/components/MinimalAuthProvider';
 import AppRouter from '@/components/AppRouter';
+import ReactHealthMonitor from '@/components/diagnostics/ReactHealthMonitor';
+import { reactHookValidator } from '@/utils/reactHookValidator';
 import i18n from './i18n';
 import './App.css';
 
@@ -54,10 +56,17 @@ class AppErrorBoundary extends React.Component<
 }
 
 function App() {
-  console.log('App: Starting TherapySync with robust setup...');
+  console.log('App: Starting TherapySync with comprehensive React health monitoring...');
+  
+  // Pre-flight React health check
+  const validation = reactHookValidator.validateReactContext();
+  if (!validation.isValid) {
+    console.error('App: React validation failed on startup:', validation.error);
+  }
   
   return (
     <AppErrorBoundary>
+      <ReactHealthMonitor />
       <I18nextProvider i18n={i18n}>
         <div className="min-h-screen bg-white">
           <QueryClientProvider client={queryClient}>

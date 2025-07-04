@@ -30,7 +30,8 @@ export function withReactValidation<P extends object>(
       const validation = reactHookValidator.validateReactContext();
       
       if (!validation.isValid) {
-        DebugLogger.error(`Component validation failed for ${finalComponentName}`, validation.error || new Error('Validation failed'), {
+        const error = validation.error ? new Error(validation.error) : new Error('Validation failed');
+        DebugLogger.error(`Component validation failed for ${finalComponentName}`, error, {
           component: finalComponentName,
           suggestions: validation.suggestions
         });
