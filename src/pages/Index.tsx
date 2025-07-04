@@ -33,13 +33,38 @@ import {
 import { useSafeNavigation } from '@/hooks/useSafeNavigation';
 
 const IndexContent = () => {
+  const [isHooksReady, setIsHooksReady] = React.useState(false);
   const { navigate } = useSafeNavigation();
   
-  useBulletproofSEO({
-    title: 'TherapySync - AI-Powered Mental Health Support',
-    description: 'Experience personalized AI therapy with voice technology, 24/7 crisis support, and culturally sensitive care. Start your mental health journey today.',
-    keywords: 'AI therapy, mental health, online therapy, voice therapy, crisis support, mental wellness'
-  });
+  // Delay hook calls until React is fully stable
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsHooksReady(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  // Only call SEO hook after React is confirmed stable
+  React.useEffect(() => {
+    if (isHooksReady) {
+      try {
+        // Manual SEO update instead of hook to avoid corruption
+        if (typeof document !== 'undefined') {
+          document.title = 'TherapySync - AI-Powered Mental Health Support';
+          
+          let metaDescription = document.querySelector('meta[name="description"]');
+          if (!metaDescription) {
+            metaDescription = document.createElement('meta');
+            metaDescription.setAttribute('name', 'description');
+            document.head.appendChild(metaDescription);
+          }
+          metaDescription.setAttribute('content', 'Experience personalized AI therapy with voice technology, 24/7 crisis support, and culturally sensitive care. Start your mental health journey today.');
+        }
+      } catch (error) {
+        console.warn('SEO update failed, but continuing:', error);
+      }
+    }
+  }, [isHooksReady]);
 
   const features = [
     {

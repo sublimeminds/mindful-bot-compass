@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 interface SEOProps {
   title?: string;
@@ -9,8 +9,9 @@ interface SEOProps {
 // Ultra-simple SEO hook with no external dependencies
 export const useSimpleSEO = ({ title, description, keywords }: SEOProps) => {
   useEffect(() => {
-    // Basic safety checks
+    // Enhanced safety checks
     if (typeof document === 'undefined') return;
+    if (typeof React === 'undefined' || !React) return;
     
     try {
       // Update title

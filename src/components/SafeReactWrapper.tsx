@@ -7,8 +7,39 @@ interface SafeReactWrapperProps {
 
 // Safe wrapper that ensures React is available before rendering components
 const SafeReactWrapper: React.FC<SafeReactWrapperProps> = ({ children, componentName = 'Component' }) => {
-  // Check if React is properly initialized
-  if (!React || typeof React.useState !== 'function' || typeof React.useContext !== 'function') {
+  // Comprehensive React readiness check
+  const isReactFullyReady = () => {
+    try {
+      // Check React object exists
+      if (!React || typeof React !== 'object') return false;
+      
+      // Check essential React methods
+      const requiredMethods = ['createElement', 'Fragment', 'Component'];
+      for (const method of requiredMethods) {
+        if (!React[method]) return false;
+      }
+      
+      // Check essential hooks exist and are functions
+      const requiredHooks = ['useState', 'useEffect', 'useContext'];
+      for (const hook of requiredHooks) {
+        if (!React[hook] || typeof React[hook] !== 'function') return false;
+      }
+      
+      // Test that hooks actually work by trying to create a test component
+      try {
+        React.createElement('div', null, 'test');
+        return true;
+      } catch (error) {
+        console.warn('React createElement test failed:', error);
+        return false;
+      }
+    } catch (error) {
+      console.error('React readiness check failed:', error);
+      return false;
+    }
+  };
+
+  if (!isReactFullyReady()) {
     console.error(`SafeReactWrapper: React hooks not available for ${componentName}`);
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
