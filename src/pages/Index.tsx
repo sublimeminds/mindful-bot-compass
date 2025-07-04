@@ -5,7 +5,7 @@ import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import SafeFooter from '@/components/SafeFooter';
 import GradientLogo from '@/components/ui/GradientLogo';
 import GradientButton from '@/components/ui/GradientButton';
-import FunctionalChatDemo from '@/components/demo/FunctionalChatDemo';
+import StaticChatDemo from '@/components/demo/StaticChatDemo';
 import ProgressTracker from '@/components/landing/ProgressTracker';
 import SimplePricingFallback from '@/components/SimplePricingFallback';
 import { Button } from '@/components/ui/button';
@@ -150,7 +150,9 @@ const IndexContent = () => {
       <SimpleErrorBoundary>
         <EnhancedHeader />
       </SimpleErrorBoundary>
-      <ProgressTracker />
+      <SimpleErrorBoundary>
+        <ProgressTracker />
+      </SimpleErrorBoundary>
       
       {/* Hero Section */}
       <section id="hero" className="py-20 lg:py-32 relative overflow-hidden">
@@ -265,7 +267,7 @@ const IndexContent = () => {
             </p>
           </div>
           
-          <FunctionalChatDemo />
+          <StaticChatDemo />
         </div>
       </section>
 
