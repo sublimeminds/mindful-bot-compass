@@ -24,13 +24,24 @@ import {
   Mail,
   LifeBuoy
 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
 import GradientLogo from '@/components/ui/GradientLogo';
 import LanguageSelector from '@/components/ui/LanguageSelector';
 import PureDropdownMenu from './PureDropdownMenu';
 
+// Context-independent header that doesn't use React hooks
 const StableHeader = () => {
-  const { user, loading } = useAuth();
+  // Use browser-native detection instead of React context
+  const checkAuthState = () => {
+    try {
+      // Check localStorage for session without using Supabase hooks
+      const session = localStorage.getItem('sb-dbwrbjmraodegffupnx-auth-token');
+      return !!session;
+    } catch {
+      return false;
+    }
+  };
+  
+  const hasAuth = checkAuthState();
 
   // Dropdown menu data
   const aiFeatures = [
@@ -213,9 +224,7 @@ const StableHeader = () => {
           <div className="flex items-center space-x-4">
             <LanguageSelector />
             
-            {loading ? (
-              <div className="w-8 h-8 rounded-full bg-therapy-100 animate-pulse" />
-            ) : user ? (
+            {hasAuth ? (
               <div className="flex items-center space-x-3">
                 <Button variant="ghost" size="sm">
                   <Bell className="h-5 w-5" />
