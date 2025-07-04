@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { I18nextProvider } from 'react-i18next';
 import { Toaster } from '@/components/ui/toaster';
-import BulletproofAuthProvider from '@/components/auth/BulletproofAuthProvider';
+import { MinimalAuthProvider } from '@/components/MinimalAuthProvider';
 import App from './App.tsx';
 import './index.css';
 import { bulletproofServiceManager } from './utils/bulletproofServiceManager';
@@ -82,10 +82,10 @@ root.render(
           <div className="min-h-screen bg-white">
             <QueryClientProvider client={queryClient}>
               <BrowserRouter>
-                <BulletproofAuthProvider>
+                <MinimalAuthProvider>
                   <App />
                   <Toaster />
-                </BulletproofAuthProvider>
+                </MinimalAuthProvider>
               </BrowserRouter>
             </QueryClientProvider>
           </div>
