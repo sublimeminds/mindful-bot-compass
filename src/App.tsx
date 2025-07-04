@@ -5,8 +5,6 @@ import { I18nextProvider } from 'react-i18next';
 import { Toaster } from '@/components/ui/toaster';
 import { MinimalAuthProvider } from '@/components/MinimalAuthProvider';
 import AppRouter from '@/components/AppRouter';
-import DiagnosticSystemLoader from '@/components/diagnostics/DiagnosticSystemLoader';
-import { reactHookValidator } from '@/utils/reactHookValidator';
 import i18n from './i18n';
 import './App.css';
 
@@ -56,15 +54,7 @@ class AppErrorBoundary extends React.Component<
 }
 
 function App() {
-  console.log('App: Starting TherapySync with bulletproof loading and comprehensive diagnostics...');
-  
-  // Move React health check to useEffect to avoid hook violations during render
-  React.useEffect(() => {
-    const validation = reactHookValidator.validateReactContext();
-    if (!validation.isValid) {
-      console.error('App: React validation failed on startup:', validation.error);
-    }
-  }, []);
+  console.log('App: Starting TherapySync...');
   
   return (
     <AppErrorBoundary>
@@ -80,8 +70,6 @@ function App() {
           </QueryClientProvider>
         </div>
       </I18nextProvider>
-      {/* Load diagnostic systems after app is stable */}
-      <DiagnosticSystemLoader />
     </AppErrorBoundary>
   );
 }
