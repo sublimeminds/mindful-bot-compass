@@ -2,6 +2,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import MinimalErrorBoundary from "@/components/MinimalErrorBoundary";
+import BulletproofPageWrapper from "@/components/BulletproofPageWrapper";
 
 // PHASE 4: Replace lazy loading with direct imports to eliminate blank page issues
 import Index from "../pages/Index";
@@ -50,16 +51,18 @@ const SafeFallback = () => (
   </div>
 );
 
-// PHASE 2: Component isolation with error boundaries for each route
+// PHASE 2: Component isolation with bulletproof error boundaries for each route
 const IsolatedRouteWrapper: React.FC<{ children: React.ReactNode; name: string }> = ({ children, name }) => {
-  console.log(`IsolatedRouteWrapper: Rendering ${name} page`);
+  console.log(`IsolatedRouteWrapper: Rendering ${name} page with bulletproof protection`);
   
   return (
-    <MinimalErrorBoundary>
-      <React.Suspense fallback={<SafeFallback />}>
-        {children}
-      </React.Suspense>
-    </MinimalErrorBoundary>
+    <BulletproofPageWrapper pageName={name}>
+      <MinimalErrorBoundary>
+        <React.Suspense fallback={<SafeFallback />}>
+          {children}
+        </React.Suspense>
+      </MinimalErrorBoundary>
+    </BulletproofPageWrapper>
   );
 };
 
