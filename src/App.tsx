@@ -74,7 +74,6 @@ function App() {
       <ReactHealthDashboard />
       <ReactReadinessGate 
         componentName="TherapySync App"
-        dependencies={['React', 'ReactDOM']}
         onReady={() => console.log('App: All systems ready')}
         onError={(error) => console.error('App: Readiness check failed:', error)}
       >

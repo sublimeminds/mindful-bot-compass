@@ -56,6 +56,10 @@ class ReactReadinessGate extends React.Component<LoadingGateProps, LoadingGateSt
       // Stage 2: Component Dependencies Check
       if (this.props.dependencies) {
         for (const dep of this.props.dependencies) {
+          // Skip React/ReactDOM checks as they're ES modules, not window globals
+          if (dep === 'React' || dep === 'ReactDOM') {
+            continue;
+          }
           if (!(window as any)[dep]) {
             throw new Error(`Dependency ${dep} not available`);
           }
