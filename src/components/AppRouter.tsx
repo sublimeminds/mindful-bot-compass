@@ -1,17 +1,48 @@
 
-import React, { Suspense, lazy } from "react";
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 import MinimalErrorBoundary from "@/components/MinimalErrorBoundary";
 
-// Safe fallback for failed lazy loads
+// PHASE 4: Replace lazy loading with direct imports to eliminate blank page issues
+import Index from "../pages/Index";
+import MinimalIndex from "../pages/MinimalIndex";
+import Dashboard from "../pages/Dashboard";
+import EnhancedAuth from "../pages/EnhancedAuth";
+import EnhancedOnboardingPage from "../pages/EnhancedOnboardingPage";
+import Pricing from "../pages/Pricing";
+import FeaturesOverview from "../pages/FeaturesOverview";
+import HowItWorks from "../pages/HowItWorks";
+import FeaturesShowcase from "../pages/FeaturesShowcase";
+import TherapyTypes from "../pages/TherapyTypes";
+import CommunityFeatures from "../pages/CommunityFeatures";
+import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
+import CulturalAIFeatures from "../pages/CulturalAIFeatures";
+import VoiceTechnology from "../pages/VoiceTechnology";
+import CrisisSupport from "../pages/CrisisSupport";
+import CrisisResources from "../pages/CrisisResources";
+import MoodTracking from "../pages/MoodTracking";
+import Integrations from "../pages/Integrations";
+import Community from "../pages/Community";
+import Support from "../pages/Support";
+import Help from "../pages/Help";
+import TherapyChatPage from "../pages/TherapyChatPage";
+import QuantumTherapy from "../pages/QuantumTherapy";
+import BlockchainHealth from "../pages/BlockchainHealth";
+import NeuralInterface from "../pages/NeuralInterface";
+import TestPage from "../pages/TestPage";
+import ComponentHealthCheck from "../pages/ComponentHealthCheck";
+import UserControlledRecoveryDashboard from "../components/UserControlledRecoveryDashboard";
+import RecoveryMonitoringDashboard from "../components/analytics/RecoveryMonitoringDashboard";
+
+// Safe fallback for any component failures
 const SafeFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gray-50">
-    <div className="text-center p-8">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">Page Loading Error</h2>
-      <p className="text-gray-600 mb-4">This page couldn't load properly.</p>
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
+    <div className="text-center p-8 bg-white rounded-lg shadow-xl max-w-md">
+      <h2 className="text-2xl font-bold text-therapy-600 mb-4">TherapySync</h2>
+      <p className="text-slate-600 mb-4">This page couldn't load properly.</p>
       <button 
         onClick={() => window.location.href = '/'}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="bg-therapy-600 text-white px-6 py-3 rounded-lg hover:bg-therapy-700 transition-colors font-semibold"
       >
         Go Home
       </button>
@@ -19,229 +50,176 @@ const SafeFallback = () => (
   </div>
 );
 
-// Lazy load pages with safe fallbacks
-const createSafeLazyComponent = (importFn: () => Promise<any>, fallbackName: string) => {
-  return lazy(() => 
-    importFn().catch((error) => {
-      console.error(`Failed to load ${fallbackName}:`, error);
-      return { default: SafeFallback };
-    })
+// PHASE 2: Component isolation with error boundaries for each route
+const IsolatedRouteWrapper: React.FC<{ children: React.ReactNode; name: string }> = ({ children, name }) => {
+  console.log(`IsolatedRouteWrapper: Rendering ${name} page`);
+  
+  return (
+    <MinimalErrorBoundary>
+      <React.Suspense fallback={<SafeFallback />}>
+        {children}
+      </React.Suspense>
+    </MinimalErrorBoundary>
   );
 };
 
-const Index = createSafeLazyComponent(() => import("../pages/Index"), "Index");
-const MinimalIndex = createSafeLazyComponent(() => import("../pages/MinimalIndex"), "MinimalIndex");
-const Dashboard = createSafeLazyComponent(() => import("../pages/Dashboard"), "Dashboard");
-const EnhancedAuth = createSafeLazyComponent(() => import("../pages/EnhancedAuth"), "EnhancedAuth");
-const EnhancedOnboardingPage = createSafeLazyComponent(() => import("../pages/EnhancedOnboardingPage"), "EnhancedOnboardingPage");
-const Pricing = createSafeLazyComponent(() => import("../pages/Pricing"), "Pricing");
-const FeaturesOverview = createSafeLazyComponent(() => import("../pages/FeaturesOverview"), "FeaturesOverview");
-const HowItWorks = createSafeLazyComponent(() => import("../pages/HowItWorks"), "HowItWorks");
-const FeaturesShowcase = createSafeLazyComponent(() => import("../pages/FeaturesShowcase"), "FeaturesShowcase");
-const TherapyTypes = createSafeLazyComponent(() => import("../pages/TherapyTypes"), "TherapyTypes");
-const CommunityFeatures = createSafeLazyComponent(() => import("../pages/CommunityFeatures"), "CommunityFeatures");
-const FamilyFeaturesPage = createSafeLazyComponent(() => import("../pages/FamilyFeaturesPage"), "FamilyFeaturesPage");
-const CulturalAIFeatures = createSafeLazyComponent(() => import("../pages/CulturalAIFeatures"), "CulturalAIFeatures");
-const VoiceTechnology = createSafeLazyComponent(() => import("../pages/VoiceTechnology"), "VoiceTechnology");
-const CrisisSupport = createSafeLazyComponent(() => import("../pages/CrisisSupport"), "CrisisSupport");
-const CrisisResources = createSafeLazyComponent(() => import("../pages/CrisisResources"), "CrisisResources");
-const MoodTracking = createSafeLazyComponent(() => import("../pages/MoodTracking"), "MoodTracking");
-const Integrations = createSafeLazyComponent(() => import("../pages/Integrations"), "Integrations");
-const Community = createSafeLazyComponent(() => import("../pages/Community"), "Community");
-const Support = createSafeLazyComponent(() => import("../pages/Support"), "Support");
-const Help = createSafeLazyComponent(() => import("../pages/Help"), "Help");
-const TherapyChatPage = createSafeLazyComponent(() => import("../pages/TherapyChatPage"), "TherapyChatPage");
-const QuantumTherapy = createSafeLazyComponent(() => import("../pages/QuantumTherapy"), "QuantumTherapy");
-const BlockchainHealth = createSafeLazyComponent(() => import("../pages/BlockchainHealth"), "BlockchainHealth");
-const NeuralInterface = createSafeLazyComponent(() => import("../pages/NeuralInterface"), "NeuralInterface");
-const TestPage = createSafeLazyComponent(() => import("../pages/TestPage"), "TestPage");
-const ComponentHealthCheck = createSafeLazyComponent(() => import("../pages/ComponentHealthCheck"), "ComponentHealthCheck");
-const UserControlledRecoveryDashboard = createSafeLazyComponent(() => import("../components/UserControlledRecoveryDashboard"), "RecoveryDashboard");
-const RecoveryMonitoringDashboard = createSafeLazyComponent(() => import("../components/analytics/RecoveryMonitoringDashboard"), "RecoveryMonitoring");
-
-// Enhanced loading fallback with TherapySync branding
-const PageLoadingFallback = () => (
-  <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
-    <div className="text-center">
-      <div className="relative mb-6">
-        {/* Gradient swirl loading animation */}
-        <div className="w-16 h-16 relative animate-spin">
-          <div className="absolute inset-0 bg-gradient-to-br from-therapy-500 via-calm-500 to-therapy-600 rounded-full opacity-80"></div>
-          <div className="absolute inset-2 bg-gradient-to-tr from-white/30 via-transparent to-white/20 rounded-full"></div>
-          <div className="absolute inset-4 bg-white/90 rounded-full animate-pulse"></div>
-        </div>
-      </div>
-      <h2 className="text-xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent mb-2">
-        TherapySync
-      </h2>
-      <p className="text-therapy-600/70">Loading...</p>
-    </div>
-  </div>
-);
-
-// Simplified route wrapper
-const RouteWrapper: React.FC<{ children: React.ReactNode; name: string }> = ({ children, name }) => {
-  console.log(`RouteWrapper: Rendering ${name} page`);
-  return children;
-};
-
 const AppRouter = () => {
+  console.log('AppRouter: Initializing stable router with direct imports');
+  
   return (
     <MinimalErrorBoundary>
-      <Suspense fallback={<PageLoadingFallback />}>
-        <Routes>
-            <Route path="/" element={
-              <RouteWrapper name="Index">
-                <Index />
-              </RouteWrapper>
-            } />
-            <Route path="/minimal" element={
-              <RouteWrapper name="MinimalIndex">
-                <MinimalIndex />
-              </RouteWrapper>
-            } />
-            <Route path="/auth" element={
-              <RouteWrapper name="Auth">
-                <EnhancedAuth />
-              </RouteWrapper>
-            } />
-            <Route path="/onboarding" element={
-              <RouteWrapper name="Onboarding">
-                <EnhancedOnboardingPage />
-              </RouteWrapper>
-            } />
-            <Route path="/dashboard" element={
-              <RouteWrapper name="Dashboard">
-                <Dashboard />
-              </RouteWrapper>
-            } />
-            <Route path="/quantum-therapy" element={
-              <RouteWrapper name="QuantumTherapy">
-                <QuantumTherapy />
-              </RouteWrapper>
-            } />
-            <Route path="/blockchain-health" element={
-              <RouteWrapper name="BlockchainHealth">
-                <BlockchainHealth />
-              </RouteWrapper>
-            } />
-            <Route path="/neural-interface" element={
-              <RouteWrapper name="NeuralInterface">
-                <NeuralInterface />
-              </RouteWrapper>
-            } />
-            <Route path="/test" element={
-              <RouteWrapper name="Test">
-                <TestPage />
-              </RouteWrapper>
-            } />
-            <Route path="/component-health" element={
-              <RouteWrapper name="ComponentHealth">
-                <ComponentHealthCheck />
-              </RouteWrapper>
-            } />
-            <Route path="/recovery-dashboard" element={
-              <RouteWrapper name="RecoveryDashboard">
-                <UserControlledRecoveryDashboard />
-              </RouteWrapper>
-            } />
-            <Route path="/recovery-monitoring" element={
-              <RouteWrapper name="RecoveryMonitoring">
-                <RecoveryMonitoringDashboard />
-              </RouteWrapper>
-            } />
-            <Route path="/pricing" element={
-              <RouteWrapper name="Pricing">
-                <Pricing />
-              </RouteWrapper>
-            } />
-            <Route path="/features-overview" element={
-              <RouteWrapper name="FeaturesOverview">
-                <FeaturesOverview />
-              </RouteWrapper>
-            } />
-            <Route path="/how-it-works" element={
-              <RouteWrapper name="HowItWorks">
-                <HowItWorks />
-              </RouteWrapper>
-            } />
-            <Route path="/features-showcase" element={
-              <RouteWrapper name="FeaturesShowcase">
-                <FeaturesShowcase />
-              </RouteWrapper>
-            } />
-            <Route path="/therapy-types" element={
-              <RouteWrapper name="TherapyTypes">
-                <TherapyTypes />
-              </RouteWrapper>
-            } />
-            <Route path="/community-features" element={
-              <RouteWrapper name="CommunityFeatures">
-                <CommunityFeatures />
-              </RouteWrapper>
-            } />
-            <Route path="/family-features" element={
-              <RouteWrapper name="FamilyFeatures">
-                <FamilyFeaturesPage />
-              </RouteWrapper>
-            } />
-            <Route path="/cultural-ai-features" element={
-              <RouteWrapper name="CulturalAIFeatures">
-                <CulturalAIFeatures />
-              </RouteWrapper>
-            } />
-            <Route path="/voice-technology" element={
-              <RouteWrapper name="VoiceTechnology">
-                <VoiceTechnology />
-              </RouteWrapper>
-            } />
-            <Route path="/crisis-support" element={
-              <RouteWrapper name="CrisisSupport">
-                <CrisisSupport />
-              </RouteWrapper>
-            } />
-            <Route path="/crisis-resources" element={
-              <RouteWrapper name="CrisisResources">
-                <CrisisResources />
-              </RouteWrapper>
-            } />
-            <Route path="/mood-tracking" element={
-              <RouteWrapper name="MoodTracking">
-                <MoodTracking />
-              </RouteWrapper>
-            } />
-            <Route path="/integrations" element={
-              <RouteWrapper name="Integrations">
-                <Integrations />
-              </RouteWrapper>
-            } />
-            <Route path="/community" element={
-              <RouteWrapper name="Community">
-                <Community />
-              </RouteWrapper>
-            } />
-            <Route path="/support" element={
-              <RouteWrapper name="Support">
-                <Support />
-              </RouteWrapper>
-            } />
-            <Route path="/help" element={
-              <RouteWrapper name="Help">
-                <Help />
-              </RouteWrapper>
-            } />
-            <Route path="/therapy-chat" element={
-              <RouteWrapper name="TherapyChat">
-                <TherapyChatPage />
-              </RouteWrapper>
-            } />
-            <Route path="/compare-plans" element={
-              <RouteWrapper name="ComparePlans">
-                <Index />
-              </RouteWrapper>
-            } />
-          </Routes>
-        </Suspense>
+      <Routes>
+        <Route path="/" element={
+          <IsolatedRouteWrapper name="Index">
+            <Index />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/minimal" element={
+          <IsolatedRouteWrapper name="MinimalIndex">
+            <MinimalIndex />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/auth" element={
+          <IsolatedRouteWrapper name="Auth">
+            <EnhancedAuth />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/onboarding" element={
+          <IsolatedRouteWrapper name="Onboarding">
+            <EnhancedOnboardingPage />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/dashboard" element={
+          <IsolatedRouteWrapper name="Dashboard">
+            <Dashboard />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/quantum-therapy" element={
+          <IsolatedRouteWrapper name="QuantumTherapy">
+            <QuantumTherapy />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/blockchain-health" element={
+          <IsolatedRouteWrapper name="BlockchainHealth">
+            <BlockchainHealth />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/neural-interface" element={
+          <IsolatedRouteWrapper name="NeuralInterface">
+            <NeuralInterface />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/test" element={
+          <IsolatedRouteWrapper name="Test">
+            <TestPage />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/component-health" element={
+          <IsolatedRouteWrapper name="ComponentHealth">
+            <ComponentHealthCheck />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/recovery-dashboard" element={
+          <IsolatedRouteWrapper name="RecoveryDashboard">
+            <UserControlledRecoveryDashboard />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/recovery-monitoring" element={
+          <IsolatedRouteWrapper name="RecoveryMonitoring">
+            <RecoveryMonitoringDashboard />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/pricing" element={
+          <IsolatedRouteWrapper name="Pricing">
+            <Pricing />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/features-overview" element={
+          <IsolatedRouteWrapper name="FeaturesOverview">
+            <FeaturesOverview />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/how-it-works" element={
+          <IsolatedRouteWrapper name="HowItWorks">
+            <HowItWorks />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/features-showcase" element={
+          <IsolatedRouteWrapper name="FeaturesShowcase">
+            <FeaturesShowcase />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/therapy-types" element={
+          <IsolatedRouteWrapper name="TherapyTypes">
+            <TherapyTypes />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/community-features" element={
+          <IsolatedRouteWrapper name="CommunityFeatures">
+            <CommunityFeatures />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/family-features" element={
+          <IsolatedRouteWrapper name="FamilyFeatures">
+            <FamilyFeaturesPage />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/cultural-ai-features" element={
+          <IsolatedRouteWrapper name="CulturalAIFeatures">
+            <CulturalAIFeatures />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/voice-technology" element={
+          <IsolatedRouteWrapper name="VoiceTechnology">
+            <VoiceTechnology />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/crisis-support" element={
+          <IsolatedRouteWrapper name="CrisisSupport">
+            <CrisisSupport />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/crisis-resources" element={
+          <IsolatedRouteWrapper name="CrisisResources">
+            <CrisisResources />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/mood-tracking" element={
+          <IsolatedRouteWrapper name="MoodTracking">
+            <MoodTracking />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/integrations" element={
+          <IsolatedRouteWrapper name="Integrations">
+            <Integrations />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/community" element={
+          <IsolatedRouteWrapper name="Community">
+            <Community />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/support" element={
+          <IsolatedRouteWrapper name="Support">
+            <Support />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/help" element={
+          <IsolatedRouteWrapper name="Help">
+            <Help />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/therapy-chat" element={
+          <IsolatedRouteWrapper name="TherapyChat">
+            <TherapyChatPage />
+          </IsolatedRouteWrapper>
+        } />
+        <Route path="/compare-plans" element={
+          <IsolatedRouteWrapper name="ComparePlans">
+            <Index />
+          </IsolatedRouteWrapper>
+        } />
+      </Routes>
     </MinimalErrorBoundary>
   );
 };
