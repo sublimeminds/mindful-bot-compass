@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useSimpleSEO } from '@/hooks/useSimpleSEO';
 import EnhancedHeader from '@/components/navigation/EnhancedHeader';
 import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import SafeFooter from '@/components/SafeFooter';
@@ -31,37 +30,24 @@ import {
 import { safeNavigate } from '@/components/SafeNavigation';
 
 const IndexContent = () => {
-  const [isHooksReady, setIsHooksReady] = React.useState(false);
-  
-  // Delay hook calls until React is fully stable
+  // Manual SEO update without hooks to avoid corruption
   React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsHooksReady(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-  
-  // Only call SEO hook after React is confirmed stable
-  React.useEffect(() => {
-    if (isHooksReady) {
-      try {
-        // Manual SEO update instead of hook to avoid corruption
-        if (typeof document !== 'undefined') {
-          document.title = 'TherapySync - AI-Powered Mental Health Support';
-          
-          let metaDescription = document.querySelector('meta[name="description"]');
-          if (!metaDescription) {
-            metaDescription = document.createElement('meta');
-            metaDescription.setAttribute('name', 'description');
-            document.head.appendChild(metaDescription);
-          }
-          metaDescription.setAttribute('content', 'Experience personalized AI therapy with voice technology, 24/7 crisis support, and culturally sensitive care. Start your mental health journey today.');
+    try {
+      if (typeof document !== 'undefined') {
+        document.title = 'TherapySync - AI-Powered Mental Health Support';
+        
+        let metaDescription = document.querySelector('meta[name="description"]');
+        if (!metaDescription) {
+          metaDescription = document.createElement('meta');
+          metaDescription.setAttribute('name', 'description');
+          document.head.appendChild(metaDescription);
         }
-      } catch (error) {
-        console.warn('SEO update failed, but continuing:', error);
+        metaDescription.setAttribute('content', 'Experience personalized AI therapy with voice technology, 24/7 crisis support, and culturally sensitive care. Start your mental health journey today.');
       }
+    } catch (error) {
+      console.warn('SEO update failed, but continuing:', error);
     }
-  }, [isHooksReady]);
+  }, []);
 
   const features = [
     {
