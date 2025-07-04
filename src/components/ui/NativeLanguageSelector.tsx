@@ -50,7 +50,7 @@ const NativeLanguageSelector = () => {
     };
   }, [isOpen]);
 
-  const handleLanguageChange = (languageCode: string) => {
+  const handleLanguageChange = async (languageCode: string) => {
     const newLang = supportedLanguages.find(lang => lang.code === languageCode);
     if (newLang) {
       setCurrentLang(newLang);
@@ -62,6 +62,22 @@ const NativeLanguageSelector = () => {
         document.documentElement.lang = languageCode;
       } catch (error) {
         console.warn('Language persistence failed:', error);
+      }
+
+      // Try to integrate with i18next if available
+      try {
+        // Get i18next instance safely
+        const i18nModule = await import('react-i18next');
+        if (i18nModule && i18nModule.useTranslation) {
+          // Try to get i18n instance
+          const i18n = (window as any).i18next;
+          if (i18n && typeof i18n.changeLanguage === 'function') {
+            await i18n.changeLanguage(languageCode);
+          }
+        }
+      } catch (error) {
+        // Silent fail - i18next integration is optional
+        console.log('i18next integration skipped:', error);
       }
     }
   };
