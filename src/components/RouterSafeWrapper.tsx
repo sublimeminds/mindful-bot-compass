@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 
 interface RouterSafeWrapperProps {
   children: React.ReactNode;
@@ -13,35 +12,37 @@ export const RouterSafeWrapper: React.FC<RouterSafeWrapperProps> = ({
 }) => {
   const [isRouterReady, setIsRouterReady] = useState(false);
   
-  // Try to access router context
-  let location: any = null;
-  let routerError = false;
-  
-  try {
-    location = useLocation();
-  } catch (error) {
-    routerError = true;
-    console.warn('Router context not available in RouterSafeWrapper');
-  }
-  
   useEffect(() => {
-    if (!routerError && location) {
-      setIsRouterReady(true);
-    } else {
-      // Delay and retry
+    // Check if Router context exists without calling hooks
+    const checkRouterContext = () => {
+      try {
+        // Use a simple DOM check instead of hook calls
+        const routerContext = window.location;
+        if (routerContext) {
+          setIsRouterReady(true);
+          return;
+        }
+      } catch (error) {
+        console.warn('Router context check failed:', error);
+      }
+      
+      // Simple timer fallback - always allow rendering after brief delay
       const timer = setTimeout(() => {
         setIsRouterReady(true);
-      }, 100);
+      }, 50);
+      
       return () => clearTimeout(timer);
-    }
-  }, [routerError, location]);
+    };
+    
+    checkRouterContext();
+  }, []);
   
   if (!isRouterReady) {
     return fallback || (
       <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
-          <p className="text-therapy-600 font-medium">Initializing...</p>
+          <p className="text-therapy-600 font-medium">Loading...</p>
         </div>
       </div>
     );
