@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { MinimalAuthProvider } from '@/components/MinimalAuthProvider';
 import AppRouter from '@/components/AppRouter';
 import i18n from '../i18n';
-import './App.css';
+import '../App.css';
 
 // Create QueryClient
 const queryClient = new QueryClient({
