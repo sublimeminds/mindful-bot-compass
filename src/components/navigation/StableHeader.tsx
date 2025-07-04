@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { safeNavigate, SafeNavigationButton } from '@/components/SafeNavigation';
 import { Button } from '@/components/ui/button';
 import { 
   Brain, 
@@ -30,7 +30,6 @@ import LanguageSelector from '@/components/ui/LanguageSelector';
 import PureDropdownMenu from './PureDropdownMenu';
 
 const StableHeader = () => {
-  const navigate = useNavigate();
   const { user, loading } = useAuth();
 
   // Dropdown menu data
@@ -181,10 +180,10 @@ const StableHeader = () => {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+          <SafeNavigationButton href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <GradientLogo size="sm" />
             <span className="text-xl font-bold therapy-text-gradient">TherapySync</span>
-          </Link>
+          </SafeNavigationButton>
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
@@ -192,21 +191,21 @@ const StableHeader = () => {
               trigger={{ icon: Brain, label: "AI" }}
               title="AI Features"
               items={aiFeatures}
-              onItemClick={(href) => navigate(href)}
+              onItemClick={(href) => safeNavigate(href)}
             />
             
             <PureDropdownMenu
               trigger={{ icon: Settings, label: "Platform" }}
               title="Platform Features"
               items={platformFeatures}
-              onItemClick={(href) => navigate(href)}
+              onItemClick={(href) => safeNavigate(href)}
             />
             
             <PureDropdownMenu
               trigger={{ icon: HelpCircle, label: "Help" }}
               title="Help & Support"
               items={helpResources}
-              onItemClick={(href) => navigate(href)}
+              onItemClick={(href) => safeNavigate(href)}
             />
           </nav>
 
@@ -229,13 +228,13 @@ const StableHeader = () => {
               <div className="flex items-center space-x-3">
                 <Button 
                   variant="ghost" 
-                  onClick={() => navigate('/auth')}
+                  onClick={() => safeNavigate('/auth')}
                   className="text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50"
                 >
                   Sign In
                 </Button>
                 <Button 
-                  onClick={() => navigate('/onboarding')}
+                  onClick={() => safeNavigate('/onboarding')}
                   className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white px-6 py-2"
                 >
                   Get Started

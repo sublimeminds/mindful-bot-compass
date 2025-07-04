@@ -2,11 +2,10 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Users, Shield } from "lucide-react";
-import { useNavigate } from 'react-router-dom';
+import { safeNavigate } from '@/components/SafeNavigation';
 import GradientButton from '@/components/ui/GradientButton';
 
 const HeroSection = () => {
-  const navigate = useNavigate();
 
   return (
     <section className="relative py-20 px-4 bg-gradient-to-br from-harmony-50 via-therapy-50 to-flow-50 overflow-hidden">
@@ -55,7 +54,7 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <GradientButton 
               size="lg" 
-              onClick={() => navigate('/get-started')}
+              onClick={() => safeNavigate('/get-started')}
               className="px-8 py-4 text-lg font-semibold"
             >
               Start Your Journey
@@ -65,7 +64,7 @@ const HeroSection = () => {
             <Button 
               variant="outline" 
               size="lg"
-              onClick={() => navigate('/auth')}
+              onClick={() => safeNavigate('/auth')}
               className="px-8 py-4 text-lg font-semibold border-2 border-therapy-200 hover:bg-therapy-50"
             >
               Sign In

@@ -1,11 +1,9 @@
 
 import React from 'react';
-import { useBulletproofSEO } from '@/hooks/useBulletproofSEO';
-import EnhancedHeader from '@/components/navigation/EnhancedHeader';
+import { useSimpleSEO } from '@/hooks/useSimpleSEO';
+import StableHeader from '@/components/navigation/StableHeader';
 import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import SafeFooter from '@/components/SafeFooter';
-import SafeReactWrapper from '@/components/SafeReactWrapper';
-import { RouterSafeWrapper } from '@/components/RouterSafeWrapper';
 import GradientLogo from '@/components/ui/GradientLogo';
 import GradientButton from '@/components/ui/GradientButton';
 import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
@@ -30,11 +28,10 @@ import {
   Zap,
   MessageSquare
 } from 'lucide-react';
-import { useSafeNavigation } from '@/hooks/useSafeNavigation';
+import { safeNavigate } from '@/components/SafeNavigation';
 
 const IndexContent = () => {
   const [isHooksReady, setIsHooksReady] = React.useState(false);
-  const { navigate } = useSafeNavigation();
   
   // Delay hook calls until React is fully stable
   React.useEffect(() => {
@@ -167,7 +164,7 @@ const IndexContent = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
       <SimpleErrorBoundary>
-        <EnhancedHeader />
+        <StableHeader />
       </SimpleErrorBoundary>
       <ProgressTracker />
       
@@ -201,7 +198,7 @@ const IndexContent = () => {
               <GradientButton 
                 size="lg" 
                 className="px-8 py-4 text-lg font-bold"
-                onClick={() => navigate('/onboarding')}
+                onClick={() => safeNavigate('/onboarding')}
               >
                 <Heart className="h-5 w-5 mr-2" />
                 Start Free Trial
@@ -401,7 +398,7 @@ const IndexContent = () => {
                 </ul>
                 <Button 
                   className="w-full font-semibold text-base py-3 transition-all duration-300 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white shadow-md hover:shadow-lg hover:scale-105"
-                  onClick={() => navigate('/onboarding')}
+                  onClick={() => safeNavigate('/onboarding')}
                 >
                   Get Started Free
                 </Button>
@@ -445,7 +442,7 @@ const IndexContent = () => {
                 </ul>
                 <Button 
                   className="w-full font-semibold text-base py-3 transition-all duration-300 bg-gradient-to-r from-therapy-500 via-calm-500 to-therapy-600 hover:from-therapy-600 hover:via-calm-600 hover:to-therapy-700 text-white shadow-lg hover:shadow-xl hover:scale-105"
-                  onClick={() => navigate('/onboarding')}
+                  onClick={() => safeNavigate('/onboarding')}
                 >
                   Start Pro
                 </Button>
@@ -486,7 +483,7 @@ const IndexContent = () => {
                 </ul>
                 <Button 
                   className="w-full font-semibold text-base py-3 transition-all duration-300 bg-gradient-to-r from-harmony-500 to-balance-500 hover:from-harmony-600 hover:to-balance-600 text-white shadow-lg hover:shadow-lg hover:scale-105"
-                  onClick={() => navigate('/onboarding')}
+                  onClick={() => safeNavigate('/onboarding')}
                 >
                   Start Premium
                 </Button>
@@ -543,7 +540,7 @@ const IndexContent = () => {
                       </div>
                       <Button 
                         className="w-full font-semibold py-3 bg-gradient-to-r from-harmony-500 to-balance-500 hover:from-harmony-600 hover:to-balance-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                        onClick={() => navigate('/family-features')}
+                        onClick={() => safeNavigate('/family-features')}
                       >
                         <Users className="h-4 w-4 mr-2" />
                         Learn More About Family Plans
@@ -584,7 +581,7 @@ const IndexContent = () => {
                 <Button 
                   size="lg"
                   className="bg-white text-therapy-600 hover:bg-therapy-50 border-2 border-white hover:border-therapy-200 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                  onClick={() => navigate('/onboarding')}
+                  onClick={() => safeNavigate('/onboarding')}
                 >
                   <Heart className="h-5 w-5 mr-2" />
                   Choose Your Plan
@@ -592,7 +589,7 @@ const IndexContent = () => {
                 <Button 
                   size="lg" 
                   className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-therapy-600 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                  onClick={() => navigate('/onboarding')}
+                  onClick={() => safeNavigate('/onboarding')}
                 >
                   <Zap className="h-5 w-5 mr-2" />
                   Start Onboarding
@@ -609,13 +606,7 @@ const IndexContent = () => {
 };
 
 const Index = () => {
-  return (
-    <SafeReactWrapper componentName="Index">
-      <RouterSafeWrapper>
-        <IndexContent />
-      </RouterSafeWrapper>
-    </SafeReactWrapper>
-  );
+  return <IndexContent />;
 };
 
 export default Index;

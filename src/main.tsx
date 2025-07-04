@@ -50,12 +50,12 @@ const StagedApp = () => {
     );
   }
   
-  // Stage 3: Load the actual app with contexts
-  const AppWithContexts = React.lazy(() => import('./components/AppWithContexts'));
+// Stage 3: Load the bulletproof app
+  const BulletproofApp = React.lazy(() => import('./components/BulletproofApp'));
   
   return (
     <React.Suspense fallback={<InitialLoadingFallback />}>
-      <AppWithContexts />
+      <BulletproofApp />
     </React.Suspense>
   );
 };
