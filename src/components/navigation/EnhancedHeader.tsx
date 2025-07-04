@@ -26,7 +26,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import GradientLogo from '@/components/ui/GradientLogo';
-import LanguageSelector from '@/components/ui/LanguageSelector';
+import NativeLanguageSelector from '@/components/ui/NativeLanguageSelector';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -293,7 +293,7 @@ const EnhancedHeader = () => {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
-            <LanguageSelector />
+            <NativeLanguageSelector />
             
             {hasAuth ? (
               <div className="flex items-center space-x-3">

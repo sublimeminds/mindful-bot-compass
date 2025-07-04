@@ -30,24 +30,22 @@ import {
 import { safeNavigate } from '@/components/SafeNavigation';
 
 const IndexContent = () => {
-  // Manual SEO update without hooks to avoid corruption
-  React.useEffect(() => {
+  // Manual SEO update using direct DOM manipulation - no React hooks to avoid corruption
+  if (typeof document !== 'undefined') {
     try {
-      if (typeof document !== 'undefined') {
-        document.title = 'TherapySync - AI-Powered Mental Health Support';
-        
-        let metaDescription = document.querySelector('meta[name="description"]');
-        if (!metaDescription) {
-          metaDescription = document.createElement('meta');
-          metaDescription.setAttribute('name', 'description');
-          document.head.appendChild(metaDescription);
-        }
-        metaDescription.setAttribute('content', 'Experience personalized AI therapy with voice technology, 24/7 crisis support, and culturally sensitive care. Start your mental health journey today.');
+      document.title = 'TherapySync - AI-Powered Mental Health Support';
+      
+      let metaDescription = document.querySelector('meta[name="description"]');
+      if (!metaDescription) {
+        metaDescription = document.createElement('meta');
+        metaDescription.setAttribute('name', 'description');
+        document.head.appendChild(metaDescription);
       }
+      metaDescription.setAttribute('content', 'Experience personalized AI therapy with voice technology, 24/7 crisis support, and culturally sensitive care. Start your mental health journey today.');
     } catch (error) {
       console.warn('SEO update failed, but continuing:', error);
     }
-  }, []);
+  }
 
   const features = [
     {
