@@ -93,9 +93,7 @@ if (!rootElement) {
 
 const root = ReactDOM.createRoot(rootElement);
 
-// Render immediately without staged loading
+// Render immediately without staged loading - StrictMode disabled for debugging
 root.render(
-  <React.StrictMode>
-    <RobustApp />
-  </React.StrictMode>
+  <RobustApp />
 );
