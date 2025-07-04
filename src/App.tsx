@@ -5,10 +5,7 @@ import { I18nextProvider } from 'react-i18next';
 import { Toaster } from '@/components/ui/toaster';
 import { MinimalAuthProvider } from '@/components/MinimalAuthProvider';
 import AppRouter from '@/components/AppRouter';
-import ReactHealthMonitor from '@/components/diagnostics/ReactHealthMonitor';
-import ReactHealthDashboard from '@/components/diagnostics/ReactHealthDashboard';
-import ErrorReportingSystem from '@/components/diagnostics/ErrorReportingSystem';
-import ReactReadinessGate from '@/components/loading/ReactReadinessGate';
+import DiagnosticSystemLoader from '@/components/diagnostics/DiagnosticSystemLoader';
 import { reactHookValidator } from '@/utils/reactHookValidator';
 import i18n from './i18n';
 import './App.css';
@@ -61,35 +58,30 @@ class AppErrorBoundary extends React.Component<
 function App() {
   console.log('App: Starting TherapySync with bulletproof loading and comprehensive diagnostics...');
   
-  // Pre-flight React health check
-  const validation = reactHookValidator.validateReactContext();
-  if (!validation.isValid) {
-    console.error('App: React validation failed on startup:', validation.error);
-  }
+  // Move React health check to useEffect to avoid hook violations during render
+  React.useEffect(() => {
+    const validation = reactHookValidator.validateReactContext();
+    if (!validation.isValid) {
+      console.error('App: React validation failed on startup:', validation.error);
+    }
+  }, []);
   
   return (
     <AppErrorBoundary>
-      <ReactHealthMonitor />
-      <ErrorReportingSystem />
-      <ReactHealthDashboard />
-      <ReactReadinessGate 
-        componentName="TherapySync App"
-        onReady={() => console.log('App: All systems ready')}
-        onError={(error) => console.error('App: Readiness check failed:', error)}
-      >
-        <I18nextProvider i18n={i18n}>
-          <div className="min-h-screen bg-white">
-            <QueryClientProvider client={queryClient}>
-              <BrowserRouter>
-                <MinimalAuthProvider>
-                  <AppRouter />
-                  <Toaster />
-                </MinimalAuthProvider>
-              </BrowserRouter>
-            </QueryClientProvider>
-          </div>
-        </I18nextProvider>
-      </ReactReadinessGate>
+      <I18nextProvider i18n={i18n}>
+        <div className="min-h-screen bg-white">
+          <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+              <MinimalAuthProvider>
+                <AppRouter />
+                <Toaster />
+              </MinimalAuthProvider>
+            </BrowserRouter>
+          </QueryClientProvider>
+        </div>
+      </I18nextProvider>
+      {/* Load diagnostic systems after app is stable */}
+      <DiagnosticSystemLoader />
     </AppErrorBoundary>
   );
 }

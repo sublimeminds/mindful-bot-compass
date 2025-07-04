@@ -19,14 +19,22 @@ export function withReactValidation<P extends object>(
     const { componentName: propComponentName, ...restProps } = props as P & ValidationProps;
     const finalComponentName = propComponentName || displayName;
 
-    // Track component render for diagnostics
+    // Track component render for diagnostics (async to avoid blocking)
     React.useEffect(() => {
-      reactHookValidator.trackComponentRender(finalComponentName);
-      validateComponentImports(finalComponentName);
-    });
+      const trackAsync = async () => {
+        await new Promise(resolve => setTimeout(resolve, 50));
+        reactHookValidator.trackComponentRender(finalComponentName);
+        validateComponentImports(finalComponentName);
+      };
+      trackAsync();
+    }, [finalComponentName]);
 
-    // Validate React context on mount and when deps change
-    React.useEffect(() => {
+  // Validate React context on mount and when deps change (but only post-mount)
+  React.useEffect(() => {
+    // Add delay to ensure React context is fully established
+    const validateAsync = async () => {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const validation = reactHookValidator.validateReactContext();
       
       if (!validation.isValid) {
@@ -36,7 +44,10 @@ export function withReactValidation<P extends object>(
           suggestions: validation.suggestions
         });
       }
-    }, [finalComponentName]);
+    };
+    
+    validateAsync();
+  }, [finalComponentName]);
 
     return (
       <ReactHookErrorBoundary componentName={finalComponentName}>
@@ -50,19 +61,26 @@ export function withReactValidation<P extends object>(
   return ValidatedComponent;
 }
 
-// Utility hook for manual validation
+// Utility hook for manual validation (async to avoid blocking)
 export const useReactValidation = (componentName: string) => {
   React.useEffect(() => {
-    reactHookValidator.trackComponentRender(componentName);
-    validateComponentImports(componentName);
+    // Delay validation to avoid interfering with component startup
+    const validateAsync = async () => {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      reactHookValidator.trackComponentRender(componentName);
+      validateComponentImports(componentName);
+      
+      const validation = reactHookValidator.validateReactContext();
+      if (!validation.isValid) {
+        DebugLogger.warn(`Manual validation failed for ${componentName}`, {
+          component: componentName,
+          error: validation.error,
+          suggestions: validation.suggestions
+        });
+      }
+    };
     
-    const validation = reactHookValidator.validateReactContext();
-    if (!validation.isValid) {
-      DebugLogger.warn(`Manual validation failed for ${componentName}`, {
-        component: componentName,
-        error: validation.error,
-        suggestions: validation.suggestions
-      });
-    }
+    validateAsync();
   }, [componentName]);
 };

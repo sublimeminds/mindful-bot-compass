@@ -132,9 +132,15 @@ class ReactHookValidator {
   }
 
   public isReactSafe(): boolean {
-    const validation = this.validateReactContext();
-    this.lastValidationTime = Date.now();
-    return validation.isValid;
+    try {    
+      const validation = this.validateReactContext();
+      this.lastValidationTime = Date.now();
+      return validation.isValid;
+    } catch (error) {
+      // If validation itself fails, assume React is not safe
+      console.error('ReactHookValidator: Safety check failed:', error);
+      return false;
+    }
   }
 
   public validateReactInit(): ReactValidationResult {
