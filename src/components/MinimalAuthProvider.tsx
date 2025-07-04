@@ -6,8 +6,8 @@ import { AuthContextType } from '@/types/auth';
 export const MinimalAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   console.log('MinimalAuthProvider: Initializing with unified AuthContext');
   
-  // Create stable auth value without hooks to prevent dispatcher issues
-  const authValue: AuthContextType = React.useMemo(() => ({
+  // Create static auth value without hooks to prevent dispatcher issues
+  const authValue: AuthContextType = {
     user: null,
     session: null,
     loading: false,
@@ -33,7 +33,7 @@ export const MinimalAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     logout: async () => {
       console.log('MinimalAuthProvider: Logout called');
     },
-  }), []);
+  };
 
   return (
     <AuthContext.Provider value={authValue}>
