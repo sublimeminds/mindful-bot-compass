@@ -5,6 +5,7 @@ import EnhancedHeader from '@/components/navigation/EnhancedHeader';
 import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import SafeFooter from '@/components/SafeFooter';
 import SafeReactWrapper from '@/components/SafeReactWrapper';
+import { RouterSafeWrapper } from '@/components/RouterSafeWrapper';
 import GradientLogo from '@/components/ui/GradientLogo';
 import GradientButton from '@/components/ui/GradientButton';
 import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
@@ -29,10 +30,10 @@ import {
   Zap,
   MessageSquare
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useSafeNavigation } from '@/hooks/useSafeNavigation';
 
 const IndexContent = () => {
-  const navigate = useNavigate();
+  const { navigate } = useSafeNavigation();
   
   useBulletproofSEO({
     title: 'TherapySync - AI-Powered Mental Health Support',
@@ -585,7 +586,9 @@ const IndexContent = () => {
 const Index = () => {
   return (
     <SafeReactWrapper componentName="Index">
-      <IndexContent />
+      <RouterSafeWrapper>
+        <IndexContent />
+      </RouterSafeWrapper>
     </SafeReactWrapper>
   );
 };
