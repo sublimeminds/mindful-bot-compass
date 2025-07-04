@@ -27,7 +27,7 @@ import {
   Zap,
   MessageSquare
 } from 'lucide-react';
-import { safeNavigate } from '@/components/SafeNavigation';
+import { safeNavigate } from '@/utils/simpleNavigation';
 
 const IndexContent = () => {
   // Manual SEO update using direct DOM manipulation - no React hooks to avoid corruption
