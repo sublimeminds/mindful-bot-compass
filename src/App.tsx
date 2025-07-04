@@ -1,17 +1,15 @@
-import React, { useEffect } from 'react';
-import BulletproofErrorBoundary from '@/components/BulletproofErrorBoundary';
+import React from 'react';
+import MinimalErrorBoundary from '@/components/MinimalErrorBoundary';
 import AppRouter from '@/components/AppRouter';
 import './App.css';
 
 function App() {
-  console.log('App: Starting TherapySync...');
-  
-  // Remove conflicting service health manager
+  console.log('App: Starting TherapySync with minimal setup...');
   
   return (
-    <BulletproofErrorBoundary>
+    <MinimalErrorBoundary>
       <AppRouter />
-    </BulletproofErrorBoundary>
+    </MinimalErrorBoundary>
   );
 }
 

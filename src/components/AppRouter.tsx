@@ -1,8 +1,7 @@
 
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
-import SafeErrorBoundary from "@/components/SafeErrorBoundary";
-import BulletproofErrorBoundary from "@/components/BulletproofErrorBoundary";
+import MinimalErrorBoundary from "@/components/MinimalErrorBoundary";
 
 // Safe fallback for failed lazy loads
 const SafeFallback = () => (
@@ -80,71 +79,17 @@ const PageLoadingFallback = () => (
   </div>
 );
 
-// Enhanced route wrapper with better error detection
+// Simplified route wrapper
 const RouteWrapper: React.FC<{ children: React.ReactNode; name: string }> = ({ children, name }) => {
-  
-  // Validate route dependencies before rendering
-  React.useEffect(() => {
-    console.log(`RouteWrapper: Rendering ${name} page`);
-    
-    // Check critical dependencies
-    if (!React || typeof React.useState !== 'function') {
-      console.error(`RouteWrapper: React hooks not available for ${name}`);
-      return;
-    }
-    
-    // Check router availability
-    if (typeof window === 'undefined' || !window.location) {
-      console.error(`RouteWrapper: Window/location not available for ${name}`);
-      return;
-    }
-    
-    console.log(`RouteWrapper: ${name} dependencies validated successfully`);
-  }, [name]);
-
-  return (
-    <SafeErrorBoundary 
-      name={`${name}Route`}
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
-          <div className="text-center p-8 max-w-md mx-auto">
-            <div className="text-red-500 text-6xl mb-4">⚠️</div>
-            <h2 className="text-xl font-semibold text-red-600 mb-4">Page Error</h2>
-            <p className="text-gray-600 mb-6">
-              The {name} page encountered an error and couldn't load properly.
-            </p>
-            <div className="space-y-3">
-              <button 
-                onClick={() => window.location.reload()}
-                className="w-full bg-therapy-600 text-white px-4 py-2 rounded hover:bg-therapy-700 transition-colors"
-              >
-                Refresh Page
-              </button>
-              <button 
-                onClick={() => window.location.href = '/'}
-                className="w-full bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition-colors"
-              >
-                Go Home
-              </button>
-            </div>
-            <p className="text-xs text-gray-500 mt-4">
-              Error ID: {name}Route-{Date.now()}
-            </p>
-          </div>
-        </div>
-      }
-    >
-      {children}
-    </SafeErrorBoundary>
-  );
+  console.log(`RouteWrapper: Rendering ${name} page`);
+  return children;
 };
 
 const AppRouter = () => {
   return (
-    <BulletproofErrorBoundary>
-      <SafeErrorBoundary name="RouterContainer">
-        <Suspense fallback={<PageLoadingFallback />}>
-          <Routes>
+    <MinimalErrorBoundary>
+      <Suspense fallback={<PageLoadingFallback />}>
+        <Routes>
             <Route path="/" element={
               <RouteWrapper name="Index">
                 <Index />
@@ -292,8 +237,7 @@ const AppRouter = () => {
             } />
           </Routes>
         </Suspense>
-      </SafeErrorBoundary>
-    </BulletproofErrorBoundary>
+    </MinimalErrorBoundary>
   );
 };
 
