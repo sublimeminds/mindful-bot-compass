@@ -1,6 +1,7 @@
 import React from 'react';
 import { AuthContext } from '@/contexts/AuthContext';
 import { AuthContextType } from '@/types/auth';
+import SafeContextProvider from '@/components/SafeContextProvider';
 
 // Bulletproof auth provider that uses the unified AuthContext
 export const MinimalAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -79,9 +80,11 @@ export const MinimalAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }), [authState, authOperations]);
 
   return (
-    <AuthContext.Provider value={authValue}>
-      {children}
-    </AuthContext.Provider>
+    <SafeContextProvider name="MinimalAuth">
+      <AuthContext.Provider value={authValue}>
+        {children}
+      </AuthContext.Provider>
+    </SafeContextProvider>
   );
 };
 
