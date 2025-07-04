@@ -5,6 +5,7 @@ import { I18nextProvider } from 'react-i18next';
 import { Toaster } from '@/components/ui/toaster';
 import { MinimalAuthProvider } from '@/components/MinimalAuthProvider';
 import AppRouter from '@/components/AppRouter';
+import PostInitDiagnosticLoader from '@/components/diagnostics/PostInitDiagnosticLoader';
 import i18n from './i18n';
 import './App.css';
 
@@ -54,7 +55,7 @@ class AppErrorBoundary extends React.Component<
 }
 
 function App() {
-  console.log('App: Starting TherapySync...');
+  console.log('App: Starting TherapySync with unified auth context...');
   
   return (
     <AppErrorBoundary>
@@ -70,6 +71,8 @@ function App() {
           </QueryClientProvider>
         </div>
       </I18nextProvider>
+      {/* Load diagnostic systems after app initialization */}
+      <PostInitDiagnosticLoader />
     </AppErrorBoundary>
   );
 }

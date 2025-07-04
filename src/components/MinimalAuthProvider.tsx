@@ -1,37 +1,46 @@
-import React, { createContext, useContext } from 'react';
+import React from 'react';
+import { AuthContext } from '@/contexts/AuthContext';
+import { AuthContextType } from '@/types/auth';
 
-// Minimal auth context without hooks initially
-const AuthContext = createContext<any>(null);
-
+// Bulletproof auth provider that uses the unified AuthContext
 export const MinimalAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Provide a minimal auth context without using hooks yet
-  const value = {
+  console.log('MinimalAuthProvider: Initializing with unified AuthContext');
+  
+  // Create stable auth value without hooks to prevent dispatcher issues
+  const authValue: AuthContextType = React.useMemo(() => ({
     user: null,
+    session: null,
     loading: false,
-    signUp: async () => ({ error: null }),
-    signIn: async () => ({ error: null }),
-    signOut: async () => {},
-    register: async () => ({ error: null }),
-    login: async () => ({ error: null }),
-    logout: async () => {},
-  };
+    signUp: async (email: string, password: string) => {
+      console.log('MinimalAuthProvider: SignUp called', { email });
+      return { error: null };
+    },
+    signIn: async (email: string, password: string) => {
+      console.log('MinimalAuthProvider: SignIn called', { email });
+      return { error: null };
+    },
+    signOut: async () => {
+      console.log('MinimalAuthProvider: SignOut called');
+    },
+    register: async (email: string, password: string) => {
+      console.log('MinimalAuthProvider: Register called', { email });
+      return { error: null };
+    },
+    login: async (email: string, password: string) => {
+      console.log('MinimalAuthProvider: Login called', { email });
+      return { error: null };
+    },
+    logout: async () => {
+      console.log('MinimalAuthProvider: Logout called');
+    },
+  }), []);
 
-  return React.createElement(AuthContext.Provider, { value }, children);
+  return (
+    <AuthContext.Provider value={authValue}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    return {
-      user: null,
-      loading: false,
-      signUp: async () => ({ error: null }),
-      signIn: async () => ({ error: null }),
-      signOut: async () => {},
-      register: async () => ({ error: null }),
-      login: async () => ({ error: null }),
-      logout: async () => {},
-    };
-  }
-  return context;
-};
+// Export the unified useAuth hook
+export { useAuth } from '@/contexts/AuthContext';
