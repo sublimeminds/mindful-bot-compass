@@ -22,6 +22,8 @@ import AdvancedAnalytics from "../pages/AdvancedAnalytics";
 import EnhancedTherapy from "../pages/EnhancedTherapy";
 import DashboardOptimization from "../pages/DashboardOptimization";
 import TherapySyncAI from "../pages/TherapySyncAI";
+import TherapyPlan from "../pages/TherapyPlan";
+import TherapistSelection from "../pages/TherapistSelection";
 
 // Error Pages
 import NotFound from "../pages/NotFound";
@@ -130,6 +132,25 @@ const AppRouter = () => {
       <Route path="/dashboard-optimization" element={
         <PageErrorBoundary pageName="Dashboard Optimization">
           <DashboardOptimization />
+        </PageErrorBoundary>
+      } />
+      
+      {/* New Therapy System Routes */}
+      <Route path="/therapy-plan" element={
+        <PageErrorBoundary pageName="Therapy Plan">
+          <TherapyPlan />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/therapist-selection" element={
+        <PageErrorBoundary pageName="Therapist Selection">
+          <TherapistSelection />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/chat" element={
+        <PageErrorBoundary pageName="Enhanced Therapy Chat">
+          <EnhancedTherapy />
         </PageErrorBoundary>
       } />
       
