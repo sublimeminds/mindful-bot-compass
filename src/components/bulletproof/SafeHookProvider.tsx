@@ -17,22 +17,16 @@ interface SafeHookProviderProps {
 }
 
 export const SafeHookProvider: React.FC<SafeHookProviderProps> = ({ children }) => {
-  const [isReactReady, setIsReactReady] = useState(false);
-  const [canUseHooks, setCanUseHooks] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    // Simple React readiness check without violating Rules of Hooks
-    try {
-      setIsReactReady(true);
-      setCanUseHooks(true);
-    } catch (err) {
-      console.error('SafeHookProvider: React environment validation failed:', err);
-      setError(err instanceof Error ? err : new Error('React validation failed'));
-    }
-  }, []);
+  // If we can render this component, React hooks are working fine
+  const contextValue = {
+    isReactReady: true,
+    canUseHooks: true,
+    error
+  };
 
-  // Fallback rendering if hooks can't be used
+  // Only show error UI if there's actually an error
   if (error) {
     return (
       <div style={{ 
@@ -62,21 +56,8 @@ export const SafeHookProvider: React.FC<SafeHookProviderProps> = ({ children }) 
     );
   }
 
-  if (!isReactReady || !canUseHooks) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh' 
-      }}>
-        <div>Loading...</div>
-      </div>
-    );
-  }
-
   return (
-    <SafeHookContext.Provider value={{ isReactReady, canUseHooks, error }}>
+    <SafeHookContext.Provider value={contextValue}>
       {children}
     </SafeHookContext.Provider>
   );
