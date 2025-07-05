@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,9 +25,9 @@ interface InternationalPricingCardProps {
 const InternationalPricingCard = ({ plan, isYearly = false, onSelect }: InternationalPricingCardProps) => {
   const { t } = useTranslation();
   const { formatPrice, userLocation, getRegionalPrice } = useEnhancedCurrency();
-  const [regionalPrice, setRegionalPrice] = React.useState<number | null>(null);
+  const [regionalPrice, setRegionalPrice] = useState<number | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const calculateRegionalPrice = async () => {
       if (userLocation) {
         const basePrice = isYearly ? plan.yearlyBasePrice : plan.basePrice;

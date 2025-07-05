@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,9 +15,9 @@ import Footer from '@/components/Footer';
 const Pricing = () => {
   const navigate = useNavigate();
   const { currentLanguage } = useEnhancedLanguage();
-  const [userCurrency, setUserCurrency] = React.useState('USD');
-  const [userLocation, setUserLocation] = React.useState(null);
-  const [billingCycle, setBillingCycle] = React.useState<'monthly' | 'yearly'>('monthly');
+  const [userCurrency, setUserCurrency] = useState('USD');
+  const [userLocation, setUserLocation] = useState(null);
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
   useSafeSEO({
     title: 'Pricing Plans - TherapySync AI Platform',
@@ -25,7 +25,7 @@ const Pricing = () => {
     keywords: 'AI therapy pricing, mental health plans, therapy subscription, crisis support, free therapy, yearly discount'
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const detectLocation = async () => {
       try {
         const location = await enhancedCurrencyService.detectUserLocation();
@@ -64,7 +64,7 @@ const Pricing = () => {
     }
   };
 
-  const [formattedPrices, setFormattedPrices] = React.useState({
+  const [formattedPrices, setFormattedPrices] = useState({
     free: 'Free',
     proMonthly: '$9',
     proYearly: '$79',
@@ -72,7 +72,7 @@ const Pricing = () => {
     premiumYearly: '$149'
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const updatePrices = async () => {
       try {
         const proMonthly = await formatPrice(9, false);

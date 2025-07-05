@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import EnhancedTherapyChatWithAvatar from '@/components/therapy/EnhancedTherapyChatWithAvatar';
@@ -7,7 +7,7 @@ const EnhancedTherapy = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!loading && !user) {
       navigate('/');
     }

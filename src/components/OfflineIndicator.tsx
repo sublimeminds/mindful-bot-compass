@@ -1,12 +1,12 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { WifiOff } from 'lucide-react';
 
 const OfflineIndicator = () => {
-  const [isOnline, setIsOnline] = React.useState(true);
+  const [isOnline, setIsOnline] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Simple online/offline detection without external dependencies
     const updateOnlineStatus = () => {
       setIsOnline(navigator.onLine);

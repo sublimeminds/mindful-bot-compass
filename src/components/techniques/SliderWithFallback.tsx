@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 
@@ -22,9 +22,9 @@ const SliderWithFallback = ({
   className,
   disabled = false
 }: SliderWithFallbackProps) => {
-  const [hasError, setHasError] = React.useState(false);
+  const [hasError, setHasError] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Reset error state when props change
     setHasError(false);
   }, [value, max, min]);

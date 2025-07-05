@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -26,8 +26,8 @@ const SessionControlPanel: React.FC<SessionControlPanelProps> = ({
   onStartSession,
   onEndSession
 }) => {
-  const [isMicOn, setIsMicOn] = React.useState(true);
-  const [isVideoOn, setIsVideoOn] = React.useState(false);
+  const [isMicOn, setIsMicOn] = useState(true);
+  const [isVideoOn, setIsVideoOn] = useState(false);
 
   const getConnectionStatusColor = () => {
     switch (sessionState.connectionStatus) {

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
@@ -16,7 +16,7 @@ const TherapyChatPage = () => {
   const [currentMood, setCurrentMood] = useState('neutral');
   const [stressLevel, setStressLevel] = useState(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!loading && !user) {
       navigate('/');
     }

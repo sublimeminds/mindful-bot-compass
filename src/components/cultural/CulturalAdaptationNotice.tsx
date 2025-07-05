@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Globe, Languages, Heart, Users } from 'lucide-react';
@@ -10,10 +10,10 @@ import { useSimpleApp } from '@/hooks/useSimpleApp';
 const CulturalAdaptationNotice = () => {
   const { t } = useTranslation();
   const { user } = useSimpleApp();
-  const [recommendations, setRecommendations] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState(true);
+  const [recommendations, setRecommendations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (user) {
       loadRecommendations();
     } else {
