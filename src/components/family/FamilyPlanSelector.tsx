@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,11 +16,22 @@ interface FamilyPlanSelectorProps {
 }
 
 const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelectorProps) => {
+  const [isReactReady, setIsReactReady] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
   const [memberCount, setMemberCount] = useState(4);
   const [selectedTier, setSelectedTier] = useState<'pro' | 'premium'>('pro');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+
+  // Ensure React is fully initialized before rendering Dialog
+  useEffect(() => {
+    // Check if React hooks are available
+    if (typeof React !== 'undefined' && React && 
+        typeof React.useRef === 'function' && 
+        typeof React.useState === 'function') {
+      setIsReactReady(true);
+    }
+  }, []);
 
   const tiers = {
     pro: {
@@ -92,6 +103,11 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
     
     onClose();
   };
+
+  // Don't render Dialog until React is ready
+  if (!isReactReady || !isOpen) {
+    return null;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
