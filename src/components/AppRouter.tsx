@@ -51,18 +51,14 @@ const SafeFallback = () => (
   </div>
 );
 
-// PHASE 2: Component isolation with bulletproof error boundaries for each route
-const IsolatedRouteWrapper: React.FC<{ children: React.ReactNode; name: string }> = ({ children, name }) => {
-  console.log(`IsolatedRouteWrapper: Rendering ${name} page with bulletproof protection`);
-  
+// Simplified route wrapper - single error boundary per route
+const SimpleRouteWrapper: React.FC<{ children: React.ReactNode; name: string }> = ({ children, name }) => {
   return (
-    <BulletproofPageWrapper pageName={name}>
-      <MinimalErrorBoundary>
-        <React.Suspense fallback={<SafeFallback />}>
-          {children}
-        </React.Suspense>
-      </MinimalErrorBoundary>
-    </BulletproofPageWrapper>
+    <MinimalErrorBoundary>
+      <React.Suspense fallback={<SafeFallback />}>
+        {children}
+      </React.Suspense>
+    </MinimalErrorBoundary>
   );
 };
 
@@ -73,154 +69,154 @@ const AppRouter = () => {
     <MinimalErrorBoundary>
       <Routes>
         <Route path="/" element={
-          <IsolatedRouteWrapper name="Index">
+          <SimpleRouteWrapper name="Index">
             <Index />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/minimal" element={
-          <IsolatedRouteWrapper name="MinimalIndex">
+          <SimpleRouteWrapper name="MinimalIndex">
             <MinimalIndex />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/auth" element={
-          <IsolatedRouteWrapper name="Auth">
+          <SimpleRouteWrapper name="Auth">
             <EnhancedAuth />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/onboarding" element={
-          <IsolatedRouteWrapper name="Onboarding">
+          <SimpleRouteWrapper name="Onboarding">
             <EnhancedOnboardingPage />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/dashboard" element={
-          <IsolatedRouteWrapper name="Dashboard">
+          <SimpleRouteWrapper name="Dashboard">
             <Dashboard />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/quantum-therapy" element={
-          <IsolatedRouteWrapper name="QuantumTherapy">
+          <SimpleRouteWrapper name="QuantumTherapy">
             <QuantumTherapy />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/blockchain-health" element={
-          <IsolatedRouteWrapper name="BlockchainHealth">
+          <SimpleRouteWrapper name="BlockchainHealth">
             <BlockchainHealth />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/neural-interface" element={
-          <IsolatedRouteWrapper name="NeuralInterface">
+          <SimpleRouteWrapper name="NeuralInterface">
             <NeuralInterface />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/test" element={
-          <IsolatedRouteWrapper name="Test">
+          <SimpleRouteWrapper name="Test">
             <TestPage />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/component-health" element={
-          <IsolatedRouteWrapper name="ComponentHealth">
+          <SimpleRouteWrapper name="ComponentHealth">
             <ComponentHealthCheck />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/recovery-dashboard" element={
-          <IsolatedRouteWrapper name="RecoveryDashboard">
+          <SimpleRouteWrapper name="RecoveryDashboard">
             <UserControlledRecoveryDashboard />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/recovery-monitoring" element={
-          <IsolatedRouteWrapper name="RecoveryMonitoring">
+          <SimpleRouteWrapper name="RecoveryMonitoring">
             <RecoveryMonitoringDashboard />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/pricing" element={
-          <IsolatedRouteWrapper name="Pricing">
+          <SimpleRouteWrapper name="Pricing">
             <Pricing />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/features-overview" element={
-          <IsolatedRouteWrapper name="FeaturesOverview">
+          <SimpleRouteWrapper name="FeaturesOverview">
             <FeaturesOverview />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/how-it-works" element={
-          <IsolatedRouteWrapper name="HowItWorks">
+          <SimpleRouteWrapper name="HowItWorks">
             <HowItWorks />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/features-showcase" element={
-          <IsolatedRouteWrapper name="FeaturesShowcase">
+          <SimpleRouteWrapper name="FeaturesShowcase">
             <FeaturesShowcase />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/therapy-types" element={
-          <IsolatedRouteWrapper name="TherapyTypes">
+          <SimpleRouteWrapper name="TherapyTypes">
             <TherapyTypes />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/community-features" element={
-          <IsolatedRouteWrapper name="CommunityFeatures">
+          <SimpleRouteWrapper name="CommunityFeatures">
             <CommunityFeatures />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/family-features" element={
-          <IsolatedRouteWrapper name="FamilyFeatures">
+          <SimpleRouteWrapper name="FamilyFeatures">
             <FamilyFeaturesPage />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/cultural-ai-features" element={
-          <IsolatedRouteWrapper name="CulturalAIFeatures">
+          <SimpleRouteWrapper name="CulturalAIFeatures">
             <CulturalAIFeatures />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/voice-technology" element={
-          <IsolatedRouteWrapper name="VoiceTechnology">
+          <SimpleRouteWrapper name="VoiceTechnology">
             <VoiceTechnology />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/crisis-support" element={
-          <IsolatedRouteWrapper name="CrisisSupport">
+          <SimpleRouteWrapper name="CrisisSupport">
             <CrisisSupport />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/crisis-resources" element={
-          <IsolatedRouteWrapper name="CrisisResources">
+          <SimpleRouteWrapper name="CrisisResources">
             <CrisisResources />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/mood-tracking" element={
-          <IsolatedRouteWrapper name="MoodTracking">
+          <SimpleRouteWrapper name="MoodTracking">
             <MoodTracking />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/integrations" element={
-          <IsolatedRouteWrapper name="Integrations">
+          <SimpleRouteWrapper name="Integrations">
             <Integrations />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/community" element={
-          <IsolatedRouteWrapper name="Community">
+          <SimpleRouteWrapper name="Community">
             <Community />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/support" element={
-          <IsolatedRouteWrapper name="Support">
+          <SimpleRouteWrapper name="Support">
             <Support />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/help" element={
-          <IsolatedRouteWrapper name="Help">
+          <SimpleRouteWrapper name="Help">
             <Help />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/therapy-chat" element={
-          <IsolatedRouteWrapper name="TherapyChat">
+          <SimpleRouteWrapper name="TherapyChat">
             <TherapyChatPage />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
         <Route path="/compare-plans" element={
-          <IsolatedRouteWrapper name="ComparePlans">
+          <SimpleRouteWrapper name="ComparePlans">
             <Index />
-          </IsolatedRouteWrapper>
+          </SimpleRouteWrapper>
         } />
       </Routes>
     </MinimalErrorBoundary>
