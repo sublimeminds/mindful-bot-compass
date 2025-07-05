@@ -3,17 +3,19 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Sparkles, Users, TrendingUp } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useSafeNavigation } from '@/components/bulletproof/SafeRouter';
+import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 
 const CTASection = () => {
-  const navigate = useNavigate();
+  const { navigate } = useSafeNavigation();
 
   const handleGetStarted = () => {
     navigate('/onboarding');
   };
 
   return (
-    <section className="relative py-20 bg-gradient-to-br from-therapy-600 to-calm-600 overflow-hidden">
+    <SafeComponentWrapper name="CTASection">
+      <section className="relative py-20 bg-gradient-to-br from-therapy-600 to-calm-600 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-black/20"></div>
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
@@ -73,6 +75,7 @@ const CTASection = () => {
         </div>
       </div>
     </section>
+    </SafeComponentWrapper>
   );
 };
 

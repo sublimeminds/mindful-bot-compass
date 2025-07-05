@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import GradientLogo from '@/components/ui/GradientLogo';
+import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 
 const steps = [
   {
@@ -33,7 +34,8 @@ const steps = [
 
 const HowItWorksSection = () => {
   return (
-    <section className="py-20 bg-gradient-to-br from-harmony-50 via-balance-50 to-flow-100">
+    <SafeComponentWrapper name="HowItWorksSection">
+      <section className="py-20 bg-gradient-to-br from-harmony-50 via-balance-50 to-flow-100">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-6">
@@ -100,6 +102,7 @@ const HowItWorksSection = () => {
         </div>
       </div>
     </section>
+    </SafeComponentWrapper>
   );
 };
 

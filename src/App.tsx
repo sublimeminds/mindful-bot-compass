@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 
+// Add i18n initialization
+import './i18n';
+
 // Bulletproof Framework Components
 import { SafeHookProvider } from '@/components/bulletproof/SafeHookProvider';
 import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAuthProvider';

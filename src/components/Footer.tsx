@@ -3,12 +3,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import GradientLogo from '@/components/ui/GradientLogo';
+import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 
 const Footer = () => {
-  const { t } = useTranslation();
+  // Safe translation hook with fallbacks
+  let t;
+  try {
+    const translationHook = useTranslation();
+    t = translationHook.t;
+  } catch (error) {
+    console.warn('Translation hook failed, using fallback');
+    t = (key: string, fallback?: string) => fallback || key.split('.').pop() || key;
+  }
 
   return (
-    <footer className="bg-gradient-to-br from-slate-50 via-therapy-50/30 to-calm-50/30 border-t border-slate-200/50">
+    <SafeComponentWrapper name="Footer">
+      <footer className="bg-gradient-to-br from-slate-50 via-therapy-50/30 to-calm-50/30 border-t border-slate-200/50">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
@@ -186,6 +196,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    </SafeComponentWrapper>
   );
 };
 
