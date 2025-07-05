@@ -12,7 +12,7 @@ import { AppErrorBoundary } from '@/components/bulletproof/MultiLevelErrorBounda
 import { SafeRouter } from '@/components/bulletproof/SafeRouter';
 
 // Pages
-import SimpleLandingPage from '@/components/SimpleLandingPage';
+import LandingPage from '@/components/LandingPage';
 import AuthPage from '@/pages/EnhancedAuth';
 import DashboardPage from '@/pages/Dashboard';
 
@@ -42,7 +42,7 @@ const queryClient = new QueryClient({
 const routes = [
   {
     path: '/',
-    component: SimpleLandingPage,
+    component: LandingPage,
     name: 'Landing'
   },
   {

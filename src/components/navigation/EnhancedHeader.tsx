@@ -44,6 +44,7 @@ import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import EnhancedUserMenu from './EnhancedUserMenu';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
 import EnhancedButton from '@/components/ui/EnhancedButton';
+import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 
 const EnhancedHeader = () => {
   const { user } = useAuth();
@@ -206,9 +207,10 @@ const EnhancedHeader = () => {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+    <SafeComponentWrapper name="EnhancedHeader">
+      <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <div className="container mx-auto px-4">
+          <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <GradientLogo size="sm" />
@@ -374,6 +376,7 @@ const EnhancedHeader = () => {
         </div>
       </div>
     </header>
+    </SafeComponentWrapper>
   );
 };
 
