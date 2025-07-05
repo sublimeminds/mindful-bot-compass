@@ -428,6 +428,84 @@ export type Database = {
         }
         Relationships: []
       }
+      ar_therapy_sessions: {
+        Row: {
+          biometric_data: Json | null
+          created_at: string
+          end_time: string | null
+          environment_id: string
+          id: string
+          interactions: Json | null
+          session_data: Json | null
+          start_time: string
+          therapeutic_goals: string[] | null
+          user_id: string
+        }
+        Insert: {
+          biometric_data?: Json | null
+          created_at?: string
+          end_time?: string | null
+          environment_id: string
+          id?: string
+          interactions?: Json | null
+          session_data?: Json | null
+          start_time?: string
+          therapeutic_goals?: string[] | null
+          user_id: string
+        }
+        Update: {
+          biometric_data?: Json | null
+          created_at?: string
+          end_time?: string | null
+          environment_id?: string
+          id?: string
+          interactions?: Json | null
+          session_data?: Json | null
+          start_time?: string
+          therapeutic_goals?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          new_values: Json | null
+          old_values: Json | null
+          resource: string
+          resource_id: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          resource: string
+          resource_id?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          resource?: string
+          resource_id?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       billing_history: {
         Row: {
           amount: number
@@ -486,6 +564,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      blockchain_health_records: {
+        Row: {
+          block_height: number | null
+          created_at: string
+          encrypted_data: string
+          id: string
+          record_hash: string
+          record_type: string
+          transaction_id: string | null
+          updated_at: string
+          user_id: string
+          verification_status: string
+        }
+        Insert: {
+          block_height?: number | null
+          created_at?: string
+          encrypted_data: string
+          id?: string
+          record_hash: string
+          record_type: string
+          transaction_id?: string | null
+          updated_at?: string
+          user_id: string
+          verification_status?: string
+        }
+        Update: {
+          block_height?: number | null
+          created_at?: string
+          encrypted_data?: string
+          id?: string
+          record_hash?: string
+          record_type?: string
+          transaction_id?: string | null
+          updated_at?: string
+          user_id?: string
+          verification_status?: string
+        }
+        Relationships: []
       }
       clinical_assessments: {
         Row: {
@@ -1049,6 +1166,42 @@ export type Database = {
         }
         Relationships: []
       }
+      enterprise_configurations: {
+        Row: {
+          configuration_type: string
+          created_at: string
+          id: string
+          integration_endpoints: Json | null
+          is_active: boolean
+          organization_id: string
+          settings: Json | null
+          updated_at: string
+          white_label_config: Json | null
+        }
+        Insert: {
+          configuration_type: string
+          created_at?: string
+          id?: string
+          integration_endpoints?: Json | null
+          is_active?: boolean
+          organization_id: string
+          settings?: Json | null
+          updated_at?: string
+          white_label_config?: Json | null
+        }
+        Update: {
+          configuration_type?: string
+          created_at?: string
+          id?: string
+          integration_endpoints?: Json | null
+          is_active?: boolean
+          organization_id?: string
+          settings?: Json | null
+          updated_at?: string
+          white_label_config?: Json | null
+        }
+        Relationships: []
+      }
       exchange_rates: {
         Row: {
           base_currency: string
@@ -1282,6 +1435,36 @@ export type Database = {
           tags?: string[] | null
           updated_at?: string
           view_count?: number
+        }
+        Relationships: []
+      }
+      global_infrastructure_metrics: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at: string
+          region: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at?: string
+          region: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          metric_type?: string
+          metric_value?: number
+          recorded_at?: string
+          region?: string
         }
         Relationships: []
       }
@@ -1743,6 +1926,45 @@ export type Database = {
           },
         ]
       }
+      healthcare_integrations: {
+        Row: {
+          created_at: string
+          credentials_encrypted: string | null
+          ehr_config: Json | null
+          fhir_endpoint: string | null
+          id: string
+          integration_type: string
+          last_sync: string | null
+          provider_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          credentials_encrypted?: string | null
+          ehr_config?: Json | null
+          fhir_endpoint?: string | null
+          id?: string
+          integration_type: string
+          last_sync?: string | null
+          provider_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          credentials_encrypted?: string | null
+          ehr_config?: Json | null
+          fhir_endpoint?: string | null
+          id?: string
+          integration_type?: string
+          last_sync?: string | null
+          provider_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       help_articles: {
         Row: {
           category: string
@@ -2047,6 +2269,45 @@ export type Database = {
           triggers?: string[] | null
           user_id?: string
           weather?: string | null
+        }
+        Relationships: []
+      }
+      neural_interface_sessions: {
+        Row: {
+          biometric_feedback: Json | null
+          created_at: string
+          end_time: string | null
+          id: string
+          interface_type: string
+          neural_patterns: Json | null
+          session_effectiveness: number | null
+          start_time: string
+          therapy_adjustments: Json | null
+          user_id: string
+        }
+        Insert: {
+          biometric_feedback?: Json | null
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          interface_type: string
+          neural_patterns?: Json | null
+          session_effectiveness?: number | null
+          start_time?: string
+          therapy_adjustments?: Json | null
+          user_id: string
+        }
+        Update: {
+          biometric_feedback?: Json | null
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          interface_type?: string
+          neural_patterns?: Json | null
+          session_effectiveness?: number | null
+          start_time?: string
+          therapy_adjustments?: Json | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -2542,6 +2803,42 @@ export type Database = {
         }
         Relationships: []
       }
+      quantum_therapy_sessions: {
+        Row: {
+          created_at: string
+          entanglement_factors: Json | null
+          id: string
+          quantum_score: number
+          session_data: Json | null
+          superposition_states: Json | null
+          therapist_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entanglement_factors?: Json | null
+          id?: string
+          quantum_score?: number
+          session_data?: Json | null
+          superposition_states?: Json | null
+          therapist_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entanglement_factors?: Json | null
+          id?: string
+          quantum_score?: number
+          session_data?: Json | null
+          superposition_states?: Json | null
+          therapist_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       real_time_metrics: {
         Row: {
           created_at: string
@@ -2711,6 +3008,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      security_events: {
+        Row: {
+          created_at: string
+          description: string
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          severity: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          severity: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          severity?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       session_analytics: {
         Row: {
@@ -3561,6 +3894,39 @@ export type Database = {
         }
         Relationships: []
       }
+      two_factor_auth: {
+        Row: {
+          backup_codes: string[] | null
+          created_at: string
+          id: string
+          is_enabled: boolean | null
+          last_used: string | null
+          secret: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          backup_codes?: string[] | null
+          created_at?: string
+          id?: string
+          is_enabled?: boolean | null
+          last_used?: string | null
+          secret: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          backup_codes?: string[] | null
+          created_at?: string
+          id?: string
+          is_enabled?: boolean | null
+          last_used?: string | null
+          secret?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_activity: {
         Row: {
           activity_data: Json | null
@@ -3955,6 +4321,39 @@ export type Database = {
           id?: string
           is_active?: boolean
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          last_activity: string
+          session_token: string
+          terminated_at: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          last_activity?: string
+          session_token: string
+          terminated_at?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          last_activity?: string
+          session_token?: string
+          terminated_at?: string | null
+          user_agent?: string | null
           user_id?: string
         }
         Relationships: []
@@ -4479,6 +4878,10 @@ export type Database = {
           current_usage?: number
         }
         Returns: boolean
+      }
+      cleanup_old_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       generate_invitation_token: {
         Args: Record<PropertyKey, never>
