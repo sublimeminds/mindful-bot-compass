@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Check, Crown, Zap, Star, Users } from 'lucide-react';
 import { useEnhancedCurrency } from '@/hooks/useEnhancedCurrency';
 import GradientLogo from '@/components/ui/GradientLogo';
-import FamilyPlanSelector from '@/components/family/FamilyPlanSelector';
+import SafeFamilyPlanSelector from '@/components/safe/SafeFamilyPlanSelector';
 
 const EnhancedPricingSection = () => {
   const navigate = useNavigate();
@@ -281,7 +281,7 @@ const EnhancedPricingSection = () => {
         </div>
       </div>
 
-      <FamilyPlanSelector
+      <SafeFamilyPlanSelector
         isOpen={showFamilyPlans}
         onClose={() => setShowFamilyPlans(false)}
       />

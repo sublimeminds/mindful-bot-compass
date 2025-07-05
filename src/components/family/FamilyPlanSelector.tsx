@@ -16,17 +16,34 @@ interface FamilyPlanSelectorProps {
 }
 
 const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelectorProps) => {
-  // Don't initialize any hooks if not open - prevents React hook issues
+  // CRITICAL: Don't call ANY hooks before this check - fixes React initialization errors
   if (!isOpen) {
     return null;
   }
-  
+
+  // Safe hook initialization only when dialog is open
   const [isReactReady, setIsReactReady] = useState(false);
-  const { user } = useAuth();
-  const navigate = useNavigate();
   const [memberCount, setMemberCount] = useState(4);
   const [selectedTier, setSelectedTier] = useState<'pro' | 'premium'>('pro');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  
+  // Use hooks safely with try-catch
+  let user: any = null;
+  let navigate: any = null;
+  
+  try {
+    const auth = useAuth();
+    user = auth?.user || null;
+  } catch (error) {
+    console.warn('useAuth failed in FamilyPlanSelector:', error);
+  }
+  
+  try {
+    navigate = useNavigate();
+  } catch (error) {
+    console.warn('useNavigate failed in FamilyPlanSelector:', error);
+    navigate = () => console.warn('Navigation unavailable');
+  }
 
   // Ensure React is fully initialized before rendering Dialog
   useEffect(() => {

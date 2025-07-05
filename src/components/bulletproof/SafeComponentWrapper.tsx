@@ -54,6 +54,16 @@ export class SafeComponentWrapper extends Component<SafeComponentWrapperProps, S
         suggestions: ['Check React context initialization', 'Verify component mounting order', 'Add safe hook patterns']
       });
     }
+
+    // Track sidebar-related errors on public pages
+    if (error.message.includes('useSidebar must be used within a SidebarProvider')) {
+      console.error(`Sidebar context error in ${componentName}:`, {
+        error: 'Component trying to use sidebar on public page',
+        component: componentName,
+        location: window.location.pathname,
+        suggestion: 'Remove sidebar dependencies from public pages'
+      });
+    }
   }
 
   handleRetry = () => {
@@ -77,7 +87,10 @@ export class SafeComponentWrapper extends Component<SafeComponentWrapperProps, S
         <div className="border border-destructive/20 rounded-lg p-4 m-2 bg-destructive/5">
           <div className="flex items-center mb-2">
             <div className="h-4 w-4 rounded-full bg-destructive mr-2"></div>
-            <h3 className="font-medium text-destructive">{name} Component Error</h3>
+            <h3 className="font-medium text-destructive">
+              {name} Error
+              {error?.message?.includes('useSidebar') && ' (Sidebar Context)'}
+            </h3>
           </div>
           <p className="text-sm text-muted-foreground mb-2">
             {error?.message?.includes('useRef') || error?.message?.includes('Cannot read properties of null') 
