@@ -11,6 +11,7 @@ import './i18n';
 import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAuthProvider';
 import { SafeRouter } from '@/components/bulletproof/SafeRouter';
 import { AppErrorBoundary } from '@/components/bulletproof/MultiLevelErrorBoundary';
+import { SimpleAppProvider } from '@/hooks/useSimpleApp';
 
 // App Router
 import AppRouter from '@/components/AppRouter';
@@ -43,13 +44,15 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AppErrorBoundary>
         <BulletproofAuthProvider>
-          <SafeRouter>
-            <div className="min-h-screen bg-background">
-              <AppRouter />
-              <Toaster />
-              <Sonner />
-            </div>
-          </SafeRouter>
+          <SimpleAppProvider>
+            <SafeRouter>
+              <div className="min-h-screen bg-background">
+                <AppRouter />
+                <Toaster />
+                <Sonner />
+              </div>
+            </SafeRouter>
+          </SimpleAppProvider>
         </BulletproofAuthProvider>
       </AppErrorBoundary>
     </QueryClientProvider>
