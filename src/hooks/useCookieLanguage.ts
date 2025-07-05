@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
 
 interface LanguageData {
   code: string;
@@ -31,11 +32,45 @@ const LANGUAGE_COOKIE_KEY = 'therapysync_language';
 const LANGUAGE_CONFIRMED_KEY = 'therapysync_language_confirmed';
 
 export const useCookieLanguage = () => {
-  const { i18n } = useTranslation();
+  const [isI18nReady, setIsI18nReady] = useState(i18n.isInitialized);
   const [currentLanguage, setCurrentLanguage] = useState<LanguageData>(
-    supportedLanguages.find(lang => lang.code === i18n.language) || supportedLanguages[0]
+    supportedLanguages.find(lang => lang.code === (i18n.isInitialized ? i18n.language : 'en')) || supportedLanguages[0]
   );
   const [hasConfirmedLanguage, setHasConfirmedLanguage] = useState(false);
+
+  // Safe wrapper for useTranslation - only use when i18n is ready
+  let i18nInstance = i18n;
+  try {
+    // Only call useTranslation if i18n is ready
+    if (isI18nReady) {
+      const translation = useTranslation();
+      i18nInstance = translation.i18n;
+    }
+  } catch (error) {
+    console.warn('useTranslation not ready, using fallback i18n instance');
+  }
+
+  // Monitor i18n initialization
+  useEffect(() => {
+    const checkI18nReady = () => {
+      if (i18n.isInitialized && !isI18nReady) {
+        setIsI18nReady(true);
+      }
+    };
+
+    // Check immediately
+    checkI18nReady();
+
+    // Set up listener for i18n initialization
+    if (!i18n.isInitialized) {
+      const handleInitialized = () => {
+        setIsI18nReady(true);
+      };
+      
+      i18n.on('initialized', handleInitialized);
+      return () => i18n.off('initialized', handleInitialized);
+    }
+  }, [isI18nReady]);
 
   // Get cookie value
   const getCookie = (name: string): string | null => {
@@ -53,6 +88,9 @@ export const useCookieLanguage = () => {
   };
 
   useEffect(() => {
+    // Only proceed if i18n is ready
+    if (!isI18nReady) return;
+
     // Check if language has been previously confirmed
     const confirmedCookie = getCookie(LANGUAGE_CONFIRMED_KEY);
     const savedLanguage = getCookie(LANGUAGE_COOKIE_KEY);
@@ -63,18 +101,23 @@ export const useCookieLanguage = () => {
     
     if (savedLanguage) {
       const lang = supportedLanguages.find(l => l.code === savedLanguage);
-      if (lang && lang.code !== i18n.language) {
-        i18n.changeLanguage(lang.code);
+      if (lang && lang.code !== i18nInstance.language) {
+        i18nInstance.changeLanguage(lang.code);
         setCurrentLanguage(lang);
         document.documentElement.dir = lang.isRTL ? 'rtl' : 'ltr';
         document.documentElement.lang = lang.code;
       }
     }
-  }, [i18n]);
+  }, [isI18nReady, i18nInstance]);
 
   const changeLanguage = async (languageCode: string) => {
+    if (!isI18nReady) {
+      console.warn('Cannot change language: i18n not ready yet');
+      return;
+    }
+
     try {
-      await i18n.changeLanguage(languageCode);
+      await i18nInstance.changeLanguage(languageCode);
       const newLang = supportedLanguages.find(l => l.code === languageCode);
       if (newLang) {
         setCurrentLanguage(newLang);
@@ -108,6 +151,7 @@ export const useCookieLanguage = () => {
     changeLanguage,
     isRTL: currentLanguage.isRTL,
     getLanguagesByRegion,
-    hasConfirmedLanguage
+    hasConfirmedLanguage,
+    isI18nReady
   };
 };

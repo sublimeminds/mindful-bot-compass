@@ -9,11 +9,24 @@ const EnhancedLanguageSelector = () => {
     currentLanguage,
     changeLanguage,
     getLanguagesByRegion,
-    hasConfirmedLanguage
+    hasConfirmedLanguage,
+    isI18nReady
   } = useCookieLanguage();
 
   // Don't show language suggestion dialog if already confirmed
   const languagesByRegion = getLanguagesByRegion();
+
+  // Show simplified version if i18n isn't ready
+  if (!isI18nReady) {
+    return (
+      <div className="flex items-center space-x-2 opacity-50">
+        <Languages className="h-4 w-4 text-muted-foreground" />
+        <div className="w-40 h-9 bg-therapy-100 rounded-md animate-pulse flex items-center px-3">
+          <span className="text-sm text-therapy-600">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center space-x-2">
