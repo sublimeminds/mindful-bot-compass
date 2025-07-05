@@ -1,5 +1,5 @@
 import React from 'react';
-import StaticIndexContent from '@/components/StaticIndexContent';
+import LandingPage from '@/components/LandingPage';
 
 // Simple error boundary for Index page
 class IndexErrorBoundary extends React.Component<
@@ -37,17 +37,13 @@ class IndexErrorBoundary extends React.Component<
   }
 }
 
-const IndexContent = () => {
+const Index = () => {
+  console.log('Index: Loading full landing page');
   return (
     <IndexErrorBoundary>
-      <StaticIndexContent />
+      <LandingPage />
     </IndexErrorBoundary>
   );
-};
-
-const Index = () => {
-  console.log('Index: Loading static index page');
-  return <IndexContent />;
 };
 
 export default Index;
