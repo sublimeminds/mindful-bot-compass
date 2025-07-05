@@ -103,12 +103,28 @@ const EnhancedAuthForm = () => {
   const handleSocialAuth = async (provider: 'google' | 'facebook' | 'apple') => {
     setLoading(true);
     try {
-      toast({
-        title: "Coming Soon",
-        description: `${provider} authentication will be available soon.`,
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}${searchParams.get('redirect') || '/onboarding'}`
+        }
       });
+
+      if (error) {
+        toast({
+          title: `${provider} Sign In Failed`,
+          description: error.message,
+          variant: "destructive"
+        });
+      }
     } catch (error) {
       console.error(`${provider} auth error:`, error);
+      toast({
+        title: "Authentication Error",
+        description: "Failed to sign in with social provider. Please try again.",
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
     }
