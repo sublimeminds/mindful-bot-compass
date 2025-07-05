@@ -25,7 +25,7 @@ interface AvatarFaceProps {
 }
 
 const AvatarFace: React.FC<AvatarFaceProps> = ({ isListening, isSpeaking, emotion, userEmotion }) => {
-  const headRef = useRef<THREE.Mesh>(null);
+  const headRef = useRef<THREE.Group>(null);
   const leftEyeRef = useRef<THREE.Mesh>(null);
   const rightEyeRef = useRef<THREE.Mesh>(null);
   const mouthRef = useRef<THREE.Mesh>(null);

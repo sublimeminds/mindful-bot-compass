@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import EnhancedTherapyChatInterface from '@/components/therapy/EnhancedTherapyChatInterface';
+import EnhancedTherapyChatWithAvatar from '@/components/therapy/EnhancedTherapyChatWithAvatar';
 
 const EnhancedTherapy = () => {
   const { user, loading } = useAuth();
@@ -28,7 +28,11 @@ const EnhancedTherapy = () => {
     return null;
   }
 
-  return <EnhancedTherapyChatInterface />;
+  return (
+    <div>
+      <EnhancedTherapyChatWithAvatar />
+    </div>
+  );
 };
 
 export default EnhancedTherapy;

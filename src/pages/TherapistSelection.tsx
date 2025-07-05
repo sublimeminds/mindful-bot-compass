@@ -84,16 +84,16 @@ const TherapistSelection = () => {
       // Check if user already has a therapist assigned
       const { data: currentRelationship } = await supabase
         .from('therapeutic_relationship')
-        .select(`
-          therapist_id,
-          therapist_personalities (*)
-        `)
+        .select('therapist_id')
         .eq('user_id', user.id)
         .single();
 
-      if (currentRelationship?.therapist_personalities) {
-        setCurrentTherapist(currentRelationship.therapist_personalities);
-        setSelectedTherapist(currentRelationship.therapist_id);
+      if (currentRelationship?.therapist_id) {
+        const therapist = therapistData?.find(t => t.id === currentRelationship.therapist_id);
+        if (therapist) {
+          setCurrentTherapist(therapist);
+          setSelectedTherapist(currentRelationship.therapist_id);
+        }
       }
 
     } catch (error) {
@@ -165,7 +165,9 @@ const TherapistSelection = () => {
         }
 
         // Match based on AI analysis recommendations
-        if (aiAnalysis?.treatment_recommendations?.recommended_approaches?.includes(therapist.approach)) {
+        const treatmentRecs = aiAnalysis?.treatment_recommendations as any;
+        if (treatmentRecs && Array.isArray(treatmentRecs.recommended_approaches) && 
+            treatmentRecs.recommended_approaches.includes(therapist.approach)) {
           score += 15;
           matchingFactors.push('AI-recommended approach');
         }
