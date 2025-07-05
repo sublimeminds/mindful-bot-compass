@@ -5,17 +5,17 @@ import { Button } from '@/components/ui/button';
 
 const SimpleLandingPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-5xl font-bold text-foreground mb-6">
             Welcome to Your Mental Health Journey
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
             Experience personalized AI-powered therapy sessions designed to support your mental wellness and growth.
           </p>
           <div className="space-x-4">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+            <Button size="lg">
               Get Started
             </Button>
             <Button variant="outline" size="lg">
@@ -32,7 +32,7 @@ const SimpleLandingPage = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Advanced AI technology provides personalized therapeutic support tailored to your unique needs.
               </p>
             </CardContent>
@@ -45,7 +45,7 @@ const SimpleLandingPage = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Your conversations and data are completely private and protected with enterprise-grade security.
               </p>
             </CardContent>
@@ -58,7 +58,7 @@ const SimpleLandingPage = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Monitor your mental health journey with detailed analytics and personalized insights.
               </p>
             </CardContent>
