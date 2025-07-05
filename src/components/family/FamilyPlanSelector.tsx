@@ -16,6 +16,11 @@ interface FamilyPlanSelectorProps {
 }
 
 const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelectorProps) => {
+  // Don't initialize any hooks if not open - prevents React hook issues
+  if (!isOpen) {
+    return null;
+  }
+  
   const [isReactReady, setIsReactReady] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
