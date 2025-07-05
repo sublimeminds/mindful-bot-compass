@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useCallback } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { SafeComponentWrapper } from './SafeComponentWrapper';
 
@@ -20,7 +20,7 @@ export const SafeRouter: React.FC<SafeRouterProps> = ({ children, fallback }) =>
 export const useSafeNavigation = () => {
   const navigate = useNavigate();
 
-  const safeNavigate = React.useCallback((to: string, options?: { replace?: boolean }) => {
+  const safeNavigate = useCallback((to: string, options?: { replace?: boolean }) => {
     try {
       navigate(to, options);
     } catch (error) {

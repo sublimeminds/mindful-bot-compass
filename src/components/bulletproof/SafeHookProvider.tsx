@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useMemo } from 'react';
 
 interface SafeHookContextType {
   isReady: boolean;
@@ -15,10 +15,10 @@ interface SafeHookProviderProps {
 }
 
 export const SafeHookProvider: React.FC<SafeHookProviderProps> = ({ children }) => {
-  const [isReady, setIsReady] = React.useState(true);
-  const [error, setError] = React.useState<Error | null>(null);
+  const [isReady, setIsReady] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  const contextValue = React.useMemo(() => ({
+  const contextValue = useMemo(() => ({
     isReady,
     error
   }), [isReady, error]);

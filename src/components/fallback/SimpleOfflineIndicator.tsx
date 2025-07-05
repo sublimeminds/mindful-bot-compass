@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { WifiOff } from 'lucide-react';
 
 interface OfflineIndicatorState {
@@ -11,9 +11,9 @@ interface SimpleOfflineIndicatorProps {
 }
 
 const SimpleOfflineIndicator: React.FC<SimpleOfflineIndicatorProps> = ({ className = '' }) => {
-  const [state, setState] = React.useState<OfflineIndicatorState>({ isOnline: navigator.onLine });
+  const [state, setState] = useState<OfflineIndicatorState>({ isOnline: navigator.onLine });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleOnline = () => setState({ isOnline: true });
     const handleOffline = () => setState({ isOnline: false });
 

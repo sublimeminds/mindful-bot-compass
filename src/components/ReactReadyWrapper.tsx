@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface ReactReadyWrapperProps {
   children: React.ReactNode;
@@ -7,10 +7,10 @@ interface ReactReadyWrapperProps {
 
 const ReactReadyWrapper: React.FC<ReactReadyWrapperProps> = ({ children }) => {
   // Use a simple state to track readiness without hooks initially
-  const [isReactReady, setIsReactReady] = React.useState(false);
-  const [initializationAttempts, setInitializationAttempts] = React.useState(0);
+  const [isReactReady, setIsReactReady] = useState(false);
+  const [initializationAttempts, setInitializationAttempts] = useState(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
     
     const checkReactReadiness = () => {
