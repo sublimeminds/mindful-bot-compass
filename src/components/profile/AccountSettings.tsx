@@ -6,11 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { User, Mail, Lock } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import EmailVerificationWarning from './EmailVerificationWarning';
 
 const AccountSettings = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [formData, setFormData] = useState({
     name: user?.user_metadata?.name || '',
     email: user?.email || '',

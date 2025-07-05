@@ -14,16 +14,7 @@ import FamilyPlanSelector from '@/components/family/FamilyPlanSelector';
 const EnhancedPricingSection = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  
-  // Safe currency formatting with fallback
-  let formatPrice;
-  try {
-    const currencyHook = useEnhancedCurrency();
-    formatPrice = currencyHook.formatPrice;
-  } catch (error) {
-    console.warn('Currency hook failed, using fallback');
-    formatPrice = (amount: number) => `$${amount.toFixed(2)}`;
-  }
+  const { formatPrice } = useEnhancedCurrency();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [showFamilyPlans, setShowFamilyPlans] = useState(false);
 

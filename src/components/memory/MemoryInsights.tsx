@@ -7,10 +7,10 @@ import { Progress } from '@/components/ui/progress';
 import { Brain, Clock, TrendingUp, Heart, Lightbulb, Target, Users, Calendar, BarChart3, Zap, Shield, MessageCircle, CheckCircle, AlertTriangle, Star } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 const MemoryInsights = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [activeTab, setActiveTab] = useState('overview');
 
   const { data: memoryData, isLoading, error } = useQuery({

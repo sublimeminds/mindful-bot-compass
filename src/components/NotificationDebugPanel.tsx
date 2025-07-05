@@ -6,11 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 
 const NotificationDebugPanel = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
 
   const [notificationType, setNotificationType] = useState('session_reminder');

@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import { chatService } from '@/services/chatService';
 import { OpenAIService } from '@/services/openAiService';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from './useSimpleApp';
 
 interface Message {
   id: string;
@@ -24,7 +24,7 @@ interface RealTimeSessionHook {
 }
 
 export const useRealTimeSession = (): RealTimeSessionHook => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

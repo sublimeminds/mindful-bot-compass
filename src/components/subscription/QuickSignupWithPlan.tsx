@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, CreditCard, Lock, Sparkles } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -17,7 +17,7 @@ interface QuickSignupWithPlanProps {
 }
 
 const QuickSignupWithPlan = ({ planName, planPrice, onSignupSuccess }: QuickSignupWithPlanProps) => {
-  const { register } = useAuth();
+  const { register } = useSimpleApp();
   const { toast } = useToast();
   const { t } = useTranslation();
   const [email, setEmail] = useState('');

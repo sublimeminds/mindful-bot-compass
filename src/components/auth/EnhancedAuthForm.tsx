@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { Mail, Lock, User, Heart, ArrowRight, Loader2, CheckCircle } from 'lucide-react';
 import GradientButton from '@/components/ui/GradientButton';
 import { toast } from '@/hooks/use-toast';

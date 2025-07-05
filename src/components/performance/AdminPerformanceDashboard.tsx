@@ -14,12 +14,12 @@ import {
   Settings,
   Shield
 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { isAdminUser } from '@/utils/adminUtils';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 
 const AdminPerformanceDashboard = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [isOpen, setIsOpen] = useState(false);
   const [config] = useState({
     enableMetrics: true,

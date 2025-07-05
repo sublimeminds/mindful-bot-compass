@@ -1,4 +1,5 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -263,84 +264,6 @@
     --flow-800: 175 65% 35%;
     --flow-900: 175 60% 26%;
     --flow-950: 175 55% 17%;
-
-    /* Global Scale Colors */
-    --global-50: 220 100% 97%;
-    --global-100: 220 96% 94%;
-    --global-200: 220 89% 89%;
-    --global-300: 220 81% 82%;
-    --global-400: 220 71% 73%;
-    --global-500: 220 61% 64%;
-    --global-600: 220 51% 55%;
-    --global-700: 220 41% 46%;
-    --global-800: 220 31% 37%;
-    --global-900: 220 21% 28%;
-    
-    --scale-50: 200 100% 97%;
-    --scale-100: 200 96% 94%;
-    --scale-200: 200 89% 89%;
-    --scale-300: 200 81% 82%;
-    --scale-400: 200 71% 73%;
-    --scale-500: 200 61% 64%;
-    --scale-600: 200 51% 55%;
-    --scale-700: 200 41% 46%;
-    --scale-800: 200 31% 37%;
-    --scale-900: 200 21% 28%;
-
-    /* Monitoring Colors */
-    --monitoring-50: 240 100% 97%;
-    --monitoring-100: 240 96% 94%;
-    --monitoring-200: 240 89% 89%;
-    --monitoring-300: 240 81% 82%;
-    --monitoring-400: 240 71% 73%;
-    --monitoring-500: 240 61% 64%;
-    --monitoring-600: 240 51% 55%;
-    --monitoring-700: 240 41% 46%;
-    --monitoring-800: 240 31% 37%;
-    --monitoring-900: 240 21% 28%;
-
-    /* System Colors */
-    --system-50: 180 100% 97%;
-    --system-100: 180 96% 94%;
-    --system-200: 180 89% 89%;
-    --system-300: 180 81% 82%;
-    --system-400: 180 71% 73%;
-    --system-500: 180 61% 64%;
-    --system-600: 180 51% 55%;
-    --system-700: 180 41% 46%;
-    --system-800: 180 31% 37%;
-    --system-800: 180 31% 37%;
-    --system-900: 180 21% 28%;
-
-    /* Enterprise Colors */
-    --enterprise-50: 240 100% 97%;
-    --enterprise-100: 240 96% 94%;
-    --enterprise-200: 240 89% 89%;
-    --enterprise-300: 240 81% 82%;
-    --enterprise-400: 240 71% 73%;
-    --enterprise-500: 240 61% 64%;
-    --enterprise-600: 240 51% 55%;
-    --enterprise-700: 240 41% 46%;
-    --enterprise-800: 240 31% 37%;
-    --enterprise-900: 240 21% 28%;
-    
-    --b2b-50: 260 100% 97%;
-    --b2b-600: 260 51% 55%;
-
-    /* Innovation Colors */
-    --innovation-50: 280 100% 97%;
-    --innovation-100: 280 96% 94%;
-    --innovation-200: 280 89% 89%;
-    --innovation-300: 280 81% 82%;
-    --innovation-400: 280 71% 73%;
-    --innovation-500: 280 61% 64%;
-    --innovation-600: 280 51% 55%;
-    --innovation-700: 280 41% 46%;
-    --innovation-800: 280 31% 37%;
-    --innovation-900: 280 21% 28%;
-    
-    --future-50: 300 100% 97%;
-    --future-600: 300 51% 55%;
   }
 
   .dark {
@@ -381,124 +304,18 @@
   }
 }
 
-/* Critical Component Fallbacks */
-.safe-bg {
-  background-color: #ffffff;
-  background-color: hsl(var(--background, 0 0% 100%));
+/* Fallback classes for critical components */
+.therapy-fallback {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: white;
 }
 
-.safe-text {
-  color: #1a1a1a;
-  color: hsl(var(--foreground, 240 10% 3.9%));
+.calm-fallback {
+  background: linear-gradient(135deg, #4ecdc4, #44a08d);
+  color: white;
 }
 
-.safe-border {
-  border-color: #e5e5e5;
-  border-color: hsl(var(--border, 240 5.9% 90%));
-}
-
-.safe-card {
-  background-color: #ffffff;
-  background-color: hsl(var(--card, 0 0% 100%));
-  border: 1px solid #e5e5e5;
-  border: 1px solid hsl(var(--border, 240 5.9% 90%));
-  border-radius: 8px;
-  border-radius: var(--radius, 8px);
-}
-
-.safe-button {
-  background-color: #1a1a1a;
-  background-color: hsl(var(--primary, 240 9% 9%));
-  color: #ffffff;
-  color: hsl(var(--primary-foreground, 0 0% 98%));
-  padding: 8px 16px;
-  border-radius: 6px;
-  border-radius: calc(var(--radius, 8px) - 2px);
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.safe-button:hover {
-  opacity: 0.9;
-}
-
-.safe-input {
-  background-color: #ffffff;
-  background-color: hsl(var(--background, 0 0% 100%));
-  border: 1px solid #e5e5e5;
-  border: 1px solid hsl(var(--input, 240 5.9% 90%));
-  border-radius: 6px;
-  border-radius: calc(var(--radius, 8px) - 2px);
-  padding: 8px 12px;
-  color: #1a1a1a;
-  color: hsl(var(--foreground, 240 10% 3.9%));
-}
-
-.safe-input:focus {
-  outline: 2px solid #1a1a1a;
-  outline: 2px solid hsl(var(--ring, 240 10% 3.9%));
-  outline-offset: 2px;
-}
-
-/* Critical Animation Fallbacks */
-@media (prefers-reduced-motion: reduce) {
-  .animate-spin,
-  .animate-swirl-breathe,
-  .therapy-gradient-bg,
-  .therapy-text-gradient-animated,
-  .brand-text-gradient-strong,
-  .brand-button-gradient-strong {
-    animation: none !important;
-  }
-}
-
-/* Font Loading Fallbacks */
-@font-face {
-  font-family: 'Inter-fallback';
-  src: local('system-ui'), local('-apple-system'), local('BlinkMacSystemFont'), local('Segoe UI'), local('Roboto');
-  font-display: swap;
-}
-
-/* Critical Layout Fallbacks */
-.safe-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-.safe-flex {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.safe-grid {
-  display: grid;
-  gap: 16px;
-}
-
-.safe-spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid #e5e5e5;
-  border-top: 2px solid #1a1a1a;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-/* Ensure critical styles load even if CSS variables fail */
-@supports not (color: hsl(var(--background))) {
-  :root {
-    --fallback-bg: #ffffff;
-    --fallback-text: #1a1a1a;
-    --fallback-border: #e5e5e5;
-    --fallback-primary: #1a1a1a;
-    --fallback-primary-fg: #ffffff;
-  }
-  
-  body {
-    background-color: var(--fallback-bg) !important;
-    color: var(--fallback-text) !important;
-  }
+.harmony-fallback {
+  background: linear-gradient(135deg, #ff6b9d, #c44569);
+  color: white;
 }

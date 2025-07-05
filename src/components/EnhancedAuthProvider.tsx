@@ -1,43 +1,40 @@
 
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import { AuthContextType } from '@/types/auth';
 import { useAuthState } from '@/components/auth/AuthStateManager';
 import { useAuthActions } from '@/components/auth/AuthActions';
-import { DevAuthControls } from '@/components/auth/DevAuthControls';
-import { AuthContext } from '@/contexts/AuthContext';
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface EnhancedAuthProviderProps {
   children: React.ReactNode;
 }
 
 export const EnhancedAuthProvider: React.FC<EnhancedAuthProviderProps> = ({ children }) => {
-  console.log('EnhancedAuthProvider: Rendering provider (non-blocking)');
+  console.log('EnhancedAuthProvider: Rendering provider');
   
-  // PHASE 1: Non-blocking auth state
-  const { user, loading, skipAuth, enableAuth } = useAuthState();
+  const { user, loading } = useAuthState();
   const authActions = useAuthActions();
 
   console.log('EnhancedAuthProvider: Auth state -', { 
     user: user ? 'Present' : 'None', 
-    loading,
-    debugMode: localStorage.getItem('auth_debug') === 'true'
+    loading 
   });
 
   const value: AuthContextType = {
     user,
-    session: null,
-    loading, // This should now be false by default
+    loading,
     ...authActions,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-      {/* Development controls */}
-      <DevAuthControls user={user} skipAuth={skipAuth} enableAuth={enableAuth} />
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Export the unified useAuth from AuthContext
-export { useAuth } from '@/contexts/AuthContext';
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    console.error('useAuth must be used within an EnhancedAuthProvider');
+    throw new Error('useAuth must be used within an EnhancedAuthProvider');
+  }
+  return context;
+};

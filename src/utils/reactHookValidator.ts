@@ -1,177 +1,90 @@
+
 import React from 'react';
 
 interface ReactValidationResult {
   isValid: boolean;
-  error?: string;
+  error?: Error;
   suggestions?: string[];
-  diagnostics?: Record<string, any>;
 }
 
 class ReactHookValidator {
   private componentRenderCount: Record<string, number> = {};
   private hookCallStack: Record<string, string[]> = {};
-  private lastValidationTime = 0;
 
-  public validateReactContext(): ReactValidationResult {
+  validateReactInit(): ReactValidationResult {
     try {
-      // Check if React is available and properly initialized
-      if (typeof React === 'undefined' || React === null) {
+      // Check if React is available
+      if (typeof React === 'undefined') {
         return {
           isValid: false,
-          error: 'React is not available in global scope',
-          suggestions: [
-            'Ensure React is properly imported',
-            'Check for circular dependencies',
-            'Verify React installation'
-          ]
+          error: new Error('React is not available'),
+          suggestions: ['Ensure React is properly imported', 'Check if React is installed']
         };
       }
 
-      // Check React internal dispatcher
-      const ReactInternals = (React as any).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-      if (!ReactInternals) {
+      // Check if hooks are available
+      if (typeof React.useState === 'undefined') {
         return {
           isValid: false,
-          error: 'React internals not accessible',
-          suggestions: [
-            'React may not be properly initialized',
-            'Check React version compatibility',
-            'Ensure React is loaded before components'
-          ]
+          error: new Error('React hooks are not available'),
+          suggestions: ['Update to React 16.8 or higher', 'Check React import']
         };
-      }
-
-      const dispatcher = ReactInternals.ReactCurrentDispatcher?.current;
-      if (!dispatcher) {
-        return {
-          isValid: false,
-          error: 'React dispatcher is null - hooks cannot be called outside component render cycle',
-          suggestions: [
-            'Ensure hooks are only called inside function components',
-            'Check for hooks called in class components',
-            'Verify component is properly wrapped in React context'
-          ]
-        };
-      }
-
-      // Check essential hooks availability
-      const essentialHooks = ['useState', 'useEffect', 'useContext', 'useMemo', 'useCallback'];
-      for (const hook of essentialHooks) {
-        if (typeof dispatcher[hook] !== 'function') {
-          return {
-            isValid: false,
-            error: `Hook ${hook} is not available in current dispatcher`,
-            suggestions: [
-              `Ensure ${hook} is imported from React`,
-              'Check React version supports this hook',
-              'Verify component render context'
-            ]
-          };
-        }
       }
 
       return { isValid: true };
     } catch (error) {
       return {
         isValid: false,
-        error: `React validation failed: ${(error as Error).message}`,
-        suggestions: [
-          'Check browser console for additional errors',
-          'Verify React and ReactDOM versions match',
-          'Clear browser cache and reload'
-        ]
+        error: error as Error,
+        suggestions: ['Check React installation', 'Verify React version compatibility']
       };
     }
   }
 
-  public getDiagnostics(): Record<string, any> {
-    return {
-      reactAvailable: typeof React !== 'undefined' && React !== null,
-      hooksAvailable: typeof React !== 'undefined' && typeof React.useState === 'function',
-      componentRenderCount: this.componentRenderCount,
-      hookCallStack: this.hookCallStack,
-      lastValidationTime: this.lastValidationTime,
-      dispatcher: this.getDispatcherInfo(),
-      timestamp: new Date().toISOString()
-    };
-  }
-
-  private getDispatcherInfo(): Record<string, any> {
+  validateReactContext(): ReactValidationResult {
     try {
-      const ReactInternals = (React as any).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-      const dispatcher = ReactInternals?.ReactCurrentDispatcher?.current;
-      
+      if (typeof React.useContext === 'undefined') {
+        return {
+          isValid: false,
+          error: new Error('React.useContext is not available'),
+          suggestions: ['Update React version', 'Check if hooks are properly imported']
+        };
+      }
+
+      return { isValid: true };
+    } catch (error) {
       return {
-        available: !!dispatcher,
-        hasUseState: !!dispatcher?.useState,
-        hasUseEffect: !!dispatcher?.useEffect,
-        hasUseContext: !!dispatcher?.useContext,
-        hasUseMemo: !!dispatcher?.useMemo,
-        type: dispatcher ? 'active' : 'null'
+        isValid: false,
+        error: error as Error,
+        suggestions: ['Check React context implementation', 'Verify provider setup']
       };
-    } catch {
-      return { error: 'Cannot access dispatcher info' };
     }
   }
 
-  public trackComponentRender(componentName: string): void {
+  trackComponentRender(componentName: string): void {
     this.componentRenderCount[componentName] = (this.componentRenderCount[componentName] || 0) + 1;
   }
 
-  public trackHookCall(componentName: string, hookName: string): void {
-    if (!this.hookCallStack[componentName]) {
-      this.hookCallStack[componentName] = [];
+  trackHookCall(hookName: string, dependencies: string[]): void {
+    if (!this.hookCallStack[hookName]) {
+      this.hookCallStack[hookName] = [];
     }
-    this.hookCallStack[componentName].push(hookName);
+    this.hookCallStack[hookName].push(...dependencies);
   }
 
-  public resetTracking(): void {
+  getDiagnostics() {
+    return {
+      reactAvailable: typeof React !== 'undefined',
+      hooksAvailable: typeof React !== 'undefined' && typeof React.useState !== 'undefined',
+      componentRenderCount: this.componentRenderCount,
+      hookCallStack: this.hookCallStack
+    };
+  }
+
+  resetTracking(): void {
     this.componentRenderCount = {};
     this.hookCallStack = {};
-    this.lastValidationTime = Date.now();
-  }
-
-  public isReactSafe(): boolean {
-    try {    
-      const validation = this.validateReactContext();
-      this.lastValidationTime = Date.now();
-      return validation.isValid;
-    } catch (error) {
-      // If validation itself fails, assume React is not safe
-      console.error('ReactHookValidator: Safety check failed:', error);
-      return false;
-    }
-  }
-
-  public validateReactInit(): ReactValidationResult {
-    return this.validateReactContext();
   }
 }
 
 export const reactHookValidator = new ReactHookValidator();
-
-// Hook safety wrapper
-export const safeUseState = <T>(initialState: T | (() => T)): [T, React.Dispatch<React.SetStateAction<T>>] | [T, () => void] => {
-  try {
-    if (!reactHookValidator.isReactSafe()) {
-      console.warn('React hooks not safe, returning fallback state');
-      return [typeof initialState === 'function' ? (initialState as () => T)() : initialState, () => {}];
-    }
-    return React.useState(initialState);
-  } catch (error) {
-    console.error('useState failed, using fallback:', error);
-    return [typeof initialState === 'function' ? (initialState as () => T)() : initialState, () => {}];
-  }
-};
-
-export const safeUseEffect = (effect: React.EffectCallback, deps?: React.DependencyList): void => {
-  try {
-    if (!reactHookValidator.isReactSafe()) {
-      console.warn('React hooks not safe, skipping useEffect');
-      return;
-    }
-    React.useEffect(effect, deps);
-  } catch (error) {
-    console.error('useEffect failed:', error);
-  }
-};

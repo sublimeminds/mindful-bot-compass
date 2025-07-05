@@ -7,13 +7,13 @@ import { Badge } from '@/components/ui/badge';
 import { Target, Plus, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 import CreateGoalDialog from './CreateGoalDialog';
 import { format } from 'date-fns';
 
 const EnhancedGoalTracker = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [showCreateDialog, setShowCreateDialog] = useState(false);

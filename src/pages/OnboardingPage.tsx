@@ -1,11 +1,11 @@
 
 import React from 'react';
 import EnhancedSmartOnboardingFlow from '@/components/onboarding/EnhancedSmartOnboardingFlow';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useNavigate } from 'react-router-dom';
 
 const OnboardingPage = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const navigate = useNavigate();
 
   const handleOnboardingComplete = async (data: any) => {

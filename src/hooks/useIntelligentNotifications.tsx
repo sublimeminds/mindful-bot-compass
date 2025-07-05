@@ -1,13 +1,13 @@
 
 import { useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useSession } from '@/contexts/SessionContext';
 import { IntelligentNotificationService } from '@/services/intelligentNotificationService';
 import { SessionService } from '@/services/sessionService';
 import { useToast } from '@/hooks/use-toast';
 
 export const useIntelligentNotifications = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { currentSession } = useSession();
   const { toast } = useToast();
 

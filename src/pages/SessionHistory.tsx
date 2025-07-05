@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { Calendar, Clock, MessageCircle, TrendingUp } from 'lucide-react';
 
 const SessionHistory = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [selectedSession, setSelectedSession] = useState<string | null>(null);
 
   // Mock session history data

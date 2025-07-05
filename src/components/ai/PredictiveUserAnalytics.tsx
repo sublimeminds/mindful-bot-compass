@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Brain, TrendingUp, AlertTriangle, Target, Clock, BarChart3 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 
 interface PredictiveInsight {
@@ -18,7 +18,7 @@ interface PredictiveInsight {
 }
 
 const PredictiveUserAnalytics = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
   const [insights, setInsights] = useState<PredictiveInsight[]>([]);
   const [isLoading, setIsLoading] = useState(true);

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface AdminProtectedRouteProps {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ interface AdminProtectedRouteProps {
 }
 
 const AdminProtectedRoute = ({ children, requiredPermission }: AdminProtectedRouteProps) => {
-  const { user, loading } = useAuth();
+  const { user, loading } = useSimpleApp();
 
   if (loading) {
     return (

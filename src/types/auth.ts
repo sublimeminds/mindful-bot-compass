@@ -1,9 +1,8 @@
 
-import { User, Session } from '@supabase/supabase-js';
+import { User } from '@supabase/supabase-js';
 
 export interface AuthContextType {
   user: User | null;
-  session: Session | null;
   loading: boolean;
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -12,14 +11,6 @@ export interface AuthContextType {
   register: (email: string, password: string) => Promise<{ error: Error | null }>;
   login: (email: string, password: string) => Promise<{ error: Error | null }>;
   logout: () => Promise<void>;
-}
-
-export interface AuthStateHook {
-  user: User | null;
-  loading: boolean;
-  setUser: (user: User | null) => void;
-  skipAuth: () => void;
-  enableAuth: () => void;
 }
 
 export interface AuthError {

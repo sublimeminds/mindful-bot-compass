@@ -142,10 +142,9 @@ class ImportValidator {
 
 export const importValidator = ImportValidator.getInstance();
 
-// Make import validation lazy to avoid startup conflicts
+// Development-only import validation
 export const validateComponentImports = (componentName: string, code?: string): void => {
-  // Only validate if explicitly requested, not during startup
-  if (import.meta.env.DEV && globalThis.enableImportValidation) {
+  if (import.meta.env.DEV) {
     importValidator.validateFileImports(componentName, code);
   }
 };

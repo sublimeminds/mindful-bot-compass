@@ -116,21 +116,8 @@ class EnhancedCurrencyService {
 
   async detectUserLocation(): Promise<LocationData | null> {
     try {
-      // Add timeout and better error handling
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
-      
-      const response = await fetch('https://ipapi.co/json/', {
-        signal: controller.signal,
-        cache: 'default'
-      });
-      
-      clearTimeout(timeoutId);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-      
+      // Try to get location from IP geolocation service
+      const response = await fetch('https://ipapi.co/json/');
       const data = await response.json();
       
       return {
@@ -141,7 +128,7 @@ class EnhancedCurrencyService {
         region: this.getRegionFromCountry(data.country_code || 'US')
       };
     } catch (error) {
-      console.debug('Location detection unavailable:', error.message);
+      console.error('Failed to detect location:', error);
       return {
         country: 'United States',
         countryCode: 'US',

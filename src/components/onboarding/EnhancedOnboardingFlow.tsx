@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/contexts/AuthContext';
-import SafeReactWrapper from '@/components/SafeReactWrapper';
+import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import AnimatedOnboardingIntro from './AnimatedOnboardingIntro';
 import WelcomeStep from './WelcomeStep';
@@ -13,27 +12,17 @@ import InternationalizedEnhancedSmartAnalysisStep from './InternationalizedEnhan
 import TherapistPersonalityStep from './TherapistPersonalityStep';
 import PlanSelectionStep from './PlanSelectionStep';
 import NotificationPreferencesStep from './NotificationPreferencesStep';
-import LanguageSelector from '@/components/ui/LanguageSelector';
+import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import CurrencySelector from '@/components/ui/CurrencySelector';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import EnhancedButton from '@/components/ui/EnhancedButton';
 import { useSEO } from '@/hooks/useSEO';
-import { onboardingService } from '@/services/onboardingService';
-import { useToast } from '@/hooks/use-toast';
 
 interface EnhancedOnboardingFlowProps {
   onComplete: (data: any) => void;
 }
 
 const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => {
-  return (
-    <SafeReactWrapper componentName="EnhancedOnboardingFlow">
-      <EnhancedOnboardingFlowContent onComplete={onComplete} />
-    </SafeReactWrapper>
-  );
-};
-
-const EnhancedOnboardingFlowContent = ({ onComplete }: EnhancedOnboardingFlowProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -104,9 +93,7 @@ const EnhancedOnboardingFlowContent = ({ onComplete }: EnhancedOnboardingFlowPro
     return -1; // No more valid steps
   };
 
-  const { toast } = useToast();
-
-  const handleNext = async (stepData?: any) => {
+  const handleNext = (stepData?: any) => {
     console.log('handleNext called with stepData:', stepData, 'currentStep:', currentStep);
     
     if (stepData) {
@@ -120,39 +107,9 @@ const EnhancedOnboardingFlowContent = ({ onComplete }: EnhancedOnboardingFlowPro
       setCurrentStep(nextStepIndex);
     } else {
       // No more steps, complete onboarding
-      const finalData = { ...onboardingData, ...stepData };
-      console.log('Completing onboarding with data:', finalData);
-      
-      if (user?.id) {
-        try {
-          const result = await onboardingService.saveOnboardingData(user.id, finalData);
-          if (result.success) {
-            toast({
-              title: "Onboarding Complete!",
-              description: "Your profile has been set up successfully.",
-            });
-            localStorage.removeItem('selectedPlan');
-            onComplete(finalData);
-          } else {
-            toast({
-              title: "Save Error",
-              description: result.error || "Failed to save onboarding data",
-              variant: "destructive",
-            });
-          }
-        } catch (error) {
-          console.error('Onboarding save error:', error);
-          toast({
-            title: "Error",
-            description: "An unexpected error occurred",
-            variant: "destructive",
-          });
-        }
-      } else {
-        // If no user, just complete onboarding (shouldn't happen)
-        localStorage.removeItem('selectedPlan');
-        onComplete(finalData);
-      }
+      console.log('Completing onboarding with data:', { ...onboardingData, ...stepData });
+      localStorage.removeItem('selectedPlan');
+      onComplete({ ...onboardingData, ...stepData });
     }
   };
 
@@ -265,7 +222,7 @@ const EnhancedOnboardingFlowContent = ({ onComplete }: EnhancedOnboardingFlowPro
         {/* Header with Controls - Enhanced Design */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-4">
-            <LanguageSelector />
+            <EnhancedLanguageSelector />
             <CurrencySelector 
               value={selectedCurrency}
               onChange={setSelectedCurrency}

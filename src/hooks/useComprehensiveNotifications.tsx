@@ -1,6 +1,6 @@
 
 import { useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useSession } from '@/contexts/SessionContext';
 import { useIntelligentNotifications } from '@/hooks/useIntelligentNotifications';
 import { useSmartNotificationTriggers } from '@/hooks/useSmartNotificationTriggers';
@@ -8,7 +8,7 @@ import { NotificationService } from '@/services/notificationService';
 import { PersonalizationService } from '@/services/personalizationService';
 
 export const useComprehensiveNotifications = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { currentSession } = useSession();
   const { triggerCustomNotification } = useIntelligentNotifications();
   const { runTriggerCheck } = useSmartNotificationTriggers();

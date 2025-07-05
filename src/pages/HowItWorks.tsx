@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,16 +10,16 @@ import {
   MessageSquare, Zap, Shield, Smartphone, Clock, Volume2, Mic,
   Settings, Trophy, TrendingUp, User, Eye, Lightbulb
 } from 'lucide-react';
-import { safeNavigate, updateSEO } from '@/utils/simpleNavigation';
+import { useNavigate } from 'react-router-dom';
+import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const HowItWorks = () => {
-  // Hook-free state management
-  let activeAudioTab = 'podcasts';
+  const navigate = useNavigate();
+  const [activeAudioTab, setActiveAudioTab] = useState('podcasts');
 
-  // Direct SEO update without hooks
-  updateSEO({
+  useSafeSEO({
     title: 'How TherapySync Works - Complete Guide to AI Therapy Platform',
     description: 'Comprehensive guide to using TherapySync for mental health support. Learn about therapy types, advanced features, audio content, and personalized AI assistance.',
     keywords: 'how therapy works, AI therapy guide, mental health platform, therapy types, mood tracking, digital notebook, meditation, therapy podcasts'
@@ -319,7 +319,7 @@ const HowItWorks = () => {
             <Button 
               size="lg"
               className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white border-0 px-8 py-6 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-              onClick={() => safeNavigate('/auth')}
+              onClick={() => navigate('/auth')}
             >
               <Heart className="h-5 w-5 mr-2" />
               Start Your Journey
@@ -511,7 +511,7 @@ const HowItWorks = () => {
           
           <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl">
             <CardContent className="p-8">
-              <Tabs value={activeAudioTab} onValueChange={() => {}}>
+              <Tabs value={activeAudioTab} onValueChange={setActiveAudioTab}>
                 <TabsList className="grid w-full grid-cols-3 mb-8">
                   <TabsTrigger value="podcasts" className="flex items-center gap-2">
                     <MessageSquare className="h-4 w-4" />
@@ -643,7 +643,7 @@ const HowItWorks = () => {
                 <Button 
                   size="lg"
                   className="bg-white text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                  onClick={() => safeNavigate('/auth')}
+                  onClick={() => navigate('/auth')}
                 >
                   <Heart className="h-5 w-5 mr-2" />
                   Start Free Today
@@ -652,7 +652,7 @@ const HowItWorks = () => {
                   size="lg" 
                   variant="outline"
                   className="border-2 border-white text-white hover:bg-white/10 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm"
-                  onClick={() => safeNavigate('/pricing')}
+                  onClick={() => navigate('/pricing')}
                 >
                   <TrendingUp className="h-5 w-5 mr-2" />
                   View Pricing

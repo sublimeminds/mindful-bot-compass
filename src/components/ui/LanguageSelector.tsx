@@ -1,3 +1,3 @@
 
-// Re-export the working NativeLanguageSelector
-export { default } from './NativeLanguageSelector';
+// Re-export the enhanced component to maintain compatibility
+export { default } from './EnhancedLanguageSelector';

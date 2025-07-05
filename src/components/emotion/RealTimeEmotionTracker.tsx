@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, Brain, Activity, TrendingUp } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 const RealTimeEmotionTracker = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [emotionData, setEmotionData] = useState({
     mood: 5,
     anxiety: 3,

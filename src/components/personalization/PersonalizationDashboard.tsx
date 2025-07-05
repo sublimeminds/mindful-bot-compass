@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Settings, Brain, Heart, Target, TrendingUp, User } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface SimpleRecommendation {
   id: string;
@@ -20,7 +20,7 @@ interface SimpleRecommendation {
 }
 
 const PersonalizationDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [recommendations, setRecommendations] = useState<SimpleRecommendation[]>([]);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);

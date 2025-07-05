@@ -75,11 +75,11 @@ const ComprehensivePricingSection = () => {
       trialInfo: billingCycle === 'yearly' ? '7-day free trial included' : 'No trial'
     },
     {
-      id: 'professional', 
-      name: 'Pro',
+      id: 'professional',
+      name: 'Professional',
       icon: Crown,
-      monthlyPrice: 19.90,
-      yearlyPrice: 199,
+      monthlyPrice: 24.90,
+      yearlyPrice: 249,
       description: 'Advanced features for mental health professionals and coaches',
       features: [
         'Everything in Premium',

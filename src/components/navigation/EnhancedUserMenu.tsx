@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserStats } from '@/hooks/useUserStats';
 import { useAuth } from '@/hooks/useAuth';
+import { useUserStats } from '@/hooks/useUserStats';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,18 +29,11 @@ import {
 } from 'lucide-react';
 
 const EnhancedUserMenu = () => {
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  
-  // Use the standardized auth hook
-  const { user, signOut } = useAuth();
-  
-  // Always call hooks at the top level - never conditionally
-  const userStatsResult = useUserStats();
-  const userStats = userStatsResult?.data || null;
-  const isStatsLoading = userStatsResult?.isLoading || false;
-  
-  // Hide menu if no user - but hooks must always be called first
+  const { data: userStats, isLoading } = useUserStats();
+
   if (!user) {
     return null;
   }
@@ -107,7 +100,7 @@ const EnhancedUserMenu = () => {
 
         {/* Quick Stats */}
         <div className="p-4 bg-gradient-to-r from-therapy-25 to-calm-25 border-b border-therapy-100">
-          {isStatsLoading ? (
+          {isLoading ? (
             <div className="text-center text-gray-500 py-4">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-therapy-600 mx-auto mb-2"></div>
               Loading stats...

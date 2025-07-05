@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useRealEnhancedChat } from '@/hooks/useRealEnhancedChat';
 import { 
   MessageCircle, 
@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 const RealTherapyChatInterface = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const {
     messages,
     isLoading,

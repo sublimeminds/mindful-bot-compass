@@ -1,11 +1,11 @@
 
 import React, { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { toast } from 'sonner';
 
 const NotificationToastHandler = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
   const isSubscribedRef = useRef(false);
 

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Shield, AlertTriangle, CheckCircle, Brain, Heart, Activity } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 
 interface RiskAssessment {
@@ -21,7 +21,7 @@ interface RiskAssessment {
 }
 
 const AIHealthRiskAssessment = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
   const [assessment, setAssessment] = useState<RiskAssessment | null>(null);
   const [isLoading, setIsLoading] = useState(false);

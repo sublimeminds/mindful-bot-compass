@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface AdminOnlyWrapperProps {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ const AdminOnlyWrapper: React.FC<AdminOnlyWrapperProps> = ({
   children, 
   fallback = null 
 }) => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   
   // Simple admin check - in a real app you'd check user roles
   const isAdmin = user?.email === 'admin@therapysync.com';

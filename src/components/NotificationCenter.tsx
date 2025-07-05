@@ -7,12 +7,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Bell, BellOff, Check, X } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { NotificationService } from '@/services/notificationService';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 const NotificationCenter = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);

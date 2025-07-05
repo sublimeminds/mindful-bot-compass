@@ -7,7 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Bell, BellRing, BellOff, Smartphone, Settings, Check, X, Clock } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 import { MobilePushService } from '@/services/mobilePushService';
 
@@ -26,7 +26,7 @@ interface NotificationSettings {
 }
 
 const EnhancedPushNotificationManager = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
   const [settings, setSettings] = useState<NotificationSettings>({
     enabled: false,

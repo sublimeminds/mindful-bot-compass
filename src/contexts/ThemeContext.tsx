@@ -1,6 +1,5 @@
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { reactHookValidator } from '@/utils/reactHookValidator';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -13,46 +12,14 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  // Add React safety check before using hooks
-  const [isReactSafe, setIsReactSafe] = useState(true);
-  
-  // Safe state initialization
-  const [theme, setThemeState] = useState<Theme>(() => {
-    try {
-      const saved = localStorage.getItem('theme') as Theme;
-      return saved || 'system';
-    } catch {
-      return 'system';
-    }
+  const [theme, setTheme] = useState<Theme>(() => {
+    const saved = localStorage.getItem('theme') as Theme;
+    return saved || 'system';
   });
 
   const [isDark, setIsDark] = useState(false);
 
-  // Safer theme setter with validation
-  const setTheme = useCallback((newTheme: Theme) => {
-    if (!isReactSafe) {
-      console.warn('ThemeProvider: React not safe, skipping theme update');
-      return;
-    }
-    setThemeState(newTheme);
-  }, [isReactSafe]);
-
-  // Check React safety on mount
   useEffect(() => {
-    const checkReactSafety = async () => {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      const validation = reactHookValidator.validateReactContext();
-      if (!validation.isValid) {
-        console.warn('ThemeProvider: React hooks not safe, using fallback mode');
-        setIsReactSafe(false);
-      }
-    };
-    checkReactSafety();
-  }, []);
-
-  useEffect(() => {
-    if (!isReactSafe) return;
-    
     const root = window.document.documentElement;
     
     const updateTheme = () => {
@@ -82,17 +49,11 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     mediaQuery.addEventListener('change', updateTheme);
 
     return () => mediaQuery.removeEventListener('change', updateTheme);
-  }, [theme, isReactSafe]);
+  }, [theme]);
 
   useEffect(() => {
-    if (!isReactSafe) return;
-    
-    try {
-      localStorage.setItem('theme', theme);
-    } catch (error) {
-      console.warn('ThemeProvider: Failed to save theme to localStorage', error);
-    }
-  }, [theme, isReactSafe]);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, isDark }}>
@@ -104,13 +65,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    // Return safe fallback instead of throwing during startup
-    console.warn('useTheme: Context undefined, returning fallback');
-    return {
-      theme: 'system' as Theme,
-      setTheme: () => {},
-      isDark: false
-    };
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
 };

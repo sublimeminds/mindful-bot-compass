@@ -9,11 +9,11 @@ import { Badge } from '@/components/ui/badge';
 import { Mail, MessageCircle, Phone, MapPin, Clock, Send, CheckCircle, AlertTriangle, FileText, Headphones } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import Header from '@/components/Header';
 
 const Contact = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: user?.user_metadata?.name || '',

@@ -1,10 +1,10 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { smartNotificationTriggerService } from "@/services/smartNotificationTriggerService";
-import { useAuth } from "@/hooks/useAuth";
+import { useSimpleApp } from "@/hooks/useSimpleApp";
 
 export const useSmartNotificationTriggers = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const queryClient = useQueryClient();
 
   const triggerAnalytics = useQuery({

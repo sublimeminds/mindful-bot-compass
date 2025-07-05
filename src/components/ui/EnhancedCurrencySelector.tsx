@@ -72,17 +72,20 @@ const EnhancedCurrencySelector = () => {
         </div>
       )}
 
-      {/* Currency Suggestion - Hidden for simplicity */}
-      {false && (
+      {/* Currency Suggestion */}
+      {suggestion.suggested && (
         <Alert className="p-2">
           <Info className="h-3 w-3" />
           <AlertDescription className="text-xs">
-            Currency suggestion disabled
+            {t('currency.suggestion', { 
+              currency: suggestion.currency, 
+              country: suggestion.country 
+            })}
             <button
-              onClick={() => {}}
+              onClick={() => changeCurrency(suggestion.currency)}
               className="ml-2 text-primary hover:underline font-medium"
             >
-              Change
+              {t('currency.change')}
             </button>
           </AlertDescription>
         </Alert>

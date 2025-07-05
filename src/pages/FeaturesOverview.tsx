@@ -21,19 +21,19 @@ import {
   TrendingUp,
   Award
 } from 'lucide-react';
-import { safeNavigate } from '@/components/SafeNavigation';
+import { useNavigate } from 'react-router-dom';
+import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const FeaturesOverview = () => {
-  // Defer SEO to prevent hook issues
-  React.useEffect(() => {
-    document.title = 'Features Overview - TherapySync AI Platform';
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Explore all TherapySync features: AI therapy, voice technology, crisis support, analytics, and personalized mental health care.');
-    }
-  }, []);
+  const navigate = useNavigate();
+  
+  useSafeSEO({
+    title: 'Features Overview - TherapySync AI Platform',
+    description: 'Explore all TherapySync features: AI therapy, voice technology, crisis support, analytics, and personalized mental health care.',
+    keywords: 'AI therapy features, voice technology, mental health analytics, crisis support, personalized therapy'
+  });
 
   const coreFeatures = [
     {
@@ -170,7 +170,7 @@ const FeaturesOverview = () => {
                 <Button 
                   size="lg"
                   className="bg-white text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                  onClick={() => safeNavigate('/auth')}
+                  onClick={() => navigate('/auth')}
                 >
                   <Heart className="h-5 w-5 mr-2" />
                   Start Free Trial
@@ -179,7 +179,7 @@ const FeaturesOverview = () => {
                   size="lg" 
                   variant="outline"
                   className="border-2 border-white text-white hover:bg-white/10 px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm"
-                  onClick={() => safeNavigate('/therapy-chat')}
+                  onClick={() => navigate('/therapy-chat')}
                 >
                   <Brain className="h-5 w-5 mr-2" />
                   Try Demo

@@ -19,35 +19,23 @@ export function withReactValidation<P extends object>(
     const { componentName: propComponentName, ...restProps } = props as P & ValidationProps;
     const finalComponentName = propComponentName || displayName;
 
-    // Track component render for diagnostics (async to avoid blocking)
+    // Track component render for diagnostics
     React.useEffect(() => {
-      const trackAsync = async () => {
-        await new Promise(resolve => setTimeout(resolve, 50));
-        reactHookValidator.trackComponentRender(finalComponentName);
-        validateComponentImports(finalComponentName);
-      };
-      trackAsync();
-    }, [finalComponentName]);
+      reactHookValidator.trackComponentRender(finalComponentName);
+      validateComponentImports(finalComponentName);
+    });
 
-  // Validate React context on mount and when deps change (but only post-mount)
-  React.useEffect(() => {
-    // Add delay to ensure React context is fully established
-    const validateAsync = async () => {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
+    // Validate React context on mount and when deps change
+    React.useEffect(() => {
       const validation = reactHookValidator.validateReactContext();
       
       if (!validation.isValid) {
-        const error = validation.error ? new Error(validation.error) : new Error('Validation failed');
-        DebugLogger.error(`Component validation failed for ${finalComponentName}`, error, {
+        DebugLogger.error(`Component validation failed for ${finalComponentName}`, validation.error || new Error('Validation failed'), {
           component: finalComponentName,
           suggestions: validation.suggestions
         });
       }
-    };
-    
-    validateAsync();
-  }, [finalComponentName]);
+    }, [finalComponentName]);
 
     return (
       <ReactHookErrorBoundary componentName={finalComponentName}>
@@ -61,26 +49,19 @@ export function withReactValidation<P extends object>(
   return ValidatedComponent;
 }
 
-// Utility hook for manual validation (async to avoid blocking)
+// Utility hook for manual validation
 export const useReactValidation = (componentName: string) => {
   React.useEffect(() => {
-    // Delay validation to avoid interfering with component startup
-    const validateAsync = async () => {
-      await new Promise(resolve => setTimeout(resolve, 200));
-      
-      reactHookValidator.trackComponentRender(componentName);
-      validateComponentImports(componentName);
-      
-      const validation = reactHookValidator.validateReactContext();
-      if (!validation.isValid) {
-        DebugLogger.warn(`Manual validation failed for ${componentName}`, {
-          component: componentName,
-          error: validation.error,
-          suggestions: validation.suggestions
-        });
-      }
-    };
+    reactHookValidator.trackComponentRender(componentName);
+    validateComponentImports(componentName);
     
-    validateAsync();
+    const validation = reactHookValidator.validateReactContext();
+    if (!validation.isValid) {
+      DebugLogger.warn(`Manual validation failed for ${componentName}`, {
+        component: componentName,
+        error: validation.error,
+        suggestions: validation.suggestions
+      });
+    }
   }, [componentName]);
 };

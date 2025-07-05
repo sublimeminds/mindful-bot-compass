@@ -16,7 +16,7 @@ import {
   Target,
   TrendingUp
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useSimpleApp } from "@/hooks/useSimpleApp";
 import { useTherapist } from "@/contexts/TherapistContext";
 import { chatService } from "@/services/chatService";
 import Header from "@/components/Header";
@@ -25,7 +25,7 @@ import EnhancedTherapyChatInterface from "@/components/therapy/EnhancedTherapyCh
 
 const TherapyChat = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const { selectedTherapist, therapists } = useTherapist();
   const [showEndModal, setShowEndModal] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');

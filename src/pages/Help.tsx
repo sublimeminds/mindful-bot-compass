@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LifeBuoy, MessageSquare, Book, Phone, Mail, Clock } from 'lucide-react';
-import { useSafeNavigation } from '@/hooks/useSafeNavigation';
+import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const Help = () => {
-  const { navigate } = useSafeNavigation();
+  const navigate = useNavigate();
   
   useSafeSEO({
     title: 'Help Center - TherapySync Support',

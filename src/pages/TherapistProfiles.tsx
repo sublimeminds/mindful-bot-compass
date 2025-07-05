@@ -26,7 +26,7 @@ import {
   ThumbsUp
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { profileImageService } from '@/services/profileImageService';
 import { subscriptionService } from '@/services/subscriptionService';
 
@@ -184,7 +184,7 @@ const therapistsData: Therapist[] = [
 ];
 
 const TherapistProfiles = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const navigate = useNavigate();
   const [userPlan, setUserPlan] = useState<string>('free');
   

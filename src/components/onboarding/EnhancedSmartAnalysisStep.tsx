@@ -16,7 +16,7 @@ import {
   CheckCircle,
   Clock
 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { supabase } from '@/integrations/supabase/client';
 
 interface EnhancedSmartAnalysisStepProps {
@@ -37,7 +37,7 @@ interface EnhancedAnalysis {
 }
 
 const EnhancedSmartAnalysisStep = ({ onNext, onBack, onboardingData }: EnhancedSmartAnalysisStepProps) => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const [isAnalyzing, setIsAnalyzing] = useState(true);
   const [analysis, setAnalysis] = useState<EnhancedAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);

@@ -7,19 +7,21 @@ import {
   Heart, Users, Brain, Rainbow, MessageCircle, Target, 
   Clock, Lightbulb, CheckCircle, ArrowRight, Star
 } from 'lucide-react';
-import { safeNavigate } from '@/components/SafeNavigation';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const TherapyTypes = () => {
-  // Defer SEO and other hooks to prevent router errors
-  React.useEffect(() => {
-    document.title = 'Therapy Types & Specializations - AI Mental Health Support | TherapySync';
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Explore our comprehensive range of AI therapy specializations including couples therapy, ADHD support, LGBTQ+ therapy, and more.');
-    }
-  }, []);
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  useSafeSEO({
+    title: 'Therapy Types & Specializations - AI Mental Health Support | TherapySync',
+    description: 'Explore our comprehensive range of AI therapy specializations including couples therapy, ADHD support, LGBTQ+ therapy, and more.',
+    keywords: 'therapy types, AI therapy, couples therapy, ADHD therapy, LGBTQ therapy, mental health specializations'
+  });
 
   const therapyTypes = [
     {
@@ -120,7 +122,7 @@ const TherapyTypes = () => {
               const IconComponent = therapy.icon;
               return (
                 <Card key={index} className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
-                      onClick={() => safeNavigate(therapy.path)}>
+                      onClick={() => navigate(therapy.path)}>
                   <CardHeader>
                     <div className={`w-12 h-12 bg-gradient-to-r ${therapy.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                       <IconComponent className="h-6 w-6 text-white" />
@@ -142,7 +144,7 @@ const TherapyTypes = () => {
                       className={`w-full bg-gradient-to-r ${therapy.color} text-white border-0 group-hover:shadow-lg transition-all`}
                       onClick={(e) => {
                         e.stopPropagation();
-                        safeNavigate(therapy.path);
+                        navigate(therapy.path);
                       }}
                     >
                       Start {therapy.title}

@@ -4,14 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { supabase } from '@/integrations/supabase/client';
 import GoalsStep from '@/components/onboarding/GoalsStep';
 import PreferencesStep from '@/components/onboarding/PreferencesStep';
 import PlanSelectionStep from '@/components/onboarding/PlanSelectionStep';
 
 const Onboarding = () => {
-  const { user } = useAuth();
+  const { user } = useSimpleApp();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
