@@ -26,6 +26,19 @@ import TherapySyncAI from "../pages/TherapySyncAI";
 import TherapyPlan from "../pages/TherapyPlan";
 import TherapistSelection from "../pages/TherapistSelection";
 
+// Additional Dashboard Pages
+import AIAvatarPage from "../pages/AIAvatarPage";
+import TherapyChatPage from "../pages/TherapyChatPage";
+import Sessions from "../pages/Sessions";
+import MoodTracker from "../pages/MoodTracker";
+import Analytics from "../pages/Analytics";
+import Community from "../pages/Community";
+import SubscriptionPage from "../pages/SubscriptionPage";
+import Help from "../pages/Help";
+import Support from "../pages/Support";
+import TherapySettingsPage from "../pages/TherapySettingsPage";
+import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
+
 // Error Pages
 import NotFound from "../pages/NotFound";
 
@@ -170,6 +183,73 @@ const AppRouter = () => {
       <Route path="/multi-language" element={
         <PageErrorBoundary pageName="Multi-Language">
           <VoiceSettings />
+        </PageErrorBoundary>
+      } />
+      
+      {/* Dashboard Navigation Routes */}
+      <Route path="/ai-avatar" element={
+        <PageErrorBoundary pageName="AI Avatar">
+          <AIAvatarPage />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/therapy-chat" element={
+        <PageErrorBoundary pageName="Therapy Chat">
+          <TherapyChatPage />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/sessions" element={
+        <PageErrorBoundary pageName="Sessions">
+          <Sessions />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/mood-tracker" element={
+        <PageErrorBoundary pageName="Mood Tracker">
+          <MoodTracker />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/analytics" element={
+        <PageErrorBoundary pageName="Analytics">
+          <Analytics />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/community" element={
+        <PageErrorBoundary pageName="Community">
+          <Community />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/therapy-settings" element={
+        <PageErrorBoundary pageName="Therapy Settings">
+          <TherapySettingsPage />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/billing" element={
+        <PageErrorBoundary pageName="Billing">
+          <SubscriptionPage />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/family-features" element={
+        <PageErrorBoundary pageName="Family Features">
+          <FamilyFeaturesPage />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/help" element={
+        <PageErrorBoundary pageName="Help">
+          <Help />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/support" element={
+        <PageErrorBoundary pageName="Support">
+          <Support />
         </PageErrorBoundary>
       } />
       
