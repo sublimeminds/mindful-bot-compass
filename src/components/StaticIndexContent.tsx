@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import StaticChatDemo from '@/components/demo/StaticChatDemo';
-import StaticProgressTracker from '@/components/landing/StaticProgressTracker';
+
 import GradientLogo from '@/components/ui/GradientLogo';
 import GradientButton from '@/components/ui/GradientButton';
 import { 
@@ -148,8 +148,6 @@ const StaticIndexContent = () => {
         </div>
       </header>
 
-      {/* Progress Tracker */}
-      <StaticProgressTracker />
 
       {/* Hero Section */}
       <section id="hero" className="py-20 lg:py-32 relative overflow-hidden">
