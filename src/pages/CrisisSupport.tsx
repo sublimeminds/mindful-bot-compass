@@ -5,33 +5,22 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Phone, MessageCircle, MapPin, Clock, AlertTriangle, Heart, Shield, User } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useSafeSEO } from '@/hooks/useSafeSEO';
+import { safeNavigate } from '@/components/SafeNavigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { CrisisDetectionService } from '@/services/crisisDetectionService';
 
 const CrisisSupport = () => {
-  const navigate = useNavigate();
-  const [userLocation, setUserLocation] = useState<{ country: string; region: string } | null>(null);
+  // Hook-free state - will be static for now
+  const userLocation = { country: 'United States', region: 'North America' };
 
-  useSafeSEO({
-    title: 'Crisis Support - Immediate Mental Health Resources',
-    description: 'Get immediate help for mental health emergencies. 24/7 crisis support, hotlines, and emergency resources.',
-    keywords: 'mental health crisis, suicide prevention, emergency support, crisis hotline, immediate help'
-  });
-
-  useEffect(() => {
-    // Detect user location for localized resources
-    const detectLocation = async () => {
-      try {
-        // This would typically use a geolocation service
-        setUserLocation({ country: 'United States', region: 'North America' });
-      } catch (error) {
-        console.log('Could not detect location for crisis resources');
-      }
-    };
-    detectLocation();
+  // Direct SEO update without hooks
+  React.useEffect(() => {
+    document.title = 'Crisis Support - Immediate Mental Health Resources';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Get immediate help for mental health emergencies. 24/7 crisis support, hotlines, and emergency resources.');
+    }
   }, []);
 
   const crisisResources = CrisisDetectionService.getCrisisResources('severe');
@@ -83,7 +72,7 @@ const CrisisSupport = () => {
     {
       title: 'Emergency Contact',
       description: 'Call your designated emergency contact',
-      action: () => navigate('/profile#emergency-contacts'),
+      action: () => safeNavigate('/profile#emergency-contacts'),
       color: 'bg-purple-600 hover:bg-purple-700',
       icon: User
     }
@@ -253,7 +242,7 @@ const CrisisSupport = () => {
                 <Button 
                   size="lg"
                   className="bg-white text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg font-bold rounded-xl"
-                  onClick={() => navigate('/therapy-chat')}
+                  onClick={() => safeNavigate('/therapy-chat')}
                 >
                   <Heart className="h-5 w-5 mr-2" />
                   Start AI Therapy Session
@@ -262,7 +251,7 @@ const CrisisSupport = () => {
                   size="lg" 
                   variant="outline"
                   className="border-2 border-white text-white hover:bg-white/10 px-8 py-4 text-lg font-bold rounded-xl backdrop-blur-sm"
-                  onClick={() => navigate('/support')}
+                  onClick={() => safeNavigate('/support')}
                 >
                   <MessageCircle className="h-5 w-5 mr-2" />
                   Get Additional Support
