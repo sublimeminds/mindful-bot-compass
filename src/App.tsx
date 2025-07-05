@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
@@ -8,8 +8,10 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 // Add i18n initialization
 import './i18n';
 
-// Simple Auth Provider
-import { SimpleAuthProvider } from '@/components/SimpleAuthProvider';
+// Bulletproof Components
+import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAuthProvider';
+import { SafeRouter } from '@/components/bulletproof/SafeRouter';
+import { AppErrorBoundary } from '@/components/bulletproof/MultiLevelErrorBoundary';
 
 // Pages
 import LandingPage from '@/components/LandingPage';
@@ -38,23 +40,25 @@ const queryClient = new QueryClient({
   },
 });
 
-// Simplified App with working authentication
+// Bulletproof App with enhanced authentication
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <SimpleAuthProvider>
-        <Router>
-          <div className="min-h-screen bg-background">
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-            </Routes>
-            <Toaster />
-            <Sonner />
-          </div>
-        </Router>
-      </SimpleAuthProvider>
+      <AppErrorBoundary>
+        <BulletproofAuthProvider>
+          <SafeRouter>
+            <div className="min-h-screen bg-background">
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+              </Routes>
+              <Toaster />
+              <Sonner />
+            </div>
+          </SafeRouter>
+        </BulletproofAuthProvider>
+      </AppErrorBoundary>
     </QueryClientProvider>
   );
 }

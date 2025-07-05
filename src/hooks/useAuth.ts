@@ -1,6 +1,6 @@
 
-import { useAuth as useSimpleAuth } from '@/components/SimpleAuthProvider';
+import { useBulletproofAuth } from '@/components/bulletproof/BulletproofAuthProvider';
 
 export const useAuth = () => {
-  return useSimpleAuth();
+  return useBulletproofAuth();
 };
