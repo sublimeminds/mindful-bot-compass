@@ -5,6 +5,8 @@ import { I18nextProvider } from 'react-i18next';
 import { Toaster } from '@/components/ui/toaster';
 import { MinimalAuthProvider } from '@/components/MinimalAuthProvider';
 import AppRouter from '@/components/AppRouter';
+import ReactHealthDashboard from '@/components/development/ReactHealthDashboard';
+import { reactReadinessGate } from '@/utils/reactReadinessGate';
 import i18n from './i18n';
 import './App.css';
 
@@ -54,7 +56,14 @@ class AppErrorBoundary extends React.Component<
 }
 
 function App() {
-  console.log('App: Starting TherapySync with unified auth context...');
+  console.log('App: Starting TherapySync with bulletproof architecture...');
+  
+  // Initialize React readiness monitoring
+  React.useEffect(() => {
+    reactReadinessGate.waitForReady().then(() => {
+      console.log('App: React fully ready, all systems operational');
+    });
+  }, []);
   
   return (
     <AppErrorBoundary>
@@ -65,6 +74,8 @@ function App() {
               <MinimalAuthProvider>
                 <AppRouter />
                 <Toaster />
+                {/* Development health monitoring */}
+                <ReactHealthDashboard />
               </MinimalAuthProvider>
             </BrowserRouter>
           </QueryClientProvider>
