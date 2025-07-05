@@ -164,7 +164,7 @@ class PersonalizedTherapistVoiceService {
     return this.currentTherapistId || localStorage.getItem('current_therapist_id');
   }
 
-  private getTherapistVoiceConfig(therapistId: string): TherapistVoiceConfig | null {
+  getTherapistVoiceConfig(therapistId: string): TherapistVoiceConfig | null {
     return this.therapistVoices.get(therapistId) || null;
   }
 

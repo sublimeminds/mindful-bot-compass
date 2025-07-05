@@ -161,6 +161,18 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
       
+      <Route path="/voice-settings" element={
+        <PageErrorBoundary pageName="Voice Settings">
+          <VoiceSettings />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/multi-language" element={
+        <PageErrorBoundary pageName="Multi-Language">
+          <VoiceSettings />
+        </PageErrorBoundary>
+      } />
+      
       {/* 404 Route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
