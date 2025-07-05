@@ -13,7 +13,7 @@ const GradientButtonComponent: React.FC<GradientButtonProps> = ({
 }) => {
   return (
     <Button
-      className={`bg-gradient-to-r from-primary to-primary-foreground hover:from-primary/90 hover:to-primary-foreground/90 text-primary-foreground font-semibold transition-all duration-200 ${className}`}
+      className={`bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl ${className}`}
       {...props}
     >
       {children}

@@ -4,9 +4,10 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import FeaturesSection from '@/components/FeaturesSection';
-import PricingSection from '@/components/PricingSection';
+import EnhancedPricingSection from '@/components/pricing/EnhancedPricingSection';
 import HowItWorksSection from '@/components/landing/HowItWorksSection';
 import CTASection from '@/components/landing/CTASection';
+import InteractiveDemo from '@/components/landing/InteractiveDemo';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 
 const LandingPage = () => {
@@ -23,6 +24,10 @@ const LandingPage = () => {
           <HeroSection />
         </SafeComponentWrapper>
         
+        <SafeComponentWrapper name="InteractiveDemo" fallback={<div className="py-20"></div>}>
+          <InteractiveDemo />
+        </SafeComponentWrapper>
+        
         <SafeComponentWrapper name="HowItWorksSection" fallback={<div className="py-20"></div>}>
           <div id="how-it-works">
             <HowItWorksSection />
@@ -37,7 +42,7 @@ const LandingPage = () => {
         
         <SafeComponentWrapper name="PricingSection" fallback={<div className="py-20"></div>}>
           <div id="pricing">
-            <PricingSection />
+            <EnhancedPricingSection />
           </div>
         </SafeComponentWrapper>
         

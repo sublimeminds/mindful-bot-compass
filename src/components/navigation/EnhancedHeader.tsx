@@ -220,19 +220,17 @@ const EnhancedHeader = () => {
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
             {/* AI Features Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
-                  <Brain className="h-4 w-4 text-therapy-500" />
-                  <span>AI</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
-                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+            <div className="relative group">
+              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                <Brain className="h-4 w-4 text-therapy-500" />
+                <span>AI</span>
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+              <div className="absolute top-full left-0 w-[480px] p-4 bg-white shadow-xl border-0 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="text-lg font-semibold mb-4 flex items-center">
                   <Brain className="h-5 w-5 mr-2 text-therapy-500" />
                   AI Features
-                </DropdownMenuLabel>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   {aiFeatures.map((feature, index) => (
                     <Link
@@ -258,23 +256,21 @@ const EnhancedHeader = () => {
                     </Link>
                   ))}
                 </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </div>
+            </div>
 
             {/* Platform Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
-                  <Settings className="h-4 w-4 text-therapy-500" />
-                  <span>Platform</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
-                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+            <div className="relative group">
+              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                <Settings className="h-4 w-4 text-therapy-500" />
+                <span>Platform</span>
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+              <div className="absolute top-full left-0 w-[480px] p-4 bg-white shadow-xl border-0 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="text-lg font-semibold mb-4 flex items-center">
                   <Settings className="h-5 w-5 mr-2 text-therapy-500" />
                   Platform Features
-                </DropdownMenuLabel>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   {platformFeatures.map((feature, index) => (
                     <Link
@@ -300,23 +296,21 @@ const EnhancedHeader = () => {
                     </Link>
                   ))}
                 </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </div>
+            </div>
 
             {/* Help Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
-                  <HelpCircle className="h-4 w-4 text-therapy-500" />
-                  <span>Help</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[480px] p-4 bg-white shadow-xl border-0">
-                <DropdownMenuLabel className="text-lg font-semibold mb-4 flex items-center">
+            <div className="relative group">
+              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
+                <HelpCircle className="h-4 w-4 text-therapy-500" />
+                <span>Help</span>
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+              <div className="absolute top-full left-0 w-[480px] p-4 bg-white shadow-xl border-0 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="text-lg font-semibold mb-4 flex items-center">
                   <HelpCircle className="h-5 w-5 mr-2 text-therapy-500" />
                   Help & Support
-                </DropdownMenuLabel>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   {helpResources.map((resource, index) => (
                     <Link
@@ -342,8 +336,8 @@ const EnhancedHeader = () => {
                     </Link>
                   ))}
                 </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </div>
+            </div>
           </nav>
 
           {/* Right Section */}
