@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import SimpleDashboard from '@/components/dashboard/SimpleDashboard';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
+import { useSafeNavigation } from '@/components/bulletproof/SafeRouter';
+import BulletproofDashboardLayout from '@/components/dashboard/BulletproofDashboardLayout';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
+  const { navigate } = useSafeNavigation();
 
   if (loading) {
     return (
@@ -41,7 +41,7 @@ const Dashboard = () => {
     );
   }
 
-  return <SimpleDashboard />;
+  return <BulletproofDashboardLayout />;
 };
 
 export default Dashboard;
