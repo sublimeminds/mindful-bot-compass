@@ -1,8 +1,7 @@
 
 import React from 'react';
-import EnhancedHeader from '@/components/navigation/EnhancedHeader';
-import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
-import SafeFooter from '@/components/SafeFooter';
+import SafeErrorBoundary from '@/components/progressive/SafeErrorBoundary';
+import EnhancedIndexLoader from '@/components/progressive/EnhancedIndexLoader';
 import GradientLogo from '@/components/ui/GradientLogo';
 import GradientButton from '@/components/ui/GradientButton';
 import ProgressiveChatDemo from '@/components/demo/ProgressiveChatDemo';
@@ -146,13 +145,16 @@ const IndexContent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
-      <SimpleErrorBoundary>
-        <EnhancedHeader />
-      </SimpleErrorBoundary>
-      <SimpleErrorBoundary>
-        <ProgressTracker />
-      </SimpleErrorBoundary>
+    <SafeErrorBoundary name="IndexPage">
+      {/* Progressive Enhanced Header and Hero - loads immediately */}
+      <EnhancedIndexLoader />
+      
+      {/* Rest of content loads after initial render with error boundaries */}
+      <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
+        
+        <SafeErrorBoundary name="ProgressTracker" fallback={null}>
+          <ProgressTracker />
+        </SafeErrorBoundary>
       
       {/* Hero Section */}
       <section id="hero" className="py-20 lg:py-32 relative overflow-hidden">
@@ -586,8 +588,24 @@ const IndexContent = () => {
         </div>
       </section>
 
-      <SafeFooter />
-    </div>
+      {/* Footer */}
+      <SafeErrorBoundary name="Footer" fallback={null}>
+        <footer className="bg-gradient-to-r from-therapy-600 to-calm-600 text-white py-12">
+          <div className="container mx-auto px-4 text-center">
+            <GradientLogo size="lg" className="mx-auto mb-4" />
+            <p className="text-therapy-100 mb-4">
+              Your AI-powered mental health companion, available 24/7
+            </p>
+            <div className="flex justify-center space-x-6 text-sm">
+              <button onClick={() => safeNavigate('/privacy')}>Privacy Policy</button>
+              <button onClick={() => safeNavigate('/terms')}>Terms of Service</button>
+              <button onClick={() => safeNavigate('/contact')}>Contact</button>
+            </div>
+          </div>
+        </footer>
+        </SafeErrorBoundary>
+      </div>
+    </SafeErrorBoundary>
   );
 };
 
