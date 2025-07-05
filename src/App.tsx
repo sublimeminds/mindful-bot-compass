@@ -39,6 +39,30 @@ const queryClient = new QueryClient({
   },
 });
 
+// Context readiness component
+function ContextReadyWrapper({ children }: { children: React.ReactNode }) {
+  const [isReady, setIsReady] = React.useState(false);
+
+  React.useEffect(() => {
+    // Give React contexts time to initialize
+    const timer = setTimeout(() => setIsReady(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Initializing application...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
+
 // Bulletproof App with enhanced authentication
 function App() {
   return (
@@ -47,13 +71,15 @@ function App() {
         <AppErrorBoundary>
           <BulletproofAuthProvider>
             <SimpleAppProvider>
-              <SafeRouter>
-                <div className="min-h-screen bg-background">
-                  <AppRouter />
-                  <Toaster />
-                  <Sonner />
-                </div>
-              </SafeRouter>
+              <ContextReadyWrapper>
+                <SafeRouter>
+                  <div className="min-h-screen bg-background">
+                    <AppRouter />
+                    <Toaster />
+                    <Sonner />
+                  </div>
+                </SafeRouter>
+              </ContextReadyWrapper>
             </SimpleAppProvider>
           </BulletproofAuthProvider>
         </AppErrorBoundary>

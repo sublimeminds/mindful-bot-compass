@@ -20,19 +20,28 @@ interface LocationData {
 }
 
 export const useEnhancedCurrency = () => {
+  // Safe hook initialization with error boundary
+  const [hookError, setHookError] = useState<Error | null>(null);
+  
+  let user: any = null;
   try {
-    const { user } = useSimpleApp();
-    const [currency, setCurrency] = useState<CurrencyData>({
-      code: 'USD',
-      symbol: '$',
-      name: 'US Dollar',
-      exchangeRate: 1,
-      region: 'Americas'
-    });
-    const [loading, setLoading] = useState(true);
-    const [isLoadingRates, setIsLoadingRates] = useState(false);
-    const [supportedCurrencies, setSupportedCurrencies] = useState<CurrencyData[]>([]);
-    const [userLocation, setUserLocation] = useState<LocationData | null>(null);
+    const simpleApp = useSimpleApp();
+    user = simpleApp?.user || null;
+  } catch (error) {
+    console.warn('useSimpleApp failed in useEnhancedCurrency:', error);
+  }
+
+  const [currency, setCurrency] = useState<CurrencyData>({
+    code: 'USD',
+    symbol: '$',
+    name: 'US Dollar',
+    exchangeRate: 1,
+    region: 'Americas'
+  });
+  const [loading, setLoading] = useState(true);
+  const [isLoadingRates, setIsLoadingRates] = useState(false);
+  const [supportedCurrencies, setSupportedCurrencies] = useState<CurrencyData[]>([]);
+  const [userLocation, setUserLocation] = useState<LocationData | null>(null);
 
   useEffect(() => {
     initializeCurrency();
@@ -170,28 +179,4 @@ export const useEnhancedCurrency = () => {
     getRegionalPrice,
     suggestCurrencyFromLocation
   };
-  } catch (error) {
-    console.error('useEnhancedCurrency error:', error);
-    // Return safe fallback values
-    return {
-      currency: {
-        code: 'USD',
-        symbol: '$',
-        name: 'US Dollar',
-        exchangeRate: 1,
-        region: 'Americas'
-      },
-      selectedCurrency: 'USD',
-      setSelectedCurrency: () => {},
-      supportedCurrencies: [],
-      userLocation: null,
-      loading: false,
-      isLoadingRates: false,
-      changeCurrency: () => {},
-      convertPrice: (amount: number) => amount,
-      formatPrice: (amount: number) => `$${amount.toFixed(2)}`,
-      getRegionalPrice: async (amount: number) => amount,
-      suggestCurrencyFromLocation: () => ({ suggested: false, currency: undefined, country: undefined })
-    };
-  }
 };
