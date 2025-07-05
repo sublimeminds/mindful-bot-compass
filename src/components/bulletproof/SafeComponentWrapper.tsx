@@ -34,6 +34,15 @@ export class SafeComponentWrapper extends Component<SafeComponentWrapperProps, S
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     const componentName = this.props.name || 'UnknownComponent';
     console.error(`SafeComponentWrapper[${componentName}]:`, error, errorInfo);
+    
+    // Log specific React-related errors for debugging
+    if (error.message.includes('Cannot read properties of null')) {
+      console.error(`React initialization error in ${componentName}:`, {
+        error: error.message,
+        stack: error.stack,
+        componentStack: errorInfo.componentStack
+      });
+    }
   }
 
   handleRetry = () => {

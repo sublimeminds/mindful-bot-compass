@@ -12,6 +12,7 @@ import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAut
 import { SafeRouter } from '@/components/bulletproof/SafeRouter';
 import { AppErrorBoundary } from '@/components/bulletproof/MultiLevelErrorBoundary';
 import { SimpleAppProvider } from '@/hooks/useSimpleApp';
+import ReactSafeWrapper from '@/components/ReactSafeWrapper';
 
 // App Router
 import AppRouter from '@/components/AppRouter';
@@ -41,21 +42,23 @@ const queryClient = new QueryClient({
 // Bulletproof App with enhanced authentication
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppErrorBoundary>
-        <BulletproofAuthProvider>
-          <SimpleAppProvider>
-            <SafeRouter>
-              <div className="min-h-screen bg-background">
-                <AppRouter />
-                <Toaster />
-                <Sonner />
-              </div>
-            </SafeRouter>
-          </SimpleAppProvider>
-        </BulletproofAuthProvider>
-      </AppErrorBoundary>
-    </QueryClientProvider>
+    <ReactSafeWrapper>
+      <QueryClientProvider client={queryClient}>
+        <AppErrorBoundary>
+          <BulletproofAuthProvider>
+            <SimpleAppProvider>
+              <SafeRouter>
+                <div className="min-h-screen bg-background">
+                  <AppRouter />
+                  <Toaster />
+                  <Sonner />
+                </div>
+              </SafeRouter>
+            </SimpleAppProvider>
+          </BulletproofAuthProvider>
+        </AppErrorBoundary>
+      </QueryClientProvider>
+    </ReactSafeWrapper>
   );
 }
 
