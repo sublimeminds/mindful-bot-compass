@@ -9,7 +9,6 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import './i18n';
 
 // Bulletproof Framework Components
-import { SafeHookProvider } from '@/components/bulletproof/SafeHookProvider';
 import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAuthProvider';
 import { AppErrorBoundary } from '@/components/bulletproof/MultiLevelErrorBoundary';
 import { SafeRouter } from '@/components/bulletproof/SafeRouter';
@@ -68,31 +67,29 @@ function App() {
       name="Application"
       showErrorDetails={process.env.NODE_ENV === 'development'}
     >
-      <SafeHookProvider>
-        <QueryClientProvider client={queryClient}>
-          <BulletproofAuthProvider>
-            <Router>
-              <div className="min-h-screen bg-background">
-                <SafeRouter 
-                  routes={routes}
-                  defaultRoute="/"
-                  authCheck={() => {
-                    // Check if user is authenticated using bulletproof auth
-                    try {
-                      const { user } = require('@/components/bulletproof/BulletproofAuthProvider').useBulletproofAuth();
-                      return !!user;
-                    } catch {
-                      return false;
-                    }
-                  }}
-                />
-                <Toaster />
-                <Sonner />
-              </div>
-            </Router>
-          </BulletproofAuthProvider>
-        </QueryClientProvider>
-      </SafeHookProvider>
+      <QueryClientProvider client={queryClient}>
+        <BulletproofAuthProvider>
+          <Router>
+            <div className="min-h-screen bg-background">
+              <SafeRouter 
+                routes={routes}
+                defaultRoute="/"
+                authCheck={() => {
+                  // Check if user is authenticated using bulletproof auth
+                  try {
+                    const { user } = require('@/components/bulletproof/BulletproofAuthProvider').useBulletproofAuth();
+                    return !!user;
+                  } catch {
+                    return false;
+                  }
+                }}
+              />
+              <Toaster />
+              <Sonner />
+            </div>
+          </Router>
+        </BulletproofAuthProvider>
+      </QueryClientProvider>
     </AppErrorBoundary>
   );
 }
