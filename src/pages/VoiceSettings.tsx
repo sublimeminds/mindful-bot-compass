@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import BulletproofDashboardLayout from '@/components/dashboard/BulletproofDashboardLayout';
@@ -8,7 +8,7 @@ const VoiceSettings = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!loading && !user) {
       navigate('/auth');
     }

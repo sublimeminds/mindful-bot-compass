@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { reactHookValidator } from '@/utils/reactHookValidator';
 import { validateComponentImports } from '@/utils/importValidator';
 import { DebugLogger } from '@/utils/debugLogger';
@@ -20,13 +20,13 @@ export function withReactValidation<P extends object>(
     const finalComponentName = propComponentName || displayName;
 
     // Track component render for diagnostics
-    React.useEffect(() => {
+    useEffect(() => {
       reactHookValidator.trackComponentRender(finalComponentName);
       validateComponentImports(finalComponentName);
     });
 
     // Validate React context on mount and when deps change
-    React.useEffect(() => {
+    useEffect(() => {
       const validation = reactHookValidator.validateReactContext();
       
       if (!validation.isValid) {
@@ -51,7 +51,7 @@ export function withReactValidation<P extends object>(
 
 // Utility hook for manual validation
 export const useReactValidation = (componentName: string) => {
-  React.useEffect(() => {
+  useEffect(() => {
     reactHookValidator.trackComponentRender(componentName);
     validateComponentImports(componentName);
     

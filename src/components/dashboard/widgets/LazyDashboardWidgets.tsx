@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
@@ -77,7 +77,7 @@ const LazyWidget = ({
   name: string;
   onLoadComplete?: () => void;
 }) => {
-  React.useEffect(() => {
+  useEffect(() => {
     if (onLoadComplete) {
       const timer = setTimeout(onLoadComplete, 0);
       return () => clearTimeout(timer);

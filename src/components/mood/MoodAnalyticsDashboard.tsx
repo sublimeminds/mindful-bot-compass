@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -76,7 +76,7 @@ const MoodAnalyticsDashboard = () => {
   })) || [];
 
   // Calculate statistics
-  const stats = React.useMemo(() => {
+  const stats = useMemo(() => {
     if (!moodData || moodData.length === 0) {
       return {
         averageMood: 0,
@@ -115,7 +115,7 @@ const MoodAnalyticsDashboard = () => {
   }, [moodData]);
 
   // Mood distribution data for pie chart
-  const moodDistribution = React.useMemo(() => {
+  const moodDistribution = useMemo(() => {
     if (!moodData || moodData.length === 0) return [];
 
     const distribution = {

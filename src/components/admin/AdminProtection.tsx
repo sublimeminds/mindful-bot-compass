@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdmin } from '@/hooks/useAdmin';
@@ -121,7 +121,7 @@ const AdminProtection: React.FC<AdminProtectionProps> = ({
   }
 
   // Security audit log
-  React.useEffect(() => {
+  useEffect(() => {
     console.log(`Admin access verified: ${user.email} accessing ${requiredPermission || 'general admin area'}`);
   }, [user.email, requiredPermission]);
 

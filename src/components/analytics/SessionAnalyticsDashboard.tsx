@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { useSessionStats } from '@/hooks/useSessionStats';
@@ -11,7 +11,7 @@ const SessionAnalyticsDashboard = () => {
   const { sessionSummaries } = useSessionHistory();
 
   // Prepare data for charts
-  const weeklyData = React.useMemo(() => {
+  const weeklyData = useMemo(() => {
     if (!sessionSummaries) return [];
     
     const last7Days = Array.from({ length: 7 }, (_, i) => {
@@ -35,7 +35,7 @@ const SessionAnalyticsDashboard = () => {
     });
   }, [sessionSummaries]);
 
-  const moodTrendData = React.useMemo(() => {
+  const moodTrendData = useMemo(() => {
     if (!sessionSummaries) return [];
     
     return sessionSummaries

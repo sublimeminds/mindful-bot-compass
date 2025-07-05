@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -20,7 +20,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 
 const AdminSidebarEnhanced = () => {
   const location = useLocation();
-  const [openSections, setOpenSections] = React.useState({
+  const [openSections, setOpenSections] = useState({
     main: true,
     advanced: true
   });
