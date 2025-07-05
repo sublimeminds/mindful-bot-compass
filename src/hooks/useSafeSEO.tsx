@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 interface SEOProps {
   title?: string;
@@ -8,7 +8,7 @@ interface SEOProps {
 }
 
 export const useSafeSEO = ({ title, description, keywords }: SEOProps) => {
-  useEffect(() => {
+  React.useEffect(() => {
     try {
       if (title) {
         document.title = title;
