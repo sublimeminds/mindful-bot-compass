@@ -22,24 +22,14 @@ export const SafeHookProvider: React.FC<SafeHookProviderProps> = ({ children }) 
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const validateReactEnvironment = () => {
-      try {
-        // Test if we can use useState
-        const [testState] = useState(true);
-        
-        // Test if we can use useEffect
-        useEffect(() => {
-          setCanUseHooks(true);
-        }, []);
-        
-        setIsReactReady(true);
-      } catch (err) {
-        console.error('SafeHookProvider: React environment validation failed:', err);
-        setError(err instanceof Error ? err : new Error('React validation failed'));
-      }
-    };
-
-    validateReactEnvironment();
+    // Simple React readiness check without violating Rules of Hooks
+    try {
+      setIsReactReady(true);
+      setCanUseHooks(true);
+    } catch (err) {
+      console.error('SafeHookProvider: React environment validation failed:', err);
+      setError(err instanceof Error ? err : new Error('React validation failed'));
+    }
   }, []);
 
   // Fallback rendering if hooks can't be used
