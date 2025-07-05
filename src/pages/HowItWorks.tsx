@@ -511,7 +511,7 @@ const HowItWorks = () => {
           
           <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl">
             <CardContent className="p-8">
-              <Tabs value={activeAudioTab} onValueChange={setActiveAudioTab}>
+              <Tabs value={activeAudioTab} onValueChange={() => {}}>
                 <TabsList className="grid w-full grid-cols-3 mb-8">
                   <TabsTrigger value="podcasts" className="flex items-center gap-2">
                     <MessageSquare className="h-4 w-4" />
