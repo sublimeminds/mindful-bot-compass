@@ -1,46 +1,30 @@
-
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Button, ButtonProps } from '@/components/ui/button';
+import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 
-interface GradientButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface GradientButtonProps extends ButtonProps {
   children: React.ReactNode;
-  variant?: 'default' | 'outline' | 'ghost';
-  size?: 'default' | 'sm' | 'lg';
-  className?: string;
 }
 
-const GradientButton: React.FC<GradientButtonProps> = ({ 
+const GradientButtonComponent: React.FC<GradientButtonProps> = ({ 
   children, 
-  variant = 'default', 
-  size = 'default',
-  className,
+  className = '', 
   ...props 
 }) => {
-  const baseClasses = "bg-gradient-to-r from-therapy-500 to-calm-500 text-white hover:from-therapy-600 hover:to-calm-600 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl border-0";
-  
-  if (variant === 'outline') {
-    return (
-      <Button
-        variant="outline"
-        size={size}
-        className={cn("border-2 border-therapy-300 text-therapy-700 hover:bg-gradient-to-r hover:from-therapy-50 hover:to-calm-50 transition-all duration-300 hover:scale-105", className)}
-        {...props}
-      >
-        {children}
-      </Button>
-    );
-  }
-
   return (
     <Button
-      size={size}
-      className={cn(baseClasses, className)}
+      className={`bg-gradient-to-r from-primary to-primary-foreground hover:from-primary/90 hover:to-primary-foreground/90 text-primary-foreground font-semibold transition-all duration-200 ${className}`}
       {...props}
     >
       {children}
     </Button>
   );
 };
+
+const GradientButton: React.FC<GradientButtonProps> = (props) => (
+  <SafeComponentWrapper name="GradientButton" fallback={<Button {...props} />}>
+    <GradientButtonComponent {...props} />
+  </SafeComponentWrapper>
+);
 
 export default GradientButton;

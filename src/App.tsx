@@ -74,8 +74,13 @@ function App() {
                   routes={routes}
                   defaultRoute="/"
                   authCheck={() => {
-                    // Simple auth check - will be enhanced later
-                    return true; // For now, allow all routes
+                    // Check if user is authenticated using bulletproof auth
+                    try {
+                      const { user } = require('@/components/bulletproof/BulletproofAuthProvider').useBulletproofAuth();
+                      return !!user;
+                    } catch {
+                      return false;
+                    }
                   }}
                 />
                 <Toaster />

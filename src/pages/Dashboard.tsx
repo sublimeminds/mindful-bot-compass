@@ -1,46 +1,47 @@
 
 import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
+import SimpleDashboard from '@/components/dashboard/SimpleDashboard';
+import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
+import { useSafeNavigation } from '@/components/bulletproof/SafeRouter';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
+  const { navigate } = useSafeNavigation();
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
-          <p className="text-therapy-600 font-medium">Loading Dashboard...</p>
+      <SafeComponentWrapper name="DashboardLoader">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-foreground font-medium">Loading Dashboard...</p>
+          </div>
         </div>
-      </div>
+      </SafeComponentWrapper>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen">
-        <Header />
-        <div className="flex items-center justify-center min-h-[80vh] bg-gradient-to-br from-therapy-50 to-calm-50">
+      <SafeComponentWrapper name="DashboardAuthRequired">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
           <div className="text-center max-w-md mx-auto p-6">
-            <h1 className="text-2xl font-bold text-therapy-900 mb-4">Access Denied</h1>
-            <p className="text-therapy-600 mb-6">Please sign in to access your dashboard.</p>
-            <a 
-              href="/auth" 
-              className="inline-block bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+            <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+            <p className="text-muted-foreground mb-6">Please sign in to access your dashboard.</p>
+            <button 
+              onClick={() => navigate('/auth')}
+              className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-lg transition-all duration-200"
             >
               Sign In
-            </a>
+            </button>
           </div>
         </div>
-        <Footer />
-      </div>
+      </SafeComponentWrapper>
     );
   }
 
-  return <DashboardLayoutWithSidebar />;
+  return <SimpleDashboard />;
 };
 
 export default Dashboard;
