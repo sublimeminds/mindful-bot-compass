@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, Suspense } from 'react';
+import React, { Component, ReactNode, Suspense, useState, useCallback } from 'react';
 
 interface SafeComponentWrapperProps {
   children: ReactNode;
@@ -88,14 +88,14 @@ export class SafeComponentWrapper extends Component<SafeComponentWrapperProps, S
 }
 
 export const useSafeComponent = (name?: string) => {
-  const [error, setError] = React.useState<Error | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
-  const handleError = React.useCallback((error: Error) => {
+  const handleError = useCallback((error: Error) => {
     console.error(`SafeComponent[${name}]:`, error);
     setError(error);
   }, [name]);
 
-  const retry = React.useCallback(() => {
+  const retry = useCallback(() => {
     setError(null);
   }, []);
 
