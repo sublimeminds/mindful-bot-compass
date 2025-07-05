@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
+import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
+import { performanceMonitor } from '@/utils/performanceMonitor';
 import EnhancedDashboardSidebar from './EnhancedDashboardSidebar';
 import DashboardHeader from './DashboardHeader';
 import DashboardLayout from './DashboardLayout';
@@ -11,7 +13,37 @@ interface BulletproofDashboardLayoutProps {
 }
 
 const BulletproofDashboardLayout = ({ children }: BulletproofDashboardLayoutProps) => {
-  return (
+  // Performance monitoring configuration
+  const { metrics, warnings, clearWarnings } = usePerformanceMonitor({
+    enableMetrics: true,
+    sampleRate: 1,
+    thresholds: {
+      renderTime: 100, // 100ms threshold
+      memoryUsage: 0.8, // 80% memory usage threshold
+      fps: 30 // 30 FPS minimum
+    }
+  });
+
+  // Start performance monitoring on mount
+  useEffect(() => {
+    performanceMonitor.startMonitoring();
+    return () => performanceMonitor.stopMonitoring();
+  }, []);
+
+  // Log performance warnings
+  useEffect(() => {
+    if (warnings.length > 0) {
+      warnings.forEach(warning => console.warn(`Dashboard Performance Warning: ${warning}`));
+      clearWarnings();
+    }
+  }, [warnings, clearWarnings]);
+
+  // Track dashboard render performance
+  useEffect(() => {
+    performanceMonitor.trackMemoryUsage('BulletproofDashboardLayout');
+  });
+
+  return performanceMonitor.measureRenderTime('BulletproofDashboardLayout', () => (
     <SafeComponentWrapper name="BulletproofDashboardLayout">
       <SidebarProvider>
         <div className="min-h-screen flex w-full">
@@ -74,7 +106,7 @@ const BulletproofDashboardLayout = ({ children }: BulletproofDashboardLayoutProp
         </div>
       </SidebarProvider>
     </SafeComponentWrapper>
-  );
+  ));
 };
 
 export default BulletproofDashboardLayout;
