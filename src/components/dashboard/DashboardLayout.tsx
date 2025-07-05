@@ -5,10 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 import NotificationWidget from './NotificationWidget';
+import WelcomeWidget from './widgets/WelcomeWidget';
 import MoodTrackerWidget from './widgets/MoodTrackerWidget';
 import SessionHistoryWidget from './widgets/SessionHistoryWidget';
 import QuickActionsWidget from './widgets/QuickActionsWidget';
 import ProgressOverviewWidget from './widgets/ProgressOverviewWidget';
+import TherapistAvatarWidget from './widgets/TherapistAvatarWidget';
 import { 
   Brain, 
   Heart, 
@@ -144,6 +146,9 @@ const DashboardLayout = () => {
 
           {/* Right Column - Side Widgets */}
           <div className="lg:col-span-4 space-y-6">
+            {/* Therapist Avatar Widget */}
+            <TherapistAvatarWidget />
+            
             {/* Mood Tracker Widget */}
             <MoodTrackerWidget />
             

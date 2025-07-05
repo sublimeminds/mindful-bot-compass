@@ -17,6 +17,7 @@ import GoalsPage from "../pages/GoalsPage";
 import Goals from "../pages/Goals";
 import Profile from "../pages/Profile";
 import Settings from "../pages/Settings";
+import VoiceSettings from "../pages/VoiceSettings";
 import EnhancedAIPersonalization from "../pages/EnhancedAIPersonalization";
 import AdvancedAnalytics from "../pages/AdvancedAnalytics";
 import EnhancedTherapy from "../pages/EnhancedTherapy";
@@ -101,6 +102,12 @@ const AppRouter = () => {
       <Route path="/settings" element={
         <PageErrorBoundary pageName="Settings">
           <Settings />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/voice-settings" element={
+        <PageErrorBoundary pageName="Voice Settings">
+          <VoiceSettings />
         </PageErrorBoundary>
       } />
       

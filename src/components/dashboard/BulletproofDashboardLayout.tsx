@@ -7,6 +7,12 @@ import EnhancedDashboardSidebar from './EnhancedDashboardSidebar';
 import DashboardHeader from './DashboardHeader';
 import DashboardLayout from './DashboardLayout';
 import DashboardFooter from './DashboardFooter';
+import TherapistAvatarWidget from './widgets/TherapistAvatarWidget';
+import MoodTrackerWidget from './widgets/MoodTrackerWidget';
+import WelcomeWidget from './widgets/WelcomeWidget';
+import QuickActionsWidget from './widgets/QuickActionsWidget';
+import RecentActivityWidget from './widgets/RecentActivityWidget';
+import ProgressOverviewWidget from './widgets/ProgressOverviewWidget';
 
 interface BulletproofDashboardLayoutProps {
   children?: React.ReactNode;
