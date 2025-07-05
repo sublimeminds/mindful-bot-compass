@@ -50,30 +50,9 @@ const EnterpriseIntegrations = () => {
   }, []);
 
   const loadIntegrations = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('enterprise_integrations')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      const formattedIntegrations: IntegrationConfig[] = data?.map(item => ({
-        id: item.id,
-        name: item.name,
-        type: item.integration_type,
-        status: item.status,
-        endpoint: item.endpoint_url,
-        apiKey: item.api_key,
-        config: item.configuration || {},
-        lastSync: item.last_sync ? new Date(item.last_sync) : undefined,
-        syncCount: item.sync_count || 0
-      })) || [];
-
-      setIntegrations(formattedIntegrations);
-    } catch (error) {
-      console.error('Error loading integrations:', error);
-    }
+    // Mock data for now (database integration pending)
+    const mockIntegrations: IntegrationConfig[] = [];
+    setIntegrations(mockIntegrations);
   };
 
   const saveIntegration = async (integration: Partial<IntegrationConfig>) => {

@@ -1202,6 +1202,48 @@ export type Database = {
         }
         Relationships: []
       }
+      enterprise_integrations: {
+        Row: {
+          api_key: string | null
+          configuration: Json | null
+          created_at: string
+          endpoint_url: string | null
+          id: string
+          integration_type: string
+          last_sync: string | null
+          name: string
+          status: string
+          sync_count: number
+          updated_at: string
+        }
+        Insert: {
+          api_key?: string | null
+          configuration?: Json | null
+          created_at?: string
+          endpoint_url?: string | null
+          id?: string
+          integration_type: string
+          last_sync?: string | null
+          name: string
+          status?: string
+          sync_count?: number
+          updated_at?: string
+        }
+        Update: {
+          api_key?: string | null
+          configuration?: Json | null
+          created_at?: string
+          endpoint_url?: string | null
+          id?: string
+          integration_type?: string
+          last_sync?: string | null
+          name?: string
+          status?: string
+          sync_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       exchange_rates: {
         Row: {
           base_currency: string
@@ -2476,6 +2518,36 @@ export type Database = {
           requester_id?: string
           status?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      performance_metrics: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          metric_type?: string
+          metric_value?: number
+          recorded_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -4489,6 +4561,72 @@ export type Database = {
           updated_at?: string
           usage_count?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      voice_clone_profiles: {
+        Row: {
+          cloned_voice_id: string | null
+          created_at: string
+          id: string
+          quality_score: number
+          sample_count: number
+          training_status: string
+          updated_at: string
+          user_id: string
+          voice_name: string
+        }
+        Insert: {
+          cloned_voice_id?: string | null
+          created_at?: string
+          id?: string
+          quality_score?: number
+          sample_count?: number
+          training_status?: string
+          updated_at?: string
+          user_id: string
+          voice_name: string
+        }
+        Update: {
+          cloned_voice_id?: string | null
+          created_at?: string
+          id?: string
+          quality_score?: number
+          sample_count?: number
+          training_status?: string
+          updated_at?: string
+          user_id?: string
+          voice_name?: string
+        }
+        Relationships: []
+      }
+      voice_samples: {
+        Row: {
+          created_at: string
+          duration: number
+          file_path: string
+          id: string
+          profile_id: string
+          quality_score: number
+          transcript: string
+        }
+        Insert: {
+          created_at?: string
+          duration?: number
+          file_path: string
+          id?: string
+          profile_id: string
+          quality_score?: number
+          transcript: string
+        }
+        Update: {
+          created_at?: string
+          duration?: number
+          file_path?: string
+          id?: string
+          profile_id?: string
+          quality_score?: number
+          transcript?: string
         }
         Relationships: []
       }

@@ -48,19 +48,11 @@ class VoiceCloneService {
       createdAt: new Date()
     };
 
-    // Store in Supabase
-    const { error } = await supabase
-      .from('voice_clone_profiles')
-      .insert([{
-        id: profile.id,
-        user_id: profile.userId,
-        voice_name: profile.voiceName,
-        training_status: profile.trainingStatus,
-        sample_count: profile.sampleCount,
-        quality_score: profile.qualityScore
-      }]);
+    // Store in localStorage for now (database integration pending)
+    const profiles = JSON.parse(localStorage.getItem('voice_clone_profiles') || '[]');
+    profiles.push(profile);
+    localStorage.setItem('voice_clone_profiles', JSON.stringify(profiles));
 
-    if (error) throw error;
     return profile;
   }
 
@@ -239,24 +231,9 @@ class VoiceCloneService {
   }
 
   async getUserVoiceProfiles(userId: string): Promise<VoiceCloneProfile[]> {
-    const { data, error } = await supabase
-      .from('voice_clone_profiles')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-    
-    return data?.map(profile => ({
-      id: profile.id,
-      userId: profile.user_id,
-      voiceName: profile.voice_name,
-      clonedVoiceId: profile.cloned_voice_id || '',
-      trainingStatus: profile.training_status,
-      sampleCount: profile.sample_count,
-      qualityScore: profile.quality_score,
-      createdAt: new Date(profile.created_at)
-    })) || [];
+    // Return from localStorage for now (database integration pending)
+    const profiles = JSON.parse(localStorage.getItem('voice_clone_profiles') || '[]');
+    return profiles.filter((profile: VoiceCloneProfile) => profile.userId === userId);
   }
 }
 
