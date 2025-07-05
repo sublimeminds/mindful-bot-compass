@@ -1,13 +1,11 @@
-
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { User } from '@supabase/supabase-js';
+import React, { createContext, useContext } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
 interface SimpleAppContextType {
-  user: User | null;
+  user: any;
   loading: boolean;
   signOut: () => Promise<void>;
-  logout: () => Promise<void>; // Added logout alias
+  logout: () => Promise<void>;
   register: (email: string, password: string) => Promise<{ error: any }>;
   login: (email: string, password: string) => Promise<{ error: any }>;
 }
@@ -15,57 +13,19 @@ interface SimpleAppContextType {
 const SimpleAppContext = createContext<SimpleAppContextType | undefined>(undefined);
 
 export const SimpleAppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const auth = useAuth();
 
-  useEffect(() => {
-    const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      setLoading(false);
-    };
-
-    getInitialSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const signOut = async () => {
-    await supabase.auth.signOut();
-  };
-
-  const register = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({ 
-      email, 
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`
-      }
-    });
-    return { error };
-  };
-
-  const login = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error };
+  const value: SimpleAppContextType = {
+    user: auth.user,
+    loading: auth.loading,
+    signOut: auth.signOut || auth.logout,
+    logout: auth.signOut || auth.logout,
+    register: auth.signUp || auth.register,
+    login: auth.signIn || auth.login,
   };
 
   return (
-    <SimpleAppContext.Provider value={{ 
-      user, 
-      loading, 
-      signOut, 
-      logout: signOut, // Alias for compatibility
-      register,
-      login
-    }}>
+    <SimpleAppContext.Provider value={value}>
       {children}
     </SimpleAppContext.Provider>
   );
@@ -74,7 +34,16 @@ export const SimpleAppProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 export const useSimpleApp = () => {
   const context = useContext(SimpleAppContext);
   if (context === undefined) {
-    throw new Error('useSimpleApp must be used within a SimpleAppProvider');
+    // Fallback to direct auth hook usage
+    const auth = useAuth();
+    return {
+      user: auth.user,
+      loading: auth.loading,
+      signOut: auth.signOut || auth.logout,
+      logout: auth.signOut || auth.logout,
+      register: auth.signUp || auth.register,
+      login: auth.signIn || auth.login,
+    };
   }
   return context;
 };
