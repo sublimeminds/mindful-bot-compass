@@ -5,6 +5,7 @@ import { useRealEnhancedChat } from '@/hooks/useRealEnhancedChat';
 import BulletproofDashboardLayout from '@/components/dashboard/BulletproofDashboardLayout';
 import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
 import EmotionCameraDetection from '@/components/avatar/EmotionCameraDetection';
+import VoiceRecorder from '@/components/voice/VoiceRecorder';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,6 +41,7 @@ const EnhancedTherapyChatWithAvatar = () => {
     messages,
     isLoading,
     isPlaying,
+    currentSessionId,
     sendMessage,
     playMessage,
     stopPlayback,
@@ -108,6 +110,14 @@ const EnhancedTherapyChatWithAvatar = () => {
 
   const handleEmotionDetected = useCallback((emotion: any) => {
     setUserEmotion(emotion.emotion);
+  }, []);
+
+  const handleVoiceTranscription = useCallback((text: string) => {
+    setMessageInput(text);
+  }, []);
+
+  const handleVoiceRecordingStateChange = useCallback((isRecording: boolean) => {
+    setIsListening(isRecording);
   }, []);
 
   const handlePlayMessage = async (content: string) => {
@@ -326,6 +336,15 @@ const EnhancedTherapyChatWithAvatar = () => {
                 showPreview={true}
               />
             )}
+
+            {/* Voice Input */}
+            <VoiceRecorder
+              onTranscription={handleVoiceTranscription}
+              onRecordingStateChange={handleVoiceRecordingStateChange}
+              userId={user?.id}
+              sessionId={currentSessionId}
+              isEnabled={voiceEnabled}
+            />
 
             {/* Session Info */}
             <Card>
