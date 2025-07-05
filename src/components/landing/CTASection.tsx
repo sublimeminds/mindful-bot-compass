@@ -1,13 +1,13 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Sparkles, Users, TrendingUp } from 'lucide-react';
-import { useSafeNavigation } from '@/components/bulletproof/SafeRouter';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 
 const CTASection = () => {
-  const { navigate } = useSafeNavigation();
+  const navigate = useNavigate();
 
   const handleGetStarted = () => {
     navigate('/onboarding');

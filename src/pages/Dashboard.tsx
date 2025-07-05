@@ -1,13 +1,13 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import SimpleDashboard from '@/components/dashboard/SimpleDashboard';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
-import { useSafeNavigation } from '@/components/bulletproof/SafeRouter';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
-  const { navigate } = useSafeNavigation();
+  const navigate = useNavigate();
 
   if (loading) {
     return (

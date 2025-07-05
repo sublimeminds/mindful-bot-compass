@@ -1,12 +1,12 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useSafeNavigation } from '@/components/bulletproof/SafeRouter';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 
 const SimpleLandingPage = () => {
-  const { navigate } = useSafeNavigation();
+  const navigate = useNavigate();
 
   const handleGetStarted = () => {
     navigate('/auth');
