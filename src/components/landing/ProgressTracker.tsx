@@ -16,9 +16,17 @@ const sections = [
 
 const ProgressTracker = () => {
   const [activeSection, setActiveSection] = useState('hero');
-  const [completedSections, setCompletedSections] = useState<string[]>([]);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [viewedSections, setViewedSections] = useState<string[]>([]);
 
   useEffect(() => {
+    const handleScroll = () => {
+      // Calculate scroll progress based on document height
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const currentProgress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
+      setScrollProgress(Math.min(100, Math.max(0, currentProgress)));
+    };
+
     const observerOptions = {
       root: null,
       rootMargin: '-20% 0px -60% 0px',
@@ -31,8 +39,8 @@ const ProgressTracker = () => {
           const sectionId = entry.target.id;
           setActiveSection(sectionId);
           
-          // Mark section as completed when it becomes active
-          setCompletedSections(prev => {
+          // Track sections that have been viewed (but don't use for progress)
+          setViewedSections(prev => {
             if (!prev.includes(sectionId)) {
               return [...prev, sectionId];
             }
@@ -52,7 +60,14 @@ const ProgressTracker = () => {
       }
     });
 
-    return () => observer.disconnect();
+    // Add scroll listener for progress calculation
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Calculate initial progress
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const scrollToSection = (sectionId: string) => {
@@ -62,7 +77,7 @@ const ProgressTracker = () => {
     }
   };
 
-  const completionPercentage = Math.round((completedSections.length / sections.length) * 100);
+  const completionPercentage = Math.round(scrollProgress);
 
   return (
     <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40 hidden xl:block">
@@ -88,7 +103,7 @@ const ProgressTracker = () => {
           <div className="space-y-2">
             {sections.map((section, index) => {
               const isActive = activeSection === section.id;
-              const isCompleted = completedSections.includes(section.id);
+              const isViewed = viewedSections.includes(section.id);
               
               return (
                 <button
@@ -99,14 +114,14 @@ const ProgressTracker = () => {
                   }`}
                 >
                   <div className="flex items-center space-x-2">
-                    {isCompleted ? (
+                    {isViewed ? (
                       <CheckCircle className="h-4 w-4 text-therapy-500" />
                     ) : (
                       <Circle className="h-4 w-4 text-gray-400" />
                     )}
                     <div className="flex-1">
                       <div className={`text-xs font-medium ${
-                        isActive ? 'text-therapy-700' : isCompleted ? 'text-gray-700' : 'text-gray-500'
+                        isActive ? 'text-therapy-700' : isViewed ? 'text-gray-700' : 'text-gray-500'
                       }`}>
                         {section.title}
                       </div>
