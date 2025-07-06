@@ -14,7 +14,8 @@ import {
   HeadphonesIcon,
   Heart,
   Users,
-  Brain
+  Brain,
+  Zap
 } from 'lucide-react';
 import {
   Sidebar,
@@ -40,6 +41,7 @@ const navigation = [
   { name: 'Sessions', href: '/sessions', icon: Calendar },
   { name: 'Goals', href: '/goals', icon: Target },
   { name: 'Mood Tracker', href: '/mood-tracker', icon: Heart },
+  { name: 'Integrations', href: '/integrations', icon: Zap },
   { name: 'Community', href: '/community', icon: Users },
   { name: 'Analytics', href: '/analytics', icon: TrendingUp },
   { name: 'Therapy Settings', href: '/therapy-settings', icon: Settings },

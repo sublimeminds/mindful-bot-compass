@@ -40,6 +40,7 @@ import Help from "../pages/Help";
 import Support from "../pages/Support";
 import TherapySettingsPage from "../pages/TherapySettingsPage";
 import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
+import Integrations from "../pages/Integrations";
 
 // Error Pages
 import NotFound from "../pages/NotFound";
@@ -241,6 +242,12 @@ const AppRouter = () => {
       <Route path="/family-features" element={
         <PageErrorBoundary pageName="Family Features">
           <FamilyFeaturesPage />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/integrations" element={
+        <PageErrorBoundary pageName="Integrations">
+          <Integrations />
         </PageErrorBoundary>
       } />
       

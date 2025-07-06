@@ -724,6 +724,42 @@ export type Database = {
         }
         Relationships: []
       }
+      conversation_threads: {
+        Row: {
+          conversation_data: Json | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          last_platform: string | null
+          platforms: string[] | null
+          thread_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_data?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          last_platform?: string | null
+          platforms?: string[] | null
+          thread_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conversation_data?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          last_platform?: string | null
+          platforms?: string[] | null
+          thread_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       crisis_assessments: {
         Row: {
           assessment_type: string
@@ -2188,6 +2224,39 @@ export type Database = {
           },
         ]
       }
+      integration_webhooks: {
+        Row: {
+          created_at: string
+          event_types: string[] | null
+          id: string
+          integration_id: string
+          is_active: boolean | null
+          last_triggered: string | null
+          webhook_secret: string | null
+          webhook_url: string
+        }
+        Insert: {
+          created_at?: string
+          event_types?: string[] | null
+          id?: string
+          integration_id: string
+          is_active?: boolean | null
+          last_triggered?: string | null
+          webhook_secret?: string | null
+          webhook_url: string
+        }
+        Update: {
+          created_at?: string
+          event_types?: string[] | null
+          id?: string
+          integration_id?: string
+          is_active?: boolean | null
+          last_triggered?: string | null
+          webhook_secret?: string | null
+          webhook_url?: string
+        }
+        Relationships: []
+      }
       integrations: {
         Row: {
           configuration: Json | null
@@ -2353,6 +2422,53 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_deliveries: {
+        Row: {
+          clicked_at: string | null
+          created_at: string
+          delivered_at: string | null
+          delivery_method: string
+          error_message: string | null
+          external_message_id: string | null
+          id: string
+          notification_id: string
+          platform_integration_id: string | null
+          status: string
+        }
+        Insert: {
+          clicked_at?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          delivery_method: string
+          error_message?: string | null
+          external_message_id?: string | null
+          id?: string
+          notification_id: string
+          platform_integration_id?: string | null
+          status?: string
+        }
+        Update: {
+          clicked_at?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          delivery_method?: string
+          error_message?: string | null
+          external_message_id?: string | null
+          id?: string
+          notification_id?: string
+          platform_integration_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_deliveries_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_preferences: {
         Row: {
           created_at: string | null
@@ -2449,6 +2565,39 @@ export type Database = {
           type?: string
           updated_at?: string
           variables?: string[] | null
+        }
+        Relationships: []
+      }
+      notification_types: {
+        Row: {
+          category: string
+          created_at: string
+          delivery_methods: string[] | null
+          id: string
+          is_active: boolean | null
+          name: string
+          priority_weight: number | null
+          template_variables: string[] | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          delivery_methods?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          priority_weight?: number | null
+          template_variables?: string[] | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          delivery_methods?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          priority_weight?: number | null
+          template_variables?: string[] | null
         }
         Relationships: []
       }
@@ -2797,6 +2946,48 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_integrations: {
+        Row: {
+          access_tokens: Json | null
+          created_at: string
+          crisis_escalation_enabled: boolean | null
+          id: string
+          integration_settings: Json | null
+          is_active: boolean | null
+          last_sync: string | null
+          platform_type: string
+          platform_user_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_tokens?: Json | null
+          created_at?: string
+          crisis_escalation_enabled?: boolean | null
+          id?: string
+          integration_settings?: Json | null
+          is_active?: boolean | null
+          last_sync?: string | null
+          platform_type: string
+          platform_user_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_tokens?: Json | null
+          created_at?: string
+          crisis_escalation_enabled?: boolean | null
+          id?: string
+          integration_settings?: Json | null
+          is_active?: boolean | null
+          last_sync?: string | null
+          platform_type?: string
+          platform_user_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       professional_oversight: {
         Row: {
           completed_at: string | null
@@ -2952,6 +3143,42 @@ export type Database = {
           recommendations?: Json
           session_count?: number | null
           summary_data?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth_key: string
+          created_at: string
+          endpoint: string
+          id: string
+          is_active: boolean | null
+          p256dh_key: string
+          updated_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth_key: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          is_active?: boolean | null
+          p256dh_key: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth_key?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          is_active?: boolean | null
+          p256dh_key?: string
+          updated_at?: string
+          user_agent?: string | null
           user_id?: string
         }
         Relationships: []

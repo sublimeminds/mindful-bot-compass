@@ -233,7 +233,7 @@ async function createOfflinePage() {
   }));
 }
 
-// Handle push notifications
+// Enhanced push notification handling
 self.addEventListener('push', event => {
   console.log('Push message received:', event);
   
@@ -241,66 +241,98 @@ self.addEventListener('push', event => {
   
   const data = event.data.json();
   const options = {
-    body: data.body,
-    icon: data.icon || '/favicon.ico',
-    badge: '/favicon.ico',
+    body: data.body || 'You have a new notification from TherapySync',
+    icon: data.icon || '/icons/icon-192x192.png',
+    badge: '/icons/icon-72x72.png',
     image: data.image,
-    data: data.data,
-    actions: data.actions || [
-      {
-        action: 'view',
-        title: 'View Session',
-        icon: '/favicon.ico'
-      },
-      {
-        action: 'dismiss',
-        title: 'Dismiss',
-        icon: '/favicon.ico'
-      }
-    ],
+    data: data.data || {},
+    vibrate: [200, 100, 200],
     requireInteraction: data.requireInteraction || false,
     silent: data.silent || false,
-    tag: data.tag || 'mindful-ai-notification',
-    timestamp: data.timestamp || Date.now(),
-    vibrate: [200, 100, 200]
+    tag: data.tag || 'therapysync-notification',
+    timestamp: data.timestamp || Date.now()
   };
 
+  // Enhanced actions based on notification type
+  if (data.category === 'crisis') {
+    options.actions = [
+      { action: 'emergency', title: 'Get Help Now', icon: '/icons/emergency.png' },
+      { action: 'therapy', title: 'Start Crisis Session', icon: '/icons/therapy.png' },
+      { action: 'resources', title: 'Crisis Resources', icon: '/icons/resources.png' }
+    ];
+    options.requireInteraction = true;
+    options.vibrate = [300, 100, 300, 100, 300];
+    options.tag = 'crisis-alert';
+    options.renotify = true;
+  } else if (data.category === 'therapy') {
+    options.actions = [
+      { action: 'join', title: 'Join Session', icon: '/icons/video.png' },
+      { action: 'reschedule', title: 'Reschedule', icon: '/icons/calendar.png' },
+      { action: 'dismiss', title: 'Dismiss', icon: '/icons/dismiss.png' }
+    ];
+  } else if (data.category === 'progress') {
+    options.actions = [
+      { action: 'celebrate', title: 'Celebrate!', icon: '/icons/celebrate.png' },
+      { action: 'share', title: 'Share Progress', icon: '/icons/share.png' },
+      { action: 'view', title: 'View Details', icon: '/icons/view.png' }
+    ];
+  } else if (data.category === 'integration') {
+    options.actions = [
+      { action: 'view', title: 'View Integration', icon: '/icons/integration.png' },
+      { action: 'settings', title: 'Settings', icon: '/icons/settings.png' }
+    ];
+  } else {
+    options.actions = [
+      { action: 'view', title: 'View', icon: '/icons/view.png' },
+      { action: 'dismiss', title: 'Dismiss', icon: '/icons/dismiss.png' }
+    ];
+  }
+
   event.waitUntil(
-    self.registration.showNotification(data.title, options)
+    self.registration.showNotification(data.title || 'TherapySync', options)
   );
 });
 
-// Handle notification clicks
+// Enhanced notification click handling
 self.addEventListener('notificationclick', event => {
   console.log('Notification clicked:', event);
   
   event.notification.close();
   
   const action = event.action;
-  const data = event.notification.data;
+  const data = event.notification.data || {};
   
   event.waitUntil(
     clients.matchAll({ type: 'window' }).then(clientList => {
-      // If there's already a window open, focus it
+      let url = '/dashboard';
+      
+      // Handle different actions based on type
+      if (action === 'emergency') {
+        url = '/crisis-resources';
+      } else if (action === 'therapy' || action === 'join') {
+        url = data.sessionId ? `/sessions/${data.sessionId}` : '/therapy-chat';
+      } else if (action === 'reschedule') {
+        url = '/sessions';
+      } else if (action === 'celebrate' || action === 'view') {
+        url = data.url || '/dashboard';
+      } else if (action === 'share') {
+        url = '/community';
+      } else if (action === 'resources') {
+        url = '/crisis-resources';
+      } else if (action === 'settings') {
+        url = '/integrations';
+      } else if (data.url) {
+        url = data.url;
+      }
+
+      // Focus existing window or open new one
       for (const client of clientList) {
-        if (client.url.includes(self.location.origin) && 'focus' in client) {
+        if (client.url.includes(url.split('?')[0]) && 'focus' in client) {
           return client.focus();
         }
       }
       
-      // Otherwise, open a new window
       if (clients.openWindow) {
-        let url = '/';
-        
-        // Handle different actions
-        if (action === 'view' || action === 'view_session') {
-          url = '/therapy';
-        } else if (action === 'view_progress') {
-          url = '/analytics';
-        } else if (data && data.url) {
-          url = data.url;
-        }
-        
         return clients.openWindow(url);
       }
     })
