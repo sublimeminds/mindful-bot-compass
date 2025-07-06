@@ -47,6 +47,8 @@ import SmartTriggerDashboard from "../components/admin/SmartTriggerDashboard";
 import NotificationAnalyticsDashboard from "../components/admin/analytics/NotificationAnalyticsDashboard";
 import CampaignDashboard from "../components/admin/campaigns/CampaignDashboard";
 import WorkflowBuilder from "../components/admin/workflows/WorkflowBuilder";
+import EnhancedCrisisManager from "../components/crisis/EnhancedCrisisManager";
+import RealTimeChat from "../components/collaboration/RealTimeChat";
 
 // Error Pages
 import NotFound from "../pages/NotFound";
