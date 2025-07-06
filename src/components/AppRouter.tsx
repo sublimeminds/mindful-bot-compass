@@ -45,6 +45,8 @@ import NotificationSettingsPage from "../pages/NotificationSettings";
 import Integrations from "../pages/Integrations";
 import SmartTriggerDashboard from "../components/admin/SmartTriggerDashboard";
 import NotificationAnalyticsDashboard from "../components/admin/analytics/NotificationAnalyticsDashboard";
+import CampaignDashboard from "../components/admin/campaigns/CampaignDashboard";
+import WorkflowBuilder from "../components/admin/workflows/WorkflowBuilder";
 
 // Error Pages
 import NotFound from "../pages/NotFound";
@@ -276,6 +278,18 @@ const AppRouter = () => {
       <Route path="/notification-analytics" element={
         <PageErrorBoundary pageName="Notification Analytics">
           <NotificationAnalyticsDashboard />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/campaign-management" element={
+        <PageErrorBoundary pageName="Campaign Management">
+          <CampaignDashboard />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/workflow-builder" element={
+        <PageErrorBoundary pageName="Workflow Builder">
+          <WorkflowBuilder />
         </PageErrorBoundary>
       } />
       
