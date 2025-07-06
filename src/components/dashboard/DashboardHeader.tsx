@@ -25,15 +25,9 @@ const DashboardHeader = () => {
       <div className="flex h-16 items-center justify-between px-6">
         {/* Left section */}
         <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
             <GradientLogo size="sm" />
-            <span className="text-lg font-bold therapy-text-gradient">TherapySync</span>
-          </div>
-          
-          <div className="hidden md:flex items-center space-x-2">
-            <Badge className="bg-gradient-to-r from-therapy-500 to-calm-500 text-white border-0">
-              Dashboard
-            </Badge>
+            <span className="text-lg font-semibold text-gray-800">Dashboard</span>
           </div>
         </div>
 
