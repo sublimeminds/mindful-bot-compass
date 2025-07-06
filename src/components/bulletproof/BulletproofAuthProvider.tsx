@@ -2,6 +2,7 @@ import React, { createContext, useContext, ReactNode, useState, useEffect, useCa
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { SafeComponentWrapper } from './SafeComponentWrapper';
+import { checkReactReadiness } from '@/utils/reactSafeGuard';
 
 interface BulletproofAuthContextType {
   user: User | null;
@@ -21,6 +22,12 @@ interface BulletproofAuthProviderProps {
 }
 
 export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = ({ children }) => {
+  // Guard against React not being properly initialized
+  if (!checkReactReadiness('BulletproofAuthProvider')) {
+    console.error('React not properly initialized in BulletproofAuthProvider');
+    return React.createElement('div', { key: 'loading' }, 'Loading...');
+  }
+
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);

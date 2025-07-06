@@ -35,6 +35,9 @@ export class SafeComponentWrapper extends Component<SafeComponentWrapperProps, S
     const componentName = this.props.name || 'UnknownComponent';
     console.error(`SafeComponentWrapper[${componentName}]:`, error, errorInfo);
     
+    // Log actual component stack for debugging
+    console.error(`Actual Component Stack: ${errorInfo.componentStack}`);
+    
     // Log specific React-related errors for debugging
     if (error.message.includes('Cannot read properties of null')) {
       console.error(`React initialization error in ${componentName}:`, {
@@ -90,6 +93,7 @@ export class SafeComponentWrapper extends Component<SafeComponentWrapperProps, S
             <h3 className="font-medium text-destructive">
               {name} Error
               {error?.message?.includes('useSidebar') && ' (Sidebar Context)'}
+              {error?.message?.includes('useState') && ' (React Init)'}
             </h3>
           </div>
           <p className="text-sm text-muted-foreground mb-2">
