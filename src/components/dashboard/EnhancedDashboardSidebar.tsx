@@ -12,7 +12,6 @@ import {
   CreditCard,
   HelpCircle,
   HeadphonesIcon,
-  Bot,
   Heart,
   Users,
   Brain
@@ -34,14 +33,14 @@ import UserMenu from '@/components/navigation/UserMenu';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'AI Avatar', href: '/ai-avatar', icon: Bot },
   { name: 'AI Personalization', href: '/ai-personalization', icon: Brain },
   { name: 'Therapy Chat', href: '/therapy-chat', icon: MessageCircle },
+  { name: 'Therapy Plan', href: '/therapy-plan', icon: Calendar },
   { name: 'Sessions', href: '/sessions', icon: Calendar },
-  { name: 'Mood Tracker', href: '/mood-tracker', icon: Heart },
-  { name: 'Analytics', href: '/analytics', icon: TrendingUp },
   { name: 'Goals', href: '/goals', icon: Target },
+  { name: 'Mood Tracker', href: '/mood-tracker', icon: Heart },
   { name: 'Community', href: '/community', icon: Users },
+  { name: 'Analytics', href: '/analytics', icon: TrendingUp },
   { name: 'Therapy Settings', href: '/therapy-settings', icon: Settings },
 ];
 

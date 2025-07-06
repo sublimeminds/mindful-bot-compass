@@ -27,7 +27,7 @@ import TherapyPlan from "../pages/TherapyPlan";
 import TherapistSelection from "../pages/TherapistSelection";
 
 // Additional Dashboard Pages
-import AIAvatarPage from "../pages/AIAvatarPage";
+import CommunityHub from "../pages/CommunityHub";
 import TherapyChatPage from "../pages/TherapyChatPage";
 import Sessions from "../pages/Sessions";
 import MoodTracker from "../pages/MoodTracker";
@@ -97,12 +97,12 @@ const AppRouter = () => {
       {/* Feature Routes */}
       <Route path="/goals" element={
         <PageErrorBoundary pageName="Goals">
-          <Goals />
+          <GoalsPage />
         </PageErrorBoundary>
       } />
-      <Route path="/goals-legacy" element={
-        <PageErrorBoundary pageName="Goals (Legacy)">
-          <GoalsPage />
+      <Route path="/goals-marketing" element={
+        <PageErrorBoundary pageName="Goals (Marketing)">
+          <Goals />
         </PageErrorBoundary>
       } />
       
@@ -187,11 +187,6 @@ const AppRouter = () => {
       } />
       
       {/* Dashboard Navigation Routes */}
-      <Route path="/ai-avatar" element={
-        <PageErrorBoundary pageName="AI Avatar">
-          <AIAvatarPage />
-        </PageErrorBoundary>
-      } />
       
       <Route path="/therapy-chat" element={
         <PageErrorBoundary pageName="Therapy Chat">
@@ -219,7 +214,7 @@ const AppRouter = () => {
       
       <Route path="/community" element={
         <PageErrorBoundary pageName="Community">
-          <Community />
+          <CommunityHub />
         </PageErrorBoundary>
       } />
       
