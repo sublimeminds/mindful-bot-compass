@@ -15,7 +15,8 @@ import {
   Heart,
   Users,
   Brain,
-  Zap
+  Zap,
+  Bell
 } from 'lucide-react';
 import {
   Sidebar,
@@ -42,6 +43,7 @@ const navigation = [
   { name: 'Goals', href: '/goals', icon: Target },
   { name: 'Mood Tracker', href: '/mood-tracker', icon: Heart },
   { name: 'Integrations', href: '/integrations', icon: Zap },
+  { name: 'Notifications', href: '/notification-center', icon: Bell },
   { name: 'Community', href: '/community', icon: Users },
   { name: 'Analytics', href: '/analytics', icon: TrendingUp },
   { name: 'Therapy Settings', href: '/therapy-settings', icon: Settings },
@@ -50,6 +52,7 @@ const navigation = [
 const secondaryNavigation = [
   { name: 'Profile', href: '/profile', icon: User },
   { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Notification Settings', href: '/notification-settings', icon: Bell },
   { name: 'Billing', href: '/billing', icon: CreditCard },
   { name: 'Family Features', href: '/family-features', icon: Users },
 ];

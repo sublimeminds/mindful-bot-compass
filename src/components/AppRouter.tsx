@@ -40,6 +40,8 @@ import Help from "../pages/Help";
 import Support from "../pages/Support";
 import TherapySettingsPage from "../pages/TherapySettingsPage";
 import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
+import NotificationCenterPage from "../pages/NotificationCenter";
+import NotificationSettingsPage from "../pages/NotificationSettings";
 import Integrations from "../pages/Integrations";
 
 // Error Pages
@@ -242,6 +244,18 @@ const AppRouter = () => {
       <Route path="/family-features" element={
         <PageErrorBoundary pageName="Family Features">
           <FamilyFeaturesPage />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/notification-center" element={
+        <PageErrorBoundary pageName="Notification Center">
+          <NotificationCenterPage />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/notification-settings" element={
+        <PageErrorBoundary pageName="Notification Settings">
+          <NotificationSettingsPage />
         </PageErrorBoundary>
       } />
       
