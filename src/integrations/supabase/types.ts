@@ -2713,6 +2713,39 @@ export type Database = {
         }
         Relationships: []
       }
+      plan_progress_tracking: {
+        Row: {
+          created_at: string
+          id: string
+          metric_type: string
+          metric_value: number
+          notes: string | null
+          recorded_date: string
+          therapy_plan_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metric_type: string
+          metric_value: number
+          notes?: string | null
+          recorded_date?: string
+          therapy_plan_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metric_type?: string
+          metric_value?: number
+          notes?: string | null
+          recorded_date?: string
+          therapy_plan_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       platform_analytics: {
         Row: {
           active_users: number | null
@@ -2872,6 +2905,54 @@ export type Database = {
           subscription_status?: string | null
           timezone?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      progress_overviews: {
+        Row: {
+          assignments_completed: number | null
+          created_at: string
+          goals_completed: number | null
+          id: string
+          insights: Json
+          mood_trend: number | null
+          overview_type: string
+          period_end: string
+          period_start: string
+          recommendations: Json
+          session_count: number | null
+          summary_data: Json
+          user_id: string
+        }
+        Insert: {
+          assignments_completed?: number | null
+          created_at?: string
+          goals_completed?: number | null
+          id?: string
+          insights?: Json
+          mood_trend?: number | null
+          overview_type: string
+          period_end: string
+          period_start: string
+          recommendations?: Json
+          session_count?: number | null
+          summary_data?: Json
+          user_id: string
+        }
+        Update: {
+          assignments_completed?: number | null
+          created_at?: string
+          goals_completed?: number | null
+          id?: string
+          insights?: Json
+          mood_trend?: number | null
+          overview_type?: string
+          period_end?: string
+          period_start?: string
+          recommendations?: Json
+          session_count?: number | null
+          summary_data?: Json
+          user_id?: string
         }
         Relationships: []
       }
@@ -3801,6 +3882,51 @@ export type Database = {
         }
         Relationships: []
       }
+      therapy_assignments: {
+        Row: {
+          assignment_type: string
+          completed: boolean
+          completed_at: string | null
+          completion_notes: string | null
+          created_at: string
+          description: string
+          due_date: string
+          id: string
+          therapy_plan_id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assignment_type?: string
+          completed?: boolean
+          completed_at?: string | null
+          completion_notes?: string | null
+          created_at?: string
+          description: string
+          due_date: string
+          id?: string
+          therapy_plan_id: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assignment_type?: string
+          completed?: boolean
+          completed_at?: string | null
+          completion_notes?: string | null
+          created_at?: string
+          description?: string
+          due_date?: string
+          id?: string
+          therapy_plan_id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       therapy_effectiveness_stats: {
         Row: {
           created_at: string
@@ -3831,6 +3957,51 @@ export type Database = {
           session_completion_rate?: number | null
           technique_effectiveness?: Json
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      therapy_plans: {
+        Row: {
+          created_at: string
+          current_phase: string
+          description: string
+          goals: Json
+          id: string
+          is_active: boolean
+          progress_percentage: number
+          therapist_id: string
+          title: string
+          total_phases: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_phase?: string
+          description: string
+          goals?: Json
+          id?: string
+          is_active?: boolean
+          progress_percentage?: number
+          therapist_id: string
+          title: string
+          total_phases?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_phase?: string
+          description?: string
+          goals?: Json
+          id?: string
+          is_active?: boolean
+          progress_percentage?: number
+          therapist_id?: string
+          title?: string
+          total_phases?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

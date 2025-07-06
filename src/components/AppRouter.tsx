@@ -27,7 +27,9 @@ import TherapyPlan from "../pages/TherapyPlan";
 import TherapistSelection from "../pages/TherapistSelection";
 
 // Additional Dashboard Pages
+import DashboardGoals from "../pages/DashboardGoals";
 import CommunityHub from "../pages/CommunityHub";
+import ProgressOverview from "../pages/ProgressOverview";
 import TherapyChatPage from "../pages/TherapyChatPage";
 import Sessions from "../pages/Sessions";
 import MoodTracker from "../pages/MoodTracker";
@@ -97,12 +99,18 @@ const AppRouter = () => {
       {/* Feature Routes */}
       <Route path="/goals" element={
         <PageErrorBoundary pageName="Goals">
-          <GoalsPage />
+          <DashboardGoals />
         </PageErrorBoundary>
       } />
       <Route path="/goals-marketing" element={
         <PageErrorBoundary pageName="Goals (Marketing)">
           <Goals />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/progress-overview" element={
+        <PageErrorBoundary pageName="Progress Overview">
+          <ProgressOverview />
         </PageErrorBoundary>
       } />
       

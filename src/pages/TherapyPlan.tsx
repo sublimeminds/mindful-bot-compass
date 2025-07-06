@@ -26,7 +26,7 @@ interface TherapyPlan {
   title: string;
   description: string;
   therapist_id: string;
-  goals: string[];
+  goals: any; // JSON type from database
   current_phase: string;
   total_phases: number;
   progress_percentage: number;
@@ -38,7 +38,7 @@ interface Assignment {
   id: string;
   title: string;
   description: string;
-  type: 'exercise' | 'reflection' | 'reading' | 'practice';
+  assignment_type: string; // Updated to match database
   due_date: string;
   completed: boolean;
   completed_at?: string;
@@ -94,47 +94,83 @@ const TherapyPlan = () => {
         setCurrentTherapist(therapistData.therapist_personalities);
       }
 
-      // Load therapy plan (mock data for now - would come from real table)
-      const mockTherapyPlan: TherapyPlan = {
-        id: '1',
-        title: 'ADHD Management & Focus Enhancement',
-        description: 'A comprehensive 12-week program focused on improving attention, organization, and emotional regulation.',
-        therapist_id: therapistData?.therapist_id || '1',
-        goals: [
-          'Improve daily focus and attention span',
-          'Develop better organization systems',
-          'Manage emotional regulation',
-          'Build sustainable routines'
-        ],
-        current_phase: 'Phase 2: Skill Building',
-        total_phases: 4,
-        progress_percentage: 35,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
-      setTherapyPlan(mockTherapyPlan);
+      // Load therapy plan from database
+      const { data: planData } = await supabase
+        .from('therapy_plans')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .single();
 
-      // Load assignments
-      const mockAssignments: Assignment[] = [
-        {
-          id: '1',
-          title: 'Daily Focus Journal',
-          description: 'Track your attention patterns for 15 minutes each day',
-          type: 'reflection',
-          due_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-          completed: false
-        },
-        {
-          id: '2',
-          title: 'Pomodoro Technique Practice',
-          description: 'Use 25-minute focused work sessions with 5-minute breaks',
-          type: 'practice',
-          due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-          completed: true,
-          completed_at: new Date().toISOString()
+      if (planData) {
+        setTherapyPlan(planData);
+      }
+
+      let currentPlan = planData;
+      if (!currentPlan) {
+        // Create a default therapy plan if none exists
+        const { data: newPlan } = await supabase
+          .from('therapy_plans')
+          .insert([{
+            user_id: user.id,
+            therapist_id: therapistData?.therapist_id || '1',
+            title: 'Personalized Therapy Plan',
+            description: 'A comprehensive therapy plan tailored to your specific needs and goals.',
+            goals: [
+              'Improve emotional well-being',
+              'Develop healthy coping strategies',
+              'Build resilience and self-awareness',
+              'Enhance communication skills'
+            ]
+          }])
+          .select()
+          .single();
+        
+        if (newPlan) {
+          setTherapyPlan(newPlan);
+          currentPlan = newPlan;
         }
-      ];
-      setAssignments(mockAssignments);
+      }
+
+      // Load assignments from database
+      const { data: assignmentData } = await supabase
+        .from('therapy_assignments')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('due_date', { ascending: true });
+
+      if (assignmentData && assignmentData.length > 0) {
+        setAssignments(assignmentData);
+      } else {
+        // Create default assignments if none exist
+        const defaultAssignments = [
+          {
+            user_id: user.id,
+            therapy_plan_id: currentPlan?.id,
+            title: 'Daily Mindfulness Practice',
+            description: 'Practice 10 minutes of mindfulness meditation each day',
+            assignment_type: 'practice',
+            due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            user_id: user.id,
+            therapy_plan_id: currentPlan?.id,
+            title: 'Mood Journal',
+            description: 'Track your daily mood and note any patterns or triggers',
+            assignment_type: 'reflection',
+            due_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString()
+          }
+        ];
+
+        const { data: createdAssignments } = await supabase
+          .from('therapy_assignments')
+          .insert(defaultAssignments)
+          .select();
+        
+        if (createdAssignments) {
+          setAssignments(createdAssignments);
+        }
+      }
 
       // Load session history
       const { data: sessions } = await supabase
@@ -171,16 +207,36 @@ const TherapyPlan = () => {
   };
 
   const completeAssignment = async (assignmentId: string) => {
-    setAssignments(prev => prev.map(assignment => 
-      assignment.id === assignmentId 
-        ? { ...assignment, completed: true, completed_at: new Date().toISOString() }
-        : assignment
-    ));
-    
-    toast({
-      title: "Assignment Completed!",
-      description: "Great job! Your progress has been recorded.",
-    });
+    try {
+      const { error } = await supabase
+        .from('therapy_assignments')
+        .update({ 
+          completed: true, 
+          completed_at: new Date().toISOString() 
+        })
+        .eq('id', assignmentId)
+        .eq('user_id', user?.id);
+
+      if (error) throw error;
+
+      setAssignments(prev => prev.map(assignment => 
+        assignment.id === assignmentId 
+          ? { ...assignment, completed: true, completed_at: new Date().toISOString() }
+          : assignment
+      ));
+      
+      toast({
+        title: "Assignment Completed!",
+        description: "Great job! Your progress has been recorded.",
+      });
+    } catch (error) {
+      console.error('Error completing assignment:', error);
+      toast({
+        title: "Error",
+        description: "Failed to complete assignment. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   if (loading || isLoading) {
@@ -248,7 +304,9 @@ const TherapyPlan = () => {
                 
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-gray-700">Goals</p>
-                  <p className="text-sm text-gray-600">{therapyPlan.goals.length} Active Goals</p>
+                  <p className="text-sm text-gray-600">
+                    {Array.isArray(therapyPlan.goals) ? therapyPlan.goals.length : 0} Active Goals
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -290,11 +348,11 @@ const TherapyPlan = () => {
                       <div className="flex items-center gap-2 mb-2">
                         <h3 className="font-semibold">{assignment.title}</h3>
                         <Badge variant={
-                          assignment.type === 'exercise' ? 'default' :
-                          assignment.type === 'reflection' ? 'secondary' :
-                          assignment.type === 'reading' ? 'outline' : 'destructive'
+                          assignment.assignment_type === 'exercise' ? 'default' :
+                          assignment.assignment_type === 'reflection' ? 'secondary' :
+                          assignment.assignment_type === 'reading' ? 'outline' : 'destructive'
                         }>
-                          {assignment.type}
+                          {assignment.assignment_type}
                         </Badge>
                       </div>
                       <p className="text-gray-600 text-sm mb-2">{assignment.description}</p>
@@ -331,7 +389,7 @@ const TherapyPlan = () => {
                 <CardTitle>Therapy Goals</CardTitle>
               </CardHeader>
               <CardContent>
-                {therapyPlan?.goals.map((goal, index) => (
+                {Array.isArray(therapyPlan?.goals) ? therapyPlan.goals.map((goal, index) => (
                   <div key={index} className="flex items-center gap-3 py-3 border-b last:border-b-0">
                     <div className="w-8 h-8 rounded-full bg-therapy-100 flex items-center justify-center">
                       <span className="text-sm font-semibold text-therapy-600">{index + 1}</span>
@@ -339,7 +397,9 @@ const TherapyPlan = () => {
                     <span className="flex-1">{goal}</span>
                     <Badge variant="outline">In Progress</Badge>
                   </div>
-                ))}
+                )) : (
+                  <p className="text-gray-500">No goals set</p>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

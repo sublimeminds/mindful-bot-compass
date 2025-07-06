@@ -36,6 +36,7 @@ const navigation = [
   { name: 'AI Personalization', href: '/ai-personalization', icon: Brain },
   { name: 'Therapy Chat', href: '/therapy-chat', icon: MessageCircle },
   { name: 'Therapy Plan', href: '/therapy-plan', icon: Calendar },
+  { name: 'Progress Overview', href: '/progress-overview', icon: TrendingUp },
   { name: 'Sessions', href: '/sessions', icon: Calendar },
   { name: 'Goals', href: '/goals', icon: Target },
   { name: 'Mood Tracker', href: '/mood-tracker', icon: Heart },
