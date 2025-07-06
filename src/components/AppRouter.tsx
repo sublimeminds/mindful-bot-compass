@@ -56,6 +56,12 @@ import AIPatterns from "../pages/ai-personalization/AIPatterns";
 import AIRecommendations from "../pages/ai-personalization/AIRecommendations";
 import AIPredictions from "../pages/ai-personalization/AIPredictions";
 
+// Sessions Pages
+import AllSessions from "../pages/sessions/AllSessions";
+
+// Goals Pages
+import ActiveGoals from "../pages/goals/ActiveGoals";
+
 // Error Pages
 import NotFound from "../pages/NotFound";
 
@@ -187,39 +193,12 @@ const AppRouter = () => {
       {/* Sessions Nested Routes */}
       <Route path="/sessions/all" element={
         <PageErrorBoundary pageName="All Sessions">
-          <div>All Sessions Page - Placeholder</div>
+          <AllSessions />
         </PageErrorBoundary>
       } />
-      <Route path="/sessions/analytics/performance" element={
-        <PageErrorBoundary pageName="Session Performance Metrics">
-          <div>Session Performance Metrics Page - Placeholder</div>
-        </PageErrorBoundary>
-      } />
-      <Route path="/sessions/analytics/mood" element={
-        <PageErrorBoundary pageName="Session Mood Analysis">
-          <div>Session Mood Analysis Page - Placeholder</div>
-        </PageErrorBoundary>
-      } />
-      <Route path="/sessions/analytics/techniques" element={
-        <PageErrorBoundary pageName="Technique Effectiveness">
-          <div>Technique Effectiveness Page - Placeholder</div>
-        </PageErrorBoundary>
-      } />
-      <Route path="/sessions/analytics/time" element={
-        <PageErrorBoundary pageName="Session Time Analysis">
-          <div>Session Time Analysis Page - Placeholder</div>
-        </PageErrorBoundary>
-      } />
-      <Route path="/sessions/history" element={
-        <PageErrorBoundary pageName="Session History">
-          <div>Session History Page - Placeholder</div>
-        </PageErrorBoundary>
-      } />
-
-      {/* Goals Nested Routes */}
       <Route path="/goals/active" element={
         <PageErrorBoundary pageName="Active Goals">
-          <div>Active Goals Page - Placeholder</div>
+          <ActiveGoals />
         </PageErrorBoundary>
       } />
       <Route path="/goals/templates" element={
