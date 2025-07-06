@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -5,14 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Phone, Shield, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { crisisDetectionService } from '@/services/crisisDetectionService';
+import { CrisisDetectionService } from '@/services/crisisDetectionService';
 
 const EnhancedCrisisManager: React.FC = () => {
   const { user } = useAuth();
   const [activeAlerts, setActiveAlerts] = useState([]);
   const [isMonitoring, setIsMonitoring] = useState(true);
 
-  const crisisResources = crisisDetectionService.getCrisisResources('severe');
+  const crisisResources = CrisisDetectionService.getCrisisResources('severe');
 
   return (
     <div className="space-y-6">
