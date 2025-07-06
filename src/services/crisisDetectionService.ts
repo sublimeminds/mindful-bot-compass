@@ -1,4 +1,6 @@
 
+import { supabase } from '@/integrations/supabase/client';
+
 export interface CrisisIndicator {
   type: 'severe' | 'moderate' | 'mild';
   keywords: string[];
@@ -133,4 +135,33 @@ export class CrisisDetectionService {
         return "Thank you for sharing your feelings with me. Remember that support is always available if you need it.";
     }
   }
+
+  async getCrisisAnalytics(dateRange?: { start: Date; end: Date }) {
+    const startDate = dateRange?.start || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const endDate = dateRange?.end || new Date();
+
+    const { data: interventions } = await supabase
+      .from('crisis_interventions')
+      .select('*')
+      .gte('created_at', startDate.toISOString())
+      .lte('created_at', endDate.toISOString())
+      .order('created_at', { ascending: false });
+
+    return {
+      totalInterventions: interventions?.length || 0,
+      byStatus: this.groupBy(interventions || [], 'status'),
+      byType: this.groupBy(interventions || [], 'intervention_type'),
+      recentInterventions: interventions?.slice(0, 10) || []
+    };
+  }
+
+  private groupBy<T>(array: T[], key: keyof T): Record<string, number> {
+    return array.reduce((acc, item) => {
+      const value = String(item[key]);
+      acc[value] = (acc[value] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+  }
 }
+
+export const crisisDetectionService = new CrisisDetectionService();
