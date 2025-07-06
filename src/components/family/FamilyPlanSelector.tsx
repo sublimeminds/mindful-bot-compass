@@ -6,8 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Users, Plus, Minus, Heart, Star, Crown, Calculator } from 'lucide-react';
 import GradientButton from '@/components/ui/GradientButton';
+import CurrencySelector from '@/components/ui/CurrencySelector';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useEnhancedCurrency } from '@/hooks/useEnhancedCurrency';
 
 interface FamilyPlanSelectorProps {
   isOpen: boolean;
@@ -26,6 +28,20 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
   const [memberCount, setMemberCount] = useState(4);
   const [selectedTier, setSelectedTier] = useState<'pro' | 'premium'>('pro');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  
+  // Currency support
+  let currency: any = null;
+  let formatPrice: any = null;
+  
+  try {
+    const enhancedCurrency = useEnhancedCurrency();
+    currency = enhancedCurrency?.currency || { code: 'USD', symbol: '$' };
+    formatPrice = enhancedCurrency?.formatPrice || ((price: number) => `$${price.toFixed(2)}`);
+  } catch (error) {
+    console.warn('useEnhancedCurrency failed in FamilyPlanSelector:', error);
+    currency = { code: 'USD', symbol: '$' };
+    formatPrice = (price: number) => `$${price.toFixed(2)}`;
+  }
   
   // Use hooks safely with try-catch
   let user: any = null;
@@ -133,7 +149,7 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto p-0">
+        <DialogContent className="max-w-4xl max-h-[95vh] overflow-y-auto p-0">
           <div className="p-6">
             <DialogHeader className="pb-6">
               <DialogTitle className="text-2xl font-bold text-center therapy-text-gradient">
@@ -146,42 +162,59 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
               )}
             </DialogHeader>
 
-            <div className="space-y-8">
-              {/* Billing Cycle Toggle */}
-              <Card className="bg-muted/30">
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-center space-x-6">
-                    <span className={`text-base ${billingCycle === 'monthly' ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>
-                      Monthly
-                    </span>
-                    <button
-                      onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-therapy-500 focus:ring-offset-2 ${
-                        billingCycle === 'yearly' ? 'bg-therapy-600' : 'bg-muted'
+            <div className="space-y-6">
+              {/* Billing Cycle & Currency Row */}
+              <div className="flex items-center justify-between gap-4 p-4 bg-muted/30 rounded-lg">
+                {/* Billing Cycle Toggle */}
+                <div className="flex items-center space-x-4">
+                  <span className={`text-sm ${billingCycle === 'monthly' ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>
+                    Monthly
+                  </span>
+                  <button
+                    onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+                    className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-therapy-500 focus:ring-offset-2 ${
+                      billingCycle === 'yearly' ? 'bg-therapy-600' : 'bg-muted'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
+                        billingCycle === 'yearly' ? 'translate-x-5' : 'translate-x-1'
                       }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                    <span className={`text-base ${billingCycle === 'yearly' ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>
-                      Yearly
-                    </span>
-                    {billingCycle === 'yearly' && (
-                      <Badge className="bg-green-100 text-green-800 border-green-200">
-                        <Star className="h-3 w-3 mr-1" />
-                        Save 20%
-                      </Badge>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+                    />
+                  </button>
+                  <span className={`text-sm ${billingCycle === 'yearly' ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>
+                    Yearly
+                  </span>
+                  {billingCycle === 'yearly' && (
+                    <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200 text-xs">
+                      <Star className="h-3 w-3 mr-1" />
+                      Save 20%
+                    </Badge>
+                  )}
+                </div>
 
-              <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+                {/* Currency Selector */}
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-muted-foreground">Currency:</span>
+                  <CurrencySelector
+                    value={currency?.code || 'USD'}
+                    onChange={(newCurrency) => {
+                      // Currency change would be handled by useEnhancedCurrency
+                      try {
+                        const enhancedCurrency = useEnhancedCurrency();
+                        enhancedCurrency?.changeCurrency?.(newCurrency);
+                      } catch (error) {
+                        console.warn('Currency change failed:', error);
+                      }
+                    }}
+                    className="w-32"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left Column - Configuration */}
-                <div className="xl:col-span-3 space-y-8">
+                <div className="lg:col-span-2 space-y-6">
                   {/* Member Count Selector */}
                   <Card>
                     <CardHeader>
@@ -277,8 +310,8 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
                               </div>
 
                               <div className="text-center mb-4">
-                                <div className="text-3xl font-bold therapy-text-gradient">
-                                  ${displayTierPrice.toFixed(2)}
+                                <div className="text-2xl font-bold therapy-text-gradient">
+                                  {formatPrice(displayTierPrice, 'USD')}
                                 </div>
                                 <div className="text-sm text-muted-foreground">
                                   /{billingCycle === 'monthly' ? 'month' : 'year'} for {memberCount} members
@@ -327,7 +360,7 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
                 </div>
 
                 {/* Right Column - Pricing Summary */}
-                <div className="xl:col-span-1">
+                <div className="lg:col-span-1">
                   <div className="sticky top-6">
                     <Card className="bg-gradient-to-br from-therapy-50 to-calm-50 border-therapy-200">
                       <CardHeader>
@@ -341,16 +374,16 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
                         <div className="space-y-3">
                           <div className="flex justify-between text-sm">
                             <span>Base Plan:</span>
-                            <span className="font-medium">${selectedTierData.basePrice.toFixed(2)}</span>
+                            <span className="font-medium">{formatPrice(selectedTierData.basePrice, 'USD')}</span>
                           </div>
                           <div className="flex justify-between text-sm">
                             <span>{memberCount} Members:</span>
-                            <span className="font-medium">${(memberCount * selectedTierData.pricePerMember).toFixed(2)}</span>
+                            <span className="font-medium">{formatPrice(memberCount * selectedTierData.pricePerMember, 'USD')}</span>
                           </div>
                           <Separator />
                           <div className="flex justify-between font-semibold">
                             <span>Monthly Total:</span>
-                            <span>${monthlyPrice.toFixed(2)}</span>
+                            <span>{formatPrice(monthlyPrice, 'USD')}</span>
                           </div>
                         </div>
 
@@ -360,11 +393,11 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
                             <div className="space-y-3">
                               <div className="flex justify-between text-sm">
                                 <span>Yearly Total:</span>
-                                <span className="font-bold text-lg">${yearlyPrice.toFixed(2)}</span>
+                                <span className="font-bold text-lg">{formatPrice(yearlyPrice, 'USD')}</span>
                               </div>
                               <div className="flex justify-between text-green-600">
                                 <span className="font-medium">Annual Savings:</span>
-                                <span className="font-bold">-${savings.toFixed(2)}</span>
+                                <span className="font-bold">-{formatPrice(savings, 'USD')}</span>
                               </div>
                             </div>
                           </>
@@ -372,12 +405,12 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
 
                         {/* Final Price Display */}
                         <div className="text-center py-4 border-t border-therapy-200">
-                          <div className="text-3xl font-bold therapy-text-gradient">
-                            ${displayPrice.toFixed(2)}
+                          <div className="text-2xl font-bold therapy-text-gradient">
+                            {formatPrice(displayPrice, 'USD')}
                           </div>
                           <div className="text-base text-muted-foreground">{priceLabel}</div>
                           <div className="text-sm text-muted-foreground mt-1">
-                            ${(displayPrice / memberCount).toFixed(2)} per member
+                            {formatPrice(displayPrice / memberCount, 'USD')} per member
                           </div>
                         </div>
 
