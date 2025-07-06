@@ -43,6 +43,8 @@ import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
 import NotificationCenterPage from "../pages/NotificationCenter";
 import NotificationSettingsPage from "../pages/NotificationSettings";
 import Integrations from "../pages/Integrations";
+import SmartTriggerDashboard from "../components/admin/SmartTriggerDashboard";
+import NotificationAnalyticsDashboard from "../components/admin/analytics/NotificationAnalyticsDashboard";
 
 // Error Pages
 import NotFound from "../pages/NotFound";
@@ -262,6 +264,18 @@ const AppRouter = () => {
       <Route path="/integrations" element={
         <PageErrorBoundary pageName="Integrations">
           <Integrations />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/smart-triggers" element={
+        <PageErrorBoundary pageName="Smart Triggers">
+          <SmartTriggerDashboard />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/notification-analytics" element={
+        <PageErrorBoundary pageName="Notification Analytics">
+          <NotificationAnalyticsDashboard />
         </PageErrorBoundary>
       } />
       

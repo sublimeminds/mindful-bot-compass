@@ -1,338 +1,300 @@
-
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+};
+
+// Crisis keywords for detection
+const crisisKeywords = [
+  'suicide', 'kill myself', 'end it all', 'want to die', 'no point',
+  'hopeless', 'worthless', 'hate myself', 'giving up', 'cant go on',
+  'self harm', 'hurt myself', 'cutting', 'overdose'
+];
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    )
+    );
 
-    const body = await req.json().catch(() => ({}))
-    const source = body.source || 'manual'
+    console.log('Starting intelligent notification generation...');
 
-    console.log(`Running intelligent notification generation... Source: ${source}`)
+    // Get active users (logged in within last 30 days)
+    const { data: activeUsers } = await supabaseClient
+      .from('profiles')
+      .select('id, email, name')
+      .gte('updated_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
 
-    const results = {
-      inactiveUsers: 0,
-      weeklyReports: 0,
-      sessionReminders: 0,
-      streakReminders: 0,
-      dailySummaries: 0
+    if (!activeUsers || activeUsers.length === 0) {
+      console.log('No active users found');
+      return new Response(JSON.stringify({ message: 'No active users found' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
     }
 
-    // Always check for inactive users (haven't had a session in 3+ days)
-    results.inactiveUsers = await checkInactiveUsers(supabaseClient)
+    let totalNotifications = 0;
+    let crisisInterventions = 0;
 
-    // Generate daily summaries if requested or if it's morning
-    const currentHour = new Date().getHours()
-    if (source === 'daily_summary' || currentHour === 9) {
-      results.dailySummaries = await generateDailySummaries(supabaseClient)
-    }
+    // Process each user
+    for (const user of activeUsers) {
+      try {
+        const notifications = await processUserTriggers(supabaseClient, user.id);
+        totalNotifications += notifications.count;
+        crisisInterventions += notifications.crisisCount;
 
-    // Generate weekly progress reports (run on Sundays)
-    const today = new Date()
-    if (today.getDay() === 0) { // Sunday
-      results.weeklyReports = await generateWeeklyReports(supabaseClient)
-    }
-
-    // Generate session reminders for users who typically session at this time
-    results.sessionReminders = await generateSessionReminders(supabaseClient)
-
-    // Check for streak maintenance reminders
-    results.streakReminders = await generateStreakReminders(supabaseClient)
-
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: 'Intelligent notifications generated',
-        source,
-        results
-      }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200 
+        // Small delay to prevent overwhelming the system
+        await new Promise(resolve => setTimeout(resolve, 100));
+      } catch (error) {
+        console.error(`Error processing user ${user.id}:`, error);
       }
-    )
+    }
+
+    console.log(`Completed processing ${activeUsers.length} users`);
+    console.log(`Generated ${totalNotifications} notifications`);
+    console.log(`Triggered ${crisisInterventions} crisis interventions`);
+
+    return new Response(JSON.stringify({
+      success: true,
+      usersProcessed: activeUsers.length,
+      notificationsGenerated: totalNotifications,
+      crisisInterventions: crisisInterventions
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+
   } catch (error) {
-    console.error('Error generating notifications:', error)
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 400 
+    console.error('Error in intelligent notifications:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+  }
+});
+
+async function processUserTriggers(supabase: any, userId: string) {
+  let notificationCount = 0;
+  let crisisCount = 0;
+
+  // 1. Check session gap (haven't had session in 3+ days)
+  const sessionGapCheck = await checkSessionGap(supabase, userId);
+  if (sessionGapCheck.shouldTrigger) {
+    await createNotification(supabase, userId, {
+      type: 'session_reminder',
+      title: 'Time for a Check-in',
+      message: 'It\'s been a few days since your last therapy session. How are you feeling today?',
+      priority: 'medium'
+    });
+    notificationCount++;
+  }
+
+  // 2. Check mood decline pattern
+  const moodCheck = await checkMoodDecline(supabase, userId);
+  if (moodCheck.shouldTrigger) {
+    const severity = moodCheck.severity || 'medium';
+    await createNotification(supabase, userId, {
+      type: 'mood_check',
+      title: 'We\'re Here to Support You',
+      message: 'I noticed your mood has been challenging lately. Would you like to talk or try a mindfulness exercise?',
+      priority: severity === 'critical' ? 'high' : 'medium'
+    });
+    notificationCount++;
+
+    if (severity === 'critical') {
+      await triggerCrisisIntervention(supabase, userId, 'mood_decline');
+      crisisCount++;
+    }
+  }
+
+  // 3. Check goal stagnation
+  const goalCheck = await checkGoalStagnation(supabase, userId);
+  if (goalCheck.shouldTrigger) {
+    await createNotification(supabase, userId, {
+      type: 'goal_motivation',
+      title: 'Let\'s Keep Moving Forward',
+      message: 'Your wellness goals are waiting for you. Even small steps count toward big changes.',
+      priority: 'medium'
+    });
+    notificationCount++;
+  }
+
+  // 4. Check for crisis indicators in recent messages
+  const crisisCheck = await checkCrisisIndicators(supabase, userId);
+  if (crisisCheck.shouldTrigger) {
+    await createNotification(supabase, userId, {
+      type: 'crisis_support',
+      title: 'Support is Available',
+      message: 'We noticed you might be going through a difficult time. You\'re not alone - immediate support is available.',
+      priority: 'high'
+    });
+    await triggerCrisisIntervention(supabase, userId, 'keyword_detection');
+    notificationCount++;
+    crisisCount++;
+  }
+
+  return { count: notificationCount, crisisCount };
+}
+
+async function checkSessionGap(supabase: any, userId: string) {
+  const { data: lastSession } = await supabase
+    .from('therapy_sessions')
+    .select('created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!lastSession) return { shouldTrigger: true }; // No sessions yet
+
+  const daysSinceLastSession = Math.floor(
+    (Date.now() - new Date(lastSession.created_at).getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  return { shouldTrigger: daysSinceLastSession >= 3 };
+}
+
+async function checkMoodDecline(supabase: any, userId: string) {
+  const { data: recentMoods } = await supabase
+    .from('mood_entries')
+    .select('overall, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(5);
+
+  if (!recentMoods || recentMoods.length < 3) return { shouldTrigger: false };
+
+  // Check for severe mood drop
+  const latestMood = recentMoods[0].overall;
+  const avgPreviousMoods = recentMoods.slice(1, 4).reduce((sum: number, m: any) => sum + m.overall, 0) / 3;
+
+  if (latestMood <= 2 && avgPreviousMoods - latestMood >= 3) {
+    return { 
+      shouldTrigger: true,
+      severity: latestMood === 1 ? 'critical' : 'high'
+    };
+  }
+
+  // Check for consistent low mood
+  const consistentlyLow = recentMoods.slice(0, 3).every((m: any) => m.overall <= 2);
+  return { 
+    shouldTrigger: consistentlyLow,
+    severity: 'medium'
+  };
+}
+
+async function checkGoalStagnation(supabase: any, userId: string) {
+  const { data: goals } = await supabase
+    .from('goals')
+    .select('id, updated_at, current_progress')
+    .eq('user_id', userId)
+    .eq('is_completed', false);
+
+  if (!goals || goals.length === 0) return { shouldTrigger: false };
+
+  const stagnantGoals = goals.filter((goal: any) => {
+    const daysSinceUpdate = Math.floor(
+      (Date.now() - new Date(goal.updated_at).getTime()) / (1000 * 60 * 60 * 24)
+    );
+    return daysSinceUpdate >= 7 && goal.current_progress < 100;
+  });
+
+  return { shouldTrigger: stagnantGoals.length > 0 };
+}
+
+async function checkCrisisIndicators(supabase: any, userId: string) {
+  // Check WhatsApp messages for crisis keywords
+  const { data: messages } = await supabase
+    .from('whatsapp_messages')
+    .select('content, timestamp')
+    .eq('user_id', userId)
+    .eq('sender_type', 'user')
+    .order('timestamp', { ascending: false })
+    .limit(10);
+
+  if (!messages) return { shouldTrigger: false };
+
+  for (const message of messages) {
+    const content = message.content.toLowerCase();
+    const hasCrisis = crisisKeywords.some(keyword => content.includes(keyword));
+    
+    if (hasCrisis) {
+      return { shouldTrigger: true };
+    }
+  }
+
+  return { shouldTrigger: false };
+}
+
+async function createNotification(supabase: any, userId: string, notification: any) {
+  // Check cooldown to prevent spam
+  const cooldownHours = getCooldownHours(notification.type);
+  const { data: recent } = await supabase
+    .from('notifications')
+    .select('created_at')
+    .eq('user_id', userId)
+    .eq('type', notification.type)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (recent) {
+    const hoursSinceLastNotification = Math.floor(
+      (Date.now() - new Date(recent.created_at).getTime()) / (1000 * 60 * 60)
+    );
+    
+    if (hoursSinceLastNotification < cooldownHours) {
+      console.log(`Skipping ${notification.type} notification for user ${userId} - still in cooldown`);
+      return;
+    }
+  }
+
+  await supabase
+    .from('notifications')
+    .insert({
+      user_id: userId,
+      type: notification.type,
+      title: notification.title,
+      message: notification.message,
+      priority: notification.priority,
+      data: {
+        automated: true,
+        timestamp: new Date().toISOString()
       }
-    )
-  }
-})
+    });
 
-async function checkInactiveUsers(supabase: any): Promise<number> {
-  const threeDaysAgo = new Date()
-  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
+  console.log(`Created ${notification.type} notification for user ${userId}`);
+}
 
-  const { data: profiles, error } = await supabase
-    .from('profiles')
-    .select('id, name')
-
-  if (error) {
-    console.error('Error fetching profiles:', error)
-    return 0
-  }
-
-  let count = 0
-  for (const profile of profiles || []) {
-    const { data: recentSessions } = await supabase
-      .from('therapy_sessions')
-      .select('start_time')
-      .eq('user_id', profile.id)
-      .gte('start_time', threeDaysAgo.toISOString())
-      .limit(1)
-
-    if (!recentSessions || recentSessions.length === 0) {
-      // Check if we already sent a reminder recently to avoid spam
-      const { data: recentReminders } = await supabase
-        .from('notifications')
-        .select('id')
-        .eq('user_id', profile.id)
-        .eq('type', 'session_reminder')
-        .gte('created_at', threeDaysAgo.toISOString())
-
-      if (!recentReminders || recentReminders.length === 0) {
-        await supabase
-          .from('notifications')
-          .insert({
-            user_id: profile.id,
-            type: 'session_reminder',
-            title: 'We miss you! 💙',
-            message: "It's been a few days since your last session. Even a few minutes of self-care can make a difference.",
-            priority: 'medium'
-          })
-        count++
+async function triggerCrisisIntervention(supabase: any, userId: string, reason: string) {
+  await supabase
+    .from('crisis_interventions')
+    .insert({
+      user_id: userId,
+      intervention_type: 'automated_detection',
+      status: 'pending',
+      reason: reason,
+      intervention_data: {
+        triggered_by: 'intelligent_notifications',
+        timestamp: new Date().toISOString(),
+        automated: true
       }
-    }
-  }
-  
-  return count
+    });
+
+  console.log(`CRISIS INTERVENTION triggered for user ${userId} - reason: ${reason}`);
 }
 
-async function generateDailySummaries(supabase: any): Promise<number> {
-  const today = new Date()
-  const yesterday = new Date(today)
-  yesterday.setDate(yesterday.getDate() - 1)
-
-  const { data: profiles } = await supabase
-    .from('profiles')
-    .select('id, name')
-
-  let count = 0
-  for (const profile of profiles || []) {
-    const { data: sessions } = await supabase
-      .from('therapy_sessions')
-      .select('mood_before, mood_after, techniques, start_time')
-      .eq('user_id', profile.id)
-      .gte('start_time', yesterday.toISOString())
-      .lt('start_time', today.toISOString())
-
-    if (sessions && sessions.length > 0) {
-      const moodImprovements = sessions
-        .filter(s => s.mood_before && s.mood_after)
-        .map(s => s.mood_after - s.mood_before)
-
-      const avgImprovement = moodImprovements.length > 0
-        ? Math.round((moodImprovements.reduce((sum, imp) => sum + imp, 0) / moodImprovements.length) * 10) / 10
-        : 0
-
-      await supabase
-        .from('notifications')
-        .insert({
-          user_id: profile.id,
-          type: 'progress_update',
-          title: 'Yesterday\'s Progress 📊',
-          message: `You completed ${sessions.length} session${sessions.length > 1 ? 's' : ''} yesterday${avgImprovement > 0 ? ` with an average mood improvement of ${avgImprovement} points` : ''}. Great work!`,
-          priority: 'low',
-          data: { sessionsYesterday: sessions.length, avgMoodImprovement: avgImprovement, date: yesterday.toISOString() }
-        })
-      count++
-    }
+function getCooldownHours(notificationType: string): number {
+  switch (notificationType) {
+    case 'crisis_support': return 1;
+    case 'mood_check': return 12;
+    case 'session_reminder': return 24;
+    case 'goal_motivation': return 48;
+    default: return 24;
   }
-
-  return count
-}
-
-async function generateWeeklyReports(supabase: any): Promise<number> {
-  const oneWeekAgo = new Date()
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-
-  const { data: profiles, error } = await supabase
-    .from('profiles')
-    .select('id, name')
-
-  if (error) return 0
-
-  let count = 0
-  for (const profile of profiles || []) {
-    const { data: sessions } = await supabase
-      .from('therapy_sessions')
-      .select('mood_before, mood_after, techniques')
-      .eq('user_id', profile.id)
-      .gte('start_time', oneWeekAgo.toISOString())
-
-    if (sessions && sessions.length > 0) {
-      const moodImprovements = sessions
-        .filter(s => s.mood_before && s.mood_after)
-        .map(s => s.mood_after - s.mood_before)
-
-      const avgImprovement = moodImprovements.length > 0
-        ? Math.round((moodImprovements.reduce((sum, imp) => sum + imp, 0) / moodImprovements.length) * 10) / 10
-        : 0
-
-      await supabase
-        .from('notifications')
-        .insert({
-          user_id: profile.id,
-          type: 'progress_update',
-          title: 'Weekly Progress Report 📊',
-          message: `This week you completed ${sessions.length} sessions with an average mood improvement of ${avgImprovement}. Keep up the great work!`,
-          priority: 'low',
-          data: { sessionsThisWeek: sessions.length, avgMoodImprovement: avgImprovement }
-        })
-      count++
-    }
-  }
-
-  return count
-}
-
-async function generateSessionReminders(supabase: any): Promise<number> {
-  const now = new Date()
-  const currentHour = now.getHours()
-
-  // Send reminders during typical therapy hours (9 AM, 1 PM, 6 PM)
-  if (![9, 13, 18].includes(currentHour)) {
-    return 0
-  }
-
-  const { data: profiles } = await supabase
-    .from('profiles')
-    .select('id, name')
-
-  let count = 0
-  for (const profile of profiles || []) {
-    // Check if user typically sessions around this time
-    const { data: historicalSessions } = await supabase
-      .from('therapy_sessions')
-      .select('start_time')
-      .eq('user_id', profile.id)
-      .limit(20)
-
-    const sessionsAtThisHour = historicalSessions?.filter(session => {
-      const sessionHour = new Date(session.start_time).getHours()
-      return Math.abs(sessionHour - currentHour) <= 1
-    }) || []
-
-    // If user often sessions around this time, send a gentle reminder
-    if (sessionsAtThisHour.length >= 3) {
-      // Check if they already had a session today
-      const today = new Date().toDateString()
-      const { data: todaySessions } = await supabase
-        .from('therapy_sessions')
-        .select('id')
-        .eq('user_id', profile.id)
-        .gte('start_time', new Date(today).toISOString())
-
-      if (!todaySessions || todaySessions.length === 0) {
-        await supabase
-          .from('notifications')
-          .insert({
-            user_id: profile.id,
-            type: 'session_reminder',
-            title: 'Perfect Time for Self-Care 🌟',
-            message: "This is usually when you take time for yourself. Ready for a quick therapy session?",
-            priority: 'medium'
-          })
-        count++
-      }
-    }
-  }
-
-  return count
-}
-
-async function generateStreakReminders(supabase: any): Promise<number> {
-  const { data: profiles } = await supabase
-    .from('profiles')
-    .select('id, name')
-
-  let count = 0
-  for (const profile of profiles || []) {
-    // Get recent sessions to calculate streak
-    const { data: sessions } = await supabase
-      .from('therapy_sessions')
-      .select('start_time')
-      .eq('user_id', profile.id)
-      .order('start_time', { ascending: false })
-      .limit(14) // Last 2 weeks
-
-    if (sessions && sessions.length > 0) {
-      const streak = calculateStreak(sessions)
-      
-      // Send streak maintenance reminder for users with 3+ day streaks who haven't sessioned today
-      if (streak >= 3) {
-        const today = new Date().toDateString()
-        const lastSession = new Date(sessions[0].start_time).toDateString()
-        
-        if (lastSession !== today) {
-          await supabase
-            .from('notifications')
-            .insert({
-              user_id: profile.id,
-              type: 'session_reminder',
-              title: `🔥 Don't Break Your ${streak}-Day Streak!`,
-              message: `You've built an amazing ${streak}-day therapy streak. A quick session today will keep your momentum going!`,
-              priority: 'medium',
-              data: { currentStreak: streak }
-            })
-          count++
-        }
-      }
-    }
-  }
-
-  return count
-}
-
-function calculateStreak(sessions: any[]): number {
-  if (sessions.length === 0) return 0
-
-  let streak = 0
-  let currentDate = new Date()
-  currentDate.setHours(0, 0, 0, 0)
-
-  for (const session of sessions) {
-    const sessionDate = new Date(session.start_time)
-    sessionDate.setHours(0, 0, 0, 0)
-
-    const daysDiff = Math.floor((currentDate.getTime() - sessionDate.getTime()) / (1000 * 60 * 60 * 24))
-
-    if (daysDiff === streak) {
-      streak++
-    } else if (daysDiff === streak + 1) {
-      // Allow for one day gap
-      streak++
-    } else {
-      break
-    }
-  }
-
-  return streak
 }

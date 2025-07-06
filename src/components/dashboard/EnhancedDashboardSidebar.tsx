@@ -44,6 +44,7 @@ const navigation = [
   { name: 'Mood Tracker', href: '/mood-tracker', icon: Heart },
   { name: 'Integrations', href: '/integrations', icon: Zap },
   { name: 'Notifications', href: '/notification-center', icon: Bell },
+  { name: 'Smart Triggers', href: '/smart-triggers', icon: Zap },
   { name: 'Community', href: '/community', icon: Users },
   { name: 'Analytics', href: '/analytics', icon: TrendingUp },
   { name: 'Therapy Settings', href: '/therapy-settings', icon: Settings },
