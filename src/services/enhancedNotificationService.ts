@@ -194,6 +194,14 @@ export class EnhancedNotificationService {
             return this.sendTeamsNotification(userId, payload);
           case 'email':
             return this.sendEmailNotification(userId, payload);
+          case 'messenger':
+            return this.sendMessengerNotification(userId, payload);
+          case 'discord':
+            return this.sendDiscordNotification(userId, payload);
+          case 'telegram':
+            return this.sendTelegramNotification(userId, payload);
+          case 'signal':
+            return this.sendSignalNotification(userId, payload);
           default:
             return Promise.resolve(false);
         }
@@ -254,6 +262,54 @@ export class EnhancedNotificationService {
       return !error;
     } catch (error) {
       console.error('Error sending email notification:', error);
+      return false;
+    }
+  }
+
+  private static async sendMessengerNotification(userId: string, payload: NotificationPayload): Promise<boolean> {
+    try {
+      const { error } = await supabase.functions.invoke('messenger-send-notification', {
+        body: { userId, payload }
+      });
+      return !error;
+    } catch (error) {
+      console.error('Error sending Messenger notification:', error);
+      return false;
+    }
+  }
+
+  private static async sendDiscordNotification(userId: string, payload: NotificationPayload): Promise<boolean> {
+    try {
+      const { error } = await supabase.functions.invoke('discord-send-notification', {
+        body: { userId, payload }
+      });
+      return !error;
+    } catch (error) {
+      console.error('Error sending Discord notification:', error);
+      return false;
+    }
+  }
+
+  private static async sendTelegramNotification(userId: string, payload: NotificationPayload): Promise<boolean> {
+    try {
+      const { error } = await supabase.functions.invoke('telegram-send-notification', {
+        body: { userId, payload }
+      });
+      return !error;
+    } catch (error) {
+      console.error('Error sending Telegram notification:', error);
+      return false;
+    }
+  }
+
+  private static async sendSignalNotification(userId: string, payload: NotificationPayload): Promise<boolean> {
+    try {
+      const { error } = await supabase.functions.invoke('signal-send-notification', {
+        body: { userId, payload }
+      });
+      return !error;
+    } catch (error) {
+      console.error('Error sending Signal notification:', error);
       return false;
     }
   }

@@ -27,7 +27,9 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
+    const resendKey = Deno.env.get('RESEND_API_KEY') || 'demo_resend_key';
+    const resend = new Resend(resendKey);
+    console.log('Using Resend key:', resendKey === 'demo_resend_key' ? 'DEMO MODE' : 'LIVE MODE');
 
     const { userId, payload }: { userId: string; payload: NotificationPayload } = await req.json();
 

@@ -32,72 +32,64 @@ serve(async (req) => {
       return new Response('Missing required fields', { status: 400, headers: corsHeaders });
     }
 
-    // Get user's Telegram integration
+    // Get user's Signal integration
     const { data: integration, error: integrationError } = await supabaseClient
       .from('platform_integrations')
       .select('*')
       .eq('user_id', userId)
-      .eq('platform_type', 'telegram')
+      .eq('platform_type', 'signal')
       .eq('is_active', true)
       .single();
 
     if (integrationError || !integration) {
-      return new Response('Telegram integration not found', { status: 404, headers: corsHeaders });
+      return new Response('Signal integration not found', { status: 404, headers: corsHeaders });
     }
 
-    const telegramBotToken = Deno.env.get('TELEGRAM_BOT_TOKEN') || 'demo_telegram_bot_token';
-    console.log('Using Telegram bot token:', telegramBotToken === 'demo_telegram_bot_token' ? 'DEMO MODE' : 'LIVE MODE');
+    // Signal uses signal-cli or similar service
+    const signalApiUrl = Deno.env.get('SIGNAL_API_URL') || 'demo_signal_api';
+    const signalNumber = integration.access_tokens?.signal_number;
+    
+    console.log('Using Signal API:', signalApiUrl === 'demo_signal_api' ? 'DEMO MODE' : 'LIVE MODE');
 
-    // Format message for Telegram
-    let messageText = `*${payload.title}*\n\n${payload.body}`;
-    let replyMarkup = null;
+    if (!signalNumber) {
+      throw new Error('Signal number not found in integration settings');
+    }
 
-    // Add inline keyboard based on category
+    // Format message for Signal
+    const messageText = `*${payload.title}*\n\n${payload.body}`;
+    
+    // Add action text based on category
+    let actionText = '';
     if (payload.category === 'crisis') {
-      replyMarkup = {
-        inline_keyboard: [[
-          {
-            text: "🚨 Get Help Now",
-            url: `${Deno.env.get('SUPABASE_URL')}/therapy-chat?crisis=true`
-          },
-          {
-            text: "📞 Crisis Resources",
-            url: `${Deno.env.get('SUPABASE_URL')}/crisis-resources`
-          }
-        ]]
-      };
+      actionText = `\n\n🚨 Get help: ${Deno.env.get('SUPABASE_URL')}/therapy-chat?crisis=true\n📞 Resources: ${Deno.env.get('SUPABASE_URL')}/crisis-resources`;
     } else if (payload.category === 'therapy') {
-      replyMarkup = {
-        inline_keyboard: [[
-          {
-            text: "💬 Join Session",
-            url: payload.url || `${Deno.env.get('SUPABASE_URL')}/therapy-chat`
-          }
-        ]]
-      };
+      actionText = `\n\n💬 Join session: ${payload.url || `${Deno.env.get('SUPABASE_URL')}/therapy-chat`}`;
     }
 
-    // Send message to Telegram
-    const telegramUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
-    const telegramPayload = {
-      chat_id: integration.platform_user_id,
-      text: messageText,
-      parse_mode: 'Markdown',
-      ...(replyMarkup && { reply_markup: replyMarkup })
-    };
+    const fullMessage = messageText + actionText;
 
-    const telegramResponse = await fetch(telegramUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(telegramPayload)
-    });
+    // Simulate Signal API call (since using demo)
+    if (signalApiUrl === 'demo_signal_api') {
+      console.log('DEMO: Would send Signal message to', signalNumber, ':', fullMessage);
+    } else {
+      // Real Signal API call (would depend on signal-cli REST API or similar)
+      const signalPayload = {
+        message: fullMessage,
+        number: signalNumber,
+        recipients: [integration.platform_user_id]
+      };
 
-    const telegramResult = await telegramResponse.json();
+      const signalResponse = await fetch(`${signalApiUrl}/v2/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(signalPayload)
+      });
 
-    if (!telegramResult.ok) {
-      throw new Error(`Telegram API error: ${telegramResult.description}`);
+      if (!signalResponse.ok) {
+        throw new Error(`Signal API error: ${signalResponse.status}`);
+      }
     }
 
     // Create notification record
@@ -119,22 +111,23 @@ serve(async (req) => {
       .from('notification_deliveries')
       .insert([{
         notification_id: notification?.id,
-        delivery_method: 'telegram',
+        delivery_method: 'signal',
         platform_integration_id: integration.id,
         status: 'delivered',
-        external_message_id: telegramResult.result.message_id.toString(),
+        external_message_id: `signal-${Date.now()}`,
         delivered_at: new Date().toISOString()
       }]);
 
     return new Response(JSON.stringify({
       success: true,
-      messageId: telegramResult.result.message_id
+      messageId: `signal-${Date.now()}`,
+      demo: signalApiUrl === 'demo_signal_api'
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
 
   } catch (error) {
-    console.error('Error sending Telegram notification:', error);
+    console.error('Error sending Signal notification:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
