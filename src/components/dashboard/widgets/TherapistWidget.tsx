@@ -1,11 +1,14 @@
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Brain, ArrowRight, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/contexts/TherapistContext';
+import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
+import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 
 const TherapistWidget = () => {
   const navigate = useNavigate();
@@ -48,8 +51,15 @@ const TherapistWidget = () => {
         {/* Therapist Info */}
         <div className="space-y-3">
           <div className="flex items-center space-x-3">
-            <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${currentTherapist.colorScheme} flex items-center justify-center text-white`}>
-              <Brain className="h-6 w-6" />
+            {/* 3D Avatar Mini Display */}
+            <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-therapy-50 to-calm-50">
+              <Suspense fallback={<Skeleton className="w-full h-full rounded-full" />}>
+                <ThreeDTherapistAvatar
+                  therapistId={getAvatarIdForTherapist(currentTherapist.id)}
+                  emotion="neutral"
+                  showControls={false}
+                />
+              </Suspense>
             </div>
             <div className="flex-1">
               <h3 className="font-semibold">{currentTherapist.name}</h3>

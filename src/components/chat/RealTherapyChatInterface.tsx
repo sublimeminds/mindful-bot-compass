@@ -1,12 +1,16 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useRealEnhancedChat } from '@/hooks/useRealEnhancedChat';
+import { useTherapist } from '@/contexts/TherapistContext';
+import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
+import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { 
   MessageCircle, 
   Send, 
@@ -22,6 +26,7 @@ import {
 
 const RealTherapyChatInterface = () => {
   const { user } = useSimpleApp();
+  const { selectedTherapist } = useTherapist();
   const {
     messages,
     isLoading,
@@ -36,7 +41,13 @@ const RealTherapyChatInterface = () => {
   
   const [input, setInput] = useState('');
   const [showInsights, setShowInsights] = useState(false);
+  const [avatarEmotion, setAvatarEmotion] = useState<'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful'>('neutral');
+  const [detectedUserEmotion, setDetectedUserEmotion] = useState<string>('neutral');
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const chatBottomRef = useRef<HTMLDivElement>(null);
+
+  const currentTherapist = selectedTherapist;
+  const avatarId = getAvatarIdForTherapist(currentTherapist?.id || '1');
 
   useEffect(() => {
     loadPreferences();
@@ -46,11 +57,59 @@ const RealTherapyChatInterface = () => {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Mood-responsive avatar behavior
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      
+      if (!lastMessage.isUser && lastMessage.emotion) {
+        switch (lastMessage.emotion.toLowerCase()) {
+          case 'happy':
+          case 'joy':
+          case 'positive':
+            setAvatarEmotion('happy');
+            break;
+          case 'sad':
+          case 'worried':
+          case 'anxious':
+            setAvatarEmotion('concerned');
+            break;
+          case 'encouraging':
+          case 'supportive':
+            setAvatarEmotion('encouraging');
+            break;
+          default:
+            setAvatarEmotion('neutral');
+        }
+      }
+
+      if (lastMessage.isUser) {
+        const content = lastMessage.content.toLowerCase();
+        if (content.includes('sad') || content.includes('upset')) {
+          setDetectedUserEmotion('sad');
+          setAvatarEmotion('concerned');
+        } else if (content.includes('happy') || content.includes('great')) {
+          setDetectedUserEmotion('happy');
+          setAvatarEmotion('encouraging');
+        } else if (content.includes('anxious') || content.includes('worried')) {
+          setDetectedUserEmotion('anxious');
+          setAvatarEmotion('concerned');
+        }
+      }
+    }
+  }, [messages]);
+
   const handleSend = async () => {
     if (input.trim()) {
       await sendMessage(input);
       setInput('');
     }
+  };
+
+  const handlePlayMessage = async (content: string) => {
+    setIsSpeaking(true);
+    await playMessage(content);
+    setIsSpeaking(false);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -70,8 +129,52 @@ const RealTherapyChatInterface = () => {
   };
 
   return (
-    <div className="h-full flex flex-col space-y-4">
-      <Card className="h-full flex flex-col">
+    <div className="h-full flex gap-6">
+      {/* Avatar Display */}
+      <div className="w-80 flex-shrink-0">
+        <Card className="h-full">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center">
+              <Heart className="mr-2 h-5 w-5 text-therapy-600" />
+              {currentTherapist?.name || 'Your Therapist'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="aspect-square">
+              <Suspense fallback={<Skeleton className="w-full h-full rounded-lg" />}>
+                <ThreeDTherapistAvatar
+                  therapistId={avatarId}
+                  emotion={avatarEmotion}
+                  userEmotion={detectedUserEmotion}
+                  isSpeaking={isSpeaking || isPlaying}
+                  isListening={isLoading}
+                  showControls={true}
+                />
+              </Suspense>
+            </div>
+            {currentTherapist && (
+              <div className="space-y-2 text-center">
+                <Badge variant="outline" className="w-full justify-center">
+                  {currentTherapist.approach}
+                </Badge>
+                <p className="text-xs text-muted-foreground">
+                  {currentTherapist.communicationStyle}
+                </p>
+              </div>
+            )}
+            <div className="p-3 bg-muted rounded-lg">
+              <div className="text-sm font-medium mb-1">Avatar Mood</div>
+              <div className="text-xs text-muted-foreground capitalize">
+                {avatarEmotion} • User: {detectedUserEmotion}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Chat Interface */}
+      <div className="flex-1 flex flex-col">
+        <Card className="h-full flex flex-col">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-2xl font-bold tracking-tight flex items-center">
             <Brain className="mr-2 h-5 w-5 text-therapy-600" />
@@ -142,7 +245,7 @@ const RealTherapyChatInterface = () => {
                             variant="ghost"
                             size="sm"
                             className="h-6 px-2"
-                            onClick={() => isPlaying ? stopPlayback() : playMessage(message.content)}
+                            onClick={() => isPlaying ? stopPlayback() : handlePlayMessage(message.content)}
                           >
                             {isPlaying ? (
                               <VolumeX className="h-3 w-3" />
@@ -192,7 +295,8 @@ const RealTherapyChatInterface = () => {
             </Button>
           </div>
         </CardContent>
-      </Card>
+        </Card>
+      </div>
 
       {/* Session Insights Panel */}
       {messages.length > 5 && (
