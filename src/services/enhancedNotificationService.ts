@@ -63,7 +63,10 @@ export class EnhancedNotificationService {
         .order('priority_weight', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+      return data?.map(type => ({
+        ...type,
+        category: type.category as NotificationType['category']
+      })) || [];
     } catch (error) {
       console.error('Error fetching notification types:', error);
       return [];
