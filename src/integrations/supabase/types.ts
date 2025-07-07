@@ -171,6 +171,54 @@ export type Database = {
           },
         ]
       }
+      ai_configurations: {
+        Row: {
+          avatar_settings: Json | null
+          configuration: Json | null
+          cost_settings: Json | null
+          created_at: string
+          cultural_settings: Json | null
+          emergency_protocols: Json | null
+          id: string
+          is_active: boolean | null
+          model_name: string
+          model_provider: string
+          name: string
+          updated_at: string
+          voice_settings: Json | null
+        }
+        Insert: {
+          avatar_settings?: Json | null
+          configuration?: Json | null
+          cost_settings?: Json | null
+          created_at?: string
+          cultural_settings?: Json | null
+          emergency_protocols?: Json | null
+          id?: string
+          is_active?: boolean | null
+          model_name: string
+          model_provider: string
+          name: string
+          updated_at?: string
+          voice_settings?: Json | null
+        }
+        Update: {
+          avatar_settings?: Json | null
+          configuration?: Json | null
+          cost_settings?: Json | null
+          created_at?: string
+          cultural_settings?: Json | null
+          emergency_protocols?: Json | null
+          id?: string
+          is_active?: boolean | null
+          model_name?: string
+          model_provider?: string
+          name?: string
+          updated_at?: string
+          voice_settings?: Json | null
+        }
+        Relationships: []
+      }
       ai_model_configs: {
         Row: {
           capabilities: string[]
@@ -213,6 +261,48 @@ export type Database = {
           system_prompt?: string
           temperature?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      ai_model_performance: {
+        Row: {
+          cost_per_request: number | null
+          created_at: string
+          cultural_context: string | null
+          id: string
+          model_name: string
+          quality_score: number | null
+          response_time_ms: number | null
+          success_rate: number | null
+          task_type: string
+          updated_at: string
+          user_satisfaction_score: number | null
+        }
+        Insert: {
+          cost_per_request?: number | null
+          created_at?: string
+          cultural_context?: string | null
+          id?: string
+          model_name: string
+          quality_score?: number | null
+          response_time_ms?: number | null
+          success_rate?: number | null
+          task_type: string
+          updated_at?: string
+          user_satisfaction_score?: number | null
+        }
+        Update: {
+          cost_per_request?: number | null
+          created_at?: string
+          cultural_context?: string | null
+          id?: string
+          model_name?: string
+          quality_score?: number | null
+          response_time_ms?: number | null
+          success_rate?: number | null
+          task_type?: string
+          updated_at?: string
+          user_satisfaction_score?: number | null
         }
         Relationships: []
       }
@@ -4149,6 +4239,48 @@ export type Database = {
           id?: string
           therapy_plan_id?: string
           title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      therapy_context: {
+        Row: {
+          context_data: Json | null
+          created_at: string
+          cultural_profile: Json | null
+          current_ai_model: string
+          current_avatar_state: string | null
+          current_voice_id: string | null
+          emotional_state: Json | null
+          id: string
+          session_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          context_data?: Json | null
+          created_at?: string
+          cultural_profile?: Json | null
+          current_ai_model: string
+          current_avatar_state?: string | null
+          current_voice_id?: string | null
+          emotional_state?: Json | null
+          id?: string
+          session_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          context_data?: Json | null
+          created_at?: string
+          cultural_profile?: Json | null
+          current_ai_model?: string
+          current_avatar_state?: string | null
+          current_voice_id?: string | null
+          emotional_state?: Json | null
+          id?: string
+          session_id?: string | null
           updated_at?: string
           user_id?: string
         }

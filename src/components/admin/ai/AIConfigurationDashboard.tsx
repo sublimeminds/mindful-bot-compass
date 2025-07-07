@@ -9,6 +9,11 @@ import PersonalizationEngine from './PersonalizationEngine';
 import QualityAssurance from './QualityAssurance';
 import AnalyticsInsights from './AnalyticsInsights';
 import AIPerformanceMetrics from './AIPerformanceMetrics';
+import ModelRoutingConfig from './ModelRoutingConfig';
+import CulturalIntegrationConfig from './CulturalIntegrationConfig';
+import VoiceAvatarSyncConfig from './VoiceAvatarSyncConfig';
+import EmergencyProtocolsConfig from './EmergencyProtocolsConfig';
+import CostManagementConfig from './CostManagementConfig';
 
 const AIConfigurationDashboard = () => {
   return (
@@ -72,22 +77,26 @@ const AIConfigurationDashboard = () => {
 
       {/* Configuration Tabs */}
       <Tabs defaultValue="models" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6 bg-gray-800">
+        <TabsList className="grid w-full grid-cols-8 bg-gray-800">
           <TabsTrigger value="models" className="data-[state=active]:bg-purple-600">
             <Brain className="h-4 w-4 mr-2" />
             Models
           </TabsTrigger>
-          <TabsTrigger value="therapy" className="data-[state=active]:bg-purple-600">
+          <TabsTrigger value="routing" className="data-[state=active]:bg-purple-600">
             <Settings className="h-4 w-4 mr-2" />
-            Therapy
+            Routing
           </TabsTrigger>
-          <TabsTrigger value="personalization" className="data-[state=active]:bg-purple-600">
+          <TabsTrigger value="cultural" className="data-[state=active]:bg-purple-600">
             <Users className="h-4 w-4 mr-2" />
-            Personalization
+            Cultural
           </TabsTrigger>
-          <TabsTrigger value="quality" className="data-[state=active]:bg-purple-600">
+          <TabsTrigger value="voice-avatar" className="data-[state=active]:bg-purple-600">
             <Shield className="h-4 w-4 mr-2" />
-            Quality
+            Voice & Avatar
+          </TabsTrigger>
+          <TabsTrigger value="emergency" className="data-[state=active]:bg-purple-600">
+            <BarChart3 className="h-4 w-4 mr-2" />
+            Emergency
           </TabsTrigger>
           <TabsTrigger value="analytics" className="data-[state=active]:bg-purple-600">
             <BarChart3 className="h-4 w-4 mr-2" />
@@ -97,22 +106,30 @@ const AIConfigurationDashboard = () => {
             <TrendingUp className="h-4 w-4 mr-2" />
             Performance
           </TabsTrigger>
+          <TabsTrigger value="cost" className="data-[state=active]:bg-purple-600">
+            <TrendingUp className="h-4 w-4 mr-2" />
+            Cost
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="models">
           <AIModelConfiguration />
         </TabsContent>
 
-        <TabsContent value="therapy">
-          <TherapeuticApproachConfig />
+        <TabsContent value="routing">
+          <ModelRoutingConfig />
         </TabsContent>
 
-        <TabsContent value="personalization">
-          <PersonalizationEngine />
+        <TabsContent value="cultural">
+          <CulturalIntegrationConfig />
         </TabsContent>
 
-        <TabsContent value="quality">
-          <QualityAssurance />
+        <TabsContent value="voice-avatar">
+          <VoiceAvatarSyncConfig />
+        </TabsContent>
+
+        <TabsContent value="emergency">
+          <EmergencyProtocolsConfig />
         </TabsContent>
 
         <TabsContent value="analytics">
@@ -121,6 +138,10 @@ const AIConfigurationDashboard = () => {
 
         <TabsContent value="performance">
           <AIPerformanceMetrics />
+        </TabsContent>
+
+        <TabsContent value="cost">
+          <CostManagementConfig />
         </TabsContent>
       </Tabs>
     </div>
