@@ -43,6 +43,14 @@ import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
 import NotificationCenterPage from "../pages/NotificationCenter";
 import NotificationSettingsPage from "../pages/NotificationSettings";
 import Integrations from "../pages/Integrations";
+
+// Integration Platform Pages
+import MessagingPlatforms from "../pages/integrations/MessagingPlatforms";
+import ProductivityTools from "../pages/integrations/ProductivityTools";
+import HealthIntegrations from "../pages/integrations/HealthIntegrations";
+import AnalyticsReporting from "../pages/integrations/AnalyticsReporting";
+import IntegrationNotifications from "../pages/integrations/IntegrationNotifications";
+import IntegrationAnalytics from "../pages/integrations/IntegrationAnalytics";
 import SmartTriggerDashboard from "../components/admin/SmartTriggerDashboard";
 import NotificationAnalyticsDashboard from "../components/admin/analytics/NotificationAnalyticsDashboard";
 import CampaignDashboard from "../components/admin/campaigns/CampaignDashboard";
@@ -376,32 +384,32 @@ const AppRouter = () => {
       {/* Integrations Nested Routes */}
       <Route path="/integrations/platforms/messaging" element={
         <PageErrorBoundary pageName="Messaging Platforms">
-          <div>Messaging Platforms Page - Placeholder</div>
+          <MessagingPlatforms />
         </PageErrorBoundary>
       } />
       <Route path="/integrations/platforms/productivity" element={
         <PageErrorBoundary pageName="Productivity Tools">
-          <div>Productivity Tools Page - Placeholder</div>
+          <ProductivityTools />
         </PageErrorBoundary>
       } />
       <Route path="/integrations/platforms/health" element={
         <PageErrorBoundary pageName="Health Integrations">
-          <div>Health Integrations Page - Placeholder</div>
+          <HealthIntegrations />
         </PageErrorBoundary>
       } />
       <Route path="/integrations/platforms/analytics" element={
         <PageErrorBoundary pageName="Analytics & Reporting">
-          <div>Analytics & Reporting Page - Placeholder</div>
+          <AnalyticsReporting />
         </PageErrorBoundary>
       } />
       <Route path="/integrations/notifications" element={
         <PageErrorBoundary pageName="Integration Notification Settings">
-          <div>Integration Notification Settings Page - Placeholder</div>
+          <IntegrationNotifications />
         </PageErrorBoundary>
       } />
       <Route path="/integrations/analytics" element={
         <PageErrorBoundary pageName="Integration Usage Analytics">
-          <div>Integration Usage Analytics Page - Placeholder</div>
+          <IntegrationAnalytics />
         </PageErrorBoundary>
       } />
 
