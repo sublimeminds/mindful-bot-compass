@@ -63,6 +63,9 @@ import AIInsights from "../pages/ai-personalization/AIInsights";
 import AIPatterns from "../pages/ai-personalization/AIPatterns";
 import AIRecommendations from "../pages/ai-personalization/AIRecommendations";
 import AIPredictions from "../pages/ai-personalization/AIPredictions";
+import SmartRecommendationEngine from "../pages/ai-personalization/SmartRecommendationEngine";
+import ContextualAIAssistant from "../pages/ai-personalization/ContextualAIAssistant";
+import AISettingsConfiguration from "../pages/ai-personalization/AISettingsConfiguration";
 
 // Sessions Pages
 import AllSessions from "../pages/sessions/AllSessions";
@@ -204,17 +207,17 @@ const AppRouter = () => {
       } />
       <Route path="/ai-personalization/recommendations" element={
         <PageErrorBoundary pageName="Smart Recommendations">
-          <div>Smart Recommendations Page - Placeholder</div>
+          <SmartRecommendationEngine />
         </PageErrorBoundary>
       } />
       <Route path="/ai-personalization/contextual" element={
         <PageErrorBoundary pageName="Contextual AI">
-          <div>Contextual AI Page - Placeholder</div>
+          <ContextualAIAssistant />
         </PageErrorBoundary>
       } />
       <Route path="/ai-personalization/settings" element={
         <PageErrorBoundary pageName="AI Settings">
-          <div>AI Settings Page - Placeholder</div>
+          <AISettingsConfiguration />
         </PageErrorBoundary>
       } />
 
