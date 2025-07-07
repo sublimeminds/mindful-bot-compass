@@ -216,6 +216,43 @@ const AppRouter = () => {
           <AllSessions />
         </PageErrorBoundary>
       } />
+      <Route path="/sessions/live" element={
+        <PageErrorBoundary pageName="Live Sessions">
+          <LiveSessions />
+        </PageErrorBoundary>
+      } />
+      <Route path="/sessions/analytics" element={
+        <PageErrorBoundary pageName="Session Analytics">
+          <SessionAnalytics />
+        </PageErrorBoundary>
+      } />
+      <Route path="/sessions/planner" element={
+        <PageErrorBoundary pageName="Session Planner">
+          <SessionPlanner />
+        </PageErrorBoundary>
+      } />
+      <Route path="/sessions/performance" element={
+        <PageErrorBoundary pageName="Performance Metrics">
+          <PerformanceMetrics />
+        </PageErrorBoundary>
+      } />
+      <Route path="/sessions/mood-analysis" element={
+        <PageErrorBoundary pageName="Mood Analysis">
+          <MoodAnalysis />
+        </PageErrorBoundary>
+      } />
+      <Route path="/sessions/technique-effectiveness" element={
+        <PageErrorBoundary pageName="Technique Effectiveness">
+          <TechniqueEffectiveness />
+        </PageErrorBoundary>
+      } />
+      <Route path="/sessions/time-analysis" element={
+        <PageErrorBoundary pageName="Time Analysis">
+          <TimeAnalysis />
+        </PageErrorBoundary>
+      } />
+
+      {/* Goals Nested Routes */}
       <Route path="/goals/active" element={
         <PageErrorBoundary pageName="Active Goals">
           <ActiveGoals />
@@ -223,39 +260,59 @@ const AppRouter = () => {
       } />
       <Route path="/goals/templates" element={
         <PageErrorBoundary pageName="Goal Templates">
-          <div>Goal Templates Page - Placeholder</div>
+          <GoalTemplates />
+        </PageErrorBoundary>
+      } />
+      <Route path="/goals/achievements" element={
+        <PageErrorBoundary pageName="Goal Achievements">
+          <GoalAchievements />
+        </PageErrorBoundary>
+      } />
+      <Route path="/goals/progress" element={
+        <PageErrorBoundary pageName="Goal Progress">
+          <GoalProgress />
         </PageErrorBoundary>
       } />
       <Route path="/goals/progress/weekly" element={
-        <PageErrorBoundary pageName="Weekly Goal Progress">
-          <div>Weekly Goal Progress Page - Placeholder</div>
+        <PageErrorBoundary pageName="Weekly View">
+          <WeeklyView />
         </PageErrorBoundary>
       } />
       <Route path="/goals/progress/monthly" element={
-        <PageErrorBoundary pageName="Monthly Goal Analysis">
-          <div>Monthly Goal Analysis Page - Placeholder</div>
+        <PageErrorBoundary pageName="Monthly Analysis">
+          <MonthlyAnalysis />
         </PageErrorBoundary>
       } />
       <Route path="/goals/progress/milestones" element={
         <PageErrorBoundary pageName="Milestone Tracker">
-          <div>Milestone Tracker Page - Placeholder</div>
+          <MilestoneTracker />
         </PageErrorBoundary>
       } />
       <Route path="/goals/progress/habits" element={
         <PageErrorBoundary pageName="Habit Formation">
-          <div>Habit Formation Page - Placeholder</div>
-        </PageErrorBoundary>
-      } />
-      <Route path="/goals/achievements" element={
-        <PageErrorBoundary pageName="Achievements">
-          <div>Achievements Page - Placeholder</div>
+          <HabitFormation />
         </PageErrorBoundary>
       } />
 
       {/* Mood Tracker Nested Routes */}
       <Route path="/mood-tracker/daily" element={
         <PageErrorBoundary pageName="Daily Mood Tracker">
-          <div>Daily Mood Tracker Page - Placeholder</div>
+          <DailyMoodTracker />
+        </PageErrorBoundary>
+      } />
+      <Route path="/mood-tracker/insights" element={
+        <PageErrorBoundary pageName="Mood Insights">
+          <MoodInsights />
+        </PageErrorBoundary>
+      } />
+      <Route path="/mood-tracker/patterns" element={
+        <PageErrorBoundary pageName="Mood Patterns">
+          <MoodPatterns />
+        </PageErrorBoundary>
+      } />
+      <Route path="/mood-tracker/emotions" element={
+        <PageErrorBoundary pageName="Emotion Analysis">
+          <EmotionAnalysis />
         </PageErrorBoundary>
       } />
       <Route path="/mood-tracker/patterns/weekly" element={
@@ -276,11 +333,6 @@ const AppRouter = () => {
       <Route path="/mood-tracker/patterns/journey" element={
         <PageErrorBoundary pageName="Emotional Journey">
           <div>Emotional Journey Page - Placeholder</div>
-        </PageErrorBoundary>
-      } />
-      <Route path="/mood-tracker/insights" element={
-        <PageErrorBoundary pageName="Mood Insights">
-          <div>Mood Insights Page - Placeholder</div>
         </PageErrorBoundary>
       } />
       <Route path="/mood-tracker/history" element={
