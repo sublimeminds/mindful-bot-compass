@@ -305,7 +305,7 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
-      {/* Mood Tracker Nested Routes */}
+      {/* Enhanced Mood Analytics Routes */}
       <Route path="/mood-tracker/daily" element={
         <PageErrorBoundary pageName="Daily Mood Tracker">
           <DailyMoodTracker />
@@ -321,7 +321,7 @@ const AppRouter = () => {
           <MoodPatterns />
         </PageErrorBoundary>
       } />
-      <Route path="/mood-tracker/emotions" element={
+      <Route path="/mood-tracker/emotion-analysis" element={
         <PageErrorBoundary pageName="Emotion Analysis">
           <EmotionAnalysis />
         </PageErrorBoundary>
@@ -349,6 +349,23 @@ const AppRouter = () => {
       <Route path="/mood-tracker/history" element={
         <PageErrorBoundary pageName="Mood History">
           <div>Mood History Page - Placeholder</div>
+        </PageErrorBoundary>
+      } />
+
+      {/* Advanced Analytics System Monitoring Routes */}
+      <Route path="/advanced-analytics/system-health" element={
+        <PageErrorBoundary pageName="System Health">
+          <SystemHealth />
+        </PageErrorBoundary>
+      } />
+      <Route path="/advanced-analytics/real-time-metrics" element={
+        <PageErrorBoundary pageName="Real-Time Metrics">
+          <RealTimeMetrics />
+        </PageErrorBoundary>
+      } />
+      <Route path="/advanced-analytics/alerts-monitoring" element={
+        <PageErrorBoundary pageName="Alerts & Monitoring">
+          <AlertsMonitoring />
         </PageErrorBoundary>
       } />
 
