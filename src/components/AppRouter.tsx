@@ -93,6 +93,11 @@ import MoodInsights from "../pages/mood-tracker/MoodInsights";
 import MoodPatterns from "../pages/mood-tracker/patterns/MoodPatterns";
 import EmotionAnalysis from "../pages/mood-tracker/patterns/EmotionAnalysis";
 
+// Advanced Analytics System Monitoring Pages
+import SystemHealth from "../pages/advanced-analytics/SystemHealth";
+import RealTimeMetrics from "../pages/advanced-analytics/RealTimeMetrics";
+import AlertsMonitoring from "../pages/advanced-analytics/AlertsMonitoring";
+
 // Error Pages
 import NotFound from "../pages/NotFound";
 
