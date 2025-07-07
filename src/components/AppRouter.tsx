@@ -58,9 +58,29 @@ import AIPredictions from "../pages/ai-personalization/AIPredictions";
 
 // Sessions Pages
 import AllSessions from "../pages/sessions/AllSessions";
+import LiveSessions from "../pages/sessions/LiveSessions";
+import SessionAnalytics from "../pages/sessions/SessionAnalytics";
+import SessionPlanner from "../pages/sessions/SessionPlanner";
+import PerformanceMetrics from "../pages/sessions/PerformanceMetrics";
+import MoodAnalysis from "../pages/sessions/MoodAnalysis";
+import TechniqueEffectiveness from "../pages/sessions/TechniqueEffectiveness";
+import TimeAnalysis from "../pages/sessions/TimeAnalysis";
 
 // Goals Pages
 import ActiveGoals from "../pages/goals/ActiveGoals";
+import GoalTemplates from "../pages/goals/GoalTemplates";
+import GoalAchievements from "../pages/goals/GoalAchievements";
+import GoalProgress from "../pages/goals/GoalProgress";
+import WeeklyView from "../pages/goals/WeeklyView";
+import MonthlyAnalysis from "../pages/goals/MonthlyAnalysis";
+import MilestoneTracker from "../pages/goals/MilestoneTracker";
+import HabitFormation from "../pages/goals/HabitFormation";
+
+// Mood Tracker Pages
+import DailyMoodTracker from "../pages/mood-tracker/DailyMoodTracker";
+import MoodInsights from "../pages/mood-tracker/MoodInsights";
+import MoodPatterns from "../pages/mood-tracker/patterns/MoodPatterns";
+import EmotionAnalysis from "../pages/mood-tracker/patterns/EmotionAnalysis";
 
 // Error Pages
 import NotFound from "../pages/NotFound";
