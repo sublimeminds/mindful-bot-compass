@@ -258,7 +258,8 @@ class TestRunner {
 }
 
 // Export for programmatic use
-export { TestRunner, SystemValidationReport, TestResult };
+export { TestRunner };
+export type { SystemValidationReport, TestResult };
 
 // CLI execution
 if (require.main === module) {

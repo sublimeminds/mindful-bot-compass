@@ -10,7 +10,7 @@ const mockSupabase = {
     select: jest.fn(() => ({
       gte: jest.fn(() => ({
         lte: jest.fn(() => ({
-          order: jest.fn(() => ({ then: jest.fn() }))
+          order: jest.fn(() => Promise.resolve({ data: [], error: null }))
         }))
       }))
     }))
@@ -199,7 +199,8 @@ describe('AI Routing Tests', () => {
         }
       ];
 
-      mockSupabase.from.mockReturnValue({
+      const mockFrom = {
+        insert: jest.fn(() => ({ select: jest.fn(() => ({ single: jest.fn() })) })),
         select: jest.fn(() => ({
           gte: jest.fn(() => ({
             lte: jest.fn(() => ({
@@ -207,7 +208,9 @@ describe('AI Routing Tests', () => {
             }))
           }))
         }))
-      });
+      };
+      
+      mockSupabase.from.mockReturnValue(mockFrom);
 
       const timeRange = {
         from: new Date('2024-01-01'),
@@ -223,7 +226,8 @@ describe('AI Routing Tests', () => {
     });
 
     test('should handle analytics fetch errors gracefully', async () => {
-      mockSupabase.from.mockReturnValue({
+      const mockFrom = {
+        insert: jest.fn(() => ({ select: jest.fn(() => ({ single: jest.fn() })) })),
         select: jest.fn(() => ({
           gte: jest.fn(() => ({
             lte: jest.fn(() => ({
@@ -231,7 +235,9 @@ describe('AI Routing Tests', () => {
             }))
           }))
         }))
-      });
+      };
+      
+      mockSupabase.from.mockReturnValue(mockFrom);
 
       const timeRange = {
         from: new Date('2024-01-01'),
