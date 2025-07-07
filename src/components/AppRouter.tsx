@@ -357,6 +357,9 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
+      {/* Health Check Endpoint for Monitoring */}
+      <Route path="/health" element={<div>healthy</div>} />
+
       {/* Advanced Analytics System Monitoring Routes */}
       <Route path="/advanced-analytics/system-health" element={
         <PageErrorBoundary pageName="System Health">
