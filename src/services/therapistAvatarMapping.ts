@@ -11,6 +11,11 @@ export const therapistAvatarMapping = {
   '88a93e17-4338-4834-b360-55c9db4cc667': 'dr-emma-thompson',  // Dr. Emma Thompson - Humanistic
   '1588e859-69a6-4b88-b2cc-c377441ac08c': 'dr-james-rodriguez', // Dr. James Rodriguez - Solution-Focused
   
+  // New specialized therapists
+  'a1b2c3d4-5e6f-7890-abcd-ef1234567890': 'dr-jordan-taylor',  // ADHD Specialist
+  'b2c3d4e5-6f78-9012-bcde-f23456789012': 'dr-riley-chen',     // LGBTQ+ Affirming
+  'c3d4e5f6-7890-1234-cdef-345678901234': 'dr-sam-morgan',     // Couples Specialist
+  
   // Legacy numeric IDs for backward compatibility
   '1': 'dr-sarah-chen',
   '2': 'dr-alex-rodriguez', 
@@ -34,6 +39,11 @@ export const getVoiceIdForTherapist = (therapistId: string): string => {
     'e352e13d-99f9-4ffc-95a6-a05c3d935b74': 'N2lVS1w4EtoT3dr4eOWO', // Dr. Michael Rivers - calm mindful male
     '88a93e17-4338-4834-b360-55c9db4cc667': 'pFZP5JQG7iQjIQuC4Bku', // Dr. Emma Thompson - warm humanistic female
     '1588e859-69a6-4b88-b2cc-c377441ac08c': 'bIHbv24MWmeRgasZH58o', // Dr. James Rodriguez - optimistic male
+    
+    // New specialized therapists
+    'a1b2c3d4-5e6f-7890-abcd-ef1234567890': 'TX3LPaxmHKxFdv7VOQHJ', // Dr. Jordan Taylor - energetic ADHD specialist
+    'b2c3d4e5-6f78-9012-bcde-f23456789012': 'cgSgspJ2msm6clMCkdW9', // Dr. Riley Chen - affirming LGBTQ+ voice
+    'c3d4e5f6-7890-1234-cdef-345678901234': 'EXAVITQu4vr4xnSDxMaL', // Dr. Sam Morgan - balanced couples voice
     
     // Legacy numeric IDs
     '1': 'EXAVITQu4vr4xnSDxMaL',

@@ -27,7 +27,10 @@ const DashboardHeader = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-3">
             <GradientLogo size="sm" />
-            <span className="text-lg font-semibold text-gray-800">Dashboard</span>
+            <div className="flex items-center space-x-2">
+              <Menu className="h-5 w-5 text-therapy-600" />
+              <span className="text-lg font-semibold text-gray-800">Dashboard</span>
+            </div>
           </div>
         </div>
 

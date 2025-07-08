@@ -4,9 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { 
   Brain, 
@@ -21,110 +18,15 @@ import {
   Clock,
   Zap,
   Globe,
-  Award,
   TrendingUp,
   Search,
-  Filter,
   CheckCircle,
-  MessageCircle,
-  Mic,
-  Camera
+  MessageCircle
 } from 'lucide-react';
 import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
-import { therapistPersonas } from '@/components/avatar/TherapistAvatarPersonas';
-import { getVoiceIdForTherapist } from '@/services/therapistAvatarMapping';
-
-// Enhanced therapist data with comprehensive information
-const therapistData = [
-  {
-    id: 'dr-sarah-chen',
-    name: 'Dr. Sarah Chen',
-    title: 'Cognitive Behavioral Therapist',
-    approach: 'Cognitive Behavioral Therapy',
-    description: 'Specializes in anxiety and depression using evidence-based CBT techniques with a warm, supportive approach.',
-    specialties: ['Anxiety', 'Depression', 'Stress Management', 'CBT', 'Panic Disorders'],
-    communicationStyle: 'Warm, direct, and solution-focused',
-    culturalCompetencies: ['Asian-American', 'Multicultural', 'LGBTQ+ Affirming'],
-    experienceLevel: 'Expert',
-    successRate: 94,
-    userSatisfaction: 4.9,
-    sessionCount: 15420,
-    voiceCharacteristics: 'Warm, analytical, reassuring',
-    personalityTraits: ['Empathetic', 'Structured', 'Evidence-based', 'Patient'],
-    languages: ['English', 'Mandarin', 'Cantonese'],
-    crisisSupport: 'Advanced',
-    availabilityHours: '24/7',
-    icon: Brain,
-    colorScheme: 'from-therapy-500 to-therapy-600',
-    avatarId: 'dr-sarah-chen'
-  },
-  {
-    id: 'dr-maya-patel',
-    name: 'Dr. Maya Patel',
-    title: 'Mindfulness-Based Therapist',
-    approach: 'Dialectical Behavior Therapy',
-    description: 'Focuses on mindfulness-based approaches and emotional regulation skills with a compassionate, mindful presence.',
-    specialties: ['Mindfulness', 'Emotional Regulation', 'DBT', 'Stress', 'Meditation'],
-    communicationStyle: 'Compassionate, mindful, and accepting',
-    culturalCompetencies: ['South Asian', 'Hindu/Buddhist Traditions', 'Mindfulness-based'],
-    experienceLevel: 'Expert',
-    successRate: 91,
-    userSatisfaction: 4.8,
-    sessionCount: 12340,
-    voiceCharacteristics: 'Gentle, calming, wise',
-    personalityTraits: ['Mindful', 'Accepting', 'Gentle', 'Spiritual'],
-    languages: ['English', 'Hindi', 'Gujarati'],
-    crisisSupport: 'Intermediate',
-    availabilityHours: '24/7',
-    icon: Heart,
-    colorScheme: 'from-calm-500 to-calm-600',
-    avatarId: 'dr-maya-patel'
-  },
-  {
-    id: 'dr-alex-rodriguez',
-    name: 'Dr. Alex Rodriguez',
-    title: 'Solution-Focused Therapist',
-    approach: 'Solution-Focused Brief Therapy',
-    description: 'Expert in solution-focused approaches helping clients identify strengths and achieve rapid positive change.',
-    specialties: ['Goal Setting', 'Life Transitions', 'SFBT', 'Career Counseling', 'Motivation'],
-    communicationStyle: 'Energetic, optimistic, and goal-oriented',
-    culturalCompetencies: ['Latino/Hispanic', 'Bilingual Therapy', 'Cultural Adaptation'],
-    experienceLevel: 'Advanced',
-    successRate: 89,
-    userSatisfaction: 4.7,
-    sessionCount: 9870,
-    voiceCharacteristics: 'Energetic, motivating, clear',
-    personalityTraits: ['Optimistic', 'Goal-oriented', 'Motivating', 'Action-focused'],
-    languages: ['English', 'Spanish'],
-    crisisSupport: 'Basic',
-    availabilityHours: '24/7',
-    icon: Target,
-    colorScheme: 'from-harmony-500 to-harmony-600',
-    avatarId: 'dr-alex-rodriguez'
-  },
-  {
-    id: 'dr-jordan-kim',
-    name: 'Dr. Jordan Kim',
-    title: 'Trauma Specialist',
-    approach: 'EMDR Therapy',
-    description: 'Expert in trauma-informed care and EMDR therapy for PTSD treatment with a gentle, patient-centered approach.',
-    specialties: ['Trauma', 'PTSD', 'EMDR', 'Crisis Intervention', 'Complex Trauma'],
-    communicationStyle: 'Gentle, patient, and trauma-informed',
-    culturalCompetencies: ['Korean-American', 'Trauma-informed', 'Military Families'],
-    experienceLevel: 'Expert',
-    successRate: 96,
-    userSatisfaction: 4.9,
-    sessionCount: 18750,
-    voiceCharacteristics: 'Gentle, grounding, secure',
-    personalityTraits: ['Trauma-informed', 'Patient', 'Grounding', 'Safe'],
-    languages: ['English', 'Korean'],
-    crisisSupport: 'Expert',
-    availabilityHours: '24/7',
-    icon: Shield,
-    colorScheme: 'from-balance-500 to-balance-600',
-    avatarId: 'dr-jordan-kim'
-  }
-];
+import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 const therapyApproaches = [
   'All Approaches',
@@ -168,6 +70,70 @@ const TherapistDiscovery = () => {
   const [selectedStyle, setSelectedStyle] = useState('All Styles');
   const [compatibilityScores, setCompatibilityScores] = useState<{[key: string]: number}>({});
 
+  // Helper function to get icon component by name
+  const getIconByName = (iconName: string) => {
+    const icons = {
+      Brain,
+      Heart,
+      Target,
+      Shield,
+      Users,
+      Star,
+      Sparkles,
+      Zap,
+      TrendingUp
+    };
+    return icons[iconName as keyof typeof icons] || Brain;
+  };
+
+  // Helper function to derive voice characteristics
+  const getVoiceCharacteristics = (communicationStyle: string) => {
+    if (communicationStyle.includes('energetic')) return 'Energetic, motivating, clear';
+    if (communicationStyle.includes('gentle')) return 'Gentle, calming, wise';
+    if (communicationStyle.includes('warm')) return 'Warm, analytical, reassuring';
+    return 'Professional, supportive, clear';
+  };
+
+  // Fetch therapists from database
+  const { data: therapistData = [], isLoading } = useQuery({
+    queryKey: ['therapist-personalities-discovery'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('therapist_personalities')
+        .select('*')
+        .eq('is_active', true);
+
+      if (error) {
+        console.error('Error fetching therapists:', error);
+        throw error;
+      }
+
+      // Transform database data to component format
+      return data.map(therapist => ({
+        id: therapist.id,
+        name: therapist.name,
+        title: therapist.title,
+        approach: therapist.approach,
+        description: therapist.description,
+        specialties: therapist.specialties,
+        communicationStyle: therapist.communication_style,
+        experienceLevel: therapist.experience_level,
+        colorScheme: therapist.color_scheme,
+        icon: getIconByName(therapist.icon),
+        avatarId: getAvatarIdForTherapist(therapist.id),
+        personalityTraits: therapist.personality_traits || {},
+        effectivenessAreas: therapist.effectiveness_areas || {},
+        successRate: Math.floor(Math.random() * 20) + 80, // 80-100% for demo
+        userSatisfaction: (Math.random() * 1 + 4).toFixed(1), // 4.0-5.0 for demo
+        sessionCount: Math.floor(Math.random() * 10000) + 5000, // Demo data
+        voiceCharacteristics: getVoiceCharacteristics(therapist.communication_style),
+        languages: ['English'], // Default, could be expanded
+        crisisSupport: therapist.experience_level === 'Expert' ? 'Advanced' : 'Intermediate',
+        availabilityHours: '24/7'
+      }));
+    },
+  });
+
   // Generate random compatibility scores for demo
   useEffect(() => {
     const scores: {[key: string]: number} = {};
@@ -175,7 +141,7 @@ const TherapistDiscovery = () => {
       scores[therapist.id] = Math.floor(Math.random() * 20) + 80; // 80-100% compatibility
     });
     setCompatibilityScores(scores);
-  }, []);
+  }, [therapistData]);
 
   const filteredTherapists = therapistData.filter(therapist => {
     const matchesSearch = therapist.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -194,6 +160,17 @@ const TherapistDiscovery = () => {
     console.log(`Playing voice preview for ${therapistId}`);
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading AI therapists...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
       {/* Hero Section */}
@@ -211,13 +188,13 @@ const TherapistDiscovery = () => {
             </h1>
             
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Meet our team of 9 specialized AI therapists, each with unique personalities, approaches, and expertise. 
+              Meet our team of specialized AI therapists, each with unique personalities, approaches, and expertise. 
               Powered by advanced AI with perfect memory, cultural intelligence, and 24/7 availability.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-therapy-600">9</div>
+                <div className="text-3xl font-bold text-therapy-600">{therapistData.length}</div>
                 <div className="text-sm text-muted-foreground">AI Therapists</div>
               </div>
               <div className="text-center">
@@ -462,17 +439,6 @@ const TherapistDiscovery = () => {
                       <div>
                         <p className="text-sm font-medium mb-2">Communication Style</p>
                         <p className="text-sm text-muted-foreground">{therapist.communicationStyle}</p>
-                      </div>
-
-                      <div>
-                        <p className="text-sm font-medium mb-2">Cultural Competencies</p>
-                        <div className="flex flex-wrap gap-1">
-                          {therapist.culturalCompetencies.map((comp, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
-                              {comp}
-                            </Badge>
-                          ))}
-                        </div>
                       </div>
 
                       <div>

@@ -224,6 +224,72 @@ export const therapistPersonas: Record<string, TherapistAvatarPersona> = {
       postureStyle: 'formal',
       approachStyle: 'dynamic'
     }
+  },
+  'dr-jordan-taylor': {
+    therapistId: 'dr-jordan-taylor',
+    name: 'Dr. Jordan Taylor',
+    appearance: {
+      faceStructure: 'oval',
+      hairStyle: 'medium',
+      clothingStyle: 'casual',
+      colorPalette: {
+        skin: '#F5DEB3',
+        hair: '#8B4513',
+        eyes: '#FF8C00',
+        clothing: '#FF7F50',
+        accent: '#FFB347'
+      }
+    },
+    personality: {
+      gestureFrequency: 0.9,
+      facialExpressiveness: 0.8,
+      postureStyle: 'open',
+      approachStyle: 'energetic'
+    }
+  },
+  'dr-riley-chen': {
+    therapistId: 'dr-riley-chen',
+    name: 'Dr. Riley Chen',
+    appearance: {
+      faceStructure: 'round',
+      hairStyle: 'short',
+      clothingStyle: 'warm',
+      colorPalette: {
+        skin: '#E8C5A0',
+        hair: '#654321',
+        eyes: '#4A90E2',
+        clothing: '#E91E63',
+        accent: '#FF69B4'
+      }
+    },
+    personality: {
+      gestureFrequency: 0.6,
+      facialExpressiveness: 0.9,
+      postureStyle: 'open',
+      approachStyle: 'affirming'
+    }
+  },
+  'dr-sam-morgan': {
+    therapistId: 'dr-sam-morgan',
+    name: 'Dr. Sam Morgan',
+    appearance: {
+      faceStructure: 'oval',
+      hairStyle: 'medium',
+      clothingStyle: 'professional',
+      colorPalette: {
+        skin: '#DDBEA9',
+        hair: '#8B4513',
+        eyes: '#2E8B57',
+        clothing: '#DC143C',
+        accent: '#FFB6C1'
+      }
+    },
+    personality: {
+      gestureFrequency: 0.5,
+      facialExpressiveness: 0.7,
+      postureStyle: 'formal',
+      approachStyle: 'balanced'
+    }
   }
 };
 

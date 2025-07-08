@@ -16,6 +16,7 @@ import ReactSafeWrapper from '@/components/ReactSafeWrapper';
 
 // App Router
 import AppRouter from '@/components/AppRouter';
+import LiveChatAgent from '@/components/LiveChatAgent';
 
 import './App.css';
 
@@ -119,6 +120,7 @@ function App() {
                 <SafeRouter>
                   <div className="min-h-screen bg-background">
                     <AppRouter />
+                    <LiveChatAgent />
                     <Toaster />
                     <Sonner />
                   </div>

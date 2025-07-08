@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 import { 
   Brain, 
   Heart, 
@@ -11,6 +12,8 @@ import {
   ChevronRight,
   Palette
 } from 'lucide-react';
+import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
+import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -149,12 +152,15 @@ const TherapistPersonalitySettings = () => {
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage src={`/api/placeholder/48/48?text=${therapist.name.split(' ').map(n => n[0]).join('')}`} />
-                      <AvatarFallback className={`${therapist.color_scheme} text-white`}>
-                        {therapist.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
+                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-therapy-50 to-calm-50">
+                      <Suspense fallback={<Skeleton className="w-full h-full" />}>
+                        <ThreeDTherapistAvatar
+                          therapistId={getAvatarIdForTherapist(therapist.id)}
+                          emotion="neutral"
+                          showControls={false}
+                        />
+                      </Suspense>
+                    </div>
                     <div>
                       <CardTitle className="text-lg">{therapist.name}</CardTitle>
                       <p className="text-sm text-muted-foreground">{therapist.title}</p>
@@ -212,21 +218,25 @@ const TherapistPersonalitySettings = () => {
                   <div className="space-y-1">
                     {Object.entries(therapist.personality_traits || {})
                       .slice(0, 3)
-                      .map(([trait, value]) => (
-                        <div key={trait} className="flex items-center justify-between text-xs">
-                          <span className="capitalize">{trait.replace('_', ' ')}</span>
-                          <div className="flex items-center space-x-1">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                              <Star 
-                                key={i} 
-                                className={`h-3 w-3 ${
-                                  i < (value as number) ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                                }`} 
-                              />
-                            ))}
+                      .map(([trait, value]) => {
+                        // Convert value to 1-5 scale for star display
+                        const starCount = Math.min(5, Math.max(1, Math.round((value as number))));
+                        return (
+                          <div key={trait} className="flex items-center justify-between text-xs">
+                            <span className="capitalize">{trait.replace('_', ' ')}</span>
+                            <div className="flex items-center space-x-1">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star 
+                                  key={i} 
+                                  className={`h-3 w-3 ${
+                                    i < starCount ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                                  }`} 
+                                />
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                   </div>
                 </div>
 
