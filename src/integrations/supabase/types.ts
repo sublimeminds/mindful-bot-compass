@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievement_badges: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          is_active: boolean
+          name: string
+          rarity: string
+          requirements: Json
+          title: string
+          unlock_criteria: Json
+          xp_reward: number
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description: string
+          icon: string
+          id?: string
+          is_active?: boolean
+          name: string
+          rarity?: string
+          requirements?: Json
+          title: string
+          unlock_criteria?: Json
+          xp_reward?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          rarity?: string
+          requirements?: Json
+          title?: string
+          unlock_criteria?: Json
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       achievements: {
         Row: {
           created_at: string
@@ -601,6 +646,81 @@ export type Database = {
         }
         Relationships: []
       }
+      avatar_customization_items: {
+        Row: {
+          category: string
+          config_data: Json
+          created_at: string
+          id: string
+          is_premium: boolean
+          item_type: string
+          name: string
+          preview_url: string | null
+          rarity: string
+          unlock_requirements: Json | null
+          xp_cost: number
+        }
+        Insert: {
+          category: string
+          config_data?: Json
+          created_at?: string
+          id?: string
+          is_premium?: boolean
+          item_type: string
+          name: string
+          preview_url?: string | null
+          rarity?: string
+          unlock_requirements?: Json | null
+          xp_cost?: number
+        }
+        Update: {
+          category?: string
+          config_data?: Json
+          created_at?: string
+          id?: string
+          is_premium?: boolean
+          item_type?: string
+          name?: string
+          preview_url?: string | null
+          rarity?: string
+          unlock_requirements?: Json | null
+          xp_cost?: number
+        }
+        Relationships: []
+      }
+      avatar_mood_entries: {
+        Row: {
+          context_data: Json | null
+          detected_by: string
+          id: string
+          mood_intensity: number
+          mood_value: string
+          recorded_at: string
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          context_data?: Json | null
+          detected_by?: string
+          id?: string
+          mood_intensity?: number
+          mood_value: string
+          recorded_at?: string
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          context_data?: Json | null
+          detected_by?: string
+          id?: string
+          mood_intensity?: number
+          mood_value?: string
+          recorded_at?: string
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       billing_history: {
         Row: {
           amount: number
@@ -1076,6 +1196,45 @@ export type Database = {
           schedule_frequency?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      digital_consents: {
+        Row: {
+          consent_data: Json | null
+          consent_type: string
+          consent_version: string
+          consented_at: string
+          id: string
+          ip_address: unknown | null
+          is_active: boolean
+          user_agent: string | null
+          user_id: string
+          withdrawal_requested_at: string | null
+        }
+        Insert: {
+          consent_data?: Json | null
+          consent_type: string
+          consent_version?: string
+          consented_at?: string
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean
+          user_agent?: string | null
+          user_id: string
+          withdrawal_requested_at?: string | null
+        }
+        Update: {
+          consent_data?: Json | null
+          consent_type?: string
+          consent_version?: string
+          consented_at?: string
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean
+          user_agent?: string | null
+          user_id?: string
+          withdrawal_requested_at?: string | null
         }
         Relationships: []
       }
@@ -2385,6 +2544,45 @@ export type Database = {
         }
         Relationships: []
       }
+      knowledge_items: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          difficulty_level: string
+          id: string
+          is_premium: boolean
+          tags: string[] | null
+          title: string
+          unlock_requirements: Json | null
+          xp_value: number
+        }
+        Insert: {
+          category: string
+          content: string
+          created_at?: string
+          difficulty_level?: string
+          id?: string
+          is_premium?: boolean
+          tags?: string[] | null
+          title: string
+          unlock_requirements?: Json | null
+          xp_value?: number
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          difficulty_level?: string
+          id?: string
+          is_premium?: boolean
+          tags?: string[] | null
+          title?: string
+          unlock_requirements?: Json | null
+          xp_value?: number
+        }
+        Relationships: []
+      }
       mental_health_assessments: {
         Row: {
           assessment_type: string
@@ -3609,6 +3807,39 @@ export type Database = {
         }
         Relationships: []
       }
+      session_avatar_interactions: {
+        Row: {
+          emotion_data: Json | null
+          id: string
+          interaction_timestamp: string
+          interaction_type: string
+          session_id: string
+          therapist_avatar_state: Json | null
+          user_avatar_state: Json | null
+          user_id: string
+        }
+        Insert: {
+          emotion_data?: Json | null
+          id?: string
+          interaction_timestamp?: string
+          interaction_type: string
+          session_id: string
+          therapist_avatar_state?: Json | null
+          user_avatar_state?: Json | null
+          user_id: string
+        }
+        Update: {
+          emotion_data?: Json | null
+          id?: string
+          interaction_timestamp?: string
+          interaction_type?: string
+          session_id?: string
+          therapist_avatar_state?: Json | null
+          user_avatar_state?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       session_context: {
         Row: {
           addressed: boolean
@@ -4564,6 +4795,105 @@ export type Database = {
         }
         Relationships: []
       }
+      user_avatar_inventory: {
+        Row: {
+          id: string
+          is_equipped: boolean
+          item_id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          is_equipped?: boolean
+          item_id: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          is_equipped?: boolean
+          item_id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_avatar_profiles: {
+        Row: {
+          animation_preferences: Json
+          appearance_config: Json
+          avatar_name: string
+          created_at: string
+          current_mood: string
+          customization_level: number
+          id: string
+          mood_expressions: Json
+          mood_history: Json | null
+          unlocked_features: string[] | null
+          updated_at: string
+          user_id: string
+          voice_settings: Json
+        }
+        Insert: {
+          animation_preferences?: Json
+          appearance_config?: Json
+          avatar_name?: string
+          created_at?: string
+          current_mood?: string
+          customization_level?: number
+          id?: string
+          mood_expressions?: Json
+          mood_history?: Json | null
+          unlocked_features?: string[] | null
+          updated_at?: string
+          user_id: string
+          voice_settings?: Json
+        }
+        Update: {
+          animation_preferences?: Json
+          appearance_config?: Json
+          avatar_name?: string
+          created_at?: string
+          current_mood?: string
+          customization_level?: number
+          id?: string
+          mood_expressions?: Json
+          mood_history?: Json | null
+          unlocked_features?: string[] | null
+          updated_at?: string
+          user_id?: string
+          voice_settings?: Json
+        }
+        Relationships: []
+      }
+      user_badge_achievements: {
+        Row: {
+          badge_id: string
+          earned_at: string
+          id: string
+          progress_data: Json | null
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string
+          id?: string
+          progress_data?: Json | null
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string
+          id?: string
+          progress_data?: Json | null
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: []
+      }
       user_behavior_analytics: {
         Row: {
           assessments_taken: number | null
@@ -4660,6 +4990,48 @@ export type Database = {
           therapy_approach_preferences?: string[]
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_experience: {
+        Row: {
+          created_at: string
+          current_level: number
+          id: string
+          level_rewards_claimed: Json | null
+          monthly_xp: number
+          total_xp: number
+          updated_at: string
+          user_id: string
+          weekly_xp: number
+          xp_sources: Json | null
+          xp_to_next_level: number
+        }
+        Insert: {
+          created_at?: string
+          current_level?: number
+          id?: string
+          level_rewards_claimed?: Json | null
+          monthly_xp?: number
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+          weekly_xp?: number
+          xp_sources?: Json | null
+          xp_to_next_level?: number
+        }
+        Update: {
+          created_at?: string
+          current_level?: number
+          id?: string
+          level_rewards_claimed?: Json | null
+          monthly_xp?: number
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
+          weekly_xp?: number
+          xp_sources?: Json | null
+          xp_to_next_level?: number
         }
         Relationships: []
       }
@@ -4821,6 +5193,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_knowledge_progress: {
+        Row: {
+          id: string
+          knowledge_item_id: string
+          last_reviewed_at: string | null
+          mastery_level: number
+          review_count: number
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          knowledge_item_id: string
+          last_reviewed_at?: string | null
+          mastery_level?: number
+          review_count?: number
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          knowledge_item_id?: string
+          last_reviewed_at?: string | null
+          mastery_level?: number
+          review_count?: number
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_onboarding: {
         Row: {
           concerns: string[] | null
@@ -4903,6 +5305,57 @@ export type Database = {
           created_at?: string
           id?: string
           progress_data?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_risk_assessments: {
+        Row: {
+          assessed_by: string | null
+          assessment_type: string
+          created_at: string
+          crisis_score: number | null
+          id: string
+          next_assessment_due: string | null
+          protective_factors: Json | null
+          recommendations: Json | null
+          reviewed_by: string | null
+          risk_factors: Json | null
+          risk_level: string
+          suicide_risk_level: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assessed_by?: string | null
+          assessment_type?: string
+          created_at?: string
+          crisis_score?: number | null
+          id?: string
+          next_assessment_due?: string | null
+          protective_factors?: Json | null
+          recommendations?: Json | null
+          reviewed_by?: string | null
+          risk_factors?: Json | null
+          risk_level?: string
+          suicide_risk_level?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assessed_by?: string | null
+          assessment_type?: string
+          created_at?: string
+          crisis_score?: number | null
+          id?: string
+          next_assessment_due?: string | null
+          protective_factors?: Json | null
+          recommendations?: Json | null
+          reviewed_by?: string | null
+          risk_factors?: Json | null
+          risk_level?: string
+          suicide_risk_level?: string | null
           updated_at?: string
           user_id?: string
         }
