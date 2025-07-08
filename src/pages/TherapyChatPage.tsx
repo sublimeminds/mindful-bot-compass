@@ -63,30 +63,50 @@ const TherapyChatPage = () => {
           </div>
         </div>
 
+        {/* Voice Chat Prominence Banner */}
+        <div className="bg-gradient-to-r from-therapy-500 to-calm-500 p-4 rounded-lg mb-6">
+          <div className="flex items-center justify-between text-white">
+            <div className="flex items-center space-x-3">
+              <Mic className="h-6 w-6" />
+              <div>
+                <h3 className="font-semibold">Voice Therapy Chat Available</h3>
+                <p className="text-sm opacity-90">Experience natural conversations with real-time emotion recognition</p>
+              </div>
+            </div>
+            <button 
+              className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
+              onClick={() => {
+                const voiceTab = document.querySelector('[value="voice"]') as HTMLButtonElement;
+                voiceTab?.click();
+              }}
+            >
+              Try Voice Chat
+            </button>
+          </div>
+        </div>
+
         <Tabs defaultValue="enhanced" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 lg:w-auto">
             <TabsTrigger value="enhanced" className="flex items-center space-x-2">
               <Brain className="h-4 w-4" />
-              <span>Enhanced Chat</span>
+              <span>AI + Avatar Chat</span>
+            </TabsTrigger>
+            
+            <TabsTrigger value="voice" className="flex items-center space-x-2 bg-gradient-to-r from-therapy-100 to-calm-100">
+              <Mic className="h-4 w-4" />
+              <span className="font-medium">Voice + Emotion</span>
             </TabsTrigger>
             
             <TabsTrigger value="chat" className="flex items-center space-x-2">
               <MessageSquare className="h-4 w-4" />
-              <span>Basic Chat</span>
-            </TabsTrigger>
-            
-            <TabsTrigger value="voice" className="flex items-center space-x-2">
-              <Mic className="h-4 w-4" />
-              <span>Voice Only</span>
+              <span>Text Only</span>
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="enhanced" className="space-y-6">
-            <EnhancedTherapyChatWithAvatar />
-          </TabsContent>
-
-          <TabsContent value="chat" className="space-y-6">
-            <RealTimeSessionManager />
+            <div className="bg-gradient-to-br from-therapy-50 to-calm-50 p-1 rounded-lg">
+              <EnhancedTherapyChatWithAvatar />
+            </div>
           </TabsContent>
 
           <TabsContent value="voice" className="space-y-6">
@@ -134,6 +154,17 @@ const TherapyChatPage = () => {
                   </CardContent>
                 </Card>
               </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="chat" className="space-y-6">
+            <div className="bg-white rounded-lg border border-therapy-200 p-4">
+              <div className="text-center text-therapy-600 mb-4">
+                <MessageSquare className="h-8 w-8 mx-auto mb-2" />
+                <h3 className="font-semibold">Text-Only Chat</h3>
+                <p className="text-sm text-muted-foreground">Traditional text-based therapy conversations</p>
+              </div>
+              <RealTimeSessionManager />
             </div>
           </TabsContent>
         </Tabs>

@@ -112,13 +112,26 @@ const TherapistPersonalityStep = ({
 }: TherapistPersonalityStepProps) => {
   const getMatchScore = (therapist: TherapistPersonality) => {
     let score = 0;
-    const goalMatches = therapist.matchingGoals.filter(goal => 
-      selectedGoals.some(selected => selected.toLowerCase().includes(goal))
+    
+    // Goal matching with specialty alignment
+    const goalMatches = selectedGoals.filter(goal => 
+      therapist.specialties.some(specialty => 
+        specialty.toLowerCase().includes(goal.toLowerCase()) ||
+        goal.toLowerCase().includes(specialty.toLowerCase())
+      )
     ).length;
-    const prefMatches = therapist.matchingPreferences.filter(pref => 
-      selectedPreferences.some(selected => selected.toLowerCase().includes(pref))
-    ).length;
-    return goalMatches + prefMatches;
+    
+    // Approach preference matching
+    const approachMatches = selectedPreferences.filter(pref => {
+      const prefLower = pref.toLowerCase();
+      const approachLower = therapist.approach.toLowerCase();
+      return approachLower.includes(prefLower) || prefLower.includes(approachLower);
+    }).length;
+    
+    // Personality compatibility (simulate based on therapist specialties)
+    const personalityScore = Math.min(3, therapist.specialties.length);
+    
+    return goalMatches * 2 + approachMatches * 2 + personalityScore;
   };
 
   const sortedTherapists = [...therapistPersonalities].sort((a, b) => getMatchScore(b) - getMatchScore(a));

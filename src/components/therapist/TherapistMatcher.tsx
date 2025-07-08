@@ -1,9 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Star, User, Heart, Brain } from 'lucide-react';
+import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
+import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 
 interface TherapistMatcherProps {
   onTherapistSelected: (therapistId: string) => void;
@@ -13,37 +16,67 @@ interface TherapistMatcherProps {
 const TherapistMatcher = ({ onTherapistSelected, onClose }: TherapistMatcherProps) => {
   const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
 
-  // Mock therapist data
+  // Mock therapist data with realistic compatibility scores
   const therapists = [
     {
-      id: '1',
+      id: 'ed979f27-2491-43f1-a779-5095febb68b2',
       name: 'Dr. Sarah Chen',
       specialties: ['Anxiety', 'Depression', 'CBT'],
       approach: 'Cognitive Behavioral Therapy',
-      matchScore: 95,
+      matchScore: 92,
       experience: '8 years',
       rating: 4.9,
       description: 'Specializes in anxiety and depression using evidence-based CBT techniques.'
     },
     {
-      id: '2',
-      name: 'Dr. Michael Rodriguez',
-      specialties: ['Trauma', 'PTSD', 'EMDR'],
-      approach: 'EMDR Therapy',
-      matchScore: 88,
-      experience: '12 years',
+      id: '9492ab1a-eab2-4c5f-a8e3-40870b2ca857',
+      name: 'Dr. Maya Patel',
+      specialties: ['Mindfulness', 'Stress', 'Emotional Regulation'],
+      approach: 'Mindfulness-Based Therapy',
+      matchScore: 87,
+      experience: '10 years',
       rating: 4.8,
-      description: 'Expert in trauma-informed care and EMDR therapy for PTSD treatment.'
+      description: 'Emphasizes present-moment awareness and mindful living practices.'
     },
     {
-      id: '3',
-      name: 'Dr. Emily Johnson',
-      specialties: ['Mindfulness', 'Stress', 'DBT'],
-      approach: 'Dialectical Behavior Therapy',
-      matchScore: 82,
+      id: '0772c602-306b-42ad-b610-2dc15ba06714',
+      name: 'Dr. Alex Rodriguez',
+      specialties: ['Goal Setting', 'Personal Growth', 'Motivation'],
+      approach: 'Solution-Focused Therapy',
+      matchScore: 84,
       experience: '6 years',
       rating: 4.7,
-      description: 'Focuses on mindfulness-based approaches and emotional regulation skills.'
+      description: 'Concentrates on finding solutions and building on existing strengths.'
+    },
+    {
+      id: '2fee5506-ee6d-4504-bab7-2ba922bdc99a',
+      name: 'Dr. Jordan Kim',
+      specialties: ['Trauma', 'PTSD', 'Safety'],
+      approach: 'Trauma-Informed Therapy',
+      matchScore: 79,
+      experience: '12 years',
+      rating: 4.9,
+      description: 'Specializes in trauma-sensitive approaches with emphasis on safety and healing.'
+    },
+    {
+      id: '84148de7-b04d-4547-9d9b-80665efbd4af',
+      name: 'Dr. Taylor Morgan',
+      specialties: ['Relationships', 'Communication', 'Social Skills'],
+      approach: 'Relationship Counseling',
+      matchScore: 75,
+      experience: '9 years',
+      rating: 4.6,
+      description: 'Focuses on improving communication, relationships, and social connections.'
+    },
+    {
+      id: '79298cfb-6997-4cc6-9b21-ffaacb525c54',
+      name: 'Dr. River Stone',
+      specialties: ['Holistic Health', 'Life Balance', 'Wellness'],
+      approach: 'Holistic Wellness',
+      matchScore: 71,
+      experience: '7 years',
+      rating: 4.5,
+      description: 'Takes a whole-person approach considering mental, physical, and spiritual well-being.'
     }
   ];
 
@@ -84,9 +117,21 @@ const TherapistMatcher = ({ onTherapistSelected, onClose }: TherapistMatcherProp
           >
             <CardHeader>
               <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-lg">{therapist.name}</CardTitle>
-                  <p className="text-sm text-muted-foreground">{therapist.approach}</p>
+                <div className="flex items-center space-x-3">
+                  {/* 3D Avatar Preview */}
+                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-therapy-50 to-calm-50">
+                    <Suspense fallback={<Skeleton className="w-full h-full" />}>
+                      <ThreeDTherapistAvatar
+                        therapistId={getAvatarIdForTherapist(therapist.id)}
+                        emotion="neutral"
+                        showControls={false}
+                      />
+                    </Suspense>
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">{therapist.name}</CardTitle>
+                    <p className="text-sm text-muted-foreground">{therapist.approach}</p>
+                  </div>
                 </div>
                 <Badge variant="secondary" className="bg-therapy-100 text-therapy-700">
                   {therapist.matchScore}% match

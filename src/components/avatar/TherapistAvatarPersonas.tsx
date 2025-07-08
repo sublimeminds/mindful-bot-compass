@@ -136,6 +136,94 @@ export const therapistPersonas: Record<string, TherapistAvatarPersona> = {
       postureStyle: 'formal',
       approachStyle: 'empathetic'
     }
+  },
+  'dr-river-stone': {
+    therapistId: 'dr-river-stone',
+    name: 'Dr. River Stone',
+    appearance: {
+      faceStructure: 'oval',
+      hairStyle: 'long',
+      clothingStyle: 'warm',
+      colorPalette: {
+        skin: '#F2E6D3',
+        hair: '#8B7355',
+        eyes: '#2E7D32',
+        clothing: '#0D9488',
+        accent: '#14B8A6'
+      }
+    },
+    personality: {
+      gestureFrequency: 0.3,
+      facialExpressiveness: 0.7,
+      postureStyle: 'relaxed',
+      approachStyle: 'holistic'
+    }
+  },
+  'dr-michael-rivers': {
+    therapistId: 'dr-michael-rivers',
+    name: 'Dr. Michael Rivers',
+    appearance: {
+      faceStructure: 'square',
+      hairStyle: 'short',
+      clothingStyle: 'warm',
+      colorPalette: {
+        skin: '#E8C5A0',
+        hair: '#4A4A4A',
+        eyes: '#2D3748',
+        clothing: '#059669',
+        accent: '#10B981'
+      }
+    },
+    personality: {
+      gestureFrequency: 0.4,
+      facialExpressiveness: 0.8,
+      postureStyle: 'relaxed',
+      approachStyle: 'mindful'
+    }
+  },
+  'dr-emma-thompson': {
+    therapistId: 'dr-emma-thompson',
+    name: 'Dr. Emma Thompson',
+    appearance: {
+      faceStructure: 'round',
+      hairStyle: 'curly',
+      clothingStyle: 'warm',
+      colorPalette: {
+        skin: '#F5E6D3',
+        hair: '#8B4513',
+        eyes: '#8B4513',
+        clothing: '#7C3AED',
+        accent: '#A78BFA'
+      }
+    },
+    personality: {
+      gestureFrequency: 0.6,
+      facialExpressiveness: 0.9,
+      postureStyle: 'open',
+      approachStyle: 'humanistic'
+    }
+  },
+  'dr-james-rodriguez': {
+    therapistId: 'dr-james-rodriguez',
+    name: 'Dr. James Rodriguez',
+    appearance: {
+      faceStructure: 'square',
+      hairStyle: 'short',
+      clothingStyle: 'professional',
+      colorPalette: {
+        skin: '#D4A574',
+        hair: '#2F1B14',
+        eyes: '#2D3748',
+        clothing: '#EA580C',
+        accent: '#FB923C'
+      }
+    },
+    personality: {
+      gestureFrequency: 0.8,
+      facialExpressiveness: 0.8,
+      postureStyle: 'formal',
+      approachStyle: 'dynamic'
+    }
   }
 };
 
