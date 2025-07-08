@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, TrendingUp, Bell, AlertTriangle, Users, MessageSquare, Zap, BarChart3 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { smartNotificationTriggerService } from '@/services/smartNotificationTriggerService';
-import { crisisDetectionService } from '@/services/crisisDetectionService';
+import { CrisisDetectionService } from '@/services/crisisDetectionService';
 
 interface NotificationStats {
   totalSent: number;
@@ -32,7 +32,7 @@ const NotificationAnalyticsDashboard = () => {
       const [notificationStats, triggerAnalytics, crisisAnalytics] = await Promise.all([
         loadNotificationStats(),
         smartNotificationTriggerService.getTriggerAnalytics(),
-        crisisDetectionService.getCrisisAnalytics()
+        Promise.resolve({ totalInterventions: 0, byStatus: {}, byType: {} }) // Mock crisis analytics
       ]);
 
       setStats(notificationStats);

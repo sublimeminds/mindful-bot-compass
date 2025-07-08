@@ -56,6 +56,7 @@ import CampaignDashboard from "../components/admin/campaigns/CampaignDashboard";
 import WorkflowBuilder from "../components/admin/workflows/WorkflowBuilder";
 import EnhancedCrisisManager from "../components/crisis/EnhancedCrisisManager";
 import RealTimeChat from "../components/collaboration/RealTimeChat";
+import AIIntegrationHub from "../components/ai/AIIntegrationHub";
 
 // AI Personalization Pages
 import AIInsights from "../pages/ai-personalization/AIInsights";
@@ -517,6 +518,12 @@ const AppRouter = () => {
       <Route path="/ai-personalization" element={
         <PageErrorBoundary pageName="AI Personalization">
           <EnhancedAIPersonalization />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/ai-dashboard" element={
+        <PageErrorBoundary pageName="AI Dashboard">
+          <AIIntegrationHub />
         </PageErrorBoundary>
       } />
       

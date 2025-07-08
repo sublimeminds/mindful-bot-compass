@@ -6,14 +6,23 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Phone, Shield, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { CrisisDetectionService } from '@/services/crisisDetectionService';
+import { CrisisDetectionService, SafetyResource } from '@/services/crisisDetectionService';
 
 const EnhancedCrisisManager: React.FC = () => {
   const { user } = useAuth();
   const [activeAlerts, setActiveAlerts] = useState([]);
   const [isMonitoring, setIsMonitoring] = useState(true);
+  const [crisisResources, setCrisisResources] = useState<SafetyResource[]>([]);
 
-  const crisisResources = CrisisDetectionService.getCrisisResources('severe');
+  useEffect(() => {
+    const loadResources = async () => {
+      if (user?.id) {
+        const resources = await CrisisDetectionService.getCrisisResources(user.id);
+        setCrisisResources(resources);
+      }
+    };
+    loadResources();
+  }, [user?.id]);
 
   return (
     <div className="space-y-6">
@@ -55,11 +64,11 @@ const EnhancedCrisisManager: React.FC = () => {
           <div className="grid gap-4">
             {crisisResources.map((resource, index) => (
               <div key={index} className="p-4 border rounded-lg">
-                <h3 className="font-medium">{resource.name}</h3>
+                <h3 className="font-medium">{resource.title}</h3>
                 <p className="text-sm text-gray-600 mb-2">{resource.description}</p>
                 <Button size="sm" className="flex items-center space-x-2">
                   <Phone className="h-4 w-4" />
-                  <span>{resource.phone}</span>
+                  <span>{resource.contact_info}</span>
                 </Button>
               </div>
             ))}

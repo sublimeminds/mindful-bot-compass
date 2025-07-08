@@ -103,8 +103,8 @@ export const sendEnhancedMessage = async (
 ): Promise<{ response: string; emotion: EmotionAnalysis }> => {
   try {
     // First, check for crisis indicators
-    const crisisIndicator = CrisisDetectionService.analyzeCrisisLevel(message);
-    if (crisisIndicator && crisisIndicator.type === 'severe') {
+    const crisisLevel = await CrisisDetectionService.analyzeCrisisLevel(message);
+    if (crisisLevel === 'critical') {
       const crisisResponse = await handleCrisisResponse(message, userPreferences?.culturalContext);
       const emotion = await analyzeEmotion(message, userPreferences?.culturalContext);
       return { response: crisisResponse, emotion };
@@ -163,10 +163,10 @@ export const sendEnhancedMessage = async (
 };
 
 async function handleCrisisResponse(message: string, culturalContext?: CulturalContext): Promise<string> {
-  const crisisIndicator = CrisisDetectionService.analyzeCrisisLevel(message);
-  if (!crisisIndicator) return "I'm here to support you.";
+  const crisisLevel = await CrisisDetectionService.analyzeCrisisLevel(message);
+  if (crisisLevel === 'low') return "I'm here to support you.";
 
-  let response = CrisisDetectionService.generateCrisisResponse(crisisIndicator);
+  let response = await CrisisDetectionService.generateCrisisResponse(crisisLevel);
   
   // Add cultural adaptations for crisis response
   if (culturalContext) {
@@ -180,10 +180,10 @@ async function handleCrisisResponse(message: string, culturalContext?: CulturalC
   }
   
   // Add crisis resources
-  const resources = CrisisDetectionService.getCrisisResources(crisisIndicator.type);
+  const resources = await CrisisDetectionService.getCrisisResources('default');
   response += "\n\nImmediate help is available:";
   resources.forEach(resource => {
-    response += `\n• ${resource.name}: ${resource.phone} (${resource.availability})`;
+    response += `\n• ${resource.title}: ${resource.contact_info} (${resource.availability})`;
   });
   
   return response;

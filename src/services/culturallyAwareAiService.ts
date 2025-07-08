@@ -101,10 +101,10 @@ export class CulturallyAwareAIService {
   ): Promise<string> {
     try {
       // Check for crisis indicators first
-      const crisisIndicator = CrisisDetectionService.analyzeCrisisLevel(message);
+      const crisisLevel = await CrisisDetectionService.analyzeCrisisLevel(message);
       
-      if (crisisIndicator) {
-        return this.generateCulturalCrisisResponse(crisisIndicator, culturalContext);
+      if (crisisLevel !== 'low') {
+        return await this.generateCulturalCrisisResponse(crisisLevel, culturalContext);
       }
 
       // Get cultural framework for the user's background
@@ -164,13 +164,13 @@ export class CulturallyAwareAIService {
     }
   }
 
-  private static generateCulturalCrisisResponse(
+  private static async generateCulturalCrisisResponse(
     indicator: any,
     context: CulturalContext
-  ): string {
+  ): Promise<string> {
     const framework = CULTURAL_FRAMEWORKS[context.language] || CULTURAL_FRAMEWORKS['en-US'];
     
-    let response = CrisisDetectionService.generateCrisisResponse(indicator);
+    let response = await CrisisDetectionService.generateCrisisResponse(indicator);
     
     // Add cultural adaptations
     if (framework.familyInvolvement === 'family-centered') {

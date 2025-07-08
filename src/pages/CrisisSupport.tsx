@@ -9,11 +9,12 @@ import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { CrisisDetectionService } from '@/services/crisisDetectionService';
+import { CrisisDetectionService, SafetyResource } from '@/services/crisisDetectionService';
 
 const CrisisSupport = () => {
   const navigate = useNavigate();
   const [userLocation, setUserLocation] = useState<{ country: string; region: string } | null>(null);
+  const [crisisResources, setCrisisResources] = useState<SafetyResource[]>([]);
 
   useSafeSEO({
     title: 'Crisis Support - Immediate Mental Health Resources',
@@ -31,10 +32,19 @@ const CrisisSupport = () => {
         console.log('Could not detect location for crisis resources');
       }
     };
+    
+    const loadCrisisResources = async () => {
+      try {
+        const resources = await CrisisDetectionService.getCrisisResources('default');
+        setCrisisResources(resources);
+      } catch (error) {
+        console.error('Error loading crisis resources:', error);
+      }
+    };
+    
     detectLocation();
+    loadCrisisResources();
   }, []);
-
-  const crisisResources = CrisisDetectionService.getCrisisResources('severe');
 
   const internationalResources = [
     { country: 'United States', phone: '988', name: 'Suicide & Crisis Lifeline' },
@@ -165,7 +175,7 @@ const CrisisSupport = () => {
                 {crisisResources.map((resource, index) => (
                   <div key={index} className="p-4 bg-red-50 rounded-lg border border-red-200">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-semibold text-red-800">{resource.name}</h4>
+                      <h4 className="font-semibold text-red-800">{resource.title}</h4>
                       <Badge className="bg-red-100 text-red-800">
                         <Clock className="h-3 w-3 mr-1" />
                         {resource.availability}
@@ -174,10 +184,10 @@ const CrisisSupport = () => {
                     <p className="text-sm text-red-700 mb-2">{resource.description}</p>
                     <Button
                       className="w-full bg-red-600 hover:bg-red-700 text-white"
-                      onClick={() => window.location.href = `tel:${resource.phone}`}
+                      onClick={() => window.location.href = `tel:${resource.contact_info}`}
                     >
                       <Phone className="h-4 w-4 mr-2" />
-                      Call {resource.phone}
+                      Call {resource.contact_info}
                     </Button>
                   </div>
                 ))}

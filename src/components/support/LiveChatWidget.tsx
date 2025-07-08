@@ -45,10 +45,10 @@ const LiveChatWidget = () => {
 
   const generateAIResponse = async (userMessage: string): Promise<string> => {
     // Crisis detection
-    const crisisIndicator = CrisisDetectionService.analyzeCrisisLevel(userMessage);
-    if (crisisIndicator && crisisIndicator.type === 'severe') {
-      return CrisisDetectionService.generateCrisisResponse(crisisIndicator) + 
-        "\n\nI'm connecting you with a crisis counselor immediately. Please hold on.";
+    const crisisLevel = await CrisisDetectionService.analyzeCrisisLevel(userMessage);
+    if (crisisLevel === 'critical') {
+      const response = await CrisisDetectionService.generateCrisisResponse(crisisLevel);
+      return response + "\n\nI'm connecting you with a crisis counselor immediately. Please hold on.";
     }
 
     // Smart routing based on message content
@@ -85,15 +85,13 @@ const LiveChatWidget = () => {
     setIsTyping(true);
 
     // Crisis detection
-    const crisisIndicator = CrisisDetectionService.analyzeCrisisLevel(inputMessage);
-    if (crisisIndicator) {
-      if (crisisIndicator.type === 'severe') {
-        toast({
-          title: "Crisis Support Activated",
-          description: "Connecting you with immediate crisis support resources.",
-          variant: "destructive"
-        });
-      }
+    const crisisLevel = await CrisisDetectionService.analyzeCrisisLevel(inputMessage);
+    if (crisisLevel === 'critical' || crisisLevel === 'high') {
+      toast({
+        title: "Crisis Support Activated",
+        description: "Connecting you with immediate crisis support resources.",
+        variant: "destructive"
+      });
     }
 
     // Simulate AI response delay
@@ -105,8 +103,8 @@ const LiveChatWidget = () => {
         content: aiResponse,
         sender: 'ai',
         timestamp: new Date(),
-        needsEscalation: crisisIndicator?.type === 'severe',
-        crisisLevel: crisisIndicator?.type
+        needsEscalation: crisisLevel === 'critical',
+        crisisLevel: crisisLevel === 'low' ? 'mild' : crisisLevel === 'moderate' ? 'moderate' : 'severe'
       };
 
       setMessages(prev => [...prev, aiMessage]);

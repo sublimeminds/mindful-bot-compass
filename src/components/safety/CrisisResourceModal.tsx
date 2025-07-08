@@ -5,13 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Phone, MessageCircle, AlertTriangle } from 'lucide-react';
-import { CrisisResource, CrisisIndicator } from '@/services/crisisDetectionService';
+import { SafetyResource, CrisisIndicator } from '@/services/crisisDetectionService';
 
 interface CrisisResourceModalProps {
   isOpen: boolean;
   onClose: () => void;
   crisisIndicator: CrisisIndicator;
-  resources: CrisisResource[];
+  resources: SafetyResource[];
 }
 
 const CrisisResourceModal: React.FC<CrisisResourceModalProps> = ({
@@ -20,11 +20,12 @@ const CrisisResourceModal: React.FC<CrisisResourceModalProps> = ({
   crisisIndicator,
   resources
 }) => {
-  const getSeverityColor = (type: string) => {
-    switch (type) {
-      case 'severe': return 'bg-red-100 text-red-800 border-red-200';
-      case 'moderate': return 'bg-orange-100 text-orange-800 border-orange-200';
-      default: return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'critical': return 'bg-red-100 text-red-800 border-red-200';
+      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -53,22 +54,22 @@ const CrisisResourceModal: React.FC<CrisisResourceModalProps> = ({
 
         <div className="space-y-6">
           {/* Crisis Level Indicator */}
-          <Card className={`border-2 ${getSeverityColor(crisisIndicator.type)}`}>
+          <Card className={`border-2 ${getSeverityColor(crisisIndicator.severity)}`}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold">Support Level Detected</h3>
                   <p className="text-sm">
-                    {crisisIndicator.type === 'severe' 
+                    {crisisIndicator.severity === 'critical' 
                       ? 'Immediate professional support recommended'
-                      : crisisIndicator.type === 'moderate'
+                      : crisisIndicator.severity === 'high'
                       ? 'Professional support strongly recommended'
                       : 'Support resources available if needed'
                     }
                   </p>
                 </div>
-                <Badge variant="outline" className={getSeverityColor(crisisIndicator.type)}>
-                  {crisisIndicator.type.toUpperCase()}
+                <Badge variant="outline" className={getSeverityColor(crisisIndicator.severity)}>
+                  {crisisIndicator.severity.toUpperCase()}
                 </Badge>
               </div>
             </CardContent>
@@ -88,30 +89,30 @@ const CrisisResourceModal: React.FC<CrisisResourceModalProps> = ({
               <Card key={index} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <h4 className="font-medium">{resource.name}</h4>
-                      <p className="text-sm text-muted-foreground mb-2">{resource.description}</p>
-                      <div className="flex items-center space-x-4 text-sm">
-                        <span className="flex items-center space-x-1">
-                          <Phone className="h-3 w-3" />
-                          <span>{resource.phone}</span>
-                        </span>
-                        <Badge variant="outline" className="text-xs">
-                          {resource.availability}
-                        </Badge>
-                      </div>
+                  <div className="flex-1">
+                    <h4 className="font-medium">{resource.title}</h4>
+                    <p className="text-sm text-muted-foreground mb-2">{resource.description}</p>
+                    <div className="flex items-center space-x-4 text-sm">
+                      <span className="flex items-center space-x-1">
+                        <Phone className="h-3 w-3" />
+                        <span>{resource.contact_info}</span>
+                      </span>
+                      <Badge variant="outline" className="text-xs">
+                        {resource.availability}
+                      </Badge>
                     </div>
-                    <Button 
-                      onClick={() => handleCallResource(resource.phone)}
-                      className="ml-4"
-                      variant={resource.priority <= 2 ? 'default' : 'outline'}
-                    >
-                      {resource.phone.includes('741741') ? (
-                        <MessageCircle className="h-4 w-4" />
-                      ) : (
-                        <Phone className="h-4 w-4" />
-                      )}
-                    </Button>
+                  </div>
+                  <Button 
+                    onClick={() => handleCallResource(resource.contact_info || '')}
+                    className="ml-4"
+                    variant={resource.immediate_access ? 'default' : 'outline'}
+                  >
+                    {resource.contact_info?.includes('741741') ? (
+                      <MessageCircle className="h-4 w-4" />
+                    ) : (
+                      <Phone className="h-4 w-4" />
+                    )}
+                  </Button>
                   </div>
                 </CardContent>
               </Card>
