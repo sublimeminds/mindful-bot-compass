@@ -36,7 +36,8 @@ import {
   Activity,
   Stethoscope,
   Link as LinkIcon,
-  LifeBuoy
+  LifeBuoy,
+  CircuitBoard
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import GradientLogo from '@/components/ui/GradientLogo';
@@ -53,6 +54,13 @@ const EnhancedHeader = () => {
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
 
   const aiFeatures = [
+    {
+      icon: CircuitBoard,
+      title: "AI Architecture",
+      description: "Discover our advanced multi-model AI system powered by ChatGPT and Anthropic",
+      href: "/ai-architecture",
+      gradient: "from-purple-500 to-indigo-600"
+    },
     {
       icon: Brain,
       title: "AI Therapy Chat",
