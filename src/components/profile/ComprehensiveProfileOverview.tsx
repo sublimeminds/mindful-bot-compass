@@ -18,14 +18,17 @@ import {
   Lightbulb,
   BarChart3,
   Settings,
-  Download
+  Download,
+  Sparkles
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 const ComprehensiveProfileOverview = () => {
   const { user } = useSimpleApp();
+  const navigate = useNavigate();
   const [onboardingData, setOnboardingData] = useState<any>(null);
   const [aiAnalysis, setAiAnalysis] = useState<any>(null);
   const [progressData, setProgressData] = useState<any>(null);
@@ -197,14 +200,68 @@ const ComprehensiveProfileOverview = () => {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="insights">AI Insights</TabsTrigger>
           <TabsTrigger value="onboarding">Onboarding Data</TabsTrigger>
           <TabsTrigger value="analysis">AI Analysis</TabsTrigger>
           <TabsTrigger value="progress">Progress Tracking</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
+          {/* AI Profile Insights Integration */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Brain className="h-5 w-5 mr-2 text-therapy-600" />
+                  AI Therapeutic Insights
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate('/profile-analytics')}
+                >
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  View Analytics
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 border rounded-lg bg-therapy-50/50">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Sparkles className="h-4 w-4 text-therapy-600" />
+                    <span className="font-medium">Latest Breakthrough</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Communication pattern improvement detected in recent sessions
+                  </p>
+                  <Badge className="bg-therapy-100 text-therapy-700">92% confidence</Badge>
+                </div>
+                <div className="p-4 border rounded-lg bg-harmony-50/50">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Heart className="h-4 w-4 text-harmony-600" />
+                    <span className="font-medium">Therapist Compatibility</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Your compatibility with Dr. Sarah Chen has improved by 13%
+                  </p>
+                  <Badge className="bg-harmony-100 text-harmony-700">94% current match</Badge>
+                </div>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="w-full mt-4"
+                onClick={() => navigate('/ai-dashboard')}
+              >
+                <Brain className="h-4 w-4 mr-2" />
+                View AI Insights Hub
+              </Button>
+            </CardContent>
+          </Card>
+
           {/* Recent Milestones */}
           <Card>
             <CardHeader>
@@ -250,6 +307,71 @@ const ComprehensiveProfileOverview = () => {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="insights" className="space-y-6">
+          {/* AI Profile Insights */}
+          <div className="space-y-6">
+            {/* Import the AIProfileInsights component content here */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Brain className="h-5 w-5 text-therapy-600" />
+                  <span>Enhanced Profile Analytics</span>
+                </CardTitle>
+                <p className="text-muted-foreground">
+                  Advanced AI-powered insights and analytics for your therapeutic journey
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate('/ai-dashboard')}
+                    className="h-20 flex flex-col items-center justify-center space-y-2"
+                  >
+                    <Sparkles className="h-6 w-6 text-therapy-600" />
+                    <div className="text-center">
+                      <p className="font-medium">AI Insights Hub</p>
+                      <p className="text-xs text-muted-foreground">Therapeutic intelligence</p>
+                    </div>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate('/therapist-selection')}
+                    className="h-20 flex flex-col items-center justify-center space-y-2"
+                  >
+                    <Heart className="h-6 w-6 text-harmony-600" />
+                    <div className="text-center">
+                      <p className="font-medium">Therapist Matching</p>
+                      <p className="text-xs text-muted-foreground">Enhanced compatibility</p>
+                    </div>
+                  </Button>
+                </div>
+                
+                <div className="p-4 border rounded-lg bg-gradient-to-r from-therapy-50 to-calm-50">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-medium">Recent AI Analysis</h4>
+                    <Badge className="bg-therapy-100 text-therapy-700">Updated</Badge>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <TrendingUp className="h-4 w-4 text-green-500" />
+                      <span>Communication improvement detected: +40% emotional expression</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Target className="h-4 w-4 text-blue-500" />
+                      <span>Goal alignment optimization: 92% match with current therapist</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Shield className="h-4 w-4 text-orange-500" />
+                      <span>Crisis prevention effectiveness: 89% success rate</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="onboarding" className="space-y-6">
