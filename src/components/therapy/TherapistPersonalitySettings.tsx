@@ -13,6 +13,7 @@ import {
   Palette
 } from 'lucide-react';
 import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
+import ThreeDErrorBoundary from '@/components/ThreeDErrorBoundary';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -153,13 +154,15 @@ const TherapistPersonalitySettings = () => {
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-therapy-50 to-calm-50">
-                      <Suspense fallback={<Skeleton className="w-full h-full" />}>
-                        <ThreeDTherapistAvatar
-                          therapistId={getAvatarIdForTherapist(therapist.id)}
-                          emotion="neutral"
-                          showControls={false}
-                        />
-                      </Suspense>
+                      <ThreeDErrorBoundary showRefresh={false}>
+                        <Suspense fallback={<Skeleton className="w-full h-full" />}>
+                          <ThreeDTherapistAvatar
+                            therapistId={getAvatarIdForTherapist(therapist.id)}
+                            emotion="neutral"
+                            showControls={false}
+                          />
+                        </Suspense>
+                      </ThreeDErrorBoundary>
                     </div>
                     <div>
                       <CardTitle className="text-lg">{therapist.name}</CardTitle>

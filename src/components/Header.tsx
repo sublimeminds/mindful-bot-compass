@@ -1,10 +1,16 @@
 
 import React from 'react';
 import EnhancedHeader from '@/components/navigation/EnhancedHeader';
+import AIInsightsHeader from '@/components/navigation/AIInsightsHeader';
 
-// Legacy Header component now uses EnhancedHeader
+// Enhanced Header component with AI insights
 const Header = () => {
-  return <EnhancedHeader />;
+  return (
+    <>
+      <AIInsightsHeader />
+      <EnhancedHeader />
+    </>
+  );
 };
 
 export default Header;

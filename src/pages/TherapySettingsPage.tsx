@@ -15,6 +15,7 @@ import TherapistPersonalitySettings from '@/components/therapy/TherapistPersonal
 import AIBehaviorSettings from '@/components/therapy/AIBehaviorSettings';
 import SessionPreferences from '@/components/therapy/SessionPreferences';
 import CrisisSettings from '@/components/therapy/CrisisSettings';
+import AIModelConfiguration from '@/components/therapy/AIModelConfiguration';
 
 const TherapySettingsPage = () => {
   const { user, loading } = useAuth();
@@ -57,10 +58,15 @@ const TherapySettingsPage = () => {
         </div>
 
         <Tabs defaultValue="therapist" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:grid-cols-5">
             <TabsTrigger value="therapist" className="flex items-center space-x-2">
               <Brain className="h-4 w-4" />
               <span className="hidden sm:inline">Therapist</span>
+            </TabsTrigger>
+            
+            <TabsTrigger value="ai-models" className="flex items-center space-x-2">
+              <Palette className="h-4 w-4" />
+              <span className="hidden sm:inline">AI Models</span>
             </TabsTrigger>
             
             <TabsTrigger value="ai-behavior" className="flex items-center space-x-2">
@@ -82,6 +88,12 @@ const TherapySettingsPage = () => {
           <TabsContent value="therapist" className="space-y-6">
             <div className="bg-white rounded-lg border border-therapy-100 p-1">
               <TherapistPersonalitySettings />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="ai-models" className="space-y-6">
+            <div className="bg-white rounded-lg border border-therapy-100 p-6">
+              <AIModelConfiguration />
             </div>
           </TabsContent>
 
