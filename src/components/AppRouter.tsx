@@ -22,7 +22,6 @@ import EnhancedAIPersonalization from "../pages/EnhancedAIPersonalization";
 import AdvancedAnalytics from "../pages/AdvancedAnalytics";
 import EnhancedTherapy from "../pages/EnhancedTherapy";
 import DashboardOptimization from "../pages/DashboardOptimization";
-import TherapySyncAI from "../pages/TherapySyncAI";
 import TherapyPlan from "../pages/TherapyPlan";
 import TherapistSelection from "../pages/TherapistSelection";
 
@@ -108,6 +107,7 @@ import CrisisSupport from "../pages/CrisisSupport";
 import Pricing from "../pages/Pricing";
 import CommunityFeatures from "../pages/CommunityFeatures";
 import TherapyTypes from "../pages/TherapyTypes";
+import TherapySyncAI from "../pages/TherapySyncAI";
 
 // Error Pages
 import NotFound from "../pages/NotFound";
@@ -422,6 +422,12 @@ const AppRouter = () => {
           <TherapyTypes />
         </PageErrorBoundary>
       } />
+      
+      <Route path="/therapy-sync-ai" element={
+        <PageErrorBoundary pageName="TherapySync AI">
+          <TherapySyncAI />
+        </PageErrorBoundary>
+      } />
 
       {/* Health Check Endpoint for Monitoring */}
       <Route path="/health" element={<div>healthy</div>} />
@@ -526,11 +532,6 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
       
-      <Route path="/therapy-ai" element={
-        <PageErrorBoundary pageName="TherapySync AI">
-          <TherapySyncAI />
-        </PageErrorBoundary>
-      } />
       
       <Route path="/dashboard-optimization" element={
         <PageErrorBoundary pageName="Dashboard Optimization">

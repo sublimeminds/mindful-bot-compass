@@ -57,7 +57,7 @@ const EnhancedHeader = () => {
       icon: Brain,
       title: "AI Therapy Chat",
       description: "Advanced AI-powered therapy conversations with personalized treatment approaches",
-      href: "/therapy-chat",
+      href: "/therapy-sync-ai",
       gradient: "from-therapy-500 to-calm-500"
     },
     {

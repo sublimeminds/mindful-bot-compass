@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 import VoiceTherapyChat from '@/components/voice/VoiceTherapyChat';
 import RealTimeSessionManager from '@/components/session/RealTimeSessionManager';
-import EnhancedTherapyChat from '@/components/chat/EnhancedTherapyChat';
+import EnhancedTherapyChatWithAvatar from '@/components/therapy/EnhancedTherapyChatWithAvatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MessageSquare, Mic, Brain } from 'lucide-react';
@@ -82,9 +82,7 @@ const TherapyChatPage = () => {
           </TabsList>
 
           <TabsContent value="enhanced" className="space-y-6">
-            <div className="h-[600px]">
-              <EnhancedTherapyChat />
-            </div>
+            <EnhancedTherapyChatWithAvatar />
           </TabsContent>
 
           <TabsContent value="chat" className="space-y-6">
