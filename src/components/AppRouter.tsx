@@ -98,6 +98,17 @@ import SystemHealth from "../pages/advanced-analytics/SystemHealth";
 import RealTimeMetrics from "../pages/advanced-analytics/RealTimeMetrics";
 import AlertsMonitoring from "../pages/advanced-analytics/AlertsMonitoring";
 
+// Marketing/Feature Pages
+import VoiceTechnology from "../pages/VoiceTechnology";
+import CulturalAIFeatures from "../pages/CulturalAIFeatures";
+import FeaturesOverview from "../pages/FeaturesOverview";
+import HowItWorks from "../pages/HowItWorks";
+import FeaturesShowcase from "../pages/FeaturesShowcase";
+import CrisisSupport from "../pages/CrisisSupport";
+import Pricing from "../pages/Pricing";
+import CommunityFeatures from "../pages/CommunityFeatures";
+import TherapyTypes from "../pages/TherapyTypes";
+
 // Error Pages
 import NotFound from "../pages/NotFound";
 
@@ -354,6 +365,61 @@ const AppRouter = () => {
       <Route path="/mood-tracker/history" element={
         <PageErrorBoundary pageName="Mood History">
           <div>Mood History Page - Placeholder</div>
+        </PageErrorBoundary>
+      } />
+
+      {/* Marketing/Feature Pages */}
+      <Route path="/voice-technology" element={
+        <PageErrorBoundary pageName="Voice Technology">
+          <VoiceTechnology />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/cultural-ai-features" element={
+        <PageErrorBoundary pageName="Cultural AI Features">
+          <CulturalAIFeatures />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/features-overview" element={
+        <PageErrorBoundary pageName="Features Overview">
+          <FeaturesOverview />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/how-it-works" element={
+        <PageErrorBoundary pageName="How It Works">
+          <HowItWorks />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/features-showcase" element={
+        <PageErrorBoundary pageName="Features Showcase">
+          <FeaturesShowcase />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/crisis-support" element={
+        <PageErrorBoundary pageName="Crisis Support">
+          <CrisisSupport />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/pricing" element={
+        <PageErrorBoundary pageName="Pricing">
+          <Pricing />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/community-features" element={
+        <PageErrorBoundary pageName="Community Features">
+          <CommunityFeatures />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/therapy-types" element={
+        <PageErrorBoundary pageName="Therapy Types">
+          <TherapyTypes />
         </PageErrorBoundary>
       } />
 
