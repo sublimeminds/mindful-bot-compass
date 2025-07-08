@@ -110,6 +110,7 @@ import CommunityFeatures from "../pages/CommunityFeatures";
 import TherapyTypes from "../pages/TherapyTypes";
 import TherapySyncAI from "../pages/TherapySyncAI";
 import AIArchitecture from "../pages/AIArchitecture";
+import TherapistDiscovery from "../pages/TherapistDiscovery";
 
 // Error Pages
 import NotFound from "../pages/NotFound";
@@ -434,6 +435,12 @@ const AppRouter = () => {
       <Route path="/ai-architecture" element={
         <PageErrorBoundary pageName="AI Architecture">
           <AIArchitecture />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/therapist-discovery" element={
+        <PageErrorBoundary pageName="Therapist Discovery">
+          <TherapistDiscovery />
         </PageErrorBoundary>
       } />
 

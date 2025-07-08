@@ -108,6 +108,13 @@ const EnhancedHeader = () => {
   const platformFeatures = [
     {
       icon: Users,
+      title: "AI Therapist Team",
+      description: "Meet our 9 specialized AI therapists with unique approaches and 3D avatars",
+      href: "/therapist-discovery", 
+      gradient: "from-therapy-500 to-calm-500"
+    },
+    {
+      icon: Users,
       title: "Family & Account Sharing",
       description: "Comprehensive family mental health support with account sharing and parental controls",
       href: "/family-features",
