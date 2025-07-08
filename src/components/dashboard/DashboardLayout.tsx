@@ -11,6 +11,8 @@ import SessionHistoryWidget from './widgets/SessionHistoryWidget';
 import QuickActionsWidget from './widgets/QuickActionsWidget';
 import ProgressOverviewWidget from './widgets/ProgressOverviewWidget';
 import TherapistAvatarWidget from './widgets/TherapistAvatarWidget';
+import AIInsightsWidget from './widgets/AIInsightsWidget';
+import SmartRecommendationsWidget from './widgets/SmartRecommendationsWidget';
 import { 
   Brain, 
   Heart, 
@@ -146,6 +148,12 @@ const DashboardLayout = () => {
 
           {/* Right Column - Side Widgets */}
           <div className="lg:col-span-4 space-y-6">
+            {/* AI Insights Widget */}
+            <AIInsightsWidget />
+            
+            {/* Smart Recommendations Widget */}
+            <SmartRecommendationsWidget />
+            
             {/* Therapist Avatar Widget */}
             <TherapistAvatarWidget />
             
