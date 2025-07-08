@@ -4071,6 +4071,7 @@ export type Database = {
       therapist_assessments: {
         Row: {
           assessment_version: number
+          compatibility_scores: Json | null
           completed_at: string
           id: string
           recommended_therapists: Json
@@ -4081,6 +4082,7 @@ export type Database = {
         }
         Insert: {
           assessment_version?: number
+          compatibility_scores?: Json | null
           completed_at?: string
           id?: string
           recommended_therapists?: Json
@@ -4091,6 +4093,7 @@ export type Database = {
         }
         Update: {
           assessment_version?: number
+          compatibility_scores?: Json | null
           completed_at?: string
           id?: string
           recommended_therapists?: Json
