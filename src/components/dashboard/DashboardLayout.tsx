@@ -27,6 +27,9 @@ import {
   ArrowRight,
   Sparkles
 } from 'lucide-react';
+import XPProgressWidget from './widgets/XPProgressWidget';
+import ComplianceStatusWidget from './widgets/ComplianceStatusWidget';
+import RecentAchievementsWidget from './widgets/RecentAchievementsWidget';
 
 const DashboardLayout = () => {
   // Mock data - in real app, fetch from API
@@ -148,6 +151,15 @@ const DashboardLayout = () => {
 
           {/* Right Column - Side Widgets */}
           <div className="lg:col-span-4 space-y-6">
+            {/* XP Progress Widget */}
+            <XPProgressWidget />
+            
+            {/* Recent Achievements Widget */}
+            <RecentAchievementsWidget />
+            
+            {/* Compliance Status Widget */}
+            <ComplianceStatusWidget />
+            
             {/* AI Insights Widget */}
             <AIInsightsWidget />
             

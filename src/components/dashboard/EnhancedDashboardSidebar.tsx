@@ -26,7 +26,9 @@ import {
   Activity,
   AlertTriangle,
   Clock,
-  CheckCircle
+  CheckCircle,
+  Trophy,
+  Shield
 } from 'lucide-react';
 import {
   Sidebar,
@@ -177,6 +179,8 @@ const navigation: NavigationItem[] = [
   { name: 'Notifications', href: '/notification-center', icon: Bell },
   { name: 'Smart Triggers', href: '/smart-triggers', icon: Zap },
   { name: 'Community', href: '/community', icon: Users },
+  { name: 'Gamification', href: '/gamification-dashboard', icon: Trophy },
+  { name: 'Compliance', href: '/compliance', icon: Shield },
   { name: 'Therapy Settings', href: '/therapy-settings', icon: Settings },
 ];
 

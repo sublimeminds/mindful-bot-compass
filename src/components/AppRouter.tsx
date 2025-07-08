@@ -111,6 +111,8 @@ import TherapyTypes from "../pages/TherapyTypes";
 import TherapySyncAI from "../pages/TherapySyncAI";
 import AIArchitecture from "../pages/AIArchitecture";
 import TherapistDiscovery from "../pages/TherapistDiscovery";
+import GamificationDashboard from "../pages/GamificationDashboard";
+import CompliancePage from "../pages/CompliancePage";
 
 // Error Pages
 import NotFound from "../pages/NotFound";
@@ -662,6 +664,18 @@ const AppRouter = () => {
       <Route path="/smart-triggers" element={
         <PageErrorBoundary pageName="Smart Triggers">
           <SmartTriggerDashboard />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/gamification-dashboard" element={
+        <PageErrorBoundary pageName="Gamification Dashboard">
+          <GamificationDashboard />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/compliance" element={
+        <PageErrorBoundary pageName="Compliance">
+          <CompliancePage />
         </PageErrorBoundary>
       } />
       
