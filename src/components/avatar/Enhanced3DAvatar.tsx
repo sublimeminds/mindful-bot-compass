@@ -173,33 +173,60 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
 }) => {
   const [is3DSupported, setIs3DSupported] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [debugMode, setDebugMode] = useState(false);
+  const [webglDetails, setWebglDetails] = useState<string>('');
   const persona = therapistPersonas[therapistId] || therapistPersonas['dr-sarah-chen'];
   const displayName = therapistName || persona.name;
 
-  // Check WebGL support only (removed lovable-tagger dependency)
+  // Comprehensive WebGL and 3D support check
   useEffect(() => {
+    console.log('🔍 3D Avatar: Starting comprehensive support check for', therapistId);
+    
     const checkSupport = () => {
       try {
-        // Check WebGL support with multiple fallbacks
+        // Test WebGL support with detailed logging
         const canvas = document.createElement('canvas');
+        console.log('🔍 3D Avatar: Canvas created');
+        
         const gl = canvas.getContext('webgl2') || 
                    canvas.getContext('webgl') || 
                    canvas.getContext('experimental-webgl');
-        canvas.remove();
         
-        if (gl) {
-          console.log('✅ 3D Avatar: WebGL supported, initializing 3D rendering');
-          setIsLoading(false);
+        if (gl && 'createBuffer' in gl) {
+          console.log('✅ 3D Avatar: WebGL context acquired');
+          
+          // Cast to WebGL context for proper typing
+          const webgl = gl as WebGLRenderingContext;
+          
+          console.log('📊 3D Avatar: WebGL Version:', webgl.getParameter(webgl.VERSION));
+          console.log('📊 3D Avatar: WebGL Vendor:', webgl.getParameter(webgl.VENDOR));
+          console.log('📊 3D Avatar: WebGL Renderer:', webgl.getParameter(webgl.RENDERER));
+          
+          // Test basic WebGL functionality
+          const buffer = webgl.createBuffer();
+          if (buffer) {
+            console.log('✅ 3D Avatar: WebGL buffer creation successful');
+            webgl.deleteBuffer(buffer);
+          }
+          
+          setWebglDetails(`WebGL supported: ${webgl.getParameter(webgl.VERSION)}`);
           setIs3DSupported(true);
+          setIsLoading(false);
+          console.log('🎉 3D Avatar: 3D rendering enabled for', therapistId);
+          
+          canvas.remove();
           return true;
         } else {
-          console.log('❌ 3D Avatar: WebGL not supported, falling back to 2D');
+          console.log('❌ 3D Avatar: WebGL context not available');
+          setWebglDetails('WebGL not supported');
           setIs3DSupported(false);
           setIsLoading(false);
+          canvas.remove();
           return false;
         }
       } catch (error) {
         console.error('❌ 3D Avatar: WebGL check failed:', error);
+        setWebglDetails(`WebGL check failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
         setIs3DSupported(false);
         setIsLoading(false);
         return false;
@@ -207,8 +234,9 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
     };
 
     // Run the check
-    checkSupport();
-  }, []);
+    const result = checkSupport();
+    console.log('🔍 3D Avatar: Support check result:', result);
+  }, [therapistId]);
 
   // Fallback to 2D if 3D not supported
   if (!is3DSupported) {
@@ -225,94 +253,108 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
   }
 
   return (
-    <SafeComponentWrapper 
-      name="Enhanced3DAvatar" 
-      fallback={
-        <div className={className}>
-          <SimpleAvatarFallback 
-            name={displayName}
-            therapistId={therapistId}
-            className="w-full h-full"
-            showName={false}
-          />
+    <div className={`${className} relative bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden`}>
+      {/* Debug info overlay */}
+      <div className="absolute top-2 left-2 z-50">
+        <div className="text-xs bg-black/70 text-white px-2 py-1 rounded">
+          {webglDetails}
         </div>
-      }
-    >
-      <div className={`${className} relative bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden`}>
-        {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
+        <button
+          onClick={() => setDebugMode(!debugMode)}
+          className="text-xs bg-therapy-500 text-white px-2 py-1 rounded mt-1 block"
+        >
+          Debug: {debugMode ? 'ON' : 'OFF'}
+        </button>
+      </div>
+
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50 z-40">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500 mx-auto mb-2"></div>
+            <div className="text-xs text-therapy-600">Loading 3D Avatar...</div>
+          </div>
+        </div>
+      )}
+      
+      <Canvas 
+        camera={{ position: [0, 0, 5], fov: 45 }}
+        style={{ width: '100%', height: '100%' }}
+        gl={{ 
+          antialias: true,
+          alpha: true,
+          powerPreference: "default"
+        }}
+        dpr={Math.min(window.devicePixelRatio, 2)}
+        onCreated={(state) => {
+          console.log('🎨 3D Avatar: Canvas created successfully');
+          console.log('🎨 3D Avatar: GL Context:', state.gl);
+          console.log('🎨 3D Avatar: Canvas size:', state.size);
+          console.log('🎨 3D Avatar: Camera:', state.camera);
+          setIsLoading(false);
+        }}
+        onError={(error) => {
+          console.error('❌ 3D Avatar: Canvas error:', error);
+          setIs3DSupported(false);
+        }}
+      >
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[5, 5, 5]} intensity={0.8} />
+        <pointLight position={[-5, -5, -5]} intensity={0.4} />
+        
+        <Suspense fallback={null}>
+          <Simple3DAvatar
+            therapistId={therapistId}
+            emotion={emotion}
+            isListening={isListening}
+            isSpeaking={isSpeaking}
+          />
+        </Suspense>
+        
+        {showControls && (
+          <OrbitControls 
+            enableZoom={false}
+            enablePan={false}
+            autoRotate={true}
+            autoRotateSpeed={1}
+            maxPolarAngle={Math.PI / 1.5}
+            minPolarAngle={Math.PI / 3}
+          />
+        )}
+      </Canvas>
+      
+      {/* Status overlay */}
+      <div className="absolute bottom-2 left-2 right-2 text-center">
+        <div className="text-xs font-medium text-therapy-700 mb-1">
+          {displayName}
+        </div>
+        {debugMode && (
+          <div className="text-xs bg-black/70 text-white px-2 py-1 rounded mb-2">
+            3D Mode: {is3DSupported ? 'Active' : 'Disabled'} | 
+            Loading: {isLoading ? 'Yes' : 'No'}
           </div>
         )}
-        
-        <Canvas 
-          camera={{ position: [0, 0, 5], fov: 45 }}
-          style={{ width: '100%', height: '100%' }}
-          gl={{ 
-            antialias: true,
-            alpha: true,
-            powerPreference: "default"
-          }}
-          dpr={Math.min(window.devicePixelRatio, 2)}
-          onCreated={() => setIsLoading(false)}
-          onError={(error) => {
-            console.warn('3D Canvas error:', error);
-            setIs3DSupported(false);
-          }}
-        >
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[5, 5, 5]} intensity={0.8} />
-          <pointLight position={[-5, -5, -5]} intensity={0.4} />
-          
-          <Suspense fallback={null}>
-            <Simple3DAvatar
-              therapistId={therapistId}
-              emotion={emotion}
-              isListening={isListening}
-              isSpeaking={isSpeaking}
-            />
-          </Suspense>
-          
-          {showControls && (
-            <OrbitControls 
-              enableZoom={false}
-              enablePan={false}
-              autoRotate={true}
-              autoRotateSpeed={1}
-              maxPolarAngle={Math.PI / 1.5}
-              minPolarAngle={Math.PI / 3}
-            />
-          )}
-        </Canvas>
-        
-        {/* Status overlay */}
-        <div className="absolute bottom-2 left-2 right-2 text-center">
-          <div className="text-xs font-medium text-therapy-700 mb-1">
-            {displayName}
+        {isListening && (
+          <div className="text-xs text-blue-600 flex items-center justify-center gap-1">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            Listening...
           </div>
-          {isListening && (
-            <div className="text-xs text-blue-600 flex items-center justify-center gap-1">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              Listening...
-            </div>
-          )}
-          {isSpeaking && (
-            <div className="text-xs text-green-600 flex items-center justify-center gap-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
-              Speaking...
-            </div>
-          )}
-          {onVoicePreview && (
-            <button
-              onClick={onVoicePreview}
-              className="mt-2 text-xs bg-therapy-500 hover:bg-therapy-600 text-white px-3 py-1 rounded-full transition-colors"
-            >
-              Preview Voice
-            </button>
-          )}
-        </div>
+        )}
+        {isSpeaking && (
+          <div className="text-xs text-green-600 flex items-center justify-center gap-1">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
+            Speaking...
+          </div>
+        )}
+        {onVoicePreview && (
+          <button
+            onClick={onVoicePreview}
+            className="mt-2 text-xs bg-therapy-500 hover:bg-therapy-600 text-white px-3 py-1 rounded-full transition-colors"
+          >
+            Preview Voice
+          </button>
+        )}
       </div>
-    </SafeComponentWrapper>
+    </div>
   );
 };
 

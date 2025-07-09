@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Star, User, Heart, Brain } from 'lucide-react';
-import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
+import Enhanced3DAvatar from '@/components/avatar/Enhanced3DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 
 interface TherapistMatcherProps {
@@ -121,8 +121,9 @@ const TherapistMatcher = ({ onTherapistSelected, onClose }: TherapistMatcherProp
                   {/* 3D Avatar Preview */}
                   <div className="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-therapy-50 to-calm-50">
                     <Suspense fallback={<Skeleton className="w-full h-full" />}>
-                      <ThreeDTherapistAvatar
+                     <Enhanced3DAvatar
                         therapistId={getAvatarIdForTherapist(therapist.id)}
+                        therapistName={therapist.name}
                         emotion="neutral"
                         showControls={false}
                       />
