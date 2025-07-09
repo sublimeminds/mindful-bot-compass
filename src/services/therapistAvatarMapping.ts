@@ -23,7 +23,19 @@ export const therapistAvatarMapping = {
 } as const;
 
 export const getAvatarIdForTherapist = (therapistId: string): string => {
-  return therapistAvatarMapping[therapistId as keyof typeof therapistAvatarMapping] || 'dr-sarah-chen';
+  // Safety checks
+  if (!therapistId) {
+    console.warn('getAvatarIdForTherapist: No therapistId provided, using default');
+    return 'dr-sarah-chen';
+  }
+  
+  const avatarId = therapistAvatarMapping[therapistId as keyof typeof therapistAvatarMapping];
+  if (!avatarId) {
+    console.warn(`getAvatarIdForTherapist: No mapping found for ${therapistId}, using default`);
+    return 'dr-sarah-chen';
+  }
+  
+  return avatarId;
 };
 
 export const getVoiceIdForTherapist = (therapistId: string): string => {

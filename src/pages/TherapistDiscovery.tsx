@@ -25,9 +25,8 @@ import {
   CheckCircle,
   MessageCircle
 } from 'lucide-react';
-import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
+import BulletproofAvatarDisplay from '@/components/avatar/BulletproofAvatarDisplay';
 import SafeAvatarModal from '@/components/avatar/SafeAvatarModal';
-import AvatarErrorBoundary from '@/components/avatar/AvatarErrorBoundary';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -76,7 +75,7 @@ const TherapistDiscovery = () => {
   const [avatarModalOpen, setAvatarModalOpen] = useState(false);
   const [modalTherapist, setModalTherapist] = useState<any>(null);
 
-  // Helper function to get icon component by name
+  // Helper function to get icon component by name with comprehensive fallbacks
   const getIconByName = (iconName: string) => {
     const icons = {
       Brain,
@@ -87,9 +86,27 @@ const TherapistDiscovery = () => {
       Star,
       Sparkles,
       Zap,
-      TrendingUp
+      TrendingUp,
+      Globe,
+      Clock,
+      CheckCircle,
+      MessageCircle,
+      // Add common icon fallbacks
+      Lightbulb: Brain,
+      Compass: Target,
+      Analytics: TrendingUp,
+      Security: Shield,
+      Community: Users,
+      Excellence: Star
     };
-    return icons[iconName as keyof typeof icons] || Brain;
+    
+    // Safe icon lookup with fallback
+    const IconComponent = icons[iconName as keyof typeof icons];
+    if (!IconComponent) {
+      console.warn(`Icon "${iconName}" not found, using Brain fallback`);
+      return Brain;
+    }
+    return IconComponent;
   };
 
   // Helper function to derive voice characteristics
@@ -380,31 +397,19 @@ const TherapistDiscovery = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* 2D Avatar Preview for Discovery */}
-                  <div 
-                    className="h-64 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 group"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openAvatarModal(therapist);
-                    }}
-                  >
-                    <div className="text-center w-full h-full flex flex-col items-center justify-center">
-                      <AvatarErrorBoundary therapistId={therapist.avatarId} therapistName={therapist.name}>
-                        <Professional2DAvatar
-                          therapistId={therapist.avatarId}
-                          therapistName={therapist.name}
-                          className="flex-1 flex items-center justify-center"
-                          showName={false}
-                          size="lg"
-                        />
-                      </AvatarErrorBoundary>
-                      <div className="mt-4 pb-4">
-                        <p className="text-sm font-medium text-therapy-700">{therapist.name}</p>
-                        <p className="text-xs text-muted-foreground mt-1 group-hover:text-therapy-600 transition-colors">
-                          Click to see full avatar
-                        </p>
-                      </div>
-                    </div>
+                  {/* Bulletproof Avatar Display */}
+                  <BulletproofAvatarDisplay
+                    therapist={therapist}
+                    className="h-64 w-full"
+                    size="lg"
+                    showName={false}
+                    onClick={() => openAvatarModal(therapist)}
+                  />
+                  <div className="mt-4 pb-4 text-center">
+                    <p className="text-sm font-medium text-therapy-700">{therapist.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1 group-hover:text-therapy-600 transition-colors">
+                      Click to see full avatar
+                    </p>
                   </div>
 
                   {/* Description */}

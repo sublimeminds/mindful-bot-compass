@@ -17,7 +17,17 @@ import {
   Lock,
   Archive,
   Eye,
-  BarChart3
+  BarChart3,
+  Brain,
+  Heart,
+  Target,
+  Sparkles,
+  Zap,
+  TrendingUp,
+  Lightbulb,
+  Compass,
+  Globe,
+  Star
 } from 'lucide-react';
 
 // Safe icon exports with validation
@@ -39,7 +49,17 @@ export const SafeIcons = {
   Lock,
   Archive,
   Eye,
-  BarChart3
+  BarChart3,
+  Brain,
+  Heart,
+  Target,
+  Sparkles,
+  Zap,
+  TrendingUp,
+  Lightbulb,
+  Compass,
+  Globe,
+  Star
 } as const;
 
 // Type-safe icon getter

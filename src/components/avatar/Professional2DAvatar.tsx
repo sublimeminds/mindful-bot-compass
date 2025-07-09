@@ -18,6 +18,8 @@ interface Professional2DAvatarProps {
   emotion?: 'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful';
   isListening?: boolean;
   isSpeaking?: boolean;
+  onLoad?: () => void;
+  onError?: (error: Error) => void;
 }
 
 const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
@@ -28,7 +30,9 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
   size = 'lg',
   emotion = 'neutral',
   isListening = false,
-  isSpeaking = false
+  isSpeaking = false,
+  onLoad,
+  onError
 }) => {
   // Add safety checks
   if (!therapistId || !therapistName) {
@@ -150,6 +154,14 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
               src={avatarImage} 
               alt={`${therapistName} professional headshot`}
               className="object-cover"
+              onLoad={() => {
+                console.log(`Avatar loaded successfully for ${therapistName}`);
+                onLoad?.();
+              }}
+              onError={(e) => {
+                console.warn(`Avatar failed to load for ${therapistName}:`, e);
+                onError?.(new Error(`Avatar image failed to load for ${therapistName}`));
+              }}
             />
           ) : null}
           <AvatarFallback 
