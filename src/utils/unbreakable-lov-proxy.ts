@@ -3,7 +3,9 @@
  * This system ensures window.lov is NEVER undefined and always provides safe fallbacks
  */
 
-interface UnbreakableLov {
+import { LovableConfig } from './lovableTaggerFix';
+
+interface UnbreakableLov extends LovableConfig {
   version: string;
   initialized: boolean;
   proxyProtected: boolean;
@@ -24,9 +26,9 @@ interface UnbreakableLov {
 
 declare global {
   interface Window {
-    lov: UnbreakableLov;
-    __lovUnbreakable?: UnbreakableLov;
-    __lovProxy?: (target: any) => UnbreakableLov;
+    lov?: LovableConfig;
+    __lovUnbreakable?: any;
+    __lovProxy?: (target: any) => any;
   }
 }
 
@@ -48,13 +50,13 @@ export class UnbreakableLovProxy {
     if (typeof window === 'undefined') return;
     
     // If window.lov doesn't exist or is corrupted, create/restore it
-    if (!window.lov || !window.lov.proxyProtected) {
+    if (!window.lov || !(window.lov as any).proxyProtected) {
       console.warn('🛡️ window.lov missing or corrupted, creating unbreakable proxy...');
       
       try {
         // Try to restore from backup first
-        if (window.__lovUnbreakable) {
-          window.lov = window.__lovUnbreakable;
+        if ((window as any).__lovUnbreakable) {
+          window.lov = (window as any).__lovUnbreakable;
           console.log('✅ Restored window.lov from backup');
           return;
         }
@@ -75,7 +77,7 @@ export class UnbreakableLovProxy {
       } catch (error) {
         console.error('❌ Failed to create unbreakable lov proxy:', error);
         // Last resort: basic object
-        window.lov = this.createBaseLov() as UnbreakableLov;
+        window.lov = this.createBaseLov() as any;
       }
     }
   }
@@ -158,7 +160,7 @@ export class UnbreakableLovProxy {
   /**
    * Creates an unbreakable proxy that never returns undefined
    */
-  private static createUnbreakableProxy(target: any): UnbreakableLov {
+  private static createUnbreakableProxy(target: any): any {
     return new Proxy(target, {
       get: function(obj, prop) {
         // If property exists, return it
@@ -212,7 +214,7 @@ export class UnbreakableLovProxy {
         const commonProps = ['reduce', 'safe', 'components', 'tagger', 'config', 'utils', 'events'];
         return prop in obj || commonProps.includes(String(prop));
       }
-    }) as UnbreakableLov;
+    }) as any;
   }
 
   /**
@@ -266,8 +268,8 @@ export class UnbreakableLovProxy {
       }
       
       try {
-        // Check if window.lov is corrupted
-        if (!window.lov || typeof window.lov !== 'object' || !window.lov.proxyProtected) {
+          // Check if window.lov is corrupted
+        if (!window.lov || typeof window.lov !== 'object' || !(window.lov as any).proxyProtected) {
           console.warn('🚨 window.lov corruption detected, self-healing...');
           this.ensureUnbreakableLov();
         }
@@ -307,8 +309,8 @@ export class UnbreakableLovProxy {
   static isHealthy(): boolean {
     try {
       return !!(window.lov && 
-                window.lov.proxyProtected && 
-                typeof window.lov.reduce === 'function' &&
+                (window.lov as any).proxyProtected && 
+                typeof (window.lov as any).reduce === 'function' &&
                 typeof window.lov.safe === 'function');
     } catch {
       return false;
@@ -322,8 +324,8 @@ export class UnbreakableLovProxy {
     try {
       return {
         exists: !!window.lov,
-        proxyProtected: window.lov?.proxyProtected || false,
-        version: window.lov?.version || 'unknown',
+        proxyProtected: (window.lov as any)?.proxyProtected || false,
+        version: (window.lov as any)?.version || 'unknown',
         healthy: this.isHealthy(),
         timestamp: Date.now()
       };

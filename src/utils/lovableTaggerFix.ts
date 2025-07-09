@@ -17,11 +17,8 @@ export interface LovableConfig {
   safe?: (fn: () => any) => any;
 }
 
-declare global {
-  interface Window {
-    lov?: LovableConfig;
-  }
-}
+// Global interface extension handled by unbreakable-lov-proxy.ts
+// to avoid conflicting declarations
 
 /**
  * Initialize the lovable-tagger environment safely
