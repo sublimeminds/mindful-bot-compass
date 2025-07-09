@@ -77,7 +77,7 @@ describe('Avatar Performance Benchmarks', () => {
   });
 
   it('measures memory usage during avatar lifecycle', async () => {
-    const initialMemory = performance.memory?.usedJSHeapSize || 0;
+    const initialMemory = (performance as any).memory?.usedJSHeapSize || 0;
     
     const { unmount } = render(
       <div>
@@ -91,7 +91,7 @@ describe('Avatar Performance Benchmarks', () => {
       // Let avatars initialize
     }, { timeout: 1000 });
 
-    const peakMemory = performance.memory?.usedJSHeapSize || 0;
+    const peakMemory = (performance as any).memory?.usedJSHeapSize || 0;
     
     unmount();
     
@@ -102,7 +102,7 @@ describe('Avatar Performance Benchmarks', () => {
     
     await new Promise(resolve => setTimeout(resolve, 100));
     
-    const finalMemory = performance.memory?.usedJSHeapSize || 0;
+    const finalMemory = (performance as any).memory?.usedJSHeapSize || 0;
     const memoryIncrease = (peakMemory - initialMemory) / 1024 / 1024; // MB
     const memoryLeakage = (finalMemory - initialMemory) / 1024 / 1024; // MB
 

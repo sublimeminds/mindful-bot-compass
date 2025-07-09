@@ -243,7 +243,7 @@ describe('Chat Interface Performance Benchmarks', () => {
   });
 
   it('measures memory usage during extended chat session', async () => {
-    const initialMemory = performance.memory?.usedJSHeapSize || 0;
+    const initialMemory = (performance as any).memory?.usedJSHeapSize || 0;
     
     const { unmount } = renderWithRouter(<RealTherapyChatInterface />);
     
@@ -261,7 +261,7 @@ describe('Chat Interface Performance Benchmarks', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
     }
 
-    const peakMemory = performance.memory?.usedJSHeapSize || 0;
+    const peakMemory = (performance as any).memory?.usedJSHeapSize || 0;
     unmount();
     
     if (global.gc) {
@@ -270,7 +270,7 @@ describe('Chat Interface Performance Benchmarks', () => {
     
     await new Promise(resolve => setTimeout(resolve, 100));
     
-    const finalMemory = performance.memory?.usedJSHeapSize || 0;
+    const finalMemory = (performance as any).memory?.usedJSHeapSize || 0;
     const memoryIncrease = (peakMemory - initialMemory) / 1024 / 1024;
     const memoryLeakage = (finalMemory - initialMemory) / 1024 / 1024;
 

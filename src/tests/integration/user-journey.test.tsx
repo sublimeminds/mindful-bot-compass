@@ -108,7 +108,7 @@ describe('End-to-End User Journey Integration Tests', () => {
     fireEvent.click(sendButton);
 
     // Verify chat functionality
-    expect(messageInput.value).toBe('');
+    expect((messageInput as HTMLInputElement).value).toBe('');
   });
 
   it('handles therapist selection persistence across navigation', async () => {
