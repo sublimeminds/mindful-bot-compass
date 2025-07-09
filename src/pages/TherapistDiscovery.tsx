@@ -76,6 +76,7 @@ const TherapistDiscovery = () => {
   const [modalTherapist, setModalTherapist] = useState<any>(null);
   const [use3DAvatar, setUse3DAvatar] = useState(false);
   const [isVoicePlaying, setIsVoicePlaying] = useState(false);
+  const [lazy3DEnabled, setLazy3DEnabled] = useState(false);
 
   // Helper function to get icon component by name with comprehensive fallbacks
   const getIconByName = (iconName: string) => {
@@ -373,6 +374,21 @@ const TherapistDiscovery = () => {
             <p className="text-lg text-muted-foreground">
               Each therapist combines advanced AI capabilities with unique therapeutic approaches and personalities
             </p>
+            
+            {/* 3D Toggle */}
+            <div className="flex items-center justify-center mt-6">
+              <div className="flex items-center space-x-3 bg-card rounded-lg p-2">
+                <span className="text-sm text-muted-foreground">Enable 3D Avatars:</span>
+                <Button
+                  variant={lazy3DEnabled ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setLazy3DEnabled(!lazy3DEnabled)}
+                  className="text-xs"
+                >
+                  {lazy3DEnabled ? "3D ON" : "3D OFF"}
+                </Button>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">

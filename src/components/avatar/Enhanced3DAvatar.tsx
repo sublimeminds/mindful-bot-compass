@@ -3,7 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Sphere, Box, Cylinder } from '@react-three/drei';
 import { therapistPersonas } from './TherapistAvatarPersonas';
 import SimpleAvatarFallback from './SimpleAvatarFallback';
-import { SafeComponentWrapper } from '../bulletproof/SafeComponentWrapper';
+import { webglManager } from '@/utils/webgl-manager';
 import * as THREE from 'three';
 
 interface Enhanced3DAvatarProps {
@@ -175,68 +175,73 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [debugMode, setDebugMode] = useState(false);
   const [webglDetails, setWebglDetails] = useState<string>('');
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const persona = therapistPersonas[therapistId] || therapistPersonas['dr-sarah-chen'];
   const displayName = therapistName || persona.name;
 
-  // Comprehensive WebGL and 3D support check
+  // Simplified WebGL check using webglManager
   useEffect(() => {
-    console.log('🔍 3D Avatar: Starting comprehensive support check for', therapistId);
+    console.log('🔍 3D Avatar: Starting support check for', therapistId);
     
     const checkSupport = () => {
       try {
-        // Test WebGL support with detailed logging
-        const canvas = document.createElement('canvas');
-        console.log('🔍 3D Avatar: Canvas created');
+        // Use webglManager for better reliability
+        const isViable = webglManager.isWebGLViable();
+        const capabilities = webglManager.detectCapabilities();
         
-        const gl = canvas.getContext('webgl2') || 
-                   canvas.getContext('webgl') || 
-                   canvas.getContext('experimental-webgl');
+        console.log('📊 3D Avatar: WebGL capabilities:', capabilities);
         
-        if (gl && 'createBuffer' in gl) {
-          console.log('✅ 3D Avatar: WebGL context acquired');
-          
-          // Cast to WebGL context for proper typing
-          const webgl = gl as WebGLRenderingContext;
-          
-          console.log('📊 3D Avatar: WebGL Version:', webgl.getParameter(webgl.VERSION));
-          console.log('📊 3D Avatar: WebGL Vendor:', webgl.getParameter(webgl.VENDOR));
-          console.log('📊 3D Avatar: WebGL Renderer:', webgl.getParameter(webgl.RENDERER));
-          
-          // Test basic WebGL functionality
-          const buffer = webgl.createBuffer();
-          if (buffer) {
-            console.log('✅ 3D Avatar: WebGL buffer creation successful');
-            webgl.deleteBuffer(buffer);
-          }
-          
-          setWebglDetails(`WebGL supported: ${webgl.getParameter(webgl.VERSION)}`);
+        if (isViable && capabilities.webgl) {
+          setWebglDetails(`WebGL ${capabilities.webgl2 ? '2.0' : '1.0'} - ${capabilities.renderer}`);
           setIs3DSupported(true);
-          setIsLoading(false);
-          console.log('🎉 3D Avatar: 3D rendering enabled for', therapistId);
-          
-          canvas.remove();
-          return true;
+          console.log('✅ 3D Avatar: 3D rendering enabled for', therapistId);
         } else {
-          console.log('❌ 3D Avatar: WebGL context not available');
-          setWebglDetails('WebGL not supported');
+          console.log('❌ 3D Avatar: WebGL not viable');
+          setWebglDetails('WebGL not supported or not viable');
           setIs3DSupported(false);
-          setIsLoading(false);
-          canvas.remove();
-          return false;
         }
+        
+        setIsLoading(false);
       } catch (error) {
         console.error('❌ 3D Avatar: WebGL check failed:', error);
         setWebglDetails(`WebGL check failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
         setIs3DSupported(false);
         setIsLoading(false);
-        return false;
       }
     };
 
     // Run the check
-    const result = checkSupport();
-    console.log('🔍 3D Avatar: Support check result:', result);
+    checkSupport();
   }, [therapistId]);
+
+  // WebGL context loss handling
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    
+    const handleContextLoss = () => {
+      console.warn('🔥 3D Avatar: WebGL context lost - falling back to 2D');
+      setIs3DSupported(false);
+      setWebglDetails('WebGL context lost');
+    };
+
+    const handleContextRestore = () => {
+      console.log('🔄 3D Avatar: WebGL context restored - attempting 3D recovery');
+      const isViable = webglManager.isWebGLViable();
+      if (isViable) {
+        setIs3DSupported(true);
+        setWebglDetails('WebGL context restored');
+      }
+    };
+
+    const canvas = canvasRef.current;
+    canvas.addEventListener('webglcontextlost', handleContextLoss);
+    canvas.addEventListener('webglcontextrestored', handleContextRestore);
+
+    return () => {
+      canvas.removeEventListener('webglcontextlost', handleContextLoss);
+      canvas.removeEventListener('webglcontextrestored', handleContextRestore);
+    };
+  }, []);
 
   // Fallback to 2D if 3D not supported
   if (!is3DSupported) {
@@ -277,24 +282,25 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
       )}
       
       <Canvas 
+        ref={canvasRef}
         camera={{ position: [0, 0, 5], fov: 45 }}
         style={{ width: '100%', height: '100%' }}
         gl={{ 
           antialias: true,
           alpha: true,
-          powerPreference: "default"
+          powerPreference: "default",
+          preserveDrawingBuffer: false
         }}
         dpr={Math.min(window.devicePixelRatio, 2)}
         onCreated={(state) => {
           console.log('🎨 3D Avatar: Canvas created successfully');
           console.log('🎨 3D Avatar: GL Context:', state.gl);
-          console.log('🎨 3D Avatar: Canvas size:', state.size);
-          console.log('🎨 3D Avatar: Camera:', state.camera);
           setIsLoading(false);
         }}
         onError={(error) => {
           console.error('❌ 3D Avatar: Canvas error:', error);
           setIs3DSupported(false);
+          setWebglDetails('Canvas creation failed');
         }}
       >
         <ambientLight intensity={0.6} />

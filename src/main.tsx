@@ -4,12 +4,11 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-// Initialize lovable-tagger safely
+// Initialize lovable-tagger safely with enhanced error handling
 const initializeLovableTagger = () => {
   try {
-    // Check if lovable-tagger is available
-    if (typeof window !== 'undefined' && !(window as any).lov) {
-      // Create a minimal lov object to prevent undefined errors
+    // Ensure window.lov exists with safe fallback
+    if (typeof window !== 'undefined') {
       (window as any).lov = {
         initialized: false,
         tagger: null,
@@ -24,18 +23,19 @@ const initializeLovableTagger = () => {
         (window as any).lov.initialized = true;
         console.log('✅ Lovable-tagger initialized successfully');
       } else {
-        console.warn('⚠️ Lovable-tagger not available, using fallback');
+        console.log('ℹ️ Lovable-tagger not available, using safe fallback');
       }
     }
   } catch (error) {
     console.error('❌ Lovable-tagger initialization failed:', error);
-    // Ensure minimal lov object exists as fallback
+    // Always ensure minimal lov object exists
     if (typeof window !== 'undefined') {
       (window as any).lov = {
         initialized: false,
         tagger: null,
         config: null,
-        utils: null
+        utils: null,
+        error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   }
