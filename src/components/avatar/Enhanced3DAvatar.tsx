@@ -176,61 +176,38 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
   const persona = therapistPersonas[therapistId] || therapistPersonas['dr-sarah-chen'];
   const displayName = therapistName || persona.name;
 
-  // Check both WebGL and lovable-tagger support
+  // Check WebGL support only (removed lovable-tagger dependency)
   useEffect(() => {
     const checkSupport = () => {
       try {
-        // Check WebGL support
+        // Check WebGL support with multiple fallbacks
         const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        const gl = canvas.getContext('webgl2') || 
+                   canvas.getContext('webgl') || 
+                   canvas.getContext('experimental-webgl');
         canvas.remove();
         
-        // Check lovable-tagger support
-        const lovAvailable = typeof window !== 'undefined' && 
-                           (window as any).lov && 
-                           typeof (window as any).lov === 'object';
-        
-        if (gl && lovAvailable) {
+        if (gl) {
+          console.log('✅ 3D Avatar: WebGL supported, initializing 3D rendering');
           setIsLoading(false);
+          setIs3DSupported(true);
           return true;
         } else {
-          console.log('3D not supported - WebGL:', !!gl, 'lovable-tagger:', lovAvailable);
+          console.log('❌ 3D Avatar: WebGL not supported, falling back to 2D');
           setIs3DSupported(false);
           setIsLoading(false);
           return false;
         }
       } catch (error) {
-        console.error('3D support check failed:', error);
+        console.error('❌ 3D Avatar: WebGL check failed:', error);
         setIs3DSupported(false);
         setIsLoading(false);
         return false;
       }
     };
 
-    // Initial check
-    if (!checkSupport()) {
-      return;
-    }
-
-    // Retry if lovable-tagger is not ready yet
-    let retryCount = 0;
-    const maxRetries = 5;
-    const retryInterval = setInterval(() => {
-      if (retryCount >= maxRetries) {
-        clearInterval(retryInterval);
-        return;
-      }
-      
-      if (typeof window !== 'undefined' && (window as any).lov) {
-        clearInterval(retryInterval);
-        setIsLoading(false);
-      } else {
-        retryCount++;
-        console.log(`Waiting for lovable-tagger... (${retryCount}/${maxRetries})`);
-      }
-    }, 100);
-
-    return () => clearInterval(retryInterval);
+    // Run the check
+    checkSupport();
   }, []);
 
   // Fallback to 2D if 3D not supported
