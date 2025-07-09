@@ -246,8 +246,9 @@ const BulletproofThreeDAvatar: React.FC<BulletproofThreeDProps> = ({
           if (state.gl.domElement) {
             webglManager.getContext(state.gl.domElement);
           }
+          // Start performance monitoring
+          updatePerformanceMetrics();
         }}
-        onBeforeRender={updatePerformanceMetrics}
       >
         <ambientLight intensity={0.6} />
         <directionalLight position={[2, 2, 2]} intensity={0.8} />
@@ -257,7 +258,7 @@ const BulletproofThreeDAvatar: React.FC<BulletproofThreeDProps> = ({
           <mesh position={[0, 0, 0]}>
             <boxGeometry args={[1, 1, 1]} />
             <meshStandardMaterial 
-              color={persona.primaryColor} 
+              color="#3B82F6"
               transparent
               opacity={isListening ? 0.8 : 1.0}
             />
@@ -283,7 +284,7 @@ const BulletproofThreeDAvatar: React.FC<BulletproofThreeDProps> = ({
                     opacity={0.6}
                   />
                 </mesh>
-              )))}
+              ))}
             </group>
           )}
         </Suspense>
