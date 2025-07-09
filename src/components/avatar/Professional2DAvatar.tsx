@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getAvatarImage, hasAnyAvatarImages } from '@/utils/avatarImageImports';
 
@@ -27,6 +27,7 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
   onLoad,
   onError
 }) => {
+  const [imageError, setImageError] = useState(false);
   // Add safety checks
   if (!therapistId || !therapistName) {
     console.warn('Professional2DAvatar: Missing required props', { therapistId, therapistName });
@@ -131,7 +132,7 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
     <div className={`${className} flex flex-col items-center justify-center`}>
       <div className="relative">
         <Avatar className={`${sizeClasses[size]} border-2 border-white shadow-lg ${getEmotionStyling()}`}>
-          {avatarImage && hasImages ? (
+          {avatarImage && hasImages && !imageError ? (
             <AvatarImage 
               src={avatarImage} 
               alt={`${therapistName} professional headshot`}
@@ -142,6 +143,7 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
               }}
               onError={(e) => {
                 console.warn(`Avatar failed to load for ${therapistName}:`, e);
+                setImageError(true);
                 onError?.(new Error(`Avatar image failed to load for ${therapistName}`));
               }}
             />

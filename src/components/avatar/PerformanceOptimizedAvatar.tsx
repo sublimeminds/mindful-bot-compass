@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { useAvatarManager } from './OptimizedAvatarManager';
 import EnhancedThreeDAvatar from './EnhancedThreeDAvatar';
+import Professional2DAvatar from './Professional2DAvatar';
 import SimpleAvatarFallback from './SimpleAvatarFallback';
 import { therapistPersonas } from './TherapistAvatarPersonas';
 
@@ -133,11 +134,15 @@ const PerformanceOptimizedAvatar: React.FC<PerformanceOptimizedAvatarProps> = ({
   );
 
   const render2DAvatar = () => (
-    <SimpleAvatarFallback
-      name={displayName}
+    <Professional2DAvatar
       therapistId={therapistId}
+      therapistName={displayName}
+      emotion={emotion}
+      isListening={isListening}
+      isSpeaking={isSpeaking}
       className="w-full h-full"
       showName={false}
+      size="lg"
     />
   );
 

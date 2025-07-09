@@ -120,25 +120,32 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
   const persona = therapistPersonas[therapistId] || therapistPersonas['dr-sarah-chen'];
   const displayName = therapistName || persona.name;
 
-  // Simple WebGL detection
+  // Simplified WebGL detection - less strict
   useEffect(() => {
     const checkWebGLSupport = () => {
       try {
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
-        return !!context;
+        if (!context) return false;
+        
+        // Basic capability test
+        const extension = context.getExtension('WEBGL_lose_context');
+        return true;
       } catch {
         return false;
       }
     };
 
-    if (!checkWebGLSupport()) {
-      setIs3DSupported(false);
-    }
+    // Try 3D for 2 seconds, then fallback if needed
+    const supportTimer = setTimeout(() => {
+      if (!checkWebGLSupport()) {
+        console.log('WebGL not fully supported, using 2D fallback');
+        setIs3DSupported(false);
+      }
+      setIsLoading(false);
+    }, 2000);
     
-    // Simulate loading time
-    const timer = setTimeout(() => setIsLoading(false), 500);
-    return () => clearTimeout(timer);
+    return () => clearTimeout(supportTimer);
   }, []);
 
   // Fallback to 2D if 3D not supported

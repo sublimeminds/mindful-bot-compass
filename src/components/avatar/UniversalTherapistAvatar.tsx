@@ -38,15 +38,19 @@ const UniversalTherapistAvatar: React.FC<UniversalTherapistAvatarProps> = ({
   const persona = therapistPersonas[avatarId];
   const displayName = therapistName || persona?.name || 'Therapist';
 
-  // Progressive enhancement approach
+  // Progressive enhancement approach - prefer 2D with professional photos
   if (force2D) {
     return (
       <div className={className}>
-        <SimpleAvatarFallback 
-          name={displayName}
+        <PerformanceOptimizedAvatar
           therapistId={avatarId}
+          therapistName={displayName}
+          emotion={emotion}
+          isListening={isListening}
+          isSpeaking={isSpeaking}
           className="w-full h-full"
-          showName={false}
+          priority={priority}
+          force2D={true}
         />
       </div>
     );
@@ -56,11 +60,15 @@ const UniversalTherapistAvatar: React.FC<UniversalTherapistAvatarProps> = ({
     <div className={`${className} relative`}>
       <Suspense 
         fallback={
-          <SimpleAvatarFallback 
-            name={displayName}
+          <PerformanceOptimizedAvatar
             therapistId={avatarId}
+            therapistName={displayName}
+            emotion={emotion}
+            isListening={isListening}
+            isSpeaking={isSpeaking}
             className="w-full h-full"
-            showName={false}
+            priority={priority}
+            force2D={true}
           />
         }
       >
