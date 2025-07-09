@@ -23,7 +23,7 @@ import {
   CheckCircle,
   MessageCircle
 } from 'lucide-react';
-import UniversalTherapistAvatar from '@/components/avatar/UniversalTherapistAvatar';
+// UniversalTherapistAvatar removed for discovery page to prevent WebGL errors
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -357,16 +357,17 @@ const TherapistDiscovery = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* Enhanced 3D Therapist Avatar */}
-                  <div className="h-64 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden">
-                    <UniversalTherapistAvatar
-                      therapistId={therapist.avatarId}
-                      therapistName={therapist.name}
-                      emotion="neutral"
-                      showControls={false}
-                      className="w-full h-full"
-                      priority={selectedTherapist === therapist.id ? 10 : 1}
-                    />
+                  {/* 2D Avatar Preview for Discovery */}
+                  <div className="h-64 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500 flex items-center justify-center">
+                        <span className="text-white text-2xl font-bold">
+                          {therapist.name.split(' ').map(n => n.charAt(0)).join('').slice(0, 2)}
+                        </span>
+                      </div>
+                      <p className="text-sm font-medium text-therapy-700">{therapist.name}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Click to see full 3D avatar</p>
+                    </div>
                   </div>
 
                   {/* Description */}
