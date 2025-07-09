@@ -42,8 +42,6 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
     );
   }
 
-  console.log('Professional2DAvatar Debug:', { therapistId, therapistName });
-  
   // Get avatar image safely
   const avatarImage = getAvatarImage(therapistId);
   const hasImages = hasAnyAvatarImages();
