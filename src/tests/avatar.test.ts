@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/dom';
 import React from 'react';
 import LightweightAvatarSystem from '@/components/avatar/LightweightAvatarSystem';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';

@@ -30,6 +30,7 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
   isListening = false,
   isSpeaking = false
 }) => {
+  console.log('Professional2DAvatar Debug:', { therapistId, therapistName });
   // Map therapist IDs to their professional images
   const avatarImages: Record<string, string> = {
     'dr-sarah-chen': drSarahChenImage,
