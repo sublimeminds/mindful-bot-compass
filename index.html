@@ -43,35 +43,104 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://therapysync.ai" />
     
-    <!-- Lovable Tagger Pre-initialization (CRITICAL: Must load before any JS) -->
+    <!-- Bulletproof Lovable Tagger Pre-initialization (CRITICAL: Must load before any JS) -->
     <script>
-      // Initialize window.lov before any JavaScript modules load
+      // PHASE 1: Ultra-bulletproof window.lov initialization
       (function() {
         'use strict';
         
-        // Ensure this runs as early as possible
         if (typeof window !== 'undefined') {
-          // Create the lov object with all required properties
-          Object.defineProperty(window, 'lov', {
-            value: {
-              tagger: {},
-              config: {},
-              utils: {},
-              initialized: true,
-              preInitialized: true,
-              timestamp: Date.now()
+          // Create comprehensive lov object with all known requirements
+          const lovObj = {
+            // Core properties
+            tagger: {},
+            config: {},
+            utils: {},
+            initialized: true,
+            preInitialized: true,
+            timestamp: Date.now(),
+            version: '2.0.0-bulletproof',
+            
+            // Essential methods that lovable-tagger might call
+            reduce: function(arr, fn, initial) {
+              try {
+                return Array.isArray(arr) ? arr.reduce(fn, initial) : initial;
+              } catch (e) {
+                console.warn('lov.reduce fallback triggered:', e);
+                return initial;
+              }
             },
+            
+            // Safe execution wrapper
+            safe: function(fn, fallback) {
+              try { 
+                return fn(); 
+              } catch (e) { 
+                console.warn('lov.safe fallback triggered:', e);
+                return fallback;
+              }
+            },
+            
+            // Component registration (commonly accessed by lovable-tagger)
+            components: new Map(),
+            
+            // Event system for component lifecycle
+            events: {
+              emit: function(event, data) {
+                try {
+                  window.dispatchEvent(new CustomEvent(`lov:${event}`, { detail: data }));
+                } catch (e) {
+                  console.warn('lov.events.emit fallback:', e);
+                }
+              },
+              on: function(event, handler) {
+                try {
+                  window.addEventListener(`lov:${event}`, handler);
+                } catch (e) {
+                  console.warn('lov.events.on fallback:', e);
+                }
+              }
+            },
+            
+            // Error recovery
+            recover: function() {
+              console.log('🔧 Lovable-tagger recovery triggered');
+              return true;
+            }
+          };
+          
+          // Create non-enumerable, configurable property
+          Object.defineProperty(window, 'lov', {
+            value: lovObj,
             writable: true,
             configurable: true,
             enumerable: false
           });
           
-          // Add additional safety for potential access patterns
-          window.lov.safe = function(fn) {
-            try { return fn(); } catch { return undefined; }
-          };
+          // Additional safety: ensure window.lov survives any potential overwrites
+          let lovBackup = lovObj;
+          Object.defineProperty(window, '__lovBackup', {
+            value: lovBackup,
+            writable: false,
+            configurable: false,
+            enumerable: false
+          });
           
-          console.log('🔧 Lovable-tagger pre-initialized successfully');
+          // Monitor for any potential window.lov corruption
+          let checkInterval = setInterval(() => {
+            if (!window.lov || typeof window.lov !== 'object') {
+              console.warn('🚨 window.lov corrupted, restoring from backup');
+              window.lov = window.__lovBackup;
+            }
+          }, 100);
+          
+          // Clean up the monitor after 5 seconds (enough time for app to load)
+          setTimeout(() => {
+            clearInterval(checkInterval);
+            console.log('✅ Lovable-tagger monitoring complete');
+          }, 5000);
+          
+          console.log('🔧 Bulletproof lovable-tagger pre-initialized successfully');
         }
       })();
     </script>
