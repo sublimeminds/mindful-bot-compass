@@ -194,9 +194,11 @@ const SafeAvatarModal: React.FC<SafeAvatarModalProps> = ({
               >
                 Close
               </Button>
-              <Button className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600">
-                <MessageCircle className="h-4 w-4 mr-2" />
-                Start Session
+              <Button 
+                className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
+                onClick={onClose}
+              >
+                Select {therapist.name}
               </Button>
             </div>
           </div>

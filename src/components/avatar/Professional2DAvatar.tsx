@@ -38,6 +38,9 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
     'dr-james-wilson': drJamesWilsonImage,
     'dr-emily-rodriguez': drEmilyRodriguezImage,
     'dr-david-kim': drDavidKimImage,
+    // Add legacy mappings for any missing IDs
+    'dr-maya-patel': drAishaPatelImage, // fallback
+    'dr-alex-rodriguez': drEmilyRodriguezImage, // fallback
   };
 
   // Generate initials safely
