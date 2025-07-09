@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render } from '@testing-library/react';
-import { screen } from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 
 // Mock the avatar components

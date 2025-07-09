@@ -22,6 +22,7 @@ import { chatService } from "@/services/chatService";
 import Header from "@/components/Header";
 import GradientLogo from "@/components/ui/GradientLogo";
 import AIEnhancedTherapyChat from "@/components/chat/AIEnhancedTherapyChat";
+import LightweightAvatarSystem from "@/components/avatar/LightweightAvatarSystem";
 
 const TherapyChat = () => {
   const navigate = useNavigate();
