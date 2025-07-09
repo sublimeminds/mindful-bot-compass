@@ -25,7 +25,7 @@ import {
   MessageCircle
 } from 'lucide-react';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
-import Enhanced3DAvatar from '@/components/avatar/Enhanced3DAvatar';
+
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -74,9 +74,7 @@ const TherapistDiscovery = () => {
   const [compatibilityScores, setCompatibilityScores] = useState<{[key: string]: number}>({});
   const [avatarModalOpen, setAvatarModalOpen] = useState(false);
   const [modalTherapist, setModalTherapist] = useState<any>(null);
-  const [use3DAvatar, setUse3DAvatar] = useState(false);
   const [isVoicePlaying, setIsVoicePlaying] = useState(false);
-  const [lazy3DEnabled, setLazy3DEnabled] = useState(false);
 
   // Helper function to get icon component by name with comprehensive fallbacks
   const getIconByName = (iconName: string) => {
@@ -375,20 +373,6 @@ const TherapistDiscovery = () => {
               Each therapist combines advanced AI capabilities with unique therapeutic approaches and personalities
             </p>
             
-            {/* 3D Toggle */}
-            <div className="flex items-center justify-center mt-6">
-              <div className="flex items-center space-x-3 bg-card rounded-lg p-2">
-                <span className="text-sm text-muted-foreground">Enable 3D Avatars:</span>
-                <Button
-                  variant={lazy3DEnabled ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setLazy3DEnabled(!lazy3DEnabled)}
-                  className="text-xs"
-                >
-                  {lazy3DEnabled ? "3D ON" : "3D OFF"}
-                </Button>
-              </div>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
@@ -748,56 +732,16 @@ const TherapistDiscovery = () => {
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle>{modalTherapist?.name}</DialogTitle>
-              <div className="flex items-center justify-center mt-4">
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant={!use3DAvatar ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setUse3DAvatar(false)}
-                  >
-                    2D
-                  </Button>
-                  <Button
-                    variant={use3DAvatar ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setUse3DAvatar(true)}
-                  >
-                    3D
-                  </Button>
-                </div>
-              </div>
             </DialogHeader>
             <div className="p-4">
               {modalTherapist && (
-                <>
-                  {use3DAvatar ? (
-                    <div className="w-full h-64 bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden">
-                      <Suspense fallback={
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
-                        </div>
-                      }>
-                        <Enhanced3DAvatar
-                          therapistId={modalTherapist.avatarId}
-                          therapistName={modalTherapist.name}
-                          emotion="neutral"
-                          isSpeaking={isVoicePlaying}
-                          showControls={true}
-                          className="w-full h-full"
-                          onVoicePreview={handleVoicePreview}
-                        />
-                      </Suspense>
-                    </div>
-                  ) : (
-                    <Professional2DAvatar
-                      therapistId={modalTherapist.avatarId}
-                      therapistName={modalTherapist.name}
-                      className="w-full h-64"
-                      size="xl"
-                      showName={true}
-                    />
-                  )}
-                </>
+                <Professional2DAvatar
+                  therapistId={modalTherapist.avatarId}
+                  therapistName={modalTherapist.name}
+                  className="w-full h-64"
+                  size="xl"
+                  showName={true}
+                />
               )}
             </div>
           </DialogContent>
