@@ -359,30 +359,25 @@ const TherapistDiscovery = () => {
 
                 <CardContent className="space-y-4">
                   {/* 3D Avatar */}
-                  <div className="h-48 bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden">
-                    <ThreeDErrorBoundary 
-                      fallback={
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="text-center">
-                            <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                              <span className="text-white font-bold text-xl">
-                                {therapist.name.charAt(0)}
-                              </span>
-                            </div>
-                            <p className="text-xs text-muted-foreground">3D Avatar</p>
+                  <div className="h-64 bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden border border-therapy-100">
+                    <Suspense fallback={
+                      <div className="w-full h-full flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <span className="text-white font-bold text-xl">
+                              {therapist.name.charAt(0)}
+                            </span>
                           </div>
+                          <p className="text-xs text-muted-foreground">Loading...</p>
                         </div>
-                      }
-                      showRefresh={false}
-                    >
-                      <Suspense fallback={<Skeleton className="w-full h-full" />}>
-                        <ThreeDTherapistAvatar
-                          therapistId={therapist.avatarId}
-                          emotion="neutral"
-                          showControls={false}
-                        />
-                      </Suspense>
-                    </ThreeDErrorBoundary>
+                      </div>
+                    }>
+                      <ThreeDTherapistAvatar
+                        therapistId={therapist.avatarId}
+                        emotion="neutral"
+                        showControls={false}
+                      />
+                    </Suspense>
                   </div>
 
                   {/* Description */}

@@ -367,13 +367,36 @@ const PersonalizedAvatar: React.FC<PersonalizedAvatarProps> = ({
   }
 
   useFrame((state, delta) => {
-    if (!avatarRef.current) return;
+    if (!avatarRef.current || webglError) return;
     
     try {
-      // Simple rotation animation only
-      avatarRef.current.rotation.y += delta * 0.2;
+      // Gentle floating animation
+      const time = state.clock.getElapsedTime();
+      avatarRef.current.position.y = Math.sin(time * 1.5) * 0.1;
+      
+      // Subtle breathing-like scaling
+      const breathScale = 1 + Math.sin(time * 2) * 0.02;
+      if (bodyRef.current) {
+        bodyRef.current.scale.setScalar(breathScale);
+      }
+      
+      // Blinking animation
+      setBlinkTimer(prev => prev + delta);
+      if (blinkTimer > 3) {
+        setBlinkTimer(0);
+        if (leftEyeRef.current && rightEyeRef.current) {
+          leftEyeRef.current.scale.y = 0.1;
+          rightEyeRef.current.scale.y = 0.1;
+          setTimeout(() => {
+            if (leftEyeRef.current && rightEyeRef.current) {
+              leftEyeRef.current.scale.y = 1;
+              rightEyeRef.current.scale.y = 1;
+            }
+          }, 150);
+        }
+      }
     } catch (error) {
-      // Silently handle errors
+      console.warn('3D animation error:', error);
       setWebglError(true);
     }
   });

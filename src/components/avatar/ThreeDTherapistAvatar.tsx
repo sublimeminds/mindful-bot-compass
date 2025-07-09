@@ -79,91 +79,56 @@ const ThreeDTherapistAvatar: React.FC<TherapistAvatarProps> = ({
   );
 
   return (
-    <Card className="w-full h-[400px] bg-gradient-to-br from-therapy-50 to-calm-50 border-therapy-200">
-      <CardContent className="p-0 h-full">
-        <WebGLDetector fallback={fallbackAvatar}>
-          <ThreeDErrorBoundary fallback={fallbackAvatar} showRefresh={false}>
-            <div className="w-full h-full">
-              <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
-                <ambientLight intensity={0.7} />
-                <pointLight position={[10, 10, 10]} intensity={1.2} />
-                <pointLight position={[-10, -10, -10]} intensity={0.6} />
-                <pointLight position={[0, 10, 5]} intensity={0.8} />
-                
-                <Suspense fallback={null}>
-                  <PersonalizedAvatar
-                    therapistId={therapistId}
-                    isListening={isListening}
-                    isSpeaking={isSpeaking}
-                    emotion={emotion}
-                    userEmotion={userEmotion}
-                    lipSyncData={lipSyncData}
-                  />
-                  
-                  {/* Therapist name and info */}
-                  <Text
-                    position={[0, -3, 0]}
-                    fontSize={0.3}
-                    color="#374151"
-                    anchorX="center"
-                    anchorY="middle"
-                  >
-                    {persona.name}
-                  </Text>
-                  
-                  <Text
-                    position={[0, -3.4, 0]}
-                    fontSize={0.18}
-                    color="#6B7280"
-                    anchorX="center"
-                    anchorY="middle"
-                  >
-                    {persona.personality.approachStyle.charAt(0).toUpperCase() + 
-                     persona.personality.approachStyle.slice(1)} Therapy
-                  </Text>
-                  
-                  {/* Status indicators */}
-                  {isListening && (
-                    <Text
-                      position={[0, -3.8, 0]}
-                      fontSize={0.16}
-                      color="#3b82f6"
-                      anchorX="center"
-                      anchorY="middle"
-                    >
-                      👂 Listening...
-                    </Text>
-                  )}
-                  
-                  {isSpeaking && (
-                    <Text
-                      position={[0, -3.8, 0]}
-                      fontSize={0.16}
-                      color="#10b981"
-                      anchorX="center"
-                      anchorY="middle"
-                    >
-                      💬 Speaking...
-                    </Text>
-                    )}
-                </Suspense>
-                
-                {showControls && (
-                  <OrbitControls 
-                    enableZoom={true}
-                    enablePan={false}
-                    minDistance={4}
-                    maxDistance={10}
-                    maxPolarAngle={Math.PI / 1.8}
-                    minPolarAngle={Math.PI / 4}
-                  />
-                )}
-              </Canvas>
+    <div className="w-full h-full relative">
+      <WebGLDetector fallback={fallbackAvatar}>
+        <ThreeDErrorBoundary fallback={fallbackAvatar} showRefresh={false}>
+          <Canvas 
+            camera={{ position: [0, 0, 5], fov: 45 }}
+            style={{ width: '100%', height: '100%' }}
+            gl={{ preserveDrawingBuffer: true, antialias: false }}
+            dpr={1}
+          >
+            <ambientLight intensity={0.6} />
+            <directionalLight position={[2, 2, 2]} intensity={0.8} />
+            
+            <Suspense fallback={null}>
+              <PersonalizedAvatar
+                therapistId={therapistId}
+                isListening={isListening}
+                isSpeaking={isSpeaking}
+                emotion={emotion}
+                userEmotion={userEmotion}
+                lipSyncData={lipSyncData}
+              />
+            </Suspense>
+            
+            {showControls && (
+              <OrbitControls 
+                enableZoom={false}
+                enablePan={false}
+                autoRotate={true}
+                autoRotateSpeed={0.5}
+                maxPolarAngle={Math.PI / 1.5}
+                minPolarAngle={Math.PI / 3}
+              />
+            )}
+          </Canvas>
+          
+          {/* Status overlay */}
+          <div className="absolute bottom-2 left-2 right-2 text-center">
+            <div className="text-xs font-medium text-therapy-700 mb-1">
+              {persona.name}
             </div>
-          </ThreeDErrorBoundary>
-        </WebGLDetector>
-      </CardContent>
-    </Card>
+            {isListening && (
+              <div className="text-xs text-blue-600">👂 Listening...</div>
+            )}
+            {isSpeaking && (
+              <div className="text-xs text-green-600">💬 Speaking...</div>
+            )}
+          </div>
+        </ThreeDErrorBoundary>
+      </WebGLDetector>
+    </div>
   );
 };
 
