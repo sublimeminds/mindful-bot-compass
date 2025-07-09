@@ -3,10 +3,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
-import { LovableTaggerInitializer } from './utils/lovable-tagger-init';
+import { UnbreakableLovProxy } from './utils/unbreakable-lov-proxy';
 
-// Initialize lovable-tagger before any React rendering
-LovableTaggerInitializer.ensureInitialized();
+// CRITICAL: Ensure unbreakable window.lov proxy is ready BEFORE any React code
+UnbreakableLovProxy.ensureUnbreakableLov();
 
 const rootElement = document.getElementById('root');
 
@@ -16,16 +16,17 @@ if (!rootElement) {
 
 const root = ReactDOM.createRoot(rootElement);
 
-// Ensure lovable-tagger is ready before rendering
-LovableTaggerInitializer.initialize().then(() => {
+// Initialize with bulletproof protection
+UnbreakableLovProxy.initialize().then(() => {
+  console.log('🛡️ Unbreakable lov proxy ready, rendering app...');
   root.render(
     <React.StrictMode>
       <App />
     </React.StrictMode>
   );
 }).catch((error) => {
-  console.error('Failed to initialize lovable-tagger, proceeding with fallback:', error);
-  // Render anyway with fallback initialization
+  console.error('Unbreakable lov proxy initialization failed, but rendering anyway:', error);
+  // Always render - the proxy should make this safe
   root.render(
     <React.StrictMode>
       <App />

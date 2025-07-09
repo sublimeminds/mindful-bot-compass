@@ -3,6 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { User, AlertTriangle } from 'lucide-react';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import ReactErrorBoundary from './ReactErrorBoundary';
+import BulletproofLovableGuard from '@/components/BulletproofLovableGuard';
 
 // Lazy load with comprehensive error handling
 const Professional2DAvatar = React.lazy(() => 
@@ -141,12 +142,17 @@ const BulletproofAvatarDisplay = ({
   };
 
   return (
-    <div 
-      className={`${className} bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 group`}
-      onClick={onClick}
+    <BulletproofLovableGuard
+      fallback={<LoadingSkeleton />}
+      onError={() => setLoadingState('fallback')}
     >
-      {renderAvatar()}
-    </div>
+      <div 
+        className={`${className} bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 group`}
+        onClick={onClick}
+      >
+        {renderAvatar()}
+      </div>
+    </BulletproofLovableGuard>
   );
 };
 
