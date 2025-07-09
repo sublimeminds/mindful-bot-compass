@@ -23,8 +23,7 @@ import {
   CheckCircle,
   MessageCircle
 } from 'lucide-react';
-import IntersectionObserverAvatar from '@/components/avatar/IntersectionObserverAvatar';
-import { AvatarVirtualizationProvider } from '@/components/avatar/AvatarVirtualizationManager';
+import SimplifiedAvatarDisplay from '@/components/avatar/SimplifiedAvatarDisplay';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -173,8 +172,7 @@ const TherapistDiscovery = () => {
   }
 
   return (
-    <AvatarVirtualizationProvider>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
       {/* Hero Section */}
       <section className="relative pt-24 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-therapy-500/10 via-calm-500/10 to-harmony-500/10" />
@@ -360,14 +358,14 @@ const TherapistDiscovery = () => {
 
                 <CardContent className="space-y-4">
                   {/* Therapist Avatar */}
-                  <IntersectionObserverAvatar
-                    therapistId={therapist.avatarId}
-                    therapistName={therapist.name}
-                    emotion="neutral"
-                    showControls={false}
-                    priority={selectedTherapist === therapist.id ? 10 : 1}
-                    className="h-64"
-                  />
+                  <div className="h-48 w-full flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg">
+                    <SimplifiedAvatarDisplay
+                      therapistId={therapist.avatarId}
+                      therapistName={therapist.name}
+                      size="xl"
+                      showName={false}
+                    />
+                  </div>
 
                   {/* Description */}
                   <p className="text-sm text-muted-foreground">{therapist.description}</p>
@@ -654,8 +652,7 @@ const TherapistDiscovery = () => {
           </Card>
         </div>
       </section>
-      </div>
-    </AvatarVirtualizationProvider>
+    </div>
   );
 };
 
