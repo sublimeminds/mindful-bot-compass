@@ -92,7 +92,8 @@ export class WebGLManager {
       const contextOptions = { ...defaultOptions, ...options };
 
       // Try WebGL2 first, then fallback to WebGL
-      let gl = canvas.getContext('webgl2', contextOptions) as WebGL2RenderingContext;
+      let gl: WebGLRenderingContext | WebGL2RenderingContext | null = null;
+      gl = canvas.getContext('webgl2', contextOptions) as WebGL2RenderingContext;
       if (!gl) {
         gl = canvas.getContext('webgl', contextOptions) as WebGLRenderingContext;
       }

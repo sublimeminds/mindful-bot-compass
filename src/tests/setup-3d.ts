@@ -34,6 +34,7 @@ export const mockCanvas = {
   }),
   addEventListener: vi.fn(),
   removeEventListener: vi.fn(),
+  dispatchEvent: vi.fn(),
   width: 800,
   height: 600,
 };
@@ -66,6 +67,7 @@ export const mockAudioContext = {
     connect: vi.fn(),
     disconnect: vi.fn(),
     getFloatFrequencyData: vi.fn(),
+    getFloatTimeDomainData: vi.fn(),
     fftSize: 2048,
     frequencyBinCount: 1024,
   })),

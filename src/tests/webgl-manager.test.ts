@@ -83,7 +83,7 @@ describe('WebGLManager', () => {
     it('should fallback from WebGL2 to WebGL', () => {
       const getContextSpy = vi.spyOn(canvas, 'getContext')
         .mockReturnValueOnce(null) // WebGL2 fails
-        .mockReturnValueOnce(testEnv.mockWebGL); // WebGL succeeds
+        .mockReturnValueOnce(testEnv.mockWebGL as any); // WebGL succeeds
       
       const gl = webglManager.createContext(canvas);
       
