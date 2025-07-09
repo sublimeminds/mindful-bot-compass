@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   Brain, 
   Heart, 
@@ -23,7 +24,8 @@ import {
   CheckCircle,
   MessageCircle
 } from 'lucide-react';
-// UniversalTherapistAvatar removed for discovery page to prevent WebGL errors
+import UniversalTherapistAvatar from '@/components/avatar/UniversalTherapistAvatar';
+import SimpleAvatarFallback from '@/components/avatar/SimpleAvatarFallback';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -69,6 +71,8 @@ const TherapistDiscovery = () => {
   const [selectedSpecialization, setSelectedSpecialization] = useState('All Specializations');
   const [selectedStyle, setSelectedStyle] = useState('All Styles');
   const [compatibilityScores, setCompatibilityScores] = useState<{[key: string]: number}>({});
+  const [avatarModalOpen, setAvatarModalOpen] = useState(false);
+  const [modalTherapist, setModalTherapist] = useState<any>(null);
 
   // Helper function to get icon component by name
   const getIconByName = (iconName: string) => {
@@ -158,6 +162,11 @@ const TherapistDiscovery = () => {
   const playVoicePreview = (therapistId: string) => {
     // Voice preview functionality would be implemented here
     console.log(`Playing voice preview for ${therapistId}`);
+  };
+
+  const openAvatarModal = (therapist: any) => {
+    setModalTherapist(therapist);
+    setAvatarModalOpen(true);
   };
 
   if (isLoading) {
@@ -358,15 +367,26 @@ const TherapistDiscovery = () => {
 
                 <CardContent className="space-y-4">
                   {/* 2D Avatar Preview for Discovery */}
-                  <div className="h-64 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center">
+                  <div 
+                    className="h-64 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 group"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openAvatarModal(therapist);
+                    }}
+                  >
                     <div className="text-center">
-                      <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500 flex items-center justify-center">
-                        <span className="text-white text-2xl font-bold">
-                          {therapist.name.split(' ').map(n => n.charAt(0)).join('').slice(0, 2)}
-                        </span>
+                      <div className="w-24 h-24 mx-auto mb-4">
+                        <SimpleAvatarFallback
+                          name={therapist.name}
+                          therapistId={therapist.avatarId}
+                          className="w-24 h-24"
+                          showName={false}
+                        />
                       </div>
                       <p className="text-sm font-medium text-therapy-700">{therapist.name}</p>
-                      <p className="text-xs text-muted-foreground mt-1">Click to see full 3D avatar</p>
+                      <p className="text-xs text-muted-foreground mt-1 group-hover:text-therapy-600 transition-colors">
+                        Click to see full 3D avatar
+                      </p>
                     </div>
                   </div>
 
@@ -655,6 +675,77 @@ const TherapistDiscovery = () => {
           </Card>
         </div>
       </section>
+
+      {/* 3D Avatar Modal */}
+      <Dialog open={avatarModalOpen} onOpenChange={setAvatarModalOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {modalTherapist?.name} - 3D Avatar Preview
+            </DialogTitle>
+          </DialogHeader>
+          
+          {modalTherapist && (
+            <div className="space-y-6">
+              {/* 3D Avatar Container */}
+              <div className="h-96 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden">
+                <Suspense 
+                  fallback={
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-600 mx-auto mb-4"></div>
+                        <p className="text-sm text-muted-foreground">Loading 3D avatar...</p>
+                      </div>
+                    </div>
+                  }
+                >
+                  <UniversalTherapistAvatar
+                    therapistId={modalTherapist.avatarId}
+                    therapistName={modalTherapist.name}
+                    emotion="neutral"
+                    showControls={true}
+                    className="w-full h-full"
+                    priority={10}
+                  />
+                </Suspense>
+              </div>
+
+              {/* Therapist Info */}
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-semibold">{modalTherapist.name}</h3>
+                  <p className="text-muted-foreground">{modalTherapist.title}</p>
+                </div>
+                
+                <div>
+                  <p className="text-sm font-medium mb-2">Approach & Specialties</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline">{modalTherapist.approach}</Badge>
+                    {modalTherapist.specialties.slice(0, 3).map((specialty: string, idx: number) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">
+                        {specialty}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center pt-4 border-t">
+                  <Button 
+                    variant="outline"
+                    onClick={() => setAvatarModalOpen(false)}
+                  >
+                    Close
+                  </Button>
+                  <Button className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600">
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Start Session
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
