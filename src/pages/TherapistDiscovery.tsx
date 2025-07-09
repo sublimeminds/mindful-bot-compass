@@ -24,7 +24,7 @@ import {
   CheckCircle,
   MessageCircle
 } from 'lucide-react';
-import BulletproofAvatar from '@/components/avatar/BulletproofAvatar';
+import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import SafeAvatarModal from '@/components/avatar/SafeAvatarModal';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
@@ -375,7 +375,7 @@ const TherapistDiscovery = () => {
                     }}
                   >
                     <div className="text-center w-full h-full flex flex-col items-center justify-center">
-                      <BulletproofAvatar
+                      <Professional2DAvatar
                         therapistId={therapist.avatarId}
                         therapistName={therapist.name}
                         className="flex-1 flex items-center justify-center"

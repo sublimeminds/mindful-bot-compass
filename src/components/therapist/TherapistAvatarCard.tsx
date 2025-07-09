@@ -1,8 +1,7 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
+import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 
 interface TherapistAvatarCardProps {
@@ -39,16 +38,17 @@ const TherapistAvatarCard = ({
     >
       <CardHeader>
         <div className="flex items-center space-x-3">
-          {/* 3D Avatar Preview */}
+          {/* Professional 2D Avatar */}
           {showMiniAvatar ? (
-            <div className="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-therapy-50 to-calm-50">
-              <Suspense fallback={<Skeleton className="w-full h-full" />}>
-                <ThreeDTherapistAvatar
-                  therapistId={avatarId}
-                  emotion="neutral"
-                  showControls={false}
-                />
-              </Suspense>
+            <div className="w-16 h-16 rounded-lg overflow-hidden">
+              <Professional2DAvatar
+                therapistId={avatarId}
+                therapistName={therapist.name}
+                className="w-full h-full"
+                showName={false}
+                size="md"
+                emotion="neutral"
+              />
             </div>
           ) : (
             <div className={`p-3 rounded-lg bg-gradient-to-r ${therapist.colorScheme} text-white w-16 h-16 flex items-center justify-center`}>
