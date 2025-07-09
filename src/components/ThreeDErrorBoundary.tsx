@@ -29,8 +29,13 @@ class ThreeDErrorBoundary extends Component<Props, State> {
     this.setState({ error, errorInfo });
     
     // Log WebGL context loss specifically
-    if (error.message?.includes('WebGL') || error.message?.includes('lov')) {
-      console.warn('3D component WebGL context lost:', error);
+    if (error.message?.includes('WebGL') || 
+        error.message?.includes('lov') || 
+        error.message?.includes('THREE') ||
+        error.message?.includes('Canvas') ||
+        error.message?.includes('context')) {
+      console.warn('3D component error detected:', error);
+      console.warn('Error details:', errorInfo);
     }
   }
 

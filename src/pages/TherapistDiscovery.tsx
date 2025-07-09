@@ -430,13 +430,14 @@ const TherapistDiscovery = () => {
                     <Button 
                       size="sm" 
                       className="flex-1"
+                      variant="outline"
                       onClick={(e) => {
                         e.stopPropagation();
-                        // Start session with this therapist
+                        // Learn more about this therapist
                       }}
                     >
-                      <MessageCircle className="h-4 w-4 mr-2" />
-                      Start Session
+                      <Brain className="h-4 w-4 mr-2" />
+                      Learn More
                     </Button>
                     <Button 
                       variant="outline" 
