@@ -1,6 +1,7 @@
 import React from 'react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/dom';
 import { create3DTestEnvironment, performanceTestUtils } from './setup-3d';
 import BulletproofThreeDAvatar from '@/components/avatar/enhanced/BulletproofThreeDAvatar';
 import { webglManager } from '@/utils/webgl-manager';

@@ -1,6 +1,7 @@
 import React from 'react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, waitFor, fireEvent, act } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
+import { screen, waitFor, fireEvent } from '@testing-library/dom';
 import { create3DTestEnvironment } from './setup-3d';
 import VoiceEnhancedAvatarV2 from '@/components/avatar/enhanced/VoiceEnhancedAvatarV2';
 import BulletproofThreeDAvatar from '@/components/avatar/enhanced/BulletproofThreeDAvatar';
