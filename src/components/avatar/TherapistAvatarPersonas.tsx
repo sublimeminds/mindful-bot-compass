@@ -320,11 +320,57 @@ const PersonalizedAvatar: React.FC<PersonalizedAvatarProps> = ({
   const [blinkTimer, setBlinkTimer] = useState(0);
   const [gestureTimer, setGestureTimer] = useState(0);
   const [breathingPhase, setBreathingPhase] = useState(0);
+  const [webglError, setWebglError] = useState(false);
 
   const persona = therapistPersonas[therapistId] || therapistPersonas['dr-sarah-chen'];
 
+  // WebGL error handling
+  useEffect(() => {
+    const handleContextLoss = (event: Event) => {
+      console.warn('WebGL context lost');
+      event.preventDefault();
+      setWebglError(true);
+    };
+
+    const handleContextRestore = (event: Event) => {
+      console.log('WebGL context restored');
+      setWebglError(false);
+    };
+
+    // Add WebGL context loss event listeners
+    const canvas = document.querySelector('canvas');
+    if (canvas) {
+      canvas.addEventListener('webglcontextlost', handleContextLoss);
+      canvas.addEventListener('webglcontextrestored', handleContextRestore);
+
+      return () => {
+        canvas.removeEventListener('webglcontextlost', handleContextLoss);
+        canvas.removeEventListener('webglcontextrestored', handleContextRestore);
+      };
+    }
+  }, []);
+
+  // Fallback to 2D avatar if WebGL has errors
+  if (webglError) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-2">
+            <span className="text-white font-bold text-xl">
+              {persona.name.charAt(0)}
+            </span>
+          </div>
+          <p className="text-xs text-muted-foreground">{persona.name}</p>
+        </div>
+      </div>
+    );
+  }
+
   useFrame((state, delta) => {
-    if (!avatarRef.current || !headRef.current) return;
+    // Safety check for WebGL context and refs
+    if (!avatarRef.current || !headRef.current || webglError) return;
+    
+    try {
 
     // Breathing animation - subtle chest movement
     setBreathingPhase(prev => prev + delta * 2);
@@ -403,6 +449,10 @@ const PersonalizedAvatar: React.FC<PersonalizedAvatarProps> = ({
     if (gestureTimer > 3 && persona.personality.gestureFrequency > 0.5) {
       setGestureTimer(0);
       // Subtle hand/arm gestures could be added here
+    }
+    } catch (error) {
+      console.warn('WebGL animation error:', error);
+      setWebglError(true);
     }
   });
 
