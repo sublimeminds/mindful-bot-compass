@@ -149,7 +149,7 @@ const TherapistMatcher = ({ onTherapistSelected, onClose }: TherapistMatcherProp
           disabled={!selectedTherapist}
           className="mr-4"
         >
-          Preview in 3D
+          Preview Therapist
         </Button>
       </div>
 

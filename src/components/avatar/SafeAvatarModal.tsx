@@ -24,21 +24,23 @@ const SafeAvatarModal: React.FC<SafeAvatarModalProps> = ({
   onClose,
   therapist
 }) => {
-  const [avatarMode, setAvatarMode] = useState<'2d' | '3d' | 'error'>('3d');
+  const [avatarMode, setAvatarMode] = useState<'2d' | '3d' | 'error'>('2d');
   const [retryCount, setRetryCount] = useState(0);
   const maxRetries = 2;
 
-  // Reset when modal opens
+  // Reset when modal opens - start with 2D to prevent WebGL context errors
   useEffect(() => {
     if (isOpen) {
-      setAvatarMode('3d');
+      setAvatarMode('2d');
       setRetryCount(0);
     }
   }, [isOpen]);
 
   const tryLoadingAvatar = () => {
+    // Temporarily disable 3D mode to prevent WebGL context errors
+    // TODO: Re-enable with proper WebGL context management
     if (retryCount < maxRetries) {
-      setAvatarMode('3d');
+      // setAvatarMode('3d'); // Disabled until WebGL context management is implemented
       setRetryCount(prev => prev + 1);
     } else {
       setAvatarMode('error');
