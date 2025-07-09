@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, RefreshCw, AlertTriangle } from 'lucide-react';
 import Professional2DAvatar from './Professional2DAvatar';
-import SafeTherapistAvatar from './SafeTherapistAvatar';
+import IndustryLeadingAvatarSystem from './IndustryLeadingAvatarSystem';
 
 interface SafeAvatarModalProps {
   isOpen: boolean;
@@ -24,14 +24,14 @@ const SafeAvatarModal: React.FC<SafeAvatarModalProps> = ({
   onClose,
   therapist
 }) => {
-  const [avatarMode, setAvatarMode] = useState<'2d' | '3d' | 'error'>('2d');
+  const [avatarMode, setAvatarMode] = useState<'2d' | '3d' | 'error'>('3d');
   const [retryCount, setRetryCount] = useState(0);
   const maxRetries = 2;
 
   // Reset when modal opens
   useEffect(() => {
     if (isOpen) {
-      setAvatarMode('2d');
+      setAvatarMode('3d');
       setRetryCount(0);
     }
   }, [isOpen]);
@@ -52,19 +52,13 @@ const SafeAvatarModal: React.FC<SafeAvatarModalProps> = ({
       case '3d':
         return (
           <div className="w-full h-full relative">
-            <div 
-              className="absolute inset-0 bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg"
-              onError={() => setAvatarMode('error')}
-            >
-              <SafeTherapistAvatar
-                therapistId={therapist.avatarId}
-                therapistName={therapist.name}
-                emotion="neutral"
-                showControls={true}
-                className="w-full h-full"
-                prefer2D={false}
-              />
-            </div>
+            <IndustryLeadingAvatarSystem
+              therapistId={therapist.avatarId}
+              therapistName={therapist.name}
+              showControls={true}
+              className="w-full h-full"
+              onAvatarError={() => setAvatarMode('2d')}
+            />
             
             {/* Fallback after delay */}
             <div className="absolute bottom-4 right-4">
