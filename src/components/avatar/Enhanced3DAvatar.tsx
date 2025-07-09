@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Sphere, Box, Cylinder } from '@react-three/drei';
 import { therapistPersonas } from './TherapistAvatarPersonas';
 import SimpleAvatarFallback from './SimpleAvatarFallback';
+import { SafeComponentWrapper } from '../bulletproof/SafeComponentWrapper';
 import * as THREE from 'three';
 
 interface Enhanced3DAvatarProps {
@@ -175,27 +176,61 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
   const persona = therapistPersonas[therapistId] || therapistPersonas['dr-sarah-chen'];
   const displayName = therapistName || persona.name;
 
-  // Simplified WebGL detection - be more optimistic
+  // Check both WebGL and lovable-tagger support
   useEffect(() => {
-    const checkWebGLSupport = () => {
+    const checkSupport = () => {
       try {
+        // Check WebGL support
         const canvas = document.createElement('canvas');
         const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
         canvas.remove();
-        return !!gl;
-      } catch {
+        
+        // Check lovable-tagger support
+        const lovAvailable = typeof window !== 'undefined' && 
+                           (window as any).lov && 
+                           typeof (window as any).lov === 'object';
+        
+        if (gl && lovAvailable) {
+          setIsLoading(false);
+          return true;
+        } else {
+          console.log('3D not supported - WebGL:', !!gl, 'lovable-tagger:', lovAvailable);
+          setIs3DSupported(false);
+          setIsLoading(false);
+          return false;
+        }
+      } catch (error) {
+        console.error('3D support check failed:', error);
+        setIs3DSupported(false);
+        setIsLoading(false);
         return false;
       }
     };
 
-    // Quick WebGL check
-    if (checkWebGLSupport()) {
-      setIsLoading(false);
-    } else {
-      console.log('WebGL not supported, using 2D fallback');
-      setIs3DSupported(false);
-      setIsLoading(false);
+    // Initial check
+    if (!checkSupport()) {
+      return;
     }
+
+    // Retry if lovable-tagger is not ready yet
+    let retryCount = 0;
+    const maxRetries = 5;
+    const retryInterval = setInterval(() => {
+      if (retryCount >= maxRetries) {
+        clearInterval(retryInterval);
+        return;
+      }
+      
+      if (typeof window !== 'undefined' && (window as any).lov) {
+        clearInterval(retryInterval);
+        setIsLoading(false);
+      } else {
+        retryCount++;
+        console.log(`Waiting for lovable-tagger... (${retryCount}/${maxRetries})`);
+      }
+    }, 100);
+
+    return () => clearInterval(retryInterval);
   }, []);
 
   // Fallback to 2D if 3D not supported
@@ -213,80 +248,94 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
   }
 
   return (
-    <div className={`${className} relative bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden`}>
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
-        </div>
-      )}
-      
-        <Canvas 
-        camera={{ position: [0, 0, 5], fov: 45 }}
-        style={{ width: '100%', height: '100%' }}
-        gl={{ 
-          antialias: true,
-          alpha: true,
-          powerPreference: "default"
-        }}
-        dpr={Math.min(window.devicePixelRatio, 2)}
-        onCreated={() => setIsLoading(false)}
-        onError={(error) => {
-          console.warn('3D Canvas error:', error);
-          setIs3DSupported(false);
-        }}
-      >
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[5, 5, 5]} intensity={0.8} />
-        <pointLight position={[-5, -5, -5]} intensity={0.4} />
-        
-        <Suspense fallback={null}>
-          <Simple3DAvatar
+    <SafeComponentWrapper 
+      name="Enhanced3DAvatar" 
+      fallback={
+        <div className={className}>
+          <SimpleAvatarFallback 
+            name={displayName}
             therapistId={therapistId}
-            emotion={emotion}
-            isListening={isListening}
-            isSpeaking={isSpeaking}
+            className="w-full h-full"
+            showName={false}
           />
-        </Suspense>
-        
-        {showControls && (
-          <OrbitControls 
-            enableZoom={false}
-            enablePan={false}
-            autoRotate={true}
-            autoRotateSpeed={1}
-            maxPolarAngle={Math.PI / 1.5}
-            minPolarAngle={Math.PI / 3}
-          />
-        )}
-      </Canvas>
-      
-      {/* Status overlay */}
-      <div className="absolute bottom-2 left-2 right-2 text-center">
-        <div className="text-xs font-medium text-therapy-700 mb-1">
-          {displayName}
         </div>
-        {isListening && (
-          <div className="text-xs text-blue-600 flex items-center justify-center gap-1">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-            Listening...
+      }
+    >
+      <div className={`${className} relative bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden`}>
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
           </div>
         )}
-        {isSpeaking && (
-          <div className="text-xs text-green-600 flex items-center justify-center gap-1">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
-            Speaking...
+        
+        <Canvas 
+          camera={{ position: [0, 0, 5], fov: 45 }}
+          style={{ width: '100%', height: '100%' }}
+          gl={{ 
+            antialias: true,
+            alpha: true,
+            powerPreference: "default"
+          }}
+          dpr={Math.min(window.devicePixelRatio, 2)}
+          onCreated={() => setIsLoading(false)}
+          onError={(error) => {
+            console.warn('3D Canvas error:', error);
+            setIs3DSupported(false);
+          }}
+        >
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[5, 5, 5]} intensity={0.8} />
+          <pointLight position={[-5, -5, -5]} intensity={0.4} />
+          
+          <Suspense fallback={null}>
+            <Simple3DAvatar
+              therapistId={therapistId}
+              emotion={emotion}
+              isListening={isListening}
+              isSpeaking={isSpeaking}
+            />
+          </Suspense>
+          
+          {showControls && (
+            <OrbitControls 
+              enableZoom={false}
+              enablePan={false}
+              autoRotate={true}
+              autoRotateSpeed={1}
+              maxPolarAngle={Math.PI / 1.5}
+              minPolarAngle={Math.PI / 3}
+            />
+          )}
+        </Canvas>
+        
+        {/* Status overlay */}
+        <div className="absolute bottom-2 left-2 right-2 text-center">
+          <div className="text-xs font-medium text-therapy-700 mb-1">
+            {displayName}
           </div>
-        )}
-        {onVoicePreview && (
-          <button
-            onClick={onVoicePreview}
-            className="mt-2 text-xs bg-therapy-500 hover:bg-therapy-600 text-white px-3 py-1 rounded-full transition-colors"
-          >
-            Preview Voice
-          </button>
-        )}
+          {isListening && (
+            <div className="text-xs text-blue-600 flex items-center justify-center gap-1">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              Listening...
+            </div>
+          )}
+          {isSpeaking && (
+            <div className="text-xs text-green-600 flex items-center justify-center gap-1">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
+              Speaking...
+            </div>
+          )}
+          {onVoicePreview && (
+            <button
+              onClick={onVoicePreview}
+              className="mt-2 text-xs bg-therapy-500 hover:bg-therapy-600 text-white px-3 py-1 rounded-full transition-colors"
+            >
+              Preview Voice
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+    </SafeComponentWrapper>
   );
 };
 
