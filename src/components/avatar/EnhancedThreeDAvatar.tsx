@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, Suspense } from 'react';
+import React, { useRef, useEffect, useState, Suspense, useCallback } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text, Sphere, Box, Cylinder, Cone } from '@react-three/drei';
 import * as THREE from 'three';
@@ -41,20 +41,34 @@ const HumanlikeAvatar: React.FC<HumanlikeAvatarProps> = ({
   const bodyRef = useRef<THREE.Group>(null);
   const leftArmRef = useRef<THREE.Group>(null);
   const rightArmRef = useRef<THREE.Group>(null);
+  const animationIdRef = useRef<number>();
   
   const [blinkTimer, setBlinkTimer] = useState(Math.random() * 5);
   const [gesturePhase, setGesturePhase] = useState(0);
   const [breathingPhase, setBreathingPhase] = useState(0);
   const [emotionTransition, setEmotionTransition] = useState(0);
   const [lastBlink, setLastBlink] = useState(0);
+  const [isDestroyed, setIsDestroyed] = useState(false);
 
-  // Enhanced frame-by-frame animation
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      setIsDestroyed(true);
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+      }
+    };
+  }, []);
+
+  // Enhanced frame-by-frame animation with safety checks
   useFrame((state, delta) => {
-    if (!avatarRef.current) return;
+    if (!avatarRef.current || isDestroyed) return;
     
     const time = state.clock.getElapsedTime();
     
     try {
+      // Null checks for all refs before using
+      if (!persona || !persona.personality) return;
       // Natural floating motion with personality-based variation
       const floatIntensity = persona.personality.gestureFrequency * 0.03;
       avatarRef.current.position.y = Math.sin(time * 0.8) * floatIntensity;
@@ -402,57 +416,142 @@ const EnhancedThreeDAvatar: React.FC<EnhancedAvatarProps> = ({
 }) => {
   const [webglError, setWebglError] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const maxRetries = 3;
   
-  const persona = therapistPersonas[therapistId] || therapistPersonas['dr-sarah-chen'];
+  // Safe persona access with fallback
+  const persona = React.useMemo(() => {
+    try {
+      return therapistPersonas?.[therapistId] || therapistPersonas?.['dr-sarah-chen'] || {
+        therapistId: 'fallback',
+        name: 'AI Therapist',
+        appearance: {
+          faceStructure: 'oval' as const,
+          hairStyle: 'short' as const,
+          clothingStyle: 'professional' as const,
+          colorPalette: {
+            skin: '#F5DEB3',
+            hair: '#8B4513',
+            eyes: '#4A4A4A',
+            clothing: '#1E40AF',
+            accent: '#3B82F6'
+          }
+        },
+        personality: {
+          gestureFrequency: 0.5,
+          facialExpressiveness: 0.7,
+          postureStyle: 'formal' as const,
+          approachStyle: 'balanced'
+        }
+      };
+    } catch (error) {
+      console.warn('Error accessing therapist persona:', error);
+      return {
+        therapistId: 'fallback',
+        name: 'AI Therapist',
+        appearance: {
+          faceStructure: 'oval' as const,
+          hairStyle: 'short' as const,
+          clothingStyle: 'professional' as const,
+          colorPalette: {
+            skin: '#F5DEB3',
+            hair: '#8B4513',
+            eyes: '#4A4A4A',
+            clothing: '#1E40AF',
+            accent: '#3B82F6'
+          }
+        },
+        personality: {
+          gestureFrequency: 0.5,
+          facialExpressiveness: 0.7,
+          postureStyle: 'formal' as const,
+          approachStyle: 'balanced'
+        }
+      };
+    }
+  }, [therapistId]);
 
-  // Enhanced WebGL detection
-  useEffect(() => {
-    const checkWebGL = () => {
-      try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl') as WebGLRenderingContext | null;
-        
-        if (!gl) {
+  // Enhanced WebGL detection with retry logic
+  const checkWebGL = useCallback(() => {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl') as WebGLRenderingContext | null;
+      
+      if (!gl) {
+        if (retryCount < maxRetries) {
+          console.warn(`WebGL unavailable, retry ${retryCount + 1}/${maxRetries}`);
+          setTimeout(() => {
+            setRetryCount(prev => prev + 1);
+          }, 1000);
+        } else {
           setWebglError(true);
-          return;
         }
-        
-        // Test basic WebGL functionality
-        const shader = gl.createShader(gl.VERTEX_SHADER);
-        if (shader) {
-          gl.deleteShader(shader);
-        }
+        return;
+      }
+      
+      // Test basic WebGL functionality
+      const shader = gl.createShader(gl.VERTEX_SHADER);
+      if (shader) {
+        gl.deleteShader(shader);
         setMounted(true);
-      } catch (error) {
-        console.warn('WebGL detection failed:', error);
+        setRetryCount(0);
+      } else {
         setWebglError(true);
       }
-    };
+      
+      // Cleanup
+      canvas.width = 1;
+      canvas.height = 1;
+    } catch (error) {
+      console.warn('WebGL detection failed:', error);
+      if (retryCount < maxRetries) {
+        setRetryCount(prev => prev + 1);
+      } else {
+        setWebglError(true);
+      }
+    }
+  }, [retryCount, maxRetries]);
 
+  useEffect(() => {
     checkWebGL();
-  }, []);
+  }, [checkWebGL, retryCount]);
 
-  // Context loss recovery
+  // Context loss recovery with proper cleanup
   useEffect(() => {
     const handleContextLoss = (event: Event) => {
       console.warn('WebGL context lost, attempting recovery...');
       event.preventDefault();
       setWebglError(true);
+      setMounted(false);
       
       // Attempt recovery after a delay
       setTimeout(() => {
-        setWebglError(false);
-        setMounted(true);
+        if (retryCount < maxRetries) {
+          setRetryCount(prev => prev + 1);
+          setWebglError(false);
+        }
       }, 2000);
+    };
+
+    const handleContextRestore = (event: Event) => {
+      console.log('WebGL context restored');
+      setWebglError(false);
+      setMounted(true);
+      setRetryCount(0);
     };
 
     const canvas = canvasRef.current;
     if (canvas) {
       canvas.addEventListener('webglcontextlost', handleContextLoss);
-      return () => canvas.removeEventListener('webglcontextlost', handleContextLoss);
+      canvas.addEventListener('webglcontextrestored', handleContextRestore);
+      
+      return () => {
+        canvas.removeEventListener('webglcontextlost', handleContextLoss);
+        canvas.removeEventListener('webglcontextrestored', handleContextRestore);
+      };
     }
-  }, [mounted]);
+  }, [mounted, retryCount, maxRetries]);
 
   if (webglError || !mounted) {
     return (

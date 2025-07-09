@@ -24,6 +24,8 @@ class EnhancedVoiceService {
   private audioContext: AudioContext | null = null;
   private currentAudio: HTMLAudioElement | null = null;
   private isPlaying: boolean = false;
+  private audioResources: Set<AudioContext> = new Set();
+  private cleanupCallbacks: Set<() => void> = new Set();
 
   constructor() {
     // Initialize audio context
@@ -32,7 +34,18 @@ class EnhancedVoiceService {
 
   private async initializeAudioContext() {
     try {
-      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      if (!this.audioContext || this.audioContext.state === 'closed') {
+        this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        this.audioResources.add(this.audioContext);
+        
+        // Add cleanup callback
+        const cleanup = () => {
+          if (this.audioContext && this.audioContext.state !== 'closed') {
+            this.audioContext.close().catch(console.warn);
+          }
+        };
+        this.cleanupCallbacks.add(cleanup);
+      }
     } catch (error) {
       console.warn('AudioContext initialization failed:', error);
     }
@@ -193,6 +206,7 @@ class EnhancedVoiceService {
     if (this.currentAudio) {
       this.currentAudio.pause();
       this.currentAudio.currentTime = 0;
+      this.currentAudio.src = '';
       this.currentAudio = null;
     }
     
@@ -201,6 +215,31 @@ class EnhancedVoiceService {
     }
     
     this.isPlaying = false;
+  }
+
+  // Clean up all resources
+  cleanup() {
+    this.stopSpeech();
+    
+    // Clean up audio contexts
+    this.audioResources.forEach(context => {
+      if (context.state !== 'closed') {
+        context.close().catch(console.warn);
+      }
+    });
+    this.audioResources.clear();
+    
+    // Run cleanup callbacks
+    this.cleanupCallbacks.forEach(callback => {
+      try {
+        callback();
+      } catch (error) {
+        console.warn('Cleanup callback error:', error);
+      }
+    });
+    this.cleanupCallbacks.clear();
+    
+    this.audioContext = null;
   }
 
   isCurrentlyPlaying(): boolean {

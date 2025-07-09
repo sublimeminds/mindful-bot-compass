@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import EnhancedThreeDAvatar from './EnhancedThreeDAvatar';
+import PerformanceOptimizedAvatar from './PerformanceOptimizedAvatar';
 import SimpleAvatarFallback from './SimpleAvatarFallback';
 import { therapistPersonas } from './TherapistAvatarPersonas';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
@@ -64,8 +64,9 @@ const UniversalTherapistAvatar: React.FC<UniversalTherapistAvatarProps> = ({
           />
         }
       >
-        <EnhancedThreeDAvatar
+        <PerformanceOptimizedAvatar
           therapistId={avatarId}
+          therapistName={displayName}
           emotion={emotion}
           isListening={isListening}
           isSpeaking={isSpeaking}
@@ -73,6 +74,8 @@ const UniversalTherapistAvatar: React.FC<UniversalTherapistAvatarProps> = ({
           lipSyncData={lipSyncData}
           showControls={showControls}
           className="w-full h-full"
+          priority={priority}
+          force2D={force2D}
         />
       </Suspense>
     </div>

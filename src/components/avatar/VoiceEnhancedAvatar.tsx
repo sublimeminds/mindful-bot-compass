@@ -32,8 +32,9 @@ const VoiceEnhancedAvatar: React.FC<VoiceEnhancedAvatarProps> = ({
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyzerRef = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number>();
+  const cleanupRef = useRef<(() => void)[]>([]);
 
-  // Initialize audio analysis for lip sync
+  // Initialize audio analysis for lip sync with proper cleanup
   useEffect(() => {
     if (isSpeaking && currentMessage) {
       initializeAudioAnalysis();
@@ -42,7 +43,10 @@ const VoiceEnhancedAvatar: React.FC<VoiceEnhancedAvatarProps> = ({
     }
 
     return () => {
+      // Clean up all resources
       stopAudioAnalysis();
+      cleanupRef.current.forEach(cleanup => cleanup());
+      cleanupRef.current = [];
     };
   }, [isSpeaking, currentMessage]);
 
@@ -151,15 +155,29 @@ const VoiceEnhancedAvatar: React.FC<VoiceEnhancedAvatarProps> = ({
     
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = undefined;
     }
     
-    if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-      audioContextRef.current.close();
+    if (audioContextRef.current) {
+      // Close audio context properly
+      if (audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close().catch(console.warn);
+      }
       audioContextRef.current = null;
     }
     
     analyzerRef.current = null;
     setLipSyncData(undefined);
+    
+    // Run any additional cleanup
+    cleanupRef.current.forEach(cleanup => {
+      try {
+        cleanup();
+      } catch (error) {
+        console.warn('Cleanup error:', error);
+      }
+    });
+    cleanupRef.current = [];
   };
 
   // Enhanced emotion detection based on message content
