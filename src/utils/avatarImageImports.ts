@@ -1,47 +1,13 @@
-// Safe avatar image imports with fallback handling
-let drSarahChenImage: string;
-let drMichaelTorresImage: string;
-let drAishaPatelImage: string;
-let drJamesWilsonImage: string;
-let drEmilyRodriguezImage: string;
-let drDavidKimImage: string;
+// SAFE Avatar Image System - No dynamic imports, no failures
+import { placeholderAvatars } from './safeAvatarSystem';
 
-// Dynamically import avatar images with error handling
-try {
-  drSarahChenImage = require('@/assets/avatars/dr-sarah-chen.jpg').default || '';
-} catch {
-  drSarahChenImage = '';
-}
-
-try {
-  drMichaelTorresImage = require('@/assets/avatars/dr-michael-torres.jpg').default || '';
-} catch {
-  drMichaelTorresImage = '';
-}
-
-try {
-  drAishaPatelImage = require('@/assets/avatars/dr-aisha-patel.jpg').default || '';
-} catch {
-  drAishaPatelImage = '';
-}
-
-try {
-  drJamesWilsonImage = require('@/assets/avatars/dr-james-wilson.jpg').default || '';
-} catch {
-  drJamesWilsonImage = '';
-}
-
-try {
-  drEmilyRodriguezImage = require('@/assets/avatars/dr-emily-rodriguez.jpg').default || '';
-} catch {
-  drEmilyRodriguezImage = '';
-}
-
-try {
-  drDavidKimImage = require('@/assets/avatars/dr-david-kim.jpg').default || '';
-} catch {
-  drDavidKimImage = '';
-}
+// Use safe base64 placeholders instead of risky file imports
+const drSarahChenImage = placeholderAvatars['dr-sarah-chen'];
+const drMichaelTorresImage = placeholderAvatars['dr-michael-torres'];
+const drAishaPatelImage = placeholderAvatars['dr-aisha-patel'];
+const drJamesWilsonImage = placeholderAvatars['dr-james-wilson'];
+const drEmilyRodriguezImage = placeholderAvatars['dr-emily-rodriguez'];
+const drDavidKimImage = placeholderAvatars['dr-david-kim'];
 
 // Export safe avatar images
 export const avatarImages = {
@@ -65,18 +31,17 @@ export const avatarImages = {
   'dr-sam-morgan': drMichaelTorresImage,
 } as const;
 
-// Safe avatar getter with fallback
+// Safe avatar getter with bulletproof fallback
 export const getAvatarImage = (therapistId: string): string => {
   const image = avatarImages[therapistId as keyof typeof avatarImages];
   if (!image) {
-    console.warn(`No avatar image found for therapist: ${therapistId}`);
-    // Return the first available image as fallback
-    return drSarahChenImage || drAishaPatelImage || drMichaelTorresImage || '';
+    // Always return a working placeholder instead of empty string
+    return placeholderAvatars['dr-sarah-chen'];
   }
   return image;
 };
 
-// Check if any avatars are available
+// Avatars are always available now
 export const hasAnyAvatarImages = (): boolean => {
-  return !!(drSarahChenImage || drAishaPatelImage || drMichaelTorresImage || drJamesWilsonImage || drEmilyRodriguezImage || drDavidKimImage);
+  return true; // Always true since we have base64 placeholders
 };

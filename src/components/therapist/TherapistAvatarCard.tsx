@@ -1,8 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
-import AvatarErrorBoundary from '@/components/avatar/AvatarErrorBoundary';
+import SafeBulletproofAvatar from '@/components/avatar/SafeBulletproofAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 
 interface TherapistAvatarCardProps {
@@ -39,19 +38,16 @@ const TherapistAvatarCard = ({
     >
       <CardHeader>
         <div className="flex items-center space-x-3">
-          {/* Professional 2D Avatar */}
+          {/* Safe Bulletproof Avatar */}
           {showMiniAvatar ? (
             <div className="w-16 h-16 rounded-lg overflow-hidden">
-              <AvatarErrorBoundary therapistId={avatarId} therapistName={therapist.name}>
-                <Professional2DAvatar
-                  therapistId={avatarId}
-                  therapistName={therapist.name}
-                  className="w-full h-full"
-                  showName={false}
-                  size="md"
-                  emotion="neutral"
-                />
-              </AvatarErrorBoundary>
+              <SafeBulletproofAvatar
+                therapistId={avatarId}
+                therapistName={therapist.name}
+                className="w-full h-full"
+                showName={false}
+                size="md"
+              />
             </div>
           ) : (
             <div className={`p-3 rounded-lg bg-gradient-to-r ${therapist.colorScheme} text-white w-16 h-16 flex items-center justify-center`}>

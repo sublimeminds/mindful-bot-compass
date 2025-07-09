@@ -25,7 +25,7 @@ import {
   CheckCircle,
   MessageCircle
 } from 'lucide-react';
-import BulletproofAvatarDisplay from '@/components/avatar/BulletproofAvatarDisplay';
+import UltraSafeAvatarDisplay from '@/components/avatar/UltraSafeAvatarDisplay';
 import SafeAvatarModal from '@/components/avatar/SafeAvatarModal';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
@@ -397,8 +397,8 @@ const TherapistDiscovery = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* Bulletproof Avatar Display */}
-                  <BulletproofAvatarDisplay
+                  {/* Ultra Safe Avatar Display */}
+                  <UltraSafeAvatarDisplay
                     therapist={therapist}
                     className="h-64 w-full"
                     size="lg"
