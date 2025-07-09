@@ -6,8 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import EnhancedLovableTaggerErrorBoundary from '@/components/ErrorBoundary/EnhancedLovableTaggerErrorBoundary';
-import BulletproofLovableGuard from '@/components/BulletproofLovableGuard';
 import { 
   Brain, 
   Heart, 
@@ -26,8 +24,7 @@ import {
   CheckCircle,
   MessageCircle
 } from 'lucide-react';
-import BulletproofAvatarDisplay from '@/components/avatar/BulletproofAvatarDisplay';
-import SafeAvatarModal from '@/components/avatar/SafeAvatarModal';
+import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -212,9 +209,7 @@ const TherapistDiscovery = () => {
   }
 
   return (
-    <BulletproofLovableGuard>
-      <EnhancedLovableTaggerErrorBoundary showDebugInfo={process.env.NODE_ENV === 'development'}>
-        <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
         {/* Hero Section */}
         <section className="relative pt-24 pb-16 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-therapy-500/10 via-calm-500/10 to-harmony-500/10" />
@@ -399,14 +394,22 @@ const TherapistDiscovery = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* Bulletproof Avatar Display */}
-                  <BulletproofAvatarDisplay
-                    therapist={therapist}
-                    className="h-64 w-full"
-                    size="lg"
-                    showName={false}
-                    onClick={() => openAvatarModal(therapist)}
-                  />
+                  {/* Simple Avatar Display */}
+                  <div 
+                    className="h-64 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 group"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openAvatarModal(therapist);
+                    }}
+                  >
+                    <Professional2DAvatar
+                      therapistId={therapist.avatarId}
+                      therapistName={therapist.name}
+                      className="w-full h-full"
+                      size="lg"
+                      showName={false}
+                    />
+                  </div>
                   <div className="mt-4 pb-4 text-center">
                     <p className="text-sm font-medium text-therapy-700">{therapist.name}</p>
                     <p className="text-xs text-muted-foreground mt-1 group-hover:text-therapy-600 transition-colors">
@@ -701,14 +704,25 @@ const TherapistDiscovery = () => {
       </section>
 
         {/* Avatar Modal */}
-        <SafeAvatarModal
-          isOpen={avatarModalOpen}
-          onClose={() => setAvatarModalOpen(false)}
-          therapist={modalTherapist}
-        />
+        <Dialog open={avatarModalOpen} onOpenChange={setAvatarModalOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>{modalTherapist?.name}</DialogTitle>
+            </DialogHeader>
+            <div className="p-4">
+              {modalTherapist && (
+                <Professional2DAvatar
+                  therapistId={modalTherapist.avatarId}
+                  therapistName={modalTherapist.name}
+                  className="w-full h-64"
+                  size="xl"
+                  showName={true}
+                />
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
-      </EnhancedLovableTaggerErrorBoundary>
-    </BulletproofLovableGuard>
   );
 };
 
