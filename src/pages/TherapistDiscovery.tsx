@@ -29,6 +29,7 @@ import Enhanced3DAvatar from '@/components/avatar/Enhanced3DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { enhancedVoiceService } from '@/services/voiceService';
 
 const therapyApproaches = [
   'All Approaches',
@@ -74,6 +75,7 @@ const TherapistDiscovery = () => {
   const [avatarModalOpen, setAvatarModalOpen] = useState(false);
   const [modalTherapist, setModalTherapist] = useState<any>(null);
   const [use3DAvatar, setUse3DAvatar] = useState(false);
+  const [isVoicePlaying, setIsVoicePlaying] = useState(false);
 
   // Helper function to get icon component by name with comprehensive fallbacks
   const getIconByName = (iconName: string) => {
@@ -197,6 +199,26 @@ const TherapistDiscovery = () => {
   const openAvatarModal = (therapist: any) => {
     setModalTherapist(therapist);
     setAvatarModalOpen(true);
+  };
+
+  const handleVoicePreview = async () => {
+    if (!modalTherapist || isVoicePlaying) return;
+    
+    setIsVoicePlaying(true);
+    
+    const previewText = `Hello, I'm ${modalTherapist.name}. I specialize in ${modalTherapist.specialties.join(', ')}. I'm here to help you on your mental health journey with ${modalTherapist.approach}.`;
+    
+    try {
+      await enhancedVoiceService.playTherapistMessage(
+        previewText,
+        modalTherapist.avatarId,
+        'encouraging'
+      );
+    } catch (error) {
+      console.error('Voice preview failed:', error);
+    } finally {
+      setIsVoicePlaying(false);
+    }
   };
 
   if (isLoading) {
@@ -743,8 +765,10 @@ const TherapistDiscovery = () => {
                           therapistId={modalTherapist.avatarId}
                           therapistName={modalTherapist.name}
                           emotion="neutral"
+                          isSpeaking={isVoicePlaying}
                           showControls={true}
                           className="w-full h-full"
+                          onVoicePreview={handleVoicePreview}
                         />
                       </Suspense>
                     </div>

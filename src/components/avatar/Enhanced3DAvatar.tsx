@@ -13,6 +13,7 @@ interface Enhanced3DAvatarProps {
   isSpeaking?: boolean;
   showControls?: boolean;
   className?: string;
+  onVoicePreview?: () => void;
 }
 
 const Simple3DAvatar: React.FC<{ 
@@ -25,6 +26,8 @@ const Simple3DAvatar: React.FC<{
   const headRef = useRef<THREE.Group>(null);
   const leftEyeRef = useRef<THREE.Mesh>(null);
   const rightEyeRef = useRef<THREE.Mesh>(null);
+  const mouthRef = useRef<THREE.Mesh>(null);
+  const bodyRef = useRef<THREE.Group>(null);
   
   const persona = therapistPersonas[therapistId] || therapistPersonas['dr-sarah-chen'];
 
@@ -33,21 +36,38 @@ const Simple3DAvatar: React.FC<{
     
     const time = state.clock.getElapsedTime();
     
-    // Gentle floating animation
-    groupRef.current.position.y = Math.sin(time * 0.8) * 0.05;
+    // More noticeable floating animation
+    groupRef.current.position.y = Math.sin(time * 1.2) * 0.15;
     
-    // Subtle head movement
+    // Enhanced head movement
     if (isListening) {
-      headRef.current.rotation.x = Math.sin(time * 2) * 0.05;
+      headRef.current.rotation.x = Math.sin(time * 2) * 0.1;
+      headRef.current.rotation.y = Math.sin(time * 1.5) * 0.05;
     } else if (isSpeaking) {
-      headRef.current.rotation.y = Math.sin(time * 3) * 0.03;
+      headRef.current.rotation.y = Math.sin(time * 4) * 0.08;
+      headRef.current.rotation.z = Math.sin(time * 3) * 0.03;
+      
+      // Speaking mouth animation
+      if (mouthRef.current) {
+        mouthRef.current.scale.y = 0.5 + Math.sin(time * 8) * 0.3;
+        mouthRef.current.scale.x = 1 + Math.sin(time * 6) * 0.2;
+      }
+    } else {
+      // Idle subtle movement
+      headRef.current.rotation.y = Math.sin(time * 0.5) * 0.02;
+      headRef.current.rotation.x = Math.sin(time * 0.3) * 0.01;
     }
     
-    // Blinking animation
-    const blinkCycle = Math.sin(time * 0.5);
+    // Body breathing animation
+    if (bodyRef.current) {
+      bodyRef.current.scale.y = 1 + Math.sin(time * 1.5) * 0.02;
+    }
+    
+    // Enhanced blinking animation
+    const blinkCycle = Math.sin(time * 0.8);
     if (blinkCycle > 0.95 && leftEyeRef.current && rightEyeRef.current) {
-      leftEyeRef.current.scale.y = 0.2;
-      rightEyeRef.current.scale.y = 0.2;
+      leftEyeRef.current.scale.y = 0.1;
+      rightEyeRef.current.scale.y = 0.1;
     } else if (leftEyeRef.current && rightEyeRef.current) {
       leftEyeRef.current.scale.y = 1;
       rightEyeRef.current.scale.y = 1;
@@ -58,49 +78,83 @@ const Simple3DAvatar: React.FC<{
     <group ref={groupRef} position={[0, 0, 0]}>
       {/* Head */}
       <group ref={headRef}>
-        {/* Face */}
-        <Sphere args={[1, 16, 16]} position={[0, 0, 0]}>
-          <meshStandardMaterial color={persona.appearance.colorPalette.skin} />
+        {/* Face - More detailed */}
+        <Sphere args={[1, 32, 32]} position={[0, 0, 0]}>
+          <meshStandardMaterial 
+            color={persona.appearance.colorPalette.skin} 
+            roughness={0.8} 
+            metalness={0.1} 
+          />
         </Sphere>
         
-        {/* Eyes */}
-        <Sphere ref={leftEyeRef} args={[0.15, 8, 8]} position={[-0.3, 0.2, 0.8]}>
+        {/* Eyes - More realistic */}
+        <Sphere ref={leftEyeRef} args={[0.18, 16, 16]} position={[-0.3, 0.2, 0.8]}>
           <meshStandardMaterial color={persona.appearance.colorPalette.eyes} />
         </Sphere>
-        <Sphere ref={rightEyeRef} args={[0.15, 8, 8]} position={[0.3, 0.2, 0.8]}>
+        <Sphere ref={rightEyeRef} args={[0.18, 16, 16]} position={[0.3, 0.2, 0.8]}>
           <meshStandardMaterial color={persona.appearance.colorPalette.eyes} />
         </Sphere>
         
-        {/* Nose */}
-        <Sphere args={[0.08, 8, 8]} position={[0, 0, 0.9]}>
-          <meshStandardMaterial color={persona.appearance.colorPalette.skin} />
+        {/* Eye pupils */}
+        <Sphere args={[0.08, 8, 8]} position={[-0.3, 0.2, 0.9]}>
+          <meshStandardMaterial color="#1a1a1a" />
+        </Sphere>
+        <Sphere args={[0.08, 8, 8]} position={[0.3, 0.2, 0.9]}>
+          <meshStandardMaterial color="#1a1a1a" />
         </Sphere>
         
-        {/* Mouth */}
-        <Sphere args={[0.2, 8, 8]} position={[0, -0.3, 0.8]} scale={[1, 0.5, 0.5]}>
-          <meshStandardMaterial color="#FF69B4" />
-        </Sphere>
-        
-        {/* Hair */}
-        <Sphere args={[1.1, 16, 16]} position={[0, 0.3, 0]}>
+        {/* Eyebrows */}
+        <Box args={[0.3, 0.05, 0.1]} position={[-0.3, 0.4, 0.85]}>
           <meshStandardMaterial color={persona.appearance.colorPalette.hair} />
+        </Box>
+        <Box args={[0.3, 0.05, 0.1]} position={[0.3, 0.4, 0.85]}>
+          <meshStandardMaterial color={persona.appearance.colorPalette.hair} />
+        </Box>
+        
+        {/* Nose - More defined */}
+        <Sphere args={[0.12, 8, 8]} position={[0, 0, 0.9]}>
+          <meshStandardMaterial color={persona.appearance.colorPalette.skin} />
+        </Sphere>
+        
+        {/* Mouth - More expressive */}
+        <Sphere ref={mouthRef} args={[0.25, 8, 8]} position={[0, -0.3, 0.8]} scale={[1, 0.5, 0.5]}>
+          <meshStandardMaterial color="#d4636a" />
+        </Sphere>
+        
+        {/* Hair - More detailed */}
+        <Sphere args={[1.15, 32, 32]} position={[0, 0.3, 0]}>
+          <meshStandardMaterial 
+            color={persona.appearance.colorPalette.hair} 
+            roughness={0.9} 
+          />
         </Sphere>
       </group>
       
       {/* Body */}
-      <group position={[0, -1.5, 0]}>
-        {/* Torso */}
-        <Box args={[1.8, 1.5, 0.8]}>
-          <meshStandardMaterial color={persona.appearance.colorPalette.clothing} />
+      <group ref={bodyRef} position={[0, -1.5, 0]}>
+        {/* Torso - More realistic proportions */}
+        <Box args={[1.6, 1.8, 0.6]}>
+          <meshStandardMaterial 
+            color={persona.appearance.colorPalette.clothing} 
+            roughness={0.7} 
+          />
         </Box>
         
-        {/* Arms */}
-        <Cylinder args={[0.2, 0.2, 1]} position={[-1.2, 0, 0]} rotation={[0, 0, 0.5]}>
+        {/* Arms - More detailed */}
+        <Cylinder args={[0.15, 0.2, 1.2]} position={[-1.1, 0, 0]} rotation={[0, 0, 0.3]}>
           <meshStandardMaterial color={persona.appearance.colorPalette.skin} />
         </Cylinder>
-        <Cylinder args={[0.2, 0.2, 1]} position={[1.2, 0, 0]} rotation={[0, 0, -0.5]}>
+        <Cylinder args={[0.15, 0.2, 1.2]} position={[1.1, 0, 0]} rotation={[0, 0, -0.3]}>
           <meshStandardMaterial color={persona.appearance.colorPalette.skin} />
         </Cylinder>
+        
+        {/* Hands */}
+        <Sphere args={[0.12, 8, 8]} position={[-1.6, -0.5, 0]}>
+          <meshStandardMaterial color={persona.appearance.colorPalette.skin} />
+        </Sphere>
+        <Sphere args={[0.12, 8, 8]} position={[1.6, -0.5, 0]}>
+          <meshStandardMaterial color={persona.appearance.colorPalette.skin} />
+        </Sphere>
       </group>
     </group>
   );
@@ -113,7 +167,8 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
   isListening = false,
   isSpeaking = false,
   showControls = true,
-  className = "w-full h-full"
+  className = "w-full h-full",
+  onVoicePreview
 }) => {
   const [is3DSupported, setIs3DSupported] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -221,6 +276,14 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
             <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
             Speaking...
           </div>
+        )}
+        {onVoicePreview && (
+          <button
+            onClick={onVoicePreview}
+            className="mt-2 text-xs bg-therapy-500 hover:bg-therapy-600 text-white px-3 py-1 rounded-full transition-colors"
+          >
+            Preview Voice
+          </button>
         )}
       </div>
     </div>
