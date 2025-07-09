@@ -12,8 +12,7 @@ import {
   ChevronRight,
   Palette
 } from 'lucide-react';
-import IntersectionObserverAvatar from '@/components/avatar/IntersectionObserverAvatar';
-import { AvatarVirtualizationProvider } from '@/components/avatar/AvatarVirtualizationManager';
+import UniversalTherapistAvatar from '@/components/avatar/UniversalTherapistAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -108,8 +107,7 @@ const TherapistPersonalitySettings = () => {
   }
 
   return (
-    <AvatarVirtualizationProvider>
-      <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6">
       <div>
         <h2 className="text-2xl font-bold mb-2">Choose Your AI Therapist</h2>
         <p className="text-muted-foreground">
@@ -154,14 +152,16 @@ const TherapistPersonalitySettings = () => {
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
-                    <IntersectionObserverAvatar
-                      therapistId={getAvatarIdForTherapist(therapist.id)}
-                      therapistName={therapist.name}
-                      emotion="neutral"
-                      showControls={false}
-                      priority={isSelected ? 10 : 1}
-                      className="w-16 h-16 rounded-lg"
-                    />
+                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-therapy-50 to-calm-50">
+                      <UniversalTherapistAvatar
+                        therapistId={getAvatarIdForTherapist(therapist.id)}
+                        therapistName={therapist.name}
+                        emotion="neutral"
+                        showControls={false}
+                        className="w-full h-full"
+                        priority={isSelected ? 10 : 1}
+                      />
+                    </div>
                     <div>
                       <CardTitle className="text-lg">{therapist.name}</CardTitle>
                       <p className="text-sm text-muted-foreground">{therapist.title}</p>
@@ -280,8 +280,7 @@ const TherapistPersonalitySettings = () => {
           </div>
         </CardContent>
       </Card>
-      </div>
-    </AvatarVirtualizationProvider>
+    </div>
   );
 };
 

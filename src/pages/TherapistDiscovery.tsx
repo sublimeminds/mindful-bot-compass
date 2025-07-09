@@ -23,7 +23,7 @@ import {
   CheckCircle,
   MessageCircle
 } from 'lucide-react';
-import SimplifiedAvatarDisplay from '@/components/avatar/SimplifiedAvatarDisplay';
+import UniversalTherapistAvatar from '@/components/avatar/UniversalTherapistAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -357,13 +357,15 @@ const TherapistDiscovery = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* Therapist Avatar */}
-                  <div className="h-48 w-full flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg">
-                    <SimplifiedAvatarDisplay
+                  {/* Enhanced 3D Therapist Avatar */}
+                  <div className="h-64 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden">
+                    <UniversalTherapistAvatar
                       therapistId={therapist.avatarId}
                       therapistName={therapist.name}
-                      size="xl"
-                      showName={false}
+                      emotion="neutral"
+                      showControls={false}
+                      className="w-full h-full"
+                      priority={selectedTherapist === therapist.id ? 10 : 1}
                     />
                   </div>
 

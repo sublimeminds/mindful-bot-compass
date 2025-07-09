@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useRealEnhancedChat } from '@/hooks/useRealEnhancedChat';
 import { useTherapist } from '@/contexts/TherapistContext';
-import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
+import VoiceEnhancedAvatar from '@/components/avatar/VoiceEnhancedAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { 
   MessageCircle, 
@@ -44,6 +44,7 @@ const RealTherapyChatInterface = () => {
   const [avatarEmotion, setAvatarEmotion] = useState<'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful'>('neutral');
   const [detectedUserEmotion, setDetectedUserEmotion] = useState<string>('neutral');
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [currentMessage, setCurrentMessage] = useState<string>('');
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
   const currentTherapist = selectedTherapist;
@@ -108,8 +109,10 @@ const RealTherapyChatInterface = () => {
 
   const handlePlayMessage = async (content: string) => {
     setIsSpeaking(true);
+    setCurrentMessage(content);
     await playMessage(content);
     setIsSpeaking(false);
+    setCurrentMessage('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -140,17 +143,19 @@ const RealTherapyChatInterface = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="aspect-square">
-              <Suspense fallback={<Skeleton className="w-full h-full rounded-lg" />}>
-                <ThreeDTherapistAvatar
-                  therapistId={avatarId}
-                  emotion={avatarEmotion}
-                  userEmotion={detectedUserEmotion}
-                  isSpeaking={isSpeaking || isPlaying}
-                  isListening={isLoading}
-                  showControls={true}
-                />
-              </Suspense>
+            <div className="aspect-square bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden">
+              <VoiceEnhancedAvatar
+                therapistId={avatarId}
+                therapistName={currentTherapist?.name}
+                emotion={avatarEmotion}
+                userEmotion={detectedUserEmotion}
+                isSpeaking={isSpeaking || isPlaying}
+                isListening={isLoading}
+                showControls={true}
+                className="w-full h-full"
+                currentMessage={currentMessage}
+                onSpeakingStateChange={setIsSpeaking}
+              />
             </div>
             {currentTherapist && (
               <div className="space-y-2 text-center">
