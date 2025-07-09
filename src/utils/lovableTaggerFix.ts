@@ -8,6 +8,13 @@ export interface LovableConfig {
   config?: Record<string, any>;
   utils?: Record<string, any>;
   initialized?: boolean;
+  preInitialized?: boolean;
+  runtimeInitialized?: boolean;
+  timestamp?: number;
+  runtimeTimestamp?: number;
+  failed?: boolean;
+  error?: string;
+  safe?: (fn: () => any) => any;
 }
 
 declare global {
@@ -18,6 +25,7 @@ declare global {
 
 /**
  * Initialize the lovable-tagger environment safely
+ * Now supports both pre-initialization and runtime initialization
  */
 export const initializeLovableTagger = (): boolean => {
   try {
@@ -26,13 +34,25 @@ export const initializeLovableTagger = (): boolean => {
       return false;
     }
 
-    // Check if already initialized
-    if (window.lov && window.lov.initialized) {
-      console.log('Lovable tagger already initialized');
+    // Check if already pre-initialized in HTML
+    if (window.lov && window.lov.preInitialized) {
+      console.log('✅ Lovable tagger pre-initialized from HTML');
+      // Enhance the existing object if needed
+      const lovObj = window.lov as LovableConfig;
+      if (!lovObj.runtimeInitialized) {
+        lovObj.runtimeInitialized = true;
+        lovObj.runtimeTimestamp = Date.now();
+      }
       return true;
     }
 
-    // Create the base lov object
+    // Check if already initialized by runtime
+    if (window.lov && window.lov.initialized) {
+      console.log('✅ Lovable tagger already runtime initialized');
+      return true;
+    }
+
+    // Create the base lov object (fallback if HTML pre-init failed)
     if (!window.lov) {
       Object.defineProperty(window, 'lov', {
         value: {} as LovableConfig,
@@ -51,20 +71,26 @@ export const initializeLovableTagger = (): boolean => {
     
     // Mark as initialized
     lovObj.initialized = true;
+    lovObj.runtimeInitialized = true;
+    lovObj.runtimeTimestamp = Date.now();
 
-    console.log('Lovable tagger initialized successfully');
+    console.log('✅ Lovable tagger runtime initialized successfully');
     return true;
 
   } catch (error) {
-    console.error('Failed to initialize lovable tagger:', error);
+    console.error('❌ Failed to initialize lovable tagger:', error);
     
     // Last resort fallback
     try {
       if (typeof window !== 'undefined') {
-        (window as any).lov = { initialized: false };
+        (window as any).lov = { 
+          initialized: false, 
+          failed: true, 
+          error: error.message 
+        };
       }
     } catch (fallbackError) {
-      console.error('Critical: Fallback initialization failed:', fallbackError);
+      console.error('💥 Critical: Fallback initialization failed:', fallbackError);
     }
     
     return false;

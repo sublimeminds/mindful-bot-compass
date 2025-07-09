@@ -18,7 +18,15 @@ export default defineConfig(({ mode }) => {
       react({
         jsxImportSource: 'react',
       }),
-      mode === 'development' && !isElectron && componentTagger(),
+      // Wrap componentTagger with safety checks
+      mode === 'development' && !isElectron && (() => {
+        try {
+          return componentTagger();
+        } catch (error) {
+          console.warn('Component tagger failed to initialize:', error);
+          return null;
+        }
+      })(),
     ].filter(Boolean),
     resolve: {
       alias: {

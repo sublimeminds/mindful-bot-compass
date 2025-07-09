@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import LovableTaggerErrorBoundary from '@/components/ErrorBoundary/LovableTaggerErrorBoundary';
+import EnhancedLovableTaggerErrorBoundary from '@/components/ErrorBoundary/EnhancedLovableTaggerErrorBoundary';
 import { 
   Brain, 
   Heart, 
@@ -194,7 +194,7 @@ const TherapistDiscovery = () => {
   }
 
   return (
-    <LovableTaggerErrorBoundary>
+    <EnhancedLovableTaggerErrorBoundary showDebugInfo={process.env.NODE_ENV === 'development'}>
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
         {/* Hero Section */}
         <section className="relative pt-24 pb-16 overflow-hidden">
@@ -700,7 +700,7 @@ const TherapistDiscovery = () => {
           therapist={modalTherapist}
         />
       </div>
-    </LovableTaggerErrorBoundary>
+    </EnhancedLovableTaggerErrorBoundary>
   );
 };
 

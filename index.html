@@ -42,6 +42,39 @@
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://therapysync.ai" />
+    
+    <!-- Lovable Tagger Pre-initialization (CRITICAL: Must load before any JS) -->
+    <script>
+      // Initialize window.lov before any JavaScript modules load
+      (function() {
+        'use strict';
+        
+        // Ensure this runs as early as possible
+        if (typeof window !== 'undefined') {
+          // Create the lov object with all required properties
+          Object.defineProperty(window, 'lov', {
+            value: {
+              tagger: {},
+              config: {},
+              utils: {},
+              initialized: true,
+              preInitialized: true,
+              timestamp: Date.now()
+            },
+            writable: true,
+            configurable: true,
+            enumerable: false
+          });
+          
+          // Add additional safety for potential access patterns
+          window.lov.safe = function(fn) {
+            try { return fn(); } catch { return undefined; }
+          };
+          
+          console.log('🔧 Lovable-tagger pre-initialized successfully');
+        }
+      })();
+    </script>
   </head>
 
   <body>
