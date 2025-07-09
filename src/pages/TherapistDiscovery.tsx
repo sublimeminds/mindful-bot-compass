@@ -359,7 +359,7 @@ const TherapistDiscovery = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* 3D Avatar */}
+                  {/* Therapist Avatar */}
                   <IntersectionObserverAvatar
                     therapistId={therapist.avatarId}
                     therapistName={therapist.name}

@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState, Suspense } from 'react';
 import ThreeDTherapistAvatar from './ThreeDTherapistAvatar';
 import SimpleAvatarFallback from './SimpleAvatarFallback';
+import WebGLDetector from './WebGLDetector';
+import ThreeDErrorBoundary from '../ThreeDErrorBoundary';
 import { useAvatarVirtualization } from './AvatarVirtualizationManager';
 
 interface IntersectionObserverAvatarProps {
@@ -64,19 +66,23 @@ const IntersectionObserverAvatar: React.FC<IntersectionObserverAvatarProps> = ({
 
   return (
     <div ref={containerRef} className={`${className} bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden border border-therapy-100`}>
-      {shouldRender3D ? (
-        <Suspense fallback={<SimpleAvatarFallback name={therapistName} />}>
-          <ThreeDTherapistAvatar
-            therapistId={therapistId}
-            emotion={emotion}
-            isListening={isListening}
-            isSpeaking={isSpeaking}
-            showControls={showControls}
-          />
-        </Suspense>
-      ) : (
-        <SimpleAvatarFallback name={therapistName} />
-      )}
+      <WebGLDetector fallback={<SimpleAvatarFallback name={therapistName} therapistId={therapistId} />}>
+        <ThreeDErrorBoundary fallback={<SimpleAvatarFallback name={therapistName} therapistId={therapistId} />}>
+          {shouldRender3D ? (
+            <Suspense fallback={<SimpleAvatarFallback name={therapistName} therapistId={therapistId} />}>
+              <ThreeDTherapistAvatar
+                therapistId={therapistId}
+                emotion={emotion}
+                isListening={isListening}
+                isSpeaking={isSpeaking}
+                showControls={showControls}
+              />
+            </Suspense>
+          ) : (
+            <SimpleAvatarFallback name={therapistName} therapistId={therapistId} />
+          )}
+        </ThreeDErrorBoundary>
+      </WebGLDetector>
     </div>
   );
 };
