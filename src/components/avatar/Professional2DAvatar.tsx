@@ -42,7 +42,7 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
     );
   }
 
-  // Get avatar image safely
+  // Get professional avatar image safely
   const avatarImage = getAvatarImage(therapistId);
   const hasImages = hasAnyAvatarImages();
 

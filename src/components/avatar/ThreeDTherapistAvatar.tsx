@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import PersonalizedAvatar, { therapistPersonas } from './TherapistAvatarPersonas';
 import SimpleAvatarFallback from './SimpleAvatarFallback';
+import Enhanced3DAvatar from './Enhanced3DAvatar';
 
 interface TherapistAvatarProps {
   isListening?: boolean;
@@ -35,11 +36,11 @@ const ThreeDTherapistAvatar: React.FC<TherapistAvatarProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const persona = therapistPersonas[therapistId] || therapistPersonas['dr-sarah-chen'];
 
-  // Simple WebGL detection
+  // Simplified WebGL detection with enhanced fallback
   const checkWebGLSupport = useCallback(() => {
     try {
       const canvas = document.createElement('canvas');
-      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       return !!gl;
     } catch {
       return false;
@@ -47,10 +48,12 @@ const ThreeDTherapistAvatar: React.FC<TherapistAvatarProps> = ({
   }, []);
 
   useEffect(() => {
+    // Use enhanced 3D avatar if available, otherwise fallback
+    setMounted(true);
+    
     if (!checkWebGLSupport()) {
+      console.log('WebGL not supported, using 2D fallback');
       setWebglError(true);
-    } else {
-      setMounted(true);
     }
   }, [checkWebGLSupport]);
 
@@ -68,70 +71,21 @@ const ThreeDTherapistAvatar: React.FC<TherapistAvatarProps> = ({
     }
   }, [mounted]);
 
+  // Use enhanced 3D avatar with better fallback
   if (webglError || !mounted) {
-    return <SimpleAvatarFallback name={persona.name} />;
+    return <SimpleAvatarFallback name={persona.name} therapistId={therapistId} />;
   }
 
   return (
-    <div className="w-full h-full relative">
-      <Canvas 
-        ref={canvasRef}
-        camera={{ position: [0, 0, 5], fov: 45 }}
-        style={{ width: '100%', height: '100%' }}
-        gl={{ 
-          preserveDrawingBuffer: false, 
-          antialias: false,
-          alpha: true,
-          powerPreference: "default",
-          failIfMajorPerformanceCaveat: true
-        }}
-        dpr={Math.min(window.devicePixelRatio, 1.5)}
-        onCreated={(state) => {
-          // Ensure proper cleanup
-          state.gl.domElement.addEventListener('webglcontextlost', () => {
-            setWebglError(true);
-          });
-        }}
-      >
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[2, 2, 2]} intensity={0.8} />
-        
-        <Suspense fallback={null}>
-          <PersonalizedAvatar
-            therapistId={therapistId}
-            isListening={isListening}
-            isSpeaking={isSpeaking}
-            emotion={emotion}
-            userEmotion={userEmotion}
-            lipSyncData={lipSyncData}
-          />
-        </Suspense>
-        
-        {showControls && (
-          <OrbitControls 
-            enableZoom={false}
-            enablePan={false}
-            autoRotate={true}
-            autoRotateSpeed={0.5}
-            maxPolarAngle={Math.PI / 1.5}
-            minPolarAngle={Math.PI / 3}
-          />
-        )}
-      </Canvas>
-      
-      {/* Status overlay */}
-      <div className="absolute bottom-2 left-2 right-2 text-center">
-        <div className="text-xs font-medium text-therapy-700 mb-1">
-          {persona.name}
-        </div>
-        {isListening && (
-          <div className="text-xs text-blue-600">👂 Listening...</div>
-        )}
-        {isSpeaking && (
-          <div className="text-xs text-green-600">💬 Speaking...</div>
-        )}
-      </div>
-    </div>
+    <Enhanced3DAvatar
+      therapistId={therapistId}
+      therapistName={persona.name}
+      emotion={emotion}
+      isListening={isListening}
+      isSpeaking={isSpeaking}
+      showControls={showControls}
+      className="w-full h-full"
+    />
   );
 };
 
