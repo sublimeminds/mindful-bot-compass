@@ -120,29 +120,27 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
   const persona = therapistPersonas[therapistId] || therapistPersonas['dr-sarah-chen'];
   const displayName = therapistName || persona.name;
 
-  // Progressive WebGL detection - try 3D first, fallback gracefully
+  // Simplified WebGL detection - be more optimistic
   useEffect(() => {
     const checkWebGLSupport = () => {
       try {
         const canvas = document.createElement('canvas');
-        const context = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
         canvas.remove();
-        return !!context;
+        return !!gl;
       } catch {
         return false;
       }
     };
 
-    // Optimistic 3D approach - assume it works unless proven otherwise
-    const supportTimer = setTimeout(() => {
-      if (!checkWebGLSupport()) {
-        console.log('WebGL not supported, using 2D fallback');
-        setIs3DSupported(false);
-      }
+    // Quick WebGL check
+    if (checkWebGLSupport()) {
       setIsLoading(false);
-    }, 1000); // Reduced timeout for faster rendering
-    
-    return () => clearTimeout(supportTimer);
+    } else {
+      console.log('WebGL not supported, using 2D fallback');
+      setIs3DSupported(false);
+      setIsLoading(false);
+    }
   }, []);
 
   // Fallback to 2D if 3D not supported
@@ -167,16 +165,20 @@ const Enhanced3DAvatar: React.FC<Enhanced3DAvatarProps> = ({
         </div>
       )}
       
-      <Canvas 
+        <Canvas 
         camera={{ position: [0, 0, 5], fov: 45 }}
         style={{ width: '100%', height: '100%' }}
         gl={{ 
           antialias: true,
           alpha: true,
-          powerPreference: "high-performance"
+          powerPreference: "default"
         }}
         dpr={Math.min(window.devicePixelRatio, 2)}
         onCreated={() => setIsLoading(false)}
+        onError={(error) => {
+          console.warn('3D Canvas error:', error);
+          setIs3DSupported(false);
+        }}
       >
         <ambientLight intensity={0.6} />
         <directionalLight position={[5, 5, 5]} intensity={0.8} />

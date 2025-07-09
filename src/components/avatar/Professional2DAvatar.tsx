@@ -46,6 +46,9 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
   // Get professional avatar image safely
   const avatarImage = getAvatarImage(therapistId);
   const hasImages = hasAnyAvatarImages();
+  
+  // Debug logging
+  console.log('Professional2DAvatar:', { therapistId, avatarImage, hasImages, imageError });
 
   // Generate initials safely
   const getInitials = (name: string): string => {
@@ -143,6 +146,7 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
               }}
               onError={(e) => {
                 console.warn(`Avatar failed to load for ${therapistName}:`, e);
+                console.warn('Avatar image path:', avatarImage);
                 setImageError(true);
                 onError?.(new Error(`Avatar image failed to load for ${therapistName}`));
               }}
