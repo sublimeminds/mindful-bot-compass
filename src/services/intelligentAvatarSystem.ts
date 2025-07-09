@@ -131,36 +131,93 @@ export class IntelligentAvatarSystem {
   }
 
   private determineAvatarEmotion(userEmotion: EmotionType, context: any): AvatarEmotionState {
-    // Emotional response mapping for therapeutic context
+    // Complete emotional response mapping for therapeutic context
     const responseMap: Record<EmotionType, { primary: EmotionType; secondary?: EmotionType }> = {
-      // User shows vulnerability -> Avatar shows empathy + safety
-      anxiety: { primary: 'empathy', secondary: 'safety' },
-      panic: { primary: 'compassion', secondary: 'safety' },
-      fear: { primary: 'understanding', secondary: 'support' },
+      // Joy family
+      joy: { primary: 'encouraging', secondary: 'happy' },
+      excitement: { primary: 'happy', secondary: 'encouraging' },
+      contentment: { primary: 'thoughtful', secondary: 'happy' },
+      love: { primary: 'empathy', secondary: 'encouraging' },
+      pride: { primary: 'encouraging', secondary: 'happy' },
       
-      // User shows sadness -> Avatar shows validation + gentle hope
-      sadness: { primary: 'validation', secondary: 'hope' },
-      grief: { primary: 'compassion', secondary: 'acceptance' },
-      melancholy: { primary: 'understanding', secondary: 'support' },
+      // Sadness family
+      sadness: { primary: 'concerned', secondary: 'empathy' },
+      grief: { primary: 'compassion', secondary: 'support' },
+      melancholy: { primary: 'understanding', secondary: 'thoughtful' },
+      disappointment: { primary: 'empathy', secondary: 'encouraging' },
       
-      // User shows anger -> Avatar shows patience + validation
-      anger: { primary: 'understanding', secondary: 'acceptance' },
-      frustration: { primary: 'validation', secondary: 'support' },
-      irritation: { primary: 'empathy', secondary: 'acceptance' },
+      // Anger family
+      anger: { primary: 'calm', secondary: 'understanding' },
+      frustration: { primary: 'thoughtful', secondary: 'support' },
+      irritation: { primary: 'neutral', secondary: 'understanding' },
+      rage: { primary: 'calm', secondary: 'safety' },
       
-      // User shows positive emotions -> Avatar mirrors + celebrates
-      joy: { primary: 'joy', secondary: 'validation' },
-      excitement: { primary: 'encouragement', secondary: 'joy' },
-      breakthrough: { primary: 'pride', secondary: 'celebration' },
+      // Fear family
+      fear: { primary: 'safety', secondary: 'support' },
+      anxiety: { primary: 'calm', secondary: 'encouraging' },
+      panic: { primary: 'safety', secondary: 'calm' },
+      worry: { primary: 'thoughtful', secondary: 'support' },
+      nervousness: { primary: 'encouraging', secondary: 'calm' },
+      terror: { primary: 'safety', secondary: 'compassion' },
+      apprehension: { primary: 'understanding', secondary: 'encouraging' },
       
-      // User shows resistance -> Avatar shows patience + gentle persistence
-      resistance: { primary: 'understanding', secondary: 'encouragement' },
-      defensiveness: { primary: 'acceptance', secondary: 'safety' },
-      withdrawal: { primary: 'compassion', secondary: 'invitation' },
+      // Surprise family
+      surprise: { primary: 'thoughtful', secondary: 'curiosity' },
+      amazement: { primary: 'happy', secondary: 'encouraging' },
+      confusion: { primary: 'understanding', secondary: 'clarity' },
+      curiosity: { primary: 'thoughtful', secondary: 'encouraging' },
+      shock: { primary: 'concerned', secondary: 'support' },
+      wonder: { primary: 'happy', secondary: 'thoughtful' },
+      bewilderment: { primary: 'understanding', secondary: 'clarity' },
+      perplexity: { primary: 'thoughtful', secondary: 'understanding' },
       
-      // Default responses
-      neutral: { primary: 'empathy', secondary: 'encouragement' },
-      confusion: { primary: 'understanding', secondary: 'clarity' }
+      // Disgust family
+      disgust: { primary: 'understanding', secondary: 'acceptance' },
+      contempt: { primary: 'neutral', secondary: 'understanding' },
+      shame: { primary: 'acceptance', secondary: 'empathy' },
+      guilt: { primary: 'compassion', secondary: 'understanding' },
+      revulsion: { primary: 'understanding', secondary: 'acceptance' },
+      disdain: { primary: 'neutral', secondary: 'thoughtful' },
+      
+      // Therapeutic/Trust emotions
+      trust: { primary: 'encouraging', secondary: 'happy' },
+      safety: { primary: 'calm', secondary: 'encouraging' },
+      acceptance: { primary: 'empathy', secondary: 'understanding' },
+      empathy: { primary: 'understanding', secondary: 'compassion' },
+      compassion: { primary: 'empathy', secondary: 'support' },
+      understanding: { primary: 'thoughtful', secondary: 'encouraging' },
+      validation: { primary: 'encouraging', secondary: 'understanding' },
+      encouragement: { primary: 'encouraging', secondary: 'happy' },
+      support: { primary: 'encouraging', secondary: 'understanding' },
+      motivation: { primary: 'encouraging', secondary: 'happy' },
+      hope: { primary: 'encouraging', secondary: 'happy' },
+      security: { primary: 'calm', secondary: 'encouraging' },
+      
+      // Complex therapeutic states
+      vulnerability: { primary: 'empathy', secondary: 'safety' },
+      openness: { primary: 'encouraging', secondary: 'understanding' },
+      breakthrough: { primary: 'happy', secondary: 'encouraging' },
+      insight: { primary: 'thoughtful', secondary: 'encouraging' },
+      clarity: { primary: 'understanding', secondary: 'encouraging' },
+      resistance: { primary: 'understanding', secondary: 'thoughtful' },
+      defensiveness: { primary: 'acceptance', secondary: 'calm' },
+      reluctance: { primary: 'understanding', secondary: 'encouraging' },
+      withdrawal: { primary: 'empathy', secondary: 'invitation' },
+      rawness: { primary: 'compassion', secondary: 'safety' },
+      exposure: { primary: 'safety', secondary: 'understanding' },
+      realization: { primary: 'thoughtful', secondary: 'encouraging' },
+      
+      // Basic avatar emotions
+      neutral: { primary: 'thoughtful', secondary: 'encouraging' },
+      happy: { primary: 'happy', secondary: 'encouraging' },
+      concerned: { primary: 'empathy', secondary: 'understanding' },
+      encouraging: { primary: 'encouraging', secondary: 'happy' },
+      thoughtful: { primary: 'thoughtful', secondary: 'understanding' },
+      
+      // Additional states
+      calm: { primary: 'calm', secondary: 'thoughtful' },
+      celebration: { primary: 'happy', secondary: 'encouraging' },
+      invitation: { primary: 'encouraging', secondary: 'understanding' }
     };
 
     // Handle unmapped emotions with defaults

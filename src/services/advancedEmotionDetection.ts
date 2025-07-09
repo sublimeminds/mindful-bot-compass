@@ -5,7 +5,7 @@ env.allowRemoteModels = false;
 env.allowLocalModels = true;
 
 export interface EmotionResult {
-  emotion: string;
+  emotion: EmotionType;
   confidence: number;
   intensity: number; // 1-10 scale
   timestamp: Date;
@@ -35,8 +35,13 @@ export type EmotionType =
   | 'understanding' | 'validation' | 'encouragement' | 'support'
   | 'motivation' | 'hope' | 'vulnerability' | 'openness'
   | 'breakthrough' | 'insight' | 'clarity' | 'resistance'
-  | 'defensiveness' | 'reluctance' | 'withdrawal' | 'neutral'
-  | 'calm' | 'celebration' | 'invitation';
+  | 'defensiveness' | 'reluctance' | 'withdrawal'
+  // Basic avatar emotions (for compatibility)
+  | 'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful'
+  // Additional therapeutic states
+  | 'calm' | 'celebration' | 'invitation' | 'terror' | 'apprehension'
+  | 'shock' | 'wonder' | 'bewilderment' | 'perplexity' | 'revulsion'
+  | 'disdain' | 'security' | 'rawness' | 'exposure' | 'realization';
 
 export class AdvancedEmotionDetection {
   private emotionClassifier: any = null;
