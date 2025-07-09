@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Star, User, Heart, Brain } from 'lucide-react';
-import Enhanced3DAvatar from '@/components/avatar/Enhanced3DAvatar';
+import SafeTherapistAvatarCard from '@/components/avatar/SafeTherapistAvatarCard';
+import SafeAvatarModal from '@/components/avatar/SafeAvatarModal';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 
 interface TherapistMatcherProps {
@@ -15,6 +16,8 @@ interface TherapistMatcherProps {
 
 const TherapistMatcher = ({ onTherapistSelected, onClose }: TherapistMatcherProps) => {
   const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
+  const [modalTherapist, setModalTherapist] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Mock therapist data with realistic compatibility scores
   const therapists = [
@@ -84,6 +87,16 @@ const TherapistMatcher = ({ onTherapistSelected, onClose }: TherapistMatcherProp
     setSelectedTherapist(therapistId);
   };
 
+  const handleViewTherapist = (therapist: any) => {
+    setModalTherapist({
+      ...therapist,
+      avatarId: getAvatarIdForTherapist(therapist.id),
+      title: therapist.approach,
+      specialties: therapist.specialties
+    });
+    setIsModalOpen(true);
+  };
+
   const handleConfirmSelection = () => {
     if (selectedTherapist) {
       onTherapistSelected(selectedTherapist);
@@ -106,70 +119,38 @@ const TherapistMatcher = ({ onTherapistSelected, onClose }: TherapistMatcherProp
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {therapists.map((therapist) => (
-          <Card 
-            key={therapist.id} 
-            className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${
-              selectedTherapist === therapist.id 
-                ? 'ring-2 ring-therapy-500 shadow-lg' 
-                : 'hover:ring-1 hover:ring-therapy-200'
-            }`}
-            onClick={() => handleSelectTherapist(therapist.id)}
-          >
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  {/* 3D Avatar Preview */}
-                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-therapy-50 to-calm-50">
-                    <Suspense fallback={<Skeleton className="w-full h-full" />}>
-                     <Enhanced3DAvatar
-                        therapistId={getAvatarIdForTherapist(therapist.id)}
-                        therapistName={therapist.name}
-                        emotion="neutral"
-                        showControls={false}
-                      />
-                    </Suspense>
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">{therapist.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{therapist.approach}</p>
-                  </div>
-                </div>
-                <Badge variant="secondary" className="bg-therapy-100 text-therapy-700">
-                  {therapist.matchScore}% match
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">{therapist.description}</p>
-              
-              <div className="flex flex-wrap gap-2">
-                {therapist.specialties.map((specialty, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
-                    {specialty}
-                  </Badge>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-1">
-                  <Brain className="h-4 w-4 text-therapy-500" />
-                  <span>{therapist.experience}</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Star className="h-4 w-4 text-yellow-500" />
-                  <span>{therapist.rating}</span>
-                </div>
-              </div>
-
-              {selectedTherapist === therapist.id && (
-                <div className="flex items-center space-x-2 text-therapy-600">
-                  <Heart className="h-4 w-4" />
-                  <span className="text-sm font-medium">Selected</span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <SafeTherapistAvatarCard
+            key={therapist.id}
+            therapist={{
+              id: therapist.id,
+              name: therapist.name,
+              title: therapist.approach,
+              description: therapist.description,
+              approach: therapist.approach,
+              specialties: therapist.specialties,
+              communicationStyle: `${therapist.experience} • ${therapist.rating}⭐`,
+              icon: '🧠',
+              colorScheme: 'from-therapy-500 to-calm-500'
+            }}
+            isSelected={selectedTherapist === therapist.id}
+            showMiniAvatar={true}
+            onSelect={() => handleSelectTherapist(therapist.id)}
+          />
         ))}
+      </div>
+
+      <div className="text-center mt-6">
+        <Button
+          variant="outline"
+          onClick={() => {
+            const selected = therapists.find(t => t.id === selectedTherapist);
+            if (selected) handleViewTherapist(selected);
+          }}
+          disabled={!selectedTherapist}
+          className="mr-4"
+        >
+          Preview in 3D
+        </Button>
       </div>
 
       <div className="flex items-center justify-between pt-6 border-t">
@@ -184,6 +165,12 @@ const TherapistMatcher = ({ onTherapistSelected, onClose }: TherapistMatcherProp
           Continue with Selected Therapist
         </Button>
       </div>
+
+      <SafeAvatarModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        therapist={modalTherapist}
+      />
     </div>
   );
 };
