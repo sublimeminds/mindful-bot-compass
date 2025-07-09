@@ -159,9 +159,20 @@ const TherapistDiscovery = () => {
     return matchesSearch && matchesApproach && matchesSpecialization && matchesStyle;
   });
 
-  const playVoicePreview = (therapistId: string) => {
-    // Voice preview functionality would be implemented here
-    console.log(`Playing voice preview for ${therapistId}`);
+  const playVoicePreview = async (therapistId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
+        body: { therapistId }
+      });
+
+      if (error) throw error;
+
+      // Create and play audio
+      const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
+      await audio.play();
+    } catch (error) {
+      console.error('Voice preview error:', error);
+    }
   };
 
   const openAvatarModal = (therapist: any) => {

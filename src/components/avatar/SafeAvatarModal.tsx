@@ -3,8 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, RefreshCw, AlertTriangle } from 'lucide-react';
-import Professional2DAvatar from './Professional2DAvatar';
-import IndustryLeadingAvatarSystem from './IndustryLeadingAvatarSystem';
+import LightweightAvatarSystem from './LightweightAvatarSystem';
 
 interface SafeAvatarModalProps {
   isOpen: boolean;
@@ -52,21 +51,22 @@ const SafeAvatarModal: React.FC<SafeAvatarModalProps> = ({
       case '3d':
         return (
           <div className="w-full h-full relative">
-            <IndustryLeadingAvatarSystem
+            <LightweightAvatarSystem
               therapistId={therapist.avatarId}
               therapistName={therapist.name}
               showControls={true}
               className="w-full h-full"
-              onAvatarError={() => setAvatarMode('2d')}
+              size="xl"
+              emotion="happy"
             />
             
-            {/* Fallback after delay */}
+            {/* Switch to 2D option */}
             <div className="absolute bottom-4 right-4">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setAvatarMode('2d')}
-                className="text-xs"
+                className="text-xs bg-white/90 backdrop-blur-sm"
               >
                 Switch to 2D
               </Button>
@@ -100,24 +100,25 @@ const SafeAvatarModal: React.FC<SafeAvatarModalProps> = ({
       default: // 2d
         return (
           <div className="w-full h-full flex flex-col items-center justify-center space-y-4 bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg">
-            <Professional2DAvatar
+            <LightweightAvatarSystem
               therapistId={therapist.avatarId}
               therapistName={therapist.name}
-              className="flex-1 flex items-center justify-center"
-              showName={false}
+              className="flex-1 w-full h-full"
+              showControls={true}
               size="xl"
+              emotion="encouraging"
             />
             
-            <div className="space-y-2">
+            <div className="space-y-2 absolute bottom-4 left-4">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={tryLoadingAvatar}
                 disabled={retryCount >= maxRetries}
-                className="text-xs w-full"
+                className="text-xs bg-white/90 backdrop-blur-sm"
               >
                 <RefreshCw className="h-3 w-3 mr-1" />
-                {retryCount < maxRetries ? 'Try 3D Avatar' : 'Max Attempts Reached'}
+                {retryCount < maxRetries ? 'Enhanced Mode' : 'Max Attempts Reached'}
               </Button>
               
               {retryCount > 0 && retryCount < maxRetries && (
