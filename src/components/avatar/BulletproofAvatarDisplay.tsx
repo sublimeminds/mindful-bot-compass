@@ -4,11 +4,21 @@ import { User, AlertTriangle } from 'lucide-react';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import ReactErrorBoundary from './ReactErrorBoundary';
 
-// Lazy load with error handling
+// Lazy load with comprehensive error handling
 const Professional2DAvatar = React.lazy(() => 
-  import('@/components/avatar/Professional2DAvatar').catch(() => ({
-    default: () => <div>Avatar not available</div>
-  }))
+  import('@/components/avatar/Professional2DAvatar').catch((error) => {
+    console.warn('Professional2DAvatar import failed:', error);
+    return {
+      default: ({ therapistName }: { therapistName: string }) => (
+        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg p-4">
+          <div className="w-24 h-24 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center text-white font-bold text-xl mb-2">
+            {therapistName?.split(' ').map((n: string) => n[0]).join('').slice(0, 2) || 'AI'}
+          </div>
+          <p className="text-sm font-medium text-therapy-700">{therapistName}</p>
+        </div>
+      )
+    };
+  })
 );
 
 interface BulletproofAvatarDisplayProps {

@@ -6,8 +6,19 @@ import { User } from 'lucide-react';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import ReactErrorBoundary from './ReactErrorBoundary';
 
-// Lazy load the Professional2DAvatar to prevent lovable-tagger interference
-const Professional2DAvatar = React.lazy(() => import('@/components/avatar/Professional2DAvatar'));
+// Lazy load the Professional2DAvatar with error handling
+const Professional2DAvatar = React.lazy(() => 
+  import('@/components/avatar/Professional2DAvatar').catch((error) => {
+    console.warn('Professional2DAvatar import failed in SafeTherapistAvatarCard:', error);
+    return {
+      default: () => (
+        <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-lg flex items-center justify-center text-white font-bold">
+          AI
+        </div>
+      )
+    };
+  })
+);
 
 interface SafeTherapistAvatarCardProps {
   therapist: {

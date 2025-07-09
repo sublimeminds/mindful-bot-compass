@@ -1,13 +1,6 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
-// Import professional avatar images
-import drSarahChenImage from '@/assets/avatars/dr-sarah-chen.jpg';
-import drMichaelTorresImage from '@/assets/avatars/dr-michael-torres.jpg';
-import drAishaPatelImage from '@/assets/avatars/dr-aisha-patel.jpg';
-import drJamesWilsonImage from '@/assets/avatars/dr-james-wilson.jpg';
-import drEmilyRodriguezImage from '@/assets/avatars/dr-emily-rodriguez.jpg';
-import drDavidKimImage from '@/assets/avatars/dr-david-kim.jpg';
+import { getAvatarImage, hasAnyAvatarImages } from '@/utils/avatarImageImports';
 
 interface Professional2DAvatarProps {
   therapistId: string;
@@ -50,18 +43,10 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
   }
 
   console.log('Professional2DAvatar Debug:', { therapistId, therapistName });
-  // Map therapist IDs to their professional images
-  const avatarImages: Record<string, string> = {
-    'dr-sarah-chen': drSarahChenImage,
-    'dr-michael-torres': drMichaelTorresImage,
-    'dr-aisha-patel': drAishaPatelImage,
-    'dr-james-wilson': drJamesWilsonImage,
-    'dr-emily-rodriguez': drEmilyRodriguezImage,
-    'dr-david-kim': drDavidKimImage,
-    // Add legacy mappings for any missing IDs
-    'dr-maya-patel': drAishaPatelImage, // fallback
-    'dr-alex-rodriguez': drEmilyRodriguezImage, // fallback
-  };
+  
+  // Get avatar image safely
+  const avatarImage = getAvatarImage(therapistId);
+  const hasImages = hasAnyAvatarImages();
 
   // Generate initials safely
   const getInitials = (name: string): string => {
@@ -118,7 +103,6 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
 
   const initials = getInitials(therapistName);
   const colorClass = getTherapistColor(therapistId);
-  const avatarImage = avatarImages[therapistId];
 
   // Determine status indicator based on emotion and activity
   const getStatusColor = () => {
@@ -149,7 +133,7 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
     <div className={`${className} flex flex-col items-center justify-center`}>
       <div className="relative">
         <Avatar className={`${sizeClasses[size]} border-2 border-white shadow-lg ${getEmotionStyling()}`}>
-          {avatarImage ? (
+          {avatarImage && hasImages ? (
             <AvatarImage 
               src={avatarImage} 
               alt={`${therapistName} professional headshot`}
