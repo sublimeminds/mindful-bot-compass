@@ -23,8 +23,8 @@ import {
   CheckCircle,
   MessageCircle
 } from 'lucide-react';
-import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
-import ThreeDErrorBoundary from '@/components/ThreeDErrorBoundary';
+import IntersectionObserverAvatar from '@/components/avatar/IntersectionObserverAvatar';
+import { AvatarVirtualizationProvider } from '@/components/avatar/AvatarVirtualizationManager';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -173,7 +173,8 @@ const TherapistDiscovery = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
+    <AvatarVirtualizationProvider>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
       {/* Hero Section */}
       <section className="relative pt-24 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-therapy-500/10 via-calm-500/10 to-harmony-500/10" />
@@ -359,26 +360,14 @@ const TherapistDiscovery = () => {
 
                 <CardContent className="space-y-4">
                   {/* 3D Avatar */}
-                  <div className="h-64 bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden border border-therapy-100">
-                    <Suspense fallback={
-                      <div className="w-full h-full flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                            <span className="text-white font-bold text-xl">
-                              {therapist.name.charAt(0)}
-                            </span>
-                          </div>
-                          <p className="text-xs text-muted-foreground">Loading...</p>
-                        </div>
-                      </div>
-                    }>
-                      <ThreeDTherapistAvatar
-                        therapistId={therapist.avatarId}
-                        emotion="neutral"
-                        showControls={false}
-                      />
-                    </Suspense>
-                  </div>
+                  <IntersectionObserverAvatar
+                    therapistId={therapist.avatarId}
+                    therapistName={therapist.name}
+                    emotion="neutral"
+                    showControls={false}
+                    priority={selectedTherapist === therapist.id ? 10 : 1}
+                    className="h-64"
+                  />
 
                   {/* Description */}
                   <p className="text-sm text-muted-foreground">{therapist.description}</p>
@@ -665,7 +654,8 @@ const TherapistDiscovery = () => {
           </Card>
         </div>
       </section>
-    </div>
+      </div>
+    </AvatarVirtualizationProvider>
   );
 };
 

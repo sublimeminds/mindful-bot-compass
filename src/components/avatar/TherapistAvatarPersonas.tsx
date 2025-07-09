@@ -370,30 +370,24 @@ const PersonalizedAvatar: React.FC<PersonalizedAvatarProps> = ({
     if (!avatarRef.current || webglError) return;
     
     try {
-      // Gentle floating animation
+      // Simple floating animation
       const time = state.clock.getElapsedTime();
-      avatarRef.current.position.y = Math.sin(time * 1.5) * 0.1;
+      avatarRef.current.position.y = Math.sin(time * 0.8) * 0.05;
       
-      // Subtle breathing-like scaling
-      const breathScale = 1 + Math.sin(time * 2) * 0.02;
+      // Gentle breathing
+      const breathScale = 1 + Math.sin(time * 1.5) * 0.01;
       if (bodyRef.current) {
-        bodyRef.current.scale.setScalar(breathScale);
+        bodyRef.current.scale.y = breathScale;
       }
       
-      // Blinking animation
-      setBlinkTimer(prev => prev + delta);
-      if (blinkTimer > 3) {
-        setBlinkTimer(0);
-        if (leftEyeRef.current && rightEyeRef.current) {
-          leftEyeRef.current.scale.y = 0.1;
-          rightEyeRef.current.scale.y = 0.1;
-          setTimeout(() => {
-            if (leftEyeRef.current && rightEyeRef.current) {
-              leftEyeRef.current.scale.y = 1;
-              rightEyeRef.current.scale.y = 1;
-            }
-          }, 150);
-        }
+      // Simple blink logic
+      const blinkCycle = Math.sin(time * 0.3);
+      if (blinkCycle > 0.98 && leftEyeRef.current && rightEyeRef.current) {
+        leftEyeRef.current.scale.y = 0.2;
+        rightEyeRef.current.scale.y = 0.2;
+      } else if (leftEyeRef.current && rightEyeRef.current) {
+        leftEyeRef.current.scale.y = 1;
+        rightEyeRef.current.scale.y = 1;
       }
     } catch (error) {
       console.warn('3D animation error:', error);
