@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, RefreshCw, AlertTriangle } from 'lucide-react';
 import LightweightAvatarSystem from './LightweightAvatarSystem';
+import ThreeDTherapistAvatar from './ThreeDTherapistAvatar';
 
 interface SafeAvatarModalProps {
   isOpen: boolean;
@@ -51,13 +52,12 @@ const SafeAvatarModal: React.FC<SafeAvatarModalProps> = ({
       case '3d':
         return (
           <div className="w-full h-full relative">
-            <LightweightAvatarSystem
+            <ThreeDTherapistAvatar
               therapistId={therapist.avatarId}
-              therapistName={therapist.name}
+              isListening={false}
+              isSpeaking={false}
+              emotion="encouraging"
               showControls={true}
-              className="w-full h-full"
-              size="xl"
-              emotion="happy"
             />
             
             {/* Switch to 2D option */}

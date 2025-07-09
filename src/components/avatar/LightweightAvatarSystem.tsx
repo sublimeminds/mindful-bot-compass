@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Volume2, Eye, EyeOff, RefreshCw, AlertTriangle } from 'lucide-react';
 import Professional2DAvatar from './Professional2DAvatar';
 import { supabase } from '@/integrations/supabase/client';
+import EmotionCameraDetection from './EmotionCameraDetection';
 
 interface LightweightAvatarSystemProps {
   therapistId: string;
@@ -124,6 +125,12 @@ const LightweightAvatarSystem: React.FC<LightweightAvatarSystemProps> = ({
     }));
   }, []);
 
+  const handleEmotionDetected = useCallback((emotionData: any) => {
+    if (onEmotionChange) {
+      onEmotionChange(emotionData.emotion, emotionData.confidence);
+    }
+  }, [onEmotionChange]);
+
   // Determine avatar emotion based on state
   const getAvatarEmotion = (): 'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful' => {
     if (systemState.isPlaying) return 'happy';
@@ -210,17 +217,23 @@ const LightweightAvatarSystem: React.FC<LightweightAvatarSystemProps> = ({
           )}
         </div>
 
+        {/* Emotion Detection Camera (when enabled) */}
+        {systemState.emotionDetectionEnabled && (
+          <div className="absolute top-4 right-4 w-48 h-36">
+            <EmotionCameraDetection
+              onEmotionDetected={handleEmotionDetected}
+              isActive={systemState.emotionDetectionEnabled}
+            />
+          </div>
+        )}
+
         {/* Error Display */}
         {systemState.error && (
-          <div className="absolute top-4 right-4">
-            <Card className="bg-red-50 border-red-200">
-              <CardContent className="p-3">
-                <div className="flex items-center space-x-2 text-red-700">
-                  <AlertTriangle className="h-4 w-4" />
-                  <span className="text-sm">{systemState.error}</span>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="absolute bottom-16 left-4">
+            <Badge variant="destructive" className="bg-red-500/80 text-white">
+              <AlertTriangle className="h-3 w-3 mr-1" />
+              {systemState.error}
+            </Badge>
           </div>
         )}
 
