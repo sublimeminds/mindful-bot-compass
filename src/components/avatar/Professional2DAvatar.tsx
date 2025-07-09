@@ -30,6 +30,21 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
   isListening = false,
   isSpeaking = false
 }) => {
+  // Add safety checks
+  if (!therapistId || !therapistName) {
+    console.warn('Professional2DAvatar: Missing required props', { therapistId, therapistName });
+    return (
+      <div className={`${className} flex flex-col items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg`}>
+        <div className="text-center">
+          <div className="w-24 h-24 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center text-white font-bold text-2xl mb-2">
+            AI
+          </div>
+          <p className="text-sm font-medium text-therapy-700">AI Therapist</p>
+        </div>
+      </div>
+    );
+  }
+
   console.log('Professional2DAvatar Debug:', { therapistId, therapistName });
   // Map therapist IDs to their professional images
   const avatarImages: Record<string, string> = {

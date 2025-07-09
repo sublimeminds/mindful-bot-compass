@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import SafeAvatarModal from '@/components/avatar/SafeAvatarModal';
+import AvatarErrorBoundary from '@/components/avatar/AvatarErrorBoundary';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -386,13 +387,15 @@ const TherapistDiscovery = () => {
                     }}
                   >
                     <div className="text-center w-full h-full flex flex-col items-center justify-center">
-                      <Professional2DAvatar
-                        therapistId={therapist.avatarId}
-                        therapistName={therapist.name}
-                        className="flex-1 flex items-center justify-center"
-                        showName={false}
-                        size="lg"
-                      />
+                      <AvatarErrorBoundary therapistId={therapist.avatarId} therapistName={therapist.name}>
+                        <Professional2DAvatar
+                          therapistId={therapist.avatarId}
+                          therapistName={therapist.name}
+                          className="flex-1 flex items-center justify-center"
+                          showName={false}
+                          size="lg"
+                        />
+                      </AvatarErrorBoundary>
                       <div className="mt-4 pb-4">
                         <p className="text-sm font-medium text-therapy-700">{therapist.name}</p>
                         <p className="text-xs text-muted-foreground mt-1 group-hover:text-therapy-600 transition-colors">
