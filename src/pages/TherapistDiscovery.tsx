@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import LovableTaggerErrorBoundary from '@/components/ErrorBoundary/LovableTaggerErrorBoundary';
 import { 
   Brain, 
   Heart, 
@@ -193,11 +194,12 @@ const TherapistDiscovery = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
-      {/* Hero Section */}
-      <section className="relative pt-24 pb-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-therapy-500/10 via-calm-500/10 to-harmony-500/10" />
-        <div className="container mx-auto px-4 relative z-10">
+    <LovableTaggerErrorBoundary>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
+        {/* Hero Section */}
+        <section className="relative pt-24 pb-16 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-therapy-500/10 via-calm-500/10 to-harmony-500/10" />
+          <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-4xl mx-auto mb-12">
             <div className="inline-flex items-center space-x-2 bg-therapy-500/10 px-4 py-2 rounded-full mb-6">
               <Sparkles className="h-4 w-4 text-therapy-600" />
@@ -691,13 +693,14 @@ const TherapistDiscovery = () => {
         </div>
       </section>
 
-      {/* Avatar Modal */}
-      <SafeAvatarModal
-        isOpen={avatarModalOpen}
-        onClose={() => setAvatarModalOpen(false)}
-        therapist={modalTherapist}
-      />
-    </div>
+        {/* Avatar Modal */}
+        <SafeAvatarModal
+          isOpen={avatarModalOpen}
+          onClose={() => setAvatarModalOpen(false)}
+          therapist={modalTherapist}
+        />
+      </div>
+    </LovableTaggerErrorBoundary>
   );
 };
 
