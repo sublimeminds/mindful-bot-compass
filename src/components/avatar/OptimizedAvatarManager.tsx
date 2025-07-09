@@ -135,7 +135,14 @@ export const AvatarManagerProvider: React.FC<AvatarManagerProviderProps> = ({
 export const useAvatarManager = () => {
   const context = useContext(AvatarManagerContext);
   if (!context) {
-    throw new Error('useAvatarManager must be used within an AvatarManagerProvider');
+    // Provide defensive fallback behavior when context is missing
+    console.warn('useAvatarManager called without AvatarManagerProvider, using fallback behavior');
+    return {
+      canRenderAvatar: () => true,
+      requestAvatarRender: () => true,
+      releaseAvatarRender: () => {},
+      getSharedWebGLContext: () => null
+    };
   }
   return context;
 };
