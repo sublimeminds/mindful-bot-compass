@@ -367,91 +367,13 @@ const PersonalizedAvatar: React.FC<PersonalizedAvatarProps> = ({
   }
 
   useFrame((state, delta) => {
-    // Safety check for WebGL context and refs
-    if (!avatarRef.current || !headRef.current || webglError) return;
+    if (!avatarRef.current) return;
     
     try {
-
-    // Breathing animation - subtle chest movement
-    setBreathingPhase(prev => prev + delta * 2);
-    if (bodyRef.current) {
-      bodyRef.current.scale.y = 1 + Math.sin(breathingPhase) * 0.02;
-    }
-
-    // Head movements based on personality
-    const intensity = persona.personality.gestureFrequency;
-    headRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1 * intensity;
-    headRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.05 * intensity;
-
-    // Posture-based body positioning
-    if (avatarRef.current) {
-      switch (persona.personality.postureStyle) {
-        case 'formal':
-          avatarRef.current.rotation.z = 0;
-          break;
-        case 'relaxed':
-          avatarRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.2) * 0.02;
-          break;
-        case 'open':
-          avatarRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.05;
-          break;
-      }
-    }
-
-    // Blinking animation
-    setBlinkTimer(prev => prev + delta);
-    if (blinkTimer > 2 + Math.random() * 3) {
-      setBlinkTimer(0);
-      if (leftEyeRef.current && rightEyeRef.current) {
-        leftEyeRef.current.scale.y = 0.1;
-        rightEyeRef.current.scale.y = 0.1;
-        setTimeout(() => {
-          if (leftEyeRef.current && rightEyeRef.current) {
-            leftEyeRef.current.scale.y = 1;
-            rightEyeRef.current.scale.y = 1;
-          }
-        }, 150);
-      }
-    }
-
-    // Speaking animation with lip sync
-    if (isSpeaking && mouthRef.current) {
-      if (lipSyncData && lipSyncData.length > 0) {
-        // Use actual audio data for lip sync
-        const audioLevel = Array.from(lipSyncData).reduce((a, b) => a + b) / lipSyncData.length;
-        const mouthScale = 1 + (audioLevel / 255) * 0.5;
-        mouthRef.current.scale.y = mouthScale;
-        mouthRef.current.scale.x = 1 + (audioLevel / 255) * 0.2;
-      } else {
-        // Fallback animation
-        const speechPhase = state.clock.elapsedTime * 8;
-        const mouthScale = 1 + Math.sin(speechPhase) * 0.3;
-        mouthRef.current.scale.y = mouthScale;
-      }
-    } else if (mouthRef.current) {
-      mouthRef.current.scale.y = 1;
-      mouthRef.current.scale.x = 1;
-    }
-
-    // Emotional responses to user
-    if (userEmotion === 'sad' && headRef.current) {
-      headRef.current.rotation.x = -0.15; // Lean forward with concern
-    } else if (userEmotion === 'happy' && headRef.current) {
-      headRef.current.rotation.y += Math.sin(state.clock.elapsedTime * 1.5) * 0.03; // Gentle nod
-    } else if (userEmotion === 'anxious' && headRef.current) {
-      // Calming, steady presence
-      headRef.current.rotation.x = 0.05;
-      headRef.current.rotation.y = 0;
-    }
-
-    // Gesture animations based on personality
-    setGestureTimer(prev => prev + delta);
-    if (gestureTimer > 3 && persona.personality.gestureFrequency > 0.5) {
-      setGestureTimer(0);
-      // Subtle hand/arm gestures could be added here
-    }
+      // Simple rotation animation only
+      avatarRef.current.rotation.y += delta * 0.2;
     } catch (error) {
-      console.warn('WebGL animation error:', error);
+      // Silently handle errors
       setWebglError(true);
     }
   });

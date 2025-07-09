@@ -52,18 +52,18 @@ const ThreeDTherapistAvatar: React.FC<TherapistAvatarProps> = ({
   }
 
   const fallbackAvatar = (
-    <div className="w-full h-full bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <div className="w-20 h-20 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-white font-bold text-2xl">
+    <div className="w-full h-full bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center p-4">
+      <div className="text-center space-y-3">
+        <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mx-auto">
+          <span className="text-white font-bold text-xl">
             {persona.name.charAt(0)}
           </span>
         </div>
         <div>
-          <h3 className="text-lg font-medium text-therapy-700 mb-1">
+          <h3 className="text-sm font-medium text-therapy-700 mb-1">
             {persona.name}
           </h3>
-          <p className="text-sm text-muted-foreground mb-2">
+          <p className="text-xs text-muted-foreground mb-2">
             {persona.personality.approachStyle.charAt(0).toUpperCase() + 
              persona.personality.approachStyle.slice(1)} Therapy
           </p>

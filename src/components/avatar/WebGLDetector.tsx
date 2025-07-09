@@ -12,36 +12,17 @@ const WebGLDetector: React.FC<WebGLDetectorProps> = ({ children, fallback }) => 
   useEffect(() => {
     const detectWebGL = () => {
       try {
-        // Check if canvas is supported
+        // Simple WebGL detection without complex checks
         const canvas = document.createElement('canvas');
-        const canvasSupport = !!(canvas.getContext && canvas.getContext('2d'));
-        setCanvasSupported(canvasSupport);
-
-        if (!canvasSupport) {
+        if (!canvas.getContext) {
           setWebGLSupported(false);
+          setCanvasSupported(false);
           return;
         }
 
-        // Check WebGL support
         const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        const webglSupport = !!gl;
-        setWebGLSupported(webglSupport);
-
-        // Additional WebGL capability checks
-        if (webglSupport && gl && gl instanceof WebGLRenderingContext) {
-          const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-          if (debugInfo) {
-            const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            console.log('WebGL Renderer:', renderer);
-            
-            // Check for software rendering (which might cause issues)
-            if (typeof renderer === 'string' && 
-                (renderer.toLowerCase().includes('software') || 
-                 renderer.toLowerCase().includes('swiftshader'))) {
-              console.warn('Software WebGL detected - 3D performance may be limited');
-            }
-          }
-        }
+        setWebGLSupported(!!gl);
+        setCanvasSupported(true);
       } catch (error) {
         console.warn('WebGL detection failed:', error);
         setWebGLSupported(false);
@@ -49,7 +30,9 @@ const WebGLDetector: React.FC<WebGLDetectorProps> = ({ children, fallback }) => 
       }
     };
 
-    detectWebGL();
+    // Delay detection to avoid blocking
+    const timer = setTimeout(detectWebGL, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   // Still checking
