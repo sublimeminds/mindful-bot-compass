@@ -290,6 +290,94 @@ export const therapistPersonas: Record<string, TherapistAvatarPersona> = {
       postureStyle: 'formal',
       approachStyle: 'balanced'
     }
+  },
+  'dr-casey-williams': {
+    therapistId: 'dr-casey-williams',
+    name: 'Dr. Casey Williams',
+    appearance: {
+      faceStructure: 'round',
+      hairStyle: 'medium',
+      clothingStyle: 'warm',
+      colorPalette: {
+        skin: '#F5DEB3',
+        hair: '#8B4513',
+        eyes: '#4682B4',
+        clothing: '#9370DB',
+        accent: '#DDA0DD'
+      }
+    },
+    personality: {
+      gestureFrequency: 0.4,
+      facialExpressiveness: 0.8,
+      postureStyle: 'open',
+      approachStyle: 'healing'
+    }
+  },
+  'dr-alex-kim': {
+    therapistId: 'dr-alex-kim',
+    name: 'Dr. Alex Kim',
+    appearance: {
+      faceStructure: 'oval',
+      hairStyle: 'short',
+      clothingStyle: 'casual',
+      colorPalette: {
+        skin: '#F5DEB3',
+        hair: '#2C1810',
+        eyes: '#4A90E2',
+        clothing: '#00CED1',
+        accent: '#7FFFD4'
+      }
+    },
+    personality: {
+      gestureFrequency: 0.8,
+      facialExpressiveness: 0.9,
+      postureStyle: 'open',
+      approachStyle: 'youthful'
+    }
+  },
+  'dr-phoenix-rivera': {
+    therapistId: 'dr-phoenix-rivera',
+    name: 'Dr. Phoenix Rivera',
+    appearance: {
+      faceStructure: 'square',
+      hairStyle: 'medium',
+      clothingStyle: 'warm',
+      colorPalette: {
+        skin: '#CD853F',
+        hair: '#8B4513',
+        eyes: '#FF4500',
+        clothing: '#FF6347',
+        accent: '#FFD700'
+      }
+    },
+    personality: {
+      gestureFrequency: 0.6,
+      facialExpressiveness: 0.8,
+      postureStyle: 'formal',
+      approachStyle: 'transformative'
+    }
+  },
+  'dr-sage-thompson': {
+    therapistId: 'dr-sage-thompson',
+    name: 'Dr. Sage Thompson',
+    appearance: {
+      faceStructure: 'oval',
+      hairStyle: 'long',
+      clothingStyle: 'warm',
+      colorPalette: {
+        skin: '#E8C5A0',
+        hair: '#A0522D',
+        eyes: '#32CD32',
+        clothing: '#20B2AA',
+        accent: '#87CEEB'
+      }
+    },
+    personality: {
+      gestureFrequency: 0.3,
+      facialExpressiveness: 0.7,
+      postureStyle: 'relaxed',
+      approachStyle: 'calming'
+    }
   }
 };
 
