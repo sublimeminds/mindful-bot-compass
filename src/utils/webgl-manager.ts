@@ -32,6 +32,11 @@ export class WebGLManager {
     lastLossTime: 0,
     averageCreationTime: 0
   };
+  
+  // Single-context strategy to prevent exhaustion
+  private activeContexts = 0;
+  private maxActiveContexts = 1; // Only allow one 3D avatar at a time
+  private contextQueue: Array<{ canvas: HTMLCanvasElement; resolve: (gl: WebGLRenderingContext | WebGL2RenderingContext | null) => void }> = [];
 
   // Detect WebGL capabilities
   detectCapabilities(): WebGLCapabilities {
@@ -68,6 +73,23 @@ export class WebGLManager {
 
     this.cleanupContext(canvas);
     return this.capabilities;
+  }
+
+  // Queue-based context creation to prevent exhaustion
+  async createContextQueued(
+    canvas: HTMLCanvasElement,
+    options: WebGLContextOptions = {}
+  ): Promise<WebGLRenderingContext | WebGL2RenderingContext | null> {
+    return new Promise((resolve) => {
+      if (this.activeContexts < this.maxActiveContexts) {
+        this.activeContexts++;
+        const context = this.createContext(canvas, options);
+        resolve(context);
+      } else {
+        console.log('🔄 WebGL: Context queued - max active contexts reached');
+        this.contextQueue.push({ canvas, resolve });
+      }
+    });
   }
 
   // Create WebGL context with comprehensive error handling
@@ -175,6 +197,10 @@ export class WebGLManager {
         extension.loseContext();
       }
       this.contexts.delete(canvas);
+      this.activeContexts = Math.max(0, this.activeContexts - 1);
+      
+      // Process next item in queue
+      this.processContextQueue();
     }
 
     // Remove event handlers
@@ -189,6 +215,16 @@ export class WebGLManager {
     if (restoreHandler) {
       canvas.removeEventListener('webglcontextrestored', restoreHandler);
       this.contextRestoreHandlers.delete(canvas);
+    }
+  }
+
+  // Process queued context requests
+  private processContextQueue(): void {
+    if (this.contextQueue.length > 0 && this.activeContexts < this.maxActiveContexts) {
+      const { canvas, resolve } = this.contextQueue.shift()!;
+      this.activeContexts++;
+      const context = this.createContext(canvas);
+      resolve(context);
     }
   }
 
@@ -316,6 +352,17 @@ export class WebGLManager {
     this.contexts.clear();
     this.contextLossHandlers.clear();
     this.contextRestoreHandlers.clear();
+    this.contextQueue.length = 0;
+    this.activeContexts = 0;
+  }
+
+  // Get queue status for debugging
+  getQueueStatus(): { active: number; queued: number; max: number } {
+    return {
+      active: this.activeContexts,
+      queued: this.contextQueue.length,
+      max: this.maxActiveContexts
+    };
   }
 }
 

@@ -8,7 +8,9 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Sphere, Box, Cylinder } from '@react-three/drei';
 import { therapistPersonas } from './TherapistAvatarPersonas';
 import SimpleAvatarFallback from './SimpleAvatarFallback';
+import Professional2DAvatar from './Professional2DAvatar';
 import { safeLovAccess, isLovHealthy } from '@/utils/lovableTaggerSafeGuard';
+import { webglManager } from '@/utils/webgl-manager';
 import * as THREE from 'three';
 
 interface Isolated3DAvatarProps {
@@ -218,11 +220,14 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
   const [is3DSupported, setIs3DSupported] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [lovStatus, setLovStatus] = useState<string>('checking');
+  const [webglContext, setWebglContext] = useState<WebGLRenderingContext | WebGL2RenderingContext | null>(null);
+  const [contextError, setContextError] = useState<string | null>(null);
+  const [show3D, setShow3D] = useState(false); // User-controlled 3D toggle
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const persona = therapistPersonas[therapistId] || therapistPersonas['dr-sarah-chen'];
   const displayName = therapistName || persona.name;
 
-  // Check WebGL and lov health
+  // Check WebGL and lov health with proper context management
   useEffect(() => {
     console.log('🔍 Isolated3D: Starting health checks for', therapistId);
     
@@ -236,22 +241,32 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
           console.warn('🚨 Isolated3D: Lov is unhealthy, but continuing with 3D (isolated mode)');
         }
 
-        // Check WebGL support independently
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+        // Check WebGL capabilities using manager
+        const capabilities = webglManager.detectCapabilities();
+        const queueStatus = webglManager.getQueueStatus();
         
-        if (!gl) {
+        console.log('🔍 WebGL capabilities:', capabilities);
+        console.log('🔍 WebGL queue status:', queueStatus);
+        
+        if (!capabilities.webgl) {
           console.log('❌ Isolated3D: WebGL not supported');
           setIs3DSupported(false);
+          setContextError('WebGL not supported by this device');
+        } else if (queueStatus.active >= queueStatus.max) {
+          console.log('⏳ Isolated3D: WebGL context queue full, waiting...');
+          setContextError('Another 3D avatar is active. Click to request 3D mode.');
+          setIs3DSupported(true); // Device supports it, just queued
         } else {
-          console.log('✅ Isolated3D: WebGL supported, 3D mode enabled');
+          console.log('✅ Isolated3D: WebGL supported and available');
           setIs3DSupported(true);
+          setContextError(null);
         }
         
         setIsLoading(false);
       } catch (error) {
         console.error('❌ Isolated3D: Support check failed:', error);
         setIs3DSupported(false);
+        setContextError('Failed to initialize 3D rendering');
         setIsLoading(false);
       }
     };
@@ -284,16 +299,79 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
     };
   }, []);
 
-  // Fallback to 2D if 3D not supported
-  if (!is3DSupported) {
+  // Request 3D context when user clicks to view 3D
+  const request3DMode = async () => {
+    if (!canvasRef.current || !is3DSupported) return;
+    
+    try {
+      setIsLoading(true);
+      setContextError(null);
+      
+      const context = await webglManager.createContextQueued(canvasRef.current, {
+        antialias: true,
+        alpha: true,
+        powerPreference: 'default'
+      });
+      
+      if (context) {
+        setWebglContext(context);
+        setShow3D(true);
+        console.log('✅ 3D context acquired for', therapistId);
+      } else {
+        setContextError('Failed to create 3D context');
+      }
+    } catch (error) {
+      console.error('❌ Failed to request 3D mode:', error);
+      setContextError('Failed to enable 3D mode');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Cleanup context on unmount
+  useEffect(() => {
+    return () => {
+      if (canvasRef.current) {
+        webglManager.cleanupContext(canvasRef.current);
+      }
+    };
+  }, []);
+
+  // Fallback to 2D if 3D not supported or not requested
+  if (!is3DSupported || !show3D) {
     return (
       <div className={className}>
-        <SimpleAvatarFallback 
-          name={displayName}
+        <Professional2DAvatar
           therapistId={therapistId}
+          therapistName={displayName}
+          emotion={emotion}
+          isListening={isListening}
+          isSpeaking={isSpeaking}
           className="w-full h-full"
           showName={false}
         />
+        
+        {/* 3D Toggle Button */}
+        {is3DSupported && (
+          <div className="absolute top-2 right-2">
+            <button
+              onClick={request3DMode}
+              disabled={isLoading}
+              className="bg-therapy-500 hover:bg-therapy-600 text-white text-xs px-3 py-1 rounded-full transition-colors disabled:opacity-50"
+            >
+              {isLoading ? 'Loading...' : contextError ? 'Request 3D' : 'View 3D'}
+            </button>
+          </div>
+        )}
+        
+        {/* Error/Status Display */}
+        {contextError && (
+          <div className="absolute bottom-2 left-2 right-2 text-center">
+            <div className="bg-black/70 text-white text-xs px-2 py-1 rounded">
+              {contextError}
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -312,14 +390,29 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
       }
     >
       <div className={`${className} relative bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden`}>
-        {/* Status overlay */}
+        {/* Status overlay and controls */}
         <div className="absolute top-2 left-2 z-50 text-xs">
           <div className="bg-black/70 text-white px-2 py-1 rounded mb-1">
-            3D: {is3DSupported ? 'ON' : 'OFF'}
+            3D Mode Active
           </div>
           <div className="bg-black/70 text-white px-2 py-1 rounded">
             Lov: {lovStatus}
           </div>
+        </div>
+        
+        {/* Exit 3D Button */}
+        <div className="absolute top-2 right-2 z-50">
+          <button
+            onClick={() => {
+              setShow3D(false);
+              if (canvasRef.current) {
+                webglManager.cleanupContext(canvasRef.current);
+              }
+            }}
+            className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-full transition-colors"
+          >
+            Exit 3D
+          </button>
         </div>
 
         {isLoading && (
