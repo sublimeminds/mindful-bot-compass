@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import Enhanced3DAvatar from '@/components/avatar/Enhanced3DAvatar';
+import Isolated3DAvatar from '@/components/avatar/Isolated3DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -459,7 +460,7 @@ const TherapistDiscovery = () => {
                           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
                         </div>
                       }>
-                        <Enhanced3DAvatar
+                        <Isolated3DAvatar
                           therapistId={therapist.avatarId}
                           therapistName={therapist.name}
                           emotion="neutral"
