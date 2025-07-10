@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Brain, ArrowRight, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/contexts/TherapistContext';
-import ReadyPlayerMeAvatar from '@/components/avatar/ReadyPlayerMeAvatar';
+import DIDAvatar from '@/components/avatar/DIDAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 
 const TherapistWidget = () => {
@@ -51,9 +51,9 @@ const TherapistWidget = () => {
         {/* Therapist Info */}
         <div className="space-y-3">
           <div className="flex items-center space-x-3">
-            {/* 3D Avatar Mini Display */}
+            {/* Professional D-ID Avatar Mini Display */}
             <Suspense fallback={<Skeleton className="w-12 h-12 rounded-full" />}>
-              <ReadyPlayerMeAvatar
+              <DIDAvatar
                 therapistId={getAvatarIdForTherapist(currentTherapist.id)}
                 emotion="neutral"
                 size="small"
