@@ -25,7 +25,6 @@ import {
   MessageCircle
 } from 'lucide-react';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
-import ReadyPlayerMeAvatar from '@/components/avatar/ReadyPlayerMeAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -75,9 +74,6 @@ const TherapistDiscovery = () => {
   const [avatarModalOpen, setAvatarModalOpen] = useState(false);
   const [modalTherapist, setModalTherapist] = useState<any>(null);
   const [isVoicePlaying, setIsVoicePlaying] = useState(false);
-  const [use3DAvatar, setUse3DAvatar] = useState(false);
-  const [enable3DMode, setEnable3DMode] = useState(false);
-  const [active3DTherapist, setActive3DTherapist] = useState<string | null>(null);
 
   // Helper function to get icon component by name with comprehensive fallbacks
   const getIconByName = (iconName: string) => {
@@ -376,30 +372,6 @@ const TherapistDiscovery = () => {
               Each therapist combines advanced AI capabilities with unique therapeutic approaches and personalities
             </p>
             
-            {/* 3D Mode Toggle */}
-            <div className="flex items-center justify-center mt-6">
-              <div className="flex items-center space-x-3 bg-card rounded-lg p-3 border">
-                <span className="text-sm font-medium">3D Avatar Mode:</span>
-                <Button
-                  variant={enable3DMode ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => {
-                    setEnable3DMode(!enable3DMode);
-                    if (!enable3DMode) {
-                      setActive3DTherapist(null); // Reset active 3D on disable
-                    }
-                  }}
-                  className="text-xs"
-                >
-                  {enable3DMode ? "3D Enabled" : "2D Only"}
-                </Button>
-                {enable3DMode && (
-                  <Badge variant="secondary" className="text-xs">
-                    Click "View 3D" for individual avatars
-                  </Badge>
-                )}
-              </div>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
@@ -453,48 +425,15 @@ const TherapistDiscovery = () => {
                       openAvatarModal(therapist);
                     }}
                   >
-                    {active3DTherapist === therapist.id ? (
-                      <Suspense fallback={
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
-                        </div>
-                      }>
-                        <ReadyPlayerMeAvatar
-                          therapistId={therapist.avatarId}
-                          emotion="neutral"
-                          className="w-full h-full"
-                          size="medium"
-                        />
-                      </Suspense>
-                    ) : (
-                      <Professional2DAvatar
-                        therapistId={therapist.avatarId}
-                        therapistName={therapist.name}
-                        className="w-full h-full"
-                        size="lg"
-                        showName={false}
-                      />
-                    )}
-                    
-                    {/* 3D Toggle Button */}
-                    {enable3DMode && (
-                      <div className="absolute top-2 right-2">
-                        <Button
-                          variant={active3DTherapist === therapist.id ? "default" : "outline"}
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            // Only one 3D avatar at a time to prevent context exhaustion
-                            setActive3DTherapist(
-                              active3DTherapist === therapist.id ? null : therapist.id
-                            );
-                          }}
-                          className="text-xs bg-white/90 backdrop-blur-sm"
-                        >
-                          {active3DTherapist === therapist.id ? "2D" : "3D"}
-                        </Button>
-                      </div>
-                    )}
+                    <Professional2DAvatar
+                      therapistId={therapist.avatarId}
+                      therapistName={therapist.name}
+                      className="w-full h-full"
+                      size="lg"
+                      showName={false}
+                      emotion="neutral"
+                      therapeuticMode={true}
+                    />
                   </div>
                   <div className="mt-4 pb-4 text-center">
                     <p className="text-sm font-medium text-therapy-700">{therapist.name}</p>
@@ -794,54 +733,20 @@ const TherapistDiscovery = () => {
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle>{modalTherapist?.name}</DialogTitle>
-              <div className="flex items-center justify-center mt-4">
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant={!use3DAvatar ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setUse3DAvatar(false)}
-                  >
-                    2D
-                  </Button>
-                  <Button
-                    variant={use3DAvatar ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setUse3DAvatar(true)}
-                    disabled={!enable3DMode}
-                  >
-                    3D {!enable3DMode && "(Enable 3D mode first)"}
-                  </Button>
-                </div>
-              </div>
             </DialogHeader>
             <div className="p-4">
               {modalTherapist && (
                 <>
-                  {use3DAvatar && enable3DMode ? (
-                    <div className="w-full h-64 bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden">
-                      <Suspense fallback={
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
-                        </div>
-                      }>
-                        <ReadyPlayerMeAvatar
-                          therapistId={modalTherapist?.avatarId}
-                          emotion="encouraging"
-                          isSpeaking={isVoicePlaying}
-                          className="w-full h-full"
-                          size="large"
-                        />
-                      </Suspense>
-                    </div>
-                  ) : (
-                    <Professional2DAvatar
-                      therapistId={modalTherapist.avatarId}
-                      therapistName={modalTherapist.name}
-                      className="w-full h-64"
-                      size="xl"
-                      showName={true}
-                    />
-                  )}
+                  <Professional2DAvatar
+                    therapistId={modalTherapist.avatarId}
+                    therapistName={modalTherapist.name}
+                    className="w-full h-64"
+                    size="xl"
+                    showName={true}
+                    emotion="encouraging"
+                    isSpeaking={isVoicePlaying}
+                    therapeuticMode={true}
+                  />
 
                   {/* Voice Preview */}
                   <div className="mt-4 text-center">
