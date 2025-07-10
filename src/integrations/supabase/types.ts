@@ -2715,6 +2715,36 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_analytics: {
+        Row: {
+          created_at: string
+          delivery_method: string
+          event_type: string
+          id: string
+          metadata: Json | null
+          notification_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          delivery_method: string
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          notification_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          delivery_method?: string
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          notification_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       notification_deliveries: {
         Row: {
           clicked_at: string | null
@@ -2819,6 +2849,54 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
           weekly_reports?: boolean | null
+        }
+        Relationships: []
+      }
+      notification_queue: {
+        Row: {
+          created_at: string
+          data: Json | null
+          delivery_methods: string[]
+          id: string
+          message: string
+          priority: string
+          processed_at: string | null
+          retry_count: number
+          scheduled_for: string
+          status: string
+          template_id: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          delivery_methods?: string[]
+          id?: string
+          message: string
+          priority?: string
+          processed_at?: string | null
+          retry_count?: number
+          scheduled_for?: string
+          status?: string
+          template_id?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          delivery_methods?: string[]
+          id?: string
+          message?: string
+          priority?: string
+          processed_at?: string | null
+          retry_count?: number
+          scheduled_for?: string
+          status?: string
+          template_id?: string | null
+          title?: string
+          user_id?: string
         }
         Relationships: []
       }
