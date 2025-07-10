@@ -3807,6 +3807,105 @@ export type Database = {
         }
         Relationships: []
       }
+      session_assessments: {
+        Row: {
+          additional_feedback: string | null
+          ai_insights: string | null
+          assessment_score: number | null
+          assessment_type: string
+          breakthrough_moments: string | null
+          challenges_discussed: string[] | null
+          completed_at: string
+          confidence_level: number | null
+          created_at: string
+          current_mood: number | null
+          current_symptoms: string[] | null
+          emotional_state: string | null
+          energy_level: number | null
+          homework_assigned: string[] | null
+          id: string
+          life_events: string | null
+          main_concerns: string[] | null
+          medication_changes: boolean | null
+          next_session_goals: string[] | null
+          overall_satisfaction: number | null
+          responses: Json
+          session_goals: string[] | null
+          session_helpfulness: number | null
+          session_id: string | null
+          sleep_quality: number | null
+          stress_level: number | null
+          techniques_learned: string[] | null
+          therapist_connection: number | null
+          user_id: string
+          would_recommend: boolean | null
+        }
+        Insert: {
+          additional_feedback?: string | null
+          ai_insights?: string | null
+          assessment_score?: number | null
+          assessment_type: string
+          breakthrough_moments?: string | null
+          challenges_discussed?: string[] | null
+          completed_at?: string
+          confidence_level?: number | null
+          created_at?: string
+          current_mood?: number | null
+          current_symptoms?: string[] | null
+          emotional_state?: string | null
+          energy_level?: number | null
+          homework_assigned?: string[] | null
+          id?: string
+          life_events?: string | null
+          main_concerns?: string[] | null
+          medication_changes?: boolean | null
+          next_session_goals?: string[] | null
+          overall_satisfaction?: number | null
+          responses?: Json
+          session_goals?: string[] | null
+          session_helpfulness?: number | null
+          session_id?: string | null
+          sleep_quality?: number | null
+          stress_level?: number | null
+          techniques_learned?: string[] | null
+          therapist_connection?: number | null
+          user_id: string
+          would_recommend?: boolean | null
+        }
+        Update: {
+          additional_feedback?: string | null
+          ai_insights?: string | null
+          assessment_score?: number | null
+          assessment_type?: string
+          breakthrough_moments?: string | null
+          challenges_discussed?: string[] | null
+          completed_at?: string
+          confidence_level?: number | null
+          created_at?: string
+          current_mood?: number | null
+          current_symptoms?: string[] | null
+          emotional_state?: string | null
+          energy_level?: number | null
+          homework_assigned?: string[] | null
+          id?: string
+          life_events?: string | null
+          main_concerns?: string[] | null
+          medication_changes?: boolean | null
+          next_session_goals?: string[] | null
+          overall_satisfaction?: number | null
+          responses?: Json
+          session_goals?: string[] | null
+          session_helpfulness?: number | null
+          session_id?: string | null
+          sleep_quality?: number | null
+          stress_level?: number | null
+          techniques_learned?: string[] | null
+          therapist_connection?: number | null
+          user_id?: string
+          would_recommend?: boolean | null
+        }
+        Relationships: []
+      }
       session_avatar_interactions: {
         Row: {
           emotion_data: Json | null
@@ -4390,51 +4489,81 @@ export type Database = {
       therapist_personalities: {
         Row: {
           approach: string
+          certifications: string[] | null
           color_scheme: string
           communication_style: string
           created_at: string
           description: string
+          education: string[] | null
           effectiveness_areas: Json | null
+          emotional_responses: Json | null
           experience_level: string
           icon: string
           id: string
           is_active: boolean
           name: string
           personality_traits: Json | null
+          session_availability: Json | null
           specialties: string[]
+          success_rate: number | null
+          therapeutic_techniques: string[] | null
           title: string
+          total_sessions: number | null
+          user_rating: number | null
+          voice_characteristics: Json | null
+          years_experience: number | null
         }
         Insert: {
           approach: string
+          certifications?: string[] | null
           color_scheme?: string
           communication_style: string
           created_at?: string
           description: string
+          education?: string[] | null
           effectiveness_areas?: Json | null
+          emotional_responses?: Json | null
           experience_level?: string
           icon?: string
           id?: string
           is_active?: boolean
           name: string
           personality_traits?: Json | null
+          session_availability?: Json | null
           specialties?: string[]
+          success_rate?: number | null
+          therapeutic_techniques?: string[] | null
           title: string
+          total_sessions?: number | null
+          user_rating?: number | null
+          voice_characteristics?: Json | null
+          years_experience?: number | null
         }
         Update: {
           approach?: string
+          certifications?: string[] | null
           color_scheme?: string
           communication_style?: string
           created_at?: string
           description?: string
+          education?: string[] | null
           effectiveness_areas?: Json | null
+          emotional_responses?: Json | null
           experience_level?: string
           icon?: string
           id?: string
           is_active?: boolean
           name?: string
           personality_traits?: Json | null
+          session_availability?: Json | null
           specialties?: string[]
+          success_rate?: number | null
+          therapeutic_techniques?: string[] | null
           title?: string
+          total_sessions?: number | null
+          user_rating?: number | null
+          voice_characteristics?: Json | null
+          years_experience?: number | null
         }
         Relationships: []
       }
@@ -4598,6 +4727,57 @@ export type Database = {
           therapist_id?: string
           title?: string
           total_phases?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      therapy_session_continuity: {
+        Row: {
+          adapted_approach: string | null
+          ai_recommendations: string[] | null
+          carry_over_topics: string[] | null
+          created_at: string
+          current_session_id: string | null
+          id: string
+          previous_session_id: string | null
+          priority_areas: string[] | null
+          progress_indicators: Json | null
+          session_plan: string | null
+          therapist_notes: string | null
+          unresolved_issues: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          adapted_approach?: string | null
+          ai_recommendations?: string[] | null
+          carry_over_topics?: string[] | null
+          created_at?: string
+          current_session_id?: string | null
+          id?: string
+          previous_session_id?: string | null
+          priority_areas?: string[] | null
+          progress_indicators?: Json | null
+          session_plan?: string | null
+          therapist_notes?: string | null
+          unresolved_issues?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          adapted_approach?: string | null
+          ai_recommendations?: string[] | null
+          carry_over_topics?: string[] | null
+          created_at?: string
+          current_session_id?: string | null
+          id?: string
+          previous_session_id?: string | null
+          priority_areas?: string[] | null
+          progress_indicators?: Json | null
+          session_plan?: string | null
+          therapist_notes?: string | null
+          unresolved_issues?: string[] | null
           updated_at?: string
           user_id?: string
         }

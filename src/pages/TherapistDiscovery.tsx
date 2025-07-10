@@ -146,10 +146,14 @@ const TherapistDiscovery = () => {
         avatarId: getAvatarIdForTherapist(therapist.id),
         personalityTraits: therapist.personality_traits || {},
         effectivenessAreas: therapist.effectiveness_areas || {},
-        successRate: Math.floor(Math.random() * 20) + 80, // 80-100% for demo
-        userSatisfaction: (Math.random() * 1 + 4).toFixed(1), // 4.0-5.0 for demo
-        sessionCount: Math.floor(Math.random() * 10000) + 5000, // Demo data
-        voiceCharacteristics: getVoiceCharacteristics(therapist.communication_style),
+        successRate: therapist.success_rate || 0.85,
+        userSatisfaction: therapist.user_rating || 4.5,
+        sessionCount: therapist.total_sessions || 150,
+        yearsExperience: therapist.years_experience || 5,
+        education: therapist.education || [],
+        therapeuticTechniques: therapist.therapeutic_techniques || [],
+        emotionalResponses: therapist.emotional_responses || {},
+        voiceCharacteristics: therapist.voice_characteristics || getVoiceCharacteristics(therapist.communication_style),
         languages: ['English'], // Default, could be expanded
         crisisSupport: therapist.experience_level === 'Expert' ? 'Advanced' : 'Intermediate',
         availabilityHours: '24/7'
@@ -474,14 +478,18 @@ const TherapistDiscovery = () => {
                   </div>
 
                   {/* Stats */}
-                  <div className="grid grid-cols-2 gap-4 pt-4 border-t">
+                  <div className="grid grid-cols-3 gap-2 pt-4 border-t">
                     <div className="text-center">
-                      <div className="text-lg font-bold text-therapy-600">{therapist.successRate}%</div>
+                      <div className="text-lg font-bold text-therapy-600">{Math.round(therapist.successRate * 100)}%</div>
                       <div className="text-xs text-muted-foreground">Success Rate</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg font-bold text-calm-600">{therapist.userSatisfaction}</div>
+                      <div className="text-lg font-bold text-calm-600">{therapist.userSatisfaction.toFixed(1)}</div>
                       <div className="text-xs text-muted-foreground">User Rating</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-harmony-600">{therapist.yearsExperience}yr</div>
+                      <div className="text-xs text-muted-foreground">Experience</div>
                     </div>
                   </div>
 
