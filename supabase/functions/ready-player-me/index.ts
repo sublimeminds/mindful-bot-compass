@@ -50,25 +50,78 @@ async function createAvatar({ therapistId, gender = 'female', style = 'professio
     });
   }
 
-  // For now, return a simple fallback avatar URL to test integration
-  // This uses Ready Player Me's demo avatars which don't require API calls
-  const fallbackAvatars = {
-    'male': 'https://d1a370nemizbjq.cloudfront.net/b68c9615-d5fb-4e0e-88eb-9b77f912a7de.glb',
-    'female': 'https://d1a370nemizbjq.cloudfront.net/5c8affd5-70b9-4af8-bdac-d01c99f44a83.glb'
-  };
-  
-  const avatarUrl = fallbackAvatars[gender] || fallbackAvatars['female'];
-  
-  console.log('Using fallback avatar:', avatarUrl);
-  
-  return new Response(JSON.stringify({ 
-    avatarUrl: avatarUrl,
-    avatarId: `${therapistId}-${gender}`,
-    therapistId: therapistId,
-    fallback: true
-  }), {
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  });
+  // Generate avatar using Ready Player Me API
+  try {
+    const avatarConfig = getAvatarConfig(therapistId, gender, style);
+    console.log('Using avatar config:', avatarConfig);
+    
+    const response = await fetch('https://api.readyplayer.me/v1/avatars', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${readyPlayerMeApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(avatarConfig),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Ready Player Me API Error:', response.status, errorData);
+      
+      // Fall back to demo avatars if API fails
+      const fallbackAvatars = {
+        'male': 'https://d1a370nemizbjq.cloudfront.net/b68c9615-d5fb-4e0e-88eb-9b77f912a7de.glb',
+        'female': 'https://d1a370nemizbjq.cloudfront.net/5c8affd5-70b9-4af8-bdac-d01c99f44a83.glb'
+      };
+      
+      const avatarUrl = fallbackAvatars[gender] || fallbackAvatars['female'];
+      console.log('Using fallback avatar due to API error:', avatarUrl);
+      
+      return new Response(JSON.stringify({ 
+        avatarUrl: avatarUrl,
+        avatarId: `${therapistId}-${gender}-fallback`,
+        therapistId: therapistId,
+        fallback: true,
+        error: `API Error: ${response.status}`
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const data = await response.json();
+    console.log('Avatar created successfully:', data);
+    
+    return new Response(JSON.stringify({ 
+      avatarUrl: data.modelUrl || data.url,
+      avatarId: data.id,
+      therapistId: therapistId,
+      fallback: false
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+    
+  } catch (error) {
+    console.error('Error creating avatar:', error);
+    
+    // Fall back to demo avatars if there's any error
+    const fallbackAvatars = {
+      'male': 'https://d1a370nemizbjq.cloudfront.net/b68c9615-d5fb-4e0e-88eb-9b77f912a7de.glb',
+      'female': 'https://d1a370nemizbjq.cloudfront.net/5c8affd5-70b9-4af8-bdac-d01c99f44a83.glb'
+    };
+    
+    const avatarUrl = fallbackAvatars[gender] || fallbackAvatars['female'];
+    console.log('Using fallback avatar due to error:', avatarUrl);
+    
+    return new Response(JSON.stringify({ 
+      avatarUrl: avatarUrl,
+      avatarId: `${therapistId}-${gender}-fallback`,
+      therapistId: therapistId,
+      fallback: true,
+      error: error.message
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
 }
 
 function getAvatarConfig(therapistId: string, gender: string, style: string) {

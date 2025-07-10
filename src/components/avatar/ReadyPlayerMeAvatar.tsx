@@ -150,14 +150,17 @@ const ReadyPlayerMeAvatar: React.FC<ReadyPlayerMeAvatarProps> = ({
     <div className={`${sizeClasses[size]} ${className} relative overflow-hidden rounded-full bg-therapy-50`}>
       <iframe
         ref={iframeRef}
-        src={`https://demo.readyplayer.me/avatar?frameUrl=${encodeURIComponent(avatarUrl)}&background=transparent&camera=portrait&quality=high`}
+        src={`https://models.readyplayer.me/embed?url=${encodeURIComponent(avatarUrl)}&transparent=1&background=ffffff00&showControls=0&autoRotate=0&cameraZoom=0.8`}
         className="w-full h-full border-0"
         allow="camera; microphone"
         title={`Avatar for ${therapistId}`}
         loading="lazy"
         style={{
-          transform: 'scale(1.2)', // Zoom in slightly for better framing
+          transform: 'scale(1.1)', // Slight zoom for better framing
           transformOrigin: 'center center'
+        }}
+        onLoad={() => {
+          console.log('Avatar iframe loaded successfully');
         }}
         onError={() => {
           console.error('Avatar iframe failed to load');
