@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useConversation } from '@11labs/react';
-import Advanced3DAvatarSystem from '@/components/avatar/Advanced3DAvatarSystem';
+import RealisticHuman3DAvatar from '@/components/avatar/RealisticHuman3DAvatar';
 import { supabase } from '@/integrations/supabase/client';
 
 interface TherapistProfile {
@@ -484,14 +484,32 @@ const Enhanced3DTherapistDiscovery: React.FC<Enhanced3DTherapistDiscoveryProps> 
             </CardHeader>
 
             <CardContent className="space-y-4">
-              {/* 3D Avatar Preview */}
-              {is3DPreview && previewingTherapist === therapist.id && (
-                <div className="h-48 w-full">
-                  <Advanced3DAvatarSystem
+              {/* Realistic 3D Avatar Preview */}
+              {is3DPreview && (
+                <div className="relative">
+                  <RealisticHuman3DAvatar
                     therapistId={therapist.id}
-                    isActive={true}
-                    className="h-full w-full"
+                    isActive={previewingTherapist === therapist.id}
+                    emotion={{ 
+                      name: previewingTherapist === therapist.id ? 'joy' : 'neutral', 
+                      intensity: 0.7, 
+                      confidence: 1 
+                    }}
+                    isSpeaking={voicePreviewPlaying === therapist.id}
+                    isListening={previewingTherapist === therapist.id && !voicePreviewPlaying}
+                    size="medium"
+                    className="mx-auto"
                   />
+                  
+                  {/* 3D Preview Controls */}
+                  <div className="absolute inset-0 bg-black/5 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
+                    <button
+                      className="bg-white/90 hover:bg-white shadow-lg px-3 py-1 rounded-md text-sm font-medium text-therapy-700 transition-colors"
+                      onClick={() => handlePreviewTherapist(therapist.id)}
+                    >
+                      {previewingTherapist === therapist.id ? 'Hide Preview' : 'View in 3D'}
+                    </button>
+                  </div>
                 </div>
               )}
 
