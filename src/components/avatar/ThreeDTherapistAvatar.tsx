@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import PersonalizedAvatar, { therapistPersonas } from './TherapistAvatarPersonas';
 import SimpleAvatarFallback from './SimpleAvatarFallback';
-import Enhanced3DAvatar from './Enhanced3DAvatar';
+import Isolated3DAvatar from './Isolated3DAvatar';
 
 interface TherapistAvatarProps {
   isListening?: boolean;
@@ -77,7 +77,7 @@ const ThreeDTherapistAvatar: React.FC<TherapistAvatarProps> = ({
   }
 
   return (
-    <Enhanced3DAvatar
+    <Isolated3DAvatar
       therapistId={therapistId}
       therapistName={persona.name}
       emotion={emotion}
