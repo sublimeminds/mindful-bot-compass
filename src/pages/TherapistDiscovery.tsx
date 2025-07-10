@@ -25,8 +25,7 @@ import {
   MessageCircle
 } from 'lucide-react';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
-// Removed Enhanced3DAvatar - using Isolated3DAvatar instead
-import Isolated3DAvatar from '@/components/avatar/Isolated3DAvatar';
+import RealisticHuman3DAvatar from '@/components/avatar/RealisticHuman3DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -460,11 +459,9 @@ const TherapistDiscovery = () => {
                           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
                         </div>
                       }>
-                        <Isolated3DAvatar
+                        <RealisticHuman3DAvatar
                           therapistId={therapist.avatarId}
-                          therapistName={therapist.name}
-                          emotion="neutral"
-                          showControls={true}
+                          emotion={{ name: "neutral", intensity: 0.7, confidence: 0.9 }}
                           className="w-full h-full"
                         />
                       </Suspense>
@@ -826,12 +823,10 @@ const TherapistDiscovery = () => {
                           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
                         </div>
                       }>
-                        <Isolated3DAvatar
-                          therapistId={modalTherapist.avatarId}
-                          therapistName={modalTherapist.name}
-                          emotion="encouraging"
+                        <RealisticHuman3DAvatar
+                          therapistId={modalTherapist?.avatarId}
+                          emotion={{ name: "welcoming", intensity: 0.8, confidence: 0.9 }}
                           isSpeaking={isVoicePlaying}
-                          showControls={true}
                           className="w-full h-full"
                         />
                       </Suspense>
@@ -845,6 +840,28 @@ const TherapistDiscovery = () => {
                       showName={true}
                     />
                   )}
+
+                  {/* Voice Preview */}
+                  <div className="mt-4 text-center">
+                    <Button
+                      onClick={handleVoicePreview}
+                      disabled={isVoicePlaying}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      {isVoicePlaying ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-therapy-500 mr-2"></div>
+                          Playing...
+                        </>
+                      ) : (
+                        <>
+                          <Play className="h-4 w-4 mr-2" />
+                          Preview Voice
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </>
               )}
             </div>
