@@ -137,5 +137,11 @@ verify_jwt = false
 [functions.ready-player-me]
 verify_jwt = false
 
+[functions.d-id-avatar]
+verify_jwt = false
+
+[functions.hume-voice-synthesis]
+verify_jwt = false
+
 [functions.hume-emotion]
 verify_jwt = false
