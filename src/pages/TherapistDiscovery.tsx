@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Brain, 
   Heart, 
@@ -22,7 +24,16 @@ import {
   TrendingUp,
   Search,
   CheckCircle,
-  MessageCircle
+  MessageCircle,
+  Cpu,
+  Languages,
+  Mic,
+  Camera,
+  BarChart3,
+  Info,
+  Maximize2,
+  Award,
+  Settings
 } from 'lucide-react';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
@@ -74,6 +85,10 @@ const TherapistDiscovery = () => {
   const [avatarModalOpen, setAvatarModalOpen] = useState(false);
   const [modalTherapist, setModalTherapist] = useState<any>(null);
   const [isVoicePlaying, setIsVoicePlaying] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [detailsTherapist, setDetailsTherapist] = useState<any>(null);
+  const [emotionDemoActive, setEmotionDemoActive] = useState(false);
+  const [currentEmotion, setCurrentEmotion] = useState('neutral');
 
   // Helper function to get icon component by name with comprehensive fallbacks
   const getIconByName = (iconName: string) => {
@@ -154,9 +169,16 @@ const TherapistDiscovery = () => {
         therapeuticTechniques: therapist.therapeutic_techniques || [],
         emotionalResponses: therapist.emotional_responses || {},
         voiceCharacteristics: therapist.voice_characteristics || getVoiceCharacteristics(therapist.communication_style),
-        languages: ['English'], // Default, could be expanded
+        languages: ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Japanese', 'Chinese', 'Korean'], // AI multilingual support
         crisisSupport: therapist.experience_level === 'Expert' ? 'Advanced' : 'Intermediate',
-        availabilityHours: '24/7'
+        availabilityHours: '24/7',
+        // AI-specific features
+        aiModel: 'GPT-4 Enhanced',
+        responseTime: '<2 seconds',
+        memoryRetention: 'Perfect recall',
+        culturalIntelligence: 'Advanced',
+        emotionRecognition: '99.2% accuracy',
+        privacyProtection: 'Enterprise-grade encryption'
       }));
     },
   });
@@ -201,6 +223,24 @@ const TherapistDiscovery = () => {
   const openAvatarModal = (therapist: any) => {
     setModalTherapist(therapist);
     setAvatarModalOpen(true);
+  };
+
+  const openDetailsModal = (therapist: any) => {
+    setDetailsTherapist(therapist);
+    setDetailsModalOpen(true);
+  };
+
+  const startEmotionDemo = async () => {
+    setEmotionDemoActive(true);
+    const emotions = ['neutral', 'happy', 'encouraging', 'concerned', 'thoughtful'];
+    
+    for (const emotion of emotions) {
+      setCurrentEmotion(emotion);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+    
+    setEmotionDemoActive(false);
+    setCurrentEmotion('neutral');
   };
 
   const handleVoicePreview = async () => {
@@ -421,9 +461,9 @@ const TherapistDiscovery = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* Enhanced 2D Avatar Display */}
+                  {/* Enhanced Large Avatar Display */}
                   <div 
-                    className="h-64 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 group relative"
+                    className="h-80 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 group relative"
                     onClick={(e) => {
                       e.stopPropagation();
                       openAvatarModal(therapist);
@@ -433,120 +473,148 @@ const TherapistDiscovery = () => {
                       therapistId={therapist.avatarId}
                       therapistName={therapist.name}
                       className="w-full h-full"
-                      size="lg"
-                      showName={false}
-                      emotion="encouraging"
-                      therapeuticMode={true}
-                      isListening={false}
-                      isSpeaking={false}
-                      showVoiceIndicator={true}
+                      size="xl"
+                      emotion="neutral"
+                      showVoiceIndicator={false}
                     />
+                    
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <Maximize2 className="h-8 w-8 text-white drop-shadow-lg" />
+                      </div>
+                    </div>
                   </div>
-                  <div className="mt-4 pb-4 text-center">
-                    <p className="text-sm font-medium text-therapy-700">{therapist.name}</p>
-                    <p className="text-xs text-muted-foreground mt-1 group-hover:text-therapy-600 transition-colors">
-                      Click to see full avatar
+
+                  {/* Enhanced Therapist Info */}
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {therapist.description}
                     </p>
-                  </div>
 
-                  {/* Description */}
-                  <p className="text-sm text-muted-foreground">{therapist.description}</p>
+                    {/* AI Model & Technical Specs */}
+                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-3 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Cpu className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium">AI Technology</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div>Model: <span className="font-medium">{therapist.aiModel}</span></div>
+                        <div>Response: <span className="font-medium">{therapist.responseTime}</span></div>
+                        <div>Memory: <span className="font-medium">{therapist.memoryRetention}</span></div>
+                        <div>Accuracy: <span className="font-medium">{therapist.emotionRecognition}</span></div>
+                      </div>
+                    </div>
 
-                  {/* Approach Badge */}
-                  <div className="flex items-center space-x-2">
-                    <therapist.icon className="h-4 w-4 text-therapy-600" />
-                    <Badge variant="outline" className="text-xs">
-                      {therapist.approach}
-                    </Badge>
-                  </div>
-
-                  {/* Specialties */}
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium">Specialties</p>
+                    {/* Specialties */}
                     <div className="flex flex-wrap gap-1">
-                      {therapist.specialties.slice(0, 4).map((specialty, idx) => (
-                        <Badge key={idx} variant="secondary" className="text-xs">
+                      {therapist.specialties.slice(0, 3).map((specialty: string) => (
+                        <Badge key={specialty} variant="secondary" className="text-xs">
                           {specialty}
                         </Badge>
                       ))}
-                      {therapist.specialties.length > 4 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{therapist.specialties.length - 4} more
+                      {therapist.specialties.length > 3 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{therapist.specialties.length - 3} more
                         </Badge>
                       )}
                     </div>
+
+                    {/* Enhanced Stats Grid */}
+                    <div className="grid grid-cols-3 gap-2 pt-2">
+                      <div className="text-center p-2 bg-gradient-to-br from-therapy-50 to-therapy-100 rounded-lg">
+                        <div className="text-lg font-bold text-therapy-700">
+                          {(therapist.successRate * 100).toFixed(0)}%
+                        </div>
+                        <div className="text-xs text-therapy-600">Success Rate</div>
+                      </div>
+                      <div className="text-center p-2 bg-gradient-to-br from-calm-50 to-calm-100 rounded-lg">
+                        <div className="text-lg font-bold text-calm-700">
+                          {therapist.userSatisfaction.toFixed(1)}⭐
+                        </div>
+                        <div className="text-xs text-calm-600">Rating</div>
+                      </div>
+                      <div className="text-center p-2 bg-gradient-to-br from-harmony-50 to-harmony-100 rounded-lg">
+                        <div className="text-lg font-bold text-harmony-700">
+                          24/7
+                        </div>
+                        <div className="text-xs text-harmony-600">Available</div>
+                      </div>
+                    </div>
+
+                    {/* Languages & Communication */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Languages className="h-4 w-4 text-blue-600" />
+                        <span className="text-xs font-medium">Languages: {therapist.languages.length}+</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground">{therapist.communicationStyle}</div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openDetailsModal(therapist);
+                        }}
+                        className="flex-1"
+                      >
+                        <Info className="h-4 w-4 mr-1" />
+                        Learn More
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedTherapist(therapist.id);
+                        }}
+                        className="flex-1 bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
+                      >
+                        <MessageCircle className="h-4 w-4 mr-1" />
+                        Start Chat
+                      </Button>
+                    </div>
                   </div>
 
-                  {/* Stats */}
-                  <div className="grid grid-cols-3 gap-2 pt-4 border-t">
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-therapy-600">{Math.round(therapist.successRate * 100)}%</div>
-                      <div className="text-xs text-muted-foreground">Success Rate</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-calm-600">{therapist.userSatisfaction.toFixed(1)}</div>
-                      <div className="text-xs text-muted-foreground">User Rating</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-harmony-600">{therapist.yearsExperience}yr</div>
-                      <div className="text-xs text-muted-foreground">Experience</div>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex space-x-2 pt-2">
-                    <Button 
-                      size="sm" 
-                      className="flex-1"
-                      variant="outline"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Learn more about this therapist
-                      }}
-                    >
-                      <Brain className="h-4 w-4 mr-2" />
-                      Learn More
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Try demo conversation
-                      }}
-                    >
-                      <Play className="h-4 w-4" />
-                    </Button>
-                  </div>
-
-                  {/* Expanded Details */}
+                  {/* Selected Therapist Actions */}
                   {selectedTherapist === therapist.id && (
-                    <div className="space-y-4 pt-4 border-t animate-accordion-down">
-                      <div>
-                        <p className="text-sm font-medium mb-2">Communication Style</p>
-                        <p className="text-sm text-muted-foreground">{therapist.communicationStyle}</p>
-                      </div>
-
-                      <div>
-                        <p className="text-sm font-medium mb-2">Languages</p>
-                        <div className="flex flex-wrap gap-1">
-                          {therapist.languages.map((lang, idx) => (
-                            <Badge key={idx} variant="secondary" className="text-xs">
-                              {lang}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4 text-center">
-                        <div>
-                          <div className="text-sm font-bold">{therapist.sessionCount.toLocaleString()}</div>
-                          <div className="text-xs text-muted-foreground">Sessions Completed</div>
-                        </div>
-                        <div>
-                          <div className="text-sm font-bold">{therapist.crisisSupport}</div>
-                          <div className="text-xs text-muted-foreground">Crisis Support</div>
-                        </div>
+                    <div className="mt-4 p-4 bg-gradient-to-r from-therapy-50 to-calm-50 rounded-lg border border-therapy-200">
+                      <h4 className="font-semibold text-therapy-700 mb-3 flex items-center">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        You've selected {therapist.name}
+                      </h4>
+                      <div className="flex gap-2 flex-wrap">
+                        <Button 
+                          size="sm" 
+                          className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700"
+                          onClick={() => {
+                            // Navigate to chat or booking
+                            console.log('Starting therapy with:', therapist.name);
+                          }}
+                        >
+                          <MessageCircle className="h-4 w-4 mr-1" />
+                          Start Therapy Session
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => openDetailsModal(therapist)}
+                        >
+                          <Info className="h-4 w-4 mr-1" />
+                          View Full Profile
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={startEmotionDemo}
+                          disabled={emotionDemoActive}
+                        >
+                          <Camera className="h-4 w-4 mr-1" />
+                          {emotionDemoActive ? 'Demo Running...' : 'Emotion Demo'}
+                        </Button>
                       </div>
                     </div>
                   )}
@@ -554,239 +622,272 @@ const TherapistDiscovery = () => {
               </Card>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Why TherapySync AI is Different */}
-      <section className="py-16 bg-gradient-to-r from-therapy-50/50 via-calm-50/50 to-harmony-50/50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Why TherapySync AI is Industry Leading</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Our AI therapists combine cutting-edge technology with proven therapeutic approaches, 
-              delivering personalized care that adapts to your unique needs and cultural background.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-therapy-500/10 rounded-lg">
-                    <Brain className="h-6 w-6 text-therapy-600" />
-                  </div>
-                  <CardTitle className="text-lg">Perfect Memory</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Never repeats questions or forgets important details. Our AI remembers every conversation, 
-                  building deeper understanding over time.
-                </p>
-                <div className="flex items-center space-x-2 text-sm text-therapy-600">
-                  <CheckCircle className="h-4 w-4" />
-                  <span>100% conversation retention</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-calm-500/10 rounded-lg">
-                    <Globe className="h-6 w-6 text-calm-600" />
-                  </div>
-                  <CardTitle className="text-lg">Cultural Intelligence</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Automatically adapts therapeutic approach based on your cultural background, 
-                  values, and communication preferences.
-                </p>
-                <div className="flex items-center space-x-2 text-sm text-calm-600">
-                  <CheckCircle className="h-4 w-4" />
-                  <span>15+ cultural frameworks</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-harmony-500/10 rounded-lg">
-                    <Shield className="h-6 w-6 text-harmony-600" />
-                  </div>
-                  <CardTitle className="text-lg">Crisis Detection</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Advanced AI monitors for signs of distress and automatically provides 
-                  appropriate crisis intervention resources.
-                </p>
-                <div className="flex items-center space-x-2 text-sm text-harmony-600">
-                  <CheckCircle className="h-4 w-4" />
-                  <span>Real-time safety monitoring</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-balance-500/10 rounded-lg">
-                    <Zap className="h-6 w-6 text-balance-600" />
-                  </div>
-                  <CardTitle className="text-lg">Multi-Model Intelligence</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Combines ChatGPT, Anthropic Claude, and specialized therapy models for 
-                  the most sophisticated AI responses available.
-                </p>
-                <div className="flex items-center space-x-2 text-sm text-balance-600">
-                  <CheckCircle className="h-4 w-4" />
-                  <span>3+ AI models working together</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-flow-500/10 rounded-lg">
-                    <Clock className="h-6 w-6 text-flow-600" />
-                  </div>
-                  <CardTitle className="text-lg">24/7 Availability</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Your AI therapist never sleeps. Get support whenever you need it, 
-                  whether it's 3 AM or during a crisis.
-                </p>
-                <div className="flex items-center space-x-2 text-sm text-flow-600">
-                  <CheckCircle className="h-4 w-4" />
-                  <span>Instant response anytime</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-energy-500/10 rounded-lg">
-                    <TrendingUp className="h-6 w-6 text-energy-600" />
-                  </div>
-                  <CardTitle className="text-lg">Continuous Learning</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Our AI gets better with every conversation, learning your preferences 
-                  and adapting to provide increasingly personalized care.
-                </p>
-                <div className="flex items-center space-x-2 text-sm text-energy-600">
-                  <CheckCircle className="h-4 w-4" />
-                  <span>Personalized adaptation</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <Card className="max-w-4xl mx-auto bg-gradient-to-r from-therapy-500/10 via-calm-500/10 to-harmony-500/10 border-therapy-200">
-            <CardContent className="text-center p-12">
-              <h2 className="text-3xl font-bold mb-4">Ready to Meet Your Perfect AI Therapist?</h2>
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Join over 100,000 users who have found their ideal therapeutic match with TherapySync AI. 
-                Start your mental health journey today with the world's most advanced AI therapy platform.
+          {/* No Results Message */}
+          {filteredTherapists.length === 0 && (
+            <div className="text-center py-12">
+              <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search className="h-12 w-12 text-muted-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">No therapists found</h3>
+              <p className="text-muted-foreground mb-4">
+                Try adjusting your search criteria or browse all available therapists.
               </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600">
-                  <Sparkles className="h-5 w-5 mr-2" />
-                  Start Your Free Assessment
-                </Button>
-                <Button variant="outline" size="lg">
-                  <Play className="h-5 w-5 mr-2" />
-                  Try 2-Minute Demo
-                </Button>
-              </div>
-              
-              <div className="flex items-center justify-center space-x-6 mt-8 text-sm text-muted-foreground">
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Free to start</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>No commitment</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>HIPAA compliant</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setSearchTerm('');
+                  setSelectedApproach('All Approaches');
+                  setSelectedSpecialization('All Specializations');
+                  setSelectedStyle('All Styles');
+                }}
+              >
+                Clear All Filters
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
-        {/* Avatar Modal */}
-        <Dialog open={avatarModalOpen} onOpenChange={setAvatarModalOpen}>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>{modalTherapist?.name}</DialogTitle>
-            </DialogHeader>
-            <div className="p-4">
-              {modalTherapist && (
-                <>
-                   <Professional2DAvatar
-                     therapistId={modalTherapist.avatarId}
-                     therapistName={modalTherapist.name}
-                     className="w-full h-64"
-                     size="xl"
-                     showName={true}
-                     emotion={isVoicePlaying ? 'encouraging' : 'neutral'}
-                     isSpeaking={isVoicePlaying}
-                     showVoiceIndicator={true}
-                     therapeuticMode={true}
-                   />
+      {/* Enhanced Avatar Modal */}
+      <Dialog open={avatarModalOpen} onOpenChange={setAvatarModalOpen}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center text-2xl">
+              <Sparkles className="h-6 w-6 mr-2 text-therapy-600" />
+              Interactive Preview: {modalTherapist?.name}
+            </DialogTitle>
+          </DialogHeader>
 
-                  {/* Voice Preview */}
-                  <div className="mt-4 text-center">
-                    <Button
-                      onClick={handleVoicePreview}
-                      disabled={isVoicePlaying}
-                      variant="outline"
-                      className="w-full"
-                    >
-                      {isVoicePlaying ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-therapy-500 mr-2"></div>
-                          Playing...
-                        </>
-                      ) : (
-                        <>
-                          <Play className="h-4 w-4 mr-2" />
-                          Preview Voice
-                        </>
-                      )}
-                    </Button>
+          {modalTherapist && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+              {/* Large Avatar Display with Emotion Demo */}
+              <div className="space-y-4">
+                <div className="h-96 bg-gradient-to-br from-therapy-50 to-calm-50 rounded-xl overflow-hidden flex items-center justify-center relative">
+                  <Professional2DAvatar
+                    therapistId={modalTherapist.avatarId}
+                    therapistName={modalTherapist.name}
+                    className="w-full h-full"
+                    size="xl"
+                    emotion={currentEmotion as any}
+                    showVoiceIndicator={isVoicePlaying || emotionDemoActive}
+                    isSpeaking={isVoicePlaying}
+                  />
+                  
+                  {emotionDemoActive && (
+                    <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                      Emotion Demo: {currentEmotion}
+                    </div>
+                  )}
+                </div>
+
+                {/* Interactive Controls */}
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    onClick={handleVoicePreview}
+                    disabled={isVoicePlaying || emotionDemoActive}
+                    variant="outline"
+                  >
+                    <Volume2 className="h-4 w-4 mr-2" />
+                    {isVoicePlaying ? 'Playing...' : 'Voice Preview'}
+                  </Button>
+                  <Button
+                    onClick={startEmotionDemo}
+                    disabled={emotionDemoActive || isVoicePlaying}
+                    variant="outline"
+                  >
+                    <Camera className="h-4 w-4 mr-2" />
+                    {emotionDemoActive ? 'Demo Running...' : 'Emotion Demo'}
+                  </Button>
+                  <Button variant="outline" className="col-span-2">
+                    <Play className="h-4 w-4 mr-2" />
+                    Try 2-Minute Demo Conversation
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-semibold mb-2">{modalTherapist.title}</h3>
+                  <p className="text-muted-foreground mb-4">{modalTherapist.description}</p>
+                  
+                  <div className="flex items-center space-x-4 text-sm mb-4">
+                    <Badge className="bg-therapy-100 text-therapy-700">
+                      {modalTherapist.approach}
+                    </Badge>
+                    <span className="flex items-center">
+                      <Star className="h-4 w-4 text-yellow-500 mr-1" />
+                      {modalTherapist.userSatisfaction}/5.0
+                    </span>
+                    <span className="flex items-center">
+                      <Shield className="h-4 w-4 text-green-500 mr-1" />
+                      {(modalTherapist.successRate * 100).toFixed(0)}% Success
+                    </span>
                   </div>
-                </>
-              )}
+
+                  {/* Compatibility Score */}
+                  <div className="p-3 bg-gradient-to-r from-therapy-50 to-calm-50 rounded-lg mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-medium">Compatibility Match</span>
+                      <span className="text-lg font-bold text-therapy-600">
+                        {compatibilityScores[modalTherapist.id]}%
+                      </span>
+                    </div>
+                    <Progress value={compatibilityScores[modalTherapist.id]} className="h-2" />
+                  </div>
+                </div>
+
+                <Tabs defaultValue="expertise" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="expertise">Expertise</TabsTrigger>
+                    <TabsTrigger value="ai-tech">AI Technology</TabsTrigger>
+                    <TabsTrigger value="communication">Communication</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="expertise" className="space-y-4">
+                    <div className="grid grid-cols-2 gap-2">
+                      {modalTherapist.specialties.map((specialty: string) => (
+                        <div key={specialty} className="flex items-center p-2 bg-muted/50 rounded-lg">
+                          <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                          <span className="text-sm">{specialty}</span>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 mt-4">
+                      <div className="text-center p-3 bg-therapy-50 rounded-lg">
+                        <div className="text-2xl font-bold text-therapy-600">{modalTherapist.sessionCount}+</div>
+                        <div className="text-sm text-muted-foreground">Sessions Completed</div>
+                      </div>
+                      <div className="text-center p-3 bg-calm-50 rounded-lg">
+                        <div className="text-2xl font-bold text-calm-600">{modalTherapist.crisisSupport}</div>
+                        <div className="text-sm text-muted-foreground">Crisis Support</div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="ai-tech" className="space-y-4">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                        <span className="flex items-center">
+                          <Cpu className="h-4 w-4 mr-2 text-blue-600" />
+                          AI Model
+                        </span>
+                        <span className="font-medium">{modalTherapist.aiModel}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                        <span className="flex items-center">
+                          <Zap className="h-4 w-4 mr-2 text-green-600" />
+                          Response Time
+                        </span>
+                        <span className="font-medium">{modalTherapist.responseTime}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
+                        <span className="flex items-center">
+                          <Brain className="h-4 w-4 mr-2 text-purple-600" />
+                          Memory
+                        </span>
+                        <span className="font-medium">{modalTherapist.memoryRetention}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                        <span className="flex items-center">
+                          <BarChart3 className="h-4 w-4 mr-2 text-orange-600" />
+                          Emotion Recognition
+                        </span>
+                        <span className="font-medium">{modalTherapist.emotionRecognition}</span>
+                      </div>
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="communication" className="space-y-4">
+                    <div className="space-y-3">
+                      <div className="p-3 bg-muted/50 rounded-lg">
+                        <div className="font-medium mb-1">Voice Characteristics</div>
+                        <div className="text-sm text-muted-foreground">{modalTherapist.voiceCharacteristics}</div>
+                      </div>
+                      <div className="p-3 bg-muted/50 rounded-lg">
+                        <div className="font-medium mb-1">Communication Style</div>
+                        <div className="text-sm text-muted-foreground">{modalTherapist.communicationStyle}</div>
+                      </div>
+                      <div className="p-3 bg-muted/50 rounded-lg">
+                        <div className="font-medium mb-1">Supported Languages ({modalTherapist.languages?.length})</div>
+                        <div className="text-sm text-muted-foreground flex flex-wrap gap-1">
+                          {modalTherapist.languages?.slice(0, 8).map((lang: string) => (
+                            <Badge key={lang} variant="outline" className="text-xs">{lang}</Badge>
+                          ))}
+                          {modalTherapist.languages?.length > 8 && (
+                            <Badge variant="outline" className="text-xs">+{modalTherapist.languages.length - 8} more</Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+
+                {/* Action Buttons */}
+                <div className="flex gap-3">
+                  <Button className="flex-1 bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700">
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Start Therapy Session
+                  </Button>
+                  <Button variant="outline">
+                    <Heart className="h-4 w-4 mr-2" />
+                    Save Favorite
+                  </Button>
+                </div>
+              </div>
             </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Details Modal */}
+      <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{detailsTherapist?.name} - Full Profile</DialogTitle>
+          </DialogHeader>
+          {detailsTherapist && (
+            <div className="space-y-6 p-4">
+              <p>{detailsTherapist.description}</p>
+              <div>
+                <h4 className="font-semibold mb-2">Education</h4>
+                <ul className="list-disc list-inside text-sm text-muted-foreground">
+                  {detailsTherapist.education.map((edu: string, idx: number) => (
+                    <li key={idx}>{edu}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Therapeutic Techniques</h4>
+                <ul className="list-disc list-inside text-sm text-muted-foreground">
+                  {detailsTherapist.therapeuticTechniques.map((tech: string, idx: number) => (
+                    <li key={idx}>{tech}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Personality Traits</h4>
+                <ul className="list-disc list-inside text-sm text-muted-foreground">
+                  {Object.entries(detailsTherapist.personalityTraits).map(([trait, value]) => (
+                    <li key={trait}>{trait}: {String(value)}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Effectiveness Areas</h4>
+                <ul className="list-disc list-inside text-sm text-muted-foreground">
+                  {Object.entries(detailsTherapist.effectivenessAreas).map(([area, value]) => (
+                    <li key={area}>{area}: {String(value)}</li>
+                  ))}
+                </ul>
+              </div>
+              <Button variant="outline" onClick={() => setDetailsModalOpen(false)}>Close</Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 

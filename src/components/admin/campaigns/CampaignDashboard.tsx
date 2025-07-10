@@ -8,7 +8,7 @@ import {
   Play, Pause, BarChart3, Users, Mail, MessageSquare, 
   Target, TrendingUp, Settings, Plus, Eye, Edit, Bell
 } from 'lucide-react';
-import { notificationCampaignService, NotificationCampaign } from '@/services/notificationCampaignService';
+import { NotificationCampaignService, NotificationCampaign } from '@/services/notificationCampaignService';
 import { useToast } from '@/hooks/use-toast';
 
 const CampaignDashboard = () => {
@@ -17,6 +17,8 @@ const CampaignDashboard = () => {
   const [selectedCampaign, setSelectedCampaign] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  
+  const notificationCampaignService = new NotificationCampaignService();
 
   useEffect(() => {
     loadCampaigns();
