@@ -21,6 +21,29 @@ class EnhancedVoiceService {
   }
 
   private initializeTherapistVoices() {
+    // Database UUID mappings for therapist voices
+    this.voices.set('ed979f27-2491-43f1-a779-5095febb68b2', {
+      voiceName: 'Google US English',
+      pitch: 0.9,
+      rate: 0.8,
+      volume: 0.8
+    });
+    
+    this.voices.set('e352e13d-99f9-4ffc-95a6-a05c3d935b74', {
+      voiceName: 'Google US English',
+      pitch: 0.7,
+      rate: 0.9,
+      volume: 0.9
+    });
+    
+    this.voices.set('0772c602-306b-42ad-b610-2dc15ba06714', {
+      voiceName: 'Google US English',
+      pitch: 0.8,
+      rate: 0.85,
+      volume: 0.8
+    });
+    
+    // String ID fallbacks for backward compatibility
     this.voices.set('dr-sarah-chen', {
       voiceName: 'Google US English',
       pitch: 0.9,
@@ -28,16 +51,16 @@ class EnhancedVoiceService {
       volume: 0.8
     });
     
-    this.voices.set('dr-michael-thompson', {
+    this.voices.set('dr-michael-rivers', {
       voiceName: 'Google US English',
       pitch: 0.7,
       rate: 0.9,
       volume: 0.9
     });
     
-    this.voices.set('dr-elena-rodriguez', {
+    this.voices.set('dr-alex-rodriguez', {
       voiceName: 'Google US English',
-      pitch: 1.0,
+      pitch: 0.8,
       rate: 0.85,
       volume: 0.8
     });

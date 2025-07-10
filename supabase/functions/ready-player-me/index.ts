@@ -80,17 +80,28 @@ async function createAvatar({ therapistId, gender = 'female', style = 'professio
 }
 
 function getAvatarConfig(therapistId: string, gender: string, style: string) {
+  console.log('Creating avatar config for:', { therapistId, gender, style });
+  
   // Generate consistent appearance for each therapist
   const baseConfig = {
     bodyType: gender,
     outfitGender: gender,
-    assets: {}
+    assets: {
+      // Default professional look
+      hair: gender === 'male' ? 'hair_short_001' : 'hair_medium_001',
+      top: gender === 'male' ? 'top_business_001' : 'top_blouse_001',
+      bottom: gender === 'male' ? 'bottom_pants_001' : 'bottom_skirt_001',
+      footwear: gender === 'male' ? 'footwear_dress_001' : 'footwear_heels_001',
+      skinTone: 'medium'
+    }
   };
 
   // Therapist-specific configurations for diversity and professionalism
   const therapistConfigs = {
     'dr-sarah-chen': {
       ...baseConfig,
+      bodyType: 'female',
+      outfitGender: 'female',
       assets: {
         hair: 'hair_032',
         top: 'top_009', // Professional blouse
@@ -126,6 +137,8 @@ function getAvatarConfig(therapistId: string, gender: string, style: string) {
     },
     'dr-maya-patel': {
       ...baseConfig,
+      bodyType: 'female',
+      outfitGender: 'female',
       assets: {
         hair: 'hair_025',
         top: 'top_012', // Professional top
@@ -145,10 +158,60 @@ function getAvatarConfig(therapistId: string, gender: string, style: string) {
         footwear: 'footwear_009', // Professional shoes
         skinTone: 'light_medium'
       }
+    },
+    'dr-taylor-morgan': {
+      ...baseConfig,
+      bodyType: 'female',
+      outfitGender: 'female',
+      assets: {
+        hair: 'hair_024',
+        top: 'top_010', // Professional blazer
+        bottom: 'bottom_004', // Professional pants
+        footwear: 'footwear_004', // Professional heels
+        skinTone: 'light'
+      }
+    },
+    'dr-river-stone': {
+      ...baseConfig,
+      bodyType: 'female',
+      outfitGender: 'female',
+      assets: {
+        hair: 'hair_026',
+        top: 'top_013', // Casual professional
+        bottom: 'bottom_006', // Flowing pants
+        footwear: 'footwear_005', // Comfortable flats
+        skinTone: 'medium_light'
+      }
+    },
+    'dr-emma-thompson': {
+      ...baseConfig,
+      bodyType: 'female',
+      outfitGender: 'female',
+      assets: {
+        hair: 'hair_027',
+        top: 'top_011', // Warm sweater
+        bottom: 'bottom_002', // Professional pants
+        footwear: 'footwear_001', // Comfortable shoes
+        skinTone: 'light'
+      }
+    },
+    'dr-james-rodriguez': {
+      ...baseConfig,
+      bodyType: 'male',
+      outfitGender: 'male',
+      assets: {
+        hair: 'hair_020',
+        top: 'top_017', // Casual shirt
+        bottom: 'bottom_010', // Khakis
+        footwear: 'footwear_010', // Casual shoes
+        skinTone: 'medium_dark'
+      }
     }
   };
 
-  return therapistConfigs[therapistId] || baseConfig;
+  const config = therapistConfigs[therapistId] || baseConfig;
+  console.log('Final avatar config:', config);
+  return config;
 }
 
 async function getAvatar({ avatarId }) {

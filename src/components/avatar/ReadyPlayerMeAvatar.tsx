@@ -77,8 +77,23 @@ const ReadyPlayerMeAvatar: React.FC<ReadyPlayerMeAvatarProps> = ({
 
   // Helper function to determine gender based on therapist ID
   const getGenderForTherapist = (id: string): 'male' | 'female' => {
-    const maleTherapists = ['dr-michael-torres', 'dr-james-kim', 'dr-alex-rodriguez', 'dr-jordan-kim', 'dr-michael-rivers', 'dr-james-rodriguez'];
-    return maleTherapists.includes(id) ? 'male' : 'female';
+    // Database UUID mapping for male therapists
+    const maleTherapistIds = [
+      '0772c602-306b-42ad-b610-2dc15ba06714', // Dr. Alex Rodriguez
+      '2fee5506-ee6d-4504-bab7-2ba922bdc99a', // Dr. Jordan Kim
+      'e352e13d-99f9-4ffc-95a6-a05c3d935b74', // Dr. Michael Rivers
+      '1588e859-69a6-4b88-b2cc-c377441ac08c', // Dr. James Rodriguez
+      'a1b2c3d4-5e6f-7890-abcd-ef1234567890', // Dr. Jordan Taylor
+      'c3d4e5f6-7890-1234-cdef-345678901234', // Dr. Sam Morgan
+    ];
+    
+    // String ID mapping for male therapists (fallback)
+    const maleTherapistStringIds = [
+      'dr-alex-rodriguez', 'dr-jordan-kim', 'dr-michael-rivers', 
+      'dr-james-rodriguez', 'dr-jordan-taylor', 'dr-sam-morgan'
+    ];
+    
+    return maleTherapistIds.includes(id) || maleTherapistStringIds.includes(id) ? 'male' : 'female';
   };
 
   const updateAvatarExpression = async () => {
