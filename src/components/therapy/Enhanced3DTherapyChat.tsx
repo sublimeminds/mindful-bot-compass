@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useEnhancedChat } from '@/hooks/useEnhancedChat';
-import Advanced3DAvatarSystem from '@/components/avatar/Advanced3DAvatarSystem';
+import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import EnhancedEmotionDetection from '@/components/emotion/EnhancedEmotionDetection';
 import VoiceTherapyChat from '@/components/voice/VoiceTherapyChat';
 import { supabase } from '@/integrations/supabase/client';
@@ -65,7 +65,6 @@ const Enhanced3DTherapyChat: React.FC<Enhanced3DTherapyChatProps> = ({
 
   // UI State
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [is3DMode, setIs3DMode] = useState(true);
   const [showMetrics, setShowMetrics] = useState(false);
   const [cameraEnabled, setCameraEnabled] = useState(false);
   const [micEnabled, setMicEnabled] = useState(true);
@@ -83,7 +82,8 @@ const Enhanced3DTherapyChat: React.FC<Enhanced3DTherapyChatProps> = ({
 
   // Avatar State
   const [avatarSpeaking, setAvatarSpeaking] = useState(false);
-  const [avatarEmotion, setAvatarEmotion] = useState('neutral');
+  const [avatarEmotion, setAvatarEmotion] = useState<'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful'>('neutral');
+  const [isListening, setIsListening] = useState(false);
 
   // Session Management
   const sessionStartTime = useRef<Date>(new Date());
@@ -153,8 +153,7 @@ const Enhanced3DTherapyChat: React.FC<Enhanced3DTherapyChatProps> = ({
           emotionalContext: emotions,
           sessionMetrics: metrics,
           conversationHistory: messages.slice(-10), // Last 10 messages for context
-          useAdvancedPersonality: true,
-          include3DContext: is3DMode
+          useAdvancedPersonality: true
         }
       });
 
@@ -218,9 +217,6 @@ const Enhanced3DTherapyChat: React.FC<Enhanced3DTherapyChatProps> = ({
     setIsFullscreen(!isFullscreen);
   };
 
-  const toggle3DMode = () => {
-    setIs3DMode(!is3DMode);
-  };
 
   const toggleCamera = async () => {
     if (!cameraEnabled) {
@@ -267,21 +263,13 @@ const Enhanced3DTherapyChat: React.FC<Enhanced3DTherapyChatProps> = ({
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center space-x-2">
               <Brain className="h-5 w-5 text-therapy-600" />
-              <span>Enhanced 3D Therapy Session</span>
+              <span>Enhanced AI Therapy Session</span>
               <Badge variant="outline" className="bg-therapy-100 text-therapy-700">
                 {formatDuration(sessionMetrics.sessionDuration)}
               </Badge>
             </CardTitle>
             
             <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={toggle3DMode}
-                className={is3DMode ? 'bg-therapy-100' : ''}
-              >
-                {is3DMode ? '3D' : '2D'}
-              </Button>
               
               <Button
                 variant="outline"
@@ -324,131 +312,135 @@ const Enhanced3DTherapyChat: React.FC<Enhanced3DTherapyChatProps> = ({
 
       {/* Main therapy interface */}
       <div className="flex-1 flex">
-        {/* Left side - 3D Avatar or traditional chat */}
-        <div className={`${is3DMode ? 'w-1/2' : 'w-full'} flex flex-col`}>
-          {is3DMode ? (
-            <Advanced3DAvatarSystem
+        {/* Left side - Enhanced 2D Avatar */}
+        <div className="w-1/2 flex flex-col">
+          <div className="flex-1 bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center p-6">
+            <Professional2DAvatar
               therapistId={therapistId}
-              isActive={true}
-              emotions={currentEmotions}
-              onEmotionChange={setAvatarEmotion}
-              onSpeakingStateChange={setAvatarSpeaking}
-              className="flex-1"
+              therapistName="AI Therapist"
+              className="w-full h-full max-w-md"
+              size="xl"
+              showName={true}
+              emotion={avatarEmotion}
+              isListening={isListening}
+              isSpeaking={avatarSpeaking}
+              showVoiceIndicator={true}
+              therapeuticMode={true}
             />
-          ) : (
-            <div className="flex-1 p-6 overflow-y-auto">
-              {/* Traditional chat messages */}
-              <div className="space-y-4">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div
-                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                        message.isUser
-                          ? 'bg-therapy-600 text-white'
-                          : 'bg-gray-100 text-gray-900'
-                      }`}
-                    >
-                      <p>{message.content}</p>
-                      {message.emotion && (
-                        <Badge variant="outline" className="mt-1 text-xs">
-                          {message.emotion}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          </div>
         </div>
 
         {/* Right side - Controls and metrics */}
-        {is3DMode && (
-          <>
-            <Separator orientation="vertical" />
-            <div className="w-1/2 flex flex-col">
-              {/* Voice chat controls */}
-              <div className="p-4">
-                <VoiceTherapyChat
-                  onMessageReceived={(message, isVoice) => handleSendMessage(message, isVoice)}
-                  onVoiceAnalysis={(emotion, stressLevel) => {
-                    setCurrentEmotions([{ name: emotion, score: stressLevel, intensity: 'medium' }]);
-                    updateSessionMetrics([{ name: emotion, score: stressLevel }], stressLevel);
-                  }}
-                  isTherapistSpeaking={avatarSpeaking}
-                />
-              </div>
+        <Separator orientation="vertical" />
+        <div className="w-1/2 flex flex-col">
+          {/* Voice chat controls */}
+          <div className="p-4">
+            <VoiceTherapyChat
+              onMessageReceived={(message, isVoice) => handleSendMessage(message, isVoice)}
+              onVoiceAnalysis={(emotion, stressLevel) => {
+                setCurrentEmotions([{ name: emotion, score: stressLevel, intensity: 'medium' }]);
+                updateSessionMetrics([{ name: emotion, score: stressLevel }], stressLevel);
+                setAvatarEmotion(emotion as 'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful');
+                setIsListening(false);
+              }}
+              isTherapistSpeaking={avatarSpeaking}
+            />
+          </div>
 
-              <Separator />
+          <Separator />
 
-              {/* Emotion detection */}
-              <div className="p-4">
-                <EnhancedEmotionDetection
-                  onEmotionUpdate={handleEmotionUpdate}
-                  onTherapyInsights={handleTherapyInsights}
-                  isActive={micEnabled || cameraEnabled}
-                  mode="realtime"
-                />
-              </div>
-
-              {/* Session metrics */}
-              {showMetrics && (
-                <>
-                  <Separator />
-                  <div className="p-4 space-y-4">
-                    <h3 className="font-semibold text-therapy-700">Session Metrics</h3>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-therapy-50 p-3 rounded-lg">
-                        <div className="text-sm text-therapy-600">Engagement</div>
-                        <div className="text-lg font-bold text-therapy-700">
-                          {Math.round(sessionMetrics.engagementLevel * 100)}%
-                        </div>
-                      </div>
-                      
-                      <div className="bg-calm-50 p-3 rounded-lg">
-                        <div className="text-sm text-calm-600">Progress</div>
-                        <div className="text-lg font-bold text-calm-700">
-                          {Math.round(sessionMetrics.therapeuticProgress * 100)}%
-                        </div>
-                      </div>
-                      
-                      <div className="bg-green-50 p-3 rounded-lg">
-                        <div className="text-sm text-green-600">Stress Level</div>
-                        <div className="text-lg font-bold text-green-700">
-                          {Math.round((1 - sessionMetrics.stressLevel) * 100)}%
-                        </div>
-                      </div>
-                      
-                      <div className="bg-blue-50 p-3 rounded-lg">
-                        <div className="text-sm text-blue-600">Emotions</div>
-                        <div className="text-lg font-bold text-blue-700">
-                          {sessionMetrics.emotionalRange.length}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Therapeutic insights */}
-                    {therapeuticInsights.length > 0 && (
-                      <div className="space-y-2">
-                        <h4 className="font-medium text-therapy-600">Recent Insights</h4>
-                        {therapeuticInsights.slice(0, 3).map((insight, index) => (
-                          <div key={index} className="bg-white border border-therapy-200 p-2 rounded text-sm">
-                            <div className="font-medium capitalize">{insight.type.replace('_', ' ')}</div>
-                            <div className="text-gray-600">{insight.message}</div>
-                          </div>
-                        ))}
-                      </div>
+          {/* Chat messages */}
+          <div className="flex-1 p-4 overflow-y-auto">
+            <div className="space-y-4">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                      message.isUser
+                        ? 'bg-therapy-600 text-white'
+                        : 'bg-gray-100 text-gray-900'
+                    }`}
+                  >
+                    <p>{message.content}</p>
+                    {message.emotion && (
+                      <Badge variant="outline" className="mt-1 text-xs">
+                        {message.emotion}
+                      </Badge>
                     )}
                   </div>
-                </>
-              )}
+                </div>
+              ))}
             </div>
-          </>
-        )}
+          </div>
+
+          <Separator />
+
+          {/* Emotion detection */}
+          <div className="p-4">
+            <EnhancedEmotionDetection
+              onEmotionUpdate={handleEmotionUpdate}
+              onTherapyInsights={handleTherapyInsights}
+              isActive={micEnabled || cameraEnabled}
+              mode="realtime"
+            />
+          </div>
+
+          {/* Session metrics */}
+          {showMetrics && (
+            <>
+              <Separator />
+              <div className="p-4 space-y-4">
+                <h3 className="font-semibold text-therapy-700">Session Metrics</h3>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-therapy-50 p-3 rounded-lg">
+                    <div className="text-sm text-therapy-600">Engagement</div>
+                    <div className="text-lg font-bold text-therapy-700">
+                      {Math.round(sessionMetrics.engagementLevel * 100)}%
+                    </div>
+                  </div>
+                  
+                  <div className="bg-calm-50 p-3 rounded-lg">
+                    <div className="text-sm text-calm-600">Progress</div>
+                    <div className="text-lg font-bold text-calm-700">
+                      {Math.round(sessionMetrics.therapeuticProgress * 100)}%
+                    </div>
+                  </div>
+                  
+                  <div className="bg-green-50 p-3 rounded-lg">
+                    <div className="text-sm text-green-600">Stress Level</div>
+                    <div className="text-lg font-bold text-green-700">
+                      {Math.round((1 - sessionMetrics.stressLevel) * 100)}%
+                    </div>
+                  </div>
+                  
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <div className="text-sm text-blue-600">Emotions</div>
+                    <div className="text-lg font-bold text-blue-700">
+                      {sessionMetrics.emotionalRange.length}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Therapeutic insights */}
+                {therapeuticInsights.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-therapy-600">Recent Insights</h4>
+                    {therapeuticInsights.slice(0, 3).map((insight, index) => (
+                      <div key={index} className="bg-white border border-therapy-200 p-2 rounded text-sm">
+                        <div className="font-medium capitalize">{insight.type.replace('_', ' ')}</div>
+                        <div className="text-gray-600">{insight.message}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Footer with session controls */}

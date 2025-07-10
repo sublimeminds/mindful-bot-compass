@@ -3,7 +3,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useRealEnhancedChat } from '@/hooks/useRealEnhancedChat';
 import BulletproofDashboardLayout from '@/components/dashboard/BulletproofDashboardLayout';
-import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
+import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import EmotionCameraDetection from '@/components/avatar/EmotionCameraDetection';
 import VoiceRecorder from '@/components/voice/VoiceRecorder';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -319,14 +319,25 @@ const EnhancedTherapyChatWithAvatar = () => {
 
           {/* Avatar & Emotion Detection Sidebar */}
           <div className="space-y-4">
-            {/* 3D Therapist Avatar */}
-            <ThreeDTherapistAvatar
-              isListening={isListening}
-              isSpeaking={isSpeaking}
-              emotion={getAvatarEmotion()}
-              therapistPersonality={currentTherapist}
-              userEmotion={userEmotion}
-            />
+            {/* Enhanced 2D Therapist Avatar */}
+            <Card className="overflow-hidden">
+              <CardContent className="p-0">
+                <div className="h-80 bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
+                  <Professional2DAvatar
+                    therapistId={currentTherapist?.id || 'dr-sarah-chen'}
+                    therapistName={currentTherapist?.name || 'AI Therapist'}
+                    className="w-full h-full"
+                    size="xl"
+                    showName={true}
+                    emotion={getAvatarEmotion()}
+                    isListening={isListening}
+                    isSpeaking={isSpeaking}
+                    showVoiceIndicator={true}
+                    therapeuticMode={true}
+                  />
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Emotion Detection */}
             {cameraEnabled && (

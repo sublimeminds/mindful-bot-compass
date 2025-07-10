@@ -417,7 +417,7 @@ const TherapistDiscovery = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* Avatar Display with 3D Option */}
+                  {/* Enhanced 2D Avatar Display */}
                   <div 
                     className="h-64 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 group relative"
                     onClick={(e) => {
@@ -431,8 +431,11 @@ const TherapistDiscovery = () => {
                       className="w-full h-full"
                       size="lg"
                       showName={false}
-                      emotion="neutral"
+                      emotion="encouraging"
                       therapeuticMode={true}
+                      isListening={false}
+                      isSpeaking={false}
+                      showVoiceIndicator={true}
                     />
                   </div>
                   <div className="mt-4 pb-4 text-center">
@@ -737,16 +740,17 @@ const TherapistDiscovery = () => {
             <div className="p-4">
               {modalTherapist && (
                 <>
-                  <Professional2DAvatar
-                    therapistId={modalTherapist.avatarId}
-                    therapistName={modalTherapist.name}
-                    className="w-full h-64"
-                    size="xl"
-                    showName={true}
-                    emotion="encouraging"
-                    isSpeaking={isVoicePlaying}
-                    therapeuticMode={true}
-                  />
+                   <Professional2DAvatar
+                     therapistId={modalTherapist.avatarId}
+                     therapistName={modalTherapist.name}
+                     className="w-full h-64"
+                     size="xl"
+                     showName={true}
+                     emotion={isVoicePlaying ? 'encouraging' : 'neutral'}
+                     isSpeaking={isVoicePlaying}
+                     showVoiceIndicator={true}
+                     therapeuticMode={true}
+                   />
 
                   {/* Voice Preview */}
                   <div className="mt-4 text-center">
