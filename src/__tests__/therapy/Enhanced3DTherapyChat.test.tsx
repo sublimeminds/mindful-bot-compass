@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import Enhanced3DTherapyChat from '@/components/therapy/Enhanced3DTherapyChat';
 import { useEnhancedChat } from '@/hooks/useEnhancedChat';
 import { useToast } from '@/hooks/use-toast';
@@ -31,9 +31,9 @@ vi.mock('@react-three/drei', () => ({
   Environment: () => <div data-testid="environment" />
 }));
 
-const mockUseEnhancedChat = useEnhancedChat as vi.MockedFunction<typeof useEnhancedChat>;
-const mockUseToast = useToast as vi.MockedFunction<typeof useToast>;
-const mockSupabase = supabase as vi.Mocked<typeof supabase>;
+const mockUseEnhancedChat = useEnhancedChat as any;
+const mockUseToast = useToast as any;
+const mockSupabase = supabase as any;
 
 describe('Enhanced3DTherapyChat', () => {
   const mockToast = vi.fn();
@@ -173,7 +173,7 @@ describe('Enhanced3DTherapyChat', () => {
     });
 
     it('handles camera access denial gracefully', async () => {
-      (navigator.mediaDevices.getUserMedia as vi.Mock).mockRejectedValue(new Error('Permission denied'));
+      (navigator.mediaDevices.getUserMedia as any).mockRejectedValue(new Error('Permission denied'));
       
       render(<Enhanced3DTherapyChat {...defaultProps} />);
       
