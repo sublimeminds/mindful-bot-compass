@@ -1082,6 +1082,42 @@ export type Database = {
           },
         ]
       }
+      crisis_notification_escalation: {
+        Row: {
+          created_at: string
+          emergency_contacts_notified: boolean | null
+          escalation_data: Json | null
+          escalation_level: number
+          id: string
+          professional_notified: boolean | null
+          resolved_at: string | null
+          trigger_notification_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emergency_contacts_notified?: boolean | null
+          escalation_data?: Json | null
+          escalation_level?: number
+          id?: string
+          professional_notified?: boolean | null
+          resolved_at?: string | null
+          trigger_notification_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emergency_contacts_notified?: boolean | null
+          escalation_data?: Json | null
+          escalation_level?: number
+          id?: string
+          professional_notified?: boolean | null
+          resolved_at?: string | null
+          trigger_notification_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       crisis_resources: {
         Row: {
           availability: string | null
@@ -2745,6 +2781,36 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_context: {
+        Row: {
+          context_data: Json
+          context_type: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          user_id: string
+        }
+        Insert: {
+          context_data?: Json
+          context_type: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          user_id: string
+        }
+        Update: {
+          context_data?: Json
+          context_type?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       notification_deliveries: {
         Row: {
           clicked_at: string | null
@@ -2791,6 +2857,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notification_intelligence: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          delivery_preferences: Json | null
+          engagement_patterns: Json | null
+          id: string
+          last_calculated_at: string | null
+          optimal_send_times: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          delivery_preferences?: Json | null
+          engagement_patterns?: Json | null
+          id?: string
+          last_calculated_at?: string | null
+          optimal_send_times?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          delivery_preferences?: Json | null
+          engagement_patterns?: Json | null
+          id?: string
+          last_calculated_at?: string | null
+          optimal_send_times?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       notification_preferences: {
         Row: {
@@ -4857,6 +4959,42 @@ export type Database = {
           therapist_notes?: string | null
           unresolved_issues?: string[] | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      therapy_session_notifications: {
+        Row: {
+          created_at: string
+          engagement_data: Json | null
+          id: string
+          notification_type: string
+          scheduled_for: string
+          sent_at: string | null
+          session_context: Json | null
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          engagement_data?: Json | null
+          id?: string
+          notification_type: string
+          scheduled_for: string
+          sent_at?: string | null
+          session_context?: Json | null
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          engagement_data?: Json | null
+          id?: string
+          notification_type?: string
+          scheduled_for?: string
+          sent_at?: string | null
+          session_context?: Json | null
+          session_id?: string | null
           user_id?: string
         }
         Relationships: []
