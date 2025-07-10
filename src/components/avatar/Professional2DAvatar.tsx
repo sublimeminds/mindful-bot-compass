@@ -11,6 +11,8 @@ interface Professional2DAvatarProps {
   emotion?: 'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful';
   isListening?: boolean;
   isSpeaking?: boolean;
+  showVoiceIndicator?: boolean;
+  therapeuticMode?: boolean;
   onLoad?: () => void;
   onError?: (error: Error) => void;
 }
@@ -24,6 +26,8 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
   emotion = 'neutral',
   isListening = false,
   isSpeaking = false,
+  showVoiceIndicator = true,
+  therapeuticMode = true,
   onLoad,
   onError
 }) => {
@@ -115,20 +119,42 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
     return 'bg-green-500'; // default online status
   };
 
-  // Apply emotion-based styling
+  // Apply emotion-based styling with therapeutic enhancements
   const getEmotionStyling = () => {
-    const baseClasses = "transition-all duration-300";
+    const baseClasses = "transition-all duration-500 ease-in-out";
+    const breathingAnimation = therapeuticMode ? "animate-pulse" : "";
+    
     switch (emotion) {
       case 'happy':
       case 'encouraging':
-        return `${baseClasses} brightness-110 saturate-110`;
+        return `${baseClasses} ${breathingAnimation} brightness-110 saturate-110 ring-2 ring-therapy-200 shadow-therapy-glow`;
       case 'concerned':
-        return `${baseClasses} brightness-90 contrast-110`;
+        return `${baseClasses} ${breathingAnimation} brightness-90 contrast-110 ring-2 ring-orange-200 shadow-orange-glow`;
       case 'thoughtful':
-        return `${baseClasses} brightness-95 contrast-105`;
+        return `${baseClasses} ${breathingAnimation} brightness-95 contrast-105 ring-2 ring-calm-200 shadow-calm-glow`;
       default:
-        return baseClasses;
+        return `${baseClasses} ${breathingAnimation} ring-2 ring-therapy-100 shadow-therapy-subtle`;
     }
+  };
+
+  // Voice visualization circles
+  const VoiceVisualization = () => {
+    if (!showVoiceIndicator || (!isSpeaking && !isListening)) return null;
+    
+    return (
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Voice wave circles */}
+        <div className={`absolute inset-0 rounded-full border-2 ${
+          isSpeaking ? 'border-green-400 animate-ping' : 'border-blue-400 animate-pulse'
+        } opacity-50`} />
+        <div className={`absolute inset-1 rounded-full border-2 ${
+          isSpeaking ? 'border-green-300 animate-ping' : 'border-blue-300 animate-pulse'
+        } opacity-30 animation-delay-200`} />
+        <div className={`absolute inset-2 rounded-full border-2 ${
+          isSpeaking ? 'border-green-200 animate-ping' : 'border-blue-200 animate-pulse'
+        } opacity-20 animation-delay-400`} />
+      </div>
+    );
   };
 
   return (
@@ -159,8 +185,11 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
           </AvatarFallback>
         </Avatar>
         
+        {/* Voice Visualization */}
+        <VoiceVisualization />
+        
         {/* Status indicator */}
-        <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${getStatusColor()} rounded-full border-2 border-white`}>
+        <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${getStatusColor()} rounded-full border-2 border-white shadow-sm`}>
           {isListening && (
             <div className="absolute inset-0 bg-blue-300 rounded-full animate-pulse"></div>
           )}

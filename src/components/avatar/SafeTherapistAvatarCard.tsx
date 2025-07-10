@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { User } from 'lucide-react';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import ReactErrorBoundary from './ReactErrorBoundary';
-import DIDAvatar from './DIDAvatar';
+import Professional2DAvatar from './Professional2DAvatar';
 
 interface SafeTherapistAvatarCardProps {
   therapist: {
@@ -61,12 +61,13 @@ const SafeTherapistAvatarCard = ({
                   fallback={<AvatarFallback therapist={therapist} />}
                   onError={(error) => console.warn('Avatar error (non-critical):', error)}
                 >
-                  <DIDAvatar
-                    therapistId={therapist.id}
-                    emotion="neutral"
+                  <Professional2DAvatar
+                    therapistId={avatarId}
+                    therapistName={therapist.name}
                     className="w-full h-full"
-                    size="medium"
-                    isAnimated={false}
+                    showName={false}
+                    size="md"
+                    emotion="neutral"
                   />
                 </ReactErrorBoundary>
               </Suspense>

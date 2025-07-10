@@ -264,6 +264,12 @@
     --flow-800: 175 65% 35%;
     --flow-900: 175 60% 26%;
     --flow-950: 175 55% 17%;
+    
+    /* Therapeutic Shadow & Glow Effects */
+    --shadow-therapy-subtle: 0 2px 8px hsla(var(--therapy-500) / 0.15);
+    --shadow-therapy-glow: 0 4px 16px hsla(var(--therapy-500) / 0.25);
+    --shadow-calm-glow: 0 4px 16px hsla(var(--calm-500) / 0.25);
+    --shadow-orange-glow: 0 4px 16px hsla(25 95% 53% / 0.25);
   }
 
   .dark {

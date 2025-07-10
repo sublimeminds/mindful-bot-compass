@@ -125,6 +125,17 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			boxShadow: {
+				'therapy-subtle': 'var(--shadow-therapy-subtle)',
+				'therapy-glow': 'var(--shadow-therapy-glow)',
+				'calm-glow': 'var(--shadow-calm-glow)',
+				'orange-glow': 'var(--shadow-orange-glow)'
+			},
+			animationDelay: {
+				'200': '200ms',
+				'400': '400ms',
+				'600': '600ms'
+			},
 			keyframes: {
 				'accordion-down': {
 					from: {
