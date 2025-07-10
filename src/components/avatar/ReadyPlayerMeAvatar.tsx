@@ -23,14 +23,8 @@ const ReadyPlayerMeAvatar: React.FC<ReadyPlayerMeAvatarProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
 
-  // Avatar URLs for different therapists (pre-created professional avatars)
-  const therapistAvatars = {
-    'dr-sarah-chen': 'https://models.readyplayer.me/66f8b8c8e6b7a3001234567a.glb',
-    'dr-michael-torres': 'https://models.readyplayer.me/66f8b8c8e6b7a3001234567b.glb',
-    'dr-emily-watson': 'https://models.readyplayer.me/66f8b8c8e6b7a3001234567c.glb',
-    'dr-james-kim': 'https://models.readyplayer.me/66f8b8c8e6b7a3001234567d.glb',
-    'dr-sofia-rodriguez': 'https://models.readyplayer.me/66f8b8c8e6b7a3001234567e.glb'
-  };
+  // Avatar URLs for different therapists - will be generated via Ready Player Me API
+  const therapistAvatars: Record<string, string> = {};
 
   const sizeClasses = {
     small: 'w-16 h-16',
@@ -51,31 +45,40 @@ const ReadyPlayerMeAvatar: React.FC<ReadyPlayerMeAvatarProps> = ({
   const initializeAvatar = async () => {
     try {
       setLoading(true);
+      setError('');
       
-      // Use pre-created avatar or create new one
-      const presetAvatarUrl = therapistAvatars[therapistId as keyof typeof therapistAvatars];
-      
-      if (presetAvatarUrl) {
-        setAvatarUrl(presetAvatarUrl);
-      } else {
-        // Create new avatar via edge function
-        const { data, error } = await supabase.functions.invoke('ready-player-me', {
-          body: {
-            action: 'createAvatar',
-            gender: 'female', // Default for therapist
-            style: 'professional'
-          }
-        });
+      // Generate avatar based on therapist ID for consistency
+      const { data, error } = await supabase.functions.invoke('ready-player-me', {
+        body: {
+          action: 'createAvatar',
+          therapistId: therapistId,
+          gender: getGenderForTherapist(therapistId),
+          style: 'professional'
+        }
+      });
 
-        if (error) throw error;
+      if (error) {
+        console.error('Ready Player Me API error:', error);
+        throw new Error(error.message || 'Failed to create avatar');
+      }
+
+      if (data?.avatarUrl) {
         setAvatarUrl(data.avatarUrl);
+      } else {
+        throw new Error('No avatar URL returned from API');
       }
     } catch (err) {
       console.error('Failed to initialize avatar:', err);
-      setError('Failed to load avatar');
+      setError(err instanceof Error ? err.message : 'Failed to load avatar');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Helper function to determine gender based on therapist ID
+  const getGenderForTherapist = (id: string): 'male' | 'female' => {
+    const maleTherapists = ['dr-michael-torres', 'dr-james-kim', 'dr-alex-rodriguez', 'dr-jordan-kim', 'dr-michael-rivers', 'dr-james-rodriguez'];
+    return maleTherapists.includes(id) ? 'male' : 'female';
   };
 
   const updateAvatarExpression = async () => {
@@ -127,13 +130,18 @@ const ReadyPlayerMeAvatar: React.FC<ReadyPlayerMeAvatarProps> = ({
     <div className={`${sizeClasses[size]} ${className} relative overflow-hidden rounded-full bg-therapy-50`}>
       <iframe
         ref={iframeRef}
-        src={`https://demo.readyplayer.me/avatar?frameUrl=${encodeURIComponent(avatarUrl)}&background=transparent`}
+        src={`https://demo.readyplayer.me/avatar?frameUrl=${encodeURIComponent(avatarUrl)}&background=transparent&camera=portrait&quality=high`}
         className="w-full h-full border-0"
         allow="camera; microphone"
         title={`Avatar for ${therapistId}`}
+        loading="lazy"
         style={{
           transform: 'scale(1.2)', // Zoom in slightly for better framing
           transformOrigin: 'center center'
+        }}
+        onError={() => {
+          console.error('Avatar iframe failed to load');
+          setError('Avatar display failed');
         }}
       />
       
