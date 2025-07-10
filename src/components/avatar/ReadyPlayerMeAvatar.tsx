@@ -47,6 +47,8 @@ const ReadyPlayerMeAvatar: React.FC<ReadyPlayerMeAvatarProps> = ({
       setLoading(true);
       setError('');
       
+      console.log('Initializing avatar for therapist:', therapistId);
+      
       // Generate avatar based on therapist ID for consistency
       const { data, error } = await supabase.functions.invoke('ready-player-me', {
         body: {
@@ -57,12 +59,15 @@ const ReadyPlayerMeAvatar: React.FC<ReadyPlayerMeAvatarProps> = ({
         }
       });
 
+      console.log('Avatar creation response:', { data, error });
+
       if (error) {
         console.error('Ready Player Me API error:', error);
         throw new Error(error.message || 'Failed to create avatar');
       }
 
       if (data?.avatarUrl) {
+        console.log('Avatar URL received:', data.avatarUrl);
         setAvatarUrl(data.avatarUrl);
       } else {
         throw new Error('No avatar URL returned from API');

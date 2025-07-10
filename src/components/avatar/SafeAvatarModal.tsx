@@ -38,10 +38,8 @@ const SafeAvatarModal: React.FC<SafeAvatarModalProps> = ({
   }, [isOpen]);
 
   const tryLoadingAvatar = () => {
-    // Temporarily disable 3D mode to prevent WebGL context errors
-    // TODO: Re-enable with proper WebGL context management
     if (retryCount < maxRetries) {
-      // setAvatarMode('3d'); // Disabled until WebGL context management is implemented
+      setAvatarMode('3d'); // Re-enabled with simplified avatar loading
       setRetryCount(prev => prev + 1);
     } else {
       setAvatarMode('error');
