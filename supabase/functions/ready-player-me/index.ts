@@ -99,38 +99,50 @@ function getAvatarConfig(therapistId: string, gender: string, style: string) {
         skinTone: 'light_medium'
       }
     },
-    'dr-michael-torres': {
+    'dr-michael-rivers': {
       ...baseConfig,
       bodyType: 'male',
       outfitGender: 'male',
       assets: {
         hair: 'hair_021',
-        top: 'top_015', // Business shirt with tie
+        top: 'top_015', // Business shirt
         bottom: 'bottom_008', // Dress pants
         footwear: 'footwear_008', // Dress shoes
-        facialHair: 'facialHair_002',
+        facialHair: 'facialHair_001',
         skinTone: 'medium'
       }
     },
-    'dr-emily-watson': {
-      ...baseConfig,
-      assets: {
-        hair: 'hair_025',
-        top: 'top_012', // Cardigan
-        bottom: 'bottom_003', // Professional pants
-        footwear: 'footwear_002', // Flats
-        skinTone: 'light'
-      }
-    },
-    'dr-james-kim': {
+    'dr-alex-rodriguez': {
       ...baseConfig,
       bodyType: 'male',
       outfitGender: 'male',
       assets: {
         hair: 'hair_018',
-        top: 'top_014', // Polo shirt
-        bottom: 'bottom_007', // Chinos
-        footwear: 'footwear_007', // Loafers
+        top: 'top_014', // Professional shirt
+        bottom: 'bottom_007', // Dress pants
+        footwear: 'footwear_007', // Professional shoes
+        skinTone: 'medium_dark'
+      }
+    },
+    'dr-maya-patel': {
+      ...baseConfig,
+      assets: {
+        hair: 'hair_025',
+        top: 'top_012', // Professional top
+        bottom: 'bottom_003', // Professional pants
+        footwear: 'footwear_002', // Professional flats
+        skinTone: 'medium'
+      }
+    },
+    'dr-jordan-kim': {
+      ...baseConfig,
+      bodyType: 'male',
+      outfitGender: 'male',
+      assets: {
+        hair: 'hair_019',
+        top: 'top_016', // Professional shirt
+        bottom: 'bottom_009', // Dress pants
+        footwear: 'footwear_009', // Professional shoes
         skinTone: 'light_medium'
       }
     }

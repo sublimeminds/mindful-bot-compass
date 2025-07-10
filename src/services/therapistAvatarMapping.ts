@@ -48,7 +48,7 @@ export const getVoiceIdForTherapist = (therapistId: string): string => {
     '2fee5506-ee6d-4504-bab7-2ba922bdc99a': 'onwK4e9ZLuTAKqWW03F9', // Dr. Jordan Kim - gentle trauma-informed male
     '84148de7-b04d-4547-9d9b-80665efbd4af': 'XB0fDUnXU5powFXDhCwa', // Dr. Taylor Morgan - empathetic female
     '79298cfb-6997-4cc6-9b21-ffaacb525c54': 'SAz9YHcvj6GT2YYXdXww', // Dr. River Stone - wise holistic voice
-    'e352e13d-99f9-4ffc-95a6-a05c3d935b74': 'N2lVS1w4EtoT3dr4eOWO', // Dr. Michael Rivers - calm mindful male
+    'e352e13d-99f9-4ffc-95a6-a05c3d935b74': 'JBFqnCBsd6RMkjVDRZzb', // Dr. Michael Rivers - calm mindful male (George)
     '88a93e17-4338-4834-b360-55c9db4cc667': 'pFZP5JQG7iQjIQuC4Bku', // Dr. Emma Thompson - warm humanistic female
     '1588e859-69a6-4b88-b2cc-c377441ac08c': 'bIHbv24MWmeRgasZH58o', // Dr. James Rodriguez - optimistic male
     
