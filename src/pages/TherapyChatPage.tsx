@@ -6,6 +6,7 @@ import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWi
 import VoiceTherapyChat from '@/components/voice/VoiceTherapyChat';
 import RealTimeSessionManager from '@/components/session/RealTimeSessionManager';
 import EnhancedTherapyChatWithAvatar from '@/components/therapy/EnhancedTherapyChatWithAvatar';
+import EnhancedEmotionDetection from '@/components/emotion/EnhancedEmotionDetection';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MessageSquare, Mic, Brain } from 'lucide-react';
@@ -119,40 +120,14 @@ const TherapyChatPage = () => {
               </div>
               
               <div className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">Current Mood</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-therapy-600 capitalize">
-                        {currentMood}
-                      </div>
-                      <div className="text-sm text-gray-600 mt-1">
-                        Detected from voice
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">Stress Level</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-therapy-600">
-                        {Math.round(stressLevel * 100)}%
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div 
-                          className="bg-gradient-to-r from-therapy-500 to-calm-500 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${stressLevel * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <EnhancedEmotionDetection
+                  onEmotionUpdate={(emotions, primary, stress) => {
+                    setCurrentMood(primary);
+                    setStressLevel(stress);
+                  }}
+                  isActive={true}
+                  mode="voice"
+                />
               </div>
             </div>
           </TabsContent>

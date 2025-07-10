@@ -1,0 +1,154 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+
+interface ReadyPlayerMeAvatarProps {
+  therapistId?: string;
+  emotion?: 'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful' | 'empathetic';
+  isListening?: boolean;
+  isSpeaking?: boolean;
+  className?: string;
+  size?: 'small' | 'medium' | 'large';
+}
+
+const ReadyPlayerMeAvatar: React.FC<ReadyPlayerMeAvatarProps> = ({
+  therapistId = 'dr-sarah-chen',
+  emotion = 'neutral',
+  isListening = false,
+  isSpeaking = false,
+  className = '',
+  size = 'medium'
+}) => {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>('');
+
+  // Avatar URLs for different therapists (pre-created professional avatars)
+  const therapistAvatars = {
+    'dr-sarah-chen': 'https://models.readyplayer.me/66f8b8c8e6b7a3001234567a.glb',
+    'dr-michael-torres': 'https://models.readyplayer.me/66f8b8c8e6b7a3001234567b.glb',
+    'dr-emily-watson': 'https://models.readyplayer.me/66f8b8c8e6b7a3001234567c.glb',
+    'dr-james-kim': 'https://models.readyplayer.me/66f8b8c8e6b7a3001234567d.glb',
+    'dr-sofia-rodriguez': 'https://models.readyplayer.me/66f8b8c8e6b7a3001234567e.glb'
+  };
+
+  const sizeClasses = {
+    small: 'w-16 h-16',
+    medium: 'w-32 h-32',
+    large: 'w-48 h-48'
+  };
+
+  useEffect(() => {
+    initializeAvatar();
+  }, [therapistId]);
+
+  useEffect(() => {
+    if (avatarUrl && emotion) {
+      updateAvatarExpression();
+    }
+  }, [emotion, isListening, isSpeaking]);
+
+  const initializeAvatar = async () => {
+    try {
+      setLoading(true);
+      
+      // Use pre-created avatar or create new one
+      const presetAvatarUrl = therapistAvatars[therapistId as keyof typeof therapistAvatars];
+      
+      if (presetAvatarUrl) {
+        setAvatarUrl(presetAvatarUrl);
+      } else {
+        // Create new avatar via edge function
+        const { data, error } = await supabase.functions.invoke('ready-player-me', {
+          body: {
+            action: 'createAvatar',
+            gender: 'female', // Default for therapist
+            style: 'professional'
+          }
+        });
+
+        if (error) throw error;
+        setAvatarUrl(data.avatarUrl);
+      }
+    } catch (err) {
+      console.error('Failed to initialize avatar:', err);
+      setError('Failed to load avatar');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateAvatarExpression = async () => {
+    if (!avatarUrl) return;
+
+    try {
+      // Determine current emotion based on state
+      let currentEmotion = emotion;
+      
+      if (isListening) {
+        currentEmotion = 'encouraging';
+      } else if (isSpeaking) {
+        currentEmotion = 'empathetic';
+      }
+
+      // Update avatar expression via edge function
+      await supabase.functions.invoke('ready-player-me', {
+        body: {
+          action: 'updateExpression',
+          avatarId: avatarUrl.split('/').pop()?.split('.')[0],
+          emotion: currentEmotion,
+          intensity: 0.7
+        }
+      });
+    } catch (err) {
+      console.error('Failed to update avatar expression:', err);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className={`${sizeClasses[size]} ${className} flex items-center justify-center bg-therapy-50 rounded-full animate-pulse`}>
+        <div className="w-8 h-8 border-2 border-therapy-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error || !avatarUrl) {
+    return (
+      <div className={`${sizeClasses[size]} ${className} flex items-center justify-center bg-therapy-100 rounded-full`}>
+        <div className="text-therapy-600 font-semibold text-lg">
+          {therapistId.split('-').map(word => word[0]?.toUpperCase()).join('')}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${sizeClasses[size]} ${className} relative overflow-hidden rounded-full bg-therapy-50`}>
+      <iframe
+        ref={iframeRef}
+        src={`https://demo.readyplayer.me/avatar?frameUrl=${encodeURIComponent(avatarUrl)}&background=transparent`}
+        className="w-full h-full border-0"
+        allow="camera; microphone"
+        title={`Avatar for ${therapistId}`}
+        style={{
+          transform: 'scale(1.2)', // Zoom in slightly for better framing
+          transformOrigin: 'center center'
+        }}
+      />
+      
+      {/* Status indicators */}
+      {isListening && (
+        <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white animate-pulse" />
+      )}
+      
+      {isSpeaking && (
+        <div className="absolute bottom-0 left-0 w-4 h-4 bg-blue-500 rounded-full border-2 border-white">
+          <div className="w-full h-full bg-blue-400 rounded-full animate-ping" />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ReadyPlayerMeAvatar;

@@ -133,3 +133,9 @@ secret = ""
 
 [functions.automated-health-check]
 verify_jwt = false
+
+[functions.ready-player-me]
+verify_jwt = false
+
+[functions.hume-emotion]
+verify_jwt = false

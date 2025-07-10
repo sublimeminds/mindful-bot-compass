@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Brain, ArrowRight, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/contexts/TherapistContext';
-import ThreeDTherapistAvatar from '@/components/avatar/ThreeDTherapistAvatar';
+import ReadyPlayerMeAvatar from '@/components/avatar/ReadyPlayerMeAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 
 const TherapistWidget = () => {
@@ -52,15 +52,14 @@ const TherapistWidget = () => {
         <div className="space-y-3">
           <div className="flex items-center space-x-3">
             {/* 3D Avatar Mini Display */}
-            <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-therapy-50 to-calm-50">
-              <Suspense fallback={<Skeleton className="w-full h-full rounded-full" />}>
-                <ThreeDTherapistAvatar
-                  therapistId={getAvatarIdForTherapist(currentTherapist.id)}
-                  emotion="neutral"
-                  showControls={false}
-                />
-              </Suspense>
-            </div>
+            <Suspense fallback={<Skeleton className="w-12 h-12 rounded-full" />}>
+              <ReadyPlayerMeAvatar
+                therapistId={getAvatarIdForTherapist(currentTherapist.id)}
+                emotion="neutral"
+                size="small"
+                className="border-2 border-therapy-100"
+              />
+            </Suspense>
             <div className="flex-1">
               <h3 className="font-semibold">{currentTherapist.name}</h3>
               <p className="text-sm text-muted-foreground">{currentTherapist.title}</p>
