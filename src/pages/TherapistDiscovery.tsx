@@ -25,7 +25,7 @@ import {
   MessageCircle
 } from 'lucide-react';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
-import RealisticHuman3DAvatar from '@/components/avatar/RealisticHuman3DAvatar';
+import ReadyPlayerMeAvatar from '@/components/avatar/ReadyPlayerMeAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -459,10 +459,11 @@ const TherapistDiscovery = () => {
                           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
                         </div>
                       }>
-                        <RealisticHuman3DAvatar
+                        <ReadyPlayerMeAvatar
                           therapistId={therapist.avatarId}
-                          emotion={{ name: "neutral", intensity: 0.7, confidence: 0.9 }}
+                          emotion="neutral"
                           className="w-full h-full"
+                          size="medium"
                         />
                       </Suspense>
                     ) : (
@@ -823,11 +824,12 @@ const TherapistDiscovery = () => {
                           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-therapy-500"></div>
                         </div>
                       }>
-                        <RealisticHuman3DAvatar
+                        <ReadyPlayerMeAvatar
                           therapistId={modalTherapist?.avatarId}
-                          emotion={{ name: "welcoming", intensity: 0.8, confidence: 0.9 }}
+                          emotion="encouraging"
                           isSpeaking={isVoicePlaying}
                           className="w-full h-full"
+                          size="large"
                         />
                       </Suspense>
                     </div>
