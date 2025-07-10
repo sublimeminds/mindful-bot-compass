@@ -72,7 +72,8 @@ export class IntelligentNotificationService {
         }
 
         // Track notification type engagement
-        const notificationType = event.metadata?.notification_type || 'unknown';
+        const metadata = event.metadata as Record<string, any> | null;
+        const notificationType = metadata?.notification_type || 'unknown';
         if (!typeEngagement[notificationType]) {
           typeEngagement[notificationType] = { clicks: 0, total: 0 };
         }
@@ -473,5 +474,143 @@ export class IntelligentNotificationService {
     } catch (error) {
       console.error('Error notifying emergency contacts:', error);
     }
+  }
+
+  /**
+   * Create a custom notification through the notification engine
+   */
+  static async createCustomNotification(
+    userId: string,
+    type: string,
+    title: string,
+    message: string,
+    priority: 'low' | 'medium' | 'high' = 'medium',
+    data?: Record<string, any>
+  ): Promise<boolean> {
+    try {
+      // Check for crisis indicators in the notification content
+      await this.detectCrisisFromNotification(userId, { 
+        type, 
+        title, 
+        message, 
+        priority, 
+        ...data 
+      });
+
+      // Send through notification engine with intelligent timing
+      const optimalTime = await this.getOptimalSendTime(userId, type);
+      
+      await NotificationEngine.sendNotification({
+        userId,
+        type,
+        title,
+        message,
+        priority,
+        scheduledFor: optimalTime,
+        data: {
+          automated: false,
+          custom: true,
+          ...data
+        }
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Error creating custom notification:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Process session completion for intelligent notifications
+   */
+  static async processSessionCompletion(
+    userId: string,
+    sessionDetails: Record<string, any>
+  ): Promise<void> {
+    try {
+      // Mark session as inactive
+      await this.setSessionContext(userId, false);
+
+      // Analyze session for insights and potential notifications
+      const sessionInsights = await this.analyzeSessionForInsights(sessionDetails);
+      
+      if (sessionInsights.length > 0) {
+        // Schedule follow-up notifications based on session insights
+        for (const insight of sessionInsights) {
+          await this.createCustomNotification(
+            userId,
+            insight.type,
+            insight.title,
+            insight.message,
+            insight.priority,
+            { sessionId: sessionDetails.id, insight: insight.data }
+          );
+        }
+      }
+
+      // Update notification intelligence with session completion data
+      await this.calculateOptimalTiming(userId);
+    } catch (error) {
+      console.error('Error processing session completion:', error);
+    }
+  }
+
+  /**
+   * Analyze session for potential insights and notifications
+   */
+  private static async analyzeSessionForInsights(
+    sessionDetails: Record<string, any>
+  ): Promise<Array<{
+    type: string;
+    title: string;
+    message: string;
+    priority: 'low' | 'medium' | 'high';
+    data: Record<string, any>;
+  }>> {
+    const insights = [];
+
+    try {
+      // Check session duration for engagement insight
+      if (sessionDetails.duration && sessionDetails.duration > 45) {
+        insights.push({
+          type: 'engagement_insight',
+          title: 'Great Session Engagement! 🌟',
+          message: 'You had a really engaged session today. Consider scheduling your next session soon to maintain momentum.',
+          priority: 'medium' as const,
+          data: { sessionDuration: sessionDetails.duration }
+        });
+      }
+
+      // Check for mood improvements
+      if (sessionDetails.pre_mood && sessionDetails.post_mood) {
+        const moodImprovement = sessionDetails.post_mood - sessionDetails.pre_mood;
+        if (moodImprovement >= 2) {
+          insights.push({
+            type: 'mood_improvement',
+            title: 'Mood Boost Detected! 💚',
+            message: `Your mood improved significantly during this session. Great progress!`,
+            priority: 'medium' as const,
+            data: { moodImprovement, preMood: sessionDetails.pre_mood, postMood: sessionDetails.post_mood }
+          });
+        }
+      }
+
+      // Check for breakthrough moments or insights
+      if (sessionDetails.insights && sessionDetails.insights.length > 0) {
+        insights.push({
+          type: 'insight_generated',
+          title: 'New Insights Available 💡',
+          message: 'You discovered some valuable insights in your last session. Take a moment to review them.',
+          priority: 'medium' as const,
+          data: { insightCount: sessionDetails.insights.length }
+        });
+      }
+
+    } catch (error) {
+      console.error('Error analyzing session insights:', error);
+    }
+
+    return insights;
   }
 }
