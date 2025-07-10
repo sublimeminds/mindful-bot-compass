@@ -140,6 +140,16 @@ function getAvatarConfig(therapistId: string, gender: string, style: string) {
     }
   };
 
+  // UUID to therapist mapping from TherapistMatcher
+  const therapistUUIDs = {
+    'ed979f27-2491-43f1-a779-5095febb68b2': 'dr-sarah-chen',     // Dr. Sarah Chen
+    '9492ab1a-eab2-4c5f-a8e3-40870b2ca857': 'dr-maya-patel',     // Dr. Maya Patel
+    '0772c602-306b-42ad-b610-2dc15ba06714': 'dr-alex-rodriguez',  // Dr. Alex Rodriguez
+    '2fee5506-ee6d-4504-bab7-2ba922bdc99a': 'dr-jordan-kim',     // Dr. Jordan Kim
+    '84148de7-b04d-4547-9d9b-80665efbd4af': 'dr-taylor-morgan',  // Dr. Taylor Morgan
+    '79298cfb-6997-4cc6-9b21-ffaacb525c54': 'dr-river-stone'     // Dr. River Stone
+  };
+
   // Therapist-specific professional avatars
   const therapistConfigs = {
     'dr-sarah-chen': {
@@ -154,15 +164,15 @@ function getAvatarConfig(therapistId: string, gender: string, style: string) {
         }
       }
     },
-    'dr-michael-rivers': {
+    'dr-maya-patel': {
       ...baseConfig,
-      source_url: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop&crop=face',
+      source_url: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face',
       presenter_config: {
         ...baseConfig.presenter_config,
         expressions: {
           start_frame: 0,
-          expression: 'confident',
-          intensity: 0.5
+          expression: 'calm',
+          intensity: 0.6
         }
       }
     },
@@ -175,18 +185,6 @@ function getAvatarConfig(therapistId: string, gender: string, style: string) {
           start_frame: 0,
           expression: 'warm',
           intensity: 0.7
-        }
-      }
-    },
-    'dr-maya-patel': {
-      ...baseConfig,
-      source_url: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face',
-      presenter_config: {
-        ...baseConfig.presenter_config,
-        expressions: {
-          start_frame: 0,
-          expression: 'calm',
-          intensity: 0.6
         }
       }
     },
@@ -213,10 +211,25 @@ function getAvatarConfig(therapistId: string, gender: string, style: string) {
           intensity: 0.6
         }
       }
+    },
+    'dr-river-stone': {
+      ...baseConfig,
+      source_url: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=400&h=400&fit=crop&crop=face',
+      presenter_config: {
+        ...baseConfig.presenter_config,
+        expressions: {
+          start_frame: 0,
+          expression: 'peaceful',
+          intensity: 0.6
+        }
+      }
     }
   };
 
-  const config = therapistConfigs[therapistId] || baseConfig;
+  // Handle UUID input by mapping to string IDs
+  const mappedTherapistId = therapistUUIDs[therapistId] || therapistId;
+
+  const config = therapistConfigs[mappedTherapistId] || baseConfig;
   console.log('Final D-ID config:', config);
   return config;
 }

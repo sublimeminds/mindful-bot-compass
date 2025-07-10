@@ -5,20 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { User } from 'lucide-react';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import ReactErrorBoundary from './ReactErrorBoundary';
-
-// Lazy load the Professional2DAvatar with error handling
-const Professional2DAvatar = React.lazy(() => 
-  import('@/components/avatar/Professional2DAvatar').catch((error) => {
-    console.warn('Professional2DAvatar import failed in SafeTherapistAvatarCard:', error);
-    return {
-      default: () => (
-        <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-lg flex items-center justify-center text-white font-bold">
-          AI
-        </div>
-      )
-    };
-  })
-);
+import DIDAvatar from './DIDAvatar';
 
 interface SafeTherapistAvatarCardProps {
   therapist: {
@@ -74,13 +61,12 @@ const SafeTherapistAvatarCard = ({
                   fallback={<AvatarFallback therapist={therapist} />}
                   onError={(error) => console.warn('Avatar error (non-critical):', error)}
                 >
-                  <Professional2DAvatar
-                    therapistId={avatarId}
-                    therapistName={therapist.name}
-                    className="w-full h-full"
-                    showName={false}
-                    size="md"
+                  <DIDAvatar
+                    therapistId={therapist.id}
                     emotion="neutral"
+                    className="w-full h-full"
+                    size="medium"
+                    isAnimated={false}
                   />
                 </ReactErrorBoundary>
               </Suspense>
