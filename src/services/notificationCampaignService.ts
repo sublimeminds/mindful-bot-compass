@@ -1,459 +1,374 @@
 import { supabase } from '@/integrations/supabase/client';
-import { EnhancedNotificationService } from './enhancedNotificationService';
-
-const enhancedNotificationService = new EnhancedNotificationService();
-
-export interface CampaignStep {
-  id: string;
-  stepNumber: number;
-  title: string;
-  message: string;
-  delayHours: number;
-  condition?: {
-    type: 'engagement' | 'mood_check' | 'session_completion' | 'goal_progress';
-    threshold?: number;
-  };
-  channels: string[];
-  priority: 'low' | 'medium' | 'high';
-}
+import { NotificationEngine } from './notificationEngine';
 
 export interface NotificationCampaign {
   id: string;
   name: string;
-  description: string;
-  triggerType: 'onboarding' | 'engagement' | 'retention' | 'wellness_check';
-  isActive: boolean;
-  steps: CampaignStep[];
-  targetAudience: {
-    planTypes?: string[];
-    activityLevel?: 'low' | 'medium' | 'high';
-    riskLevel?: 'low' | 'moderate' | 'high';
-  };
-  abTestConfig?: {
-    enabled: boolean;
-    variants: Array<{
-      name: string;
-      percentage: number;
-      stepOverrides: Partial<CampaignStep>[];
-    }>;
-  };
-  stats: {
-    sent: number;
-    delivered: number;
-    engaged: number;
-    completed: number;
-  };
-}
-
-export interface UserCampaignProgress {
-  userId: string;
-  campaignId: string;
-  currentStep: number;
-  startedAt: Date;
-  lastStepAt?: Date;
+  description?: string;
+  campaignType: 'onboarding' | 'retention' | 'engagement' | 'educational';
+  targetAudience: Record<string, any>;
+  notificationSequence: CampaignStep[];
+  personalizationRules: Record<string, any>;
+  scheduling: Record<string, any>;
+  status: 'draft' | 'scheduled' | 'running' | 'completed' | 'paused';
+  metrics: Record<string, any>;
+  startedAt?: Date;
   completedAt?: Date;
-  abTestVariant?: string;
-  engagementEvents: Array<{
-    stepId: string;
-    event: 'sent' | 'delivered' | 'opened' | 'clicked' | 'completed';
-    timestamp: Date;
-  }>;
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-class NotificationCampaignService {
-  private campaigns: Map<string, NotificationCampaign> = new Map();
-  private userProgress: Map<string, UserCampaignProgress[]> = new Map();
+export interface CampaignStep {
+  id: string;
+  stepOrder: number;
+  title: string;
+  message: string;
+  delayHours: number;
+  triggerConditions?: Record<string, any>;
+  deliveryMethods: string[];
+  personalization?: Record<string, any>;
+}
 
-  constructor() {
-    this.initializeDefaultCampaigns();
+export interface CampaignEnrollment {
+  id: string;
+  campaignId: string;
+  userId: string;
+  currentStep: number;
+  enrollmentData: Record<string, any>;
+  completionStatus: 'active' | 'completed' | 'opted_out' | 'failed';
+  enrolledAt: Date;
+  completedAt?: Date;
+}
+
+export class NotificationCampaignService {
+  /**
+   * Create a new notification campaign
+   */
+  static async createCampaign(campaign: Partial<NotificationCampaign>): Promise<string | null> {
+    try {
+      const { data, error } = await supabase
+        .from('notification_campaigns')
+        .insert({
+          name: campaign.name,
+          description: campaign.description,
+          campaign_type: campaign.campaignType,
+          target_audience: campaign.targetAudience,
+          notification_sequence: campaign.notificationSequence as any,
+          personalization_rules: campaign.personalizationRules || {},
+          scheduling: campaign.scheduling,
+          status: campaign.status || 'draft',
+          created_by: campaign.createdBy
+        })
+        .select('id')
+        .single();
+
+      if (error) throw error;
+      return data.id;
+    } catch (error) {
+      console.error('Error creating campaign:', error);
+      return null;
+    }
   }
 
-  private initializeDefaultCampaigns() {
-    const onboardingCampaign: NotificationCampaign = {
-      id: 'onboarding-sequence',
-      name: 'Welcome & Onboarding',
-      description: 'Guide new users through their first week',
-      triggerType: 'onboarding',
-      isActive: true,
-      steps: [
-        {
-          id: 'welcome',
-          stepNumber: 1,
-          title: 'Welcome to TherapySync! 🌟',
-          message: "Welcome to your personal wellness journey! Let's start with a quick mood check-in.",
-          delayHours: 0,
-          channels: ['push', 'email'],
-          priority: 'high'
-        },
-        {
-          id: 'first-session',
-          stepNumber: 2,
-          title: 'Ready for your first session?',
-          message: "You've been with us for 24 hours! Ready to have your first AI therapy conversation?",
-          delayHours: 24,
-          channels: ['push', 'whatsapp'],
-          priority: 'medium'
-        },
-        {
-          id: 'goal-setting',
-          stepNumber: 3,
-          title: 'Set your wellness goals',
-          message: "Great progress! Let's set some personal wellness goals to keep you motivated.",
-          delayHours: 72,
-          condition: { type: 'session_completion', threshold: 1 },
-          channels: ['push', 'email'],
-          priority: 'medium'
-        },
-        {
-          id: 'week-one-checkin',
-          stepNumber: 4,
-          title: 'Your first week reflection',
-          message: "It's been a week! How are you feeling about your wellness journey so far?",
-          delayHours: 168,
-          channels: ['push', 'whatsapp', 'email'],
-          priority: 'high'
-        }
-      ],
-      targetAudience: {},
-      abTestConfig: {
-        enabled: true,
-        variants: [
-          { name: 'friendly', percentage: 50, stepOverrides: [] },
-          { name: 'professional', percentage: 50, stepOverrides: [
-            { title: 'Welcome to TherapySync', message: 'Begin your evidence-based wellness journey with personalized AI support.' }
-          ] }
-        ]
-      },
-      stats: { sent: 0, delivered: 0, engaged: 0, completed: 0 }
-    };
+  /**
+   * Get campaign by ID
+   */
+  static async getCampaign(campaignId: string): Promise<NotificationCampaign | null> {
+    try {
+      const { data, error } = await supabase
+        .from('notification_campaigns')
+        .select('*')
+        .eq('id', campaignId)
+        .single();
 
-    const retentionCampaign: NotificationCampaign = {
-      id: 'retention-sequence',
-      name: 'Re-engagement Campaign',
-      description: 'Win back inactive users',
-      triggerType: 'retention',
-      isActive: true,
-      steps: [
-        {
-          id: 'we-miss-you',
-          stepNumber: 1,
-          title: 'We miss you! 💙',
-          message: "It's been a while since your last session. Your wellness journey is waiting for you.",
-          delayHours: 0,
-          channels: ['push', 'email'],
-          priority: 'medium'
-        },
-        {
-          id: 'special-offer',
-          stepNumber: 2,
-          title: 'Come back with a free session',
-          message: "We've unlocked a complimentary premium session just for you. No commitments, just care.",
-          delayHours: 72,
-          channels: ['email', 'whatsapp'],
-          priority: 'high'
-        },
-        {
-          id: 'final-check',
-          stepNumber: 3,
-          title: 'Your wellness matters',
-          message: "This is our final check-in. Remember, taking care of your mental health is always worth it.",
-          delayHours: 168,
-          channels: ['email'],
-          priority: 'low'
-        }
-      ],
-      targetAudience: { activityLevel: 'low' },
-      stats: { sent: 0, delivered: 0, engaged: 0, completed: 0 }
-    };
+      if (error) throw error;
 
-    this.campaigns.set(onboardingCampaign.id, onboardingCampaign);
-    this.campaigns.set(retentionCampaign.id, retentionCampaign);
+      return {
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        campaignType: data.campaign_type as 'onboarding' | 'retention' | 'engagement' | 'educational',
+        targetAudience: data.target_audience as Record<string, any>,
+        notificationSequence: (data.notification_sequence as any) || [],
+        personalizationRules: data.personalization_rules as Record<string, any>,
+        scheduling: data.scheduling as Record<string, any>,
+        status: data.status as 'draft' | 'scheduled' | 'running' | 'completed' | 'paused',
+        metrics: data.metrics as Record<string, any>,
+        startedAt: data.started_at ? new Date(data.started_at) : undefined,
+        completedAt: data.completed_at ? new Date(data.completed_at) : undefined,
+        createdBy: data.created_by,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at)
+      };
+    } catch (error) {
+      console.error('Error fetching campaign:', error);
+      return null;
+    }
   }
 
-  async startCampaign(userId: string, campaignId: string): Promise<void> {
-    const campaign = this.campaigns.get(campaignId);
-    if (!campaign || !campaign.isActive) {
-      console.log(`Campaign ${campaignId} not found or inactive`);
-      return;
-    }
+  /**
+   * Start a campaign
+   */
+  static async startCampaign(campaignId: string): Promise<boolean> {
+    try {
+      const campaign = await this.getCampaign(campaignId);
+      if (!campaign) return false;
 
-    // Check if user already has this campaign running
-    const existingProgress = await this.getUserCampaignProgress(userId, campaignId);
-    if (existingProgress) {
-      console.log(`User ${userId} already has campaign ${campaignId} in progress`);
-      return;
-    }
+      // Update campaign status to running
+      await supabase
+        .from('notification_campaigns')
+        .update({
+          status: 'running',
+          started_at: new Date().toISOString()
+        })
+        .eq('id', campaignId);
 
-    // Determine A/B test variant
-    let abTestVariant = 'default';
-    if (campaign.abTestConfig?.enabled) {
-      const random = Math.random() * 100;
-      let cumulative = 0;
-      for (const variant of campaign.abTestConfig.variants) {
-        cumulative += variant.percentage;
-        if (random <= cumulative) {
-          abTestVariant = variant.name;
-          break;
-        }
+      // Enroll eligible users
+      await this.enrollEligibleUsers(campaign);
+
+      return true;
+    } catch (error) {
+      console.error('Error starting campaign:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Enroll eligible users in a campaign
+   */
+  private static async enrollEligibleUsers(campaign: NotificationCampaign): Promise<void> {
+    try {
+      // Get eligible users based on target audience criteria
+      const eligibleUsers = await this.getEligibleUsers(campaign.targetAudience);
+
+      // Enroll each user
+      for (const userId of eligibleUsers) {
+        await this.enrollUser(campaign.id, userId);
       }
+    } catch (error) {
+      console.error('Error enrolling users:', error);
     }
-
-    // Create user progress record
-    const progress: UserCampaignProgress = {
-      userId,
-      campaignId,
-      currentStep: 1,
-      startedAt: new Date(),
-      abTestVariant,
-      engagementEvents: []
-    };
-
-    // Store progress
-    await this.saveUserProgress(progress);
-
-    // Send first step immediately
-    await this.sendCampaignStep(campaign, campaign.steps[0], userId, abTestVariant);
-
-    // Schedule subsequent steps
-    this.scheduleRemainingSteps(campaign, userId, abTestVariant);
-
-    console.log(`Started campaign ${campaignId} for user ${userId} with variant ${abTestVariant}`);
   }
 
-  private async sendCampaignStep(
-    campaign: NotificationCampaign, 
-    step: CampaignStep, 
-    userId: string, 
-    variant: string
-  ): Promise<void> {
-    // Apply A/B test overrides
-    let finalStep = { ...step };
-    if (campaign.abTestConfig?.enabled) {
-      const variantConfig = campaign.abTestConfig.variants.find(v => v.name === variant);
-      if (variantConfig) {
-        const override = variantConfig.stepOverrides.find(o => o.id === step.id);
-        if (override) {
-          finalStep = { ...finalStep, ...override };
-        }
+  /**
+   * Get users that match target audience criteria
+   */
+  private static async getEligibleUsers(targetAudience: Record<string, any>): Promise<string[]> {
+    try {
+      let query = supabase.from('profiles').select('id');
+
+      // Apply filters based on target audience criteria
+      if (targetAudience.subscriptionPlan) {
+        query = query.eq('subscription_plan', targetAudience.subscriptionPlan);
       }
-    }
 
-    // Check condition if specified
-    if (step.condition && !await this.checkCondition(userId, step.condition)) {
-      console.log(`Skipping step ${step.id} for user ${userId} - condition not met`);
-      return;
-    }
+      if (targetAudience.joinedAfter) {
+        query = query.gte('created_at', targetAudience.joinedAfter);
+      }
 
-    // Send notification through selected channels
-    for (const channel of finalStep.channels) {
-      try {
-        // Send notification through selected channels (demo mode)
-        console.log(`Sending ${channel} notification to user ${userId}:`, {
-          title: finalStep.title,
-          message: finalStep.message,
-          campaignId: campaign.id,
-          stepId: step.id,
-          variant
+      if (targetAudience.joinedBefore) {
+        query = query.lte('created_at', targetAudience.joinedBefore);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+
+      return data.map(user => user.id);
+    } catch (error) {
+      console.error('Error getting eligible users:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Enroll a user in a campaign
+   */
+  static async enrollUser(campaignId: string, userId: string): Promise<boolean> {
+    try {
+      const { error } = await supabase
+        .from('campaign_enrollments')
+        .insert({
+          campaign_id: campaignId,
+          user_id: userId,
+          current_step: 0,
+          enrollment_data: {},
+          completion_status: 'active'
         });
 
-        // Track engagement
-        await this.trackEngagement(userId, campaign.id, step.id, 'sent');
-      } catch (error) {
-        console.error(`Error sending ${channel} notification:`, error);
+      if (error) throw error;
+
+      // Schedule first step
+      await this.scheduleNextStep(campaignId, userId, 0);
+
+      return true;
+    } catch (error) {
+      console.error('Error enrolling user:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Schedule the next step for a user in a campaign
+   */
+  static async scheduleNextStep(
+    campaignId: string,
+    userId: string,
+    currentStep: number
+  ): Promise<void> {
+    try {
+      const campaign = await this.getCampaign(campaignId);
+      if (!campaign) return;
+
+      const nextStepIndex = currentStep;
+      const nextStep = campaign.notificationSequence[nextStepIndex];
+      
+      if (!nextStep) {
+        // Campaign completed for this user
+        await this.completeUserCampaign(campaignId, userId);
+        return;
       }
-    }
-  }
 
-  private async checkCondition(userId: string, condition: CampaignStep['condition']): Promise<boolean> {
-    if (!condition) return true;
+      // Calculate when to send the next notification
+      const sendAt = new Date(Date.now() + nextStep.delayHours * 60 * 60 * 1000);
 
-    switch (condition.type) {
-      case 'session_completion':
-        const { data: sessions } = await supabase
-          .from('therapy_sessions')
-          .select('id')
-          .eq('user_id', userId)
-          .not('end_time', 'is', null);
-        return (sessions?.length || 0) >= (condition.threshold || 1);
-
-      case 'mood_check':
-        const { data: moods } = await supabase
-          .from('mood_entries')
-          .select('overall')
-          .eq('user_id', userId)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-        return moods ? moods.overall >= (condition.threshold || 3) : false;
-
-      case 'goal_progress':
-        const { data: goals } = await supabase
-          .from('goals')
-          .select('current_progress')
-          .eq('user_id', userId)
-          .gte('current_progress', condition.threshold || 25);
-        return (goals?.length || 0) > 0;
-
-      default:
-        return true;
-    }
-  }
-
-  private scheduleRemainingSteps(campaign: NotificationCampaign, userId: string, variant: string): void {
-    const remainingSteps = campaign.steps.slice(1);
-    
-    remainingSteps.forEach(step => {
-      setTimeout(async () => {
-        await this.sendCampaignStep(campaign, step, userId, variant);
-      }, step.delayHours * 60 * 60 * 1000);
-    });
-  }
-
-  async trackEngagement(userId: string, campaignId: string, stepId: string, event: string): Promise<void> {
-    const progress = await this.getUserCampaignProgress(userId, campaignId);
-    if (!progress) return;
-
-    progress.engagementEvents.push({
-      stepId,
-      event: event as any,
-      timestamp: new Date()
-    });
-
-    await this.saveUserProgress(progress);
-
-    // Update campaign stats
-    const campaign = this.campaigns.get(campaignId);
-    if (campaign) {
-      switch (event) {
-        case 'sent': campaign.stats.sent++; break;
-        case 'delivered': campaign.stats.delivered++; break;
-        case 'opened': campaign.stats.engaged++; break;
-        case 'completed': campaign.stats.completed++; break;
-      }
-    }
-  }
-
-  async getCampaignAnalytics(campaignId: string) {
-    const campaign = this.campaigns.get(campaignId);
-    if (!campaign) return null;
-
-    // Calculate step-by-step conversion rates
-    const stepAnalytics = campaign.steps.map(step => {
-      const stepEvents = this.getAllEngagementEvents()
-        .filter(e => e.campaignId === campaignId && e.stepId === step.id);
-      
-      const sent = stepEvents.filter(e => e.event === 'sent').length;
-      const delivered = stepEvents.filter(e => e.event === 'delivered').length;
-      const opened = stepEvents.filter(e => e.event === 'opened').length;
-      
-      return {
-        stepId: step.id,
-        title: step.title,
-        sent,
-        delivered,
-        opened,
-        deliveryRate: sent > 0 ? (delivered / sent) * 100 : 0,
-        openRate: delivered > 0 ? (opened / delivered) * 100 : 0
-      };
-    });
-
-    // A/B test results
-    const abTestResults = campaign.abTestConfig?.enabled ? 
-      this.calculateABTestResults(campaignId) : null;
-
-    return {
-      campaign: {
-        id: campaign.id,
-        name: campaign.name,
-        stats: campaign.stats
-      },
-      stepAnalytics,
-      abTestResults,
-      overallConversionRate: campaign.stats.sent > 0 ? 
-        (campaign.stats.completed / campaign.stats.sent) * 100 : 0
-    };
-  }
-
-  private calculateABTestResults(campaignId: string) {
-    const allProgress = this.getAllUserProgress()
-      .filter(p => p.campaignId === campaignId && p.abTestVariant);
-
-    const variants = [...new Set(allProgress.map(p => p.abTestVariant!))];
-    
-    return variants.map(variant => {
-      const variantProgress = allProgress.filter(p => p.abTestVariant === variant);
-      const completed = variantProgress.filter(p => p.completedAt).length;
-      
-      return {
-        variant,
-        users: variantProgress.length,
-        completed,
-        completionRate: variantProgress.length > 0 ? 
-          (completed / variantProgress.length) * 100 : 0
-      };
-    });
-  }
-
-  // Storage methods (in production, these would use Supabase)
-  private async saveUserProgress(progress: UserCampaignProgress): Promise<void> {
-    const userProgressList = this.userProgress.get(progress.userId) || [];
-    const existingIndex = userProgressList.findIndex(p => p.campaignId === progress.campaignId);
-    
-    if (existingIndex >= 0) {
-      userProgressList[existingIndex] = progress;
-    } else {
-      userProgressList.push(progress);
-    }
-    
-    this.userProgress.set(progress.userId, userProgressList);
-  }
-
-  private async getUserCampaignProgress(userId: string, campaignId: string): Promise<UserCampaignProgress | null> {
-    const userProgressList = this.userProgress.get(userId) || [];
-    return userProgressList.find(p => p.campaignId === campaignId) || null;
-  }
-
-  private getAllUserProgress(): UserCampaignProgress[] {
-    const allProgress: UserCampaignProgress[] = [];
-    for (const progressList of this.userProgress.values()) {
-      allProgress.push(...progressList);
-    }
-    return allProgress;
-  }
-
-  private getAllEngagementEvents(): Array<{
-    campaignId: string;
-    stepId: string;
-    event: string;
-    timestamp: Date;
-  }> {
-    const events: any[] = [];
-    for (const progressList of this.userProgress.values()) {
-      for (const progress of progressList) {
-        for (const event of progress.engagementEvents) {
-          events.push({
-            campaignId: progress.campaignId,
-            stepId: event.stepId,
-            event: event.event,
-            timestamp: event.timestamp
-          });
+      // Schedule the notification
+      await NotificationEngine.sendNotification({
+        userId,
+        type: 'campaign_step',
+        title: nextStep.title,
+        message: nextStep.message,
+        priority: 'medium',
+        scheduledFor: sendAt,
+        deliveryMethods: nextStep.deliveryMethods,
+        data: {
+          campaignId,
+          stepId: nextStep.id,
+          stepOrder: nextStep.stepOrder
         }
-      }
+      });
+
+      // Update user's current step
+      await supabase
+        .from('campaign_enrollments')
+        .update({ current_step: nextStepIndex + 1 })
+        .eq('campaign_id', campaignId)
+        .eq('user_id', userId);
+    } catch (error) {
+      console.error('Error scheduling next step:', error);
     }
-    return events;
   }
 
-  getAllCampaigns(): NotificationCampaign[] {
-    return Array.from(this.campaigns.values());
+  /**
+   * Complete a user's campaign enrollment
+   */
+  private static async completeUserCampaign(campaignId: string, userId: string): Promise<void> {
+    try {
+      await supabase
+        .from('campaign_enrollments')
+        .update({
+          completion_status: 'completed',
+          completed_at: new Date().toISOString()
+        })
+        .eq('campaign_id', campaignId)
+        .eq('user_id', userId);
+    } catch (error) {
+      console.error('Error completing user campaign:', error);
+    }
   }
 
-  getCampaign(id: string): NotificationCampaign | undefined {
-    return this.campaigns.get(id);
+  /**
+   * Opt user out of a campaign
+   */
+  static async optOutUser(campaignId: string, userId: string): Promise<boolean> {
+    try {
+      await supabase
+        .from('campaign_enrollments')
+        .update({
+          completion_status: 'opted_out',
+          completed_at: new Date().toISOString()
+        })
+        .eq('campaign_id', campaignId)
+        .eq('user_id', userId);
+
+      return true;
+    } catch (error) {
+      console.error('Error opting out user:', error);
+      return false;
+    }
   }
 
-  async updateCampaign(campaign: NotificationCampaign): Promise<void> {
-    this.campaigns.set(campaign.id, campaign);
+  /**
+   * Get campaign metrics
+   */
+  static async getCampaignMetrics(campaignId: string): Promise<Record<string, any>> {
+    try {
+      // Get enrollment stats
+      const { data: enrollments } = await supabase
+        .from('campaign_enrollments')
+        .select('completion_status, current_step, enrolled_at, completed_at')
+        .eq('campaign_id', campaignId);
+
+      if (!enrollments) return {};
+
+      const totalEnrolled = enrollments.length;
+      const completed = enrollments.filter(e => e.completion_status === 'completed').length;
+      const optedOut = enrollments.filter(e => e.completion_status === 'opted_out').length;
+      const active = enrollments.filter(e => e.completion_status === 'active').length;
+
+      const completionRate = totalEnrolled > 0 ? (completed / totalEnrolled) * 100 : 0;
+      const optOutRate = totalEnrolled > 0 ? (optedOut / totalEnrolled) * 100 : 0;
+
+      // Calculate average completion time
+      const completedEnrollments = enrollments.filter(e => e.completed_at);
+      const averageCompletionTime = completedEnrollments.length > 0
+        ? completedEnrollments.reduce((sum, e) => {
+            const duration = new Date(e.completed_at!).getTime() - new Date(e.enrolled_at).getTime();
+            return sum + duration;
+          }, 0) / completedEnrollments.length
+        : 0;
+
+      return {
+        totalEnrolled,
+        completed,
+        optedOut,
+        active,
+        completionRate,
+        optOutRate,
+        averageCompletionTimeHours: averageCompletionTime / (1000 * 60 * 60),
+        lastUpdated: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error getting campaign metrics:', error);
+      return {};
+    }
+  }
+
+  /**
+   * Process campaign step completion
+   */
+  static async processCampaignStepCompletion(
+    userId: string,
+    notificationData: Record<string, any>
+  ): Promise<void> {
+    try {
+      const campaignId = notificationData.campaignId;
+      const stepOrder = notificationData.stepOrder;
+
+      if (!campaignId || stepOrder === undefined) return;
+
+      // Schedule next step
+      await this.scheduleNextStep(campaignId, userId, stepOrder);
+
+      // Update campaign metrics
+      const metrics = await this.getCampaignMetrics(campaignId);
+      
+      await supabase
+        .from('notification_campaigns')
+        .update({ metrics })
+        .eq('id', campaignId);
+    } catch (error) {
+      console.error('Error processing campaign step completion:', error);
+    }
   }
 }
-
-export const notificationCampaignService = new NotificationCampaignService();

@@ -819,6 +819,47 @@ export type Database = {
         }
         Relationships: []
       }
+      campaign_enrollments: {
+        Row: {
+          campaign_id: string | null
+          completed_at: string | null
+          completion_status: string | null
+          current_step: number | null
+          enrolled_at: string | null
+          enrollment_data: Json | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          completed_at?: string | null
+          completion_status?: string | null
+          current_step?: number | null
+          enrolled_at?: string | null
+          enrollment_data?: Json | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          completed_at?: string | null
+          completion_status?: string | null
+          current_step?: number | null
+          enrolled_at?: string | null
+          enrollment_data?: Json | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_enrollments_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "notification_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clinical_assessments: {
         Row: {
           administered_at: string
@@ -2751,6 +2792,98 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_ab_assignments: {
+        Row: {
+          assigned_at: string | null
+          conversion_data: Json | null
+          converted: boolean | null
+          id: string
+          test_id: string | null
+          user_id: string | null
+          variant: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          conversion_data?: Json | null
+          converted?: boolean | null
+          id?: string
+          test_id?: string | null
+          user_id?: string | null
+          variant: string
+        }
+        Update: {
+          assigned_at?: string | null
+          conversion_data?: Json | null
+          converted?: boolean | null
+          id?: string
+          test_id?: string | null
+          user_id?: string | null
+          variant?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_ab_assignments_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "notification_ab_tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_ab_tests: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          current_sample_size: number | null
+          ended_at: string | null
+          id: string
+          notification_type: string
+          results: Json | null
+          started_at: string | null
+          status: string | null
+          success_metric: string
+          target_sample_size: number | null
+          test_name: string
+          traffic_split: number | null
+          variant_a: Json
+          variant_b: Json
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          current_sample_size?: number | null
+          ended_at?: string | null
+          id?: string
+          notification_type: string
+          results?: Json | null
+          started_at?: string | null
+          status?: string | null
+          success_metric: string
+          target_sample_size?: number | null
+          test_name: string
+          traffic_split?: number | null
+          variant_a: Json
+          variant_b: Json
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          current_sample_size?: number | null
+          ended_at?: string | null
+          id?: string
+          notification_type?: string
+          results?: Json | null
+          started_at?: string | null
+          status?: string | null
+          success_metric?: string
+          target_sample_size?: number | null
+          test_name?: string
+          traffic_split?: number | null
+          variant_a?: Json
+          variant_b?: Json
+        }
+        Relationships: []
+      }
       notification_analytics: {
         Row: {
           created_at: string
@@ -2778,6 +2911,102 @@ export type Database = {
           metadata?: Json | null
           notification_id?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      notification_automation_rules: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          effectiveness_threshold: number | null
+          frequency_limits: Json | null
+          id: string
+          is_active: boolean | null
+          notification_config: Json
+          rule_name: string
+          target_criteria: Json
+          trigger_conditions: Json
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          effectiveness_threshold?: number | null
+          frequency_limits?: Json | null
+          id?: string
+          is_active?: boolean | null
+          notification_config: Json
+          rule_name: string
+          target_criteria: Json
+          trigger_conditions: Json
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          effectiveness_threshold?: number | null
+          frequency_limits?: Json | null
+          id?: string
+          is_active?: boolean | null
+          notification_config?: Json
+          rule_name?: string
+          target_criteria?: Json
+          trigger_conditions?: Json
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      notification_campaigns: {
+        Row: {
+          campaign_type: string
+          completed_at: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          metrics: Json | null
+          name: string
+          notification_sequence: Json
+          personalization_rules: Json | null
+          scheduling: Json
+          started_at: string | null
+          status: string | null
+          target_audience: Json
+          updated_at: string | null
+        }
+        Insert: {
+          campaign_type: string
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          metrics?: Json | null
+          name: string
+          notification_sequence: Json
+          personalization_rules?: Json | null
+          scheduling: Json
+          started_at?: string | null
+          status?: string | null
+          target_audience: Json
+          updated_at?: string | null
+        }
+        Update: {
+          campaign_type?: string
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          metrics?: Json | null
+          name?: string
+          notification_sequence?: Json
+          personalization_rules?: Json | null
+          scheduling?: Json
+          started_at?: string | null
+          status?: string | null
+          target_audience?: Json
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -2893,6 +3122,94 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      notification_orchestration_logs: {
+        Row: {
+          channel_sequence: Json
+          created_at: string | null
+          delivery_attempts: Json | null
+          final_status: string
+          id: string
+          notification_id: string | null
+          optimization_data: Json | null
+          orchestration_strategy: string
+          total_delivery_time_ms: number | null
+        }
+        Insert: {
+          channel_sequence: Json
+          created_at?: string | null
+          delivery_attempts?: Json | null
+          final_status: string
+          id?: string
+          notification_id?: string | null
+          optimization_data?: Json | null
+          orchestration_strategy: string
+          total_delivery_time_ms?: number | null
+        }
+        Update: {
+          channel_sequence?: Json
+          created_at?: string | null
+          delivery_attempts?: Json | null
+          final_status?: string
+          id?: string
+          notification_id?: string | null
+          optimization_data?: Json | null
+          orchestration_strategy?: string
+          total_delivery_time_ms?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_orchestration_logs_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_performance_analytics: {
+        Row: {
+          cohort_data: Json | null
+          conversion_data: Json | null
+          delivery_performance: Json | null
+          engagement_metrics: Json | null
+          id: string
+          notification_id: string | null
+          recorded_at: string | null
+          sentiment_analysis: Json | null
+          user_segment: Json | null
+        }
+        Insert: {
+          cohort_data?: Json | null
+          conversion_data?: Json | null
+          delivery_performance?: Json | null
+          engagement_metrics?: Json | null
+          id?: string
+          notification_id?: string | null
+          recorded_at?: string | null
+          sentiment_analysis?: Json | null
+          user_segment?: Json | null
+        }
+        Update: {
+          cohort_data?: Json | null
+          conversion_data?: Json | null
+          delivery_performance?: Json | null
+          engagement_metrics?: Json | null
+          id?: string
+          notification_id?: string | null
+          recorded_at?: string | null
+          sentiment_analysis?: Json | null
+          user_segment?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_performance_analytics_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notifications"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notification_preferences: {
         Row: {
@@ -5616,6 +5933,51 @@ export type Database = {
           review_count?: number
           unlocked_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_notification_preferences: {
+        Row: {
+          created_at: string | null
+          crisis_override: boolean | null
+          do_not_disturb: Json | null
+          frequency_limits: Json | null
+          id: string
+          is_enabled: boolean | null
+          notification_type: string
+          personalization_level: string | null
+          platform_preferences: Json | null
+          timing_preferences: Json | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          crisis_override?: boolean | null
+          do_not_disturb?: Json | null
+          frequency_limits?: Json | null
+          id?: string
+          is_enabled?: boolean | null
+          notification_type: string
+          personalization_level?: string | null
+          platform_preferences?: Json | null
+          timing_preferences?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          crisis_override?: boolean | null
+          do_not_disturb?: Json | null
+          frequency_limits?: Json | null
+          id?: string
+          is_enabled?: boolean | null
+          notification_type?: string
+          personalization_level?: string | null
+          platform_preferences?: Json | null
+          timing_preferences?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
