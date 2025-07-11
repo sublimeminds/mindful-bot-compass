@@ -303,26 +303,33 @@ export class TherapistMatchingService {
   static async saveAssessment(
     userId: string,
     responses: AssessmentResponse[],
-    matches: TherapistMatch[],
-    selectedTherapistId?: string
-  ): Promise<void> {
-    const { error } = await supabase
-      .from('therapist_assessments')
-      .upsert({
-        user_id: userId,
-        responses: Object.fromEntries(responses.map(r => [r.questionId, r.value])),
-        recommended_therapists: matches.slice(0, 3).map(m => ({
-          therapist_id: m.therapist.id,
-          compatibility_score: m.compatibility_score,
-          reasoning: m.reasoning
-        })),
-        selected_therapist_id: selectedTherapistId,
-        updated_at: new Date().toISOString()
-      });
+    matches: TherapistMatch[]
+  ): Promise<string | null> {
+    try {
+      const { data, error } = await supabase
+        .from('therapist_assessments')
+        .insert({
+          user_id: userId,
+          assessment_responses: Object.fromEntries(responses.map(r => [r.questionId, r.value])),
+          calculated_matches: matches.slice(0, 5).map(m => ({
+            therapist_id: m.therapist.id,
+            compatibility_score: m.compatibility_score,
+            reasoning: m.reasoning,
+            strengths: m.strengths
+          }))
+        })
+        .select('id')
+        .single();
 
-    if (error) {
-      console.error('Error saving assessment:', error);
-      throw error;
+      if (error) {
+        console.error('Error saving assessment:', error);
+        throw error;
+      }
+
+      return data?.id || null;
+    } catch (error) {
+      console.error('Error in saveAssessment:', error);
+      return null;
     }
   }
 

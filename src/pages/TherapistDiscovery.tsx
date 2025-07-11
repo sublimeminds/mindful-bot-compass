@@ -49,6 +49,7 @@ import { enhancedVoiceService } from '@/services/voiceService';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useOnboardingData } from '@/hooks/useOnboardingData';
 import { TherapistMatchingService } from '@/services/therapistMatchingService';
+import SimpleFavoriteButton from '@/components/therapist/SimpleFavoriteButton';
 import { TherapistAnalyticsService } from '@/services/therapistAnalyticsService';
 import { useNavigate } from 'react-router-dom';
 
@@ -437,7 +438,7 @@ const TherapistDiscovery = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" onClick={() => navigate('/therapist-assessment')} className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 shadow-lg">
                 <Target className="h-5 w-5 mr-2" />
-                Take Matching Assessment
+                Take Therapist Assessment
               </Button>
               <Button variant="outline" size="lg">
                 <Play className="h-5 w-5 mr-2" />
@@ -860,14 +861,14 @@ const TherapistDiscovery = () => {
                              Select This Therapist
                            </Button>
                          ) : (
-                           <Button 
-                             size="sm" 
-                             className="bg-gradient-to-r from-harmony-600 to-therapy-600 hover:from-harmony-700 hover:to-therapy-700 text-white shadow-lg flex-1"
-                             onClick={() => navigate('/therapist-assessment')}
-                           >
-                             <Target className="h-4 w-4 mr-1" />
-                             Take Matching Assessment
-                           </Button>
+                            <Button 
+                              size="sm" 
+                              className="bg-gradient-to-r from-harmony-600 to-therapy-600 hover:from-harmony-700 hover:to-therapy-700 text-white shadow-lg flex-1"
+                              onClick={() => navigate('/therapist-assessment')}
+                            >
+                              <Target className="h-4 w-4 mr-1" />
+                              Take Assessment
+                            </Button>
                          )}
                        </div>
                      </div>

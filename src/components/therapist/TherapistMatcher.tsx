@@ -7,14 +7,16 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Star, User, Heart, Brain } from 'lucide-react';
 import SafeTherapistAvatarCard from '@/components/avatar/SafeTherapistAvatarCard';
 import SafeAvatarModal from '@/components/avatar/SafeAvatarModal';
+import SimpleFavoriteButton from '@/components/therapist/SimpleFavoriteButton';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 
 interface TherapistMatcherProps {
   onTherapistSelected: (therapistId: string) => void;
   onClose: () => void;
+  assessmentMatches?: any[];
 }
 
-const TherapistMatcher = ({ onTherapistSelected, onClose }: TherapistMatcherProps) => {
+const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches }: TherapistMatcherProps) => {
   const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
   const [modalTherapist, setModalTherapist] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -119,23 +121,32 @@ const TherapistMatcher = ({ onTherapistSelected, onClose }: TherapistMatcherProp
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {therapists.map((therapist) => (
-          <SafeTherapistAvatarCard
-            key={therapist.id}
-            therapist={{
-              id: therapist.id,
-              name: therapist.name,
-              title: therapist.approach,
-              description: therapist.description,
-              approach: therapist.approach,
-              specialties: therapist.specialties,
-              communicationStyle: `${therapist.experience} • ${therapist.rating}⭐`,
-              icon: '🧠',
-              colorScheme: 'from-therapy-500 to-calm-500'
-            }}
-            isSelected={selectedTherapist === therapist.id}
-            showMiniAvatar={true}
-            onSelect={() => handleSelectTherapist(therapist.id)}
-          />
+            <div key={therapist.id} className="relative">
+              <SafeTherapistAvatarCard
+                therapist={{
+                  id: therapist.id,
+                  name: therapist.name,
+                  title: therapist.approach,
+                  description: therapist.description,
+                  approach: therapist.approach,
+                  specialties: therapist.specialties,
+                  communicationStyle: `${therapist.experience} • ${therapist.rating}⭐`,
+                  icon: '🧠',
+                  colorScheme: 'from-therapy-500 to-calm-500'
+                }}
+                isSelected={selectedTherapist === therapist.id}
+                showMiniAvatar={true}
+                onSelect={() => handleSelectTherapist(therapist.id)}
+              />
+              <div className="absolute top-4 right-4">
+                <SimpleFavoriteButton 
+                  therapistId={therapist.id}
+                  therapistName={therapist.name}
+                  size="sm"
+                  variant="ghost"
+                />
+              </div>
+            </div>
         ))}
       </div>
 
