@@ -63,8 +63,8 @@ import AdminAnalytics from "../pages/AdminAnalytics";
 import AdminContent from "../pages/AdminContent";
 import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
 import ContentLibrary from "../pages/ContentLibrary";
-import CompliancePage from './compliance/CompliancePage';
-import PrivacyDashboard from './compliance/PrivacyDashboard';
+import CompliancePage from '../components/compliance/CompliancePage';
+import PrivacyDashboard from '../components/compliance/PrivacyDashboard';
 
 // Component to wrap public pages
 const PublicPageWrapper = ({ children }: { children: React.ReactNode }) => (

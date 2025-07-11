@@ -25,7 +25,10 @@ import {
   ArrowRight,
   CheckCircle,
   Zap,
-  MessageSquare
+  MessageSquare,
+  Lock,
+  FileText,
+  Eye
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -129,6 +132,34 @@ const Index = () => {
     }
   ];
 
+  const complianceStandards = [
+    {
+      icon: Shield,
+      title: "HIPAA Compliant",
+      description: "Full compliance with healthcare privacy regulations"
+    },
+    {
+      icon: Globe,
+      title: "GDPR Ready",
+      description: "European data protection standards implemented"
+    },
+    {
+      icon: Lock,
+      title: "SOC 2 Certified",
+      description: "Rigorous security and availability controls"
+    },
+    {
+      icon: FileText,
+      title: "CCPA Compliant",
+      description: "California consumer privacy rights protected"
+    },
+    {
+      icon: Eye,
+      title: "ISO 27001",
+      description: "International information security management"
+    }
+  ];
+
   const scrollToDemo = () => {
     const demoElement = document.getElementById('demo');
     if (demoElement) {
@@ -201,6 +232,51 @@ const Index = () => {
                 <div className="text-slate-600 font-medium">{stat.label}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Compliance Standards Section */}
+      <section id="compliance" className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-2xl mb-4">
+              <Shield className="h-8 w-8 text-white" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              <span className="therapy-text-gradient">
+                Trusted & Compliant
+              </span>
+            </h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              Your privacy and security are our top priorities. We meet the highest industry standards for healthcare data protection.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 max-w-4xl mx-auto">
+            {complianceStandards.map((standard, index) => {
+              const IconComponent = standard.icon;
+              return (
+                <div key={index} className="text-center group">
+                  <div className="w-12 h-12 bg-gradient-to-r from-therapy-100 to-calm-100 rounded-xl flex items-center justify-center mx-auto mb-3 transition-all duration-300 group-hover:from-therapy-500 group-hover:to-calm-500 group-hover:scale-110">
+                    <IconComponent className="h-6 w-6 text-therapy-600 group-hover:text-white transition-colors duration-300" />
+                  </div>
+                  <h3 className="font-semibold text-sm text-slate-800 mb-1">{standard.title}</h3>
+                  <p className="text-xs text-slate-500">{standard.description}</p>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className="text-center mt-8">
+            <Button 
+              variant="outline" 
+              className="border-therapy-200 text-therapy-700 hover:bg-therapy-50"
+              onClick={() => navigate('/compliance')}
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              View Full Compliance Details
+            </Button>
           </div>
         </div>
       </section>
