@@ -214,13 +214,15 @@ const EnhancedDashboardSidebar = () => {
   }, [location.pathname]);
 
   return (
-    <Sidebar className="border-r border-therapy-100 bg-white/80 backdrop-blur-sm w-72">
-      <SidebarHeader className="border-b border-therapy-100 p-4">
-        <div className="flex items-center space-x-3">
-          <GradientLogo size="sm" />
-          <div>
-            <h2 className="text-lg font-semibold therapy-text-gradient">TherapySync</h2>
-            <p className="text-xs text-therapy-600 font-medium italic">
+    <Sidebar className="border-r border-gray-200/50 bg-white/95 backdrop-blur-lg shadow-lg w-72">
+      <SidebarHeader className="border-b border-gray-200/50 p-6 bg-gradient-to-br from-therapy-50/50 to-calm-50/50">
+        <div className="flex items-center space-x-4">
+          <GradientLogo size="md" />
+          <div className="flex-1">
+            <h2 className="text-xl font-bold bg-gradient-to-r from-therapy-600 via-therapy-500 to-calm-600 bg-clip-text text-transparent">
+              TherapySync
+            </h2>
+            <p className="text-sm text-therapy-600/80 font-medium italic mt-1 leading-relaxed">
               "{useQuoteOfTheDay().quote}"
             </p>
           </div>
