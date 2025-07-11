@@ -294,6 +294,53 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
+      {/* Additional AI Personalization Routes */}
+      <Route path="/ai-personalization/dashboard/insights" element={
+        <PageErrorBoundary pageName="AI Insights">
+          <DashboardPageWrapper><AIPersonalizationDashboard /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/ai-personalization/dashboard/patterns" element={
+        <PageErrorBoundary pageName="AI Patterns">
+          <DashboardPageWrapper><AIPersonalizationDashboard /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/ai-personalization/dashboard/recommendations" element={
+        <PageErrorBoundary pageName="AI Recommendations">
+          <DashboardPageWrapper><AIPersonalizationDashboard /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* Goals sub-routes */}
+      <Route path="/goals/active" element={
+        <PageErrorBoundary pageName="Active Goals">
+          <DashboardPageWrapper><Goals /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* Mood Tracker sub-routes */}
+      <Route path="/mood-tracker/daily" element={
+        <PageErrorBoundary pageName="Daily Mood Tracker">
+          <DashboardPageWrapper><MoodTracker /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* Sessions sub-routes */}
+      <Route path="/sessions/all" element={
+        <PageErrorBoundary pageName="All Sessions">
+          <DashboardPageWrapper><Sessions /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* Notification Center */}
+      <Route path="/notification-center" element={
+        <PageErrorBoundary pageName="Notification Center">
+          <DashboardPageWrapper><NotificationsPage /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
       {/* All other dashboard routes would go here with DashboardPageWrapper if needed */}
       
       {/* Error Pages */}
