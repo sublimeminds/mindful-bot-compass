@@ -16,12 +16,53 @@ import {
   Eye,
   Users
 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 const AIPersonalizationHub = () => {
+  const { user } = useSimpleApp();
   const [selectedTimeframe, setSelectedTimeframe] = useState('week');
 
-  // Mock AI insights data
-  const insights = [
+  // Fetch AI insights from database
+  const { data: insights = [], isLoading: isLoadingInsights } = useQuery({
+    queryKey: ['goal-insights', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from('goal_insights')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user
+  });
+
+  // Fetch personalized recommendations
+  const { data: recommendations = [], isLoading: isLoadingRecommendations } = useQuery({
+    queryKey: ['personalized-recommendations', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from('personalized_recommendations')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .order('priority_score', { ascending: false })
+        .limit(5);
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user
+  });
+
+  // Mock fallback data structure for compatibility
+  const mockInsights = [
     {
       id: 1,
       type: 'behavioral_pattern',
@@ -51,32 +92,15 @@ const AIPersonalizationHub = () => {
     }
   ];
 
-  const recommendations = [
-    {
-      id: 1,
-      title: 'Personalized Mindfulness Session',
-      description: 'AI-curated 10-minute session based on your stress patterns',
-      type: 'immediate',
-      estimatedImpact: 'High',
-      timeToComplete: '10 min'
-    },
-    {
-      id: 2,
-      title: 'Therapist Switch Recommendation',
-      description: 'Consider switching to Dr. Maya for ADHD-focused session',
-      type: 'context_switch',
-      estimatedImpact: 'Medium',
-      timeToComplete: '2 min'
-    },
-    {
-      id: 3,
-      title: 'Mood Journal Prompt',
-      description: 'Reflect on recent sleep patterns and mood correlations',
-      type: 'reflection',
-      estimatedImpact: 'Medium',
-      timeToComplete: '5 min'
-    }
-  ];
+  // Transform database recommendations to component format
+  const transformedRecommendations = recommendations.map(rec => ({
+    id: rec.id,
+    title: rec.title,
+    description: rec.description,
+    type: rec.recommendation_type,
+    estimatedImpact: rec.estimated_impact > 0.7 ? 'High' : rec.estimated_impact > 0.4 ? 'Medium' : 'Low',
+    timeToComplete: '5 min' // Default, could be enhanced with actual data
+  }));
 
   const behavioralPatterns = [
     { pattern: 'Morning Routine Impact', score: 85, trend: 'improving' },
@@ -174,31 +198,43 @@ const AIPersonalizationHub = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {insights.map((insight) => (
+              {isLoadingInsights ? (
+                <div className="space-y-4">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="h-24 bg-muted rounded animate-pulse"></div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {insights.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">
+                      No AI insights available yet. Continue using the app to generate personalized insights.
+                    </p>
+                  ) : (
+                    insights.map((insight) => (
                   <div key={insight.id} className="border rounded-lg p-4 hover:border-therapy-300 transition-colors">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center mb-2">
                           <h3 className="font-semibold">{insight.title}</h3>
                           <Badge variant="outline" className="ml-2">
-                            {insight.confidence}% confidence
+                            {Math.round(insight.confidence_score * 100)}% confidence
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-2">{insight.description}</p>
                         <Badge variant="secondary" className="text-xs">
-                          {insight.category}
+                          {insight.insight_type}
                         </Badge>
                       </div>
-                      {insight.actionable && (
-                        <Button size="sm">
-                          Take Action
-                        </Button>
-                      )}
+                      <Button size="sm">
+                        Take Action
+                      </Button>
                     </div>
                   </div>
-                ))}
-              </div>
+                    ))
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -248,8 +284,20 @@ const AIPersonalizationHub = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {recommendations.map((rec) => (
+              {isLoadingRecommendations ? (
+                <div className="space-y-4">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="h-24 bg-muted rounded animate-pulse"></div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {transformedRecommendations.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">
+                      No recommendations available. Continue using the app to receive personalized suggestions.
+                    </p>
+                  ) : (
+                    transformedRecommendations.map((rec) => (
                   <div key={rec.id} className="border rounded-lg p-4 hover:border-therapy-300 transition-colors">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -269,8 +317,10 @@ const AIPersonalizationHub = () => {
                       </Button>
                     </div>
                   </div>
-                ))}
-              </div>
+                    ))
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

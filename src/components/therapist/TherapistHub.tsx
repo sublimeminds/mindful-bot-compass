@@ -16,56 +16,40 @@ import {
   Heart,
   Zap
 } from 'lucide-react';
-import { useTherapistSelection } from '@/hooks/useTherapistSelection';
+import { useMultiTherapist } from '@/hooks/useMultiTherapist';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 const TherapistHub = () => {
   const { user } = useSimpleApp();
-  const { currentSelection } = useTherapistSelection();
+  const { 
+    activeTherapists, 
+    therapyTeam,
+    isLoadingTherapists, 
+    isLoadingTeam,
+    addTherapist,
+    switchContext,
+    isAddingTherapist,
+    isSwitchingContext
+  } = useMultiTherapist();
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>('all');
 
-  // Mock data for multi-therapist setup
-  const therapistTeam = [
-    {
-      id: 'ed979f27-2491-43f1-a779-5095febb68b2',
-      name: 'Dr. Sarah Chen',
-      specialty: 'Anxiety & Depression',
-      isPrimary: true,
-      approach: 'Cognitive Behavioral Therapy',
-      sessionsCompleted: 12,
-      effectiveness: 92,
-      nextSession: '2024-01-15T14:00:00Z',
-      status: 'active'
-    },
-    {
-      id: '9492ab1a-eab2-4c5f-a8e3-40870b2ca857',
-      name: 'Dr. Maya Patel',
-      specialty: 'ADHD & Focus',
-      isPrimary: false,
-      approach: 'Mindfulness-Based Therapy',
-      sessionsCompleted: 6,
-      effectiveness: 87,
-      nextSession: '2024-01-17T10:00:00Z',
-      status: 'active'
-    }
-  ];
+  // Use real data from database
+  const therapistTeam = activeTherapists || [];
 
   const availableSpecialties = [
     'Anxiety', 'Depression', 'ADHD', 'Trauma', 'Relationships', 
     'Stress Management', 'Sleep Issues', 'Work-Life Balance'
   ];
 
-  const recommendedTherapists = [
-    {
-      id: '0772c602-306b-42ad-b610-2dc15ba06714',
-      name: 'Dr. Alex Rodriguez',
-      specialty: 'Trauma Therapy',
-      matchScore: 94,
-      approach: 'EMDR & Somatic Therapy',
-      experience: '8 years',
-      reason: 'Based on your recent stress patterns and assessment results'
+  // Get recommendations based on user's needs
+  const [recommendations, setRecommendations] = useState([]);
+  
+  React.useEffect(() => {
+    if (user && selectedSpecialty !== 'all') {
+      // This would be replaced with actual API call
+      // getRecommendations([selectedSpecialty]).then(setRecommendations);
     }
-  ];
+  }, [user, selectedSpecialty]);
 
   return (
     <div className="space-y-6 p-6">
@@ -79,9 +63,12 @@ const TherapistHub = () => {
             Manage your therapy team and coordinate specialized care
           </p>
         </div>
-        <Button className="bg-gradient-to-r from-therapy-500 to-harmony-500 hover:from-therapy-600 hover:to-harmony-600">
+        <Button 
+          className="bg-gradient-to-r from-therapy-500 to-harmony-500 hover:from-therapy-600 hover:to-harmony-600"
+          disabled={isAddingTherapist}
+        >
           <Plus className="h-4 w-4 mr-2" />
-          Add Therapist
+          {isAddingTherapist ? 'Adding...' : 'Add Therapist'}
         </Button>
       </div>
 
@@ -231,7 +218,12 @@ const TherapistHub = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {recommendedTherapists.map((therapist) => (
+                {recommendations.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">
+                    {isLoadingTherapists ? 'Loading recommendations...' : 'No recommendations available. Select a specialty to see suggestions.'}
+                  </p>
+                ) : (
+                  recommendations.map((therapist) => (
                   <div key={therapist.id} className="border rounded-lg p-4 hover:border-therapy-300 transition-colors">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -245,13 +237,21 @@ const TherapistHub = () => {
                         <p className="text-sm text-muted-foreground mb-2">{therapist.approach} • {therapist.experience}</p>
                         <p className="text-sm text-therapy-600">{therapist.reason}</p>
                       </div>
-                      <Button>
-                        Add to Team
+                      <Button
+                        onClick={() => addTherapist({
+                          therapistId: therapist.id,
+                          specialty: therapist.specialty,
+                          isPrimary: false
+                        })}
+                        disabled={isAddingTherapist}
+                      >
+                        {isAddingTherapist ? 'Adding...' : 'Add to Team'}
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </Button>
                     </div>
                   </div>
-                ))}
+                  ))
+                )}
               </div>
             </CardContent>
           </Card>

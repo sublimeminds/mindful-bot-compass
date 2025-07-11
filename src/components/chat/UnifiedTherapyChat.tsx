@@ -19,7 +19,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useTherapistSelection } from '@/hooks/useTherapistSelection';
+import { useMultiTherapist } from '@/hooks/useMultiTherapist';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface Message {
@@ -45,7 +45,11 @@ interface TherapistContext {
 
 const UnifiedTherapyChat = () => {
   const { user } = useSimpleApp();
-  const { currentSelection } = useTherapistSelection();
+  const { 
+    activeTherapists, 
+    switchContext,
+    isSwitchingContext
+  } = useMultiTherapist();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [activeTherapist, setActiveTherapist] = useState<string>('primary');
@@ -53,26 +57,16 @@ const UnifiedTherapyChat = () => {
   const [sessionMode, setSessionMode] = useState<'text' | 'voice' | 'video'>('text');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Mock therapist contexts for multi-therapist support
-  const therapistContexts: TherapistContext[] = [
-    {
-      id: 'primary',
-      name: 'Dr. Sarah Chen',
-      specialty: 'Anxiety & Depression',
-      approach: 'CBT',
-      status: 'active',
-      currentMood: 'supportive',
-      lastInteraction: new Date()
-    },
-    {
-      id: 'adhd-specialist',
-      name: 'Dr. Maya Patel',
-      specialty: 'ADHD & Focus',
-      approach: 'Mindfulness',
-      status: 'available',
-      lastInteraction: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
-    }
-  ];
+  // Use real therapist data from database
+  const therapistContexts: TherapistContext[] = (activeTherapists || []).map(therapist => ({
+    id: therapist.therapist_id,
+    name: therapist.therapist_id.replace(/-/g, ' '), // Temporary name formatting
+    specialty: therapist.specialty_focus,
+    approach: therapist.therapy_context,
+    status: therapist.is_primary ? 'active' : 'available' as 'active' | 'available' | 'busy',
+    currentMood: 'supportive',
+    lastInteraction: new Date()
+  }));
 
   // Mock conversation history
   useEffect(() => {
@@ -157,7 +151,18 @@ const UnifiedTherapyChat = () => {
   const switchTherapist = (therapistId: string) => {
     setActiveTherapist(therapistId);
     const therapist = therapistContexts.find(t => t.id === therapistId);
-    if (therapist) {
+    if (therapist && user) {
+      // Call the actual context switch service
+      switchContext({
+        toTherapistId: therapistId,
+        fromTherapistId: activeTherapist !== therapistId ? activeTherapist : undefined,
+        reason: 'User initiated context switch',
+        contextData: {
+          sessionMode,
+          lastMessage: messages[messages.length - 1]?.content
+        }
+      });
+
       const contextSwitchMessage: Message = {
         id: Date.now().toString(),
         content: `You're now chatting with ${therapist.name}, specializing in ${therapist.specialty}.`,

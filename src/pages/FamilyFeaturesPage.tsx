@@ -28,9 +28,17 @@ import {
   Sparkles
 } from 'lucide-react';
 import GradientLogo from '@/components/ui/GradientLogo';
+import FamilyDashboard from '@/components/family/FamilyDashboard';
+import { useAuth } from '@/hooks/useAuth';
 
 const FamilyFeaturesPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // If user is logged in, show family dashboard instead of marketing page
+  if (user) {
+    return <FamilyDashboard />;
+  }
 
   const handleGetStarted = () => {
     const planSelection = {
