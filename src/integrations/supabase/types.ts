@@ -974,6 +974,59 @@ export type Database = {
           },
         ]
       }
+      campaign_recipients: {
+        Row: {
+          bounce_reason: string | null
+          campaign_id: string
+          clicked_at: string | null
+          created_at: string | null
+          delivered_at: string | null
+          email: string
+          id: string
+          opened_at: string | null
+          sent_at: string | null
+          status: string | null
+          unsubscribed_at: string | null
+          user_id: string
+        }
+        Insert: {
+          bounce_reason?: string | null
+          campaign_id: string
+          clicked_at?: string | null
+          created_at?: string | null
+          delivered_at?: string | null
+          email: string
+          id?: string
+          opened_at?: string | null
+          sent_at?: string | null
+          status?: string | null
+          unsubscribed_at?: string | null
+          user_id: string
+        }
+        Update: {
+          bounce_reason?: string | null
+          campaign_id?: string
+          clicked_at?: string | null
+          created_at?: string | null
+          delivered_at?: string | null
+          email?: string
+          id?: string
+          opened_at?: string | null
+          sent_at?: string | null
+          status?: string | null
+          unsubscribed_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_recipients_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "newsletter_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       challenge_participants: {
         Row: {
           best_streak: number | null
@@ -1715,6 +1768,135 @@ export type Database = {
           },
         ]
       }
+      email_ab_tests: {
+        Row: {
+          created_at: string | null
+          ended_at: string | null
+          id: string
+          name: string
+          results: Json | null
+          started_at: string | null
+          success_metric: string
+          template_key_a: string
+          template_key_b: string
+          test_status: string | null
+          traffic_split: number | null
+          winner: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          ended_at?: string | null
+          id?: string
+          name: string
+          results?: Json | null
+          started_at?: string | null
+          success_metric: string
+          template_key_a: string
+          template_key_b: string
+          test_status?: string | null
+          traffic_split?: number | null
+          winner?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          ended_at?: string | null
+          id?: string
+          name?: string
+          results?: Json | null
+          started_at?: string | null
+          success_metric?: string
+          template_key_a?: string
+          template_key_b?: string
+          test_status?: string | null
+          traffic_split?: number | null
+          winner?: string | null
+        }
+        Relationships: []
+      }
+      email_analytics: {
+        Row: {
+          campaign_id: string | null
+          created_at: string | null
+          email: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          template_key: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string | null
+          email: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          template_key?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string | null
+          email?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          template_key?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      email_templates: {
+        Row: {
+          category: string
+          created_at: string | null
+          html_content: string
+          id: string
+          is_active: boolean | null
+          language_code: string
+          subject: string
+          template_key: string
+          text_content: string | null
+          updated_at: string | null
+          variables: Json | null
+          version: number | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string | null
+          html_content: string
+          id?: string
+          is_active?: boolean | null
+          language_code?: string
+          subject: string
+          template_key: string
+          text_content?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+          version?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          html_content?: string
+          id?: string
+          is_active?: boolean | null
+          language_code?: string
+          subject?: string
+          template_key?: string
+          text_content?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+          version?: number | null
+        }
+        Relationships: []
+      }
       emergency_contacts: {
         Row: {
           contact_type: string
@@ -1826,6 +2008,72 @@ export type Database = {
           timestamp?: string
           user_id?: string
           valence?: number
+        }
+        Relationships: []
+      }
+      enhanced_notification_preferences: {
+        Row: {
+          created_at: string | null
+          educational_content: boolean | null
+          email_notifications: boolean | null
+          frequency_limit: number | null
+          id: string
+          language_preference: string | null
+          marketing_emails: boolean | null
+          newsletter_subscribed: boolean | null
+          payment_notifications: boolean | null
+          preferred_send_time: string | null
+          product_updates: boolean | null
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          subscription_warnings: boolean | null
+          timezone: string | null
+          unsubscribe_categories: string[] | null
+          updated_at: string | null
+          upsell_offers: boolean | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          educational_content?: boolean | null
+          email_notifications?: boolean | null
+          frequency_limit?: number | null
+          id?: string
+          language_preference?: string | null
+          marketing_emails?: boolean | null
+          newsletter_subscribed?: boolean | null
+          payment_notifications?: boolean | null
+          preferred_send_time?: string | null
+          product_updates?: boolean | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          subscription_warnings?: boolean | null
+          timezone?: string | null
+          unsubscribe_categories?: string[] | null
+          updated_at?: string | null
+          upsell_offers?: boolean | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          educational_content?: boolean | null
+          email_notifications?: boolean | null
+          frequency_limit?: number | null
+          id?: string
+          language_preference?: string | null
+          marketing_emails?: boolean | null
+          newsletter_subscribed?: boolean | null
+          payment_notifications?: boolean | null
+          preferred_send_time?: string | null
+          product_updates?: boolean | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          subscription_warnings?: boolean | null
+          timezone?: string | null
+          unsubscribe_categories?: string[] | null
+          updated_at?: string | null
+          upsell_offers?: boolean | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -3364,6 +3612,54 @@ export type Database = {
           start_time?: string
           therapy_adjustments?: Json | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      newsletter_campaigns: {
+        Row: {
+          a_b_test_config: Json | null
+          analytics_data: Json | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          name: string
+          segmentation_rules: Json | null
+          send_at: string | null
+          status: string | null
+          subject: string
+          target_audience: Json | null
+          template_key: string
+          updated_at: string | null
+        }
+        Insert: {
+          a_b_test_config?: Json | null
+          analytics_data?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name: string
+          segmentation_rules?: Json | null
+          send_at?: string | null
+          status?: string | null
+          subject: string
+          target_audience?: Json | null
+          template_key: string
+          updated_at?: string | null
+        }
+        Update: {
+          a_b_test_config?: Json | null
+          analytics_data?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name?: string
+          segmentation_rules?: Json | null
+          send_at?: string | null
+          status?: string | null
+          subject?: string
+          target_audience?: Json | null
+          template_key?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -5430,6 +5726,36 @@ export type Database = {
           },
         ]
       }
+      subscription_lifecycle_events: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          subscription_id: string | null
+          triggered_notifications: Json | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          subscription_id?: string | null
+          triggered_notifications?: Json | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          subscription_id?: string | null
+          triggered_notifications?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       subscription_plans: {
         Row: {
           created_at: string
@@ -6422,6 +6748,89 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      upselling_campaigns: {
+        Row: {
+          created_at: string | null
+          discount_percentage: number | null
+          email_template_key: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          success_metrics: Json | null
+          target_plan: string
+          trigger_conditions: Json
+          trigger_type: string
+          updated_at: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          discount_percentage?: number | null
+          email_template_key?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          success_metrics?: Json | null
+          target_plan: string
+          trigger_conditions: Json
+          trigger_type: string
+          updated_at?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          discount_percentage?: number | null
+          email_template_key?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          success_metrics?: Json | null
+          target_plan?: string
+          trigger_conditions?: Json
+          trigger_type?: string
+          updated_at?: string | null
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
+      upselling_interactions: {
+        Row: {
+          campaign_id: string
+          conversion_value: number | null
+          created_at: string | null
+          id: string
+          interaction_context: Json | null
+          interaction_type: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          conversion_value?: number | null
+          created_at?: string | null
+          id?: string
+          interaction_context?: Json | null
+          interaction_type: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string
+          conversion_value?: number | null
+          created_at?: string | null
+          id?: string
+          interaction_context?: Json | null
+          interaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "upselling_interactions_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "upselling_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_activity: {
         Row: {
