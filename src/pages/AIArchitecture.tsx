@@ -864,9 +864,9 @@ const AIArchitecture = () => {
               </Button>
             </div>
           </div>
-        </section>
-        </div>
+         </section>
       </div>
+    </div>
     </PageLayout>
   );
 };

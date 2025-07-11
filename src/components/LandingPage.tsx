@@ -9,9 +9,11 @@ import HowItWorksSection from '@/components/landing/HowItWorksSection';
 import CTASection from '@/components/landing/CTASection';
 import InteractiveDemo from '@/components/landing/InteractiveDemo';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
+import AlexCompanion from '@/components/ai/AlexCompanion';
 
 const LandingPage = () => {
   console.log('LandingPage rendering');
+  const [isAlexMinimized, setIsAlexMinimized] = React.useState(true);
   
   return (
     <SafeComponentWrapper name="LandingPage">
@@ -53,6 +55,12 @@ const LandingPage = () => {
         <SafeComponentWrapper name="Footer" fallback={<div className="h-32 bg-slate-50"></div>}>
           <Footer />
         </SafeComponentWrapper>
+        
+        {/* Alex AI Companion */}
+        <AlexCompanion 
+          isMinimized={isAlexMinimized}
+          onToggleMinimize={() => setIsAlexMinimized(!isAlexMinimized)}
+        />
       </div>
     </SafeComponentWrapper>
   );
