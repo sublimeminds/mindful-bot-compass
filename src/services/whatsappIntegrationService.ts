@@ -12,12 +12,6 @@ export interface WhatsAppIntegration {
   last_activity?: string;
   created_at: string;
   updated_at: string;
-  userId: string;
-  phoneNumber: string;
-  accessToken: string;
-  businessAccountId: string;
-  isActive: boolean;
-  lastMessageAt?: Date;
 }
 
 export interface WhatsAppMessage {
@@ -68,15 +62,9 @@ class WhatsAppIntegrationService {
 
       return {
         ...data,
-        isVerified: (data as any).is_verified || false,
-        preferences: (data as any).preferences || {},
-        userId: data.user_id,
-        phoneNumber: data.phone_number,
-        accessToken: data.access_token_encrypted || '',
-        businessAccountId: data.business_account_id || '',
-        isActive: data.is_active,
-        lastMessageAt: data.last_message_at ? new Date(data.last_message_at) : undefined
-      } as any;
+        is_verified: (data as any).is_verified || false,
+        preferences: (data as any).preferences || {}
+      };
     } catch (error) {
       console.error('Error creating WhatsApp integration:', error);
       throw error;
@@ -172,14 +160,19 @@ class WhatsAppIntegrationService {
   ): Promise<void> {
     try {
       // Find integration by phone number
-      const { data: integration, error: fetchError } = await supabase
+      const integrationQuery = await supabase
         .from('whatsapp_integrations')
         .select('*')
         .eq('phone_number', phoneNumber)
-        .eq('is_verified', true)
-        .single();
+        .maybeSingle();
 
-      if (fetchError) throw fetchError;
+      if (integrationQuery.error) throw integrationQuery.error;
+      
+      if (!integrationQuery.data) {
+        throw new Error('Integration not found');
+      }
+      
+      const integration = integrationQuery.data;
 
       // Save incoming message
       const messageData = {
@@ -207,7 +200,7 @@ class WhatsAppIntegrationService {
       }
 
       // Generate AI response if auto-responses enabled
-      const preferences = ((integration as any).preferences || {}) as Record<string, any>;
+      const preferences = (integration as any).preferences || {};
       if (preferences.auto_responses) {
         await this.generateAIResponse(integration as any, content);
       }
@@ -276,7 +269,7 @@ class WhatsAppIntegrationService {
       });
   }
 
-  private async generateAIResponse(integration: WhatsAppIntegration, userMessage: string): Promise<void> {
+  private async generateAIResponse(integration: any, userMessage: string): Promise<void> {
     try {
       // Get conversation context
       const { data: recentMessages } = await supabase
@@ -320,24 +313,13 @@ class WhatsAppIntegrationService {
         .from('whatsapp_integrations')
         .select('*')
         .eq('user_id', userId)
-        .eq('is_verified', true)
-        .single();
+        .maybeSingle();
 
       if (error && error.code !== 'PGRST116') throw error;
       
       if (!data) return null;
       
-      return {
-        ...data,
-        isVerified: (data as any).is_verified || false,
-        preferences: (data as any).preferences || {},
-        userId: data.user_id,
-        phoneNumber: data.phone_number,
-        accessToken: data.access_token_encrypted || '',
-        businessAccountId: data.business_account_id || '',
-        isActive: data.is_active,
-        lastMessageAt: data.last_message_at ? new Date(data.last_message_at) : undefined
-      } as any;
+      return data as any;
     } catch (error) {
       console.error('Error fetching WhatsApp integration:', error);
       return null;
