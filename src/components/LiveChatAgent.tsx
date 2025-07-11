@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import VoiceEnhancedAvatar from '@/components/avatar/VoiceEnhancedAvatar';
+import Alex2DAvatar from '@/components/ai/Alex2DAvatar';
 
 interface ChatMessage {
   id: string;
@@ -45,7 +45,7 @@ const LiveChatAgent = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [avatarEmotion, setAvatarEmotion] = useState<'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful'>('happy');
+  const [avatarEmotion, setAvatarEmotion] = useState<'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful' | 'excited' | 'empathetic' | 'celebrating'>('happy');
   const [isSpeaking, setIsSpeaking] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -239,20 +239,12 @@ const LiveChatAgent = () => {
           onClick={() => setIsOpen(true)}
           className="relative bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white rounded-full w-16 h-16 shadow-2xl hover:shadow-therapy-500/25 transition-all duration-300 hover:scale-110 border-0 overflow-hidden"
         >
-          <div className="absolute inset-2 rounded-full overflow-hidden">
-            <VoiceEnhancedAvatar
-              therapistId="alex-support"
-              therapistName="Alex"
-              emotion={avatarEmotion}
-              userEmotion="neutral"
-              isSpeaking={false}
-              isListening={false}
-              showControls={false}
-              className="w-full h-full scale-150"
-              currentMessage=""
-              onSpeakingStateChange={() => {}}
-            />
-          </div>
+          <Alex2DAvatar
+            emotion={avatarEmotion}
+            size="lg"
+            showParticles={avatarEmotion === 'celebrating' || avatarEmotion === 'excited'}
+            className="w-full h-full"
+          />
           <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
             <Sparkles className="h-2.5 w-2.5 text-white" />
           </div>
@@ -269,20 +261,13 @@ const LiveChatAgent = () => {
       <Card className={`w-96 bg-white/95 backdrop-blur-sm shadow-2xl border-0 transition-all duration-300 ${isMinimized ? 'h-16' : 'h-96'}`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-therapy-600 to-calm-600 text-white rounded-t-lg">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-white/20 rounded-full overflow-hidden flex items-center justify-center">
-              <VoiceEnhancedAvatar
-                therapistId="alex-support"
-                therapistName="Alex"
-                emotion={avatarEmotion}
-                userEmotion="neutral"
-                isSpeaking={isSpeaking}
-                isListening={isTyping}
-                showControls={false}
-                className="w-full h-full scale-125"
-                currentMessage=""
-                onSpeakingStateChange={() => {}}
-              />
-            </div>
+            <Alex2DAvatar
+              emotion={avatarEmotion}
+              size="md"
+              isSpeaking={isSpeaking}
+              isListening={isTyping}
+              showParticles={avatarEmotion === 'celebrating' || avatarEmotion === 'excited'}
+            />
             <div>
               <CardTitle className="text-sm font-semibold flex items-center space-x-2">
                 <span>Alex - Platform Support</span>
@@ -326,20 +311,10 @@ const LiveChatAgent = () => {
                   }`}>
                     <div className="flex items-center space-x-2 mb-1">
                       {message.type === 'agent' ? (
-                        <div className="w-4 h-4 rounded-full overflow-hidden">
-                          <VoiceEnhancedAvatar
-                            therapistId="alex-support"
-                            therapistName="Alex"
-                            emotion={avatarEmotion}
-                            userEmotion="neutral"
-                            isSpeaking={false}
-                            isListening={false}
-                            showControls={false}
-                            className="w-full h-full scale-150"
-                            currentMessage=""
-                            onSpeakingStateChange={() => {}}
-                          />
-                        </div>
+                        <Alex2DAvatar
+                          emotion={avatarEmotion}
+                          size="sm"
+                        />
                       ) : (
                         <User className="h-4 w-4" />
                       )}
@@ -375,20 +350,11 @@ const LiveChatAgent = () => {
                 <div className="flex justify-start">
                   <div className="bg-gray-100 text-gray-800 p-3 rounded-lg mr-4 max-w-xs">
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 rounded-full overflow-hidden">
-                        <VoiceEnhancedAvatar
-                          therapistId="alex-support"
-                          therapistName="Alex"
-                          emotion="thoughtful"
-                          userEmotion="neutral"
-                          isSpeaking={true}
-                          isListening={false}
-                          showControls={false}
-                          className="w-full h-full scale-150"
-                          currentMessage=""
-                          onSpeakingStateChange={() => {}}
-                        />
-                      </div>
+                      <Alex2DAvatar
+                        emotion="thoughtful"
+                        size="sm"
+                        isAnimating={true}
+                      />
                       <span className="text-xs opacity-75">Alex (AI Support)</span>
                     </div>
                     <div className="flex space-x-1 mt-1">

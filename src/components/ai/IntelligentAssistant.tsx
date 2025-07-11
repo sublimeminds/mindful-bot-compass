@@ -1,9 +1,9 @@
 
 import React from 'react';
-import EnhancedAlex from './EnhancedAlex';
+import Enhanced2DAlex from './Enhanced2DAlex';
 
 const IntelligentAssistant = () => {
-  return <EnhancedAlex />;
+  return <Enhanced2DAlex />;
 };
 
 export default IntelligentAssistant;
