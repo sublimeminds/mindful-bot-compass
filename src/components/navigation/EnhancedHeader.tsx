@@ -161,6 +161,13 @@ const EnhancedHeader = () => {
       description: "Connect with your favorite health and wellness apps for seamless care",
       href: "/integrations",
       gradient: "from-harmony-500 to-calm-500"
+    },
+    {
+      icon: Shield,
+      title: "Compliance & Security",
+      description: "HIPAA, GDPR compliance and enterprise-grade security standards",
+      href: "/compliance",
+      gradient: "from-therapy-600 to-harmony-600"
     }
   ];
 
