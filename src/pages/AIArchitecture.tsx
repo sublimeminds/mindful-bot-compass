@@ -327,6 +327,7 @@ const AIArchitecture = () => {
   ];
 
   return (
+    <PageLayout>
     <div className="min-h-screen bg-gradient-to-br from-therapy-25 to-calm-25">
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-therapy-600 via-therapy-700 to-calm-600 text-white py-24 overflow-hidden">

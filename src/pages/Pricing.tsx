@@ -9,6 +9,7 @@ import { useSafeSEO } from '@/hooks/useSafeSEO';
 import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
 import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
 import CurrencySelector from '@/components/ui/CurrencySelector';
+import PageLayout from '@/components/layout/PageLayout';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -216,8 +217,8 @@ const Pricing = () => {
   ];
 
   return (
+    <PageLayout>
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
-      <Header />
       
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
@@ -460,9 +461,9 @@ const Pricing = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
+      
     </div>
+    </PageLayout>
   );
 };
 

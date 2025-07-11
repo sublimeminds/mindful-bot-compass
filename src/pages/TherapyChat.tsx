@@ -20,6 +20,7 @@ import { useSimpleApp } from "@/hooks/useSimpleApp";
 import { useTherapist } from "@/contexts/TherapistContext";
 import { chatService } from "@/services/chatService";
 import Header from "@/components/Header";
+import PageLayout from "@/components/layout/PageLayout";
 import GradientLogo from "@/components/ui/GradientLogo";
 import AIEnhancedTherapyChat from "@/components/chat/AIEnhancedTherapyChat";
 import LightweightAvatarSystem from "@/components/avatar/LightweightAvatarSystem";
@@ -99,8 +100,7 @@ const TherapyChat = () => {
   ];
 
   return (
-    <>
-      <Header />
+    <PageLayout>
       <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50">
         <div className="container mx-auto px-4 py-8">
           {/* Header Section */}
@@ -290,7 +290,7 @@ const TherapyChat = () => {
           </Card>
         </div>
       )}
-    </>
+    </PageLayout>
   );
 };
 
