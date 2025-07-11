@@ -17,7 +17,7 @@ const EnhancedCrisisManager: React.FC = () => {
   useEffect(() => {
     const loadResources = async () => {
       if (user?.id) {
-        const resources = await CrisisDetectionService.getCrisisResources(user.id);
+        const resources = await crisisDetectionService.getCrisisResources();
         setCrisisResources(resources);
       }
     };
@@ -68,7 +68,7 @@ const EnhancedCrisisManager: React.FC = () => {
                 <p className="text-sm text-gray-600 mb-2">{resource.description}</p>
                 <Button size="sm" className="flex items-center space-x-2">
                   <Phone className="h-4 w-4" />
-                  <span>{resource.contact_info}</span>
+                  <span>{resource.contact_info?.phone || resource.phone_number}</span>
                 </Button>
               </div>
             ))}

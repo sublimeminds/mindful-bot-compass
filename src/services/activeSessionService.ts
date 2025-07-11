@@ -349,13 +349,20 @@ class ActiveSessionService {
         session.user_id,
         sessionId,
         messages,
-        session.mood_tracking || {}
+        (session.mood_tracking && typeof session.mood_tracking === 'object') ? session.mood_tracking as Record<string, any> : {}
       );
 
       // Update session with crisis indicators
       const { error } = await supabase
         .from('active_sessions')
-        .update({ crisis_indicators: indicators })
+        .update({ 
+          crisis_indicators: {
+            crisis_score: indicators.crisis_score,
+            indicators: indicators.indicators,
+            confidence: indicators.confidence,
+            requires_escalation: indicators.requires_escalation
+          }
+        })
         .eq('id', sessionId);
 
       if (error) throw error;

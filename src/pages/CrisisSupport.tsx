@@ -35,7 +35,7 @@ const CrisisSupport = () => {
     
     const loadCrisisResources = async () => {
       try {
-        const resources = await CrisisDetectionService.getCrisisResources('default');
+        const resources = await crisisDetectionService.getCrisisResources();
         setCrisisResources(resources);
       } catch (error) {
         console.error('Error loading crisis resources:', error);
@@ -187,7 +187,7 @@ const CrisisSupport = () => {
                       onClick={() => window.location.href = `tel:${resource.contact_info}`}
                     >
                       <Phone className="h-4 w-4 mr-2" />
-                      Call {resource.contact_info}
+                      Call {resource.contact_info?.phone || resource.phone_number}
                     </Button>
                   </div>
                 ))}

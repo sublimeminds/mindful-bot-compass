@@ -21,6 +21,28 @@ export interface CrisisIndicators {
   requires_escalation: boolean;
 }
 
+export interface SafetyResource {
+  id: string;
+  name: string;
+  title: string;
+  phone_number?: string;
+  website_url?: string;
+  description?: string;
+  availability?: string;
+  resource_type: string;
+  contact_info?: {
+    phone: string;
+    website: string;
+  };
+  immediate_access?: boolean;
+}
+
+export interface CrisisIndicator {
+  type: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  description: string;
+}
+
 class CrisisDetectionService {
   private crisisKeywords = [
     'suicide', 'kill myself', 'end it all', 'hurt myself', 'self harm',
@@ -53,11 +75,12 @@ class CrisisDetectionService {
       if (error) throw error;
 
       // If crisis detected, create alert
-      if (indicators.requires_escalation) {
-        await this.createCrisisAlert(userId, sessionId, indicators);
+      const crisisData = indicators as any;
+      if (crisisData.requires_escalation) {
+        await this.createCrisisAlert(userId, sessionId, crisisData);
       }
 
-      return indicators;
+      return crisisData as CrisisIndicators;
     } catch (error) {
       console.error('Error analyzing crisis risk:', error);
       // Fallback to client-side detection
@@ -176,9 +199,58 @@ class CrisisDetectionService {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+      return (data || []).map(alert => ({
+        ...alert,
+        severity_level: alert.severity_level as 'low' | 'medium' | 'high' | 'critical',
+        resolution_status: alert.resolution_status as 'pending' | 'escalated' | 'resolved' | 'false_positive',
+        trigger_data: (typeof alert.trigger_data === 'string' ? JSON.parse(alert.trigger_data) : alert.trigger_data) || {}
+      }));
     } catch (error) {
       console.error('Error fetching crisis alerts:', error);
+      return [];
+    }
+  }
+
+  async analyzeCrisisLevel(messages: string[]): Promise<number> {
+    const indicators = this.fallbackCrisisDetection(messages, {});
+    return indicators.crisis_score;
+  }
+
+  async generateCrisisResponse(messages: string[]): Promise<string> {
+    const score = await this.analyzeCrisisLevel(messages);
+    if (score > 0.6) {
+      return "I'm here to support you. If you're having thoughts of self-harm, please reach out to a crisis helpline immediately. Your safety is the priority.";
+    }
+    return "I understand you're going through a difficult time. Let's talk about how you're feeling.";
+  }
+
+  async getCrisisResources(): Promise<SafetyResource[]> {
+    try {
+      const { data, error } = await supabase
+        .from('crisis_resources')
+        .select('*')
+        .eq('is_active', true)
+        .order('priority_order');
+
+      if (error) throw error;
+
+      return (data || []).map(resource => ({
+        id: resource.id,
+        name: resource.name,
+        title: resource.name,
+        phone_number: resource.phone_number,
+        website_url: resource.website_url,
+        description: resource.description,
+        availability: resource.availability,
+        resource_type: resource.resource_type,
+        contact_info: {
+          phone: resource.phone_number || '',
+          website: resource.website_url || ''
+        },
+        immediate_access: resource.resource_type === 'hotline'
+      }));
+    } catch (error) {
+      console.error('Error fetching crisis resources:', error);
       return [];
     }
   }
@@ -203,3 +275,4 @@ class CrisisDetectionService {
 }
 
 export const crisisDetectionService = new CrisisDetectionService();
+export { CrisisDetectionService };

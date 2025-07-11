@@ -53,7 +53,7 @@ const mockAssignmentService = {
     description: 'Practice deep breathing for 5 minutes, focusing on the rhythm and sensation of each breath.'
   })
 };
-import { CrisisDetectionService } from '@/services/crisisDetectionService';
+import { crisisDetectionService } from '@/services/crisisDetectionService';
 
 interface TherapeuticMessage {
   id: string;
@@ -178,7 +178,7 @@ const AIEnhancedTherapyChat = ({ className }: AIEnhancedTherapyChatProps) => {
 
     try {
       // Crisis detection
-      const crisisLevel = await CrisisDetectionService.analyzeCrisisLevel(content);
+      const crisisLevel = await crisisDetectionService.analyzeCrisisLevel([content]);
       setCrisisRiskLevel(crisisLevel === 'critical' ? 'high' : crisisLevel === 'high' ? 'moderate' : 'low');
 
       // Get therapeutic context

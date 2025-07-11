@@ -12,6 +12,12 @@ export interface WhatsAppIntegration {
   last_activity?: string;
   created_at: string;
   updated_at: string;
+  userId: string;
+  phoneNumber: string;
+  accessToken: string;
+  businessAccountId: string;
+  isActive: boolean;
+  lastMessageAt?: Date;
 }
 
 export interface WhatsAppMessage {
@@ -62,8 +68,15 @@ class WhatsAppIntegrationService {
 
       return {
         ...data,
-        preferences: data.preferences as Record<string, any>
-      };
+        isVerified: data.is_verified || false,
+        preferences: (data as any).preferences || {},
+        userId: data.user_id,
+        phoneNumber: data.phone_number,
+        accessToken: data.access_token_encrypted || '',
+        businessAccountId: data.business_account_id || '',
+        isActive: data.is_active,
+        lastMessageAt: data.last_message_at ? new Date(data.last_message_at) : undefined
+      } as any;
     } catch (error) {
       console.error('Error creating WhatsApp integration:', error);
       throw error;
@@ -114,7 +127,7 @@ class WhatsAppIntegrationService {
 
       if (fetchError) throw fetchError;
 
-      if (!integration.is_verified) {
+      if (!(integration as any).is_verified) {
         throw new Error('WhatsApp integration not verified');
       }
 
@@ -194,15 +207,15 @@ class WhatsAppIntegrationService {
       }
 
       // Generate AI response if auto-responses enabled
-      const preferences = integration.preferences as Record<string, any>;
+      const preferences = ((integration as any).preferences || {}) as Record<string, any>;
       if (preferences.auto_responses) {
-        await this.generateAIResponse(integration, content);
+        await this.generateAIResponse(integration as any, content);
       }
 
       // Update last activity
       await supabase
         .from('whatsapp_integrations')
-        .update({ last_activity: new Date().toISOString() })
+        .update({ last_message_at: new Date().toISOString() })
         .eq('id', integration.id);
 
     } catch (error) {
@@ -316,8 +329,15 @@ class WhatsAppIntegrationService {
       
       return {
         ...data,
-        preferences: data.preferences as Record<string, any>
-      };
+        isVerified: data.is_verified || false,
+        preferences: (data as any).preferences || {},
+        userId: data.user_id,
+        phoneNumber: data.phone_number,
+        accessToken: data.access_token_encrypted || '',
+        businessAccountId: data.business_account_id || '',
+        isActive: data.is_active,
+        lastMessageAt: data.last_message_at ? new Date(data.last_message_at) : undefined
+      } as any;
     } catch (error) {
       console.error('Error fetching WhatsApp integration:', error);
       return null;

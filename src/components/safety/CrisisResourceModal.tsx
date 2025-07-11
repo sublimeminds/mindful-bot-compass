@@ -95,7 +95,7 @@ const CrisisResourceModal: React.FC<CrisisResourceModalProps> = ({
                     <div className="flex items-center space-x-4 text-sm">
                       <span className="flex items-center space-x-1">
                         <Phone className="h-3 w-3" />
-                        <span>{resource.contact_info}</span>
+                        <span>{resource.contact_info?.phone || resource.phone_number}</span>
                       </span>
                       <Badge variant="outline" className="text-xs">
                         {resource.availability}
@@ -103,11 +103,11 @@ const CrisisResourceModal: React.FC<CrisisResourceModalProps> = ({
                     </div>
                   </div>
                   <Button 
-                    onClick={() => handleCallResource(resource.contact_info || '')}
+                    onClick={() => handleCallResource(resource.contact_info?.phone || resource.phone_number || '')}
                     className="ml-4"
                     variant={resource.immediate_access ? 'default' : 'outline'}
                   >
-                    {resource.contact_info?.includes('741741') ? (
+                    {(resource.contact_info?.phone || resource.phone_number || '').includes('741741') ? (
                       <MessageCircle className="h-4 w-4" />
                     ) : (
                       <Phone className="h-4 w-4" />

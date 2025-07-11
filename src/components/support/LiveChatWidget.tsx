@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Bot, User, Send, Phone, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { CrisisDetectionService } from '@/services/crisisDetectionService';
+import { crisisDetectionService } from '@/services/crisisDetectionService';
 
 interface ChatMessage {
   id: string;
@@ -45,9 +45,9 @@ const LiveChatWidget = () => {
 
   const generateAIResponse = async (userMessage: string): Promise<string> => {
     // Crisis detection
-    const crisisLevel = await CrisisDetectionService.analyzeCrisisLevel(userMessage);
-    if (crisisLevel === 'critical') {
-      const response = await CrisisDetectionService.generateCrisisResponse(crisisLevel);
+    const crisisLevel = await crisisDetectionService.analyzeCrisisLevel([userMessage]);
+    if (crisisLevel > 0.8) {
+      const response = await crisisDetectionService.generateCrisisResponse([userMessage]);
       return response + "\n\nI'm connecting you with a crisis counselor immediately. Please hold on.";
     }
 
@@ -85,8 +85,8 @@ const LiveChatWidget = () => {
     setIsTyping(true);
 
     // Crisis detection
-    const crisisLevel = await CrisisDetectionService.analyzeCrisisLevel(inputMessage);
-    if (crisisLevel === 'critical' || crisisLevel === 'high') {
+    const crisisLevel = await crisisDetectionService.analyzeCrisisLevel([inputMessage]);
+    if (crisisLevel > 0.6) {
       toast({
         title: "Crisis Support Activated",
         description: "Connecting you with immediate crisis support resources.",
