@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Brain, 
   Heart, 
@@ -33,13 +34,22 @@ import {
   Info,
   Maximize2,
   Award,
-  Settings
+  Settings,
+  ArrowRight,
+  User,
+  Calendar,
+  ChevronRight,
+  Compass
 } from 'lucide-react';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { enhancedVoiceService } from '@/services/voiceService';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
+import { useOnboardingData } from '@/hooks/useOnboardingData';
+import { TherapistMatchingService } from '@/services/therapistMatchingService';
+import { useNavigate } from 'react-router-dom';
 
 const therapyApproaches = [
   'All Approaches',
@@ -76,6 +86,10 @@ const communicationStyles = [
 ];
 
 const TherapistDiscovery = () => {
+  const { user } = useSimpleApp();
+  const { onboardingData, isLoading: onboardingLoading } = useOnboardingData();
+  const navigate = useNavigate();
+  
   const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedApproach, setSelectedApproach] = useState('All Approaches');
@@ -187,6 +201,33 @@ const TherapistDiscovery = () => {
     return techniqueMap[technique] || { icon: Star, description: 'Specialized therapeutic technique', evidence: 'Research-supported approach' };
   };
 
+  // Fetch user profile data
+  const { data: profile } = useQuery({
+    queryKey: ['user-profile', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle();
+      
+      if (error) console.error('Error fetching profile:', error);
+      return data;
+    },
+    enabled: !!user?.id
+  });
+
+  // Fetch latest therapist assessment
+  const { data: assessment } = useQuery({
+    queryKey: ['therapist-assessment', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      return await TherapistMatchingService.getLatestAssessment(user.id);
+    },
+    enabled: !!user?.id
+  });
+
   // Fetch therapists from database
   const { data: therapistData = [], isLoading } = useQuery({
     queryKey: ['therapist-personalities-discovery'],
@@ -228,7 +269,8 @@ const TherapistDiscovery = () => {
         crisisSupport: therapist.experience_level === 'Expert' ? 'Advanced' : 'Intermediate',
         availabilityHours: '24/7',
         // AI-specific features
-        aiModel: 'GPT-4 Enhanced',
+        aiModel: 'TherapySync AI',
+        aiDetails: 'Powered by GPT-4 & Anthropic Claude with proprietary therapy AI and our comprehensive mental health database',
         responseTime: '<2 seconds',
         memoryRetention: 'Perfect recall',
         culturalIntelligence: 'Advanced',
@@ -378,6 +420,152 @@ const TherapistDiscovery = () => {
           </div>
         </div>
       </section>
+
+      {/* Matched Therapist & Onboarding Status Section */}
+      {user && (
+        <section className="py-8 bg-gradient-to-r from-therapy-50/50 to-calm-50/50">
+          <div className="container mx-auto px-4">
+            {/* Current Matched Therapist */}
+            {assessment?.selected_therapist_id && (
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold mb-4 flex items-center">
+                  <CheckCircle className="h-6 w-6 mr-2 text-green-600" />
+                  Your Matched Therapist
+                </h2>
+                {(() => {
+                  const matchedTherapist = therapistData.find(t => t.id === assessment.selected_therapist_id);
+                  if (!matchedTherapist) return null;
+                  
+                  return (
+                    <Card className="bg-gradient-to-r from-green-50 to-therapy-50 border-green-200">
+                      <CardContent className="p-6">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-16 h-16 rounded-full overflow-hidden">
+                            <Professional2DAvatar
+                              therapistId={matchedTherapist.avatarId}
+                              therapistName={matchedTherapist.name}
+                              className="w-full h-full"
+                              showName={false}
+                              size="md"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-xl font-bold text-therapy-700">{matchedTherapist.name}</h3>
+                            <p className="text-therapy-600 mb-2">{matchedTherapist.title}</p>
+                            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                              <span className="flex items-center">
+                                <Star className="h-4 w-4 mr-1 text-yellow-500" />
+                                {Math.round(compatibilityScores[matchedTherapist.id] || 95)}% Match
+                              </span>
+                              <span>{matchedTherapist.approach}</span>
+                            </div>
+                          </div>
+                          <Button onClick={() => navigate('/dashboard')} className="bg-therapy-600 hover:bg-therapy-700">
+                            Continue Therapy
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })()}
+              </div>
+            )}
+
+            {/* Top Recommendations (if assessment completed but no selection) */}
+            {assessment && !assessment.selected_therapist_id && assessment.recommended_therapists && (
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold mb-4 flex items-center">
+                  <Target className="h-6 w-6 mr-2 text-therapy-600" />
+                  Your Top Recommended Matches
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {(Array.isArray(assessment.recommended_therapists) ? assessment.recommended_therapists : []).slice(0, 3).map((rec: any, index: number) => {
+                    const therapist = therapistData.find(t => t.id === rec.therapist_id);
+                    if (!therapist) return null;
+                    
+                    return (
+                      <Card key={therapist.id} className="hover:shadow-lg transition-shadow">
+                        <CardContent className="p-4">
+                          <div className="text-center mb-3">
+                            <div className="w-12 h-12 rounded-full overflow-hidden mx-auto mb-2">
+                              <Professional2DAvatar
+                                therapistId={therapist.avatarId}
+                                therapistName={therapist.name}
+                                className="w-full h-full"
+                                showName={false}
+                                size="sm"
+                              />
+                            </div>
+                            <h3 className="font-semibold text-sm">{therapist.name}</h3>
+                            <div className="flex items-center justify-center mt-1">
+                              <Star className="h-3 w-3 mr-1 text-yellow-500" />
+                              <span className="text-xs text-muted-foreground">
+                                {Math.round((rec.compatibility_score || 0.9) * 100)}% Match
+                              </span>
+                            </div>
+                          </div>
+                          <Button 
+                            size="sm" 
+                            className="w-full" 
+                            variant="outline"
+                            onClick={() => openDetailsModal(therapist)}
+                          >
+                            View Details
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+                <div className="text-center mt-4">
+                  <Button variant="outline" onClick={() => navigate('/therapist-assessment')}>
+                    Review Full Assessment
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Onboarding Status */}
+            {profile && !profile.onboarding_complete && (
+              <Alert className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+                <Compass className="h-4 w-4" />
+                <AlertDescription className="flex items-center justify-between">
+                  <div>
+                    <strong>Complete your assessment to find your perfect therapist match</strong>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Get personalized recommendations based on your goals and preferences
+                    </p>
+                  </div>
+                  <Button onClick={() => navigate('/onboarding')} className="ml-4">
+                    Continue Assessment
+                    <ChevronRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {/* Take Assessment CTA (for users with complete onboarding but no assessment) */}
+            {profile?.onboarding_complete && !assessment && onboardingData && (
+              <Alert className="mb-8 bg-gradient-to-r from-therapy-50 to-calm-50 border-therapy-200">
+                <Target className="h-4 w-4" />
+                <AlertDescription className="flex items-center justify-between">
+                  <div>
+                    <strong>Ready to find your ideal therapist?</strong>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Based on your goals: {onboardingData.goals?.join(', ')} - Take our matching assessment
+                    </p>
+                  </div>
+                  <Button onClick={() => navigate('/therapist-assessment')} className="ml-4">
+                    Take Matching Quiz
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Smart Discovery Engine */}
       <section className="py-16 bg-card/50">
@@ -624,12 +812,33 @@ const TherapistDiscovery = () => {
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedTherapist(therapist.id);
+                          if (assessment?.selected_therapist_id === therapist.id) {
+                            navigate('/dashboard');
+                          } else if (assessment) {
+                            // Save selection and continue
+                            setSelectedTherapist(therapist.id);
+                          } else {
+                            navigate('/therapist-assessment');
+                          }
                         }}
                         className="flex-1 bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
                       >
-                        <MessageCircle className="h-4 w-4 mr-1" />
-                        Start Chat
+                        {assessment?.selected_therapist_id === therapist.id ? (
+                          <>
+                            <Calendar className="h-4 w-4 mr-1" />
+                            Continue Therapy
+                          </>
+                        ) : assessment ? (
+                          <>
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Select Therapist
+                          </>
+                        ) : (
+                          <>
+                            <Target className="h-4 w-4 mr-1" />
+                            Take Assessment
+                          </>
+                        )}
                       </Button>
                     </div>
                   </div>
@@ -823,12 +1032,14 @@ const TherapistDiscovery = () => {
                   
                   <TabsContent value="ai-tech" className="space-y-4">
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                        <span className="flex items-center">
+                      <div className="p-3 bg-blue-50 rounded-lg space-y-2">
+                        <div className="flex items-center">
                           <Cpu className="h-4 w-4 mr-2 text-blue-600" />
-                          AI Model
-                        </span>
-                        <span className="font-medium">{modalTherapist.aiModel}</span>
+                          <span className="font-medium">TherapySync AI Platform</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {modalTherapist.aiDetails}
+                        </p>
                       </div>
                       <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
                         <span className="flex items-center">
