@@ -95,6 +95,45 @@ export type Database = {
         }
         Relationships: []
       }
+      active_sessions: {
+        Row: {
+          crisis_indicators: Json | null
+          id: string
+          last_activity: string | null
+          mood_tracking: Json | null
+          session_data: Json | null
+          session_type: string
+          start_time: string | null
+          status: string | null
+          therapist_id: string
+          user_id: string
+        }
+        Insert: {
+          crisis_indicators?: Json | null
+          id?: string
+          last_activity?: string | null
+          mood_tracking?: Json | null
+          session_data?: Json | null
+          session_type: string
+          start_time?: string | null
+          status?: string | null
+          therapist_id: string
+          user_id: string
+        }
+        Update: {
+          crisis_indicators?: Json | null
+          id?: string
+          last_activity?: string | null
+          mood_tracking?: Json | null
+          session_data?: Json | null
+          session_type?: string
+          start_time?: string | null
+          status?: string | null
+          therapist_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       admin_activity_log: {
         Row: {
           action: string
@@ -603,6 +642,36 @@ export type Database = {
           session_data?: Json | null
           start_time?: string
           therapeutic_goals?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      assessment_matches: {
+        Row: {
+          assessment_id: string
+          compatibility_score: number
+          created_at: string | null
+          id: string
+          matching_factors: Json | null
+          therapist_id: string
+          user_id: string
+        }
+        Insert: {
+          assessment_id: string
+          compatibility_score?: number
+          created_at?: string | null
+          id?: string
+          matching_factors?: Json | null
+          therapist_id: string
+          user_id: string
+        }
+        Update: {
+          assessment_id?: string
+          compatibility_score?: number
+          created_at?: string | null
+          id?: string
+          matching_factors?: Json | null
+          therapist_id?: string
           user_id?: string
         }
         Relationships: []
@@ -1215,6 +1284,48 @@ export type Database = {
           platforms?: string[] | null
           thread_type?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      crisis_alerts: {
+        Row: {
+          ai_confidence: number
+          alert_type: string
+          created_at: string | null
+          escalated_to: string | null
+          id: string
+          resolution_status: string | null
+          resolved_at: string | null
+          session_id: string | null
+          severity_level: string
+          trigger_data: Json | null
+          user_id: string
+        }
+        Insert: {
+          ai_confidence?: number
+          alert_type: string
+          created_at?: string | null
+          escalated_to?: string | null
+          id?: string
+          resolution_status?: string | null
+          resolved_at?: string | null
+          session_id?: string | null
+          severity_level?: string
+          trigger_data?: Json | null
+          user_id: string
+        }
+        Update: {
+          ai_confidence?: number
+          alert_type?: string
+          created_at?: string | null
+          escalated_to?: string | null
+          id?: string
+          resolution_status?: string | null
+          resolved_at?: string | null
+          session_id?: string | null
+          severity_level?: string
+          trigger_data?: Json | null
           user_id?: string
         }
         Relationships: []
@@ -4201,6 +4312,48 @@ export type Database = {
           subscription_status?: string | null
           timezone?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      progress_milestones: {
+        Row: {
+          achieved_at: string | null
+          celebration_shown: boolean | null
+          created_at: string | null
+          current_value: number | null
+          description: string | null
+          id: string
+          milestone_type: string
+          points_earned: number | null
+          target_value: number | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          achieved_at?: string | null
+          celebration_shown?: boolean | null
+          created_at?: string | null
+          current_value?: number | null
+          description?: string | null
+          id?: string
+          milestone_type: string
+          points_earned?: number | null
+          target_value?: number | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          achieved_at?: string | null
+          celebration_shown?: boolean | null
+          created_at?: string | null
+          current_value?: number | null
+          description?: string | null
+          id?: string
+          milestone_type?: string
+          points_earned?: number | null
+          target_value?: number | null
+          title?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -7282,6 +7435,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      check_milestone_achievements: {
+        Args: { user_id_param: string }
+        Returns: undefined
+      }
       cleanup_old_sessions: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -7293,6 +7450,14 @@ export type Database = {
       decrement_post_likes: {
         Args: { post_id: string }
         Returns: undefined
+      }
+      detect_crisis_indicators: {
+        Args: {
+          session_messages: string[]
+          mood_data: Json
+          user_history: Json
+        }
+        Returns: Json
       }
       generate_invitation_token: {
         Args: Record<PropertyKey, never>
