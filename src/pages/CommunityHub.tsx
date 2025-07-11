@@ -58,6 +58,12 @@ import { useAuth } from '@/hooks/useAuth';
 import { CommunityService, SupportGroup, GroupDiscussion, SharedMilestone } from '@/services/communityService';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import EventCard from '@/components/community/EventCard';
+import MilestoneCard from '@/components/community/MilestoneCard';
+import CreateEventDialog from '@/components/community/CreateEventDialog';
+import CreateMilestoneDialog from '@/components/community/CreateMilestoneDialog';
+import DiscussionCard from '@/components/community/DiscussionCard';
+import EnhancedCreateDiscussionDialog from '@/components/community/EnhancedCreateDiscussionDialog';
 
 interface CommunityEvent {
   id: string;
