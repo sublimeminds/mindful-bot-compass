@@ -704,30 +704,30 @@ const TherapistDiscovery = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* Enhanced Large Avatar Display */}
-                  <div 
-                    className="h-80 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 group relative"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openAvatarModal(therapist);
-                    }}
-                  >
-                    <Professional2DAvatar
-                      therapistId={therapist.avatarId}
-                      therapistName={therapist.name}
-                      className="w-full h-full"
-                      size="xl"
-                      emotion="neutral"
-                      showVoiceIndicator={false}
-                    />
-                    
-                    {/* Hover overlay */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Maximize2 className="h-8 w-8 text-white drop-shadow-lg" />
-                      </div>
-                    </div>
-                  </div>
+                   {/* Enhanced Large Avatar Display */}
+                   <div 
+                     className="h-64 w-full bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 group relative"
+                     onClick={(e) => {
+                       e.stopPropagation();
+                       openAvatarModal(therapist);
+                     }}
+                   >
+                     <Professional2DAvatar
+                       therapistId={therapist.avatarId}
+                       therapistName={therapist.name}
+                       className="w-48 h-48 rounded-full"
+                       size="xl"
+                       emotion="neutral"
+                       showVoiceIndicator={false}
+                     />
+                     
+                     {/* Hover overlay */}
+                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
+                       <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                         <Maximize2 className="h-8 w-8 text-white drop-shadow-lg" />
+                       </div>
+                     </div>
+                   </div>
 
                   {/* Enhanced Therapist Info */}
                   <div className="space-y-4">
@@ -735,19 +735,39 @@ const TherapistDiscovery = () => {
                       {therapist.description}
                     </p>
 
-                    {/* AI Model & Technical Specs */}
-                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-3 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Cpu className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm font-medium">AI Technology</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div>Model: <span className="font-medium">{therapist.aiModel}</span></div>
-                        <div>Response: <span className="font-medium">{therapist.responseTime}</span></div>
-                        <div>Memory: <span className="font-medium">{therapist.memoryRetention}</span></div>
-                        <div>Accuracy: <span className="font-medium">{therapist.emotionRecognition}</span></div>
-                      </div>
-                    </div>
+                     {/* TherapySync AI Model & Technical Specs */}
+                     <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 space-y-3 border border-purple-200">
+                       <div className="flex items-center gap-2">
+                         <div className="p-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500">
+                           <Cpu className="h-4 w-4 text-white" />
+                         </div>
+                         <div>
+                           <span className="text-sm font-semibold text-gray-900">TherapySync AI</span>
+                           <div className="text-xs text-purple-600">Powered by GPT-4 & Anthropic Claude</div>
+                         </div>
+                       </div>
+                       <div className="text-xs text-gray-600">+ Proprietary Therapy Database (10M+ Sessions)</div>
+                       
+                       {/* AI Features Grid */}
+                       <div className="grid grid-cols-2 gap-2 text-xs">
+                         <div className="flex items-center gap-1">
+                           <Brain className="h-3 w-3 text-purple-500" />
+                           <span>Perfect Memory</span>
+                         </div>
+                         <div className="flex items-center gap-1">
+                           <Shield className="h-3 w-3 text-green-500" />
+                           <span>Crisis Detection</span>
+                         </div>
+                         <div className="flex items-center gap-1">
+                           <Globe className="h-3 w-3 text-blue-500" />
+                           <span>Cultural Intelligence</span>
+                         </div>
+                         <div className="flex items-center gap-1">
+                           <Languages className="h-3 w-3 text-orange-500" />
+                           <span>{therapist.languages.length}+ Languages</span>
+                         </div>
+                       </div>
+                     </div>
 
                     {/* Specialties */}
                     <div className="flex flex-wrap gap-1">
@@ -843,45 +863,62 @@ const TherapistDiscovery = () => {
                     </div>
                   </div>
 
-                  {/* Selected Therapist Actions */}
-                  {selectedTherapist === therapist.id && (
-                    <div className="mt-4 p-4 bg-gradient-to-r from-therapy-50 to-calm-50 rounded-lg border border-therapy-200">
-                      <h4 className="font-semibold text-therapy-700 mb-3 flex items-center">
-                        <CheckCircle className="h-4 w-4 mr-2" />
-                        You've selected {therapist.name}
-                      </h4>
-                      <div className="flex gap-2 flex-wrap">
-                        <Button 
-                          size="sm" 
-                          className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700"
-                          onClick={() => {
-                            // Navigate to chat or booking
-                            console.log('Starting therapy with:', therapist.name);
-                          }}
-                        >
-                          <MessageCircle className="h-4 w-4 mr-1" />
-                          Start Therapy Session
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => openDetailsModal(therapist)}
-                        >
-                          <Info className="h-4 w-4 mr-1" />
-                          View Full Profile
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={startEmotionDemo}
-                          disabled={emotionDemoActive}
-                        >
-                          <Camera className="h-4 w-4 mr-1" />
-                          {emotionDemoActive ? 'Demo Running...' : 'Emotion Demo'}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
+                   {/* Selected Therapist Actions - Streamlined */}
+                   {selectedTherapist === therapist.id && (
+                     <div className="mt-4 p-4 bg-gradient-to-r from-therapy-50 to-calm-50 rounded-lg border border-therapy-200">
+                       <h4 className="font-semibold text-therapy-700 mb-3 flex items-center">
+                         <CheckCircle className="h-4 w-4 mr-2" />
+                         You've selected {therapist.name}
+                       </h4>
+                       <div className="flex gap-2">
+                         {assessment?.selected_therapist_id === therapist.id ? (
+                           <Button 
+                             size="sm" 
+                             className="bg-green-600 hover:bg-green-700 flex-1"
+                             onClick={() => navigate('/therapy')}
+                           >
+                             <ArrowRight className="h-4 w-4 mr-1" />
+                             Continue Therapy
+                           </Button>
+                         ) : (Array.isArray(assessment?.recommended_therapists) && assessment.recommended_therapists.includes(therapist.id)) ? (
+                           <Button 
+                             size="sm" 
+                             className="bg-therapy-600 hover:bg-therapy-700 flex-1"
+                             onClick={() => navigate('/therapy')}
+                           >
+                             <CheckCircle className="h-4 w-4 mr-1" />
+                             Select This Therapist
+                           </Button>
+                         ) : profile?.onboarding_complete ? (
+                           <Button 
+                             size="sm" 
+                             className="bg-therapy-600 hover:bg-therapy-700 flex-1"
+                             onClick={() => navigate('/therapy')}
+                           >
+                             <MessageCircle className="h-4 w-4 mr-1" />
+                             Start Therapy Session
+                           </Button>
+                         ) : (
+                           <Button 
+                             size="sm" 
+                             className="bg-harmony-600 hover:bg-harmony-700 flex-1"
+                             onClick={() => navigate('/onboarding')}
+                           >
+                             <Compass className="h-4 w-4 mr-1" />
+                             Take Assessment
+                           </Button>
+                         )}
+                         <Button 
+                           size="sm" 
+                           variant="outline"
+                           onClick={() => openDetailsModal(therapist)}
+                         >
+                           <Info className="h-4 w-4 mr-1" />
+                           View Profile
+                         </Button>
+                       </div>
+                     </div>
+                   )}
                 </CardContent>
               </Card>
             ))}
@@ -1242,11 +1279,13 @@ const TherapistDiscovery = () => {
 
               <TabsContent value="ai-specs" className="space-y-6 mt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
-                    <h3 className="text-lg font-semibold mb-4 flex items-center">
-                      <Cpu className="h-5 w-5 mr-2 text-blue-600" />
-                      TherapySync AI Technology
-                    </h3>
+                   <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+                     <h3 className="text-lg font-semibold mb-4 flex items-center">
+                       <div className="p-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 mr-2">
+                         <Cpu className="h-4 w-4 text-white" />
+                       </div>
+                       TherapySync AI Technology
+                     </h3>
                     <div className="space-y-3">
                       <div className="flex justify-between items-center p-2 bg-white rounded-lg">
                         <span className="text-sm">AI Model</span>
@@ -1267,30 +1306,52 @@ const TherapistDiscovery = () => {
                     </div>
                   </div>
 
-                  <div className="p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg">
-                    <h3 className="text-lg font-semibold mb-4 flex items-center">
-                      <Globe className="h-5 w-5 mr-2 text-green-600" />
-                      Advanced Capabilities
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center p-2 bg-white rounded-lg">
-                        <Clock className="h-4 w-4 text-green-600 mr-2" />
-                        <span className="text-sm">24/7 Availability</span>
-                      </div>
-                      <div className="flex items-center p-2 bg-white rounded-lg">
-                        <Languages className="h-4 w-4 text-blue-600 mr-2" />
-                        <span className="text-sm">10+ Languages</span>
-                      </div>
-                      <div className="flex items-center p-2 bg-white rounded-lg">
-                        <Shield className="h-4 w-4 text-purple-600 mr-2" />
-                        <span className="text-sm">Enterprise Encryption</span>
-                      </div>
-                      <div className="flex items-center p-2 bg-white rounded-lg">
-                        <Target className="h-4 w-4 text-orange-600 mr-2" />
-                        <span className="text-sm">Crisis Detection</span>
-                      </div>
-                    </div>
-                  </div>
+                   <div className="p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg">
+                     <h3 className="text-lg font-semibold mb-4 flex items-center">
+                       <Globe className="h-5 w-5 mr-2 text-green-600" />
+                       Advanced Capabilities & Languages
+                     </h3>
+                     <div className="space-y-3">
+                       <div className="flex items-center p-2 bg-white rounded-lg">
+                         <Clock className="h-4 w-4 text-green-600 mr-2" />
+                         <span className="text-sm">24/7 Availability</span>
+                       </div>
+                       
+                       {/* Enhanced Languages Section */}
+                       <div className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+                         <div className="flex items-center mb-2">
+                           <Languages className="h-4 w-4 text-blue-600 mr-2" />
+                           <span className="text-sm font-semibold">Native-Level AI Language Intelligence</span>
+                         </div>
+                         <div className="text-xs text-gray-600 mb-3">
+                           TherapySync AI provides native-level proficiency in all languages with cultural context understanding and therapeutic terminology expertise.
+                         </div>
+                         <div className="grid grid-cols-3 gap-2">
+                           {detailsTherapist.languages?.slice(0, 9).map((language: string, index: number) => (
+                             <div key={index} className="flex items-center space-x-1 text-xs">
+                               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                               <span className="text-blue-800 font-medium">{language}</span>
+                             </div>
+                           ))}
+                           {detailsTherapist.languages?.length > 9 && (
+                             <div className="flex items-center space-x-1 text-xs">
+                               <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                               <span className="text-gray-600">+{detailsTherapist.languages.length - 9} more</span>
+                             </div>
+                           )}
+                         </div>
+                       </div>
+                       
+                       <div className="flex items-center p-2 bg-white rounded-lg">
+                         <Shield className="h-4 w-4 text-purple-600 mr-2" />
+                         <span className="text-sm">Enterprise Encryption</span>
+                       </div>
+                       <div className="flex items-center p-2 bg-white rounded-lg">
+                         <Target className="h-4 w-4 text-orange-600 mr-2" />
+                         <span className="text-sm">Crisis Detection</span>
+                       </div>
+                     </div>
+                   </div>
                 </div>
 
                 <div className="p-4 bg-gradient-to-r from-therapy-50 to-calm-50 rounded-lg">
