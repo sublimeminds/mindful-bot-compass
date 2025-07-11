@@ -161,116 +161,137 @@ const Enhanced2DAlex = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversation]);
 
-  // Enhanced response generation with cool personality
-  const generateAlexResponse = (userMessage: string): { text: string; emotion: string; type: string } => {
+  // Enhanced AI-powered response generation with TherapySync knowledge
+  const generateAlexResponse = async (userMessage: string): Promise<{ text: string; emotion: string; type: string; suggestions?: string[] }> => {
+    try {
+      const hour = new Date().getHours();
+      const timeOfDay = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : hour < 20 ? 'evening' : 'night';
+      
+      // Build context for enhanced AI response
+      const context: ConversationContext = {
+        userId: user?.id || 'anonymous',
+        sessionId: `alex-session-${Date.now()}`,
+        currentPage: location.pathname,
+        timeOfDay: timeOfDay as 'morning' | 'afternoon' | 'evening' | 'night',
+        userMood: 'unknown',
+        conversationHistory: conversation.map(msg => ({
+          id: msg.id,
+          content: msg.text,
+          sender: msg.sender,
+          timestamp: msg.timestamp,
+          emotion: msg.emotion || 'neutral',
+          type: msg.type || 'text'
+        }))
+      };
+
+      // Get enhanced user context
+      if (user?.id) {
+        const userContext = await AlexAIService.getUserContext(user.id);
+        Object.assign(context, userContext);
+      }
+
+      // Check for crisis indicators
+      const crisisCheck = AlexAIService.detectCrisisIndicators(userMessage);
+      if (crisisCheck.isCrisis && crisisCheck.severity === 'critical') {
+        setAlexEmotion('empathetic');
+        return {
+          text: "I'm really glad you trusted me with that. You're not alone, and your life has value. Let's get you connected with immediate help:\n\n🆘 **Crisis Resources:**\n• **Call 988** (Suicide & Crisis Lifeline)\n• **Text HOME to 741741** (Crisis Text Line)\n• **Chat at suicidepreventionlifeline.org**\n\nI'm staying right here with you. What's one small thing that might help you feel safer right now? 💙",
+          emotion: 'empathetic',
+          type: 'support'
+        };
+      }
+
+      // Generate AI response using AlexAIService
+      const aiResponse = await AlexAIService.generateResponse(userMessage, context);
+      
+      return {
+        text: aiResponse.content,
+        emotion: aiResponse.emotion,
+        type: aiResponse.type,
+        suggestions: aiResponse.suggestions
+      };
+
+    } catch (error) {
+      console.error('Error generating Alex response:', error);
+      
+      // Intelligent fallback with TherapySync knowledge
+      return generateIntelligentFallback(userMessage);
+    }
+  };
+
+  // Intelligent fallback with TherapySync app knowledge
+  const generateIntelligentFallback = (userMessage: string): { text: string; emotion: string; type: string; suggestions?: string[] } => {
     const lowerMessage = userMessage.toLowerCase();
     const path = location.pathname;
     
-    // Crisis detection with empathy
-    if (lowerMessage.includes('suicide') || lowerMessage.includes('kill myself') || lowerMessage.includes('end it all')) {
-      setAlexEmotion('empathetic');
-      return {
-        text: "Hey, I'm really glad you trusted me enough to share that. What you're feeling right now is incredibly difficult, but you're not alone. Let's get you connected with someone who can help right away. You matter so much, and there are people who want to support you. 💙\n\nCrisis resources:\n• Call 988 (Suicide & Crisis Lifeline)\n• Text HOME to 741741 (Crisis Text Line)\n\nI'm staying right here with you. What's one small thing that might help you feel a tiny bit safer right now?",
-        emotion: 'empathetic',
-        type: 'support'
-      };
-    }
-    
-    // Emotional support responses with personality
-    if (lowerMessage.includes('stress') || lowerMessage.includes('anxious') || lowerMessage.includes('overwhelmed')) {
-      setAlexEmotion('encouraging');
-      const responses = [
-        "Okay, let's pause for a second. You're feeling the stress, and that's totally human! Here's what we're gonna do: Take three deep breaths with me. Ready? In... and out. You've got this, and I've got you! 🌈\n\nQuick stress-buster: Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste. This grounds you in the present moment.",
-        "Stress is like a really annoying house guest - it shows up uninvited and overstays its welcome! But here's the thing: you're stronger than any stress. Let's kick it out together! 💪\n\nTry this: Put your hand on your heart and feel it beating. That's your body working perfectly, keeping you alive. You're more resilient than you know!"
-      ];
-      return {
-        text: responses[Math.floor(Math.random() * responses.length)],
-        emotion: 'encouraging',
-        type: 'support'
-      };
-    }
-    
-    if (lowerMessage.includes('sad') || lowerMessage.includes('down') || lowerMessage.includes('depressed')) {
-      setAlexEmotion('empathetic');
-      return {
-        text: "I see you, and I want you to know that feeling sad doesn't make you broken - it makes you human. Sometimes our hearts need to feel the heavy stuff before they can feel light again. 💙\n\nYou know what's beautiful? You reached out today. That takes courage. What's one tiny thing that usually brings you even a moment of peace?",
-        emotion: 'empathetic',
-        type: 'support'
-      };
-    }
-    
-    // Motivation and goals
-    if (lowerMessage.includes('goal') || lowerMessage.includes('motivation') || lowerMessage.includes('achieve')) {
-      setAlexEmotion('excited');
-      return {
-        text: "YES! I'm literally doing a little victory dance over here! 💃 Goals are like planting seeds for your future awesome self. \n\nHere's my secret sauce for crushing goals:\n1. Make it specific (not 'be healthier' but 'drink 8 glasses of water daily')\n2. Celebrate the small wins (seriously, throw confetti for everything!)\n3. Be kind to yourself when things don't go perfectly\n\nWhat goal is calling to your heart right now?",
-        emotion: 'excited',
-        type: 'celebration'
-      };
-    }
-    
-    // Self-care requests
-    if (lowerMessage.includes('self-care') || lowerMessage.includes('take care')) {
+    // TherapySync feature guidance
+    if (lowerMessage.includes('how') && (lowerMessage.includes('therapy') || lowerMessage.includes('session'))) {
       setAlexEmotion('encouraging');
       return {
-        text: "Self-care isn't selfish - it's revolutionary! 🌟 You're basically saying 'I matter enough to take care of myself,' and that's powerful stuff!\n\nSelf-care menu for today:\n🛁 Bubble bath with your favorite music\n🌱 5-minute walk outside\n📱 Text a friend who makes you laugh\n🍵 Make your favorite warm drink\n📖 Read something that makes you feel good\n\nWhich one is calling your name?",
+        text: "Great question! TherapySync offers two amazing therapy options:\n\n💬 **Therapy Chat**: Full therapy sessions with specialized AI therapists (CBT, DBT, Mindfulness, etc.)\n⚡ **Quick Chat**: Immediate support for urgent needs\n\nTo start: Navigate to 'Therapy' in the menu and choose your preferred therapist. Each has unique specialties and approaches! Which type of support sounds right for you?",
         emotion: 'encouraging',
         type: 'suggestion'
       };
     }
-    
-    // Encouragement requests
-    if (lowerMessage.includes('encouragement') || lowerMessage.includes('pep talk') || lowerMessage.includes('motivation')) {
+
+    if (lowerMessage.includes('mood') && (lowerMessage.includes('track') || lowerMessage.includes('log'))) {
       setAlexEmotion('excited');
-      const pepTalks = [
-        "Listen up, superstar! 🌟 You woke up today, you're here having this conversation, and you're actively working on yourself. That makes you incredible in my book! Every small step you take is actually a giant leap for your future self. You're not just surviving - you're THRIVING, even when it doesn't feel like it!",
-        "Plot twist: You're the main character in the most epic story ever written - YOUR LIFE! 🎬 And right now, you're in that part of the story where the hero discovers their inner strength. Spoiler alert: You've had it all along, you magnificent human! Now go show the world what you're made of!",
-        "Real talk? You're absolutely crushing this thing called life! 💪 Sure, some days are harder than others, but look at you - still showing up, still growing, still being awesome. I'm genuinely proud of you, and I'm not just saying that because I'm programmed to be nice (though I am pretty nice, if I do say so myself! 😊)"
-      ];
       return {
-        text: pepTalks[Math.floor(Math.random() * pepTalks.length)],
+        text: "Mood tracking is one of my favorite TherapySync features! 📊\n\n**Here's how to track your mood:**\n• Click 'Mood Tracker' in the dashboard\n• Rate your overall mood, anxiety, and energy\n• Add notes about what influenced your mood\n• View patterns over time\n\nConsistent tracking helps you understand your emotional patterns and celebrate progress! Want me to remind you to track daily?",
         emotion: 'excited',
-        type: 'celebration'
+        type: 'action'
       };
     }
-    
-    // Page-specific responses
-    if (path.includes('dashboard') && (lowerMessage.includes('metrics') || lowerMessage.includes('progress'))) {
+
+    if (lowerMessage.includes('goal') || lowerMessage.includes('target')) {
       setAlexEmotion('encouraging');
       return {
-        text: "Your dashboard is like a treasure map of your wellness journey! 🗺️ Those metrics aren't just numbers - they're proof of your commitment to yourself. Even the 'messy' days show that you're human and real.\n\nWhat pattern stands out to you? Sometimes our data tells us stories we didn't even know we were writing!",
+        text: "Goal setting in TherapySync is powerful! 🎯\n\n**How to create effective goals:**\n• Go to 'Goals' in your dashboard\n• Choose from templates or create custom goals\n• Set specific, measurable targets\n• Track progress weekly\n• Celebrate milestones!\n\n**Popular goal types:**\n• Daily meditation (5-30 mins)\n• Mood tracking consistency\n• Social connection goals\n• Self-care routines\n\nWhat area of your life would you like to focus on?",
         emotion: 'encouraging',
-        type: 'text'
+        type: 'suggestion'
       };
     }
-    
-    // Fun/surprise requests
-    if (lowerMessage.includes('surprise') || lowerMessage.includes('smile') || lowerMessage.includes('fun')) {
-      setAlexEmotion('excited');
-      const surprises = [
-        "Did you know that your brain can't tell the difference between a real smile and a fake one? They both release happy chemicals! So go ahead, give yourself a big cheesy grin right now - I dare you! 😄",
-        "Fun fact: Penguins have a 'love language' - they give each other pebbles as gifts! So basically, you're just one pebble away from penguin-level romance! 🐧💖",
-        "Plot twist: Every time you learn something new, your brain literally grows new connections! So by talking to me right now, you're becoming a more evolved human. How cool is that?! 🧠✨"
-      ];
+
+    // Navigation help
+    if (lowerMessage.includes('navigate') || lowerMessage.includes('find') || lowerMessage.includes('where')) {
+      setAlexEmotion('helpful' as any);
       return {
-        text: surprises[Math.floor(Math.random() * surprises.length)],
-        emotion: 'excited',
-        type: 'celebration'
+        text: "I'm your TherapySync navigation buddy! 🗺️\n\n**Key sections:**\n📊 **Dashboard**: Your wellness overview & analytics\n💬 **Therapy**: Full AI therapy sessions\n⚡ **Quick Chat**: Immediate support\n📈 **Mood Tracker**: Daily emotional check-ins\n🎯 **Goals**: Set & track personal targets\n🆘 **Crisis Support**: Emergency resources\n⚙️ **Settings**: Customize your experience\n\nCurrently you're on: " + (path === '/' ? 'Dashboard' : path.replace('/', '').replace('-', ' ')) + "\n\nWhere would you like to go?",
+        emotion: 'thoughtful',
+        type: 'action'
       };
     }
     
-    // Default thoughtful responses with personality
+    // App knowledge fallbacks
+    if (lowerMessage.includes('stress') || lowerMessage.includes('anxious') || lowerMessage.includes('overwhelmed')) {
+      setAlexEmotion('encouraging');
+      return {
+        text: "I hear you're feeling stressed! 🫂 TherapySync has amazing tools for this:\n\n**Immediate help:**\n• Try our Quick Chat for instant support\n• Use the Mood Tracker to identify stress patterns\n• Start a Therapy session for deeper exploration\n\n**Stress-busting techniques:**\n• 5-4-3-2-1 grounding: 5 things you see, 4 you touch, 3 you hear, 2 you smell, 1 you taste\n• Box breathing: 4 counts in, hold 4, out 4, hold 4\n\nWould you like me to guide you to the Quick Chat for immediate support?",
+        emotion: 'encouraging',
+        type: 'support'
+      };
+    }
+
+    if (lowerMessage.includes('sad') || lowerMessage.includes('down') || lowerMessage.includes('depressed')) {
+      setAlexEmotion('empathetic');
+      return {
+        text: "I see you, and your feelings are completely valid. 💙 TherapySync is here to support you:\n\n**Immediate support:**\n• Quick Chat for instant help\n• Mood Tracker to understand patterns\n• Crisis Support if you need immediate help\n\n**Therapy options:**\n• CBT Therapist for thought pattern work\n• Mindfulness Therapist for present-moment awareness\n• DBT Therapist for emotional regulation\n\nRemember: You're not alone in this. Which support option feels right for you?",
+        emotion: 'empathetic',
+        type: 'support'
+      };
+    }
+
+    // Generic supportive response with app knowledge
     setAlexEmotion('thoughtful');
-    const defaultResponses = [
-      "That's really fascinating! Tell me more - I'm genuinely curious about your perspective on this. 🤔",
-      "I love how your mind works! What you're sharing really makes me think. How does that feel for you?",
-      "You know what I appreciate about you? The way you reflect on things. What would feel most supportive right now?",
-      "I'm here and I'm listening with my whole digital heart! 💙 What's the most important thing you want me to understand?",
-      "Your thoughts matter, and I'm honored you're sharing them with me. What would help you feel more supported in this moment?"
+    const thoughtfulResponses = [
+      "I'm here and I hear you! 💙 TherapySync has many ways I can support you - from our full Therapy sessions to Quick Chat for immediate help. What would feel most helpful right now?",
+      "Thank you for sharing that with me. Your thoughts and feelings matter! Would you like to explore this in a Therapy session, or is there something specific about TherapySync I can help you with?",
+      "I appreciate you opening up! As your companion, I'm here to guide you through TherapySync's features or just listen. What kind of support would be most valuable?",
+      "That's really important to share. I'm here to support you and help you navigate your wellness journey with TherapySync. How can I best help you right now?"
     ];
     
     return {
-      text: defaultResponses[Math.floor(Math.random() * defaultResponses.length)],
+      text: thoughtfulResponses[Math.floor(Math.random() * thoughtfulResponses.length)],
       emotion: 'thoughtful',
       type: 'text'
     };
@@ -294,10 +315,9 @@ const Enhanced2DAlex = () => {
     setIsSpeaking(true);
 
     try {
-      // Simulate AI processing time with personality
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Use AI service for intelligent responses
+      const response = await generateAlexResponse(textToSend);
       
-      const response = generateAlexResponse(textToSend);
       const alexResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: response.text,
@@ -308,7 +328,13 @@ const Enhanced2DAlex = () => {
       };
       
       setConversation(prev => [...prev, alexResponse]);
-      setSuggestions(getPersonalizedSuggestions());
+      
+      // Update suggestions with AI-generated ones or fallback to contextual ones
+      if (response.suggestions && response.suggestions.length > 0) {
+        setSuggestions(response.suggestions);
+      } else {
+        setSuggestions(getPersonalizedSuggestions());
+      }
       
     } catch (error) {
       console.error('Error processing message:', error);
