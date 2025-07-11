@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, TrendingUp, Bell, AlertTriangle, Users, MessageSquare, Zap, BarChart3 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { smartNotificationTriggerService } from '@/services/smartNotificationTriggerService';
-import { CrisisDetectionService } from '@/services/crisisDetectionService';
+
 
 interface NotificationStats {
   totalSent: number;
