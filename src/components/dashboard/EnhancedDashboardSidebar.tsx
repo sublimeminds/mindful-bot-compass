@@ -77,6 +77,8 @@ const navigation: NavigationItem[] = [
     ]
   },
   { name: 'Therapy Chat', href: '/therapy-chat', icon: MessageCircle },
+  { name: 'AI Therapists', href: '/therapist-discovery', icon: Brain },
+  { name: 'Subscription', href: '/subscription', icon: CreditCard },
   { name: 'Therapy Plan', href: '/therapy-plan', icon: Calendar },
   { name: 'Progress Overview', href: '/progress-overview', icon: TrendingUp },
   { 

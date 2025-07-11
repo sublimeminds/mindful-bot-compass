@@ -52,6 +52,7 @@ import { TherapistMatchingService } from '@/services/therapistMatchingService';
 import SimpleFavoriteButton from '@/components/therapist/SimpleFavoriteButton';
 import { TherapistAnalyticsService } from '@/services/therapistAnalyticsService';
 import { useNavigate } from 'react-router-dom';
+import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 
 const therapyApproaches = [
   'All Approaches',
@@ -400,7 +401,8 @@ const TherapistDiscovery = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
+    <DashboardLayoutWithSidebar>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20">
         {/* Hero Section */}
         <section className="relative pt-24 pb-16 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-therapy-500/10 via-calm-500/10 to-harmony-500/10" />
@@ -1352,7 +1354,8 @@ const TherapistDiscovery = () => {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+      </div>
+    </DashboardLayoutWithSidebar>
   );
 };
 

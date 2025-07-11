@@ -6,6 +6,7 @@ import { AdvancedSubscriptionManager } from '@/components/subscription/AdvancedS
 import EnhancedBillingHistory from '@/components/billing/EnhancedBillingHistory';
 import PaymentMethodManager from '@/components/billing/PaymentMethodManager';
 import PlanSelector from '@/components/subscription/PlanSelector';
+import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 
 const SubscriptionPage = () => {
   const handleSelectPlan = (planId: string, billingCycle: 'monthly' | 'yearly') => {
@@ -13,8 +14,8 @@ const SubscriptionPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-      <div className="max-w-4xl mx-auto">
+    <DashboardLayoutWithSidebar>
+      <div className="p-6">
         <h1 className="text-3xl font-bold text-therapy-600 mb-8">Subscription</h1>
         
         <Tabs defaultValue="current" className="space-y-6">
@@ -56,7 +57,7 @@ const SubscriptionPage = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </DashboardLayoutWithSidebar>
   );
 };
 
