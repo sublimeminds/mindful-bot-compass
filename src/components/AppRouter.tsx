@@ -113,6 +113,8 @@ import AIArchitecture from "../pages/AIArchitecture";
 import TherapistDiscovery from "../pages/TherapistDiscovery";
 import TherapistAssessmentPage from "../pages/TherapistAssessmentPage";
 import TherapistSelectionPage from "../pages/TherapistSelectionPage";
+import TherapistDashboard from "../components/therapist/TherapistDashboard";
+import FavoritesPage from "../pages/FavoritesPage";
 import GamificationDashboard from "../pages/GamificationDashboard";
 import CompliancePage from "../pages/CompliancePage";
 
@@ -457,6 +459,18 @@ const AppRouter = () => {
       <Route path="/therapist-selection" element={
         <PageErrorBoundary pageName="Therapist Selection">
           <TherapistSelectionPage />
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/therapist-dashboard" element={
+        <PageErrorBoundary pageName="Therapist Dashboard">
+          <TherapistDashboard />
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/favorites" element={
+        <PageErrorBoundary pageName="Favorites">
+          <FavoritesPage />
         </PageErrorBoundary>
       } />
 

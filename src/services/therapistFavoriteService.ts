@@ -11,7 +11,7 @@ export interface TherapistFavorite {
 export class TherapistFavoriteService {
   static async addFavorite(userId: string, therapistId: string, notes?: string): Promise<boolean> {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('therapist_favorites')
         .insert({
           user_id: userId,
@@ -28,7 +28,7 @@ export class TherapistFavoriteService {
 
   static async removeFavorite(userId: string, therapistId: string): Promise<boolean> {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('therapist_favorites')
         .delete()
         .eq('user_id', userId)
@@ -43,7 +43,7 @@ export class TherapistFavoriteService {
 
   static async isFavorite(userId: string, therapistId: string): Promise<boolean> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('therapist_favorites')
         .select('id')
         .eq('user_id', userId)
@@ -59,13 +59,13 @@ export class TherapistFavoriteService {
 
   static async getUserFavorites(userId: string): Promise<TherapistFavorite[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('therapist_favorites')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
 
-      return data || [];
+      return (data as TherapistFavorite[]) || [];
     } catch (error) {
       console.error('Error fetching favorites:', error);
       return [];

@@ -48,8 +48,8 @@ const TherapistSelectionFlow: React.FC<TherapistSelectionFlowProps> = ({
           description: `You've successfully selected ${selectedTherapist.name} as your therapist.`
         });
 
-        // Navigate to dashboard or chat
-        navigate('/dashboard', { 
+        // Navigate to therapist dashboard
+        navigate('/therapist-dashboard', { 
           state: { 
             selectedTherapist: selectedTherapist,
             justSelected: true 

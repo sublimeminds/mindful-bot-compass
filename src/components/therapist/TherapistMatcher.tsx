@@ -4,11 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Star, User, Heart, Brain } from 'lucide-react';
+import { Star, User, Heart, Brain, Search } from 'lucide-react';
 import SafeTherapistAvatarCard from '@/components/avatar/SafeTherapistAvatarCard';
 import SafeAvatarModal from '@/components/avatar/SafeAvatarModal';
 import SimpleFavoriteButton from '@/components/therapist/SimpleFavoriteButton';
 import TherapistSelectionFlow from '@/components/therapist/TherapistSelectionFlow';
+import TherapistSearchFilters from '@/components/therapist/TherapistSearchFilters';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 
 interface TherapistMatcherProps {
@@ -24,9 +25,11 @@ const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches, ass
   const [modalTherapist, setModalTherapist] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSelectionFlow, setShowSelectionFlow] = useState(false);
+  const [filteredTherapists, setFilteredTherapists] = useState<any[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
 
   // Mock therapist data with realistic compatibility scores
-  const therapists = [
+  const allTherapists = [
     {
       id: 'ed979f27-2491-43f1-a779-5095febb68b2',
       name: 'Dr. Sarah Chen',
@@ -89,10 +92,44 @@ const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches, ass
     }
   ];
 
+  const therapists = filteredTherapists.length > 0 ? filteredTherapists : allTherapists;
+
   const handleSelectTherapist = (therapistId: string) => {
     setSelectedTherapist(therapistId);
     const therapist = therapists.find(t => t.id === therapistId);
     setSelectedTherapistData(therapist);
+  };
+
+  const handleFiltersChange = (filters: any) => {
+    let filtered = [...allTherapists];
+
+    // Apply search query filter
+    if (filters.searchQuery) {
+      const query = filters.searchQuery.toLowerCase();
+      filtered = filtered.filter(t => 
+        t.name.toLowerCase().includes(query) ||
+        t.description.toLowerCase().includes(query) ||
+        t.specialties.some((s: string) => s.toLowerCase().includes(query))
+      );
+    }
+
+    // Apply specialty filters
+    if (filters.specialties.length > 0) {
+      filtered = filtered.filter(t =>
+        filters.specialties.some((s: string) => t.specialties.includes(s))
+      );
+    }
+
+    // Apply approach filter
+    if (filters.approach) {
+      filtered = filtered.filter(t => t.approach === filters.approach);
+    }
+
+    setFilteredTherapists(filtered);
+  };
+
+  const handleClearFilters = () => {
+    setFilteredTherapists([]);
   };
 
   const handleViewTherapist = (therapist: any) => {
@@ -136,15 +173,31 @@ const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches, ass
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <User className="h-6 w-6 mr-2 text-therapy-500" />
-            Find Your Perfect Therapist Match
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center">
+              <User className="h-6 w-6 mr-2 text-therapy-500" />
+              Find Your Perfect Therapist Match
+            </div>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              <Search className="h-4 w-4 mr-2" />
+              {showFilters ? 'Hide' : 'Show'} Filters
+            </Button>
           </CardTitle>
           <p className="text-muted-foreground">
             Based on your preferences and needs, we've found these therapists that would be a great fit for you.
           </p>
         </CardHeader>
       </Card>
+
+      {showFilters && (
+        <TherapistSearchFilters
+          onFiltersChange={handleFiltersChange}
+          onClearFilters={handleClearFilters}
+        />
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {therapists.map((therapist) => (

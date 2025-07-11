@@ -306,7 +306,7 @@ export class TherapistMatchingService {
     matches: TherapistMatch[]
   ): Promise<string | null> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('therapist_assessments')
         .insert({
           user_id: userId,
@@ -334,7 +334,7 @@ export class TherapistMatchingService {
   }
 
   static async getLatestAssessment(userId: string) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('therapist_assessments')
       .select('*')
       .eq('user_id', userId)
