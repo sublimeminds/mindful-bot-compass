@@ -7,13 +7,19 @@ import { Badge } from '@/components/ui/badge';
 import { MessageCircle, Clock, Brain, Sparkles, Heart } from 'lucide-react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import UserAvatar from '@/components/ui/UserAvatar';
+import SessionCreator from '@/components/therapy/SessionCreator';
 
 const SessionStarterWidget = () => {
   const { user } = useSimpleApp();
   const navigate = useNavigate();
   const [isStartHovered, setIsStartHovered] = useState(false);
+  const [showSessionCreator, setShowSessionCreator] = useState(false);
 
   const handleStartSession = () => {
+    setShowSessionCreator(true);
+  };
+
+  const handleQuickCheckIn = () => {
     navigate('/therapy');
   };
 
@@ -57,35 +63,41 @@ const SessionStarterWidget = () => {
           </div>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button 
-            onClick={handleStartSession}
-            onMouseEnter={() => setIsStartHovered(true)}
-            onMouseLeave={() => setIsStartHovered(false)}
-            className="flex-1 bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white font-semibold py-3 text-lg shadow-lg hover:shadow-therapy-500/30 transition-all duration-300 group relative overflow-hidden"
-            size="lg"
-          >
-            <div className="flex items-center justify-center relative z-10">
-              <div className={`mr-3 transition-transform duration-500 ${isStartHovered ? 'scale-110' : 'scale-100'}`}>
-                <Heart className="h-5 w-5" />
+        {!showSessionCreator ? (
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button 
+              onClick={handleStartSession}
+              onMouseEnter={() => setIsStartHovered(true)}
+              onMouseLeave={() => setIsStartHovered(false)}
+              className="flex-1 bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white font-semibold py-3 text-lg shadow-lg hover:shadow-therapy-500/30 transition-all duration-300 group relative overflow-hidden"
+              size="lg"
+            >
+              <div className="flex items-center justify-center relative z-10">
+                <div className={`mr-3 transition-transform duration-500 ${isStartHovered ? 'scale-110' : 'scale-100'}`}>
+                  <Heart className="h-5 w-5" />
+                </div>
+                <MessageCircle className="h-5 w-5 mr-2" />
+                Start Therapy Session
               </div>
-              <MessageCircle className="h-5 w-5 mr-2" />
-              Start Therapy Session
-            </div>
-            
-            {isStartHovered && (
-              <div className="absolute inset-0 bg-gradient-to-r from-therapy-600/20 to-calm-600/20 animate-pulse" />
-            )}
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/therapy')}
-            className="px-6 border-therapy-200 hover:bg-therapy-50 group"
-          >
-            <Sparkles className="mr-2 h-4 w-4 group-hover:text-therapy-600" />
-            Quick Check-in
-          </Button>
-        </div>
+              
+              {isStartHovered && (
+                <div className="absolute inset-0 bg-gradient-to-r from-therapy-600/20 to-calm-600/20 animate-pulse" />
+              )}
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleQuickCheckIn}
+              className="px-6 border-therapy-200 hover:bg-therapy-50 group"
+            >
+              <Sparkles className="mr-2 h-4 w-4 group-hover:text-therapy-600" />
+              Quick Check-in
+            </Button>
+          </div>
+        ) : (
+          <SessionCreator 
+            onSessionCreated={() => setShowSessionCreator(false)}
+          />
+        )}
       </CardContent>
     </Card>
   );

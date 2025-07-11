@@ -156,5 +156,5 @@ export const useMoodEntries = (limit?: number) => {
     createMoodEntry,
     updateMoodEntry,
     deleteMoodEntry,
-  };
+  } as const;
 };

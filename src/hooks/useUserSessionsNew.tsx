@@ -17,7 +17,16 @@ export interface UserSession {
   therapistId?: string;
 }
 
-export const useUserSessions = (limit?: number) => {
+export interface UseUserSessionsReturn {
+  data: UserSession[];
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+  createSession: (sessionData: Partial<UserSession>) => Promise<any>;
+  updateSession: (sessionId: string, updates: Partial<UserSession>) => Promise<boolean>;
+}
+
+export const useUserSessionsNew = (limit?: number): UseUserSessionsReturn => {
   const { user } = useSimpleApp();
   const [data, setData] = useState<UserSession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +46,7 @@ export const useUserSessions = (limit?: number) => {
       setError(null);
 
       let query = supabase
-        .from('therapy_sessions' as any)
+        .from('therapy_sessions')
         .select('*')
         .eq('user_id', user.id)
         .order('start_time', { ascending: false });
@@ -52,7 +61,7 @@ export const useUserSessions = (limit?: number) => {
         throw sessionsError;
       }
 
-      const sessions: UserSession[] = (sessionsData || []).map(session => ({
+      const sessions: UserSession[] = (sessionsData || []).map((session: any) => ({
         id: session.id,
         userId: session.user_id,
         sessionType: session.session_type || 'therapy',
@@ -84,7 +93,7 @@ export const useUserSessions = (limit?: number) => {
 
     try {
       const { data, error } = await supabase
-        .from('therapy_sessions' as any)
+        .from('therapy_sessions')
         .insert({
           user_id: user.id,
           session_type: sessionData.sessionType || 'therapy',
@@ -109,7 +118,7 @@ export const useUserSessions = (limit?: number) => {
   const updateSession = async (sessionId: string, updates: Partial<UserSession>) => {
     try {
       const { error } = await supabase
-        .from('therapy_sessions' as any)
+        .from('therapy_sessions')
         .update({
           end_time: updates.endTime,
           mood_after: updates.moodAfter,

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserStats } from '@/hooks/useUserStats';
-import { useUserSessions } from '@/hooks/useUserSessions';
+import { useUserSessionsNew } from '@/hooks/useUserSessionsNew';
 import { useUserGoals } from '@/hooks/useUserGoals';
 import { useMoodEntries } from '@/hooks/useMoodEntries';
 import { 
@@ -18,11 +18,12 @@ import {
   Flame,
   Clock
 } from 'lucide-react';
+import QuickGoalCreator from '@/components/goals/QuickGoalCreator';
 
 const RealDashboardContent = () => {
   const { user } = useAuth();
   const { data: userStats, isLoading: statsLoading } = useUserStats();
-  const { data: userSessions, isLoading: sessionsLoading } = useUserSessions();
+  const { data: userSessions, isLoading: sessionsLoading } = useUserSessionsNew();
   const { data: userGoals, isLoading: goalsLoading } = useUserGoals();
   const { data: moodEntries, isLoading: moodLoading } = useMoodEntries();
 
@@ -145,8 +146,13 @@ const RealDashboardContent = () => {
                     <div>
                       <p className="font-medium capitalize">{session.sessionType}</p>
                       <p className="text-sm text-gray-600">
-                        {new Date(session.createdAt).toLocaleDateString()}
+                        {new Date(session.startTime).toLocaleDateString()}
                       </p>
+                      {session.moodBefore && (
+                        <p className="text-xs text-muted-foreground">
+                          Mood: {session.moodBefore}/10 → {session.moodAfter || '?'}/10
+                        </p>
+                      )}
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-medium">{session.durationMinutes} min</p>
@@ -276,6 +282,11 @@ const RealDashboardContent = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Quick Goal Creator - Only show if user has no goals */}
+      {userGoals && userGoals.length === 0 && (
+        <QuickGoalCreator />
+      )}
     </div>
   );
 };

@@ -156,5 +156,5 @@ export const useUserGoals = () => {
     createGoal,
     updateGoal,
     deleteGoal,
-  };
+  } as const;
 };

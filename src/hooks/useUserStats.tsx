@@ -144,5 +144,5 @@ export const useUserStats = () => {
     }
   };
 
-  return { data, isLoading, error, refetch: fetchUserStats };
+  return { data, isLoading, error, refetch: fetchUserStats } as const;
 };
