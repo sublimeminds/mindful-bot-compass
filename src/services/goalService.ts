@@ -44,24 +44,24 @@ export class GoalService {
       throw error;
     }
 
-    return data.map(goal => ({
-      id: goal.id,
-      title: goal.title,
-      description: goal.description || '',
-      category: goal.category || 'General',
-      priority: (goal.priority || 'medium') as 'low' | 'medium' | 'high',
-      targetValue: goal.target_value || 100,
-      currentProgress: goal.current_progress || 0,
-      unit: goal.unit || 'points',
-      targetDate: new Date(goal.target_date || new Date()),
-      isCompleted: goal.is_completed || false,
-      tags: goal.tags || [],
-      userId: goal.user_id,
-      createdAt: goal.created_at,
-      updatedAt: goal.updated_at,
-      notes: goal.notes || '',
-      type: goal.type || 'personal'
-    }));
+      return data.map(goal => ({
+        id: goal.id,
+        title: goal.title,
+        description: goal.description || '',
+        category: goal.category || 'General',
+        priority: (goal.priority || 'medium') as 'low' | 'medium' | 'high',
+        targetValue: goal.target_value || 100,
+        currentProgress: goal.current_progress || 0,
+        unit: goal.unit || 'points',
+        targetDate: new Date(goal.target_date || new Date()),
+        isCompleted: goal.is_completed || false,
+        tags: goal.tags || [],
+        userId: goal.user_id,
+        createdAt: goal.created_at,
+        updatedAt: goal.updated_at,
+        notes: goal.notes || '',
+        type: goal.type || 'personal'
+      }));
   }
 
   static async createGoal(goalData: {

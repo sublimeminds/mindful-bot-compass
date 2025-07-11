@@ -2862,6 +2862,45 @@ export type Database = {
         }
         Relationships: []
       }
+      intelligent_notifications: {
+        Row: {
+          created_at: string | null
+          data: Json | null
+          id: string
+          is_read: boolean | null
+          message: string
+          notification_type: string
+          priority: string | null
+          read_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          notification_type: string
+          priority?: string | null
+          read_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          notification_type?: string
+          priority?: string | null
+          read_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       knowledge_items: {
         Row: {
           category: string
@@ -5460,6 +5499,39 @@ export type Database = {
           updated_at?: string
           user_id?: string
           would_recommend?: boolean
+        }
+        Relationships: []
+      }
+      therapist_selections: {
+        Row: {
+          assessment_id: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          selected_at: string | null
+          selection_reason: string | null
+          therapist_id: string
+          user_id: string
+        }
+        Insert: {
+          assessment_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          selected_at?: string | null
+          selection_reason?: string | null
+          therapist_id: string
+          user_id: string
+        }
+        Update: {
+          assessment_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          selected_at?: string | null
+          selection_reason?: string | null
+          therapist_id?: string
+          user_id?: string
         }
         Relationships: []
       }

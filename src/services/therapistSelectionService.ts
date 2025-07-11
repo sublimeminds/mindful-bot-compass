@@ -20,13 +20,13 @@ export class TherapistSelectionService {
   ): Promise<string | null> {
     try {
       // First, mark any previous selections as inactive
-      await (supabase as any)
+      await supabase
         .from('therapist_selections')
         .update({ is_active: false })
         .eq('user_id', userId);
 
       // Create new active selection
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('therapist_selections')
         .insert({
           user_id: userId,
@@ -52,7 +52,7 @@ export class TherapistSelectionService {
 
   static async getCurrentSelection(userId: string): Promise<TherapistSelection | null> {
     try {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('therapist_selections')
         .select('*')
         .eq('user_id', userId)
@@ -75,7 +75,7 @@ export class TherapistSelectionService {
 
   static async getSelectionHistory(userId: string): Promise<TherapistSelection[]> {
     try {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('therapist_selections')
         .select('*')
         .eq('user_id', userId)
@@ -95,7 +95,7 @@ export class TherapistSelectionService {
 
   static async updateSelectionReason(selectionId: string, reason: string): Promise<boolean> {
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from('therapist_selections')
         .update({ selection_reason: reason })
         .eq('id', selectionId);
@@ -109,7 +109,7 @@ export class TherapistSelectionService {
 
   static async deactivateSelection(userId: string, therapistId: string): Promise<boolean> {
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from('therapist_selections')
         .update({ is_active: false })
         .eq('user_id', userId)

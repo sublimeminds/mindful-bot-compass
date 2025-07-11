@@ -9,12 +9,17 @@ import { useNavigate } from 'react-router-dom';
 import { useTherapist } from '@/contexts/TherapistContext';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
+import { useTherapistSelection } from '@/hooks/useTherapistSelection';
 
 const TherapistWidget = () => {
   const navigate = useNavigate();
   const { selectedTherapist, therapists } = useTherapist();
+  const { currentSelection } = useTherapistSelection();
 
-  const currentTherapist = selectedTherapist || therapists[0];
+  // Use database selection if available, fallback to context
+  const currentTherapist = currentSelection 
+    ? therapists.find(t => t.id === currentSelection.therapist_id) || selectedTherapist || therapists[0]
+    : selectedTherapist || therapists[0];
 
   if (!currentTherapist) {
     return (

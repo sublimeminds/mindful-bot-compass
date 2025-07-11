@@ -7,6 +7,7 @@ import { useUserStats } from '@/hooks/useUserStats';
 import { useUserSessionsNew } from '@/hooks/useUserSessionsNew';
 import { useUserGoals } from '@/hooks/useUserGoals';
 import { useMoodEntries } from '@/hooks/useMoodEntries';
+import { useIntelligentNotifications } from '@/hooks/useIntelligentNotifications';
 import { 
   Activity, 
   Target, 
@@ -19,6 +20,7 @@ import {
   Clock
 } from 'lucide-react';
 import QuickGoalCreator from '@/components/goals/QuickGoalCreator';
+import NotificationCenter from '@/components/notifications/NotificationCenter';
 
 const RealDashboardContent = () => {
   const { user } = useAuth();
@@ -26,6 +28,9 @@ const RealDashboardContent = () => {
   const { data: userSessions, isLoading: sessionsLoading } = useUserSessionsNew();
   const { data: userGoals, isLoading: goalsLoading } = useUserGoals();
   const { data: moodEntries, isLoading: moodLoading } = useMoodEntries();
+  
+  // Initialize intelligent notifications
+  useIntelligentNotifications();
 
   const activeGoals = userGoals?.filter(goal => goal.status === 'active').length || 0;
   const completedGoals = userGoals?.filter(goal => goal.status === 'completed').length || 0;
@@ -120,7 +125,9 @@ const RealDashboardContent = () => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Sessions & Goals */}
+        <div className="lg:col-span-2 space-y-6">
         {/* Recent Sessions */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
@@ -233,6 +240,12 @@ const RealDashboardContent = () => {
             )}
           </CardContent>
         </Card>
+        </div>
+
+        {/* Right Column - Notifications */}
+        <div className="space-y-6">
+          <NotificationCenter />
+        </div>
       </div>
 
       {/* Mood Tracking */}
