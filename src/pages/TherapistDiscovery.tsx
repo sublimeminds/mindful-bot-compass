@@ -280,14 +280,26 @@ const TherapistDiscovery = () => {
     },
   });
 
-  // Generate random compatibility scores for demo
+  // Generate compatibility scores based on assessment or default community data
   useEffect(() => {
     const scores: {[key: string]: number} = {};
     therapistData.forEach(therapist => {
-      scores[therapist.id] = Math.floor(Math.random() * 20) + 80; // 80-100% compatibility
+      // Use assessment data if available, otherwise use community ratings
+      if (assessment?.recommended_therapists) {
+        const recommendation = Array.isArray(assessment.recommended_therapists) 
+          ? assessment.recommended_therapists.find((r: any) => r.therapist_id === therapist.id)
+          : null;
+        scores[therapist.id] = recommendation && typeof recommendation === 'object' && 'compatibility_score' in recommendation
+          ? Math.round(((recommendation as any).compatibility_score || 0.9) * 100)
+          : Math.floor(Math.random() * 15) + 75; // Lower for non-recommended
+      } else {
+        // Use community-based scoring (success rate + user satisfaction)
+        const communityScore = (therapist.successRate * 0.6 + (therapist.userSatisfaction / 5) * 0.4) * 100;
+        scores[therapist.id] = Math.round(communityScore);
+      }
     });
     setCompatibilityScores(scores);
-  }, [therapistData]);
+  }, [therapistData, assessment]);
 
   const filteredTherapists = therapistData.filter(therapist => {
     const matchesSearch = therapist.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -408,9 +420,9 @@ const TherapistDiscovery = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600">
+              <Button size="lg" onClick={() => navigate('/therapist-assessment')} className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 shadow-lg">
                 <Target className="h-5 w-5 mr-2" />
-                Find Your Perfect Match
+                Take Matching Assessment
               </Button>
               <Button variant="outline" size="lg">
                 <Play className="h-5 w-5 mr-2" />
@@ -556,8 +568,8 @@ const TherapistDiscovery = () => {
                       Based on your goals: {onboardingData.goals?.join(', ')} - Take our matching assessment
                     </p>
                   </div>
-                  <Button onClick={() => navigate('/therapist-assessment')} className="ml-4">
-                    Take Matching Quiz
+                  <Button onClick={() => navigate('/therapist-assessment')} className="ml-4 bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 shadow-lg">
+                    Take Matching Assessment
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 </AlertDescription>
@@ -567,27 +579,13 @@ const TherapistDiscovery = () => {
         </section>
       )}
 
-      {/* Smart Discovery Engine */}
-      <section className="py-16 bg-card/50">
+      {/* Therapist Filter Bar - Simplified */}
+      <section className="py-8 bg-card/30">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Find Your Perfect Match in 30 Seconds</h2>
-            <p className="text-lg text-muted-foreground">
-              Use our advanced filtering system to discover the ideal AI therapist for your unique needs
-            </p>
-          </div>
-
-          <Card className="max-w-6xl mx-auto">
-            <CardHeader>
-              <CardTitle className="flex items-center text-xl">
-                <Search className="h-5 w-5 mr-2" />
-                Smart Discovery Engine
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Search</label>
+          <Card className="max-w-4xl mx-auto">
+            <CardContent className="p-4">
+              <div className="flex flex-col md:flex-row gap-4 items-center">
+                <div className="flex-1">
                   <div className="relative">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -598,52 +596,9 @@ const TherapistDiscovery = () => {
                     />
                   </div>
                 </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Therapy Approach</label>
-                  <Select value={selectedApproach} onValueChange={setSelectedApproach}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {therapyApproaches.map(approach => (
-                        <SelectItem key={approach} value={approach}>{approach}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="text-sm text-muted-foreground">
+                  {filteredTherapists.length} therapists available
                 </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Specialization</label>
-                  <Select value={selectedSpecialization} onValueChange={setSelectedSpecialization}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {specializations.map(spec => (
-                        <SelectItem key={spec} value={spec}>{spec}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Communication Style</label>
-                  <Select value={selectedStyle} onValueChange={setSelectedStyle}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {communicationStyles.map(style => (
-                        <SelectItem key={style} value={style}>{style}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="text-center text-sm text-muted-foreground">
-                Showing {filteredTherapists.length} of {therapistData.length} therapists
               </div>
             </CardContent>
           </Card>
@@ -863,59 +818,42 @@ const TherapistDiscovery = () => {
                     </div>
                   </div>
 
-                   {/* Selected Therapist Actions - Streamlined */}
+                   {/* Selected Therapist Actions - Simplified */}
                    {selectedTherapist === therapist.id && (
                      <div className="mt-4 p-4 bg-gradient-to-r from-therapy-50 to-calm-50 rounded-lg border border-therapy-200">
                        <h4 className="font-semibold text-therapy-700 mb-3 flex items-center">
                          <CheckCircle className="h-4 w-4 mr-2" />
-                         You've selected {therapist.name}
+                         Ready to continue with {therapist.name}?
                        </h4>
                        <div className="flex gap-2">
                          {assessment?.selected_therapist_id === therapist.id ? (
                            <Button 
                              size="sm" 
-                             className="bg-green-600 hover:bg-green-700 flex-1"
-                             onClick={() => navigate('/therapy')}
+                             className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg flex-1"
+                             onClick={() => navigate('/dashboard')}
                            >
                              <ArrowRight className="h-4 w-4 mr-1" />
                              Continue Therapy
                            </Button>
-                         ) : (Array.isArray(assessment?.recommended_therapists) && assessment.recommended_therapists.includes(therapist.id)) ? (
+                         ) : assessment ? (
                            <Button 
                              size="sm" 
-                             className="bg-therapy-600 hover:bg-therapy-700 flex-1"
+                             className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white shadow-lg flex-1"
                              onClick={() => navigate('/therapy')}
                            >
                              <CheckCircle className="h-4 w-4 mr-1" />
                              Select This Therapist
                            </Button>
-                         ) : profile?.onboarding_complete ? (
-                           <Button 
-                             size="sm" 
-                             className="bg-therapy-600 hover:bg-therapy-700 flex-1"
-                             onClick={() => navigate('/therapy')}
-                           >
-                             <MessageCircle className="h-4 w-4 mr-1" />
-                             Start Therapy Session
-                           </Button>
                          ) : (
                            <Button 
                              size="sm" 
-                             className="bg-harmony-600 hover:bg-harmony-700 flex-1"
-                             onClick={() => navigate('/onboarding')}
+                             className="bg-gradient-to-r from-harmony-600 to-therapy-600 hover:from-harmony-700 hover:to-therapy-700 text-white shadow-lg flex-1"
+                             onClick={() => navigate('/therapist-assessment')}
                            >
-                             <Compass className="h-4 w-4 mr-1" />
-                             Take Assessment
+                             <Target className="h-4 w-4 mr-1" />
+                             Take Matching Assessment
                            </Button>
                          )}
-                         <Button 
-                           size="sm" 
-                           variant="outline"
-                           onClick={() => openDetailsModal(therapist)}
-                         >
-                           <Info className="h-4 w-4 mr-1" />
-                           View Profile
-                         </Button>
                        </div>
                      </div>
                    )}
