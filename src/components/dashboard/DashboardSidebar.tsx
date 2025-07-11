@@ -20,6 +20,8 @@ const navItems = [
   { to: '/notifications', label: 'Notifications', icon: Bell },
   { to: '/smart-triggers', label: 'Smart Triggers', icon: Zap },
   { to: '/security', label: 'Security', icon: Shield },
+  { to: '/compliance', label: 'Compliance', icon: Shield },
+  { to: '/privacy', label: 'Privacy', icon: Shield },
   { to: '/mood-tracking', label: 'Mood Tracking', icon: Heart },
   { to: '/achievements', label: 'Achievements', icon: Sparkles },
 ];
