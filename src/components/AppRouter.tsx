@@ -397,6 +397,19 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
+      {/* Security & Compliance */}
+      <Route path="/compliance" element={
+        <PageErrorBoundary pageName="Security & Compliance">
+          <CompliancePage />
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/privacy" element={
+        <PageErrorBoundary pageName="Privacy Dashboard">
+          <PrivacyDashboard />
+        </PageErrorBoundary>
+      } />
+
       {/* Family Dashboard */}
       <Route path="/family-dashboard" element={
         <PageErrorBoundary pageName="Family Dashboard">
