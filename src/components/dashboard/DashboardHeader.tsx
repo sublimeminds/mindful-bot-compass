@@ -1,34 +1,34 @@
 
 import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useQuoteOfTheDay } from '@/hooks/useQuoteOfTheDay';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { 
   Bell, 
-  Settings, 
-  User,
-  Menu,
   Search,
   Calendar,
-  Crown
+  Menu
 } from 'lucide-react';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
-import EnhancedUserMenu from '@/components/navigation/EnhancedUserMenu';
-import GradientLogo from '@/components/ui/GradientLogo';
+import { useSidebar } from '@/components/ui/sidebar';
 
 const DashboardHeader = () => {
   const { user } = useAuth();
-  const { quote } = useQuoteOfTheDay();
+  const { toggleSidebar } = useSidebar();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-gray-200/50 bg-white/95 backdrop-blur-lg shadow-sm supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-40 w-full border-b border-gray-200/50 bg-white/95 backdrop-blur-lg shadow-sm supports-[backdrop-filter]:bg-white/60 ml-0">
       <div className="flex h-16 items-center justify-between px-6">
-        {/* Left section with dashboard title */}
+        {/* Left section with sidebar toggle and dashboard title */}
         <div className="flex items-center space-x-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleSidebar}
+            className="hover:bg-gray-100 p-2"
+          >
+            <Menu className="h-5 w-5 text-gray-600" />
+          </Button>
           <div className="flex items-center space-x-3">
-            <Menu className="h-5 w-5 text-therapy-600" />
             <span className="text-xl font-semibold text-gray-900">Dashboard</span>
           </div>
         </div>
@@ -61,9 +61,6 @@ const DashboardHeader = () => {
 
           {/* Notification Center */}
           <EnhancedNotificationCenter />
-
-          {/* User Menu */}
-          <EnhancedUserMenu />
         </div>
       </div>
     </header>
