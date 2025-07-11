@@ -1,307 +1,247 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Target, Plus, Calendar, Trophy, TrendingUp, 
-  CheckCircle, Clock, Star, BarChart3, Lightbulb
-} from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useSafeSEO } from '@/hooks/useSafeSEO';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Plus, Target, TrendingUp, Calendar, CheckCircle } from 'lucide-react';
 
 const Goals = () => {
-  const navigate = useNavigate();
-  const [showNewGoalForm, setShowNewGoalForm] = useState(false);
+  const { user } = useAuth();
+  const [goals, setGoals] = useState<any[]>([]);
+  const [activeGoals, setActiveGoals] = useState<any[]>([]);
+  const [completedGoals, setCompletedGoals] = useState<any[]>([]);
+  const [newGoal, setNewGoal] = useState({ title: '', description: '', target_value: 10 });
 
-  useSafeSEO({
-    title: 'Goal Tracking & Management - Mental Health Goals | TherapySync',
-    description: 'Set, track, and achieve your mental health goals with AI-powered insights and personalized guidance.',
-    keywords: 'goal tracking, mental health goals, SMART goals, progress tracking, personal development'
-  });
-
-  const activeGoals = [
-    {
-      id: 1,
-      title: 'Practice Daily Mindfulness',
-      description: 'Complete 10 minutes of mindfulness meditation each day',
-      category: 'Mindfulness',
-      progress: 75,
-      target: 30,
-      current: 23,
-      unit: 'days',
-      deadline: '2024-02-15',
-      priority: 'High',
-      color: 'from-purple-500 to-violet-500'
-    },
-    {
-      id: 2,
-      title: 'Improve Sleep Quality',
-      description: 'Maintain consistent sleep schedule and 8 hours of sleep',
-      category: 'Wellness',
-      progress: 60,
-      target: 21,
-      current: 13,
-      unit: 'nights',
-      deadline: '2024-02-10',
-      priority: 'Medium',
-      color: 'from-blue-500 to-indigo-500'
-    },
-    {
-      id: 3,
-      title: 'Social Connection Goals',
-      description: 'Reach out to friends and family members weekly',
-      category: 'Relationships',
-      progress: 85,
-      target: 8,
-      current: 7,
-      unit: 'connections',
-      deadline: '2024-02-20',
-      priority: 'High',
-      color: 'from-green-500 to-emerald-500'
+  useEffect(() => {
+    if (user) {
+      fetchGoals();
     }
-  ];
+  }, [user]);
 
-  const completedGoals = [
-    {
-      title: 'Complete CBT Course',
-      description: 'Finish 8-week cognitive behavioral therapy program',
-      completedDate: '2024-01-15',
-      category: 'Learning'
-    },
-    {
-      title: 'Anxiety Management',
-      description: 'Reduce daily anxiety levels using breathing techniques',
-      completedDate: '2024-01-10',
-      category: 'Mental Health'
-    }
-  ];
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'High': return 'bg-red-100 text-red-800';
-      case 'Medium': return 'bg-yellow-100 text-yellow-800';
-      case 'Low': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+  const fetchGoals = async () => {
+    try {
+      const { data } = await supabase
+        .from('goals')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+      
+      setGoals(data || []);
+      setActiveGoals(data?.filter(g => !g.is_completed) || []);
+      setCompletedGoals(data?.filter(g => g.is_completed) || []);
+    } catch (error) {
+      console.error('Error fetching goals:', error);
     }
   };
 
-  const getDaysUntilDeadline = (deadline: string) => {
-    const today = new Date();
-    const deadlineDate = new Date(deadline);
-    const diffTime = deadlineDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
+  const createGoal = async () => {
+    if (!newGoal.title.trim() || !user) return;
+
+    try {
+      await supabase.from('goals').insert({
+        user_id: user.id,
+        title: newGoal.title,
+        description: newGoal.description,
+        target_sessions: newGoal.target_value,
+        current_progress: 0,
+        goal_type: 'therapy'
+      });
+
+      setNewGoal({ title: '', description: '', target_value: 10 });
+      fetchGoals();
+    } catch (error) {
+      console.error('Error creating goal:', error);
+    }
   };
+
+  const updateGoalProgress = async (goalId: string, currentValue: number) => {
+    try {
+      await supabase
+        .from('goals')
+        .update({ current_progress: currentValue })
+        .eq('id', goalId);
+      fetchGoals();
+    } catch (error) {
+      console.error('Error updating goal:', error);
+    }
+  };
+
+  const overallProgress = goals.length > 0 
+    ? (completedGoals.length / goals.length) * 100 
+    : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-indigo-50">
-      <Header />
-      
-      <section className="py-20 lg:py-32">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Badge className="mb-6 bg-gradient-to-r from-therapy-500 to-indigo-500 text-white px-8 py-3 text-sm font-semibold shadow-lg border-0">
-              <Target className="h-4 w-4 mr-2" />
-              Goal Tracking
-            </Badge>
-            
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-therapy-600 to-indigo-600 bg-clip-text text-transparent">
-                Achieve Your Mental Health Goals
-              </span>
-            </h1>
-            
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
-              Set SMART goals, track your progress, and celebrate achievements with AI-powered insights and personalized guidance.
-            </p>
-
-            <Button
-              size="lg"
-              onClick={() => setShowNewGoalForm(true)}
-              className="bg-gradient-to-r from-therapy-500 to-indigo-500 hover:from-therapy-600 hover:to-indigo-600 text-white border-0 px-8 py-6 text-lg"
-            >
-              <Plus className="h-5 w-5 mr-2" />
-              Set New Goal
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Goals & Milestones</h1>
+          <p className="text-gray-600 mt-1">Track your therapy goals and celebrate achievements</p>
+        </div>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Goal
             </Button>
-          </div>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New Goal</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Goal Title</label>
+                <Input
+                  value={newGoal.title}
+                  onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
+                  placeholder="e.g., Practice mindfulness daily"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Description</label>
+                <Textarea
+                  value={newGoal.description}
+                  onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
+                  placeholder="Describe your goal and how you'll achieve it"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Target Value</label>
+                <Input
+                  type="number"
+                  value={newGoal.target_value}
+                  onChange={(e) => setNewGoal({ ...newGoal, target_value: parseInt(e.target.value) })}
+                />
+              </div>
+              <Button onClick={createGoal} className="w-full">Create Goal</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
 
-          {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            {[
-              { icon: Target, label: 'Active Goals', value: '3', color: 'from-blue-500 to-indigo-500' },
-              { icon: Trophy, label: 'Completed', value: '12', color: 'from-green-500 to-emerald-500' },
-              { icon: TrendingUp, label: 'Avg Progress', value: '73%', color: 'from-purple-500 to-violet-500' },
-              { icon: Star, label: 'Streak Days', value: '15', color: 'from-orange-500 to-red-500' }
-            ].map((stat, index) => {
-              const IconComponent = stat.icon;
-              return (
-                <Card key={index} className="bg-white/90 backdrop-blur-sm border-0 shadow-lg">
-                  <CardContent className="pt-6">
+      {/* Progress Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Overall Progress</CardTitle>
+            <TrendingUp className="h-4 w-4 text-therapy-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{Math.round(overallProgress)}%</div>
+            <Progress value={overallProgress} className="mt-2" />
+            <p className="text-xs text-muted-foreground mt-1">
+              {completedGoals.length} of {goals.length} goals completed
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Goals</CardTitle>
+            <Target className="h-4 w-4 text-therapy-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{activeGoals.length}</div>
+            <p className="text-xs text-muted-foreground">Goals in progress</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">This Week</CardTitle>
+            <Calendar className="h-4 w-4 text-therapy-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">4</div>
+            <p className="text-xs text-muted-foreground">Goals worked on</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Tabs defaultValue="active" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="active">Active Goals ({activeGoals.length})</TabsTrigger>
+          <TabsTrigger value="completed">Completed ({completedGoals.length})</TabsTrigger>
+          <TabsTrigger value="templates">Goal Templates</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="active" className="space-y-4">
+          <div className="grid gap-4">
+            {activeGoals.map((goal) => (
+              <Card key={goal.id}>
+                <CardContent className="pt-6">
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-slate-600">{stat.label}</p>
-                        <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
+                        <h3 className="font-medium text-lg">{goal.title}</h3>
+                        <p className="text-sm text-gray-500">{goal.description}</p>
                       </div>
-                      <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center`}>
-                        <IconComponent className="h-6 w-6 text-white" />
-                      </div>
+                      <Button
+                        size="sm"
+                        onClick={() => updateGoalProgress(goal.id, goal.current_value + 1)}
+                      >
+                        Update Progress
+                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    <div>
+                      <div className="flex justify-between text-sm mb-2">
+                        <span>Progress</span>
+                        <span>{goal.current_value}/{goal.target_value}</span>
+                      </div>
+                      <Progress value={(goal.current_value / goal.target_value) * 100} />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
+        </TabsContent>
 
-          {/* Active Goals */}
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold mb-8">
-              <span className="bg-gradient-to-r from-therapy-600 to-indigo-600 bg-clip-text text-transparent">
-                Active Goals
-              </span>
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {activeGoals.map((goal) => {
-                const daysLeft = getDaysUntilDeadline(goal.deadline);
-                return (
-                  <Card key={goal.id} className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                    <CardHeader>
-                      <div className="flex items-start justify-between mb-2">
-                        <Badge variant="outline" className="text-xs">
-                          {goal.category}
-                        </Badge>
-                        <Badge className={getPriorityColor(goal.priority)}>
-                          {goal.priority}
-                        </Badge>
-                      </div>
-                      <CardTitle className="text-xl text-therapy-600">{goal.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <p className="text-slate-600 text-sm">{goal.description}</p>
-                      
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-slate-600">Progress</span>
-                          <span className="font-semibold">{goal.current}/{goal.target} {goal.unit}</span>
-                        </div>
-                        <Progress value={goal.progress} className="h-2" />
-                        <p className="text-xs text-slate-500">{goal.progress}% complete</p>
-                      </div>
-
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-1 text-slate-500">
-                          <Calendar className="h-4 w-4" />
-                          {daysLeft > 0 ? `${daysLeft} days left` : 'Overdue'}
-                        </div>
-                        <div className="flex items-center gap-1 text-slate-500">
-                          <Clock className="h-4 w-4" />
-                          {new Date(goal.deadline).toLocaleDateString()}
-                        </div>
-                      </div>
-
-                      <div className="flex gap-2 pt-2">
-                        <Button size="sm" className="flex-1 bg-gradient-to-r from-therapy-500 to-indigo-500 text-white border-0">
-                          Update Progress
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <BarChart3 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
+        <TabsContent value="completed" className="space-y-4">
+          <div className="grid gap-4">
+            {completedGoals.map((goal) => (
+              <Card key={goal.id} className="border-green-200">
+                <CardContent className="pt-6">
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="w-6 h-6 text-green-500" />
+                    <div className="flex-1">
+                      <h3 className="font-medium text-lg">{goal.title}</h3>
+                      <p className="text-sm text-gray-500">{goal.description}</p>
+                      <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full mt-2 inline-block">
+                        Completed
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
+        </TabsContent>
 
-          {/* Completed Goals */}
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold mb-8">
-              <span className="bg-gradient-to-r from-therapy-600 to-indigo-600 bg-clip-text text-transparent">
-                Recent Achievements
-              </span>
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {completedGoals.map((goal, index) => (
-                <Card key={index} className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 shadow-lg">
-                  <CardContent className="pt-6">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
-                        <CheckCircle className="h-5 w-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-green-800 mb-1">{goal.title}</h3>
-                        <p className="text-sm text-green-600 mb-2">{goal.description}</p>
-                        <div className="flex items-center gap-2 text-xs text-green-600">
-                          <Badge variant="outline" className="border-green-300 text-green-700">
-                            {goal.category}
-                          </Badge>
-                          <span>Completed {new Date(goal.completedDate).toLocaleDateString()}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+        <TabsContent value="templates" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              { title: 'Daily Mindfulness', description: 'Practice mindfulness for 10 minutes daily' },
+              { title: 'Mood Tracking', description: 'Log your mood twice daily for better awareness' },
+              { title: 'Gratitude Practice', description: 'Write 3 things you\'re grateful for each day' },
+              { title: 'Social Connection', description: 'Reach out to a friend or family member weekly' }
+            ].map((template, index) => (
+              <Card key={index} className="cursor-pointer hover:shadow-md transition-shadow">
+                <CardContent className="pt-6">
+                  <h3 className="font-medium">{template.title}</h3>
+                  <p className="text-sm text-gray-500 mt-1">{template.description}</p>
+                  <Button size="sm" className="mt-3">Use Template</Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-
-          {/* AI Insights */}
-          <Card className="bg-gradient-to-r from-therapy-50 to-indigo-50 border-0 shadow-xl">
-            <CardHeader>
-              <CardTitle className="text-center text-2xl font-bold">
-                <span className="bg-gradient-to-r from-therapy-600 to-indigo-600 bg-clip-text text-transparent">
-                  AI Goal Insights
-                </span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <Lightbulb className="h-6 w-6 text-therapy-500 flex-shrink-0 mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-therapy-600 mb-1">Goal Recommendation</h3>
-                      <p className="text-sm text-slate-600">Based on your progress, consider adding a stress management goal to complement your mindfulness practice.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <TrendingUp className="h-6 w-6 text-green-500 flex-shrink-0 mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-green-600 mb-1">Progress Insight</h3>
-                      <p className="text-sm text-slate-600">You're 23% more likely to achieve goals when you check in daily. Keep up the momentum!</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <Calendar className="h-6 w-6 text-blue-500 flex-shrink-0 mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-blue-600 mb-1">Timing Optimization</h3>
-                      <p className="text-sm text-slate-600">Your most productive goal completion time is in the morning. Schedule important tasks then.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <Trophy className="h-6 w-6 text-orange-500 flex-shrink-0 mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-orange-600 mb-1">Achievement Pattern</h3>
-                      <p className="text-sm text-slate-600">You complete goals 40% faster when they're broken into weekly milestones.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      <Footer />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

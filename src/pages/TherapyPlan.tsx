@@ -9,9 +9,9 @@ import { Calendar, Target, TrendingUp, Clock, CheckCircle, AlertCircle } from 'l
 
 const TherapyPlan = () => {
   const { user } = useAuth();
-  const [currentPlan, setCurrentPlan] = useState(null);
-  const [goals, setGoals] = useState([]);
-  const [progress, setProgress] = useState(0);
+  const [currentPlan, setCurrentPlan] = useState<any>(null);
+  const [goals, setGoals] = useState<any[]>([]);
+  const [progress, setProgress] = useState<number>(0);
 
   useEffect(() => {
     if (user) {
@@ -25,9 +25,9 @@ const TherapyPlan = () => {
       const { data } = await supabase
         .from('therapy_plans')
         .select('id, title, description, duration_weeks, focus_areas, therapeutic_approaches')
-        .eq('user_id', user.id)
+        .eq('user_id', user?.id)
         .eq('status', 'active')
-        .single();
+        .maybeSingle();
       
       setCurrentPlan(data);
     } catch (error) {
@@ -40,7 +40,7 @@ const TherapyPlan = () => {
       const { data } = await supabase
         .from('goals')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
       
       setGoals(data || []);

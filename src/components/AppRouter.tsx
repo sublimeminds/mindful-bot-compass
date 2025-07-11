@@ -36,6 +36,9 @@ import OnboardingPage from "../pages/OnboardingPage";
 import Onboarding from "../pages/Onboarding";
 import GoalsPage from "../pages/GoalsPage";
 import Goals from "../pages/Goals";
+import MoodTracker from "../pages/MoodTracker";
+import AdvancedAnalytics from "../pages/AdvancedAnalytics";
+import AIPersonalizationDashboard from "../pages/AIPersonalizationDashboard";
 import Profile from "../pages/Profile";
 import Settings from "../pages/Settings";
 import VoiceSettings from "../pages/VoiceSettings";
@@ -264,6 +267,30 @@ const AppRouter = () => {
       <Route path="/subscription" element={
         <PageErrorBoundary pageName="Subscription">
           <DashboardPageWrapper><Subscription /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/goals" element={
+        <PageErrorBoundary pageName="Goals">
+          <DashboardPageWrapper><Goals /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/mood-tracker" element={
+        <PageErrorBoundary pageName="Mood Tracker">
+          <DashboardPageWrapper><MoodTracker /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/advanced-analytics" element={
+        <PageErrorBoundary pageName="Advanced Analytics">
+          <DashboardPageWrapper><AdvancedAnalytics /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/ai-personalization" element={
+        <PageErrorBoundary pageName="AI Personalization">
+          <DashboardPageWrapper><AIPersonalizationDashboard /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
