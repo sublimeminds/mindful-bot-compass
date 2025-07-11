@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 import { useSafeNavigation } from '@/components/bulletproof/SafeRouter';
 import BulletproofDashboardLayout from '@/components/dashboard/BulletproofDashboardLayout';
+import AuthRequiredPage from '@/components/auth/AuthRequiredPage';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
@@ -23,22 +24,11 @@ const Dashboard = () => {
   }
 
   if (!user) {
-    return (
-      <SafeComponentWrapper name="DashboardAuthRequired">
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
-          <div className="text-center max-w-md mx-auto p-6">
-            <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-            <p className="text-muted-foreground mb-6">Please sign in to access your dashboard.</p>
-            <button 
-              onClick={() => navigate('/auth')}
-              className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-lg transition-all duration-200"
-            >
-              Sign In
-            </button>
-          </div>
-        </div>
-      </SafeComponentWrapper>
-    );
+    return <AuthRequiredPage 
+      title="Access Your Dashboard" 
+      description="Sign in to view your personalized therapy dashboard, track progress, and access AI-powered mental wellness tools."
+      redirectTo="/dashboard"
+    />;
   }
 
   return <BulletproofDashboardLayout />;

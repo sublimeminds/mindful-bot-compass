@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Users, Shield } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import GradientButton from '@/components/ui/GradientButton';
+import heroImage from '@/assets/hero-therapy-ai.jpg';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -77,19 +78,43 @@ const HeroSection = () => {
           </p>
         </div>
 
-        {/* Hero visual/demo could go here */}
-        <div className="relative max-w-4xl mx-auto">
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-therapy-200/50 p-8">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-therapy-500 to-harmony-500 rounded-2xl mb-4">
-                <Heart className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Ready to start healing?</h3>
-              <p className="text-slate-600 mb-4">Join thousands who have transformed their mental wellness with TherapySync</p>
-              <div className="flex justify-center space-x-4 text-sm text-slate-500">
-                <span>✓ Personalized therapy</span>
-                <span>✓ Mood tracking</span>
-                <span>✓ Crisis support</span>
+        {/* Hero visual showcase */}
+        <div className="relative max-w-5xl mx-auto">
+          <div className="relative overflow-hidden rounded-3xl shadow-2xl border border-therapy-200/50">
+            <img 
+              src={heroImage} 
+              alt="TherapySync AI - Professional mental health support with cutting-edge AI technology" 
+              className="w-full h-[400px] md:h-[500px] object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+            
+            {/* Overlay content */}
+            <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
+              <div className="max-w-3xl">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl">
+                    <Heart className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-2xl font-bold">Transform Your Mental Wellness Journey</h3>
+                </div>
+                <p className="text-lg mb-6 text-white/90">
+                  Experience the future of therapy with our AI-powered platform that adapts to your unique needs, 
+                  providing personalized support, crisis intervention, and continuous growth tracking.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex items-center space-x-2 text-white/90">
+                    <div className="w-2 h-2 bg-therapy-400 rounded-full"></div>
+                    <span>AI-Powered Personalization</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-white/90">
+                    <div className="w-2 h-2 bg-harmony-400 rounded-full"></div>
+                    <span>24/7 Crisis Support</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-white/90">
+                    <div className="w-2 h-2 bg-flow-400 rounded-full"></div>
+                    <span>Progress Analytics</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

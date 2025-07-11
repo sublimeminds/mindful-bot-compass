@@ -19,8 +19,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import PageLayout from '@/components/layout/PageLayout';
 
 const VoiceTechnology = () => {
   const navigate = useNavigate();
@@ -68,8 +67,8 @@ const VoiceTechnology = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-calm-50 via-white to-therapy-50">
-      <Header />
+    <PageLayout>
+      <div className="bg-gradient-to-br from-calm-50 via-white to-therapy-50 pt-8">{/* ... keep existing code */}
       
       {/* Hero Section */}
       <section className="py-20 lg:py-32 relative overflow-hidden">
@@ -260,8 +259,8 @@ const VoiceTechnology = () => {
         </div>
       </section>
 
-      <Footer />
-    </div>
+      </div>
+    </PageLayout>
   );
 };
 

@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { useSEO } from '@/hooks/useSEO';
+import PageLayout from '@/components/layout/PageLayout';
 import { 
   Brain,
   Shield,
@@ -864,8 +865,9 @@ const AIArchitecture = () => {
             </div>
           </div>
         </section>
+        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 
