@@ -112,6 +112,7 @@ import TherapySyncAI from "../pages/TherapySyncAI";
 import AIArchitecture from "../pages/AIArchitecture";
 import TherapistDiscovery from "../pages/TherapistDiscovery";
 import TherapistAssessmentPage from "../pages/TherapistAssessmentPage";
+import TherapistSelectionPage from "../pages/TherapistSelectionPage";
 import GamificationDashboard from "../pages/GamificationDashboard";
 import CompliancePage from "../pages/CompliancePage";
 
@@ -450,6 +451,12 @@ const AppRouter = () => {
       <Route path="/therapist-assessment" element={
         <PageErrorBoundary pageName="Therapist Assessment">
           <TherapistAssessmentPage />
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/therapist-selection" element={
+        <PageErrorBoundary pageName="Therapist Selection">
+          <TherapistSelectionPage />
         </PageErrorBoundary>
       } />
 

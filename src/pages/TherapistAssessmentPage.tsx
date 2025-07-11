@@ -30,8 +30,8 @@ const TherapistAssessmentPage: React.FC = () => {
           description: "Your therapist matches have been saved successfully."
         });
         
-        // Navigate to therapist discovery with the results
-        navigate('/therapist-discovery', { 
+        // Navigate to therapist selection with results
+        navigate('/therapist-selection', { 
           state: { 
             assessmentCompleted: true, 
             matches,

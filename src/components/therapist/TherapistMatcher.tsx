@@ -8,18 +8,22 @@ import { Star, User, Heart, Brain } from 'lucide-react';
 import SafeTherapistAvatarCard from '@/components/avatar/SafeTherapistAvatarCard';
 import SafeAvatarModal from '@/components/avatar/SafeAvatarModal';
 import SimpleFavoriteButton from '@/components/therapist/SimpleFavoriteButton';
+import TherapistSelectionFlow from '@/components/therapist/TherapistSelectionFlow';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 
 interface TherapistMatcherProps {
   onTherapistSelected: (therapistId: string) => void;
   onClose: () => void;
   assessmentMatches?: any[];
+  assessmentId?: string;
 }
 
-const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches }: TherapistMatcherProps) => {
+const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches, assessmentId }: TherapistMatcherProps) => {
   const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
+  const [selectedTherapistData, setSelectedTherapistData] = useState<any>(null);
   const [modalTherapist, setModalTherapist] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showSelectionFlow, setShowSelectionFlow] = useState(false);
 
   // Mock therapist data with realistic compatibility scores
   const therapists = [
@@ -87,6 +91,8 @@ const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches }: T
 
   const handleSelectTherapist = (therapistId: string) => {
     setSelectedTherapist(therapistId);
+    const therapist = therapists.find(t => t.id === therapistId);
+    setSelectedTherapistData(therapist);
   };
 
   const handleViewTherapist = (therapist: any) => {
@@ -100,10 +106,31 @@ const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches }: T
   };
 
   const handleConfirmSelection = () => {
+    if (selectedTherapist && selectedTherapistData) {
+      setShowSelectionFlow(true);
+    }
+  };
+
+  const handleSelectionComplete = () => {
     if (selectedTherapist) {
       onTherapistSelected(selectedTherapist);
     }
   };
+
+  const handleBackToSelection = () => {
+    setShowSelectionFlow(false);
+  };
+
+  if (showSelectionFlow && selectedTherapistData) {
+    return (
+      <TherapistSelectionFlow
+        selectedTherapist={selectedTherapistData}
+        assessmentId={assessmentId}
+        onComplete={handleSelectionComplete}
+        onBack={handleBackToSelection}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">

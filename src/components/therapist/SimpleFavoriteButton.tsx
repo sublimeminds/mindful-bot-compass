@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { TherapistFavoriteService } from '@/services/therapistFavoriteService';
+import { useSimpleApp } from '@/hooks/useSimpleApp';
 
 interface SimpleFavoriteButtonProps {
   therapistId: string;
@@ -17,17 +19,60 @@ const SimpleFavoriteButton: React.FC<SimpleFavoriteButtonProps> = ({
   variant = 'outline' 
 }) => {
   const { toast } = useToast();
+  const { user } = useSimpleApp();
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleToggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+  useEffect(() => {
+    if (user?.id) {
+      checkFavoriteStatus();
+    }
+  }, [user?.id, therapistId]);
+
+  const checkFavoriteStatus = async () => {
+    if (!user?.id) return;
     
-    toast({
-      title: isFavorite ? "Removed from Favorites" : "Added to Favorites",
-      description: isFavorite 
-        ? `${therapistName} removed from your favorites.`
-        : `${therapistName} saved to your favorites.`
-    });
+    try {
+      const favorite = await TherapistFavoriteService.isFavorite(user.id, therapistId);
+      setIsFavorite(favorite);
+    } catch (error) {
+      console.error('Error checking favorite status:', error);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!user?.id || isLoading) return;
+    
+    setIsLoading(true);
+    
+    try {
+      const success = await TherapistFavoriteService.toggleFavorite(user.id, therapistId);
+      
+      if (success) {
+        setIsFavorite(!isFavorite);
+        toast({
+          title: isFavorite ? "Removed from Favorites" : "Added to Favorites",
+          description: isFavorite 
+            ? `${therapistName} removed from your favorites.`
+            : `${therapistName} saved to your favorites.`
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to update favorites. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -35,6 +80,7 @@ const SimpleFavoriteButton: React.FC<SimpleFavoriteButtonProps> = ({
       variant={variant}
       size={size}
       onClick={handleToggleFavorite}
+      disabled={isLoading || !user?.id}
       className={`
         ${isFavorite ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-red-500'}
         transition-colors duration-200
@@ -45,7 +91,7 @@ const SimpleFavoriteButton: React.FC<SimpleFavoriteButtonProps> = ({
       />
       {size !== 'sm' && (
         <span className="ml-2">
-          {isFavorite ? 'Saved' : 'Save'}
+          {isLoading ? '...' : isFavorite ? 'Saved' : 'Save'}
         </span>
       )}
     </Button>
