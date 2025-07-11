@@ -94,8 +94,8 @@ const Footer = () => {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/features-showcase" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
-                  {t('footer.platform.features', 'New Features')}
+                <Link to="/features" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
+                  {t('footer.platform.features', 'Features')}
                 </Link>
               </li>
               <li>
@@ -109,8 +109,13 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/cultural-ai-features" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
-                  {t('footer.platform.culturalAI', 'Cultural AI')}
+                <Link to="/therapysync-ai" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
+                  {t('footer.platform.aiArchitecture', 'AI Architecture')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/therapist-discovery" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
+                  {t('footer.platform.therapistDiscovery', 'AI Therapists')}
                 </Link>
               </li>
             </ul>
@@ -123,8 +128,8 @@ const Footer = () => {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/help" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
-                  {t('footer.support.help', 'Help Center')}
+                <Link to="/faq" className="text-slate-600 hover:text-therapy-600 text-sm transition-colors duration-200 hover:translate-x-1 inline-block">
+                  {t('footer.support.faq', 'FAQ & Blog')}
                 </Link>
               </li>
               <li>
