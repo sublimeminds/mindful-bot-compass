@@ -41,13 +41,10 @@ interface WhatsAppIntegration {
   id?: string;
   user_id: string;
   phone_number: string;
-  whatsapp_number: string;
+  whatsapp_number: string | null;
   verification_status: string;
   is_active: boolean;
-  privacy_settings: {
-    data_sharing: boolean;
-    message_history: boolean;
-  };
+  privacy_settings: any;
 }
 
 const WhatsAppSetup = () => {
@@ -92,7 +89,12 @@ const WhatsAppSetup = () => {
         .single();
 
       if (!integrationError && integrationData) {
-        setIntegration(integrationData);
+        setIntegration({
+          ...integrationData,
+          privacy_settings: typeof integrationData.privacy_settings === 'string' 
+            ? JSON.parse(integrationData.privacy_settings) 
+            : integrationData.privacy_settings || { data_sharing: false, message_history: false }
+        });
         setPhoneNumber(integrationData.phone_number);
         
         if (integrationData.verification_status === 'verified') {

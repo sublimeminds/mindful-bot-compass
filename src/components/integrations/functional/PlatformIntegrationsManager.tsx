@@ -295,7 +295,7 @@ const PlatformIntegrationsManager = () => {
       // Generate iCal feed URL for user's therapy sessions
       const { data, error } = await supabase
         .from('therapy_sessions')
-        .select('id, session_type, start_time, end_time, notes')
+        .select('id, techniques, start_time, end_time, notes')
         .eq('user_id', user.id)
         .gte('start_time', new Date().toISOString())
         .order('start_time', { ascending: true })
@@ -323,7 +323,7 @@ const PlatformIntegrationsManager = () => {
           `UID:therapy-${session.id}@therapysync.com`,
           `DTSTART:${formatICalDate(startDate)}`,
           `DTEND:${formatICalDate(endDate)}`,
-          `SUMMARY:${session.session_type} Therapy Session`,
+          `SUMMARY:${session.techniques?.[0] || 'Therapy'} Session`,
           `DESCRIPTION:${session.notes || 'Therapy session'}`,
           'CATEGORIES:Therapy,Health',
           'STATUS:CONFIRMED',

@@ -144,7 +144,7 @@ const EnhancedSearch = ({
       try {
         const { data: sessions, error } = await supabase
           .from('therapy_sessions')
-          .select('id, session_type, notes, start_time, end_time')
+          .select('id, techniques, notes, start_time, end_time')
           .eq('user_id', user.id)
           .ilike('notes', `%${term}%`)
           .order('start_time', { ascending: false })
@@ -154,7 +154,7 @@ const EnhancedSearch = ({
           const sessionResults = sessions.map(session => ({
             id: `session-${session.id}`,
             type: 'session' as const,
-            title: `${session.session_type} Session`,
+            title: `${session.techniques?.[0] || 'Therapy'} Session`,
             description: session.notes || 'Therapy session',
             date: new Date(session.start_time).toLocaleDateString(),
             icon: MessageSquare,
@@ -172,7 +172,7 @@ const EnhancedSearch = ({
       try {
         const { data: goals, error } = await supabase
           .from('goals')
-          .select('id, title, description, status, target_date')
+          .select('id, title, description, is_completed, target_date')
           .eq('user_id', user.id)
           .or(`title.ilike.%${term}%,description.ilike.%${term}%`)
           .order('created_at', { ascending: false })
@@ -186,7 +186,7 @@ const EnhancedSearch = ({
             description: goal.description || 'Personal goal',
             date: goal.target_date ? new Date(goal.target_date).toLocaleDateString() : undefined,
             icon: Target,
-            metadata: { status: goal.status }
+            metadata: { status: goal.is_completed ? 'completed' : 'active' }
           }));
           results.push(...goalResults);
         }

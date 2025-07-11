@@ -33,7 +33,7 @@ const FunctionalSearch = () => {
       try {
         const { data, error } = await supabase
           .from('therapy_sessions')
-          .select('id, type, created_at, updated_at')
+          .select('id, notes, start_time, techniques')
           .eq('user_id', user.id)
           .order('start_time', { ascending: false })
           .limit(10);
@@ -42,8 +42,8 @@ const FunctionalSearch = () => {
 
         const sessionsData = data?.map(session => ({
           id: session.id,
-          title: `Therapy Session`,
-          date: new Date(session.created_at).toLocaleDateString(),
+          title: session.techniques?.[0] || 'Therapy Session',
+          date: new Date(session.start_time).toLocaleDateString(),
           duration: 60,
           participants: 1,
           status: 'completed' as 'completed'
