@@ -860,6 +860,53 @@ export type Database = {
           },
         ]
       }
+      challenge_participants: {
+        Row: {
+          best_streak: number | null
+          challenge_id: string
+          completion_date: string | null
+          completion_percentage: number | null
+          current_streak: number | null
+          days_completed: number | null
+          id: string
+          is_completed: boolean | null
+          joined_date: string
+          user_id: string
+        }
+        Insert: {
+          best_streak?: number | null
+          challenge_id: string
+          completion_date?: string | null
+          completion_percentage?: number | null
+          current_streak?: number | null
+          days_completed?: number | null
+          id?: string
+          is_completed?: boolean | null
+          joined_date?: string
+          user_id: string
+        }
+        Update: {
+          best_streak?: number | null
+          challenge_id?: string
+          completion_date?: string | null
+          completion_percentage?: number | null
+          current_streak?: number | null
+          days_completed?: number | null
+          id?: string
+          is_completed?: boolean | null
+          joined_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_participants_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "wellness_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clinical_assessments: {
         Row: {
           administered_at: string
@@ -899,6 +946,162 @@ export type Database = {
           severity_level?: string
           total_score?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      community_events: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          end_time: string
+          event_type: string
+          id: string
+          is_active: boolean
+          is_virtual: boolean
+          location: string | null
+          max_participants: number | null
+          meeting_link: string | null
+          organizer_id: string
+          participant_count: number | null
+          start_time: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          end_time: string
+          event_type: string
+          id?: string
+          is_active?: boolean
+          is_virtual?: boolean
+          location?: string | null
+          max_participants?: number | null
+          meeting_link?: string | null
+          organizer_id: string
+          participant_count?: number | null
+          start_time: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          end_time?: string
+          event_type?: string
+          id?: string
+          is_active?: boolean
+          is_virtual?: boolean
+          location?: string | null
+          max_participants?: number | null
+          meeting_link?: string | null
+          organizer_id?: string
+          participant_count?: number | null
+          start_time?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      community_milestones: {
+        Row: {
+          achievement_date: string
+          celebration_count: number | null
+          created_at: string
+          description: string
+          id: string
+          is_shared: boolean
+          milestone_data: Json | null
+          milestone_type: string
+          points_earned: number | null
+          support_count: number | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          achievement_date: string
+          celebration_count?: number | null
+          created_at?: string
+          description: string
+          id?: string
+          is_shared?: boolean
+          milestone_data?: Json | null
+          milestone_type: string
+          points_earned?: number | null
+          support_count?: number | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          achievement_date?: string
+          celebration_count?: number | null
+          created_at?: string
+          description?: string
+          id?: string
+          is_shared?: boolean
+          milestone_data?: Json | null
+          milestone_type?: string
+          points_earned?: number | null
+          support_count?: number | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_posts: {
+        Row: {
+          author_id: string
+          category: string
+          comment_count: number | null
+          content: string
+          created_at: string
+          id: string
+          is_anonymous: boolean
+          is_pinned: boolean
+          like_count: number | null
+          post_type: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          view_count: number | null
+        }
+        Insert: {
+          author_id: string
+          category: string
+          comment_count?: number | null
+          content: string
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean
+          is_pinned?: boolean
+          like_count?: number | null
+          post_type?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          view_count?: number | null
+        }
+        Update: {
+          author_id?: string
+          category?: string
+          comment_count?: number | null
+          content?: string
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean
+          is_pinned?: boolean
+          like_count?: number | null
+          post_type?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          view_count?: number | null
         }
         Relationships: []
       }
@@ -1610,6 +1813,44 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      event_participants: {
+        Row: {
+          attendance_status: string | null
+          event_id: string
+          feedback_comment: string | null
+          feedback_rating: number | null
+          id: string
+          registration_date: string
+          user_id: string
+        }
+        Insert: {
+          attendance_status?: string | null
+          event_id: string
+          feedback_comment?: string | null
+          feedback_rating?: number | null
+          id?: string
+          registration_date?: string
+          user_id: string
+        }
+        Update: {
+          attendance_status?: string | null
+          event_id?: string
+          feedback_comment?: string | null
+          feedback_rating?: number | null
+          id?: string
+          registration_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "community_events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       exchange_rates: {
         Row: {
@@ -3778,6 +4019,41 @@ export type Database = {
         }
         Relationships: []
       }
+      post_interactions: {
+        Row: {
+          comment_text: string | null
+          created_at: string
+          id: string
+          interaction_type: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          comment_text?: string | null
+          created_at?: string
+          id?: string
+          interaction_type: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          comment_text?: string | null
+          created_at?: string
+          id?: string
+          interaction_type?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_interactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       professional_oversight: {
         Row: {
           completed_at: string | null
@@ -4472,6 +4748,63 @@ export type Database = {
         }
         Relationships: []
       }
+      session_feedback: {
+        Row: {
+          comfort_rating: number
+          communication_rating: number
+          created_at: string
+          effectiveness_rating: number
+          feedback_text: string | null
+          id: string
+          improvement_suggestions: string | null
+          mood_after: number | null
+          mood_before: number | null
+          overall_rating: number
+          session_date: string
+          session_helpful: boolean | null
+          session_id: string
+          therapist_id: string | null
+          user_id: string
+          would_recommend: boolean | null
+        }
+        Insert: {
+          comfort_rating: number
+          communication_rating: number
+          created_at?: string
+          effectiveness_rating: number
+          feedback_text?: string | null
+          id?: string
+          improvement_suggestions?: string | null
+          mood_after?: number | null
+          mood_before?: number | null
+          overall_rating: number
+          session_date: string
+          session_helpful?: boolean | null
+          session_id: string
+          therapist_id?: string | null
+          user_id: string
+          would_recommend?: boolean | null
+        }
+        Update: {
+          comfort_rating?: number
+          communication_rating?: number
+          created_at?: string
+          effectiveness_rating?: number
+          feedback_text?: string | null
+          id?: string
+          improvement_suggestions?: string | null
+          mood_after?: number | null
+          mood_before?: number | null
+          overall_rating?: number
+          session_date?: string
+          session_helpful?: boolean | null
+          session_id?: string
+          therapist_id?: string | null
+          user_id?: string
+          would_recommend?: boolean | null
+        }
+        Relationships: []
+      }
       session_insights: {
         Row: {
           actionable_suggestion: string | null
@@ -5061,6 +5394,72 @@ export type Database = {
           user_rating?: number | null
           voice_characteristics?: Json | null
           years_experience?: number | null
+        }
+        Relationships: []
+      }
+      therapist_reviews: {
+        Row: {
+          communication_rating: number
+          created_at: string
+          effectiveness_rating: number
+          empathy_rating: number
+          expertise_rating: number
+          helpful_count: number | null
+          id: string
+          improvement_percentage: number | null
+          is_anonymous: boolean
+          is_verified: boolean
+          overall_rating: number
+          review_text: string | null
+          review_title: string | null
+          specific_areas_helped: string[] | null
+          therapist_id: string
+          therapy_duration_weeks: number | null
+          updated_at: string
+          user_id: string
+          would_recommend: boolean
+        }
+        Insert: {
+          communication_rating: number
+          created_at?: string
+          effectiveness_rating: number
+          empathy_rating: number
+          expertise_rating: number
+          helpful_count?: number | null
+          id?: string
+          improvement_percentage?: number | null
+          is_anonymous?: boolean
+          is_verified?: boolean
+          overall_rating: number
+          review_text?: string | null
+          review_title?: string | null
+          specific_areas_helped?: string[] | null
+          therapist_id: string
+          therapy_duration_weeks?: number | null
+          updated_at?: string
+          user_id: string
+          would_recommend: boolean
+        }
+        Update: {
+          communication_rating?: number
+          created_at?: string
+          effectiveness_rating?: number
+          empathy_rating?: number
+          expertise_rating?: number
+          helpful_count?: number | null
+          id?: string
+          improvement_percentage?: number | null
+          is_anonymous?: boolean
+          is_verified?: boolean
+          overall_rating?: number
+          review_text?: string | null
+          review_title?: string | null
+          specific_areas_helped?: string[] | null
+          therapist_id?: string
+          therapy_duration_weeks?: number | null
+          updated_at?: string
+          user_id?: string
+          would_recommend?: boolean
         }
         Relationships: []
       }
@@ -6412,6 +6811,51 @@ export type Database = {
           updated_at?: string
           url?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      wellness_challenges: {
+        Row: {
+          category: string
+          challenge_type: string
+          created_at: string
+          created_by: string | null
+          description: string
+          end_date: string
+          id: string
+          is_active: boolean
+          reward_points: number | null
+          start_date: string
+          target_participants: number | null
+          title: string
+        }
+        Insert: {
+          category: string
+          challenge_type: string
+          created_at?: string
+          created_by?: string | null
+          description: string
+          end_date: string
+          id?: string
+          is_active?: boolean
+          reward_points?: number | null
+          start_date: string
+          target_participants?: number | null
+          title: string
+        }
+        Update: {
+          category?: string
+          challenge_type?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          end_date?: string
+          id?: string
+          is_active?: boolean
+          reward_points?: number | null
+          start_date?: string
+          target_participants?: number | null
+          title?: string
         }
         Relationships: []
       }
