@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { CrisisDetectionService, SafetyResource } from '@/services/crisisDetectionService';
+import { crisisDetectionService, SafetyResource } from '@/services/crisisDetectionService';
 
 const CrisisSupport = () => {
   const navigate = useNavigate();

@@ -179,7 +179,7 @@ const AIEnhancedTherapyChat = ({ className }: AIEnhancedTherapyChatProps) => {
     try {
       // Crisis detection
       const crisisLevel = await crisisDetectionService.analyzeCrisisLevel([content]);
-      setCrisisRiskLevel(crisisLevel === 'critical' ? 'high' : crisisLevel === 'high' ? 'moderate' : 'low');
+      setCrisisRiskLevel(crisisLevel > 0.8 ? 'high' : crisisLevel > 0.4 ? 'moderate' : 'low');
 
       // Get therapeutic context
       const memoryContext = await mockMemoryService.getRelevantMemories(user.id, content);
@@ -205,7 +205,7 @@ const AIEnhancedTherapyChat = ({ className }: AIEnhancedTherapyChatProps) => {
           therapistPersonality: selectedTherapist,
           therapeuticApproach: response.approach,
           memoryReferences: response.memoryReferences || [],
-          crisisLevel,
+          crisisLevel: crisisLevel.toString(),
           confidence: response.confidence,
           planPhase: therapyPlan.currentPhase
         }

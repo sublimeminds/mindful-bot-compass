@@ -68,7 +68,7 @@ class WhatsAppIntegrationService {
 
       return {
         ...data,
-        isVerified: data.is_verified || false,
+        isVerified: (data as any).is_verified || false,
         preferences: (data as any).preferences || {},
         userId: data.user_id,
         phoneNumber: data.phone_number,
@@ -329,7 +329,7 @@ class WhatsAppIntegrationService {
       
       return {
         ...data,
-        isVerified: data.is_verified || false,
+        isVerified: (data as any).is_verified || false,
         preferences: (data as any).preferences || {},
         userId: data.user_id,
         phoneNumber: data.phone_number,

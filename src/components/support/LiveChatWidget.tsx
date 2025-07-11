@@ -103,8 +103,8 @@ const LiveChatWidget = () => {
         content: aiResponse,
         sender: 'ai',
         timestamp: new Date(),
-        needsEscalation: crisisLevel === 'critical',
-        crisisLevel: crisisLevel === 'low' ? 'mild' : crisisLevel === 'moderate' ? 'moderate' : 'severe'
+        needsEscalation: crisisLevel > 0.8,
+        crisisLevel: crisisLevel > 0.8 ? 'severe' : crisisLevel > 0.6 ? 'moderate' : 'mild'
       };
 
       setMessages(prev => [...prev, aiMessage]);

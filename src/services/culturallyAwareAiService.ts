@@ -1,5 +1,5 @@
 
-import { CrisisDetectionService } from './crisisDetectionService';
+import { crisisDetectionService } from './crisisDetectionService';
 import { enhancedCacheService } from './enhancedCachingService';
 
 export interface CulturalContext {
@@ -101,9 +101,9 @@ export class CulturallyAwareAIService {
   ): Promise<string> {
     try {
       // Check for crisis indicators first
-      const crisisLevel = await CrisisDetectionService.analyzeCrisisLevel(message);
+      const crisisLevel = await crisisDetectionService.analyzeCrisisLevel([message]);
       
-      if (crisisLevel !== 'low') {
+      if (crisisLevel > 0.6) {
         return await this.generateCulturalCrisisResponse(crisisLevel, culturalContext);
       }
 
@@ -170,7 +170,7 @@ export class CulturallyAwareAIService {
   ): Promise<string> {
     const framework = CULTURAL_FRAMEWORKS[context.language] || CULTURAL_FRAMEWORKS['en-US'];
     
-    let response = await CrisisDetectionService.generateCrisisResponse(indicator);
+    let response = await crisisDetectionService.generateCrisisResponse([indicator]);
     
     // Add cultural adaptations
     if (framework.familyInvolvement === 'family-centered') {

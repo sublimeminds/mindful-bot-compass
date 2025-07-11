@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Phone, Shield, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { CrisisDetectionService, SafetyResource } from '@/services/crisisDetectionService';
+import { crisisDetectionService, SafetyResource } from '@/services/crisisDetectionService';
 
 const EnhancedCrisisManager: React.FC = () => {
   const { user } = useAuth();

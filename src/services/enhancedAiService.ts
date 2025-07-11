@@ -2,7 +2,7 @@ import { Message } from "@/types";
 import { SessionRecommendationService } from "./sessionRecommendationService";
 import { CulturallyAwareAIService, CulturalContext } from "./culturallyAwareAiService";
 import { MultiLanguageAIService } from "./multiLanguageAiService";
-import { CrisisDetectionService } from "./crisisDetectionService";
+import { crisisDetectionService } from "./crisisDetectionService";
 
 const API_URL = import.meta.env.VITE_OPENAI_API_URL || "https://api.openai.com/v1/chat/completions";
 const API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
@@ -103,8 +103,8 @@ export const sendEnhancedMessage = async (
 ): Promise<{ response: string; emotion: EmotionAnalysis }> => {
   try {
     // First, check for crisis indicators
-    const crisisLevel = await CrisisDetectionService.analyzeCrisisLevel(message);
-    if (crisisLevel === 'critical') {
+    const crisisLevel = await crisisDetectionService.analyzeCrisisLevel([message]);
+    if (crisisLevel > 0.8) {
       const crisisResponse = await handleCrisisResponse(message, userPreferences?.culturalContext);
       const emotion = await analyzeEmotion(message, userPreferences?.culturalContext);
       return { response: crisisResponse, emotion };
@@ -163,10 +163,10 @@ export const sendEnhancedMessage = async (
 };
 
 async function handleCrisisResponse(message: string, culturalContext?: CulturalContext): Promise<string> {
-  const crisisLevel = await CrisisDetectionService.analyzeCrisisLevel(message);
-  if (crisisLevel === 'low') return "I'm here to support you.";
+  const crisisLevel = await crisisDetectionService.analyzeCrisisLevel([message]);
+  if (crisisLevel < 0.4) return "I'm here to support you.";
 
-  let response = await CrisisDetectionService.generateCrisisResponse(crisisLevel);
+  let response = await crisisDetectionService.generateCrisisResponse([message]);
   
   // Add cultural adaptations for crisis response
   if (culturalContext) {
@@ -180,7 +180,7 @@ async function handleCrisisResponse(message: string, culturalContext?: CulturalC
   }
   
   // Add crisis resources
-  const resources = await CrisisDetectionService.getCrisisResources('default');
+  const resources = await crisisDetectionService.getCrisisResources();
   response += "\n\nImmediate help is available:";
   resources.forEach(resource => {
     response += `\n• ${resource.title}: ${resource.contact_info} (${resource.availability})`;
