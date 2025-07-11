@@ -47,9 +47,11 @@ const Goals = () => {
         user_id: user.id,
         title: newGoal.title,
         description: newGoal.description,
-        target_sessions: newGoal.target_value,
+        target_value: newGoal.target_value,
         current_progress: 0,
-        goal_type: 'therapy'
+        category: 'therapy',
+        target_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        type: 'personal'
       });
 
       setNewGoal({ title: '', description: '', target_value: 10 });
@@ -183,7 +185,7 @@ const Goals = () => {
                       </div>
                       <Button
                         size="sm"
-                        onClick={() => updateGoalProgress(goal.id, goal.current_value + 1)}
+                        onClick={() => updateGoalProgress(goal.id, goal.current_progress + 1)}
                       >
                         Update Progress
                       </Button>
@@ -191,9 +193,9 @@ const Goals = () => {
                     <div>
                       <div className="flex justify-between text-sm mb-2">
                         <span>Progress</span>
-                        <span>{goal.current_value}/{goal.target_value}</span>
+                        <span>{goal.current_progress}/{goal.target_value}</span>
                       </div>
-                      <Progress value={(goal.current_value / goal.target_value) * 100} />
+                      <Progress value={(goal.current_progress / goal.target_value) * 100} />
                     </div>
                   </div>
                 </CardContent>

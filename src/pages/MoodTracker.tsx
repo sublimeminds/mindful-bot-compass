@@ -55,6 +55,7 @@ const MoodTracker = () => {
         energy: currentMood,
         stress: 10 - currentMood,
         anxiety: Math.max(1, 10 - currentMood),
+        depression: Math.max(1, 8 - currentMood),
         triggers: triggers
       });
 

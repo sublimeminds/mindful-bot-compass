@@ -73,7 +73,7 @@ const AdvancedAnalytics = () => {
       // Process goal progress
       const goalProgress = goalsData?.map(goal => ({
         name: goal.title,
-        progress: (goal.current_progress / goal.target_sessions) * 100,
+        progress: (goal.current_progress / goal.target_value) * 100,
         status: goal.is_completed ? 'completed' : 'active'
       })) || [];
 
