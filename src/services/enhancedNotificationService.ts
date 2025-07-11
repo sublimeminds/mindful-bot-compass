@@ -412,3 +412,6 @@ export class EnhancedNotificationService {
     await this.sendMultiPlatformNotification(userId, payload, platforms);
   }
 }
+
+// Export alias for compatibility
+export const enhancedNotificationService = EnhancedNotificationService;
