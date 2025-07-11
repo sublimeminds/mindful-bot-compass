@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Shield, Eye, Lock, Activity, Users, CheckCircle, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useSupportTickets } from '@/hooks/useSupportTickets';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SecurityEvent {
   id: string;
@@ -21,23 +23,34 @@ const AdminSecurityDashboard = () => {
   const [securityEvents, setSecurityEvents] = useState<SecurityEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const { tickets } = useSupportTickets(true);
 
   const loadSecurityEvents = useCallback(async () => {
     try {
       setLoading(true);
-      // Mock security events
-      const mockEvents: SecurityEvent[] = [
-        {
-          id: '1',
-          type: 'failed_login',
-          severity: 'medium',
-          timestamp: new Date().toISOString(),
-          description: 'Multiple failed login attempts detected',
-          ip_address: '192.168.1.100',
-          resolved: false
-        }
-      ];
-      setSecurityEvents(mockEvents);
+      
+      // Load real security events from audit logs
+      const { data: auditLogs, error } = await supabase
+        .from('audit_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (error) throw error;
+
+      // Transform audit logs to security events
+      const events: SecurityEvent[] = auditLogs?.map(log => ({
+        id: log.id,
+        type: log.action,
+        severity: log.action.includes('delete') ? 'high' : 'medium',
+        timestamp: log.created_at,
+        description: `${log.action} on ${log.resource}`,
+        ip_address: log.ip_address?.toString(),
+        user_id: log.user_id,
+        resolved: false
+      })) || [];
+
+      setSecurityEvents(events);
     } catch (error) {
       console.error('Error loading security events:', error);
       toast({

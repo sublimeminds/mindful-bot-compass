@@ -1272,6 +1272,66 @@ export type Database = {
         }
         Relationships: []
       }
+      content_library: {
+        Row: {
+          category: string
+          content_type: string
+          content_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          difficulty_level: string | null
+          duration_minutes: number | null
+          id: string
+          is_published: boolean | null
+          published_at: string | null
+          tags: string[] | null
+          target_audience: string[] | null
+          therapeutic_approach: string | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          content_type: string
+          content_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          difficulty_level?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean | null
+          published_at?: string | null
+          tags?: string[] | null
+          target_audience?: string[] | null
+          therapeutic_approach?: string | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          content_type?: string
+          content_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          difficulty_level?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean | null
+          published_at?: string | null
+          tags?: string[] | null
+          target_audience?: string[] | null
+          therapeutic_approach?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       conversation_memories: {
         Row: {
           conversation_flow: Json
@@ -6885,7 +6945,11 @@ export type Database = {
           id: string
           is_enabled: boolean | null
           last_used: string | null
+          last_used_at: string | null
+          phone_number: string | null
+          recovery_codes_used: number | null
           secret: string
+          setup_completed_at: string | null
           updated_at: string
           user_id: string
         }
@@ -6895,7 +6959,11 @@ export type Database = {
           id?: string
           is_enabled?: boolean | null
           last_used?: string | null
+          last_used_at?: string | null
+          phone_number?: string | null
+          recovery_codes_used?: number | null
           secret: string
+          setup_completed_at?: string | null
           updated_at?: string
           user_id: string
         }
@@ -6905,9 +6973,49 @@ export type Database = {
           id?: string
           is_enabled?: boolean | null
           last_used?: string | null
+          last_used_at?: string | null
+          phone_number?: string | null
+          recovery_codes_used?: number | null
           secret?: string
+          setup_completed_at?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      two_factor_setup_attempts: {
+        Row: {
+          attempts_count: number | null
+          created_at: string
+          expires_at: string
+          id: string
+          is_verified: boolean | null
+          method_type: string
+          phone_number: string | null
+          user_id: string
+          verification_code: string | null
+        }
+        Insert: {
+          attempts_count?: number | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          is_verified?: boolean | null
+          method_type: string
+          phone_number?: string | null
+          user_id: string
+          verification_code?: string | null
+        }
+        Update: {
+          attempts_count?: number | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_verified?: boolean | null
+          method_type?: string
+          phone_number?: string | null
+          user_id?: string
+          verification_code?: string | null
         }
         Relationships: []
       }
@@ -8348,6 +8456,10 @@ export type Database = {
         }
         Returns: Json
       }
+      generate_backup_codes: {
+        Args: Record<PropertyKey, never>
+        Returns: string[]
+      }
       generate_invitation_token: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -8437,6 +8549,10 @@ export type Database = {
       update_goal_streak: {
         Args: { goal_id_param: string }
         Returns: undefined
+      }
+      verify_totp_code: {
+        Args: { user_id_param: string; code_param: string }
+        Returns: boolean
       }
     }
     Enums: {
