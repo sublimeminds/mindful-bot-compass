@@ -438,8 +438,15 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
       
+      <Route path="/therapysync-ai" element={
+        <PageErrorBoundary pageName="TherapySync AI">
+          <AIArchitecture />
+        </PageErrorBoundary>
+      } />
+      
+      {/* Legacy redirect */}
       <Route path="/ai-architecture" element={
-        <PageErrorBoundary pageName="AI Architecture">
+        <PageErrorBoundary pageName="AI Architecture (Legacy)">
           <AIArchitecture />
         </PageErrorBoundary>
       } />

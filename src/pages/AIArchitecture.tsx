@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { useSEO } from '@/hooks/useSEO';
 import { 
   Brain,
   Shield,
@@ -47,6 +48,15 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarC
 
 const AIArchitecture = () => {
   const navigate = useNavigate();
+  
+  // SEO optimization
+  useSEO({
+    title: 'TherapySync AI - World\'s Most Advanced AI Therapist | OpenAI + Anthropic',
+    description: 'Experience the most sophisticated AI therapy available. Powered by OpenAI GPT-4 and Anthropic Claude, TherapySync AI remembers everything, detects crises, and evolves with your unique therapy journey.',
+    keywords: 'AI therapist, OpenAI therapy, Anthropic Claude therapy, AI mental health, personalized therapy, crisis detection, multi-language therapy AI',
+    type: 'website'
+  });
+  
   const [animatedStats, setAnimatedStats] = useState({
     responseTime: 0,
     userSatisfaction: 0,
@@ -75,25 +85,25 @@ const AIArchitecture = () => {
 
   const heroFeatures = [
     {
-      icon: Sparkles,
-      title: "Meet TherapySync AI",
-      description: "The world's most advanced AI therapy companion",
-      stat: "#1 Rated",
+      icon: Brain,
+      title: "Multi-Model AI Power",
+      description: "OpenAI GPT-4 + Anthropic Claude working together for superior therapy conversations",
+      stat: "2 AI Models",
       color: "from-therapy-500 to-therapy-600"
     },
     {
       icon: Heart,
       title: "Human-Like Connection",
-      description: "Experience conversations that feel genuinely caring",
+      description: "Conversations that feel genuinely caring with emotional intelligence and empathy",
       stat: "96.7% Satisfaction",
       color: "from-harmony-500 to-harmony-600"
     },
     {
       icon: Shield,
-      title: "Always Safe & Private",
-      description: "Your conversations are encrypted and never shared",
-      stat: "Bank-Level Security",
-      color: "from-flow-500 to-flow-600"
+      title: "24/7 Crisis Protection",
+      description: "Real-time monitoring for crisis situations with immediate life-saving interventions",
+      stat: "Life-Saving",
+      color: "from-red-500 to-red-600"
     }
   ];
 
@@ -322,21 +332,34 @@ const AIArchitecture = () => {
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative container mx-auto px-6">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="flex items-center justify-center mb-8">
-                <div className="w-20 h-20 bg-white/20 rounded-3xl flex items-center justify-center mr-6 animate-pulse">
-                  <Sparkles className="h-10 w-10 text-white" />
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center mb-8">
+                  <div className="w-20 h-20 bg-white/20 rounded-3xl flex items-center justify-center mr-6 animate-pulse">
+                    <Brain className="h-10 w-10 text-white" />
+                  </div>
+                  <div className="text-left">
+                    <h1 className="text-6xl font-bold mb-2">TherapySync AI</h1>
+                    <p className="text-2xl text-therapy-100">The World's Most Advanced AI Therapist</p>
+                  </div>
                 </div>
-                <div className="text-left">
-                  <h1 className="text-6xl font-bold mb-2">Meet TherapySync AI</h1>
-                  <p className="text-2xl text-therapy-100">The World's Most Advanced AI Therapy Companion</p>
+                <p className="text-xl text-therapy-100 mb-6 leading-relaxed max-w-4xl mx-auto">
+                  Powered by OpenAI GPT-4 and Anthropic Claude, TherapySync AI delivers personalized mental health support that understands, remembers, and evolves with your unique therapy journey.
+                </p>
+                <div className="flex items-center justify-center space-x-8 text-therapy-100">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-sm">Real-time Crisis Detection</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
+                    <span className="text-sm">29 Languages Supported</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse"></div>
+                    <span className="text-sm">Complete Memory System</span>
+                  </div>
                 </div>
               </div>
-              <p className="text-xl text-therapy-100 mb-10 leading-relaxed max-w-4xl mx-auto">
-                Experience the future of mental health support. TherapySync AI combines cutting-edge technology with human empathy 
-                to create the most sophisticated, caring, and effective AI therapist ever built.
-              </p>
-            </div>
             
             {/* Hero Feature Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
@@ -381,10 +404,10 @@ const AIArchitecture = () => {
         <section>
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-6 therapy-text-gradient">
-              Why TherapySync AI is the Industry Leader
+              Why TherapySync AI is the Best Therapy AI Available
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Trusted by thousands, recommended by professionals, and proven to deliver results that other AI therapy platforms simply can't match.
+              While others offer basic chatbots, we deliver real therapy powered by the world's most advanced AI models. Here's what makes us different:
             </p>
           </div>
           
@@ -687,6 +710,117 @@ const AIArchitecture = () => {
                 <Heart className="h-8 w-8 text-therapy-600 mx-auto mb-4" />
                 <h4 className="font-bold text-therapy-800 mb-2">Best of Both Worlds</h4>
                 <p className="text-sm text-therapy-700">Professional quality care with AI convenience</p>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Real Therapy Features */}
+        <section>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-6 therapy-text-gradient">
+              Real Therapy Features Powered by AI
+            </h2>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+              TherapySync AI doesn't just chat - it delivers complete therapeutic support with features that create real healing and growth.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <Card className="hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-white to-therapy-25">
+              <CardHeader>
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-harmony-500 rounded-lg flex items-center justify-center">
+                    <Target className="h-6 w-6 text-white" />
+                  </div>
+                  <CardTitle className="text-lg">AI-Generated Therapy Plans</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">Personalized treatment plans with phases, milestones, and adaptive goals based on your progress.</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-therapy-500 mr-2" />CBT, DBT, and mindfulness techniques</li>
+                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-therapy-500 mr-2" />Weekly goal setting and tracking</li>
+                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-therapy-500 mr-2" />Progress analytics and insights</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-white to-harmony-25">
+              <CardHeader>
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gradient-to-r from-harmony-500 to-calm-500 rounded-lg flex items-center justify-center">
+                    <Heart className="h-6 w-6 text-white" />
+                  </div>
+                  <CardTitle className="text-lg">Smart Mood Analytics</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">AI-powered mood tracking that identifies patterns, triggers, and provides personalized coping strategies.</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-harmony-500 mr-2" />Emotion pattern recognition</li>
+                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-harmony-500 mr-2" />Trigger identification and alerts</li>
+                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-harmony-500 mr-2" />Predictive wellness insights</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-white to-calm-25">
+              <CardHeader>
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gradient-to-r from-calm-500 to-flow-500 rounded-lg flex items-center justify-center">
+                    <Users className="h-6 w-6 text-white" />
+                  </div>
+                  <CardTitle className="text-lg">Family Therapy Support</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">Coordinate care across family members with shared insights and collaborative treatment planning.</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-calm-500 mr-2" />Multi-user account management</li>
+                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-calm-500 mr-2" />Family progress dashboards</li>
+                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-calm-500 mr-2" />Shared therapy goals and milestones</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+            <Card className="hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-white to-flow-25">
+              <CardHeader>
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gradient-to-r from-flow-500 to-balance-500 rounded-lg flex items-center justify-center">
+                    <Headphones className="h-6 w-6 text-white" />
+                  </div>
+                  <CardTitle className="text-lg">Voice AI Therapy Sessions</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">Natural voice conversations with emotion detection and real-time therapeutic guidance in 29 languages.</p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge className="bg-flow-100 text-flow-700">Emotion Recognition</Badge>
+                  <Badge className="bg-flow-100 text-flow-700">Voice Analytics</Badge>
+                  <Badge className="bg-flow-100 text-flow-700">Multi-language</Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-white to-balance-25">
+              <CardHeader>
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gradient-to-r from-balance-500 to-therapy-500 rounded-lg flex items-center justify-center">
+                    <Award className="h-6 w-6 text-white" />
+                  </div>
+                  <CardTitle className="text-lg">Gamified Wellness Journey</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">Achievement systems, wellness challenges, and progress celebrations that make therapy engaging and motivating.</p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge className="bg-balance-100 text-balance-700">Wellness Challenges</Badge>
+                  <Badge className="bg-balance-100 text-balance-700">Achievement Badges</Badge>
+                  <Badge className="bg-balance-100 text-balance-700">Progress Rewards</Badge>
+                </div>
               </CardContent>
             </Card>
           </div>

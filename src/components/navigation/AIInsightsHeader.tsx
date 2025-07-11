@@ -46,11 +46,11 @@ const AIInsightsHeader = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/ai-architecture')}
+            onClick={() => navigate('/therapysync-ai')}
             className="text-white hover:bg-white/10 text-xs"
           >
             <Sparkles className="h-3 w-3 mr-1" />
-            AI Features
+            TherapySync AI
           </Button>
           <Button
             variant="ghost"

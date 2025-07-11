@@ -56,9 +56,9 @@ const EnhancedHeader = () => {
   const aiFeatures = [
     {
       icon: CircuitBoard,
-      title: "AI Architecture",
-      description: "Discover our advanced multi-model AI system powered by ChatGPT and Anthropic",
-      href: "/ai-architecture",
+      title: "TherapySync AI",
+      description: "Discover our advanced multi-model AI system powered by OpenAI and Anthropic",
+      href: "/therapysync-ai",
       gradient: "from-purple-500 to-indigo-600"
     },
     {
