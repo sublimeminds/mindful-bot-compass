@@ -79,23 +79,12 @@ const AdminOverviewEnhanced = () => {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white flex items-center space-x-3">
-            <LayoutDashboard className="h-8 w-8 text-blue-400" />
-            <span>Admin Dashboard</span>
-          </h1>
-          <p className="text-gray-400 mt-1">
-            Overview of platform performance and user activity
-          </p>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Badge variant="outline" className="border-green-400 text-green-400">
-            <Activity className="h-3 w-3 mr-1" />
-            All Systems Operational
-          </Badge>
-        </div>
+      {/* Status Badge */}
+      <div className="flex justify-end mb-6">
+        <Badge variant="outline" className="border-green-400 text-green-400">
+          <Activity className="h-3 w-3 mr-1" />
+          All Systems Operational
+        </Badge>
       </div>
 
       {/* Key Stats Grid */}

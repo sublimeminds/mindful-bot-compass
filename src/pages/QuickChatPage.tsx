@@ -9,7 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useRealEnhancedChat } from '@/hooks/useRealEnhancedChat';
-import { useTherapist } from '@/contexts/TherapistContext';
+import { useTherapist, TherapistProvider } from '@/contexts/TherapistContext';
 import VoiceEnhancedAvatar from '@/components/avatar/VoiceEnhancedAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import VoiceTherapyChat from '@/components/voice/VoiceTherapyChat';
@@ -29,7 +29,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 
-const QuickChatPage = () => {
+const QuickChatPageContent = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const { selectedTherapist } = useTherapist();
@@ -176,26 +176,15 @@ const QuickChatPage = () => {
   return (
     <DashboardLayoutWithSidebar>
       <div className="p-6">
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <MessageCircle className="h-6 w-6 text-therapy-600" />
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Quick Chat</h1>
-                <p className="text-gray-600 mt-1">
-                  Immediate support and quick conversations with your AI therapist
-                </p>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/therapy-session')}
-              className="flex items-center space-x-2"
-            >
-              <Brain className="h-4 w-4" />
-              <span>Full Session</span>
-            </Button>
-          </div>
+        <div className="mb-6 flex justify-end">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/therapy-session')}
+            className="flex items-center space-x-2"
+          >
+            <Brain className="h-4 w-4" />
+            <span>Full Session</span>
+          </Button>
         </div>
 
         <Tabs defaultValue="enhanced" className="space-y-6">
@@ -486,6 +475,14 @@ const QuickChatPage = () => {
         </Tabs>
       </div>
     </DashboardLayoutWithSidebar>
+  );
+};
+
+const QuickChatPage = () => {
+  return (
+    <TherapistProvider>
+      <QuickChatPageContent />
+    </TherapistProvider>
   );
 };
 

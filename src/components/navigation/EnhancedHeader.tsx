@@ -234,7 +234,10 @@ const EnhancedHeader = () => {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+          <Link 
+            to={user ? "/dashboard" : "/"} 
+            className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+          >
             <GradientLogo size="sm" />
             <span className="text-xl font-bold therapy-text-gradient">TherapySync</span>
           </Link>
@@ -248,17 +251,17 @@ const EnhancedHeader = () => {
                 <span>AI</span>
                 <ChevronDown className="h-4 w-4" />
               </Button>
-              <div className="absolute top-full left-0 w-[480px] p-4 bg-white shadow-xl border-0 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="absolute top-full left-0 w-[520px] p-5 bg-white/95 backdrop-blur-md shadow-xl border border-gray-100 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <div className="text-lg font-semibold mb-4 flex items-center">
                   <Brain className="h-5 w-5 mr-2 text-therapy-500" />
                   AI Features
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-4">
                   {aiFeatures.map((feature, index) => (
                     <Link
                       key={feature.title}
                       to={feature.href}
-                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
+                      className="flex items-start space-x-4 p-4 rounded-xl hover:bg-therapy-50 transition-all duration-300 group hover:shadow-md"
                       onMouseEnter={() => setHoveredIcon(feature.title)}
                       onMouseLeave={() => setHoveredIcon(null)}
                     >
@@ -288,17 +291,17 @@ const EnhancedHeader = () => {
                 <span>Platform</span>
                 <ChevronDown className="h-4 w-4" />
               </Button>
-              <div className="absolute top-full left-0 w-[480px] p-4 bg-white shadow-xl border-0 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="absolute top-full left-0 w-[520px] p-5 bg-white/95 backdrop-blur-md shadow-xl border border-gray-100 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <div className="text-lg font-semibold mb-4 flex items-center">
                   <Settings className="h-5 w-5 mr-2 text-therapy-500" />
                   Platform Features
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-4">
                   {platformFeatures.map((feature, index) => (
                     <Link
                       key={feature.title}
                       to={feature.href}
-                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
+                      className="flex items-start space-x-4 p-4 rounded-xl hover:bg-therapy-50 transition-all duration-300 group hover:shadow-md"
                       onMouseEnter={() => setHoveredIcon(feature.title)}
                       onMouseLeave={() => setHoveredIcon(null)}
                     >
@@ -328,17 +331,17 @@ const EnhancedHeader = () => {
                 <span>Help</span>
                 <ChevronDown className="h-4 w-4" />
               </Button>
-              <div className="absolute top-full left-0 w-[480px] p-4 bg-white shadow-xl border-0 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="absolute top-full left-0 w-[520px] p-5 bg-white/95 backdrop-blur-md shadow-xl border border-gray-100 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <div className="text-lg font-semibold mb-4 flex items-center">
                   <HelpCircle className="h-5 w-5 mr-2 text-therapy-500" />
                   Help & Support
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-4">
                   {helpResources.map((resource, index) => (
                     <Link
                       key={resource.title}
                       to={resource.href}
-                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-all duration-200 group"
+                      className="flex items-start space-x-4 p-4 rounded-xl hover:bg-therapy-50 transition-all duration-300 group hover:shadow-md"
                       onMouseEnter={() => setHoveredIcon(resource.title)}
                       onMouseLeave={() => setHoveredIcon(null)}
                     >
