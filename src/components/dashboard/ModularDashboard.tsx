@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Edit3, Plus, RotateCcw, Save } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Edit3, Plus, RotateCcw, Save, Home, Focus, BarChart3, Heart } from 'lucide-react';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 import { useWidgetLayout } from '@/hooks/useWidgetLayout';
 import { getWidgetById } from './widgets/WidgetRegistry';
@@ -11,6 +12,7 @@ import WidgetLibrary from './widgets/WidgetLibrary';
 
 // Import existing widgets
 import WelcomeWidget from './widgets/WelcomeWidget';
+import CompactWelcomeWidget from './widgets/CompactWelcomeWidget';
 import QuickActionsWidget from './widgets/QuickActionsWidget';
 import MoodTrackerWidget from './widgets/MoodTrackerWidget';
 import XPProgressWidget from './widgets/XPProgressWidget';
@@ -21,11 +23,20 @@ import AIInsightsWidget from './widgets/AIInsightsWidget';
 import SmartRecommendationsWidget from './widgets/SmartRecommendationsWidget';
 import TherapistAvatarWidget from './widgets/TherapistAvatarWidget';
 import ComplianceStatusWidget from './widgets/ComplianceStatusWidget';
-import NotificationWidget from './NotificationWidget';
+import EnhancedNotificationWidget from './widgets/EnhancedNotificationWidget';
+import DailyGoalsWidget from './widgets/DailyGoalsWidget';
+import StreakTrackerWidget from './widgets/StreakTrackerWidget';
+import MindfulnessWidget from './widgets/MindfulnessWidget';
 import { cn } from '@/lib/utils';
 
 const WIDGET_COMPONENTS = {
-  WelcomeWidget,
+  WelcomeWidget: (props: any) => {
+    // Use compact version for smaller sizes
+    if (props.size === 'medium' || props.size === 'small') {
+      return <CompactWelcomeWidget />;
+    }
+    return <WelcomeWidget />;
+  },
   QuickActionsWidget,
   MoodTrackerWidget,
   XPProgressWidget,
@@ -36,17 +47,48 @@ const WIDGET_COMPONENTS = {
   SmartRecommendationsWidget,
   TherapistAvatarWidget,
   ComplianceStatusWidget,
-  NotificationWidget,
+  NotificationWidget: EnhancedNotificationWidget,
+  DailyGoalsWidget,
+  StreakTrackerWidget,
+  MindfulnessWidget,
   // Placeholder components for new widgets
-  DailyGoalsWidget: () => <div className="p-4 text-center text-muted-foreground">Daily Goals - Coming Soon</div>,
-  StreakTrackerWidget: () => <div className="p-4 text-center text-muted-foreground">Streak Tracker - Coming Soon</div>,
-  MindfulnessWidget: () => <div className="p-4 text-center text-muted-foreground">Mindfulness Reminders - Coming Soon</div>,
   AnalyticsOverviewWidget: () => <div className="p-4 text-center text-muted-foreground">Analytics Overview - Coming Soon</div>,
+};
+
+// Dashboard view types
+type DashboardView = 'home' | 'focus' | 'analytics' | 'wellness';
+
+const DASHBOARD_VIEWS = {
+  home: {
+    name: 'Home',
+    icon: Home,
+    description: 'Complete overview',
+    widgets: ['welcome', 'quick-actions', 'mood-tracker', 'xp-progress', 'recent-achievements', 'notifications']
+  },
+  focus: {
+    name: 'Focus',
+    icon: Focus,
+    description: 'Minimal essentials',
+    widgets: ['mood-tracker', 'quick-actions', 'notifications']
+  },
+  analytics: {
+    name: 'Analytics',
+    icon: BarChart3,
+    description: 'Data & insights',
+    widgets: ['progress-overview', 'session-history', 'ai-insights', 'compliance-status', 'analytics-overview']
+  },
+  wellness: {
+    name: 'Wellness',
+    icon: Heart,
+    description: 'Health focused',
+    widgets: ['mood-tracker', 'daily-goals', 'streak-tracker', 'mindfulness-reminders', 'recent-achievements']
+  }
 };
 
 const ModularDashboard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+  const [currentView, setCurrentView] = useState<DashboardView>('home');
   const {
     layout,
     isLoading,
@@ -54,7 +96,9 @@ const ModularDashboard = () => {
     removeWidget,
     resizeWidget,
     resetLayout,
-    getAvailableWidgetIds
+    getAvailableWidgetIds,
+    loadDashboardView,
+    saveDashboardView
   } = useWidgetLayout();
 
   const handleAddWidget = (widgetId: string) => {
@@ -64,7 +108,12 @@ const ModularDashboard = () => {
 
   const handleSave = () => {
     setIsEditing(false);
-    // Layout is automatically saved through the hook
+    saveDashboardView(currentView);
+  };
+
+  const handleViewChange = (view: DashboardView) => {
+    setCurrentView(view);
+    loadDashboardView(view);
   };
 
   const renderWidget = (widgetItem: typeof layout.widgets[0]) => {
@@ -92,7 +141,7 @@ const ModularDashboard = () => {
             </div>
           }
         >
-          <WidgetComponent />
+          <WidgetComponent size={widgetItem.size} />
         </SafeComponentWrapper>
       </WidgetContainer>
     );
@@ -117,7 +166,7 @@ const ModularDashboard = () => {
           <div>
             <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
             <p className="text-sm text-muted-foreground">
-              {isEditing ? 'Customize your dashboard' : 'Your personalized therapy overview'}
+              {isEditing ? 'Customize your dashboard' : DASHBOARD_VIEWS[currentView].description}
             </p>
           </div>
           
@@ -163,29 +212,48 @@ const ModularDashboard = () => {
           </div>
         </div>
 
-        {/* Widgets Grid */}
-        <div className={cn(
-          'grid gap-4 auto-rows-[200px]',
-          'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-          isEditing && 'border-2 border-dashed border-primary/20 rounded-lg p-4'
-        )}>
-          {layout.widgets.length === 0 ? (
-            <Card className="col-span-full flex items-center justify-center p-12">
-              <div className="text-center">
-                <h3 className="text-lg font-semibold mb-2">No widgets yet</h3>
-                <p className="text-muted-foreground mb-4">Add widgets to customize your dashboard</p>
-                <Button onClick={() => setIsEditing(true)}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Widgets
-                </Button>
+        {/* Dashboard View Selector */}
+        <Tabs value={currentView} onValueChange={(value) => handleViewChange(value as DashboardView)} className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            {Object.entries(DASHBOARD_VIEWS).map(([key, view]) => {
+              const Icon = view.icon;
+              return (
+                <TabsTrigger key={key} value={key} className="flex items-center space-x-2">
+                  <Icon className="h-4 w-4" />
+                  <span className="hidden sm:inline">{view.name}</span>
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+
+          {Object.entries(DASHBOARD_VIEWS).map(([key, view]) => (
+            <TabsContent key={key} value={key} className="mt-6">
+              {/* Widgets Grid */}
+              <div className={cn(
+                'grid gap-4 auto-rows-min',
+                'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5',
+                isEditing && 'border-2 border-dashed border-primary/20 rounded-lg p-4'
+              )}>
+                {layout.widgets.length === 0 ? (
+                  <Card className="col-span-full flex items-center justify-center p-12">
+                    <div className="text-center">
+                      <h3 className="text-lg font-semibold mb-2">No widgets yet</h3>
+                      <p className="text-muted-foreground mb-4">Add widgets to customize your {view.name.toLowerCase()} dashboard</p>
+                      <Button onClick={() => setIsEditing(true)}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Widgets
+                      </Button>
+                    </div>
+                  </Card>
+                ) : (
+                  layout.widgets
+                    .sort((a, b) => a.order - b.order)
+                    .map(renderWidget)
+                )}
               </div>
-            </Card>
-          ) : (
-            layout.widgets
-              .sort((a, b) => a.order - b.order)
-              .map(renderWidget)
-          )}
-        </div>
+            </TabsContent>
+          ))}
+        </Tabs>
 
         {/* Editing Instructions */}
         {isEditing && (

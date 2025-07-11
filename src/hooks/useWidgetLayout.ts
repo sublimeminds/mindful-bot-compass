@@ -13,6 +13,10 @@ export interface WidgetLayout {
 }
 
 const STORAGE_KEY = 'dashboard-widget-layout';
+const VIEW_STORAGE_KEY = 'dashboard-view-layouts';
+
+// Dashboard view types
+type DashboardView = 'home' | 'focus' | 'analytics' | 'wellness';
 
 export const useWidgetLayout = () => {
   const [layout, setLayout] = useState<WidgetLayout>({
@@ -120,6 +124,54 @@ export const useWidgetLayout = () => {
     return layout.widgets.map(widget => widget.id);
   }, [layout]);
 
+  // Load dashboard view
+  const loadDashboardView = useCallback((view: DashboardView) => {
+    try {
+      const savedViews = localStorage.getItem(VIEW_STORAGE_KEY);
+      if (savedViews) {
+        const viewLayouts = JSON.parse(savedViews);
+        if (viewLayouts[view]) {
+          setLayout(viewLayouts[view]);
+          return;
+        }
+      }
+      
+      // Default layouts for each view
+      const defaultViewLayouts = {
+        home: DEFAULT_LAYOUT,
+        focus: ['mood-tracker', 'quick-actions', 'notifications'],
+        analytics: ['progress-overview', 'session-history', 'ai-insights', 'compliance-status'],
+        wellness: ['mood-tracker', 'daily-goals', 'streak-tracker', 'mindfulness-reminders']
+      };
+      
+      const defaultLayout: WidgetLayout = {
+        widgets: defaultViewLayouts[view].map((id, index) => ({
+          id,
+          size: 'medium' as const,
+          order: index
+        })),
+        lastModified: new Date().toISOString()
+      };
+      
+      setLayout(defaultLayout);
+    } catch (error) {
+      console.error('Failed to load dashboard view:', error);
+    }
+  }, []);
+
+  // Save dashboard view
+  const saveDashboardView = useCallback((view: DashboardView) => {
+    try {
+      const savedViews = localStorage.getItem(VIEW_STORAGE_KEY);
+      const viewLayouts = savedViews ? JSON.parse(savedViews) : {};
+      
+      viewLayouts[view] = layout;
+      localStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify(viewLayouts));
+    } catch (error) {
+      console.error('Failed to save dashboard view:', error);
+    }
+  }, [layout]);
+
   return {
     layout,
     isLoading,
@@ -128,6 +180,8 @@ export const useWidgetLayout = () => {
     resizeWidget,
     reorderWidgets,
     resetLayout,
-    getAvailableWidgetIds
+    getAvailableWidgetIds,
+    loadDashboardView,
+    saveDashboardView
   };
 };

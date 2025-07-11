@@ -31,13 +31,13 @@ const WidgetContainer = ({
   const getSizeClasses = () => {
     switch (size) {
       case 'small':
-        return 'col-span-1 row-span-1';
+        return 'col-span-1 min-h-[200px]';
       case 'medium':
-        return 'col-span-2 row-span-1 lg:col-span-1 lg:row-span-2';
+        return 'col-span-1 md:col-span-2 min-h-[250px]';
       case 'large':
-        return 'col-span-2 row-span-2';
+        return 'col-span-1 md:col-span-2 lg:col-span-3 min-h-[320px]';
       default:
-        return 'col-span-1 row-span-1';
+        return 'col-span-1 min-h-[200px]';
     }
   };
 
@@ -49,8 +49,8 @@ const WidgetContainer = ({
       className
     )}>
       {/* Widget Header */}
-      <div className="flex items-center justify-between p-4 pb-2">
-        <h3 className="font-semibold text-sm text-foreground">{title}</h3>
+      <div className="flex items-center justify-between p-3 pb-2 min-h-[48px]">
+        <h3 className="font-semibold text-sm text-foreground truncate">{title}</h3>
         
         {/* Widget Controls */}
         <div className={cn(
@@ -117,7 +117,7 @@ const WidgetContainer = ({
       </div>
 
       {/* Widget Content */}
-      <div className="p-4 pt-0">
+      <div className="p-3 pt-0 flex-1 overflow-hidden">
         {children}
       </div>
 
