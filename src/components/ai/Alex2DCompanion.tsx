@@ -261,7 +261,7 @@ const Alex2DCompanion: React.FC<Alex2DCompanionProps> = ({
                 >
                   {msg.type === 'alex' && (
                     <div className="flex items-center gap-2 mb-2">
-                      <Alex2DAvatar emotion={msg.emotion} size="sm" />
+                      <Alex2DAvatar emotion={msg.emotion as 'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful' | 'excited' | 'empathetic' | 'celebrating'} size="sm" />
                       <span className="text-xs font-medium text-purple-600">Alex</span>
                     </div>
                   )}

@@ -30,6 +30,7 @@ import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'react-router-dom';
 import Alex2DAvatar from './Alex2DAvatar';
+import AlexAIService, { ConversationContext } from '@/services/alexAiService';
 
 interface Message {
   id: string;
@@ -303,7 +304,7 @@ const Enhanced2DAlex = () => {
         sender: 'alex',
         timestamp: new Date(),
         type: response.type as 'text' | 'suggestion' | 'action' | 'celebration' | 'support',
-        emotion: response.emotion
+        emotion: response.emotion as 'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful' | 'excited' | 'empathetic' | 'celebrating'
       };
       
       setConversation(prev => [...prev, alexResponse]);
