@@ -2,8 +2,9 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import SubscriptionManager from '@/components/subscription/SubscriptionManager';
-import BillingHistory from '@/components/subscription/BillingHistory';
+import { AdvancedSubscriptionManager } from '@/components/subscription/AdvancedSubscriptionManager';
+import EnhancedBillingHistory from '@/components/billing/EnhancedBillingHistory';
+import PaymentMethodManager from '@/components/billing/PaymentMethodManager';
 import PlanSelector from '@/components/subscription/PlanSelector';
 
 const SubscriptionPage = () => {
@@ -17,9 +18,10 @@ const SubscriptionPage = () => {
         <h1 className="text-3xl font-bold text-therapy-600 mb-8">Subscription</h1>
         
         <Tabs defaultValue="current" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="current">Current Plan</TabsTrigger>
             <TabsTrigger value="plans">Available Plans</TabsTrigger>
+            <TabsTrigger value="payment">Payment Methods</TabsTrigger>
             <TabsTrigger value="billing">Billing History</TabsTrigger>
           </TabsList>
           
@@ -29,7 +31,7 @@ const SubscriptionPage = () => {
                 <CardTitle>Subscription Management</CardTitle>
               </CardHeader>
               <CardContent>
-                <SubscriptionManager />
+                <AdvancedSubscriptionManager />
               </CardContent>
             </Card>
           </TabsContent>
@@ -45,15 +47,12 @@ const SubscriptionPage = () => {
             </Card>
           </TabsContent>
           
+          <TabsContent value="payment">
+            <PaymentMethodManager />
+          </TabsContent>
+          
           <TabsContent value="billing">
-            <Card>
-              <CardHeader>
-                <CardTitle>Billing History</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <BillingHistory />
-              </CardContent>
-            </Card>
+            <EnhancedBillingHistory />
           </TabsContent>
         </Tabs>
       </div>

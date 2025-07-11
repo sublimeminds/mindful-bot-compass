@@ -37,8 +37,9 @@ const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches, ass
       approach: 'Cognitive Behavioral Therapy',
       matchScore: 92,
       experience: '8 years',
-      rating: 4.9,
-      description: 'Specializes in anxiety and depression using evidence-based CBT techniques.'
+          rating: 4.9,
+          totalReviews: 127,
+          description: 'Specializes in anxiety and depression using evidence-based CBT techniques.'
     },
     {
       id: '9492ab1a-eab2-4c5f-a8e3-40870b2ca857',
@@ -210,7 +211,7 @@ const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches, ass
                   description: therapist.description,
                   approach: therapist.approach,
                   specialties: therapist.specialties,
-                  communicationStyle: `${therapist.experience} • ${therapist.rating}⭐`,
+                  communicationStyle: `${therapist.experience} • ${therapist.rating > 0 ? `${therapist.rating}⭐` : 'No ratings yet'}`,
                   icon: '🧠',
                   colorScheme: 'from-therapy-500 to-calm-500'
                 }}
