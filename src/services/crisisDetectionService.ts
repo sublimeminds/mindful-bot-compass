@@ -497,3 +497,6 @@ export class CrisisDetectionService {
     }
   }
 }
+
+// Export an instance for direct use (following the pattern of other services)
+export const crisisDetectionService = new CrisisDetectionService();
