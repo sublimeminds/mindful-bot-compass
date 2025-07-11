@@ -60,6 +60,9 @@ import FamilyDashboard from "../pages/FamilyDashboard";
 import AdminDashboard from "../pages/AdminDashboard";
 import AdminAI from "../pages/AdminAI";
 import AdminAnalytics from "../pages/AdminAnalytics";
+import AdminContent from "../pages/AdminContent";
+import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
+import ContentLibrary from "../pages/ContentLibrary";
 
 // Component to wrap public pages
 const PublicPageWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -399,6 +402,13 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
+      {/* Family Features */}
+      <Route path="/family-features" element={
+        <PageErrorBoundary pageName="Family Features">
+          <PublicPageWrapper><FamilyFeaturesPage /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
       {/* Admin Routes */}
       <Route path="/admin" element={
         <PageErrorBoundary pageName="Admin Dashboard">
@@ -415,6 +425,19 @@ const AppRouter = () => {
       <Route path="/admin/analytics" element={
         <PageErrorBoundary pageName="Admin Analytics">
           <DashboardPageWrapper><AdminAnalytics /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/admin/content" element={
+        <PageErrorBoundary pageName="Admin Content">
+          <DashboardPageWrapper><AdminContent /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* Content Library */}
+      <Route path="/content-library" element={
+        <PageErrorBoundary pageName="Content Library">
+          <DashboardPageWrapper><ContentLibrary /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 

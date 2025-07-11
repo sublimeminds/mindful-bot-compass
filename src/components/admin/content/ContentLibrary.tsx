@@ -14,76 +14,35 @@ import {
   Download,
   Upload
 } from 'lucide-react';
+import { useContentLibrary } from '@/hooks/useContentLibrary';
 
-interface ContentItem {
-  id: string;
-  title: string;
-  type: 'technique' | 'guide' | 'exercise' | 'assessment';
-  category: string;
-  description: string;
-  status: 'published' | 'draft' | 'archived';
-  lastModified: Date;
-  author: string;
-  usageCount: number;
-}
+// Using ContentItem from useContentLibrary hook
 
 const ContentLibrary = () => {
+  const { content, loading, deleteContent, publishContent, unpublishContent } = useContentLibrary();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
 
-  const mockContent: ContentItem[] = [
-    {
-      id: '1',
-      title: 'Deep Breathing Exercise',
-      type: 'technique',
-      category: 'Anxiety Management',
-      description: 'Guided breathing technique for stress relief',
-      status: 'published',
-      lastModified: new Date(2024, 5, 10),
-      author: 'Dr. Sarah Wilson',
-      usageCount: 245
-    },
-    {
-      id: '2',
-      title: 'Cognitive Restructuring Guide',
-      type: 'guide',
-      category: 'CBT Techniques',
-      description: 'Step-by-step guide for thought challenging',
-      status: 'published',
-      lastModified: new Date(2024, 5, 8),
-      author: 'Dr. Michael Chen',
-      usageCount: 189
-    },
-    {
-      id: '3',
-      title: 'Mindfulness Assessment',
-      type: 'assessment',
-      category: 'Mindfulness',
-      description: 'Self-assessment for mindfulness practice',
-      status: 'draft',
-      lastModified: new Date(2024, 5, 5),
-      author: 'Dr. Emily Rodriguez',
-      usageCount: 0
-    }
-  ];
+  const filteredContent = content.filter(item => {
+    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesFilter = selectedFilter === 'all' || item.content_type === selectedFilter;
+    return matchesSearch && matchesFilter;
+  });
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'technique': return '🧘';
-      case 'guide': return '📖';
-      case 'exercise': return '💪';
-      case 'assessment': return '📊';
+      case 'exercise': return '🧘';
+      case 'article': return '📖';
+      case 'video': return '🎥';
+      case 'audio': return '🎵';
+      case 'worksheet': return '📊';
       default: return '📄';
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'published': return 'default';
-      case 'draft': return 'secondary';
-      case 'archived': return 'outline';
-      default: return 'outline';
-    }
+  const getStatusColor = (isPublished: boolean) => {
+    return isPublished ? 'default' : 'secondary';
   };
 
   return (
@@ -127,10 +86,11 @@ const ContentLibrary = () => {
                 className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="all">All Types</option>
-                <option value="technique">Techniques</option>
-                <option value="guide">Guides</option>
+                <option value="article">Articles</option>
+                <option value="video">Videos</option>
+                <option value="audio">Audio</option>
                 <option value="exercise">Exercises</option>
-                <option value="assessment">Assessments</option>
+                <option value="worksheet">Worksheets</option>
               </select>
               <Button variant="outline" size="sm">
                 <Filter className="h-4 w-4 mr-2" />
@@ -142,82 +102,104 @@ const ContentLibrary = () => {
       </Card>
 
       {/* Content Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockContent.map((item) => (
-          <Card key={item.id} className="bg-gray-800 border-gray-700 hover:border-purple-500 transition-colors">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-2">
-                  <span className="text-2xl">{getTypeIcon(item.type)}</span>
-                  <div>
-                    <CardTitle className="text-white text-lg">{item.title}</CardTitle>
-                    <p className="text-sm text-gray-400">{item.category}</p>
+      {loading ? (
+        <div className="text-center py-12">
+          <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4 animate-pulse" />
+          <h3 className="text-lg font-semibold text-white mb-2">Loading Content...</h3>
+          <p className="text-gray-400">Fetching content library</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredContent.map((item) => (
+            <Card key={item.id} className="bg-gray-800 border-gray-700 hover:border-purple-500 transition-colors">
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-2xl">{getTypeIcon(item.content_type)}</span>
+                    <div>
+                      <CardTitle className="text-white text-lg">{item.title}</CardTitle>
+                      <p className="text-sm text-gray-400">{item.category}</p>
+                    </div>
+                  </div>
+                  <Badge variant={getStatusColor(item.is_published) as any} className="text-xs">
+                    {item.is_published ? 'Published' : 'Draft'}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 text-sm mb-4">{item.description || 'No description available'}</p>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>{item.difficulty_level && `${item.difficulty_level} level`}</span>
+                    <span>{item.duration_minutes ? `${item.duration_minutes}m` : 'No duration'}</span>
+                  </div>
+                  
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>Created: {new Date(item.created_at).toLocaleDateString()}</span>
+                    {item.therapeutic_approach && (
+                      <span className="capitalize">{item.therapeutic_approach}</span>
+                    )}
+                  </div>
+                  
+                  <div className="flex space-x-2 pt-2">
+                    <Button variant="ghost" size="sm" className="flex-1">
+                      <Eye className="h-4 w-4 mr-1" />
+                      View
+                    </Button>
+                    <Button variant="ghost" size="sm" className="flex-1">
+                      <Edit className="h-4 w-4 mr-1" />
+                      Edit
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Download className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-red-400 hover:text-red-300"
+                      onClick={() => deleteContent(item.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
-                <Badge variant={getStatusColor(item.status) as any} className="text-xs">
-                  {item.status}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-300 text-sm mb-4">{item.description}</p>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between text-xs text-gray-500">
-                  <span>By {item.author}</span>
-                  <span>{item.usageCount} uses</span>
-                </div>
-                
-                <div className="flex justify-between text-xs text-gray-500">
-                  <span>Modified: {item.lastModified.toLocaleDateString()}</span>
-                </div>
-                
-                <div className="flex space-x-2 pt-2">
-                  <Button variant="ghost" size="sm" className="flex-1">
-                    <Eye className="h-4 w-4 mr-1" />
-                    View
-                  </Button>
-                  <Button variant="ghost" size="sm" className="flex-1">
-                    <Edit className="h-4 w-4 mr-1" />
-                    Edit
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Download className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-white">24</div>
+            <div className="text-2xl font-bold text-white">{content.length}</div>
             <p className="text-sm text-gray-400">Total Content Items</p>
           </CardContent>
         </Card>
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-green-400">18</div>
+            <div className="text-2xl font-bold text-green-400">
+              {content.filter(item => item.is_published).length}
+            </div>
             <p className="text-sm text-gray-400">Published</p>
           </CardContent>
         </Card>
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-yellow-400">4</div>
+            <div className="text-2xl font-bold text-yellow-400">
+              {content.filter(item => !item.is_published).length}
+            </div>
             <p className="text-sm text-gray-400">Drafts</p>
           </CardContent>
         </Card>
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-blue-400">1,247</div>
-            <p className="text-sm text-gray-400">Total Usage</p>
+            <div className="text-2xl font-bold text-blue-400">
+              {Array.from(new Set(content.map(item => item.category))).length}
+            </div>
+            <p className="text-sm text-gray-400">Categories</p>
           </CardContent>
         </Card>
       </div>
