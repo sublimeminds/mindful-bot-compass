@@ -220,14 +220,39 @@ const BillingOverview: React.FC<BillingOverviewProps> = ({ userId }) => {
         <CardContent>
           <div className="grid grid-cols-2 gap-4 text-center">
             <div>
-              <p className="text-2xl font-bold text-primary">$0</p>
-              <p className="text-xs text-muted-foreground">Spent</p>
+              <p className="text-2xl font-bold text-primary">
+                ${upcomingInvoice ? upcomingInvoice.amount_total.toFixed(2) : '0.00'}
+              </p>
+              <p className="text-xs text-muted-foreground">Next Bill</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-secondary">3</p>
-              <p className="text-xs text-muted-foreground">Invoices</p>
+              <p className="text-2xl font-bold text-secondary">
+                {failedPayments.length}
+              </p>
+              <p className="text-xs text-muted-foreground">Payment Issues</p>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Quick Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <Button variant="outline" className="w-full justify-start" onClick={openCustomerPortal}>
+            <CreditCard className="h-4 w-4 mr-2" />
+            Manage Subscription
+          </Button>
+          <Button variant="outline" className="w-full justify-start">
+            <FileText className="h-4 w-4 mr-2" />
+            Download Invoices
+          </Button>
+          <Button variant="outline" className="w-full justify-start">
+            <TrendingUp className="h-4 w-4 mr-2" />
+            Usage Analytics
+          </Button>
         </CardContent>
       </Card>
     </div>
