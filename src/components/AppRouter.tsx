@@ -48,8 +48,8 @@ import NotificationsPage from "../pages/NotificationsPage";
 import TherapyPlan from "../pages/TherapyPlan";
 import ProgressOverview from "../pages/ProgressOverview";
 import Subscription from "../pages/Subscription";
-import TherapyChatPage from "../pages/TherapyChatPage";
 import TherapySessionPage from "../pages/TherapySessionPage";
+import QuickChatPage from "../pages/QuickChatPage";
 import UnifiedTherapyChat from '@/components/chat/UnifiedTherapyChat';
 import TherapistHub from '@/components/therapist/TherapistHub';
 import AIPersonalizationHub from '@/components/ai/AIPersonalizationHub';
@@ -260,14 +260,20 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
+      <Route path="/therapy" element={
+        <PageErrorBoundary pageName="Quick Chat">
+          <QuickChatPage />
+        </PageErrorBoundary>
+      } />
+      
       <Route path="/therapy-chat" element={
-        <PageErrorBoundary pageName="Therapy Chat">
-          <TherapyChatPage />
+        <PageErrorBoundary pageName="Quick Chat">
+          <QuickChatPage />
         </PageErrorBoundary>
       } />
       
       <Route path="/therapy-session" element={
-        <PageErrorBoundary pageName="Therapy Session">
+        <PageErrorBoundary pageName="Full Therapy Session">
           <TherapySessionPage />
         </PageErrorBoundary>
       } />
@@ -308,10 +314,10 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
-      {/* NEW: Unified Chat System */}
+      {/* Quick Chat - Crisis/Immediate Support */}
       <Route path="/chat" element={
-        <PageErrorBoundary pageName="Unified Therapy Chat">
-          <DashboardPageWrapper><UnifiedTherapyChat /></DashboardPageWrapper>
+        <PageErrorBoundary pageName="Quick Chat">
+          <QuickChatPage />
         </PageErrorBoundary>
       } />
 

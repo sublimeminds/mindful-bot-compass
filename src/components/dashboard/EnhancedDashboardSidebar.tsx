@@ -391,9 +391,8 @@ const EnhancedUserDropdown = ({
 // 6-Section Navigation Structure for Professional Multi-Therapist Platform
 const coreTherapyNav: NavigationItem[] = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Full Session', href: '/therapy-session', icon: Heart },
-  { name: 'Enhanced Chat', href: '/therapy', icon: Brain },
-  { name: 'Quick Support', href: '/chat', icon: MessageCircle },
+  { name: 'Full Session', href: '/therapy-session', icon: Brain },
+  { name: 'Quick Chat', href: '/therapy', icon: MessageCircle },
   { name: 'Therapy Plan', href: '/therapy-plan', icon: Calendar },
   { name: 'Sessions', href: '/sessions', icon: Calendar },
 ];
@@ -429,6 +428,7 @@ const accountBillingNav: NavigationItem[] = [
 const communitySupportNav: NavigationItem[] = [
   { name: 'Community Hub', href: '/community', icon: Users },
   { name: 'Wellness Challenges', href: '/wellness-challenges', icon: Trophy },
+  { name: 'Crisis Support', href: '/chat', icon: AlertTriangle },
   { name: 'Help & Support', href: '/help', icon: HelpCircle },
   { name: 'Compliance Dashboard', href: '/compliance', icon: Shield },
 ];
