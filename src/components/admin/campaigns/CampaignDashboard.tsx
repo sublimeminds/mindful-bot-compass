@@ -18,8 +18,6 @@ const CampaignDashboard = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   
-  const notificationCampaignService = new NotificationCampaignService();
-
   useEffect(() => {
     loadCampaigns();
   }, []);
@@ -27,11 +25,11 @@ const CampaignDashboard = () => {
   const loadCampaigns = async () => {
     setLoading(true);
     try {
-      const allCampaigns = notificationCampaignService.getAllCampaigns();
+      const allCampaigns = await NotificationCampaignService.getAllCampaigns();
       setCampaigns(allCampaigns);
       
       if (allCampaigns.length > 0) {
-        const campaignAnalytics = await notificationCampaignService.getCampaignAnalytics(allCampaigns[0].id);
+        const campaignAnalytics = await NotificationCampaignService.getCampaignAnalytics(allCampaigns[0].id);
         setAnalytics(campaignAnalytics);
         setSelectedCampaign(allCampaigns[0].id);
       }
@@ -52,7 +50,7 @@ const CampaignDashboard = () => {
     if (!campaign) return;
 
     const updatedCampaign = { ...campaign, isActive };
-    await notificationCampaignService.updateCampaign(updatedCampaign);
+    await NotificationCampaignService.updateCampaign(updatedCampaign);
     
     setCampaigns(prev => 
       prev.map(c => c.id === campaignId ? updatedCampaign : c)
@@ -65,7 +63,7 @@ const CampaignDashboard = () => {
   };
 
   const loadCampaignAnalytics = async (campaignId: string) => {
-    const campaignAnalytics = await notificationCampaignService.getCampaignAnalytics(campaignId);
+    const campaignAnalytics = await NotificationCampaignService.getCampaignAnalytics(campaignId);
     setAnalytics(campaignAnalytics);
     setSelectedCampaign(campaignId);
   };
