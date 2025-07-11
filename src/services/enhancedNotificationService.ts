@@ -413,5 +413,6 @@ export class EnhancedNotificationService {
   }
 }
 
-// Export alias for compatibility
+// Export both class and alias for compatibility
 export const enhancedNotificationService = EnhancedNotificationService;
+export default EnhancedNotificationService;
