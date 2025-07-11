@@ -1,14 +1,17 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BarChart3, Users, TrendingUp, Brain } from 'lucide-react';
+import { useAdminAnalytics } from '@/hooks/useAdminAnalytics';
 import UserEngagementMetrics from './UserEngagementMetrics';
 import SessionStatistics from './SessionStatistics';
 import TherapistPerformanceData from './TherapistPerformanceData';
 import AnalyticsOverview from './AnalyticsOverview';
 
 const AdminAnalyticsDashboard = () => {
+  const { platformStats, engagementData, isLoadingStats } = useAdminAnalytics();
+
   return (
     <div className="space-y-6">
       {/* Header */}

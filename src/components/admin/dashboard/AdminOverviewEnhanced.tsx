@@ -11,24 +11,27 @@ import {
   Activity,
   LayoutDashboard
 } from 'lucide-react';
+import { useAdminAnalytics } from '@/hooks/useAdminAnalytics';
 import RealTimeMetrics from './RealTimeMetrics';
 import QuickActionsGrid from './QuickActionsGrid';
 import SystemHealthOverview from './SystemHealthOverview';
 import RecentActivityFeed from './RecentActivityFeed';
 
 const AdminOverviewEnhanced = () => {
+  const { platformStats, isLoadingStats } = useAdminAnalytics();
+
   const dashboardStats = [
     {
       title: 'Total Users',
-      value: '12,847',
-      change: '+12.5%',
+      value: platformStats?.totalUsers?.toLocaleString() || '0',
+      change: '+12.5%', // Would calculate from historical data
       trend: 'up' as const,
       icon: Users,
       color: 'text-blue-400'
     },
     {
       title: 'Active Sessions',
-      value: '1,423',
+      value: platformStats?.totalSessions?.toLocaleString() || '0',
       change: '+8.2%',
       trend: 'up' as const,
       icon: MessageCircle,
@@ -36,7 +39,7 @@ const AdminOverviewEnhanced = () => {
     },
     {
       title: 'Crisis Interventions',
-      value: '23',
+      value: platformStats?.crisisInterventions?.toString() || '0',
       change: '-15.3%',
       trend: 'down' as const,
       icon: AlertTriangle,
@@ -44,7 +47,7 @@ const AdminOverviewEnhanced = () => {
     },
     {
       title: 'System Uptime',
-      value: '99.9%',
+      value: `${platformStats?.systemUptime?.toFixed(1) || 99.9}%`,
       change: '+0.1%',
       trend: 'up' as const,
       icon: Activity,
@@ -97,31 +100,45 @@ const AdminOverviewEnhanced = () => {
 
       {/* Key Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {dashboardStats.map((stat, index) => {
-          const TrendIcon = getTrendIcon(stat.trend);
-          return (
+        {isLoadingStats ? (
+          Array.from({ length: 4 }).map((_, index) => (
             <Card key={index} className="bg-gray-800 border-gray-700">
               <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-400">{stat.title}</p>
-                    <p className="text-2xl font-bold text-white">{stat.value}</p>
-                    <div className="flex items-center mt-2">
-                      <TrendIcon className={`h-4 w-4 mr-1 ${getTrendColor(stat.trend)}`} />
-                      <span className={`text-sm ${getTrendColor(stat.trend)}`}>
-                        {stat.change}
-                      </span>
-                      <span className="text-xs text-gray-500 ml-1">vs last week</span>
-                    </div>
-                  </div>
-                  <div className={`p-3 bg-gray-900 rounded-lg`}>
-                    <stat.icon className={`h-6 w-6 ${stat.color}`} />
-                  </div>
+                <div className="animate-pulse">
+                  <div className="h-4 bg-gray-700 rounded w-1/2 mb-2"></div>
+                  <div className="h-8 bg-gray-700 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-gray-700 rounded w-1/3"></div>
                 </div>
               </CardContent>
             </Card>
-          );
-        })}
+          ))
+        ) : (
+          dashboardStats.map((stat, index) => {
+            const TrendIcon = getTrendIcon(stat.trend);
+            return (
+              <Card key={index} className="bg-gray-800 border-gray-700">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-400">{stat.title}</p>
+                      <p className="text-2xl font-bold text-white">{stat.value}</p>
+                      <div className="flex items-center mt-2">
+                        <TrendIcon className={`h-4 w-4 mr-1 ${getTrendColor(stat.trend)}`} />
+                        <span className={`text-sm ${getTrendColor(stat.trend)}`}>
+                          {stat.change}
+                        </span>
+                        <span className="text-xs text-gray-500 ml-1">vs last week</span>
+                      </div>
+                    </div>
+                    <div className={`p-3 bg-gray-900 rounded-lg`}>
+                      <stat.icon className={`h-6 w-6 ${stat.color}`} />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })
+        )}
       </div>
 
       {/* Main Dashboard Grid */}

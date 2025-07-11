@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useAdminUsers } from '@/hooks/useAdminUsers';
 
 interface ActivityItem {
   id: string;
@@ -27,77 +28,7 @@ interface ActivityItem {
 }
 
 const RecentActivity = () => {
-  const [activities, setActivities] = useState<ActivityItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchActivities = () => {
-      // Simulate real activity data
-      const mockActivities: ActivityItem[] = [
-        {
-          id: '1',
-          type: 'user_action',
-          title: 'New User Registration',
-          description: 'Sarah Johnson completed onboarding',
-          user: 'Sarah Johnson',
-          timestamp: new Date(Date.now() - 300000), // 5 minutes ago
-          severity: 'success'
-        },
-        {
-          id: '2',
-          type: 'session',
-          title: 'Therapy Session Completed',
-          description: 'User completed 45-minute session with AI therapist',
-          user: 'John Doe',
-          timestamp: new Date(Date.now() - 900000), // 15 minutes ago
-          severity: 'info'
-        },
-        {
-          id: '3',
-          type: 'system_event',
-          title: 'Database Backup',
-          description: 'Scheduled backup completed successfully',
-          timestamp: new Date(Date.now() - 1800000), // 30 minutes ago
-          severity: 'success'
-        },
-        {
-          id: '4',
-          type: 'alert',
-          title: 'High Memory Usage',
-          description: 'Memory usage exceeded 80% threshold',
-          timestamp: new Date(Date.now() - 2700000), // 45 minutes ago
-          severity: 'warning'
-        },
-        {
-          id: '5',
-          type: 'goal',
-          title: 'Goal Achievement',
-          description: 'Mike Chen completed daily meditation goal',
-          user: 'Mike Chen',
-          timestamp: new Date(Date.now() - 3600000), // 1 hour ago
-          severity: 'success'
-        },
-        {
-          id: '6',
-          type: 'admin_action',
-          title: 'User Role Updated',
-          description: 'Admin granted moderator role to Lisa Brown',
-          user: 'Admin User',
-          timestamp: new Date(Date.now() - 7200000), // 2 hours ago
-          severity: 'info'
-        }
-      ];
-
-      setActivities(mockActivities);
-      setLoading(false);
-    };
-
-    fetchActivities();
-    
-    // Refresh every minute
-    const interval = setInterval(fetchActivities, 60000);
-    return () => clearInterval(interval);
-  }, []);
+  const { recentActivity, isLoadingActivity } = useAdminUsers();
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -146,14 +77,14 @@ const RecentActivity = () => {
         </div>
       </CardHeader>
       <CardContent>
-        {loading ? (
+        {isLoadingActivity ? (
           <div className="text-center py-8 text-gray-400">
             <Clock className="h-12 w-12 mx-auto mb-4 opacity-50 animate-pulse" />
             <p>Loading recent activity...</p>
           </div>
         ) : (
           <div className="space-y-4 max-h-96 overflow-y-auto">
-            {activities.map((activity) => {
+            {recentActivity?.map((activity) => {
               const Icon = getActivityIcon(activity.type);
               
               return (

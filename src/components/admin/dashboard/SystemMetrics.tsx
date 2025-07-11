@@ -1,9 +1,10 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Cpu, Database, Server, Wifi, HardDrive, Activity, Zap, Clock } from 'lucide-react';
+import { useAdminAnalytics } from '@/hooks/useAdminAnalytics';
 
 interface SystemMetric {
   name: string;
@@ -15,89 +16,28 @@ interface SystemMetric {
 }
 
 const SystemMetrics = () => {
-  const [metrics, setMetrics] = useState<SystemMetric[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { systemMetrics, isLoadingMetrics } = useAdminAnalytics();
 
-  useEffect(() => {
-    // Simulate fetching real system metrics
-    const fetchMetrics = () => {
-      const mockMetrics: SystemMetric[] = [
-        {
-          name: 'CPU Usage',
-          value: 42,
-          unit: '%',
-          status: 'healthy',
-          icon: Cpu,
-          description: 'Server CPU utilization'
-        },
-        {
-          name: 'Memory Usage',
-          value: 68,
-          unit: '%',
-          status: 'warning',
-          icon: HardDrive,
-          description: 'RAM consumption'
-        },
-        {
-          name: 'Database Load',
-          value: 35,
-          unit: '%',
-          status: 'healthy',
-          icon: Database,
-          description: 'Database connection pool'
-        },
-        {
-          name: 'API Response Time',
-          value: 120,
-          unit: 'ms',
-          status: 'healthy',
-          icon: Zap,
-          description: 'Average API response time'
-        },
-        {
-          name: 'Active Connections',
-          value: 1247,
-          unit: '',
-          status: 'healthy',
-          icon: Wifi,
-          description: 'Current active user sessions'
-        },
-        {
-          name: 'Uptime',
-          value: 99.9,
-          unit: '%',
-          status: 'healthy',
-          icon: Activity,
-          description: 'System availability'
-        },
-        {
-          name: 'Disk Usage',
-          value: 56,
-          unit: '%',
-          status: 'healthy',
-          icon: Server,
-          description: 'Storage utilization'
-        },
-        {
-          name: 'Queue Processing',
-          value: 23,
-          unit: 'jobs/min',
-          status: 'healthy',
-          icon: Clock,
-          description: 'Background job processing rate'
-        }
-      ];
+  // Enhance system metrics with icons and additional info
+  const enhancedMetrics = systemMetrics?.map(metric => ({
+    ...metric,
+    icon: getMetricIcon(metric.name)
+  })) || [];
 
-      setMetrics(mockMetrics);
-      setLoading(false);
-    };
-
-    fetchMetrics();
-    
-    // Update metrics every 30 seconds
-    const interval = setInterval(fetchMetrics, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  function getMetricIcon(name: string) {
+    switch (name.toLowerCase()) {
+      case 'response time':
+        return Zap;
+      case 'active sessions':
+        return Wifi;
+      case 'database load':
+        return Database;
+      case 'memory usage':
+        return HardDrive;
+      default:
+        return Activity;
+    }
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -135,14 +75,14 @@ const SystemMetrics = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {loading ? (
+        {isLoadingMetrics ? (
           <div className="text-center py-8 text-gray-400">
             <Activity className="h-12 w-12 mx-auto mb-4 opacity-50 animate-pulse" />
             <p>Loading system metrics...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {metrics.map((metric) => {
+            {enhancedMetrics.map((metric) => {
               const Icon = metric.icon;
               const progressValue = metric.unit === '%' ? metric.value : Math.min((metric.value / 2000) * 100, 100);
               

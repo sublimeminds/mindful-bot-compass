@@ -56,6 +56,10 @@ import AnalyticsPage from '../pages/AnalyticsPage';
 import PersonalizationSettingsPage from '../pages/PersonalizationSettingsPage';
 import IntegrationsPage from '../pages/IntegrationsPage';
 import NotFound from "../pages/NotFound";
+import FamilyDashboard from "../pages/FamilyDashboard";
+import AdminDashboard from "../pages/AdminDashboard";
+import AdminAI from "../pages/AdminAI";
+import AdminAnalytics from "../pages/AdminAnalytics";
 
 // Component to wrap public pages
 const PublicPageWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -385,6 +389,32 @@ const AppRouter = () => {
       <Route path="/integrations" element={
         <PageErrorBoundary pageName="Integrations">
           <DashboardPageWrapper><IntegrationsPage /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* Family Dashboard */}
+      <Route path="/family-dashboard" element={
+        <PageErrorBoundary pageName="Family Dashboard">
+          <DashboardPageWrapper><FamilyDashboard /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* Admin Routes */}
+      <Route path="/admin" element={
+        <PageErrorBoundary pageName="Admin Dashboard">
+          <DashboardPageWrapper><AdminDashboard /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/admin/ai" element={
+        <PageErrorBoundary pageName="Admin AI">
+          <DashboardPageWrapper><AdminAI /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/admin/analytics" element={
+        <PageErrorBoundary pageName="Admin Analytics">
+          <DashboardPageWrapper><AdminAnalytics /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
