@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useQuoteOfTheDay } from '@/hooks/useQuoteOfTheDay';
+import GradientLogo from '@/components/ui/GradientLogo';
 import { 
   LayoutDashboard, 
   MessageCircle, 
@@ -215,12 +217,12 @@ const EnhancedDashboardSidebar = () => {
     <Sidebar className="border-r border-therapy-100 bg-white/80 backdrop-blur-sm w-72">
       <SidebarHeader className="border-b border-therapy-100 p-4">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">TS</span>
-          </div>
+          <GradientLogo size="sm" />
           <div>
             <h2 className="text-lg font-semibold therapy-text-gradient">TherapySync</h2>
-            <p className="text-xs text-gray-500">Professional AI Therapy</p>
+            <p className="text-xs text-therapy-600 font-medium italic">
+              "{useQuoteOfTheDay().quote}"
+            </p>
           </div>
         </div>
       </SidebarHeader>
