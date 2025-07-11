@@ -64,25 +64,33 @@ const TherapyChatPage = () => {
           </div>
         </div>
 
-        {/* Voice Chat Prominence Banner */}
+        {/* Enhanced Features Banner */}
         <div className="bg-gradient-to-r from-therapy-500 to-calm-500 p-4 rounded-lg mb-6">
           <div className="flex items-center justify-between text-white">
             <div className="flex items-center space-x-3">
-              <Mic className="h-6 w-6" />
+              <Brain className="h-6 w-6" />
               <div>
-                <h3 className="font-semibold">Voice Therapy Chat Available</h3>
-                <p className="text-sm opacity-90">Experience natural conversations with real-time emotion recognition</p>
+                <h3 className="font-semibold">Advanced Therapy Features Available</h3>
+                <p className="text-sm opacity-90">Voice analysis, emotion detection, and AI-powered therapeutic support</p>
               </div>
             </div>
-            <button 
-              className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
-              onClick={() => {
-                const voiceTab = document.querySelector('[value="voice"]') as HTMLButtonElement;
-                voiceTab?.click();
-              }}
-            >
-              Try Voice Chat
-            </button>
+            <div className="flex gap-2">
+              <button 
+                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded text-sm transition-colors"
+                onClick={() => navigate('/therapy-session')}
+              >
+                Full Session
+              </button>
+              <button 
+                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded text-sm transition-colors"
+                onClick={() => {
+                  const voiceTab = document.querySelector('[value="voice"]') as HTMLButtonElement;
+                  voiceTab?.click();
+                }}
+              >
+                Try Voice
+              </button>
+            </div>
           </div>
         </div>
 

@@ -49,6 +49,7 @@ import TherapyPlan from "../pages/TherapyPlan";
 import ProgressOverview from "../pages/ProgressOverview";
 import Subscription from "../pages/Subscription";
 import TherapyChatPage from "../pages/TherapyChatPage";
+import TherapySessionPage from "../pages/TherapySessionPage";
 import UnifiedTherapyChat from '@/components/chat/UnifiedTherapyChat';
 import TherapistHub from '@/components/therapist/TherapistHub';
 import AIPersonalizationHub from '@/components/ai/AIPersonalizationHub';
@@ -262,6 +263,12 @@ const AppRouter = () => {
       <Route path="/therapy-chat" element={
         <PageErrorBoundary pageName="Therapy Chat">
           <TherapyChatPage />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/therapy-session" element={
+        <PageErrorBoundary pageName="Therapy Session">
+          <TherapySessionPage />
         </PageErrorBoundary>
       } />
 
