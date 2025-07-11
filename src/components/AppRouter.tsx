@@ -49,8 +49,12 @@ import TherapyPlan from "../pages/TherapyPlan";
 import ProgressOverview from "../pages/ProgressOverview";
 import Subscription from "../pages/Subscription";
 import TherapyChatPage from "../pages/TherapyChatPage";
-
-// Error Pages
+import UnifiedTherapyChat from '@/components/chat/UnifiedTherapyChat';
+import TherapistHub from '@/components/therapist/TherapistHub';
+import AIPersonalizationHub from '@/components/ai/AIPersonalizationHub';
+import AnalyticsPage from '../pages/AnalyticsPage';
+import PersonalizationSettingsPage from '../pages/PersonalizationSettingsPage';
+import IntegrationsPage from '../pages/IntegrationsPage';
 import NotFound from "../pages/NotFound";
 
 // Component to wrap public pages
@@ -288,9 +292,24 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
+      {/* NEW: Unified Chat System */}
+      <Route path="/chat" element={
+        <PageErrorBoundary pageName="Unified Therapy Chat">
+          <DashboardPageWrapper><UnifiedTherapyChat /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* NEW: Therapist Hub */}
+      <Route path="/therapist-hub" element={
+        <PageErrorBoundary pageName="Therapist Hub">
+          <DashboardPageWrapper><TherapistHub /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* NEW: AI Personalization Hub */}
       <Route path="/ai-personalization" element={
-        <PageErrorBoundary pageName="AI Personalization">
-          <DashboardPageWrapper><AIPersonalizationDashboard /></DashboardPageWrapper>
+        <PageErrorBoundary pageName="AI Personalization Hub">
+          <DashboardPageWrapper><AIPersonalizationHub /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
@@ -338,6 +357,34 @@ const AppRouter = () => {
       <Route path="/notification-center" element={
         <PageErrorBoundary pageName="Notification Center">
           <DashboardPageWrapper><NotificationsPage /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* NEW: Enhanced Analytics */}
+      <Route path="/analytics" element={
+        <PageErrorBoundary pageName="Analytics">
+          <DashboardPageWrapper><AnalyticsPage /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* NEW: Personalization Settings */}
+      <Route path="/personalization-settings" element={
+        <PageErrorBoundary pageName="Personalization Settings">
+          <DashboardPageWrapper><PersonalizationSettingsPage /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* Mood Tracking - Enhanced Route */}
+      <Route path="/mood-tracking" element={
+        <PageErrorBoundary pageName="Mood Tracking">
+          <DashboardPageWrapper><MoodTracker /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* NEW: Integrations */}
+      <Route path="/integrations" element={
+        <PageErrorBoundary pageName="Integrations">
+          <DashboardPageWrapper><IntegrationsPage /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
