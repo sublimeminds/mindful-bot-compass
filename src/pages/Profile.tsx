@@ -19,6 +19,7 @@ import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrap
 import BulletproofDashboardLayout from '@/components/dashboard/BulletproofDashboardLayout';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -29,52 +30,132 @@ const Profile = () => {
     keywords: 'profile, progress, achievements, mental health journey'
   });
 
-  // Mock user data - in real app, fetch from API
-  const userData = {
+  const [userData, setUserData] = React.useState({
     name: user?.email?.split('@')[0] || 'User',
     email: user?.email || 'user@example.com',
-    joinDate: '2024-01-15',
-    totalSessions: 12,
-    streakDays: 7,
-    currentMood: 8.2,
-    planType: 'Premium',
+    joinDate: user?.created_at || '2024-01-15',
+    totalSessions: 0,
+    streakDays: 0,
+    currentMood: 0,
+    planType: 'Free',
     profileImage: null
-  };
+  });
 
-  const achievements = [
-    { 
-      id: 1, 
-      title: '7-Day Streak', 
-      description: 'Consistent daily check-ins', 
-      icon: '🔥', 
-      date: 'Today',
-      type: 'streak'
-    },
-    { 
-      id: 2, 
-      title: 'First Month', 
-      description: 'Completed first month of therapy', 
-      icon: '🎉', 
-      date: 'Yesterday',
-      type: 'milestone'
-    },
-    { 
-      id: 3, 
-      title: 'Mood Master', 
-      description: 'Tracked mood consistently', 
-      icon: '😊', 
-      date: '2 days ago',
-      type: 'habit'
-    },
-    { 
-      id: 4, 
-      title: 'Goal Setter', 
-      description: 'Set and achieved first goal', 
-      icon: '🎯', 
-      date: '1 week ago',
-      type: 'achievement'
-    }
-  ];
+  React.useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user) return;
+
+      try {
+        // Fetch user profile
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        // Fetch session count
+        const { data: sessions } = await supabase
+          .from('therapy_sessions')
+          .select('id')
+          .eq('user_id', user.id);
+
+        // Fetch latest mood
+        const { data: moods } = await supabase
+          .from('mood_entries')
+          .select('overall')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        // Fetch user stats for streak
+        const { data: userStats } = await supabase
+          .from('user_stats')
+          .select('current_streak')
+          .eq('user_id', user.id)
+          .single();
+
+        setUserData({
+          name: profile?.name || user.email?.split('@')[0] || 'User',
+          email: user.email || 'user@example.com',
+          joinDate: user.created_at || '2024-01-15',
+          totalSessions: sessions?.length || 0,
+          streakDays: userStats?.current_streak || 0,
+          currentMood: moods?.[0]?.overall || 0,
+          planType: profile?.subscription_plan || 'Free',
+          profileImage: profile?.avatar_url || null
+        });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
+
+  const [achievements, setAchievements] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    const fetchAchievements = async () => {
+      if (!user) return;
+
+      try {
+        // Fetch real achievements from database
+        const { data: achievementData } = await supabase
+          .from('achievements')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('unlocked_at', { ascending: false })
+          .limit(4);
+
+        if (achievementData && achievementData.length > 0) {
+          const formattedAchievements = achievementData.map(achievement => ({
+            id: achievement.id,
+            title: achievement.title,
+            description: achievement.description,
+            icon: achievement.icon,
+            date: new Date(achievement.unlocked_at).toLocaleDateString(),
+            type: achievement.type
+          }));
+          setAchievements(formattedAchievements);
+        } else {
+          // Fallback to sample achievements if none exist
+          setAchievements([
+            { 
+              id: 1, 
+              title: 'Welcome!', 
+              description: 'Started your mental health journey', 
+              icon: '🌟', 
+              date: 'Today',
+              type: 'milestone'
+            },
+            { 
+              id: 2, 
+              title: 'First Session', 
+              description: 'Completed your first therapy session', 
+              icon: '🎯', 
+              date: 'Recently',
+              type: 'achievement'
+            }
+          ]);
+        }
+      } catch (error) {
+        console.error('Error fetching achievements:', error);
+        // Set default achievements on error
+        setAchievements([
+          { 
+            id: 1, 
+            title: 'Getting Started', 
+            description: 'Welcome to your therapy journey', 
+            icon: '👋', 
+            date: 'Today',
+            type: 'milestone'
+          }
+        ]);
+      }
+    };
+
+    fetchAchievements();
+  }, [user]);
 
   const stats = [
     { label: 'Total Sessions', value: userData.totalSessions, icon: Heart, color: 'from-therapy-500 to-calm-500' },

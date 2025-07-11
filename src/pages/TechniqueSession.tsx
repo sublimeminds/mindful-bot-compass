@@ -44,45 +44,95 @@ const TechniqueSession = () => {
 
   const loadTechnique = async (id: string) => {
     try {
-      // Use existing goals table as a mock for techniques
-      const { data, error } = await supabase
+      // Try to get from content_library first
+      const { data: contentData, error: contentError } = await supabase
+        .from('content_library')
+        .select('*')
+        .eq('id', id)
+        .eq('content_type', 'technique')
+        .single();
+
+      if (contentData && !contentError) {
+        const techniqueSteps = typeof contentData.therapeutic_approach === 'object' 
+          ? contentData.therapeutic_approach as string[]
+          : [
+              'Begin by finding a comfortable position',
+              'Focus on your breathing',
+              'Apply the technique mindfully',
+              'Reflect on your experience'
+            ];
+
+        setTechnique({
+          id: contentData.id,
+          name: contentData.title,
+          description: contentData.description || 'Practice this therapeutic technique',
+          duration: contentData.duration_minutes || 10,
+          steps: techniqueSteps
+        });
+        return;
+      }
+
+      // Fallback: use goals table
+      const { data: goalData, error: goalError } = await supabase
         .from('goals')
         .select('*')
         .eq('id', id)
         .single();
 
-      if (error) throw error;
-      
-      // Transform goal data to technique format
-      const mockTechnique: TechniqueSessionProps = {
-        id: data.id,
-        name: data.title,
-        description: data.description || 'Practice this therapeutic technique',
-        duration: 10, // Mock duration in minutes
-        steps: [
-          'Begin by finding a comfortable position',
-          'Focus on your breathing',
-          'Apply the technique mindfully',
-          'Reflect on your experience'
-        ]
-      };
-      
-      setTechnique(mockTechnique);
+      if (goalData && !goalError) {
+        setTechnique({
+          id: goalData.id,
+          name: goalData.title,
+          description: goalData.description || 'Practice this therapeutic technique',
+          duration: 10,
+          steps: [
+            'Begin by finding a comfortable position',
+            'Focus on your breathing',
+            'Apply the technique mindfully',
+            'Reflect on your experience'
+          ]
+        });
+        return;
+      }
+
+      throw new Error('Technique not found');
     } catch (error) {
       console.error('Error loading technique:', error);
-      // Set a default technique if loading fails
+      // Set a default technique based on common techniques
+      const defaultTechniques = {
+        'mindfulness': {
+          name: 'Mindfulness Meditation',
+          description: 'A foundational mindfulness practice to help center yourself.',
+          steps: [
+            'Find a quiet, comfortable place to sit',
+            'Close your eyes and focus on your breath',
+            'Notice thoughts without judgment',
+            'Return focus to breathing when mind wanders',
+            'Complete the session with intention'
+          ]
+        },
+        'breathing': {
+          name: 'Deep Breathing Exercise',
+          description: 'A calming breathing technique to reduce stress and anxiety.',
+          steps: [
+            'Sit comfortably with your back straight',
+            'Place one hand on chest, one on belly',
+            'Breathe in slowly through your nose',
+            'Hold for 4 seconds',
+            'Exhale slowly through your mouth'
+          ]
+        }
+      };
+
+      const defaultKey = id?.includes('breathing') ? 'breathing' : 'mindfulness';
+      const defaultTechnique = defaultTechniques[defaultKey];
+
       setTechnique({
-        id: id,
-        name: 'Mindfulness Technique',
-        description: 'A simple mindfulness practice to help you center yourself.',
+        id: id || 'default',
+        name: defaultTechnique.name,
+        description: defaultTechnique.description,
         duration: 10,
-        steps: [
-          'Find a quiet, comfortable place to sit',
-          'Close your eyes and focus on your breath',
-          'Notice thoughts without judgment',
-          'Return focus to breathing when mind wanders',
-          'Complete the session with intention'
-        ]
+        steps: defaultTechnique.steps
       });
     }
   };

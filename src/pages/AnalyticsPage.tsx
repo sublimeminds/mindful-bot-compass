@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   TrendingUp, 
   BarChart3, 
@@ -15,23 +17,135 @@ import {
 } from 'lucide-react';
 
 const AnalyticsPage = () => {
-  // Mock analytics data
-  const overallMetrics = {
-    therapyProgress: 78,
-    goalCompletion: 65,
-    moodImprovement: 23,
-    sessionFrequency: 2.4
-  };
+  const { user } = useAuth();
+  const [overallMetrics, setOverallMetrics] = React.useState({
+    therapyProgress: 0,
+    goalCompletion: 0,
+    moodImprovement: 0,
+    sessionFrequency: 0
+  });
 
-  const weeklyData = [
-    { day: 'Mon', mood: 7, sessions: 1, goals: 3 },
-    { day: 'Tue', mood: 6, sessions: 0, goals: 2 },
-    { day: 'Wed', mood: 8, sessions: 1, goals: 4 },
-    { day: 'Thu', mood: 7, sessions: 0, goals: 3 },
-    { day: 'Fri', mood: 8, sessions: 1, goals: 5 },
-    { day: 'Sat', mood: 9, sessions: 0, goals: 2 },
-    { day: 'Sun', mood: 8, sessions: 0, goals: 1 }
-  ];
+  React.useEffect(() => {
+    const fetchAnalytics = async () => {
+      if (!user) return;
+
+      try {
+        // Fetch goals for completion rate
+        const { data: goals } = await supabase
+          .from('goals')
+          .select('*')
+          .eq('user_id', user.id);
+
+        // Fetch sessions for frequency
+        const { data: sessions } = await supabase
+          .from('therapy_sessions')
+          .select('*')
+          .eq('user_id', user.id);
+
+        // Fetch mood data for improvement
+        const { data: moods } = await supabase
+          .from('mood_entries')
+          .select('overall, created_at')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: true });
+
+        // Calculate metrics
+        const completedGoals = goals?.filter(g => g.is_completed).length || 0;
+        const totalGoals = goals?.length || 0;
+        const goalCompletion = totalGoals > 0 ? (completedGoals / totalGoals) * 100 : 0;
+
+        // Calculate therapy progress based on sessions and goals
+        const therapyProgress = Math.min(((sessions?.length || 0) * 10 + completedGoals * 20), 100);
+
+        // Calculate mood improvement
+        let moodImprovement = 0;
+        if (moods && moods.length > 1) {
+          const firstMood = moods[0].overall;
+          const recentMoods = moods.slice(-7); // Last 7 entries
+          const avgRecentMood = recentMoods.reduce((sum, m) => sum + m.overall, 0) / recentMoods.length;
+          moodImprovement = ((avgRecentMood - firstMood) / firstMood) * 100;
+        }
+
+        // Calculate session frequency (sessions per week)
+        const sessionFrequency = sessions && sessions.length > 0 
+          ? (sessions.length / 4) // Assuming 4 weeks of data
+          : 0;
+
+        setOverallMetrics({
+          therapyProgress: Math.round(therapyProgress),
+          goalCompletion: Math.round(goalCompletion),
+          moodImprovement: Math.round(moodImprovement),
+          sessionFrequency: Number(sessionFrequency.toFixed(1))
+        });
+      } catch (error) {
+        console.error('Error fetching analytics:', error);
+      }
+    };
+
+    fetchAnalytics();
+  }, [user]);
+
+  const [weeklyData, setWeeklyData] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    const fetchWeeklyData = async () => {
+      if (!user) return;
+
+      try {
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        const weeklyStats = [];
+
+        for (let i = 0; i < 7; i++) {
+          const date = new Date();
+          date.setDate(date.getDate() - (6 - i));
+          const dayName = days[date.getDay() === 0 ? 6 : date.getDay() - 1];
+
+          // Fetch mood for this day
+          const { data: dayMoods } = await supabase
+            .from('mood_entries')
+            .select('overall')
+            .eq('user_id', user.id)
+            .gte('created_at', date.toISOString().split('T')[0])
+            .lt('created_at', new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+
+          // Fetch sessions for this day
+          const { data: daySessions } = await supabase
+            .from('therapy_sessions')
+            .select('id')
+            .eq('user_id', user.id)
+            .gte('start_time', date.toISOString().split('T')[0])
+            .lt('start_time', new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+
+          const avgMood = dayMoods && dayMoods.length > 0
+            ? dayMoods.reduce((sum, m) => sum + m.overall, 0) / dayMoods.length
+            : 0;
+
+          weeklyStats.push({
+            day: dayName,
+            mood: Math.round(avgMood),
+            sessions: daySessions?.length || 0,
+            goals: Math.floor(Math.random() * 5) + 1 // Mock goals for now
+          });
+        }
+
+        setWeeklyData(weeklyStats);
+      } catch (error) {
+        console.error('Error fetching weekly data:', error);
+        // Fallback data
+        setWeeklyData([
+          { day: 'Mon', mood: 0, sessions: 0, goals: 0 },
+          { day: 'Tue', mood: 0, sessions: 0, goals: 0 },
+          { day: 'Wed', mood: 0, sessions: 0, goals: 0 },
+          { day: 'Thu', mood: 0, sessions: 0, goals: 0 },
+          { day: 'Fri', mood: 0, sessions: 0, goals: 0 },
+          { day: 'Sat', mood: 0, sessions: 0, goals: 0 },
+          { day: 'Sun', mood: 0, sessions: 0, goals: 0 }
+        ]);
+      }
+    };
+
+    fetchWeeklyData();
+  }, [user]);
 
   return (
     <div className="space-y-6 p-6">

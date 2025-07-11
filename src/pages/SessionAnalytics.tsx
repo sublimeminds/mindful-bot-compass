@@ -13,16 +13,61 @@ const SessionAnalytics = () => {
     const fetchSessionData = async () => {
       setLoading(true);
       try {
-        // Mock data for demonstration
-        const mockData = {
-          totalSessions: 42,
-          averageMood: 7.8,
-          goalCompletionRate: 0.85,
-          timeSpent: '35 hours'
-        };
-        setSessionData(mockData);
+        // Fetch real session data
+        const { data: sessions } = await supabase
+          .from('therapy_sessions')
+          .select('*')
+          .eq('user_id', user?.id);
+
+        // Fetch mood data for average
+        const { data: moods } = await supabase
+          .from('mood_entries')
+          .select('overall')
+          .eq('user_id', user?.id);
+
+        // Fetch goals for completion rate
+        const { data: goals } = await supabase
+          .from('goals')
+          .select('*')
+          .eq('user_id', user?.id);
+
+        const totalSessions = sessions?.length || 0;
+        const averageMood = moods?.length > 0 
+          ? (moods.reduce((sum, mood) => sum + mood.overall, 0) / moods.length).toFixed(1)
+          : 0;
+        
+        const completedGoals = goals?.filter(g => g.is_completed).length || 0;
+        const totalGoals = goals?.length || 0;
+        const goalCompletionRate = totalGoals > 0 ? (completedGoals / totalGoals) : 0;
+
+        // Calculate total time from sessions
+        const totalMinutes = sessions?.reduce((sum, session) => {
+          if (session.start_time && session.end_time) {
+            const duration = new Date(session.end_time).getTime() - new Date(session.start_time).getTime();
+            return sum + Math.floor(duration / (1000 * 60));
+          }
+          return sum;
+        }, 0) || 0;
+
+        const timeSpent = totalMinutes > 60 
+          ? `${Math.floor(totalMinutes / 60)}h ${totalMinutes % 60}m`
+          : `${totalMinutes}m`;
+
+        setSessionData({
+          totalSessions,
+          averageMood,
+          goalCompletionRate,
+          timeSpent
+        });
       } catch (error) {
         console.error('Error fetching session data:', error);
+        // Fallback to zeros
+        setSessionData({
+          totalSessions: 0,
+          averageMood: 0,
+          goalCompletionRate: 0,
+          timeSpent: '0m'
+        });
       } finally {
         setLoading(false);
       }

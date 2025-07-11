@@ -22,16 +22,42 @@ const TherapyPlan = () => {
 
   const fetchTherapyPlan = async () => {
     try {
-      // Mock therapy plan data for now since table doesn't exist
-      setCurrentPlan({
-        title: 'Comprehensive Mental Health Plan',
-        description: 'A personalized approach to improve your mental well-being',
-        duration_weeks: 12,
-        focus_areas: ['Anxiety Management', 'Stress Reduction', 'Mindfulness'],
-        therapeutic_approaches: ['CBT', 'DBT', 'Mindfulness']
-      });
+      // Fetch therapy plan from therapy_plans table
+      const { data: planData } = await supabase
+        .from('therapy_plans')
+        .select('*')
+        .eq('user_id', user?.id)
+        .eq('is_active', true)
+        .single();
+
+      if (planData) {
+        setCurrentPlan({
+          title: planData.title,
+          description: planData.description,
+          duration_weeks: planData.total_phases || 8,
+          focus_areas: Array.isArray(planData.goals) ? planData.goals : ['General Wellness'],
+          therapeutic_approaches: ['CBT', 'Mindfulness'] // Default approaches
+        });
+      } else {
+        // Create a default plan based on user's goals
+        const { data: goals } = await supabase
+          .from('goals')
+          .select('category')
+          .eq('user_id', user?.id);
+
+        const categories = [...new Set(goals?.map(g => g.category) || [])];
+        
+        setCurrentPlan({
+          title: 'Personalized Therapy Plan',
+          description: 'A customized approach based on your goals and preferences',
+          duration_weeks: 8,
+          focus_areas: categories.length > 0 ? categories : ['General Wellness'],
+          therapeutic_approaches: ['CBT', 'Mindfulness']
+        });
+      }
     } catch (error) {
       console.error('Error fetching therapy plan:', error);
+      setCurrentPlan(null);
     }
   };
 
