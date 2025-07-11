@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Shield, 
   Eye, 
@@ -16,11 +17,15 @@ import {
   Settings,
   AlertTriangle,
   CheckCircle,
-  Clock
+  Clock,
+  FileText,
+  User
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import DataExportRequest from './DataExportRequest';
+import ConsentManagement from './ConsentManagement';
 
 interface PrivacyPreferences {
   analytics_consent: boolean;
@@ -44,11 +49,13 @@ const PrivacyDashboard = () => {
   });
   const [loading, setLoading] = useState(true);
   const [deletionRequest, setDeletionRequest] = useState<any>(null);
+  const [exportRequests, setExportRequests] = useState<any[]>([]);
 
   useEffect(() => {
     if (user) {
       fetchPrivacyPreferences();
       checkDeletionRequest();
+      fetchExportRequests();
     }
   }, [user]);
 
@@ -69,6 +76,21 @@ const PrivacyDashboard = () => {
       console.error('Error fetching privacy preferences:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchExportRequests = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('data_export_requests')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('requested_at', { ascending: false });
+
+      if (error) throw error;
+      setExportRequests(data || []);
+    } catch (error) {
+      console.error('Error fetching export requests:', error);
     }
   };
 
@@ -186,7 +208,18 @@ const PrivacyDashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center">
+        <div className="flex items-center justify-center space-x-3 mb-4">
+          <User className="h-8 w-8 text-therapy-600" />
+          <h1 className="text-3xl font-bold text-therapy-600">Privacy Dashboard</h1>
+        </div>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          Manage your personal data, privacy preferences, and exercise your rights under data protection regulations.
+        </p>
+      </div>
+
       {/* Account Deletion Warning */}
       {deletionRequest && (
         <Card className="border-red-200 bg-red-50">
@@ -213,155 +246,209 @@ const PrivacyDashboard = () => {
         </Card>
       )}
 
-      {/* Privacy Controls */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Shield className="h-5 w-5" />
-            <span>Privacy Controls</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Analytics Consent */}
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <Label className="text-sm font-medium">Analytics & Usage Data</Label>
-              <p className="text-xs text-muted-foreground">
-                Help us improve the app by sharing anonymized usage analytics
-              </p>
-            </div>
-            <Switch
-              checked={preferences.analytics_consent}
-              onCheckedChange={(value) => updatePreference('analytics_consent', value)}
-            />
-          </div>
+      {/* Main Content Tabs */}
+      <Tabs defaultValue="privacy" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="privacy">Privacy Controls</TabsTrigger>
+          <TabsTrigger value="data-export">Data Export</TabsTrigger>
+          <TabsTrigger value="consent">Consent Management</TabsTrigger>
+          <TabsTrigger value="account">Account Actions</TabsTrigger>
+        </TabsList>
 
-          {/* Marketing Consent */}
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <Label className="text-sm font-medium">Marketing Communications</Label>
-              <p className="text-xs text-muted-foreground">
-                Receive updates about new features and wellness tips
-              </p>
-            </div>
-            <Switch
-              checked={preferences.marketing_consent}
-              onCheckedChange={(value) => updatePreference('marketing_consent', value)}
-            />
-          </div>
-
-          {/* Third Party Sharing */}
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <Label className="text-sm font-medium">Third-Party Data Sharing</Label>
-              <p className="text-xs text-muted-foreground">
-                Allow sharing anonymized data with research partners
-              </p>
-            </div>
-            <Switch
-              checked={preferences.third_party_sharing}
-              onCheckedChange={(value) => updatePreference('third_party_sharing', value)}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Data Retention */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Database className="h-5 w-5" />
-            <span>Data Retention</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Current Retention Period</Label>
-            <Badge variant="outline" className="text-sm">
-              {preferences.data_retention_period.replace('_', ' ')}
-            </Badge>
-            <p className="text-xs text-muted-foreground">
-              Your data will be automatically deleted after this period of inactivity.
-              You can request immediate deletion using the button below.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Cookie Preferences */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Cookie className="h-5 w-5" />
-            <span>Cookie Preferences</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <Label className="text-sm font-medium">Essential</Label>
+        <TabsContent value="privacy" className="space-y-6">
+          {/* Privacy Controls */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Shield className="h-5 w-5" />
+                <span>Privacy Controls</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Analytics Consent */}
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <Label className="text-sm font-medium">Analytics & Usage Data</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Help us improve the app by sharing anonymized usage analytics
+                  </p>
+                </div>
+                <Switch
+                  checked={preferences.analytics_consent}
+                  onCheckedChange={(value) => updatePreference('analytics_consent', value)}
+                />
               </div>
-              <p className="text-xs text-muted-foreground">
-                Required for basic app functionality
-              </p>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Badge variant={preferences.analytics_consent ? "default" : "secondary"} className="text-xs">
-                  {preferences.analytics_consent ? "Enabled" : "Disabled"}
+
+              {/* Marketing Consent */}
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <Label className="text-sm font-medium">Marketing Communications</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Receive updates about new features and wellness tips
+                  </p>
+                </div>
+                <Switch
+                  checked={preferences.marketing_consent}
+                  onCheckedChange={(value) => updatePreference('marketing_consent', value)}
+                />
+              </div>
+
+              {/* Third Party Sharing */}
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <Label className="text-sm font-medium">Third-Party Data Sharing</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Allow sharing anonymized data with research partners
+                  </p>
+                </div>
+                <Switch
+                  checked={preferences.third_party_sharing}
+                  onCheckedChange={(value) => updatePreference('third_party_sharing', value)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Data Retention */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Database className="h-5 w-5" />
+                <span>Data Retention</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Current Retention Period</Label>
+                <Badge variant="outline" className="text-sm">
+                  {preferences.data_retention_period.replace('_', ' ')}
                 </Badge>
-                <Label className="text-sm font-medium">Analytics</Label>
+                <p className="text-xs text-muted-foreground">
+                  Your data will be automatically deleted after this period of inactivity.
+                  You can request immediate deletion using the account actions tab.
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Help us understand app usage
-              </p>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Badge variant={preferences.marketing_consent ? "default" : "secondary"} className="text-xs">
-                  {preferences.marketing_consent ? "Enabled" : "Disabled"}
-                </Badge>
-                <Label className="text-sm font-medium">Marketing</Label>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Personalized content and offers
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
 
-      {/* Account Actions */}
-      <Card className="border-red-200">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2 text-red-700">
-            <Trash2 className="h-5 w-5" />
-            <span>Account Deletion</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            Delete your account and all associated data permanently. This action cannot be undone.
-            Your data will be scheduled for deletion in 30 days, giving you time to change your mind.
-          </p>
-          <div className="flex items-center space-x-2">
-            <AlertTriangle className="h-4 w-4 text-red-500" />
-            <span className="text-sm text-red-600">This action is irreversible</span>
-          </div>
-          {!deletionRequest && (
-            <Button 
-              onClick={requestAccountDeletion}
-              variant="destructive"
-              className="w-full"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Request Account Deletion
-            </Button>
-          )}
-        </CardContent>
-      </Card>
+          {/* Cookie Preferences */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Cookie className="h-5 w-5" />
+                <span>Cookie Preferences</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <Label className="text-sm font-medium">Essential</Label>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Required for basic app functionality
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Badge variant={preferences.analytics_consent ? "default" : "secondary"} className="text-xs">
+                      {preferences.analytics_consent ? "Enabled" : "Disabled"}
+                    </Badge>
+                    <Label className="text-sm font-medium">Analytics</Label>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Help us understand app usage
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Badge variant={preferences.marketing_consent ? "default" : "secondary"} className="text-xs">
+                      {preferences.marketing_consent ? "Enabled" : "Disabled"}
+                    </Badge>
+                    <Label className="text-sm font-medium">Marketing</Label>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Personalized content and offers
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="data-export">
+          <DataExportRequest 
+            exportRequests={exportRequests}
+            onRequestCreated={fetchExportRequests}
+          />
+        </TabsContent>
+
+        <TabsContent value="consent">
+          <ConsentManagement />
+        </TabsContent>
+
+        <TabsContent value="account" className="space-y-6">
+          {/* Account Actions */}
+          <Card className="border-red-200">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-red-700">
+                <Trash2 className="h-5 w-5" />
+                <span>Account Deletion</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Delete your account and all associated data permanently. This action cannot be undone.
+                Your data will be scheduled for deletion in 30 days, giving you time to change your mind.
+              </p>
+              <div className="flex items-center space-x-2">
+                <AlertTriangle className="h-4 w-4 text-red-500" />
+                <span className="text-sm text-red-600">This action is irreversible</span>
+              </div>
+              {!deletionRequest && (
+                <Button 
+                  onClick={requestAccountDeletion}
+                  variant="destructive"
+                  className="w-full"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Request Account Deletion
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Contact Information */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Mail className="h-5 w-5" />
+                <span>Need Help?</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                If you have questions about your privacy rights or need assistance with data requests, 
+                our privacy team is here to help.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button variant="outline">
+                  <Mail className="h-4 w-4 mr-2" />
+                  Contact Privacy Team
+                </Button>
+                <Button variant="outline">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Privacy Policy
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-4">
+                Email: <span className="font-medium text-therapy-600">privacy@therapysync.ai</span>
+              </p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
