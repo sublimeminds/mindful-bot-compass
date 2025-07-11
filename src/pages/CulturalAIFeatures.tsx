@@ -25,8 +25,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import PageLayout from '@/components/layout/PageLayout';
 
 const CulturalAIFeatures = () => {
   const navigate = useNavigate();
@@ -165,9 +164,7 @@ const CulturalAIFeatures = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
-      <Header />
-      
+    <PageLayout>
       {/* Hero Section */}
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
@@ -397,9 +394,7 @@ const CulturalAIFeatures = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

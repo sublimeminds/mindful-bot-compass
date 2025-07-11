@@ -5,7 +5,7 @@ import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { performanceMonitor } from '@/utils/performanceMonitor';
 import EnhancedDashboardSidebar from './EnhancedDashboardSidebar';
 import DashboardHeader from './DashboardHeader';
-import DashboardLayout from './DashboardLayout';
+import ModularDashboard from './ModularDashboard';
 import DashboardFooter from './DashboardFooter';
 import TherapistAvatarWidget from './widgets/TherapistAvatarWidget';
 import MoodTrackerWidget from './widgets/MoodTrackerWidget';
@@ -93,7 +93,7 @@ const BulletproofDashboardLayout = ({ children }: BulletproofDashboardLayoutProp
                   </div>
                 }
               >
-                {children || <DashboardLayout />}
+                {children || <ModularDashboard />}
               </SafeComponentWrapper>
             </main>
 
