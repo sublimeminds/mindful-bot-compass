@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useQuoteOfTheDay } from '@/hooks/useQuoteOfTheDay';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -19,18 +20,25 @@ import GradientLogo from '@/components/ui/GradientLogo';
 
 const DashboardHeader = () => {
   const { user } = useAuth();
+  const { quote } = useQuoteOfTheDay();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="flex h-16 items-center justify-between px-6">
-        {/* Left section */}
+        {/* Left section with logo and brand */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-3">
             <GradientLogo size="sm" />
-            <div className="flex items-center space-x-2">
-              <Menu className="h-5 w-5 text-therapy-600" />
-              <span className="text-lg font-semibold text-gray-800">Dashboard</span>
+            <div className="flex flex-col">
+              <span className="text-lg font-semibold text-gray-800">TherapySync</span>
+              <span className="text-xs text-therapy-600 font-medium italic">
+                "{quote}"
+              </span>
             </div>
+          </div>
+          <div className="flex items-center space-x-2 ml-4">
+            <Menu className="h-5 w-5 text-therapy-600" />
+            <span className="text-lg font-semibold text-gray-800">Dashboard</span>
           </div>
         </div>
 
