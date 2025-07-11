@@ -124,12 +124,67 @@ const TherapistDiscovery = () => {
     return IconComponent;
   };
 
-  // Helper function to derive voice characteristics
-  const getVoiceCharacteristics = (communicationStyle: string) => {
-    if (communicationStyle.includes('energetic')) return 'Energetic, motivating, clear';
-    if (communicationStyle.includes('gentle')) return 'Gentle, calming, wise';
-    if (communicationStyle.includes('warm')) return 'Warm, analytical, reassuring';
-    return 'Professional, supportive, clear';
+  // Helper function to safely handle voice characteristics
+  const getVoiceCharacteristics = (voiceData: any, communicationStyle: string) => {
+    // Handle object voice characteristics from database
+    if (voiceData && typeof voiceData === 'object') {
+      const { pace = 'moderate', tone = 'warm', accent = 'neutral', vocal_quality = 'clear' } = voiceData;
+      return `${tone.charAt(0).toUpperCase() + tone.slice(1)} tone, ${pace} pace, ${vocal_quality} voice quality`;
+    }
+    
+    // Handle string voice characteristics
+    if (typeof voiceData === 'string' && voiceData.trim()) {
+      return voiceData;
+    }
+    
+    // Fallback based on communication style
+    if (communicationStyle?.includes('energetic')) return 'Energetic, motivating, clear voice with dynamic pace';
+    if (communicationStyle?.includes('gentle')) return 'Gentle, calming, wise tone with measured pace';
+    if (communicationStyle?.includes('warm')) return 'Warm, analytical, reassuring voice with steady rhythm';
+    return 'Professional, supportive, clear voice with balanced delivery';
+  };
+
+  // Helper function to get personality trait icon and description
+  const getPersonalityTraitInfo = (trait: string) => {
+    const traitMap: Record<string, { icon: any; description: string; color: string }> = {
+      warmth: { icon: Heart, description: 'Shows genuine care and emotional warmth', color: 'text-red-500' },
+      empathy: { icon: Users, description: 'Deeply understands and relates to emotions', color: 'text-blue-500' },
+      patience: { icon: Clock, description: 'Takes time to listen and understand', color: 'text-green-500' },
+      analytical: { icon: Brain, description: 'Uses logical thinking and evidence-based approaches', color: 'text-purple-500' },
+      directness: { icon: Target, description: 'Provides clear, straightforward guidance', color: 'text-orange-500' },
+      compassion: { icon: Heart, description: 'Shows deep care and understanding', color: 'text-pink-500' },
+      wisdom: { icon: Award, description: 'Draws from experience and insight', color: 'text-yellow-600' },
+      creativity: { icon: Sparkles, description: 'Uses innovative therapeutic approaches', color: 'text-indigo-500' }
+    };
+    return traitMap[trait] || { icon: Star, description: 'Special therapeutic quality', color: 'text-gray-500' };
+  };
+
+  // Helper function to get effectiveness area info
+  const getEffectivenessAreaInfo = (area: string) => {
+    const areaMap: Record<string, { icon: any; description: string; color: string }> = {
+      trauma_recovery: { icon: Shield, description: 'Specialized in healing from traumatic experiences', color: 'text-red-600' },
+      anxiety_disorders: { icon: Heart, description: 'Expert in managing anxiety and panic disorders', color: 'text-blue-600' },
+      stress_management: { icon: Zap, description: 'Helps develop healthy stress coping strategies', color: 'text-yellow-600' },
+      emotional_regulation: { icon: TrendingUp, description: 'Teaches skills for managing emotions effectively', color: 'text-green-600' },
+      mindfulness_training: { icon: Brain, description: 'Guides in mindfulness and meditation practices', color: 'text-purple-600' },
+      depression_support: { icon: Users, description: 'Specialized support for depressive symptoms', color: 'text-indigo-600' },
+      relationship_therapy: { icon: Heart, description: 'Improves communication and relationship skills', color: 'text-pink-600' },
+      grief_counseling: { icon: Shield, description: 'Supports through loss and grief processes', color: 'text-gray-600' }
+    };
+    return areaMap[area] || { icon: Star, description: 'Specialized therapeutic area', color: 'text-gray-500' };
+  };
+
+  // Helper function to get therapeutic technique info
+  const getTherapeuticTechniqueInfo = (technique: string) => {
+    const techniqueMap: Record<string, { icon: any; description: string; evidence: string }> = {
+      'Cognitive Behavioral Therapy': { icon: Brain, description: 'Evidence-based approach focusing on thoughts and behaviors', evidence: 'Gold standard for anxiety and depression' },
+      'Mindfulness-Based Stress Reduction': { icon: Brain, description: 'Combines mindfulness meditation with stress reduction', evidence: 'Proven effective for stress and chronic pain' },
+      'EMDR': { icon: Sparkles, description: 'Eye Movement Desensitization and Reprocessing for trauma', evidence: 'WHO-recommended for PTSD treatment' },
+      'Dialectical Behavior Therapy': { icon: Target, description: 'Skills-based therapy for emotional regulation', evidence: 'Highly effective for borderline personality disorder' },
+      'Acceptance and Commitment Therapy': { icon: Heart, description: 'Focuses on psychological flexibility and values', evidence: 'Strong evidence for anxiety and depression' },
+      'Solution-Focused Brief Therapy': { icon: TrendingUp, description: 'Goal-oriented therapy focusing on solutions', evidence: 'Effective for diverse presenting problems' }
+    };
+    return techniqueMap[technique] || { icon: Star, description: 'Specialized therapeutic technique', evidence: 'Research-supported approach' };
   };
 
   // Fetch therapists from database
@@ -168,7 +223,7 @@ const TherapistDiscovery = () => {
         education: therapist.education || [],
         therapeuticTechniques: therapist.therapeutic_techniques || [],
         emotionalResponses: therapist.emotional_responses || {},
-        voiceCharacteristics: therapist.voice_characteristics || getVoiceCharacteristics(therapist.communication_style),
+        voiceCharacteristics: getVoiceCharacteristics(therapist.voice_characteristics, therapist.communication_style),
         languages: ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Japanese', 'Chinese', 'Korean'], // AI multilingual support
         crisisSupport: therapist.experience_level === 'Expert' ? 'Advanced' : 'Intermediate',
         availabilityHours: '24/7',
@@ -841,49 +896,233 @@ const TherapistDiscovery = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Details Modal */}
+      {/* Enhanced Details Modal */}
       <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{detailsTherapist?.name} - Full Profile</DialogTitle>
+            <DialogTitle className="flex items-center text-2xl">
+              <Brain className="h-6 w-6 mr-2 text-therapy-600" />
+              {detailsTherapist?.name} - Complete Profile
+            </DialogTitle>
           </DialogHeader>
           {detailsTherapist && (
-            <div className="space-y-6 p-4">
-              <p>{detailsTherapist.description}</p>
-              <div>
-                <h4 className="font-semibold mb-2">Education</h4>
-                <ul className="list-disc list-inside text-sm text-muted-foreground">
-                  {detailsTherapist.education.map((edu: string, idx: number) => (
-                    <li key={idx}>{edu}</li>
-                  ))}
-                </ul>
+            <Tabs defaultValue="personality" className="w-full mt-6">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="personality">Personality</TabsTrigger>
+                <TabsTrigger value="effectiveness">Effectiveness</TabsTrigger>
+                <TabsTrigger value="techniques">Techniques</TabsTrigger>
+                <TabsTrigger value="ai-specs">AI Specifications</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="personality" className="space-y-6 mt-6">
+                <div className="p-4 bg-gradient-to-r from-therapy-50 to-calm-50 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <Heart className="h-5 w-5 mr-2 text-therapy-600" />
+                    Personality Traits
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.entries(detailsTherapist.personalityTraits).map(([trait, value]) => {
+                      const traitInfo = getPersonalityTraitInfo(trait);
+                      const IconComponent = traitInfo.icon;
+                      const score = typeof value === 'number' ? value : parseFloat(String(value)) || 0.5;
+                      
+                      return (
+                        <div key={trait} className="bg-white rounded-lg p-4 shadow-sm">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center space-x-2">
+                              <IconComponent className={`h-4 w-4 ${traitInfo.color}`} />
+                              <span className="font-medium capitalize">{trait.replace('_', ' ')}</span>
+                            </div>
+                            <span className="text-sm font-bold text-therapy-600">{(score * 100).toFixed(0)}%</span>
+                          </div>
+                          <Progress value={score * 100} className="h-2 mb-2" />
+                          <p className="text-xs text-muted-foreground">{traitInfo.description}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="effectiveness" className="space-y-6 mt-6">
+                <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <Shield className="h-5 w-5 mr-2 text-green-600" />
+                    Effectiveness Areas
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.entries(detailsTherapist.effectivenessAreas).map(([area, value]) => {
+                      const areaInfo = getEffectivenessAreaInfo(area);
+                      const IconComponent = areaInfo.icon;
+                      const score = typeof value === 'number' ? value : parseFloat(String(value)) || 0.5;
+                      const level = score >= 0.8 ? 'Expert' : score >= 0.6 ? 'Advanced' : 'Intermediate';
+                      
+                      return (
+                        <div key={area} className="bg-white rounded-lg p-4 shadow-sm">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center space-x-2">
+                              <IconComponent className={`h-4 w-4 ${areaInfo.color}`} />
+                              <span className="font-medium capitalize">{area.replace('_', ' ')}</span>
+                            </div>
+                            <Badge 
+                              variant={score >= 0.8 ? 'default' : score >= 0.6 ? 'secondary' : 'outline'}
+                              className="text-xs"
+                            >
+                              {level}
+                            </Badge>
+                          </div>
+                          <Progress value={score * 100} className="h-2 mb-2" />
+                          <p className="text-xs text-muted-foreground">{areaInfo.description}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="techniques" className="space-y-6 mt-6">
+                <div className="p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <Sparkles className="h-5 w-5 mr-2 text-purple-600" />
+                    Therapeutic Techniques
+                  </h3>
+                  <div className="space-y-4">
+                    {detailsTherapist.therapeuticTechniques.map((technique: string, idx: number) => {
+                      const techniqueInfo = getTherapeuticTechniqueInfo(technique);
+                      const IconComponent = techniqueInfo.icon;
+                      
+                      return (
+                        <div key={idx} className="bg-white rounded-lg p-4 shadow-sm">
+                          <div className="flex items-start space-x-3">
+                            <IconComponent className="h-5 w-5 text-purple-600 mt-1" />
+                            <div className="flex-1">
+                              <h4 className="font-medium text-lg mb-2">{technique}</h4>
+                              <p className="text-sm text-muted-foreground mb-2">{techniqueInfo.description}</p>
+                              <div className="flex items-center space-x-2">
+                                <Badge variant="outline" className="text-xs">
+                                  <CheckCircle className="h-3 w-3 mr-1" />
+                                  Evidence-Based
+                                </Badge>
+                                <span className="text-xs text-green-600 font-medium">{techniqueInfo.evidence}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center">
+                    <Award className="h-5 w-5 mr-2 text-blue-600" />
+                    Education & Qualifications
+                  </h3>
+                  <div className="space-y-2">
+                    {detailsTherapist.education.map((edu: string, idx: number) => (
+                      <div key={idx} className="flex items-center p-2 bg-white rounded-lg">
+                        <Award className="h-4 w-4 text-blue-600 mr-2" />
+                        <span className="text-sm">{edu}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="ai-specs" className="space-y-6 mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center">
+                      <Cpu className="h-5 w-5 mr-2 text-blue-600" />
+                      TherapySync AI Technology
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-2 bg-white rounded-lg">
+                        <span className="text-sm">AI Model</span>
+                        <Badge className="bg-blue-100 text-blue-700">GPT-4 + Anthropic Claude</Badge>
+                      </div>
+                      <div className="flex justify-between items-center p-2 bg-white rounded-lg">
+                        <span className="text-sm">Response Time</span>
+                        <span className="text-sm font-medium text-green-600">&lt;2 seconds</span>
+                      </div>
+                      <div className="flex justify-between items-center p-2 bg-white rounded-lg">
+                        <span className="text-sm">Memory System</span>
+                        <span className="text-sm font-medium text-purple-600">Perfect Recall</span>
+                      </div>
+                      <div className="flex justify-between items-center p-2 bg-white rounded-lg">
+                        <span className="text-sm">Emotion Recognition</span>
+                        <span className="text-sm font-medium text-orange-600">99.2% Accuracy</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center">
+                      <Globe className="h-5 w-5 mr-2 text-green-600" />
+                      Advanced Capabilities
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center p-2 bg-white rounded-lg">
+                        <Clock className="h-4 w-4 text-green-600 mr-2" />
+                        <span className="text-sm">24/7 Availability</span>
+                      </div>
+                      <div className="flex items-center p-2 bg-white rounded-lg">
+                        <Languages className="h-4 w-4 text-blue-600 mr-2" />
+                        <span className="text-sm">10+ Languages</span>
+                      </div>
+                      <div className="flex items-center p-2 bg-white rounded-lg">
+                        <Shield className="h-4 w-4 text-purple-600 mr-2" />
+                        <span className="text-sm">Enterprise Encryption</span>
+                      </div>
+                      <div className="flex items-center p-2 bg-white rounded-lg">
+                        <Target className="h-4 w-4 text-orange-600 mr-2" />
+                        <span className="text-sm">Crisis Detection</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-gradient-to-r from-therapy-50 to-calm-50 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                    <TrendingUp className="h-5 w-5 mr-2 text-therapy-600" />
+                    Personalization Features
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="text-center p-3 bg-white rounded-lg">
+                      <Brain className="h-6 w-6 text-therapy-600 mx-auto mb-2" />
+                      <div className="text-sm font-medium">Therapy Plans</div>
+                      <div className="text-xs text-muted-foreground">Personalized treatment</div>
+                    </div>
+                    <div className="text-center p-3 bg-white rounded-lg">
+                      <Heart className="h-6 w-6 text-calm-600 mx-auto mb-2" />
+                      <div className="text-sm font-medium">Emotional Adaptation</div>
+                      <div className="text-xs text-muted-foreground">Real-time adjustment</div>
+                    </div>
+                    <div className="text-center p-3 bg-white rounded-lg">
+                      <Users className="h-6 w-6 text-harmony-600 mx-auto mb-2" />
+                      <div className="text-sm font-medium">Cultural Intelligence</div>
+                      <div className="text-xs text-muted-foreground">Context-aware responses</div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+
+              <div className="flex justify-between items-center pt-6 border-t">
+                <Button variant="outline" onClick={() => setDetailsModalOpen(false)}>
+                  Close
+                </Button>
+                <div className="flex gap-3">
+                  <Button variant="outline">
+                    <Heart className="h-4 w-4 mr-2" />
+                    Save Favorite
+                  </Button>
+                  <Button className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700">
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Start Therapy Session
+                  </Button>
+                </div>
               </div>
-              <div>
-                <h4 className="font-semibold mb-2">Therapeutic Techniques</h4>
-                <ul className="list-disc list-inside text-sm text-muted-foreground">
-                  {detailsTherapist.therapeuticTechniques.map((tech: string, idx: number) => (
-                    <li key={idx}>{tech}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Personality Traits</h4>
-                <ul className="list-disc list-inside text-sm text-muted-foreground">
-                  {Object.entries(detailsTherapist.personalityTraits).map(([trait, value]) => (
-                    <li key={trait}>{trait}: {String(value)}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Effectiveness Areas</h4>
-                <ul className="list-disc list-inside text-sm text-muted-foreground">
-                  {Object.entries(detailsTherapist.effectivenessAreas).map(([area, value]) => (
-                    <li key={area}>{area}: {String(value)}</li>
-                  ))}
-                </ul>
-              </div>
-              <Button variant="outline" onClick={() => setDetailsModalOpen(false)}>Close</Button>
-            </div>
+            </Tabs>
           )}
         </DialogContent>
       </Dialog>
