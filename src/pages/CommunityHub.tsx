@@ -64,6 +64,8 @@ import CreateEventDialog from '@/components/community/CreateEventDialog';
 import CreateMilestoneDialog from '@/components/community/CreateMilestoneDialog';
 import DiscussionCard from '@/components/community/DiscussionCard';
 import EnhancedCreateDiscussionDialog from '@/components/community/EnhancedCreateDiscussionDialog';
+import CommunityPostCreator from '@/components/community/CommunityPostCreator';
+import PostInteractionButtons from '@/components/community/PostInteractionButtons';
 
 interface CommunityEvent {
   id: string;
@@ -450,34 +452,13 @@ const CommunityHub = () => {
               {/* Main Feed */}
               <div className="lg:col-span-2 space-y-6">
                 {/* Create Post */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Sparkles className="h-5 w-5 mr-2" />
-                      Share with Community
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <Textarea placeholder="Share your thoughts, milestones, or questions..." rows={3} />
-                      <div className="flex items-center justify-between">
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
-                            <Camera className="h-4 w-4 mr-2" />
-                            Photo
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            <Mic className="h-4 w-4 mr-2" />
-                            Voice Note
-                          </Button>
-                        </div>
-                        <Button className="bg-therapy-600 hover:bg-therapy-700">
-                          Share Post
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <CommunityPostCreator onPostCreated={() => {
+                  // Refresh feed when post is created
+                  toast({
+                    title: "Post shared!",
+                    description: "Your post has been shared with the community.",
+                  });
+                }} />
 
                 {/* Posts */}
                 <div className="space-y-4">
@@ -523,22 +504,21 @@ const CommunityHub = () => {
                             </Badge>
                           ))}
                         </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4">
-                            <Button variant="ghost" size="sm" className={post.isLiked ? 'text-red-600' : ''}>
-                              <ThumbsUp className="h-4 w-4 mr-2" />
-                              {post.likes}
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <MessageCircle className="h-4 w-4 mr-2" />
-                              {post.comments}
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Share2 className="h-4 w-4 mr-2" />
-                              Share
-                            </Button>
-                          </div>
-                        </div>
+                        <PostInteractionButtons
+                          postId={post.id}
+                          initialLikes={post.likes}
+                          initialComments={post.comments}
+                          isLiked={post.isLiked}
+                          onCommentClick={() => {
+                            toast({
+                              title: "Comments",
+                              description: "Comments feature coming soon!",
+                            });
+                          }}
+                          onLikeChange={(newCount, isLiked) => {
+                            console.log(`Post ${post.id} now has ${newCount} likes, user liked: ${isLiked}`);
+                          }}
+                        />
                       </CardContent>
                     </Card>
                   ))}
