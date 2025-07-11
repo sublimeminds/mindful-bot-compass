@@ -42,6 +42,10 @@ import VoiceSettings from "../pages/VoiceSettings";
 import Billing from "../pages/Billing";
 import Sessions from "../pages/Sessions";
 import NotificationsPage from "../pages/NotificationsPage";
+import TherapyPlan from "../pages/TherapyPlan";
+import ProgressOverview from "../pages/ProgressOverview";
+import Subscription from "../pages/Subscription";
+import TherapyChatPage from "../pages/TherapyChatPage";
 
 // Error Pages
 import NotFound from "../pages/NotFound";
@@ -241,7 +245,25 @@ const AppRouter = () => {
 
       <Route path="/therapy-chat" element={
         <PageErrorBoundary pageName="Therapy Chat">
-          <DashboardPageWrapper><div className="p-6"><h1 className="text-2xl font-bold">Therapy Chat</h1><p>Chat with your AI therapist here.</p></div></DashboardPageWrapper>
+          <TherapyChatPage />
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/therapy-plan" element={
+        <PageErrorBoundary pageName="Therapy Plan">
+          <DashboardPageWrapper><TherapyPlan /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/progress-overview" element={
+        <PageErrorBoundary pageName="Progress Overview">
+          <DashboardPageWrapper><ProgressOverview /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/subscription" element={
+        <PageErrorBoundary pageName="Subscription">
+          <DashboardPageWrapper><Subscription /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
