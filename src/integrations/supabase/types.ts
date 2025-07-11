@@ -8374,6 +8374,17 @@ export type Database = {
           total_sessions: number
         }[]
       }
+      get_user_active_therapists: {
+        Args: { user_id_param: string; specialty_filter?: string }
+        Returns: {
+          therapist_id: string
+          specialty_focus: string
+          therapy_context: string
+          treatment_phase: string
+          is_primary: boolean
+          selection_reason: string
+        }[]
+      }
       get_user_plan_limits: {
         Args: { user_id_param: string }
         Returns: Json
@@ -8418,6 +8429,10 @@ export type Database = {
       is_admin: {
         Args: { _user_id: string }
         Returns: boolean
+      }
+      recommend_therapist_combinations: {
+        Args: { user_id_param: string; needed_specialties: string[] }
+        Returns: Json
       }
       update_goal_streak: {
         Args: { goal_id_param: string }
