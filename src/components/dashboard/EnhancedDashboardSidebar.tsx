@@ -4,6 +4,7 @@ import { useQuoteOfTheDay } from '@/hooks/useQuoteOfTheDay';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserStats } from '@/hooks/useUserStats';
 import GradientLogo from '@/components/ui/GradientLogo';
+import { Search } from 'lucide-react';
 import { 
   LayoutDashboard, 
   MessageCircle, 
@@ -477,27 +478,41 @@ const EnhancedDashboardSidebar = () => {
 
   return (
     <Sidebar className="border-r border-gray-200/50 bg-white/95 backdrop-blur-lg shadow-lg" collapsible="icon">
-      <SidebarHeader className="border-b border-gray-200/50 p-6 bg-gradient-to-br from-therapy-50/50 to-calm-50/50">
-        <div className="flex items-center space-x-4">
-          <GradientLogo size={state === "collapsed" ? "sm" : "md"} />
+      <SidebarHeader className="border-b border-gray-200/50 p-4 bg-gradient-to-br from-therapy-50/30 to-calm-50/30">
+        <div className="flex items-center space-x-3">
+          <GradientLogo size={state === "collapsed" ? "sm" : "sm"} />
           {state !== "collapsed" && (
             <div className="flex-1">
-              <h2 className="text-xl font-bold bg-gradient-to-r from-therapy-600 via-therapy-500 to-calm-600 bg-clip-text text-transparent">
+              <h2 className="text-lg font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
                 TherapySync
               </h2>
-              <p className="text-sm text-therapy-600/80 font-medium italic mt-1 leading-relaxed">
+              <p className="text-xs text-therapy-600/70 font-medium italic leading-tight">
                 "{quote}"
               </p>
             </div>
           )}
         </div>
+        
+        {/* Search functionality */}
+        {state !== "collapsed" && (
+          <div className="mt-3">
+            <div className="relative">
+              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 h-3 w-3" />
+              <input
+                type="text"
+                placeholder="Search features..."
+                className="w-full pl-7 pr-3 py-1.5 text-xs bg-white/60 border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-therapy-400 focus:border-transparent transition-all"
+              />
+            </div>
+          </div>
+        )}
       </SidebarHeader>
 
-      <SidebarContent className="px-3 py-4">
+      <SidebarContent className="px-2 py-2">
         {navigationSections.map((section) => (
-          <SidebarGroup key={section.title} className="mb-4">
-            <SidebarGroupLabel 
-              className="flex items-center justify-between text-xs font-semibold text-therapy-600 uppercase tracking-wider mb-2 cursor-pointer hover:text-therapy-700 transition-colors"
+          <SidebarGroup key={section.title} className="mb-2">
+            <SidebarGroupLabel
+              className="flex items-center justify-between text-xs font-semibold text-therapy-600 uppercase tracking-wider mb-1 cursor-pointer hover:text-therapy-700 transition-colors px-2"
               onClick={() => {
                 if (state !== "collapsed") {
                   setExpandedGroups(prev => ({
@@ -508,7 +523,7 @@ const EnhancedDashboardSidebar = () => {
               }}
             >
               <div className="flex items-center">
-                <section.icon className="w-4 h-4 mr-2" />
+                <section.icon className={`w-3 h-3 ${state !== "collapsed" ? 'mr-2' : ''}`} />
                 {state !== "collapsed" && <span>{section.title}</span>}
               </div>
               {state !== "collapsed" && (
