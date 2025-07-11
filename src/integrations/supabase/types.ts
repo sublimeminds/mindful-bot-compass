@@ -1272,6 +1272,33 @@ export type Database = {
         }
         Relationships: []
       }
+      compliance_metrics: {
+        Row: {
+          compliance_standard: string
+          id: string
+          metadata: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at: string
+        }
+        Insert: {
+          compliance_standard: string
+          id?: string
+          metadata?: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at?: string
+        }
+        Update: {
+          compliance_standard?: string
+          id?: string
+          metadata?: Json | null
+          metric_type?: string
+          metric_value?: number
+          recorded_at?: string
+        }
+        Relationships: []
+      }
       content_library: {
         Row: {
           category: string
@@ -1744,6 +1771,81 @@ export type Database = {
           report_type?: string
           schedule_frequency?: string | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      data_deletion_requests: {
+        Row: {
+          completed_at: string | null
+          deletion_type: string
+          id: string
+          reason: string | null
+          requested_at: string
+          retention_period_days: number | null
+          scheduled_for: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          deletion_type?: string
+          id?: string
+          reason?: string | null
+          requested_at?: string
+          retention_period_days?: number | null
+          scheduled_for?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          deletion_type?: string
+          id?: string
+          reason?: string | null
+          requested_at?: string
+          retention_period_days?: number | null
+          scheduled_for?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      data_export_requests: {
+        Row: {
+          completed_at: string | null
+          expires_at: string | null
+          export_url: string | null
+          file_size_bytes: number | null
+          format: string
+          id: string
+          request_type: string
+          requested_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          expires_at?: string | null
+          export_url?: string | null
+          file_size_bytes?: number | null
+          format?: string
+          id?: string
+          request_type?: string
+          requested_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          expires_at?: string | null
+          export_url?: string | null
+          file_size_bytes?: number | null
+          format?: string
+          id?: string
+          request_type?: string
+          requested_at?: string
+          status?: string
           user_id?: string
         }
         Relationships: []
@@ -4792,6 +4894,45 @@ export type Database = {
           },
         ]
       }
+      privacy_preferences: {
+        Row: {
+          analytics_consent: boolean | null
+          communication_preferences: Json | null
+          cookie_preferences: Json | null
+          created_at: string
+          data_retention_period: string | null
+          id: string
+          marketing_consent: boolean | null
+          third_party_sharing: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          analytics_consent?: boolean | null
+          communication_preferences?: Json | null
+          cookie_preferences?: Json | null
+          created_at?: string
+          data_retention_period?: string | null
+          id?: string
+          marketing_consent?: boolean | null
+          third_party_sharing?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          analytics_consent?: boolean | null
+          communication_preferences?: Json | null
+          cookie_preferences?: Json | null
+          created_at?: string
+          data_retention_period?: string | null
+          id?: string
+          marketing_consent?: boolean | null
+          third_party_sharing?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       professional_oversight: {
         Row: {
           completed_at: string | null
@@ -5268,6 +5409,48 @@ export type Database = {
           severity?: string
           user_agent?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      security_incidents: {
+        Row: {
+          affected_users_count: number | null
+          description: string
+          detected_at: string
+          detection_method: string | null
+          id: string
+          incident_type: string
+          metadata: Json | null
+          resolved_at: string | null
+          response_actions: Json | null
+          severity: string
+          status: string
+        }
+        Insert: {
+          affected_users_count?: number | null
+          description: string
+          detected_at?: string
+          detection_method?: string | null
+          id?: string
+          incident_type: string
+          metadata?: Json | null
+          resolved_at?: string | null
+          response_actions?: Json | null
+          severity?: string
+          status?: string
+        }
+        Update: {
+          affected_users_count?: number | null
+          description?: string
+          detected_at?: string
+          detection_method?: string | null
+          id?: string
+          incident_type?: string
+          metadata?: Json | null
+          resolved_at?: string | null
+          response_actions?: Json | null
+          severity?: string
+          status?: string
         }
         Relationships: []
       }
@@ -7282,6 +7465,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_consent: {
+        Row: {
+          consent_type: string
+          created_at: string
+          granted: boolean
+          granted_at: string | null
+          id: string
+          ip_address: unknown | null
+          updated_at: string
+          user_agent: string | null
+          user_id: string
+          withdrawn_at: string | null
+        }
+        Insert: {
+          consent_type: string
+          created_at?: string
+          granted?: boolean
+          granted_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          updated_at?: string
+          user_agent?: string | null
+          user_id: string
+          withdrawn_at?: string | null
+        }
+        Update: {
+          consent_type?: string
+          created_at?: string
+          granted?: boolean
+          granted_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string
+          withdrawn_at?: string | null
+        }
+        Relationships: []
+      }
       user_cultural_profiles: {
         Row: {
           communication_style: string
@@ -8545,6 +8767,28 @@ export type Database = {
       recommend_therapist_combinations: {
         Args: { user_id_param: string; needed_specialties: string[] }
         Returns: Json
+      }
+      request_data_deletion: {
+        Args: {
+          user_id_param: string
+          deletion_type?: string
+          reason_text?: string
+        }
+        Returns: string
+      }
+      request_data_export: {
+        Args: { user_id_param: string; export_type?: string }
+        Returns: string
+      }
+      update_consent: {
+        Args: {
+          user_id_param: string
+          consent_type_param: string
+          granted_param: boolean
+          user_ip?: unknown
+          user_agent_param?: string
+        }
+        Returns: undefined
       }
       update_goal_streak: {
         Args: { goal_id_param: string }

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Shield, ChevronDown } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import MobileMenu from './MobileMenu';
 import UserMenu from './UserMenu';
 
@@ -24,6 +25,28 @@ const UnifiedNavigation = () => {
                 <Link to="/notebook" className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Journal</Link>
                 <Link to="/dashboard/audio-library" className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Audio</Link>
                 <Link to="/smart-scheduling" className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Schedule</Link>
+                
+                {/* Security & Compliance Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium flex items-center space-x-1">
+                    <Shield className="h-4 w-4" />
+                    <span>Security</span>
+                    <ChevronDown className="h-3 w-3" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem asChild>
+                      <Link to="/compliance" className="w-full">
+                        Security & Compliance
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/privacy" className="w-full">
+                        Privacy Center
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                
                 <Link to="/help" className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Help</Link>
               </div>
             </div>
