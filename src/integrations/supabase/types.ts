@@ -7214,9 +7214,35 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      decrement_event_participants: {
+        Args: { event_id: string }
+        Returns: undefined
+      }
+      decrement_post_likes: {
+        Args: { post_id: string }
+        Returns: undefined
+      }
       generate_invitation_token: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_therapist_review_metrics: {
+        Args: { therapist_id: string }
+        Returns: {
+          average_rating: number
+          user_satisfaction: number
+          recommendation_rate: number
+          total_reviews: number
+          effectiveness_areas: string[]
+        }[]
+      }
+      get_therapist_session_metrics: {
+        Args: { therapist_id: string }
+        Returns: {
+          success_rate: number
+          mood_improvement_avg: number
+          total_sessions: number
+        }[]
       }
       get_user_plan_limits: {
         Args: { user_id_param: string }
@@ -7238,6 +7264,26 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
         }
         Returns: boolean
+      }
+      increment_event_participants: {
+        Args: { event_id: string }
+        Returns: undefined
+      }
+      increment_milestone_celebrations: {
+        Args: { milestone_id: string }
+        Returns: undefined
+      }
+      increment_post_comments: {
+        Args: { post_id: string }
+        Returns: undefined
+      }
+      increment_post_likes: {
+        Args: { post_id: string }
+        Returns: undefined
+      }
+      increment_review_helpful_count: {
+        Args: { review_id: string }
+        Returns: undefined
       }
       is_admin: {
         Args: { _user_id: string }

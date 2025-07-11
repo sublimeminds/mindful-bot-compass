@@ -58,32 +58,70 @@ export class TherapistAnalyticsService {
   // Get real therapist metrics from database
   static async getTherapistMetrics(therapistId: string): Promise<TherapistMetrics | null> {
     try {
-      // Get session feedback metrics
-      const { data: sessionMetrics } = await supabase
-        .rpc('get_therapist_session_metrics', { therapist_id: therapistId });
+      // Use direct SQL queries since the functions may not be in types yet
+      const { data: sessionData } = await supabase
+        .from('session_feedback')
+        .select(`
+          mood_before,
+          mood_after,
+          overall_rating,
+          effectiveness_rating
+        `)
+        .eq('therapist_id', therapistId);
 
-      // Get review metrics
-      const { data: reviewMetrics } = await supabase
-        .rpc('get_therapist_review_metrics', { therapist_id: therapistId });
+      const { data: reviewData } = await supabase
+        .from('therapist_reviews')
+        .select(`
+          overall_rating,
+          communication_rating,
+          expertise_rating,
+          empathy_rating,
+          effectiveness_rating,
+          would_recommend,
+          specific_areas_helped
+        `)
+        .eq('therapist_id', therapistId);
 
       // Get therapy sessions count
       const { count: sessionCount } = await supabase
         .from('therapy_sessions')
-        .select('*', { count: 'exact', head: true })
-        .eq('therapist_id', therapistId);
+        .select('id', { count: 'exact', head: true });
 
-      if (!sessionMetrics && !reviewMetrics) return null;
+      // Calculate metrics from raw data
+      let success_rate = 0;
+      let mood_improvement_avg = 0;
+      if (sessionData && sessionData.length > 0) {
+        const improvements = sessionData.filter(s => s.mood_after && s.mood_before && s.mood_after > s.mood_before);
+        success_rate = improvements.length / sessionData.length;
+        mood_improvement_avg = sessionData.reduce((sum, s) => 
+          sum + ((s.mood_after || 0) - (s.mood_before || 0)), 0) / sessionData.length;
+      }
+
+      let average_rating = 0;
+      let user_satisfaction = 0;
+      let recommendation_rate = 0;
+      let effectiveness_areas: string[] = [];
+      if (reviewData && reviewData.length > 0) {
+        average_rating = reviewData.reduce((sum, r) => sum + r.overall_rating, 0) / reviewData.length;
+        user_satisfaction = reviewData.reduce((sum, r) => 
+          sum + ((r.overall_rating + r.communication_rating + r.expertise_rating + r.empathy_rating + r.effectiveness_rating) / 5), 0) / reviewData.length;
+        recommendation_rate = reviewData.filter(r => r.would_recommend).length / reviewData.length;
+        
+        // Collect all effectiveness areas
+        const allAreas = reviewData.flatMap(r => r.specific_areas_helped || []);
+        effectiveness_areas = [...new Set(allAreas)];
+      }
 
       return {
         therapist_id: therapistId,
         total_sessions: sessionCount || 0,
-        average_rating: reviewMetrics?.average_rating || 0,
-        success_rate: sessionMetrics?.success_rate || 0,
-        user_satisfaction: reviewMetrics?.user_satisfaction || 0,
-        mood_improvement_avg: sessionMetrics?.mood_improvement_avg || 0,
-        recommendation_rate: reviewMetrics?.recommendation_rate || 0,
-        total_reviews: reviewMetrics?.total_reviews || 0,
-        effectiveness_areas: reviewMetrics?.effectiveness_areas || [],
+        average_rating,
+        success_rate,
+        user_satisfaction,
+        mood_improvement_avg,
+        recommendation_rate,
+        total_reviews: reviewData?.length || 0,
+        effectiveness_areas,
         response_time_avg: 1.5 // AI response time in seconds
       };
     } catch (error) {
@@ -200,23 +238,23 @@ export class TherapistAnalyticsService {
       const metrics = await this.getTherapistMetrics(therapistId);
       if (!metrics) return 0.75; // Default score
 
-      // Get user's therapy history and preferences
-      const { data: userHistory } = await supabase
-        .from('therapy_sessions')
-        .select('*')
+      // Get user's session feedback for past satisfaction
+      const { data: userFeedback } = await supabase
+        .from('session_feedback')
+        .select('overall_rating')
         .eq('user_id', userId)
         .limit(10);
 
       // Calculate base compatibility from therapist effectiveness
       let compatibilityScore = metrics.success_rate * 0.4 + 
                               (metrics.average_rating / 5) * 0.3 + 
-                              (metrics.user_satisfaction / 100) * 0.3;
+                              (metrics.user_satisfaction / 5) * 0.3;
 
       // Adjust based on user history and preferences
-      if (userHistory && userHistory.length > 0) {
+      if (userFeedback && userFeedback.length > 0) {
         // Consider user's past session ratings
-        const avgUserRating = userHistory.reduce((sum, session) => 
-          sum + (session.user_satisfaction || 3), 0) / userHistory.length;
+        const avgUserRating = userFeedback.reduce((sum, feedback) => 
+          sum + (feedback.overall_rating || 3), 0) / userFeedback.length;
         
         // Adjust score based on user's typical satisfaction
         if (avgUserRating > 4) {

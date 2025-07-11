@@ -15,6 +15,108 @@ export interface SupportGroup {
   updated_at: string;
 }
 
+export interface CommunityPost {
+  id: string;
+  author_id: string;
+  title: string;
+  content: string;
+  post_type: string;
+  category: string;
+  is_anonymous: boolean;
+  is_pinned: boolean;
+  tags: string[];
+  like_count: number;
+  comment_count: number;
+  view_count: number;
+  created_at: string;
+  updated_at: string;
+  author_name?: string;
+  author_avatar?: string;
+  user_has_liked?: boolean;
+}
+
+export interface PostInteraction {
+  id: string;
+  post_id: string;
+  user_id: string;
+  interaction_type: string;
+  comment_text?: string;
+  created_at: string;
+  author_name?: string;
+}
+
+export interface CommunityEvent {
+  id: string;
+  organizer_id: string;
+  title: string;
+  description: string;
+  event_type: string;
+  category: string;
+  start_time: string;
+  end_time: string;
+  max_participants?: number;
+  is_virtual: boolean;
+  meeting_link?: string;
+  location?: string;
+  tags: string[];
+  participant_count: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  organizer_name?: string;
+  user_is_registered?: boolean;
+}
+
+export interface PeerConnection {
+  id: string;
+  requester_id: string;
+  requested_id: string;
+  connection_type: string;
+  status: string;
+  compatibility_score?: number;
+  shared_goals?: string[];
+  communication_frequency?: string;
+  connection_notes?: string;
+  created_at: string;
+  updated_at: string;
+  peer_name?: string;
+  peer_avatar?: string;
+}
+
+export interface CommunityMilestone {
+  id: string;
+  user_id: string;
+  milestone_type: string;
+  title: string;
+  description: string;
+  achievement_date: string;
+  points_earned: number;
+  is_shared: boolean;
+  celebration_count: number;
+  support_count: number;
+  milestone_data: any;
+  created_at: string;
+  user_name?: string;
+  user_avatar?: string;
+}
+
+export interface WellnessChallenge {
+  id: string;
+  title: string;
+  description: string;
+  challenge_type: string;
+  category: string;
+  start_date: string;
+  end_date: string;
+  target_participants?: number;
+  reward_points: number;
+  is_active: boolean;
+  created_by?: string;
+  created_at: string;
+  participant_count?: number;
+  user_participation?: any;
+}
+
 export interface GroupMembership {
   id: string;
   user_id: string;
@@ -49,15 +151,7 @@ export interface DiscussionReply {
   updated_at: string;
 }
 
-export interface PeerConnection {
-  id: string;
-  requester_id: string;
-  requested_id: string;
-  status: string;
-  connection_type: string;
-  created_at: string;
-  updated_at: string;
-}
+// Duplicate interface removed - using the one defined above
 
 export interface SharedMilestone {
   id: string;
