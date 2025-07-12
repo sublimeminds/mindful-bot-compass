@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import TherapyApproachSelector from './TherapyApproachSelector';
+import AITherapyRecommendation from './AITherapyRecommendation';
 import SessionProgressTracker from './SessionProgressTracker';
 import { PlayCircle, BookOpen, Target, ArrowRight } from 'lucide-react';
 
@@ -13,6 +13,8 @@ interface TherapyApproach {
   description: string;
   techniques: string[];
   system_prompt_addition: string;
+  target_conditions: string[];
+  effectiveness_score: number;
 }
 
 interface EnhancedSessionFlowProps {
@@ -39,18 +41,10 @@ const EnhancedSessionFlow = ({ onSessionStart }: EnhancedSessionFlowProps) => {
       // Check if user has existing preferences
       const { data: preferences } = await supabase
         .from('user_therapy_preferences')
-        .select(`
-          *,
-          therapeutic_approach_configs (*)
-        `)
+        .select('*')
         .eq('user_id', user.id)
         .single();
 
-      if (preferences?.therapeutic_approach_configs) {
-        setSelectedApproach(preferences.therapeutic_approach_configs);
-        setCurrentStep('pre-session');
-      }
-      
       setUserPreferences(preferences);
     } catch (error) {
       console.error('Error loading user preferences:', error);
@@ -59,13 +53,13 @@ const EnhancedSessionFlow = ({ onSessionStart }: EnhancedSessionFlowProps) => {
     }
   };
 
-  const handleApproachSelected = async (approach: TherapyApproach) => {
+  const handleApproachSelected = (approach: TherapyApproach) => {
     setSelectedApproach(approach);
     setCurrentStep('pre-session');
 
     // Save user preference
     try {
-      await supabase
+      supabase
         .from('user_therapy_preferences')
         .upsert({
           user_id: user?.id,
@@ -94,9 +88,8 @@ const EnhancedSessionFlow = ({ onSessionStart }: EnhancedSessionFlowProps) => {
   if (currentStep === 'approach-selection') {
     return (
       <div className="space-y-6">
-        <TherapyApproachSelector
+        <AITherapyRecommendation
           onApproachSelected={handleApproachSelected}
-          currentApproachId={userPreferences?.preferred_approach_id}
         />
       </div>
     );
