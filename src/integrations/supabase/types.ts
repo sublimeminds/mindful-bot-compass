@@ -6071,6 +6071,8 @@ export type Database = {
           name: string
           price_monthly: number
           price_yearly: number
+          session_limits: Json | null
+          therapy_plan_limit: number | null
           updated_at: string
         }
         Insert: {
@@ -6082,6 +6084,8 @@ export type Database = {
           name: string
           price_monthly: number
           price_yearly: number
+          session_limits?: Json | null
+          therapy_plan_limit?: number | null
           updated_at?: string
         }
         Update: {
@@ -6093,6 +6097,8 @@ export type Database = {
           name?: string
           price_monthly?: number
           price_yearly?: number
+          session_limits?: Json | null
+          therapy_plan_limit?: number | null
           updated_at?: string
         }
         Relationships: []

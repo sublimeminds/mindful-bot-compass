@@ -79,20 +79,23 @@ class SearchService {
         .or(`title.ilike.%${query}%, description.ilike.%${query}%`)
         .limit(limit);
 
-      if (error) throw error;
+      if (error) {
+        console.log('Goals table not found, returning empty results');
+        return [];
+      }
 
       return (data || []).map(goal => ({
         id: goal.id,
         title: goal.title,
         description: goal.description || '',
         type: 'goal' as const,
-        url: `/dashboard/goals/${goal.id}`,
+        url: `/goals?goal=${goal.id}`,
         relevance: this.calculateRelevance(query, goal.title + ' ' + (goal.description || '')),
         category: goal.category,
         icon: 'Target'
       }));
     } catch (error) {
-      console.error('Goal search error:', error);
+      console.log('Goal search error, returning empty results:', error);
       return [];
     }
   }
@@ -108,20 +111,23 @@ class SearchService {
         .order('created_at', { ascending: false })
         .limit(limit);
 
-      if (error) throw error;
+      if (error) {
+        console.log('Mood entries table not found, returning empty results');
+        return [];
+      }
 
       return (data || []).map(mood => ({
         id: mood.id,
         title: `Mood Entry - ${mood.overall}/10`,
         description: mood.notes || '',
         type: 'mood' as const,
-        url: `/dashboard/mood?entry=${mood.id}`,
+        url: `/mood-tracking?entry=${mood.id}`,
         relevance: this.calculateRelevance(query, mood.notes || ''),
         category: 'Mood Tracking',
         icon: 'Heart'
       }));
     } catch (error) {
-      console.error('Mood search error:', error);
+      console.log('Mood search error, returning empty results:', error);
       return [];
     }
   }
@@ -232,6 +238,30 @@ class SearchService {
         url: '/dashboard/billing',
         category: 'Account',
         keywords: ['billing', 'subscription', 'payment', 'invoice', 'plan', 'upgrade']
+      },
+      {
+        id: 'breathing',
+        title: 'Breathing Exercises',
+        description: 'Guided breathing techniques for relaxation and stress relief',
+        url: '/breathing-exercises',
+        category: 'Wellness',
+        keywords: ['breathing', 'exercises', 'relaxation', 'stress', 'calm', '4-7-8', 'box breathing']
+      },
+      {
+        id: 'meditation',
+        title: 'Meditation Library',
+        description: 'Premium meditation collection for mindfulness and inner peace',
+        url: '/meditation-library',
+        category: 'Wellness',
+        keywords: ['meditation', 'mindfulness', 'peace', 'calm', 'spiritual', 'guided']
+      },
+      {
+        id: 'pricing',
+        title: 'Pricing Plans',
+        description: 'View our affordable pricing plans and subscription options',
+        url: '/pricing',
+        category: 'Account',
+        keywords: ['pricing', 'plans', 'subscription', 'billing', 'cost', 'upgrade', 'pro', 'premium']
       }
     ];
 
@@ -323,7 +353,10 @@ class SearchService {
       goals: 'Target',
       family: 'Users',
       crisis: 'Shield',
-      billing: 'CreditCard'
+      billing: 'CreditCard',
+      breathing: 'Wind',
+      meditation: 'Brain',
+      pricing: 'CreditCard'
     };
     return iconMap[featureId] || 'Search';
   }

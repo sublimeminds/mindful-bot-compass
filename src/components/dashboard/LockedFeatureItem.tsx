@@ -74,19 +74,16 @@ const LockedFeatureItem: React.FC<LockedFeatureItemProps> = ({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-all hover:bg-accent/50 cursor-not-allowed opacity-60">
-            <div className="flex items-center">
-              <Icon className="h-4 w-4" />
-              {!isCollapsed && <span className="ml-2">{children}</span>}
+          <div className="flex items-center justify-between rounded-lg px-2 py-1.5 text-sm transition-all hover:bg-accent/50 cursor-not-allowed opacity-60">
+            <div className="flex items-center min-w-0 flex-1">
+              <Icon className="h-4 w-4 flex-shrink-0" />
+              {!isCollapsed && <span className="ml-2 truncate">{children}</span>}
             </div>
             {!isCollapsed && (
-              <div className="flex items-center space-x-1">
-                <Badge className={`text-xs px-1.5 py-0.5 ${getTierColor(requiredTier)}`}>
-                  {getTierIcon(requiredTier)}
-                  <span className="ml-1 capitalize">{requiredTier}</span>
-                </Badge>
-                <Lock className="h-3 w-3 text-muted-foreground" />
-              </div>
+              <Badge className={`text-xs px-1 py-0.5 ml-1 flex-shrink-0 ${getTierColor(requiredTier)}`}>
+                {getTierIcon(requiredTier)}
+                <span className="ml-0.5 capitalize text-xs">{requiredTier}</span>
+              </Badge>
             )}
           </div>
         </TooltipTrigger>

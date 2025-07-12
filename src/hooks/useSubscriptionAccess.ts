@@ -15,9 +15,9 @@ export interface SubscriptionAccess {
 }
 
 const FEATURE_ACCESS = {
-  free: ['basic-chat', 'mood-tracking', 'basic-goals'],
-  pro: ['advanced-chat', 'ai-insights', 'unlimited-sessions', 'progress-tracking', 'community-hub'],
-  premium: ['advanced-analytics', 'crisis-intervention', 'priority-support', 'personalized-insights'],
+  free: ['basic-chat', 'mood-tracking', 'basic-goals', 'crisis-intervention', 'mindfulness'],
+  pro: ['advanced-chat', 'ai-insights', 'unlimited-sessions', 'progress-tracking', 'community-hub', 'breathing-exercises'],
+  premium: ['advanced-analytics', 'priority-support', 'personalized-insights', 'meditation-library'],
   'family-pro': ['family-dashboard', 'member-monitoring', 'progress-sharing', 'alerts'],
   'family-premium': ['24-7-support', 'family-therapy'],
   enterprise: ['api-access', 'custom-integrations', 'dedicated-support', 'white-label', 'compliance-tools', 'bulk-management']

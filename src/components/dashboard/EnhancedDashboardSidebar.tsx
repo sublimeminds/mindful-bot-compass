@@ -29,6 +29,8 @@ import {
   ChevronDown,
   ChevronRight,
   Sparkles,
+  SidebarClose,
+  SidebarOpen,
   BarChart3,
   Lightbulb,
   Server,
@@ -54,6 +56,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
   useSidebar
 } from '@/components/ui/sidebar';
 import {
@@ -437,10 +440,16 @@ const familyFeaturesNav: NavigationItem[] = [
   { name: 'Family Features', href: '/family-features', icon: Heart },
 ];
 
+const wellnessResourcesNav: NavigationItem[] = [
+  { name: 'Breathing Exercises', href: '/breathing-exercises', icon: Heart, locked: true, requiredFeature: 'breathing-exercises', requiredTier: 'pro' },
+  { name: 'Meditation Library', href: '/meditation-library', icon: Brain, locked: true, requiredFeature: 'meditation-library', requiredTier: 'premium' },
+  { name: 'Mindfulness', href: '/mindfulness', icon: Sparkles },
+];
+
 const communitySupportNav: NavigationItem[] = [
   { name: 'Community Hub', href: '/community', icon: Users, locked: true, requiredFeature: 'community-hub', requiredTier: 'pro' },
   { name: 'Wellness Challenges', href: '/wellness-challenges', icon: Trophy },
-  { name: 'Crisis Support', href: '/chat', icon: AlertTriangle, locked: true, requiredFeature: 'crisis-intervention', requiredTier: 'premium' },
+  { name: 'Crisis Support', href: '/chat', icon: AlertTriangle },
   { name: 'Help & Support', href: '/help', icon: HelpCircle },
 ];
 
@@ -466,6 +475,7 @@ const EnhancedDashboardSidebar = () => {
     { title: "Core Therapy", items: coreTherapyNav, icon: Brain },
     { title: "Progress & Analytics", items: progressAnalyticsNav, icon: BarChart3 },
     { title: "AI & Personalization", items: aiPersonalizationNav, icon: Sparkles },
+    { title: "Wellness Resources", items: wellnessResourcesNav, icon: Heart },
     { title: "Family Features", items: familyFeaturesNav, icon: Users, locked: true, requiredFeature: 'family-dashboard' },
     { title: "Technical", items: technicalNav, icon: Zap },
     { title: "Account & Billing", items: accountBillingNav, icon: User },
@@ -494,18 +504,21 @@ const EnhancedDashboardSidebar = () => {
   return (
     <Sidebar className="border-r border-gray-200/50 bg-white/95 backdrop-blur-lg shadow-lg" collapsible="icon">
       <SidebarHeader className="border-b border-gray-200/50 p-4 bg-gradient-to-br from-therapy-50/30 to-calm-50/30">
-        <div className="flex items-center space-x-3">
-          <GradientLogo size={state === "collapsed" ? "sm" : "sm"} />
-          {state !== "collapsed" && (
-            <div className="flex-1">
-              <h2 className="text-lg font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
-                TherapySync
-              </h2>
-              <p className="text-xs text-therapy-600/70 font-medium italic leading-tight">
-                "{quote}"
-              </p>
-            </div>
-          )}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <GradientLogo size={state === "collapsed" ? "sm" : "sm"} />
+            {state !== "collapsed" && (
+              <div className="flex-1">
+                <h2 className="text-lg font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                  TherapySync
+                </h2>
+                <p className="text-xs text-therapy-600/70 font-medium italic leading-tight">
+                  "{quote}"
+                </p>
+              </div>
+            )}
+          </div>
+          <SidebarTrigger className="h-8 w-8 hover:bg-therapy-100 rounded-lg transition-colors" />
         </div>
         
         {/* Search functionality */}

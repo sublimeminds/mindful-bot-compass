@@ -20,6 +20,9 @@ import HowItWorks from "../pages/HowItWorks";
 import FeaturesShowcase from "../pages/FeaturesShowcase";
 import CrisisSupport from "../pages/CrisisSupport";
 import Pricing from "../pages/Pricing";
+import BreathingExercisesPage from "../pages/BreathingExercisesPage";
+import MeditationLibraryPage from "../pages/MeditationLibraryPage";
+import PricingPage from "../pages/PricingPage";
 import CommunityFeatures from "../pages/CommunityFeatures";
 import TherapyTypes from "../pages/TherapyTypes";
 import TherapySyncAI from "../pages/TherapySyncAI";
@@ -152,7 +155,19 @@ const AppRouter = () => {
       
       <Route path="/pricing" element={
         <PageErrorBoundary pageName="Pricing">
-          <Pricing />
+          <PricingPage />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/breathing-exercises" element={
+        <PageErrorBoundary pageName="BreathingExercises">
+          <BreathingExercisesPage />
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/meditation-library" element={
+        <PageErrorBoundary pageName="MeditationLibrary">
+          <MeditationLibraryPage />
         </PageErrorBoundary>
       } />
       
