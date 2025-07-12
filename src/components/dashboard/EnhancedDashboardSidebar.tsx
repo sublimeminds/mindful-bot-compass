@@ -7,6 +7,7 @@ import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 import { useTherapyPlans } from '@/hooks/useTherapyPlans';
 import TherapyPlanSwitcher from '@/components/therapy/TherapyPlanSwitcher';
 import LockedFeatureItem from './LockedFeatureItem';
+import SearchBar from './SearchBar';
 import GradientLogo from '@/components/ui/GradientLogo';
 import { Search } from 'lucide-react';
 import { 
@@ -508,14 +509,7 @@ const EnhancedDashboardSidebar = () => {
         {/* Search functionality */}
         {state !== "collapsed" && (
           <div className="mt-3">
-            <div className="relative">
-              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 h-3 w-3" />
-              <input
-                type="text"
-                placeholder="Search features..."
-                className="w-full pl-7 pr-3 py-1.5 text-xs bg-white/60 border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-therapy-400 focus:border-transparent transition-all"
-              />
-            </div>
+            <SearchBar variant="header" placeholder="Search dashboard..." className="text-xs" />
           </div>
         )}
 

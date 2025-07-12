@@ -30,6 +30,22 @@ serve(async (req) => {
   }
 
   try {
+    // Get auth token from request
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ 
+        error: 'Authentication required',
+        response: "I'm here to help! Please make sure you're logged in to continue our conversation. 💙",
+        message: "I'm here to help! Please make sure you're logged in to continue our conversation. 💙",
+        confidence: 0.8,
+        emotion: 'empathetic',
+        type: 'support'
+      }), {
+        status: 200, // Return 200 to show fallback message
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const { message, systemPrompt, context, modelConfig }: AlexRequest = await req.json();
 
