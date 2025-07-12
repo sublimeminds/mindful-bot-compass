@@ -7,7 +7,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
@@ -56,70 +56,89 @@ serve(async (req) => {
       .eq('user_id', userId)
       .single();
 
-    // Use AI to analyze and recommend approaches
-    const recommendationPrompt = `
-    You are a clinical AI assistant specializing in therapy approach selection. Based on the following information, recommend the most suitable therapy approaches:
+    // Use Claude Opus for sophisticated therapy approach analysis
+    const recommendationPrompt = `You are a clinical AI assistant with expertise in therapeutic modalities, trauma-informed care, and evidence-based treatment selection. 
+
+    Analyze the following comprehensive user profile and recommend optimal therapy approaches:
 
     User Conditions: ${currentConditions.join(', ')}
     
-    ${sessionContext ? `Session Context:
-    - Mood: ${sessionContext.mood || 'Unknown'}
+    ${sessionContext ? `Current Session Context:
+    - Mood State: ${sessionContext.mood || 'Unknown'}
     - Recent Topics: ${sessionContext.recentTopics?.join(', ') || 'None'}
-    - Crisis Risk: ${sessionContext.crisisIndicators?.risk_level || 0}
-    - Previous Approaches: ${sessionContext.previousApproaches?.join(', ') || 'None'}` : ''}
+    - Crisis Risk Level: ${sessionContext.crisisIndicators?.risk_level || 0}
+    - Previous Approaches: ${sessionContext.previousApproaches?.join(', ') || 'None'}
+    - Engagement Level: ${sessionContext.engagementLevel || 'Unknown'}
+    - Therapeutic Alliance: ${sessionContext.therapeuticAlliance || 'Unknown'}` : ''}
 
-    ${userPrefs ? `User Preferences:
+    ${userPrefs ? `User Preferences & History:
     - Preferred Approaches: ${userPrefs.preferred_approaches?.join(', ') || 'None'}
-    - Communication Style: ${userPrefs.communication_style || 'balanced'}` : ''}
+    - Communication Style: ${userPrefs.communication_style || 'balanced'}
+    - Cultural Considerations: ${userPrefs.cultural_background || 'None'}
+    - Previous Treatment Response: ${userPrefs.treatment_history || 'Unknown'}` : ''}
 
-    Available Approaches: ${approaches.map(a => `${a.name} (effectiveness: ${a.effectiveness_score})`).join(', ')}
+    Available Therapeutic Approaches: ${approaches.map(a => `${a.name} (effectiveness: ${a.effectiveness_score}, specialties: ${a.target_conditions?.join(', ') || 'general'})`).join(', ')}
+
+    Provide evidence-based recommendations considering:
+    1. Clinical effectiveness for specific conditions
+    2. User preferences and cultural factors  
+    3. Trauma-informed considerations
+    4. Integration potential between approaches
+    5. Short-term stabilization vs long-term growth
 
     Respond with a JSON object containing:
     {
       "primary": {
         "approach_name": "name",
         "confidence": 0.0-1.0,
-        "reasoning": "detailed explanation",
-        "suitability_factors": ["factor1", "factor2"]
+        "reasoning": "detailed clinical reasoning",
+        "suitability_factors": ["factor1", "factor2"],
+        "evidence_base": "research support level",
+        "expected_timeline": "estimated duration"
       },
       "secondary": {
         "approach_name": "name", 
         "confidence": 0.0-1.0,
-        "reasoning": "detailed explanation",
-        "suitability_factors": ["factor1", "factor2"]
+        "reasoning": "detailed clinical reasoning",
+        "suitability_factors": ["factor1", "factor2"],
+        "complementary_value": "how it enhances primary approach"
       },
-      "dual_approach_strategy": "how to integrate both approaches",
+      "dual_approach_strategy": "integration methodology and sequencing",
       "session_structure": {
-        "opening": "approach to use",
-        "middle": "approach to use", 
-        "closing": "approach to use"
-      }
-    }
-    `;
+        "opening": "approach and techniques to use",
+        "middle": "core intervention approach", 
+        "closing": "consolidation and homework approach"
+      },
+      "contraindications": ["potential risks or unsuitable factors"],
+      "success_indicators": ["measurable outcomes to track"],
+      "adaptation_triggers": ["conditions requiring approach modification"]
+    }`;
 
-    const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'x-api-key': anthropicApiKey!,
         'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'claude-opus-4-20250514',
+        max_tokens: 4000,
         messages: [
-          { role: 'system', content: 'You are a clinical AI assistant. Always respond with valid JSON.' },
-          { role: 'user', content: recommendationPrompt }
-        ],
-        temperature: 0.3,
-        response_format: { type: "json_object" }
+          {
+            role: 'user',
+            content: recommendationPrompt
+          }
+        ]
       }),
     });
 
-    if (!openAIResponse.ok) {
-      throw new Error(`OpenAI API error: ${openAIResponse.status}`);
+    if (!anthropicResponse.ok) {
+      throw new Error(`Anthropic API error: ${anthropicResponse.status}`);
     }
 
-    const openAIData = await openAIResponse.json();
-    const recommendations = JSON.parse(openAIData.choices[0].message.content);
+    const anthropicData = await anthropicResponse.json();
+    const recommendations = JSON.parse(anthropicData.content[0].text);
 
     // Find the actual approach objects
     const primaryApproach = approaches.find(a => a.name === recommendations.primary.approach_name);

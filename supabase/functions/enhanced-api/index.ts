@@ -25,14 +25,13 @@ serve(async (req) => {
       response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${anthropicApiKey}`,
-          'Content-Type': 'application/json',
           'x-api-key': anthropicApiKey,
+          'Content-Type': 'application/json',
           'anthropic-version': '2023-06-01'
         },
         body: JSON.stringify({
-          model: model || 'claude-3-5-sonnet-20241022',
-          max_tokens: 1024,
+          model: model || 'claude-opus-4-20250514',
+          max_tokens: 2048,
           messages: [
             {
               role: 'user',

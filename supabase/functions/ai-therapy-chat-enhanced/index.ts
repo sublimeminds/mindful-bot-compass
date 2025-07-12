@@ -7,6 +7,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL') ?? '',
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -58,26 +59,28 @@ Guidelines:
 - Reference past conversations when relevant
 - Stay in character as this specific therapist`;
 
-    // Call OpenAI
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Call Claude Opus for superior therapeutic reasoning
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
+        'x-api-key': anthropicApiKey!,
         'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'claude-opus-4-20250514',
+        max_tokens: 2000,
         messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: message }
-        ],
-        temperature: 0.7,
-        max_tokens: 1000
+          {
+            role: 'user',
+            content: `${systemPrompt}\n\nUser: ${message}`
+          }
+        ]
       }),
     });
 
     const data = await response.json();
-    const aiResponse = data.choices[0].message.content;
+    const aiResponse = data.content[0].text;
 
     // Store memory if significant
     if (message.length > 20) {

@@ -7,7 +7,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
@@ -29,17 +29,19 @@ serve(async (req) => {
     // Initialize Supabase client
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Analyze message with OpenAI
-    const analysisPrompt = `
-    You are a clinical AI assistant specializing in therapy session analysis. Analyze the following user message for:
+    // Analyze message with Claude Opus for superior reasoning
+    const analysisPrompt = `You are a clinical AI assistant specializing in therapy session analysis with expertise in trauma-informed care, crisis intervention, and therapeutic breakthrough identification.
 
-    1. Emotional state and intensity (0-1 scale)
-    2. Crisis indicators and risk level (0-1 scale)
-    3. Breakthrough potential (0-1 scale)
-    4. Key themes and concerns
-    5. Recommended therapeutic techniques
+    Analyze the following user message comprehensively:
 
     User message: "${message}"
+
+    Provide a detailed analysis focusing on:
+    1. Emotional state analysis (primary/secondary emotions, intensity, valence, arousal)
+    2. Crisis risk assessment (suicide/self-harm indicators, immediate safety concerns)
+    3. Therapeutic breakthrough potential (readiness for change, insight moments)
+    4. Clinical themes and therapeutic technique recommendations
+    5. Urgency classification and intervention needs
 
     Respond with a JSON object containing:
     {
@@ -48,45 +50,52 @@ serve(async (req) => {
         "intensity": 0.0-1.0,
         "valence": -1.0 to 1.0,
         "arousal": 0.0-1.0,
-        "secondary_emotions": ["emotion1", "emotion2"]
+        "secondary_emotions": ["emotion1", "emotion2"],
+        "emotional_complexity": 0.0-1.0,
+        "regulation_capacity": 0.0-1.0
       },
       "crisis_indicators": {
         "risk_level": 0.0-1.0,
         "indicators": ["indicator1", "indicator2"],
         "confidence": 0.0-1.0,
         "requires_escalation": boolean,
-        "immediate_concerns": ["concern1", "concern2"]
+        "immediate_concerns": ["concern1", "concern2"],
+        "protective_factors": ["factor1", "factor2"],
+        "risk_timeline": "immediate|hours|days|weeks"
       },
       "breakthrough_potential": 0.0-1.0,
+      "breakthrough_indicators": ["insight", "motivation", "readiness"],
       "themes": ["theme1", "theme2"],
       "recommended_techniques": ["technique1", "technique2"],
-      "urgency_level": "low|medium|high|crisis"
-    }
-    `;
+      "urgency_level": "low|medium|high|crisis",
+      "clinical_notes": "detailed assessment notes"
+    }`;
 
-    const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'x-api-key': anthropicApiKey!,
         'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'claude-opus-4-20250514',
+        max_tokens: 3000,
         messages: [
-          { role: 'system', content: 'You are a clinical AI assistant. Always respond with valid JSON.' },
-          { role: 'user', content: analysisPrompt }
-        ],
-        temperature: 0.3,
-        response_format: { type: "json_object" }
+          {
+            role: 'user',
+            content: analysisPrompt
+          }
+        ]
       }),
     });
 
-    if (!openAIResponse.ok) {
-      throw new Error(`OpenAI API error: ${openAIResponse.status}`);
+    if (!anthropicResponse.ok) {
+      throw new Error(`Anthropic API error: ${anthropicResponse.status}`);
     }
 
-    const openAIData = await openAIResponse.json();
-    const analysis = JSON.parse(openAIData.choices[0].message.content);
+    const anthropicData = await anthropicResponse.json();
+    const analysis = JSON.parse(anthropicData.content[0].text);
 
     // Store analysis in database
     if (sessionId) {
