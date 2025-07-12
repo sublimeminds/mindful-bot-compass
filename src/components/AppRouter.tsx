@@ -51,6 +51,7 @@ import NotificationsPage from "../pages/NotificationsPage";
 import TherapyPlanPage from "../pages/TherapyPlanPage";
 import ProgressOverview from "../pages/ProgressOverview";
 import Subscription from "../pages/Subscription";
+import AccountBilling from "../pages/AccountBilling";
 import TherapySessionPage from "../pages/TherapySessionPage";
 import QuickChatPage from "../pages/QuickChatPage";
 import UnifiedTherapyChat from '@/components/chat/UnifiedTherapyChat';
@@ -258,9 +259,9 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
-      <Route path="/billing" element={
-        <PageErrorBoundary pageName="Billing">
-          <DashboardPageWrapper><Billing /></DashboardPageWrapper>
+      <Route path="/account-billing" element={
+        <PageErrorBoundary pageName="Account & Billing">
+          <DashboardPageWrapper><AccountBilling /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
@@ -306,9 +307,16 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
+      {/* Legacy routes - redirect to unified page */}
+      <Route path="/billing" element={
+        <PageErrorBoundary pageName="Billing (Legacy)">
+          <DashboardPageWrapper><AccountBilling /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
       <Route path="/subscription" element={
-        <PageErrorBoundary pageName="Subscription">
-          <DashboardPageWrapper><Subscription /></DashboardPageWrapper>
+        <PageErrorBoundary pageName="Subscription (Legacy)">
+          <DashboardPageWrapper><AccountBilling /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
