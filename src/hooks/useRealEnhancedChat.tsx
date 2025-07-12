@@ -5,6 +5,8 @@ import { realAIService, ConversationContext } from '@/services/realAiService';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from './use-toast';
 import { useTherapist } from '@/contexts/TherapistContext';
+import { adaptiveTherapyPlanService } from '@/services/adaptiveTherapyPlanService';
+import { SessionAnalyticsService } from '@/services/sessionAnalyticsService';
 
 export interface Message {
   id: string;
@@ -63,6 +65,9 @@ export const useRealEnhancedChat = () => {
     try {
       const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       setCurrentSessionId(sessionId);
+      
+      // Prepare session with adaptive insights
+      await adaptiveTherapyPlanService.prepareSessionWithAdaptiveInsights(user.id, sessionId);
       
       // Store session start in database
       await supabase.from('session_messages').insert({
@@ -222,14 +227,30 @@ export const useRealEnhancedChat = () => {
   }, []);
 
   const analyzeSession = useCallback(async () => {
-    if (!currentSessionId) return null;
+    if (!currentSessionId || !user) return null;
 
     try {
+      // Run comprehensive session analysis
       const insights = await realAIService.analyzeSessionInsights(currentSessionId);
+      
+      // Get session analytics for effectiveness scoring
+      const sessionAnalytics = await SessionAnalyticsService.getSessionAnalytics(user.id, '1d');
+      
+      // Update adaptive therapy plan effectiveness
+      if (sessionAnalytics.effectivenessScore) {
+        await adaptiveTherapyPlanService.updatePlanEffectiveness(
+          user.id, 
+          currentSessionId, 
+          sessionAnalytics.effectivenessScore / 100
+        );
+      }
+      
+      // Trigger adaptive plan analysis for next session
+      await adaptiveTherapyPlanService.analyzeAndAdaptPlan(user.id);
       
       toast({
         title: "📊 Session Analysis Complete",
-        description: insights.summary || "Your session has been analyzed for insights."
+        description: insights.summary || "Your session has been analyzed and therapy plan updated."
       });
 
       return insights;
@@ -237,7 +258,7 @@ export const useRealEnhancedChat = () => {
       console.error('Error analyzing session:', error);
       return null;
     }
-  }, [currentSessionId, toast]);
+  }, [currentSessionId, user, toast]);
 
   return {
     messages,

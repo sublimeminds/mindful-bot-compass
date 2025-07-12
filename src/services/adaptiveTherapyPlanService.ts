@@ -10,8 +10,8 @@ export interface AdaptiveTherapyPlan {
   techniques: string[];
   goals: string[];
   effectiveness_score: number;
-  adaptations: AdaptationHistory[];
-  next_session_recommendations: Recommendation[];
+  adaptations: any; // JSON field
+  next_session_recommendations: any; // JSON field
   created_at: string;
   updated_at: string;
 }
@@ -252,9 +252,10 @@ class AdaptiveTherapyPlanService {
 
       const frequency = (crisisAlerts?.length || 0) / 4; // Per week over 30 days
       
-      const triggers = crisisAlerts?.flatMap(alert => 
-        alert.trigger_data?.indicators || []
-      ).filter((value, index, self) => self.indexOf(value) === index) || [];
+      const triggers = crisisAlerts?.flatMap(alert => {
+        const triggerData = alert.trigger_data as any;
+        return triggerData?.indicators || [];
+      }).filter((value, index, self) => self.indexOf(value) === index) || [];
 
       return {
         frequency,
@@ -383,7 +384,7 @@ class AdaptiveTherapyPlanService {
         }
       );
 
-      const newPlan: Omit<AdaptiveTherapyPlan, 'id' | 'created_at' | 'updated_at'> = {
+      const newPlan = {
         user_id: userId,
         primary_approach: approachRecommendations.primary.approach.name,
         secondary_approach: approachRecommendations.secondary?.approach.name,
@@ -399,8 +400,8 @@ class AdaptiveTherapyPlanService {
             effectiveness_before: currentPlan?.effectiveness_score || 0,
             trigger_data: { recommendations }
           }
-        ],
-        next_session_recommendations: recommendations
+        ] as any,
+        next_session_recommendations: recommendations as any
       };
 
       // Save new plan
@@ -486,7 +487,7 @@ class AdaptiveTherapyPlanService {
         .from('adaptive_therapy_plans')
         .update({
           effectiveness_score: effectivenessScore,
-          adaptations: updatedAdaptations,
+          adaptations: updatedAdaptations as any,
           updated_at: new Date().toISOString()
         })
         .eq('id', currentPlan.id);

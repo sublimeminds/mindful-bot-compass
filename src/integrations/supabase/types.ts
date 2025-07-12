@@ -134,6 +134,48 @@ export type Database = {
         }
         Relationships: []
       }
+      adaptive_therapy_plans: {
+        Row: {
+          adaptations: Json
+          created_at: string
+          effectiveness_score: number
+          goals: string[]
+          id: string
+          next_session_recommendations: Json
+          primary_approach: string
+          secondary_approach: string | null
+          techniques: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          adaptations?: Json
+          created_at?: string
+          effectiveness_score?: number
+          goals?: string[]
+          id?: string
+          next_session_recommendations?: Json
+          primary_approach: string
+          secondary_approach?: string | null
+          techniques?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          adaptations?: Json
+          created_at?: string
+          effectiveness_score?: number
+          goals?: string[]
+          id?: string
+          next_session_recommendations?: Json
+          primary_approach?: string
+          secondary_approach?: string | null
+          techniques?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       admin_activity_log: {
         Row: {
           action: string
