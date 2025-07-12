@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Check, X, Crown, Users, Zap, Shield, Star, ArrowRight } from 'lucide-react';
+import { Check, X, Crown, Users, Zap, Shield, Star, ArrowRight, Brain, Heart, Sparkles, Globe, Clock, Award, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
 import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
@@ -14,40 +15,50 @@ interface PricingFeature {
   free: boolean | string;
   pro: boolean | string;
   premium: boolean | string;
-  category: 'core' | 'wellness' | 'analytics' | 'support' | 'family' | 'limits';
+  category: 'core' | 'ai' | 'wellness' | 'analytics' | 'support' | 'family' | 'limits';
 }
 
 const PRICING_FEATURES: PricingFeature[] = [
-  // Core Features
-  { name: 'AI Therapy Chat', free: '10 messages/session', pro: 'Unlimited', premium: 'Unlimited', category: 'core' },
+  // Core AI Features
+  { name: 'TherapySync AI (GPT-4 Based)', free: '10 messages/session', pro: 'Unlimited (GPT-4)', premium: 'Advanced (GPT-4 + Claude)', category: 'core' },
   { name: 'Quick Chat Sessions', free: true, pro: true, premium: true, category: 'core' },
   { name: 'Full Therapy Sessions', free: '1/week, 4/month', pro: 'Unlimited', premium: 'Unlimited', category: 'limits' },
   { name: 'Therapy Plans', free: '1 plan', pro: '5 plans', premium: '10 plans', category: 'limits' },
+  { name: 'AI Personality Types', free: '2 therapists', pro: '8 specialized therapists', premium: '12+ expert therapists', category: 'core' },
   { name: 'Mood Tracking', free: true, pro: true, premium: true, category: 'core' },
   { name: 'Basic Goals', free: true, pro: true, premium: true, category: 'core' },
   { name: 'Crisis Support (24/7)', free: true, pro: true, premium: true, category: 'support' },
   
+  // Advanced AI Features
+  { name: 'Predictive Insights', free: false, pro: 'Basic predictions', premium: 'Advanced ML insights', category: 'ai' },
+  { name: 'Personalized Interventions', free: false, pro: true, premium: 'Hyper-personalized', category: 'ai' },
+  { name: 'Cultural Adaptation', free: 'Basic', pro: '15+ cultures', premium: '30+ cultures + dialects', category: 'ai' },
+  { name: 'Voice Therapy (Coming Soon)', free: false, pro: false, premium: 'Beta access', category: 'ai' },
+  
   // Wellness Resources
-  { name: 'Mindfulness Exercises', free: true, pro: true, premium: true, category: 'wellness' },
-  { name: 'Breathing Exercises', free: false, pro: true, premium: true, category: 'wellness' },
-  { name: 'Meditation Library', free: false, pro: 'Basic', premium: 'Premium + Offline', category: 'wellness' },
-  { name: 'Audio Content Library', free: 'Limited', pro: 'Extended', premium: 'Full Access', category: 'wellness' },
+  { name: 'Mindfulness Exercises', free: '5 exercises', pro: '25+ exercises', premium: '100+ premium exercises', category: 'wellness' },
+  { name: 'Breathing Exercises', free: false, pro: '15+ techniques', premium: '50+ advanced techniques', category: 'wellness' },
+  { name: 'Meditation Library', free: false, pro: '50+ guided sessions', premium: '200+ premium + offline', category: 'wellness' },
+  { name: 'Audio Content Library', free: 'Limited (10)', pro: 'Extended (100+)', premium: 'Full Access (500+)', category: 'wellness' },
   
   // Analytics & Insights
-  { name: 'Progress Tracking', free: 'Basic', pro: 'Advanced', premium: 'Advanced', category: 'analytics' },
-  { name: 'AI Insights', free: false, pro: true, premium: true, category: 'analytics' },
-  { name: 'Advanced Analytics', free: false, pro: false, premium: true, category: 'analytics' },
-  { name: 'Personalized Reports', free: false, pro: 'Monthly', premium: 'Weekly', category: 'analytics' },
+  { name: 'Progress Tracking', free: 'Basic charts', pro: 'Advanced analytics', premium: 'Predictive analytics', category: 'analytics' },
+  { name: 'AI Insights', free: false, pro: 'Weekly insights', premium: 'Real-time insights', category: 'analytics' },
+  { name: 'Advanced Analytics', free: false, pro: false, premium: 'Deep behavioral analysis', category: 'analytics' },
+  { name: 'Personalized Reports', free: false, pro: 'Monthly reports', premium: 'Weekly + custom reports', category: 'analytics' },
+  { name: 'Data Export', free: false, pro: 'CSV export', premium: 'Full data portability', category: 'analytics' },
   
   // Community & Support
-  { name: 'Community Hub', free: false, pro: true, premium: true, category: 'support' },
-  { name: 'Priority Support', free: false, pro: false, premium: true, category: 'support' },
-  { name: 'Direct Therapist Referrals', free: false, pro: false, premium: true, category: 'support' },
+  { name: 'Community Hub', free: false, pro: 'Full access', premium: 'VIP community + events', category: 'support' },
+  { name: 'Priority Support', free: 'Email (48h)', pro: 'Email (24h)', premium: 'Chat + Phone (2h)', category: 'support' },
+  { name: 'Direct Therapist Referrals', free: false, pro: false, premium: 'Vetted network access', category: 'support' },
+  { name: 'Expert Consultations', free: false, pro: false, premium: '2 sessions/year', category: 'support' },
   
   // Family Features
-  { name: 'Family Dashboard', free: false, pro: false, premium: 'Add-on Available', category: 'family' },
-  { name: 'Member Monitoring', free: false, pro: false, premium: 'Add-on Available', category: 'family' },
-  { name: 'Progress Sharing', free: false, pro: false, premium: 'Add-on Available', category: 'family' },
+  { name: 'Family Members', free: '1 user', pro: '1 user', premium: 'Up to 4 members', category: 'family' },
+  { name: 'Family Dashboard', free: false, pro: false, premium: 'Comprehensive overview', category: 'family' },
+  { name: 'Member Monitoring', free: false, pro: false, premium: 'Privacy-respecting alerts', category: 'family' },
+  { name: 'Progress Sharing', free: false, pro: false, premium: 'Secure family insights', category: 'family' },
 ];
 
 interface PlanDetails {
@@ -66,56 +77,56 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
     name: 'Free',
     price: { monthly: 0, yearly: 0 },
     description: 'Essential mental health support for everyone',
-    icon: Shield,
-    color: 'from-gray-500 to-gray-600',
+    icon: Heart,
+    color: 'from-therapy-400 to-therapy-500',
     features: [
-      'Basic AI therapy chat',
-      'Mood tracking',
-      'Crisis support access',
-      'Limited sessions (1/week)',
-      'Basic goal setting',
-      'Mindfulness exercises'
+      'AI therapy chat (GPT-4)',
+      'Crisis support (24/7)',
+      'Basic mood tracking',
+      '1 session/week, 4/month',
+      '2 AI therapist personalities',
+      'Basic mindfulness exercises'
     ],
     limitations: [
       '10 messages per session',
       '1 therapy plan only',
-      'Limited meditation content'
+      'Limited to basic features'
     ]
   },
   pro: {
     name: 'Pro',
-    price: { monthly: 29, yearly: 290 },
-    description: 'Advanced features for serious mental wellness',
-    icon: Crown,
-    color: 'from-blue-500 to-blue-600',
+    price: { monthly: 19, yearly: 190 },
+    description: 'Advanced AI therapy with unlimited access',
+    icon: Brain,
+    color: 'from-harmony-500 to-harmony-600',
     features: [
       'Unlimited therapy sessions',
-      'Advanced AI insights',
-      'Breathing exercises',
-      'Extended meditation library',
+      '8 specialized AI therapists',
+      'Advanced breathing exercises',
+      'Extended meditation library (50+)',
       'Community hub access',
       'Up to 5 therapy plans',
-      'Progress tracking',
-      'Monthly reports'
+      'Predictive insights',
+      'Monthly detailed reports'
     ],
     popular: true
   },
   premium: {
     name: 'Premium',
-    price: { monthly: 79, yearly: 790 },
-    description: 'Complete mental health solution with premium support',
-    icon: Star,
-    color: 'from-purple-500 to-purple-600',
+    price: { monthly: 39, yearly: 390 },
+    description: 'Complete mental wellness ecosystem',
+    icon: Sparkles,
+    color: 'from-flow-500 to-flow-600',
     features: [
       'Everything in Pro',
-      'Advanced analytics dashboard',
-      'Premium meditation library',
-      'Priority customer support',
-      'Direct therapist referrals',
+      '12+ expert AI therapists',
+      'Advanced ML insights',
+      'Premium meditation library (200+)',
+      'Priority support (2h response)',
       'Up to 10 therapy plans',
-      'Weekly detailed reports',
-      'Offline meditation downloads',
-      'Family plan add-on available'
+      'Family dashboard (up to 4)',
+      'Direct therapist referrals',
+      'Weekly reports + data export'
     ]
   }
 };
@@ -123,6 +134,8 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
 const PricingPage = () => {
   const [isYearly, setIsYearly] = useState(false);
   const [expandedFeatures, setExpandedFeatures] = useState(false);
+  const [familyMembers, setFamilyMembers] = useState([2]);
+  const [showFamilyCalculator, setShowFamilyCalculator] = useState(false);
   const navigate = useNavigate();
 
   useSafeSEO({
@@ -150,12 +163,24 @@ const PricingPage = () => {
   }, {} as Record<string, PricingFeature[]>);
 
   const categoryLabels = {
-    core: 'Core Features',
+    core: 'Core AI Features',
+    ai: 'Advanced AI Capabilities',
     limits: 'Usage Limits',
     wellness: 'Wellness Resources',
     analytics: 'Analytics & Insights',
     support: 'Support & Community',
     family: 'Family Features'
+  };
+
+  const calculateFamilyPrice = (members: number, plan: 'pro' | 'premium') => {
+    const basePrice = PLAN_DETAILS[plan].price;
+    const memberPrice = plan === 'pro' ? 12 : 25;
+    const additionalMembers = Math.max(0, members - 1);
+    
+    return {
+      monthly: basePrice.monthly + (additionalMembers * memberPrice),
+      yearly: basePrice.yearly + (additionalMembers * memberPrice * 10) // 2 months free
+    };
   };
 
   return (
@@ -166,36 +191,105 @@ const PricingPage = () => {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-5xl font-bold text-gray-900 mb-6">
-              Simple, Transparent Pricing
+            <h1 className="text-5xl font-bold therapy-text-gradient mb-6">
+              AI-Powered Mental Wellness
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Choose the plan that fits your mental health journey. All plans include our core AI therapy features with no hidden fees.
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
+              Choose the plan that fits your mental health journey. All plans include our advanced TherapySync AI powered by GPT-4, with specialized therapists trained in different approaches.
             </p>
             
-            {/* Billing Toggle */}
-            <div className="flex items-center justify-center space-x-4">
-              <span className={`text-lg ${!isYearly ? 'font-semibold text-therapy-600' : 'text-gray-600'}`}>
-                Monthly
-              </span>
-              <Switch
-                checked={isYearly}
-                onCheckedChange={setIsYearly}
-                className="data-[state=checked]:bg-therapy-600"
-              />
-              <span className={`text-lg ${isYearly ? 'font-semibold text-therapy-600' : 'text-gray-600'}`}>
-                Yearly
-              </span>
-              {isYearly && (
-                <Badge className="bg-green-100 text-green-700 ml-2">
-                  Save up to 17%
-                </Badge>
+            {/* AI Technology Highlight */}
+            <div className="max-w-4xl mx-auto mb-8">
+              <div className="bg-gradient-to-r from-therapy-50 to-harmony-50 rounded-2xl p-6 border border-therapy-200">
+                <div className="flex items-center justify-center mb-4">
+                  <Brain className="h-8 w-8 text-therapy-600 mr-3" />
+                  <h3 className="text-xl font-semibold text-therapy-800">Advanced TherapySync AI</h3>
+                </div>
+                <p className="text-therapy-700 mb-4">
+                  Our AI combines GPT-4's language understanding with specialized therapy training across CBT, DBT, Mindfulness, and Trauma-Focused approaches.
+                </p>
+                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                  <div className="flex items-center">
+                    <Award className="h-4 w-4 text-therapy-600 mr-2" />
+                    <span>Clinically Validated</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Globe className="h-4 w-4 text-therapy-600 mr-2" />
+                    <span>30+ Cultural Adaptations</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Clock className="h-4 w-4 text-therapy-600 mr-2" />
+                    <span>24/7 Availability</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Billing Toggle & Family Option */}
+            <div className="flex flex-col items-center space-y-4">
+              <div className="flex items-center space-x-4">
+                <span className={`text-lg ${!isYearly ? 'font-semibold text-therapy-600' : 'text-gray-600'}`}>
+                  Monthly
+                </span>
+                <Switch
+                  checked={isYearly}
+                  onCheckedChange={setIsYearly}
+                  className="data-[state=checked]:bg-therapy-600"
+                />
+                <span className={`text-lg ${isYearly ? 'font-semibold text-therapy-600' : 'text-gray-600'}`}>
+                  Yearly
+                </span>
+                {isYearly && (
+                  <Badge className="bg-green-100 text-green-700 ml-2">
+                    Save up to 17%
+                  </Badge>
+                )}
+              </div>
+              
+              <Button
+                variant="outline"
+                onClick={() => setShowFamilyCalculator(!showFamilyCalculator)}
+                className="text-therapy-600 border-therapy-200 hover:bg-therapy-50"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                Family Plan Calculator
+                {showFamilyCalculator ? <ChevronUp className="h-4 w-4 ml-2" /> : <ChevronDown className="h-4 w-4 ml-2" />}
+              </Button>
+              
+              {showFamilyCalculator && (
+                <div className="w-full max-w-md p-4 bg-white rounded-lg border border-therapy-200 shadow-sm">
+                  <h4 className="font-medium text-therapy-800 mb-3">Family Members: {familyMembers[0]}</h4>
+                  <Slider
+                    value={familyMembers}
+                    onValueChange={setFamilyMembers}
+                    max={6}
+                    min={2}
+                    step={1}
+                    className="mb-4"
+                  />
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div className="p-3 bg-harmony-50 rounded-lg text-center">
+                      <p className="font-medium text-harmony-800">Pro Family</p>
+                      <p className="text-lg font-bold text-harmony-700">
+                        ${calculateFamilyPrice(familyMembers[0], 'pro')[isYearly ? 'yearly' : 'monthly']}
+                        <span className="text-xs">/{isYearly ? 'year' : 'month'}</span>
+                      </p>
+                    </div>
+                    <div className="p-3 bg-flow-50 rounded-lg text-center">
+                      <p className="font-medium text-flow-800">Premium Family</p>
+                      <p className="text-lg font-bold text-flow-700">
+                        ${calculateFamilyPrice(familyMembers[0], 'premium')[isYearly ? 'yearly' : 'monthly']}
+                        <span className="text-xs">/{isYearly ? 'year' : 'month'}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           </div>
 
           {/* Pricing Cards */}
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-3 gap-8 mb-16 relative">
             {Object.entries(PLAN_DETAILS).map(([key, plan]) => {
               const IconComponent = plan.icon;
               const price = isYearly ? plan.price.yearly : plan.price.monthly;
@@ -212,15 +306,15 @@ const PricingPage = () => {
                   )}
                   
                   <CardHeader className={`text-center ${plan.popular ? 'pt-8' : ''}`}>
-                    <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${plan.color} flex items-center justify-center text-white`}>
-                      <IconComponent className="h-8 w-8" />
+                    <div className={`w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${plan.color} flex items-center justify-center text-white shadow-lg`}>
+                      <IconComponent className="h-10 w-10" />
                     </div>
                     
                     <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
-                    <CardDescription className="text-gray-600">{plan.description}</CardDescription>
+                    <CardDescription className="text-gray-600 text-base">{plan.description}</CardDescription>
                     
                     <div className="space-y-2">
-                      <div className="text-4xl font-bold text-gray-900">
+                      <div className="text-4xl font-bold therapy-text-gradient">
                         ${price}
                         {price > 0 && (
                           <span className="text-lg font-normal text-gray-600">
@@ -230,7 +324,8 @@ const PricingPage = () => {
                       </div>
                       
                       {isYearly && savings > 0 && (
-                        <div className="text-sm text-green-600 font-medium">
+                        <div className="text-sm text-green-600 font-medium flex items-center justify-center">
+                          <Award className="h-4 w-4 mr-1" />
                           Save {savings}% with yearly billing
                         </div>
                       )}
@@ -262,18 +357,23 @@ const PricingPage = () => {
                     )}
                     
                     <Button 
-                      className={`w-full ${
+                      className={`w-full py-3 text-lg font-semibold ${
                         plan.popular 
-                          ? 'bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700' 
-                          : ''
+                          ? 'bg-gradient-to-r from-harmony-500 to-harmony-600 hover:from-harmony-600 hover:to-harmony-700' 
+                          : key === 'free'
+                          ? 'bg-gradient-to-r from-therapy-500 to-therapy-600 hover:from-therapy-600 hover:to-therapy-700'
+                          : 'bg-gradient-to-r from-flow-500 to-flow-600 hover:from-flow-600 hover:to-flow-700'
                       }`}
-                      variant={plan.popular ? 'default' : 'outline'}
                       onClick={() => {
-                        if (key === 'free') {
-                          navigate('/register');
-                        } else {
-                          navigate('/register', { state: { selectedPlan: key, isYearly } });
-                        }
+                        // Store selected plan
+                        localStorage.setItem('selectedPlan', JSON.stringify({
+                          name: plan.name,
+                          price: `$${price}`,
+                          period: `/${isYearly ? 'year' : 'month'}`,
+                          tier: key
+                        }));
+                        
+                        navigate('/auth');
                       }}
                     >
                       {key === 'free' ? 'Get Started Free' : `Choose ${plan.name}`}
@@ -286,45 +386,66 @@ const PricingPage = () => {
           </div>
 
           {/* Detailed Feature Comparison */}
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <div className="p-6 border-b">
+          <div className="bg-white rounded-2xl shadow-lg border overflow-hidden">
+            <div className="p-8 border-b bg-gradient-to-r from-therapy-50 to-harmony-50">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">Detailed Feature Comparison</h2>
+                <div>
+                  <h2 className="text-3xl font-bold therapy-text-gradient mb-2">Complete Feature Comparison</h2>
+                  <p className="text-gray-600">See exactly what's included in each plan</p>
+                </div>
                 <Button 
                   variant="outline" 
                   onClick={() => setExpandedFeatures(!expandedFeatures)}
+                  className="border-therapy-200 text-therapy-600 hover:bg-therapy-50"
                 >
-                  {expandedFeatures ? 'Show Less' : 'Show All Features'}
+                  {expandedFeatures ? 'Show Essential' : 'Show All Features'}
+                  {expandedFeatures ? <ChevronUp className="h-4 w-4 ml-2" /> : <ChevronDown className="h-4 w-4 ml-2" />}
                 </Button>
               </div>
             </div>
             
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-gradient-to-r from-therapy-100 to-harmony-100">
                   <tr>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Features</th>
-                    <th className="text-center py-4 px-6 font-semibold text-gray-900">Free</th>
-                    <th className="text-center py-4 px-6 font-semibold text-gray-900">Pro</th>
-                    <th className="text-center py-4 px-6 font-semibold text-gray-900">Premium</th>
+                    <th className="text-left py-6 px-8 font-bold text-gray-900 text-lg">Features</th>
+                    <th className="text-center py-6 px-6">
+                      <div className="flex flex-col items-center">
+                        <Heart className="h-6 w-6 text-therapy-600 mb-2" />
+                        <span className="font-bold text-therapy-800">Free</span>
+                      </div>
+                    </th>
+                    <th className="text-center py-6 px-6">
+                      <div className="flex flex-col items-center">
+                        <Brain className="h-6 w-6 text-harmony-600 mb-2" />
+                        <span className="font-bold text-harmony-800">Pro</span>
+                        <Badge className="mt-1 bg-harmony-100 text-harmony-700">Popular</Badge>
+                      </div>
+                    </th>
+                    <th className="text-center py-6 px-6">
+                      <div className="flex flex-col items-center">
+                        <Sparkles className="h-6 w-6 text-flow-600 mb-2" />
+                        <span className="font-bold text-flow-800">Premium</span>
+                      </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {Object.entries(categoryLabels).map(([categoryKey, categoryLabel]) => (
                     <React.Fragment key={categoryKey}>
-                      {(expandedFeatures || ['core', 'limits'].includes(categoryKey)) && (
+                      {(expandedFeatures || ['core', 'ai', 'limits', 'support'].includes(categoryKey)) && (
                         <>
-                          <tr className="bg-therapy-25">
-                            <td colSpan={4} className="py-3 px-6 font-semibold text-therapy-800 border-t">
+                          <tr className="bg-gradient-to-r from-therapy-25 to-harmony-25">
+                            <td colSpan={4} className="py-4 px-8 font-bold text-therapy-900 border-t-2 border-therapy-200 text-lg">
                               {categoryLabel}
                             </td>
                           </tr>
                           {categorizedFeatures[categoryKey]?.map((feature, index) => (
-                            <tr key={index} className="border-t hover:bg-gray-50">
-                              <td className="py-4 px-6 font-medium text-gray-900">{feature.name}</td>
-                              <td className="py-4 px-6 text-center">{getFeatureValue(feature, 'free')}</td>
-                              <td className="py-4 px-6 text-center">{getFeatureValue(feature, 'pro')}</td>
-                              <td className="py-4 px-6 text-center">{getFeatureValue(feature, 'premium')}</td>
+                            <tr key={index} className="border-t hover:bg-gradient-to-r hover:from-therapy-25/50 hover:to-harmony-25/50 transition-all">
+                              <td className="py-5 px-8 font-medium text-gray-900 text-base">{feature.name}</td>
+                              <td className="py-5 px-6 text-center">{getFeatureValue(feature, 'free')}</td>
+                              <td className="py-5 px-6 text-center">{getFeatureValue(feature, 'pro')}</td>
+                              <td className="py-5 px-6 text-center">{getFeatureValue(feature, 'premium')}</td>
                             </tr>
                           ))}
                         </>
@@ -336,25 +457,70 @@ const PricingPage = () => {
             </div>
           </div>
 
+          {/* AI Technology Deep Dive */}
+          <div className="mt-20 bg-gradient-to-r from-therapy-900 to-harmony-900 rounded-3xl p-12 text-white">
+            <div className="max-w-4xl mx-auto text-center">
+              <Brain className="h-16 w-16 mx-auto mb-6 text-therapy-300" />
+              <h2 className="text-4xl font-bold mb-6">Why TherapySync AI is Different</h2>
+              <p className="text-xl text-therapy-100 mb-8">
+                Our AI isn't just a chatbot—it's a sophisticated therapeutic companion trained on decades of clinical research.
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-8 text-left">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                  <Brain className="h-8 w-8 text-therapy-300 mb-4" />
+                  <h3 className="text-xl font-semibold mb-3">GPT-4 + Clinical Training</h3>
+                  <p className="text-therapy-100">
+                    Advanced language model enhanced with therapeutic protocols, validated interventions, and cultural sensitivity training.
+                  </p>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                  <Heart className="h-8 w-8 text-harmony-300 mb-4" />
+                  <h3 className="text-xl font-semibold mb-3">Specialized Therapists</h3>
+                  <p className="text-therapy-100">
+                    12+ AI therapist personalities, each specialized in different approaches: CBT, DBT, Mindfulness, Trauma-Focused, and more.
+                  </p>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                  <Globe className="h-8 w-8 text-flow-300 mb-4" />
+                  <h3 className="text-xl font-semibold mb-3">Cultural Intelligence</h3>
+                  <p className="text-therapy-100">
+                    Adapted for 30+ cultures and dialects, understanding cultural context in mental health approaches and communication styles.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* FAQ Section */}
-          <div className="mt-16 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Frequently Asked Questions</h2>
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div className="text-left">
-                <h3 className="font-semibold text-gray-900 mb-2">Can I change plans anytime?</h3>
-                <p className="text-gray-600">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
+          <div className="mt-20 text-center">
+            <h2 className="text-4xl font-bold therapy-text-gradient mb-12">Frequently Asked Questions</h2>
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              <div className="text-left p-6 bg-white rounded-xl border border-therapy-100 shadow-sm">
+                <h3 className="font-bold text-therapy-800 mb-3 text-lg">How advanced is your AI compared to other therapy apps?</h3>
+                <p className="text-gray-700">TherapySync uses GPT-4 enhanced with specialized therapy training, not basic chatbots. Our AI understands therapeutic context, remembers your progress, and adapts to your cultural background—capabilities most apps lack.</p>
               </div>
-              <div className="text-left">
-                <h3 className="font-semibold text-gray-900 mb-2">Is there a free trial?</h3>
-                <p className="text-gray-600">Our Free plan gives you access to core features permanently. No credit card required.</p>
+              <div className="text-left p-6 bg-white rounded-xl border border-therapy-100 shadow-sm">
+                <h3 className="font-bold text-therapy-800 mb-3 text-lg">Can I change plans anytime?</h3>
+                <p className="text-gray-700">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate any billing differences.</p>
               </div>
-              <div className="text-left">
-                <h3 className="font-semibold text-gray-900 mb-2">What happens to my data if I cancel?</h3>
-                <p className="text-gray-600">Your data remains secure and accessible. You can export it anytime or reactivate your account.</p>
+              <div className="text-left p-6 bg-white rounded-xl border border-therapy-100 shadow-sm">
+                <h3 className="font-bold text-therapy-800 mb-3 text-lg">Is the Free plan really free forever?</h3>
+                <p className="text-gray-700">Absolutely! Our Free plan includes crisis support and basic AI therapy features permanently. No credit card required, no hidden fees.</p>
               </div>
-              <div className="text-left">
-                <h3 className="font-semibold text-gray-900 mb-2">Do you offer refunds?</h3>
-                <p className="text-gray-600">Yes, we offer a 30-day money-back guarantee for all paid plans. No questions asked.</p>
+              <div className="text-left p-6 bg-white rounded-xl border border-therapy-100 shadow-sm">
+                <h3 className="font-bold text-therapy-800 mb-3 text-lg">How does family plan monitoring work?</h3>
+                <p className="text-gray-700">Family plans include privacy-respecting insights and optional progress sharing. Members control what they share, and emergency alerts only trigger for crisis situations.</p>
+              </div>
+              <div className="text-left p-6 bg-white rounded-xl border border-therapy-100 shadow-sm">
+                <h3 className="font-bold text-therapy-800 mb-3 text-lg">What happens to my data if I cancel?</h3>
+                <p className="text-gray-700">Your data remains secure and accessible for 90 days. You can export everything or reactivate anytime. We never delete therapeutic progress without your explicit consent.</p>
+              </div>
+              <div className="text-left p-6 bg-white rounded-xl border border-therapy-100 shadow-sm">
+                <h3 className="font-bold text-therapy-800 mb-3 text-lg">Do you offer refunds?</h3>
+                <p className="text-gray-700">Yes, we offer a 30-day money-back guarantee for all paid plans. If you're not satisfied, we'll refund you completely, no questions asked.</p>
               </div>
             </div>
           </div>
