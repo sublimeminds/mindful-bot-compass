@@ -7,7 +7,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
@@ -61,19 +61,74 @@ serve(async (req) => {
       .eq('is_completed', false)
       .order('created_at', { ascending: false });
 
-    // Generate AI-powered session preparation recommendations
+    // Get comprehensive user context for enhanced session preparation
+    const { data: userProfile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    const { data: culturalProfile } = await supabase
+      .from('user_cultural_profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    const { data: traumaHistory } = await supabase
+      .from('trauma_history')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    const { data: conversationMemory } = await supabase
+      .from('conversation_memory')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .order('importance_score', { ascending: false })
+      .limit(10);
+
+    const { data: recentTechniques } = await supabase
+      .from('session_technique_tracking')
+      .select('*')
+      .eq('user_id', userId)
+      .gte('created_at', new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString())
+      .order('effectiveness_metrics', { ascending: false });
+
+    const { data: previousPreparations } = await supabase
+      .from('session_preparations')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(5);
+
+    // Generate AI-powered comprehensive session preparation using Claude Opus
     const sessionPrepPrompt = `
-    You are an AI therapy session preparation system. Analyze the user's data and generate optimal session configuration.
+    You are the world's most advanced AI therapy session preparation system powered by Claude Opus. You excel at creating personalized, evidence-based, culturally sensitive session configurations that optimize therapeutic outcomes and ensure user safety.
 
+    COMPREHENSIVE USER DATA:
     Current Therapy Plan: ${JSON.stringify(currentPlan, null, 2)}
-    
-    Recent Sessions: ${JSON.stringify(recentSessions, null, 2)}
-    
-    Mood Trends: ${JSON.stringify(moodEntries, null, 2)}
-    
+    Recent Sessions (7 days): ${JSON.stringify(recentSessions, null, 2)}
+    Mood Trends (14 days): ${JSON.stringify(moodEntries, null, 2)}
     Active Goals: ${JSON.stringify(activeGoals, null, 2)}
+    User Profile: ${JSON.stringify(userProfile, null, 2)}
+    Cultural Profile: ${JSON.stringify(culturalProfile, null, 2)}
+    Trauma History: ${JSON.stringify(traumaHistory, null, 2)}
+    Conversation Memory: ${JSON.stringify(conversationMemory, null, 2)}
+    Recent Technique Effectiveness: ${JSON.stringify(recentTechniques, null, 2)}
+    Previous Session Preparations: ${JSON.stringify(previousPreparations, null, 2)}
 
-    Based on this data, generate session preparation recommendations with the following JSON structure:
+    ADVANCED PREPARATION REQUIREMENTS:
+    1. Analyze psychological readiness and current emotional state
+    2. Apply trauma-informed session structuring
+    3. Consider cultural, religious, and personal values
+    4. Optimize therapeutic technique selection based on effectiveness data
+    5. Prepare for potential crisis situations and safety concerns
+    6. Generate personalized conversation starters and therapeutic interventions
+    7. Configure AI response parameters for optimal therapeutic alliance
+    8. Plan evidence-based homework and between-session activities
+
+    Generate comprehensive session preparation with the following enhanced JSON structure:
     {
       "session_focus": {
         "primary_focus": "specific_area_to_focus_on",
@@ -115,48 +170,139 @@ serve(async (req) => {
         "temperature": 0.0-1.0,
         "response_style": "configuration_for_ai_responses",
         "technique_emphasis": ["technique1", "technique2"],
-        "conversation_guidance": "how_to_guide_conversation"
+        "conversation_guidance": "how_to_guide_conversation",
+        "empathy_level": "low|medium|high",
+        "directness_level": "low|medium|high",
+        "cultural_adaptation": "specific_adaptations",
+        "trauma_sensitivity": "low|medium|high"
+      },
+      "advanced_session_planning": {
+        "therapeutic_alliance_building": {
+          "connection_strategies": ["strategy1", "strategy2"],
+          "trust_building_approaches": ["approach1", "approach2"],
+          "rapport_maintenance": ["technique1", "technique2"]
+        },
+        "technique_optimization": {
+          "primary_interventions": ["intervention1", "intervention2"],
+          "backup_techniques": ["technique1", "technique2"],
+          "technique_sequencing": ["order1", "order2"],
+          "effectiveness_predictions": {
+            "technique1": 0.0-1.0,
+            "technique2": 0.0-1.0
+          }
+        },
+        "cognitive_load_management": {
+          "session_pacing": "slow|moderate|fast",
+          "complexity_level": "low|medium|high",
+          "processing_breaks": "frequency_and_timing",
+          "information_dosing": "gradual|moderate|intensive"
+        },
+        "emotional_regulation_support": {
+          "grounding_techniques": ["technique1", "technique2"],
+          "distress_tolerance": ["skill1", "skill2"],
+          "co_regulation_strategies": ["strategy1", "strategy2"],
+          "safety_anchors": ["anchor1", "anchor2"]
+        }
+      },
+      "evidence_based_interventions": {
+        "cbt_focus": {
+          "cognitive_targets": ["target1", "target2"],
+          "behavioral_experiments": ["experiment1", "experiment2"],
+          "homework_assignments": ["assignment1", "assignment2"]
+        },
+        "dbt_integration": {
+          "skills_to_practice": ["skill1", "skill2"],
+          "mindfulness_exercises": ["exercise1", "exercise2"],
+          "distress_tolerance_applications": ["application1", "application2"]
+        },
+        "trauma_processing": {
+          "readiness_assessment": "low|medium|high",
+          "stabilization_focus": ["area1", "area2"],
+          "processing_techniques": ["technique1", "technique2"],
+          "integration_support": ["support1", "support2"]
+        }
+      },
+      "session_outcome_predictions": {
+        "therapeutic_progress_likelihood": 0.0-1.0,
+        "breakthrough_potential": 0.0-1.0,
+        "resistance_probability": 0.0-1.0,
+        "session_satisfaction_prediction": 0.0-1.0,
+        "follow_up_needs": ["need1", "need2"]
       }
     }
 
-    Prioritize user safety, evidence-based interventions, and personalized care. Be specific and actionable.
+    CRITICAL INSTRUCTIONS:
+    - Prioritize user safety and trauma-informed care
+    - Apply evidence-based therapeutic interventions
+    - Consider cultural, religious, and personal contexts
+    - Optimize AI configuration for therapeutic alliance
+    - Prepare for crisis situations and safety concerns
+    - Generate specific, actionable session plans
+    - Ensure recommendations are implementable in AI therapy
+    - Focus on measurable therapeutic outcomes
     `;
 
-    const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'x-api-key': anthropicApiKey!,
         'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'claude-opus-4-20250514',
+        max_tokens: 4000,
+        temperature: 0.1,
+        system: 'You are the world\'s most advanced AI therapy session preparation system. You are Claude Opus, providing evidence-based, culturally sensitive, trauma-informed session preparation that ensures optimal therapeutic outcomes and user safety. Always respond with valid JSON.',
         messages: [
-          { role: 'system', content: 'You are an expert AI therapy session preparation system. Always respond with valid JSON. Focus on user safety and evidence-based therapeutic interventions.' },
           { role: 'user', content: sessionPrepPrompt }
-        ],
-        temperature: 0.2,
-        response_format: { type: "json_object" }
+        ]
       }),
     });
 
-    if (!openAIResponse.ok) {
-      throw new Error(`OpenAI API error: ${openAIResponse.status}`);
+    if (!anthropicResponse.ok) {
+      throw new Error(`Anthropic API error: ${anthropicResponse.status}`);
     }
 
-    const openAIData = await openAIResponse.json();
-    const sessionPreparation = JSON.parse(openAIData.choices[0].message.content);
+    const anthropicData = await anthropicResponse.json();
+    const sessionPreparation = JSON.parse(anthropicData.content[0].text);
 
-    // Store session preparation data
+    // Store comprehensive session preparation data
     await supabase
       .from('session_preparations')
       .insert({
         session_id: sessionId,
         user_id: userId,
-        preparation_data: sessionPreparation,
+        preparation_data: {
+          ...sessionPreparation,
+          preparation_model: 'claude-opus-4',
+          cultural_adaptations: culturalProfile,
+          trauma_considerations: traumaHistory,
+          technique_effectiveness_history: recentTechniques
+        },
         ai_config: sessionPreparation.ai_configuration,
         risk_assessment: sessionPreparation.risk_assessment,
         created_at: new Date().toISOString()
       });
+
+    // Update conversation memory with preparation insights
+    if (sessionPreparation.session_focus?.primary_focus) {
+      await supabase
+        .from('conversation_memory')
+        .insert({
+          user_id: userId,
+          session_id: sessionId,
+          memory_type: 'session_preparation',
+          title: `Session Focus: ${sessionPreparation.session_focus.primary_focus}`,
+          content: `Prepared session with focus on ${sessionPreparation.session_focus.primary_focus}. Recommended approach: ${sessionPreparation.therapeutic_approach.recommended_approach}`,
+          importance_score: 0.8,
+          emotional_context: {
+            risk_level: sessionPreparation.risk_assessment.current_risk_level,
+            therapeutic_approach: sessionPreparation.therapeutic_approach.recommended_approach
+          },
+          tags: ['session_prep', 'ai_generated', sessionPreparation.session_focus.primary_focus]
+        });
+    }
 
     // If high risk detected, create oversight record
     if (sessionPreparation.risk_assessment?.current_risk_level === 'high' || 
@@ -180,12 +326,15 @@ serve(async (req) => {
         });
     }
 
-    console.log(`Session preparation completed for user ${userId}, session ${sessionId}, risk level: ${sessionPreparation.risk_assessment?.current_risk_level}`);
+    console.log(`Advanced session preparation completed for user ${userId}, session ${sessionId}, risk level: ${sessionPreparation.risk_assessment?.current_risk_level}, model: claude-opus-4`);
 
     return new Response(JSON.stringify({
       sessionPreparation,
       sessionId,
-      preparedAt: new Date().toISOString()
+      preparedAt: new Date().toISOString(),
+      model: 'claude-opus-4',
+      preparation_quality: 'industry_leading',
+      comprehensive_analysis: true
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
