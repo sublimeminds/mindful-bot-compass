@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 
 interface Therapist {
   id: string;
@@ -18,6 +18,8 @@ interface TherapistContextType {
   isLoading: boolean;
   selectedTherapist: Therapist | null;
   therapists: Therapist[];
+  selectTherapist: (therapistId: string) => void;
+  hasSelectedTherapist: boolean;
 }
 
 const TherapistContext = createContext<TherapistContextType | null>(null);
@@ -35,7 +37,10 @@ interface TherapistProviderProps {
 }
 
 export const TherapistProvider: React.FC<TherapistProviderProps> = ({ children }) => {
-  // Mock therapist data - no hooks needed for static data
+  const [selectedTherapistId, setSelectedTherapistId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Mock therapist data - enhanced with more context
   const mockTherapists: Therapist[] = [
     {
       id: '1',
@@ -72,11 +77,33 @@ export const TherapistProvider: React.FC<TherapistProviderProps> = ({ children }
     }
   ];
 
+  // Load selected therapist from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem('selected_therapist');
+    if (stored && mockTherapists.find(t => t.id === stored)) {
+      setSelectedTherapistId(stored);
+    }
+    setIsLoading(false);
+  }, []);
+
+  const selectTherapist = (therapistId: string) => {
+    if (mockTherapists.find(t => t.id === therapistId)) {
+      setSelectedTherapistId(therapistId);
+      localStorage.setItem('selected_therapist', therapistId);
+    }
+  };
+
+  const selectedTherapist = selectedTherapistId ? 
+    mockTherapists.find(t => t.id === selectedTherapistId) || null : 
+    null;
+
   const therapistData = {
-    therapist: null,
-    isLoading: false,
-    selectedTherapist: mockTherapists[0], // Default to first therapist
-    therapists: mockTherapists
+    therapist: selectedTherapist,
+    isLoading,
+    selectedTherapist,
+    therapists: mockTherapists,
+    selectTherapist,
+    hasSelectedTherapist: !!selectedTherapist
   };
 
   return (

@@ -18,6 +18,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useTherapist } from '@/contexts/TherapistContext';
 
 interface TherapistPersonality {
   id: string;
@@ -38,6 +39,7 @@ const TherapistPersonalitySettings = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { selectTherapist: updateContextTherapist } = useTherapist();
   const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
 
   const { data: therapists, isLoading } = useQuery({
@@ -96,6 +98,8 @@ const TherapistPersonalitySettings = () => {
   const handleSelectTherapist = (therapistId: string) => {
     setSelectedTherapist(therapistId);
     updateTherapistMutation.mutate(therapistId);
+    // Update the global context immediately
+    updateContextTherapist(therapistId);
   };
 
   if (isLoading) {

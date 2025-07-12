@@ -25,10 +25,14 @@ class OpenAIServiceClass {
     userId?: string
   ): Promise<TherapyResponse> {
     console.log('Sending therapy message:', userMessage);
+    console.log('Therapist context:', therapist);
+    console.log('Conversation history:', conversationHistory);
     
+    // Simulate AI processing delay
     await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
 
-    const response = this.generateTherapyResponse(userMessage, therapist);
+    // Generate contextually aware response
+    const response = this.generateContextualTherapyResponse(userMessage, conversationHistory, therapist);
     
     return {
       message: response.message,
@@ -38,12 +42,24 @@ class OpenAIServiceClass {
     };
   }
 
-  private generateTherapyResponse(userMessage: string, therapist?: any): TherapyResponse {
+  private generateContextualTherapyResponse(
+    userMessage: string, 
+    conversationHistory: ChatMessage[], 
+    therapist?: any
+  ): TherapyResponse {
     const lowerMessage = userMessage.toLowerCase();
     
     let emotion = 'neutral';
     let techniques: string[] = [];
     let insights: string[] = [];
+
+    // Get therapist personality context
+    const therapistStyle = this.getTherapistStyle(therapist);
+    
+    // Analyze conversation context
+    const conversationContext = this.analyzeConversationContext(conversationHistory);
+    
+    // Generate context-aware emotion and techniques
 
     if (lowerMessage.includes('sad') || lowerMessage.includes('depressed') || lowerMessage.includes('down')) {
       emotion = 'empathetic';
@@ -92,14 +108,126 @@ class OpenAIServiceClass {
     };
 
     const responseArray = responses[emotion as keyof typeof responses] || responses.neutral;
-    const randomResponse = responseArray[Math.floor(Math.random() * responseArray.length)];
+    let selectedResponse = responseArray[Math.floor(Math.random() * responseArray.length)];
+
+    // Personalize response based on therapist style and conversation context
+    selectedResponse = this.personalizeResponse(selectedResponse, therapistStyle, conversationContext, userMessage);
 
     return {
-      message: randomResponse,
+      message: selectedResponse,
       emotion,
       techniques,
       insights
     };
+  }
+
+  private getTherapistStyle(therapist?: any) {
+    if (!therapist || !therapist.systemPrompt) {
+      // Default style if no therapist selected
+      return {
+        approach: 'supportive',
+        style: 'warm',
+        communication: 'direct'
+      };
+    }
+
+    // Extract style from therapist data
+    return {
+      approach: therapist.approach || 'supportive',
+      style: therapist.communicationStyle || 'warm',
+      communication: therapist.style || 'direct'
+    };
+  }
+
+  private analyzeConversationContext(conversationHistory: ChatMessage[]) {
+    const recentMessages = conversationHistory.slice(-3);
+    
+    return {
+      length: conversationHistory.length,
+      recentTopics: this.extractTopics(recentMessages),
+      emotionalTrend: this.analyzeEmotionalTrend(recentMessages),
+      isFirstMessage: conversationHistory.length === 0
+    };
+  }
+
+  private extractTopics(messages: ChatMessage[]): string[] {
+    const topics: string[] = [];
+    const topicKeywords = {
+      'work': ['work', 'job', 'career', 'boss', 'colleague'],
+      'relationship': ['relationship', 'partner', 'family', 'friend'],
+      'anxiety': ['anxious', 'worried', 'nervous', 'panic'],
+      'depression': ['sad', 'depressed', 'down', 'hopeless'],
+      'stress': ['stress', 'overwhelmed', 'pressure', 'burnout']
+    };
+
+    messages.forEach(msg => {
+      Object.entries(topicKeywords).forEach(([topic, keywords]) => {
+        if (keywords.some(keyword => msg.content.toLowerCase().includes(keyword))) {
+          if (!topics.includes(topic)) topics.push(topic);
+        }
+      });
+    });
+
+    return topics;
+  }
+
+  private analyzeEmotionalTrend(messages: ChatMessage[]): string {
+    if (messages.length === 0) return 'neutral';
+    
+    const emotions = messages.map(msg => {
+      const content = msg.content.toLowerCase();
+      if (content.includes('better') || content.includes('good') || content.includes('happy')) return 'positive';
+      if (content.includes('worse') || content.includes('bad') || content.includes('sad')) return 'negative';
+      return 'neutral';
+    });
+
+    const positiveCount = emotions.filter(e => e === 'positive').length;
+    const negativeCount = emotions.filter(e => e === 'negative').length;
+
+    if (positiveCount > negativeCount) return 'improving';
+    if (negativeCount > positiveCount) return 'declining';
+    return 'stable';
+  }
+
+  private personalizeResponse(
+    baseResponse: string, 
+    therapistStyle: any, 
+    context: any, 
+    userMessage: string
+  ): string {
+    let personalizedResponse = baseResponse;
+
+    // Add context-aware elements
+    if (context.isFirstMessage) {
+      personalizedResponse = `Hello! I'm here to support you. ${personalizedResponse}`;
+    } else if (context.recentTopics.length > 0) {
+      const topic = context.recentTopics[0];
+      personalizedResponse = personalizedResponse.replace(
+        'What would you like to explore together today?',
+        `I notice we've been discussing ${topic}. How are you feeling about that now?`
+      );
+    }
+
+    // Add therapist style
+    if (therapistStyle.approach === 'CBT' || therapistStyle.approach === 'Cognitive Behavioral Therapy') {
+      if (userMessage.toLowerCase().includes('think') || userMessage.toLowerCase().includes('thought')) {
+        personalizedResponse += " Let's explore the thoughts behind these feelings.";
+      }
+    }
+
+    // Add emotional trend awareness
+    if (context.emotionalTrend === 'improving') {
+      personalizedResponse += " I'm glad to hear you're making progress.";
+    } else if (context.emotionalTrend === 'declining') {
+      personalizedResponse += " I want you to know that it's okay to have difficult moments.";
+    }
+
+    return personalizedResponse;
+  }
+
+  private generateTherapyResponse(userMessage: string, therapist?: any): TherapyResponse {
+    // Fallback to original method for backward compatibility
+    return this.generateContextualTherapyResponse(userMessage, [], therapist);
   }
 
   hasApiKey(): boolean {

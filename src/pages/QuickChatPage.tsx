@@ -32,7 +32,7 @@ import {
 const QuickChatPageContent = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const { selectedTherapist } = useTherapist();
+  const { selectedTherapist, hasSelectedTherapist } = useTherapist();
   const {
     messages,
     isLoading,
@@ -171,6 +171,31 @@ const QuickChatPageContent = () => {
 
   if (!user) {
     return null;
+  }
+
+  // Show therapist selection requirement
+  if (!hasSelectedTherapist) {
+    return (
+      <DashboardLayoutWithSidebar>
+        <div className="p-6 h-full flex items-center justify-center">
+          <Card className="max-w-md mx-auto">
+            <CardContent className="pt-6 text-center">
+              <Brain className="h-12 w-12 mx-auto mb-4 text-therapy-600" />
+              <h3 className="text-lg font-semibold mb-2">Select Your AI Therapist</h3>
+              <p className="text-muted-foreground mb-4">
+                Choose an AI therapist personality to get started with your quick chat session.
+              </p>
+              <Button 
+                onClick={() => navigate('/therapy-settings')}
+                className="bg-therapy-600 hover:bg-therapy-700"
+              >
+                Choose Therapist
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </DashboardLayoutWithSidebar>
+    );
   }
 
   return (

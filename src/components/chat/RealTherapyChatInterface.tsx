@@ -26,7 +26,7 @@ import {
 
 const RealTherapyChatInterface = () => {
   const { user } = useSimpleApp();
-  const { selectedTherapist } = useTherapist();
+  const { selectedTherapist, hasSelectedTherapist } = useTherapist();
   const {
     messages,
     isLoading,
@@ -130,6 +130,29 @@ const RealTherapyChatInterface = () => {
       default: return 'bg-green-500 text-white';
     }
   };
+
+  // Show therapist selection requirement
+  if (!hasSelectedTherapist) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Card className="max-w-md mx-auto">
+          <CardContent className="pt-6 text-center">
+            <Brain className="h-12 w-12 mx-auto mb-4 text-therapy-600" />
+            <h3 className="text-lg font-semibold mb-2">Select Your AI Therapist</h3>
+            <p className="text-muted-foreground mb-4">
+              Please choose an AI therapist personality from the therapy settings before starting your session.
+            </p>
+            <Button 
+              onClick={() => window.location.href = '/therapy-settings'}
+              className="bg-therapy-600 hover:bg-therapy-700"
+            >
+              Choose Therapist
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex gap-6">

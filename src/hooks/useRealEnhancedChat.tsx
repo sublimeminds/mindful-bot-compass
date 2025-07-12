@@ -4,6 +4,7 @@ import { useSimpleApp } from './useSimpleApp';
 import { realAIService, ConversationContext } from '@/services/realAiService';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from './use-toast';
+import { useTherapist } from '@/contexts/TherapistContext';
 
 export interface Message {
   id: string;
@@ -26,6 +27,7 @@ export interface UserPreferences {
 export const useRealEnhancedChat = () => {
   const { user } = useSimpleApp();
   const { toast } = useToast();
+  const { selectedTherapist } = useTherapist();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -110,7 +112,7 @@ export const useRealEnhancedChat = () => {
         .order('created_at', { ascending: false })
         .limit(3);
 
-      // Build conversation context
+      // Build conversation context with therapist information
       const context: ConversationContext = {
         userId: user.id,
         sessionId,
@@ -118,10 +120,11 @@ export const useRealEnhancedChat = () => {
           role: m.isUser ? 'user' : 'assistant',
           content: m.content
         })),
-        recentGoals: recentGoals || []
+        recentGoals: recentGoals || [],
+        therapist: selectedTherapist
       };
 
-      // Get AI response
+      // Get AI response with selected therapist context
       const aiResponse = await realAIService.generateTherapyResponse(content, context);
 
       // Handle crisis situation

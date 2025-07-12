@@ -9,6 +9,7 @@ export interface ConversationContext {
   userProfile?: any;
   currentMood?: any;
   recentGoals?: any[];
+  therapist?: any;
 }
 
 export interface AIResponse {
@@ -61,11 +62,16 @@ class RealAIService {
       // Create system prompt with personalization
       const systemPrompt = this.buildPersonalizedPrompt(enhancedContext);
 
-      // Call OpenAI service with enhanced context
+      // Call OpenAI service with enhanced context including therapist
       const aiResponse = await OpenAIService.sendTherapyMessage(
         userMessage,
         context.conversationHistory,
-        { systemPrompt },
+        { 
+          systemPrompt,
+          therapist: context.therapist,
+          approach: context.therapist?.approach,
+          communicationStyle: context.therapist?.communicationStyle
+        },
         context.userId
       );
 
