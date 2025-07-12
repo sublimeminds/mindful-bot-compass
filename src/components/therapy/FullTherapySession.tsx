@@ -5,6 +5,7 @@ import { useRealEnhancedChat } from '@/hooks/useRealEnhancedChat';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import EmotionCameraDetection from '@/components/avatar/EmotionCameraDetection';
 import VoiceRecorder from '@/components/voice/VoiceRecorder';
+import EnhancedSessionFlow from '@/components/therapy/EnhancedSessionFlow';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,8 +35,9 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 
 interface SessionState {
-  phase: 'check-in' | 'active' | 'check-out' | 'completed';
+  phase: 'approach-selection' | 'active' | 'check-out' | 'completed';
   startTime: Date | null;
+  selectedApproach: any | null;
   checkInData: {
     mood: number;
     concerns: string;
@@ -75,8 +77,9 @@ const FullTherapySession = () => {
   } = useRealEnhancedChat();
 
   const [sessionState, setSessionState] = useState<SessionState>({
-    phase: 'check-in',
+    phase: 'approach-selection',
     startTime: null,
+    selectedApproach: null,
     checkInData: {
       mood: 5,
       concerns: '',
@@ -149,11 +152,12 @@ const FullTherapySession = () => {
     }
   };
 
-  const handleCheckIn = () => {
+  const handleSessionStart = (approach: any) => {
     setSessionState(prev => ({
       ...prev,
       phase: 'active',
-      startTime: new Date()
+      startTime: new Date(),
+      selectedApproach: approach
     }));
   };
 
@@ -229,86 +233,11 @@ const FullTherapySession = () => {
     return null;
   }
 
-  // Check-in Phase
-  if (sessionState.phase === 'check-in') {
+  // Approach Selection Phase
+  if (sessionState.phase === 'approach-selection') {
     return (
-      <div className="p-6 max-w-4xl mx-auto">
-        <Card className="bg-gradient-to-br from-therapy-50 to-calm-50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-2xl">
-              <CheckCircle className="h-6 w-6 text-therapy-600" />
-              Session Check-In
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium">How are you feeling today? (1-10)</label>
-                  <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    value={sessionState.checkInData.mood}
-                    onChange={(e) => setSessionState(prev => ({
-                      ...prev,
-                      checkInData: { ...prev.checkInData, mood: parseInt(e.target.value) }
-                    }))}
-                    className="w-full mt-2"
-                  />
-                  <div className="text-center text-sm text-gray-600 mt-1">
-                    {sessionState.checkInData.mood}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium">Energy Level (1-10)</label>
-                  <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    value={sessionState.checkInData.energy}
-                    onChange={(e) => setSessionState(prev => ({
-                      ...prev,
-                      checkInData: { ...prev.checkInData, energy: parseInt(e.target.value) }
-                    }))}
-                    className="w-full mt-2"
-                  />
-                  <div className="text-center text-sm text-gray-600 mt-1">
-                    {sessionState.checkInData.energy}
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium">What's on your mind today?</label>
-                  <Textarea
-                    placeholder="Share any concerns, thoughts, or what you'd like to focus on..."
-                    value={sessionState.checkInData.concerns}
-                    onChange={(e) => setSessionState(prev => ({
-                      ...prev,
-                      checkInData: { ...prev.checkInData, concerns: e.target.value }
-                    }))}
-                    className="mt-2"
-                    rows={4}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-center">
-              <Button
-                onClick={handleCheckIn}
-                className="bg-therapy-600 hover:bg-therapy-700 px-8 py-3"
-                size="lg"
-              >
-                <PlayCircle className="h-5 w-5 mr-2" />
-                Start Therapy Session
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="p-6">
+        <EnhancedSessionFlow onSessionStart={handleSessionStart} />
       </div>
     );
   }
@@ -445,8 +374,9 @@ const FullTherapySession = () => {
               </Button>
               <Button 
                 onClick={() => setSessionState({
-                  phase: 'check-in',
+                  phase: 'approach-selection',
                   startTime: null,
+                  selectedApproach: null,
                   checkInData: { mood: 5, concerns: '', goals: [], energy: 5 },
                   checkOutData: { mood: 5, insights: '', progress: 5, nextSteps: [] }
                 })}
