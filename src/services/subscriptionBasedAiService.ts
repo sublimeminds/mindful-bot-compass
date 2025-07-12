@@ -6,11 +6,11 @@ interface ModelSelectionCriteria {
   urgency: 'low' | 'medium' | 'high' | 'critical';
   complexity: 'simple' | 'moderate' | 'complex';
   culturalContext?: string;
-  userTier: 'free' | 'premium' | 'enterprise';
+  userTier: 'free' | 'premium' | 'enterprise' | 'pro';
 }
 
 export class SubscriptionBasedAiService {
-  private static async getUserSubscriptionTier(userId: string): Promise<'free' | 'premium' | 'enterprise'> {
+  private static async getUserSubscriptionTier(userId: string): Promise<'free' | 'premium' | 'enterprise' | 'pro'> {
     try {
       const { data: subscription } = await supabase
         .from('user_subscriptions')
@@ -27,7 +27,8 @@ export class SubscriptionBasedAiService {
       const planName = subscription.subscription_plans.name.toLowerCase();
       
       if (planName.includes('enterprise')) return 'enterprise';
-      if (planName.includes('premium') || planName.includes('pro')) return 'premium';
+      if (planName.includes('premium')) return 'premium';
+      if (planName.includes('pro')) return 'pro';
       
       return 'free';
     } catch (error) {
@@ -36,15 +37,16 @@ export class SubscriptionBasedAiService {
     }
   }
 
-  private static getModelForTier(tier: 'free' | 'premium' | 'enterprise'): string {
+  private static getModelForTier(tier: 'free' | 'premium' | 'enterprise' | 'pro'): string {
     switch (tier) {
       case 'enterprise':
-        return 'claude-opus-4-20250514'; // Highest quality
       case 'premium':
-        return 'claude-sonnet-4-20250514'; // High quality, efficient
+        return 'claude-opus-20240229'; // Highest quality for premium
+      case 'pro':
+        return 'claude-sonnet-3-5-20241022'; // High quality, efficient for pro
       case 'free':
       default:
-        return 'gpt-4.1-2025-04-14'; // Cost-effective
+        return 'gpt-4.1-2025-04-14'; // Cost-effective for free
     }
   }
 
@@ -126,6 +128,7 @@ export class SubscriptionBasedAiService {
     // Define limits based on tier
     const limits = {
       free: 50,
+      pro: 200,
       premium: 500,
       enterprise: -1 // unlimited
     };

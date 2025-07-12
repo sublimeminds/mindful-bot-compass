@@ -22,8 +22,8 @@ const PRICING_FEATURES: PricingFeature[] = [
   // Core AI Features
   { name: 'TherapySync AI (GPT-4 Based)', free: '10 messages/session', pro: 'Unlimited (GPT-4)', premium: 'Advanced (GPT-4 + Claude)', category: 'core' },
   { name: 'Quick Chat Sessions', free: true, pro: true, premium: true, category: 'core' },
-  { name: 'Full Therapy Sessions', free: '1/week, 4/month', pro: 'Unlimited', premium: 'Unlimited', category: 'limits' },
-  { name: 'Therapy Plans', free: '1 plan', pro: '5 plans', premium: '10 plans', category: 'limits' },
+  { name: 'Full Therapy Sessions', free: '2/week, 8/month', pro: 'Unlimited', premium: 'Unlimited', category: 'limits' },
+  { name: 'Therapy Plans', free: '1 plan', pro: '3 plans', premium: 'Unlimited', category: 'limits' },
   { name: 'AI Personality Types', free: '2 therapists', pro: '8 specialized therapists', premium: '12+ expert therapists', category: 'core' },
   { name: 'Mood Tracking', free: true, pro: true, premium: true, category: 'core' },
   { name: 'Basic Goals', free: true, pro: true, premium: true, category: 'core' },
@@ -105,7 +105,7 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
       'Advanced breathing exercises',
       'Extended meditation library (50+)',
       'Community hub access',
-      'Up to 5 therapy plans',
+      'Up to 3 therapy plans',
       'Predictive insights',
       'Monthly detailed reports'
     ],
@@ -123,7 +123,7 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
       'Advanced ML insights',
       'Premium meditation library (200+)',
       'Priority support (2h response)',
-      'Up to 10 therapy plans',
+      'Unlimited therapy plans',
       'Family dashboard (up to 4)',
       'Direct therapist referrals',
       'Weekly reports + data export'

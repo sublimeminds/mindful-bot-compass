@@ -7,7 +7,7 @@ interface ModelSelectionCriteria {
   urgency: 'low' | 'medium' | 'high' | 'critical';
   complexity: 'simple' | 'moderate' | 'complex';
   culturalContext?: string;
-  userTier: 'free' | 'premium' | 'enterprise';
+  userTier: 'free' | 'pro' | 'premium' | 'enterprise';
 }
 
 interface AIModelProvider {
@@ -34,8 +34,8 @@ export class MultiModelAIRouter {
       available: true
     },
     {
-      id: 'claude-opus-4-20250514',
-      name: 'Claude Opus 4',
+      id: 'claude-opus-20240229',
+      name: 'Claude Opus',
       provider: 'anthropic',
       capabilities: ['chat', 'analysis', 'crisis', 'cultural'],
       costPerToken: 0.00005,
@@ -44,8 +44,8 @@ export class MultiModelAIRouter {
       available: true
     },
     {
-      id: 'claude-sonnet-4-20250514',
-      name: 'Claude Sonnet 4',
+      id: 'claude-sonnet-3-5-20241022',
+      name: 'Claude Sonnet 3.5',
       provider: 'anthropic',
       capabilities: ['chat', 'analysis', 'cultural'],
       costPerToken: 0.00001,
@@ -83,6 +83,15 @@ export class MultiModelAIRouter {
       return filteredModels.reduce((best, current) => 
         current.costPerToken < best.costPerToken ? current : best
       );
+    }
+
+    if (criteria.userTier === 'pro') {
+      // Mid-tier: Balance quality and cost
+      return filteredModels.reduce((best, current) => {
+        const currentScore = current.qualityScore * 0.7 + (1 / current.costPerToken) * 0.3;
+        const bestScore = best.qualityScore * 0.7 + (1 / best.costPerToken) * 0.3;
+        return currentScore > bestScore ? current : best;
+      });
     }
 
     if (criteria.complexity === 'complex' || criteria.culturalContext) {

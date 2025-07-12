@@ -12,6 +12,8 @@ export interface SubscriptionAccess {
   isEnterprise: boolean;
   isPremium: boolean;
   isPro: boolean;
+  therapyPlanLimit: number;
+  sessionLimit: number;
 }
 
 const FEATURE_ACCESS = {
@@ -101,6 +103,17 @@ export const useSubscriptionAccess = (): SubscriptionAccess => {
     return allFeatures.includes(feature);
   };
 
+  const getTherapyPlanLimit = (): number => {
+    if (tier === 'premium' || tier === 'family-premium' || tier === 'enterprise') return -1; // unlimited
+    if (tier === 'pro' || tier === 'family-pro') return 3;
+    return 1; // free
+  };
+
+  const getSessionLimit = (): number => {
+    if (tier === 'premium' || tier === 'family-premium' || tier === 'enterprise' || tier === 'pro' || tier === 'family-pro') return -1; // unlimited
+    return 8; // free - 2 per week, 8 per month
+  };
+
   return {
     tier: tier as SubscriptionAccess['tier'],
     hasFamily: isFamily,
@@ -111,5 +124,7 @@ export const useSubscriptionAccess = (): SubscriptionAccess => {
     isEnterprise,
     isPremium,
     isPro,
+    therapyPlanLimit: getTherapyPlanLimit(),
+    sessionLimit: getSessionLimit(),
   };
 };
