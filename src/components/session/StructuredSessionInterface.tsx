@@ -18,7 +18,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { AISessionConductor, SessionState, SessionMessage } from '@/services/aiSessionConductor';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 interface StructuredSessionInterfaceProps {
   therapyApproach: string;
@@ -40,7 +40,7 @@ const StructuredSessionInterface = ({
   const [sessionStarted, setSessionStarted] = useState(false);
   const [timeLeft, setTimeLeft] = useState<string>('');
   
-  const { toast } = useToast();
+  // Using sonner toast
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout>();
 

@@ -1341,6 +1341,45 @@ export type Database = {
         }
         Relationships: []
       }
+      component_registry: {
+        Row: {
+          category: string | null
+          changelog: string | null
+          criticality: string | null
+          dependencies: string[] | null
+          features: string[] | null
+          id: string
+          last_updated: string | null
+          name: string
+          status: string | null
+          version: string
+        }
+        Insert: {
+          category?: string | null
+          changelog?: string | null
+          criticality?: string | null
+          dependencies?: string[] | null
+          features?: string[] | null
+          id: string
+          last_updated?: string | null
+          name: string
+          status?: string | null
+          version: string
+        }
+        Update: {
+          category?: string | null
+          changelog?: string | null
+          criticality?: string | null
+          dependencies?: string[] | null
+          features?: string[] | null
+          id?: string
+          last_updated?: string | null
+          name?: string
+          status?: string | null
+          version?: string
+        }
+        Relationships: []
+      }
       content_library: {
         Row: {
           category: string
@@ -6420,6 +6459,33 @@ export type Database = {
           subject?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      system_health_logs: {
+        Row: {
+          checked_at: string | null
+          critical_issues: string[] | null
+          id: string
+          overall_health: number
+          recommendations: string[] | null
+          warnings: string[] | null
+        }
+        Insert: {
+          checked_at?: string | null
+          critical_issues?: string[] | null
+          id?: string
+          overall_health: number
+          recommendations?: string[] | null
+          warnings?: string[] | null
+        }
+        Update: {
+          checked_at?: string | null
+          critical_issues?: string[] | null
+          id?: string
+          overall_health?: number
+          recommendations?: string[] | null
+          warnings?: string[] | null
         }
         Relationships: []
       }

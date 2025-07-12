@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { AISessionConductor, SessionState, SessionMessage } from '@/services/aiSessionConductor';
 import { ComponentUpdateChecker } from '@/services/componentUpdateChecker';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 interface UseStructuredSessionProps {
   therapyApproach: string;
@@ -28,7 +28,7 @@ export const useStructuredSession = ({
   const [phaseTransitionAlert, setPhaseTransitionAlert] = useState<string | null>(null);
   const [systemHealth, setSystemHealth] = useState<any>(null);
 
-  const { toast } = useToast();
+  // Using sonner toast
   const intervalRef = useRef<NodeJS.Timeout>();
   const healthCheckRef = useRef<NodeJS.Timeout>();
 
