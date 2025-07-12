@@ -24,8 +24,9 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Alex2DAvatar from '@/components/ai/Alex2DAvatar';
+import AlexAIService from '@/services/alexAiService';
 
 interface ChatMessage {
   id: string;
@@ -49,6 +50,7 @@ const LiveChatAgent = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
@@ -178,7 +180,7 @@ const LiveChatAgent = () => {
     setMessages(prev => [...prev, emergencyMessage]);
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!currentMessage.trim()) return;
 
     const userMessage: ChatMessage = {
@@ -194,23 +196,33 @@ const LiveChatAgent = () => {
     setIsSpeaking(true);
     setAvatarEmotion('thoughtful');
 
-    // Simulate platform support responses
-    setTimeout(() => {
-      let response = '';
-      const lowerMessage = currentMessage.toLowerCase();
+    try {
+      // Build context for Alex AI
+      const hour = new Date().getHours();
+      const timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night' = 
+        hour < 12 ? 'morning' : 
+        hour < 17 ? 'afternoon' : 
+        hour < 22 ? 'evening' : 'night';
 
-      if (lowerMessage.includes('therapy') || lowerMessage.includes('talk') || lowerMessage.includes('help me') || lowerMessage.includes('depressed') || lowerMessage.includes('anxious')) {
-        response = "I can see you're looking for personal support. Let me connect you with our AI therapists who are specially trained to help with emotional and mental health concerns. I'll guide you there! 🤗";
-      } else if (lowerMessage.includes('dashboard') || lowerMessage.includes('progress')) {
-        response = "I can help you navigate to your dashboard where you'll find your progress tracking, mood analytics, and session history. Would you like me to take you there?";
-      } else if (lowerMessage.includes('billing') || lowerMessage.includes('payment') || lowerMessage.includes('subscription')) {
-        response = "I can help with billing questions! You can manage your subscription, payment methods, and view billing history in your account settings. Let me guide you there.";
-      } else if (lowerMessage.includes('settings') || lowerMessage.includes('account')) {
-        response = "I can help you navigate to your settings where you can customize your experience, manage notifications, and update your account preferences.";
-      } else {
-        response = "I'm here to help you navigate the TherapySync platform! I can assist with account questions, feature explanations, or guide you to the right area. For personal support, our AI therapists are available 24/7 in the therapy chat.";
-      }
+      const context = {
+        userId: user?.id || 'guest',
+        currentPage: location.pathname,
+        timeOfDay,
+        conversationHistory: messages.map(msg => ({
+          id: msg.id,
+          content: msg.message,
+          sender: (msg.type === 'user' ? 'user' : 'alex') as 'user' | 'alex',
+          timestamp: msg.timestamp,
+          emotion: 'neutral' as const,
+          type: 'text' as const
+        })),
+        userPreferences: null
+      };
 
+      // Get real AI response from Alex
+      const alexResponse = await AlexAIService.generateResponse(currentMessage, context);
+      
+      // Map Alex response to chat message format
       const supportActions = [
         { label: 'Start Therapy Session', action: () => navigate('/therapy-chat'), icon: Play },
         { label: 'Visit Dashboard', action: () => navigate('/dashboard'), icon: BarChart3 },
@@ -220,16 +232,41 @@ const LiveChatAgent = () => {
       const aiResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'agent',
-        message: response,
+        message: alexResponse.content,
         timestamp: new Date(),
-        actions: supportActions
+        actions: alexResponse.type === 'action' ? supportActions : alexResponse.actions?.map(action => ({
+          label: action.label,
+          action: () => {
+            if (action.action.startsWith('/')) {
+              navigate(action.action);
+            } else {
+              eval(action.action);
+            }
+          },
+          icon: Play
+        }))
       };
 
       setMessages(prev => [...prev, aiResponse]);
+      setAvatarEmotion(alexResponse.emotion);
+      
+    } catch (error) {
+      console.error('Error getting Alex AI response:', error);
+      
+      // Fallback response only on error
+      const fallbackResponse: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'agent',
+        message: "I'm having a small technical hiccup, but I'm still here to help! What can I assist you with?",
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, fallbackResponse]);
+      setAvatarEmotion('empathetic');
+    } finally {
       setIsTyping(false);
       setIsSpeaking(false);
-      setAvatarEmotion('encouraging');
-    }, 2000);
+    }
   };
 
   if (!isOpen) {

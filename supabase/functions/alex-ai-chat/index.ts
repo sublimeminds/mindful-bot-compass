@@ -88,7 +88,7 @@ Respond naturally and conversationally. Avoid being too formal or clinical. Be t
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: modelConfig.model,
+        model: modelConfig.model || 'gpt-4.1-2025-04-14',
         messages,
         temperature: modelConfig.temperature,
         max_tokens: modelConfig.maxTokens,

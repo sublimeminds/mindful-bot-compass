@@ -129,7 +129,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4.1-2025-04-14',
         messages: [
           { role: 'system', content: 'You are an expert AI therapy session preparation system. Always respond with valid JSON. Focus on user safety and evidence-based therapeutic interventions.' },
           { role: 'user', content: sessionPrepPrompt }
