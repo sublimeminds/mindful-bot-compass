@@ -2,6 +2,8 @@
 import { Message } from "@/types";
 import { AIConfigurationService, AIModelConfig, TherapeuticApproachConfig } from "./aiConfigurationService";
 import { supabase } from '@/integrations/supabase/client';
+import { liveAnalyticsService } from './liveAnalyticsService';
+import { therapyApproachService } from './therapyApproachService';
 
 interface SessionContext {
   userId: string;
@@ -110,6 +112,32 @@ export class ConfiguredAIService {
 
       if (context.therapeuticGoals?.length) {
         systemPrompt += `\nTherapeutic goals: ${context.therapeuticGoals.join(', ')}`;
+      }
+
+      // Analyze message for real-time insights
+      const messageAnalysis = await liveAnalyticsService.analyzeMessage(
+        message, 
+        context.userId, 
+        context.sessionId
+      );
+
+      // Get dynamic therapy approach recommendations
+      const approachRecommendations = await therapyApproachService.recommendApproaches(
+        context.userId,
+        context.therapeuticGoals || [],
+        {
+          mood: messageAnalysis.emotions?.primary,
+          crisisIndicators: messageAnalysis.crisisIndicators
+        }
+      );
+
+      // Update system prompt with recommended approach
+      if (approachRecommendations.primary) {
+        systemPrompt += `\n\nDynamic Approach Recommendation: ${approachRecommendations.primary.approach.name}`;
+        systemPrompt += `\nReasoning: ${approachRecommendations.primary.reasoning}`;
+        if (approachRecommendations.secondary) {
+          systemPrompt += `\nSecondary Approach: ${approachRecommendations.secondary.approach.name}`;
+        }
       }
 
       // Call the AI service (using Supabase Edge Function)

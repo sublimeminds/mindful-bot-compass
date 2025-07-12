@@ -3645,6 +3645,48 @@ export type Database = {
         }
         Relationships: []
       }
+      live_analytics_events: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          processed: boolean | null
+          processing_result: Json | null
+          requires_intervention: boolean | null
+          session_id: string | null
+          severity_level: string | null
+          timestamp: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          processed?: boolean | null
+          processing_result?: Json | null
+          requires_intervention?: boolean | null
+          session_id?: string | null
+          severity_level?: string | null
+          timestamp?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          processed?: boolean | null
+          processing_result?: Json | null
+          requires_intervention?: boolean | null
+          session_id?: string | null
+          severity_level?: string | null
+          timestamp?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       mental_health_assessments: {
         Row: {
           assessment_type: string
@@ -5233,6 +5275,54 @@ export type Database = {
         }
         Relationships: []
       }
+      real_time_session_analytics: {
+        Row: {
+          analysis_timestamp: string | null
+          approach_recommendations: Json | null
+          breakthrough_moments: Json | null
+          created_at: string | null
+          crisis_indicators: Json | null
+          emotion_scores: Json | null
+          engagement_metrics: Json | null
+          id: string
+          intervention_needed: boolean | null
+          session_id: string
+          session_quality_score: number | null
+          technique_effectiveness: Json | null
+          user_id: string
+        }
+        Insert: {
+          analysis_timestamp?: string | null
+          approach_recommendations?: Json | null
+          breakthrough_moments?: Json | null
+          created_at?: string | null
+          crisis_indicators?: Json | null
+          emotion_scores?: Json | null
+          engagement_metrics?: Json | null
+          id?: string
+          intervention_needed?: boolean | null
+          session_id: string
+          session_quality_score?: number | null
+          technique_effectiveness?: Json | null
+          user_id: string
+        }
+        Update: {
+          analysis_timestamp?: string | null
+          approach_recommendations?: Json | null
+          breakthrough_moments?: Json | null
+          created_at?: string | null
+          crisis_indicators?: Json | null
+          emotion_scores?: Json | null
+          engagement_metrics?: Json | null
+          id?: string
+          intervention_needed?: boolean | null
+          session_id?: string
+          session_quality_score?: number | null
+          technique_effectiveness?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       risk_assessments: {
         Row: {
           alcohol_use_frequency: string | null
@@ -5945,6 +6035,48 @@ export type Database = {
           preparation_steps?: Json | null
           session_structure?: Json | null
           therapy_type?: string
+        }
+        Relationships: []
+      }
+      session_technique_tracking: {
+        Row: {
+          ai_confidence: number | null
+          approach_type: string
+          created_at: string | null
+          effectiveness_metrics: Json | null
+          id: string
+          implementation_timestamp: string | null
+          session_id: string
+          technique_name: string
+          user_feedback: string | null
+          user_id: string
+          user_response_score: number | null
+        }
+        Insert: {
+          ai_confidence?: number | null
+          approach_type: string
+          created_at?: string | null
+          effectiveness_metrics?: Json | null
+          id?: string
+          implementation_timestamp?: string | null
+          session_id: string
+          technique_name: string
+          user_feedback?: string | null
+          user_id: string
+          user_response_score?: number | null
+        }
+        Update: {
+          ai_confidence?: number | null
+          approach_type?: string
+          created_at?: string | null
+          effectiveness_metrics?: Json | null
+          id?: string
+          implementation_timestamp?: string | null
+          session_id?: string
+          technique_name?: string
+          user_feedback?: string | null
+          user_id?: string
+          user_response_score?: number | null
         }
         Relationships: []
       }
@@ -6804,6 +6936,66 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      therapy_approach_combinations: {
+        Row: {
+          combination_name: string
+          contraindications: string[] | null
+          created_at: string | null
+          effectiveness_score: number | null
+          id: string
+          integration_strategy: string
+          is_active: boolean | null
+          primary_approach_id: string | null
+          secondary_approach_id: string | null
+          session_structure: Json | null
+          target_conditions: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          combination_name: string
+          contraindications?: string[] | null
+          created_at?: string | null
+          effectiveness_score?: number | null
+          id?: string
+          integration_strategy: string
+          is_active?: boolean | null
+          primary_approach_id?: string | null
+          secondary_approach_id?: string | null
+          session_structure?: Json | null
+          target_conditions?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          combination_name?: string
+          contraindications?: string[] | null
+          created_at?: string | null
+          effectiveness_score?: number | null
+          id?: string
+          integration_strategy?: string
+          is_active?: boolean | null
+          primary_approach_id?: string | null
+          secondary_approach_id?: string | null
+          session_structure?: Json | null
+          target_conditions?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapy_approach_combinations_primary_approach_id_fkey"
+            columns: ["primary_approach_id"]
+            isOneToOne: false
+            referencedRelation: "therapeutic_approach_configs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "therapy_approach_combinations_secondary_approach_id_fkey"
+            columns: ["secondary_approach_id"]
+            isOneToOne: false
+            referencedRelation: "therapeutic_approach_configs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       therapy_assignments: {
         Row: {
@@ -8202,6 +8394,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_therapy_preferences: {
+        Row: {
+          approach_effectiveness: Json | null
+          communication_style: string | null
+          created_at: string | null
+          crisis_protocols: Json | null
+          cultural_adaptations: Json | null
+          id: string
+          preferred_approaches: string[] | null
+          session_preferences: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          approach_effectiveness?: Json | null
+          communication_style?: string | null
+          created_at?: string | null
+          crisis_protocols?: Json | null
+          cultural_adaptations?: Json | null
+          id?: string
+          preferred_approaches?: string[] | null
+          session_preferences?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          approach_effectiveness?: Json | null
+          communication_style?: string | null
+          created_at?: string | null
+          crisis_protocols?: Json | null
+          cultural_adaptations?: Json | null
+          id?: string
+          preferred_approaches?: string[] | null
+          session_preferences?: Json | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       user_usage: {
         Row: {
