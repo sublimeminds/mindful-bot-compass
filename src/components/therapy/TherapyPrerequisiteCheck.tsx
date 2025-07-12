@@ -107,10 +107,31 @@ const TherapyPrerequisiteCheck = ({ onAllPrerequisitesMet }: TherapyPrerequisite
     if (!user || !status.hasTherapistSelection) return;
     
     try {
-      // Navigate to onboarding to create a new plan
-      navigate('/enhanced-onboarding');
+      // Create therapy plan using collected data
+      const therapistSelection = await TherapistSelectionService.getCurrentSelection(user.id);
+      
+      const { data, error } = await supabase.functions.invoke('adaptive-therapy-planner', {
+        body: {
+          userId: user.id,
+          therapistId: therapistSelection?.therapist_id,
+          onboardingData,
+          assessmentData: {} // Will be populated from assessment results
+        }
+      });
+
+      if (error) {
+        console.error('Error creating therapy plan:', error);
+        // Fallback to onboarding if plan creation fails
+        navigate('/enhanced-onboarding');
+        return;
+      }
+
+      // Refresh prerequisites check
+      await checkPrerequisites();
     } catch (error) {
-      console.error('Error navigating to create therapy plan:', error);
+      console.error('Error creating therapy plan:', error);
+      // Fallback to onboarding
+      navigate('/enhanced-onboarding');
     }
   };
 

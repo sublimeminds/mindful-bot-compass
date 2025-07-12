@@ -19,6 +19,7 @@ import AppRouter from '@/components/AppRouter';
 import LiveChatAgent from '@/components/LiveChatAgent';
 import { AvatarManagerProvider } from '@/components/avatar/OptimizedAvatarManager';
 import { TherapistProvider } from '@/contexts/TherapistContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 import './App.css';
 
@@ -118,20 +119,22 @@ function App() {
         <AppErrorBoundary>
           <BulletproofAuthProvider>
             <SimpleAppProvider>
-              <TherapistProvider>
-                <AvatarManagerProvider maxActiveAvatars={3}>
-                  <ContextReadyWrapper>
-                    <SafeRouter>
-                    <div className="min-h-screen bg-background">
-                      <AppRouter />
-                      <LiveChatAgent />
-                      <Toaster />
-                      <Sonner />
-                    </div>
-                    </SafeRouter>
-                  </ContextReadyWrapper>
-                </AvatarManagerProvider>
-              </TherapistProvider>
+              <ThemeProvider>
+                <TherapistProvider>
+                  <AvatarManagerProvider maxActiveAvatars={3}>
+                    <ContextReadyWrapper>
+                      <SafeRouter>
+                      <div className="min-h-screen bg-background">
+                        <AppRouter />
+                        <LiveChatAgent />
+                        <Toaster />
+                        <Sonner />
+                      </div>
+                      </SafeRouter>
+                    </ContextReadyWrapper>
+                  </AvatarManagerProvider>
+                </TherapistProvider>
+              </ThemeProvider>
             </SimpleAppProvider>
           </BulletproofAuthProvider>
         </AppErrorBoundary>
