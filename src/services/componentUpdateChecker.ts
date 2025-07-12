@@ -85,8 +85,8 @@ export class ComponentUpdateChecker {
           name: component.name,
           version: '1.0.0',
           lastUpdated: new Date(),
-          criticality: component.category === 'therapy' ? 'high' : 
-                      component.category === 'core' ? 'medium' : 'low',
+          criticality: component.category === 'therapy' ? 'high' as const : 
+                      component.category === 'core' ? 'medium' as const : 'low' as const,
           category: component.category,
           status: 'active',
           dependencies: [],
@@ -177,7 +177,7 @@ export class ComponentUpdateChecker {
         latestVersion,
         updateAvailable,
         updateType: this.getUpdateType(component.version, latestVersion),
-        criticality: component.criticality,
+        criticality: component.criticality as 'low' | 'medium' | 'high' | 'critical',
         description: await this.getUpdateDescription(componentId, latestVersion),
         releaseDate: new Date(),
         breakingChanges: this.hasBreakingChanges(component.version, latestVersion),

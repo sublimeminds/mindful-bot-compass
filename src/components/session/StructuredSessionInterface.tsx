@@ -90,18 +90,11 @@ const StructuredSessionInterface = ({
       const updatedMessages = conductor.getMessages();
       setMessages([...updatedMessages]);
       
-      toast({
-        title: "Session Started",
-        description: `Your ${therapyApproach} therapy session has begun.`
-      });
+      toast.success(`Your ${therapyApproach} therapy session has begun.`);
       
     } catch (error) {
       console.error('Error starting session:', error);
-      toast({
-        title: "Error",
-        description: "Failed to start therapy session.",
-        variant: "destructive"
-      });
+      toast.error("Failed to start therapy session.");
     } finally {
       setIsLoading(false);
     }
@@ -153,19 +146,12 @@ const StructuredSessionInterface = ({
 
       // Show phase transition notification
       if (response.nextAction === 'transition') {
-        toast({
-          title: "Session Phase Update",
-          description: `Moving to: ${updatedSession?.currentPhase.name}`,
-        });
+        toast.info(`Moving to: ${updatedSession?.currentPhase.name}`);
       }
 
     } catch (error) {
       console.error('Error sending message:', error);
-      toast({
-        title: "Error",
-        description: "Failed to send message.",
-        variant: "destructive"
-      });
+      toast.error("Failed to send message.");
     } finally {
       setIsLoading(false);
     }
@@ -173,10 +159,7 @@ const StructuredSessionInterface = ({
 
   const handlePauseResume = () => {
     setIsPaused(!isPaused);
-    toast({
-      title: isPaused ? "Session Resumed" : "Session Paused",
-      description: isPaused ? "Your therapy session has resumed." : "Your therapy session is paused."
-    });
+    toast.info(isPaused ? "Your therapy session has resumed." : "Your therapy session is paused.");
   };
 
   const handleEndSession = async () => {
@@ -185,18 +168,11 @@ const StructuredSessionInterface = ({
       const summary = await conductor.endSession();
       onSessionEnd(summary);
       
-      toast({
-        title: "Session Complete",
-        description: "Your therapy session has ended successfully."
-      });
+      toast.success("Your therapy session has ended successfully.");
       
     } catch (error) {
       console.error('Error ending session:', error);
-      toast({
-        title: "Error",
-        description: "Failed to end session properly.",
-        variant: "destructive"
-      });
+      toast.error("Failed to end session properly.");
     } finally {
       setIsLoading(false);
       setSessionStarted(false);

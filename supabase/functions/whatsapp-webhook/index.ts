@@ -156,7 +156,7 @@ async function generateAIResponse(integration: any, userMessage: any, supabaseCl
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4',
+        model: 'gpt-4.1-2025-04-14',
         messages: [
           {
             role: 'system',
@@ -185,7 +185,7 @@ async function generateAIResponse(integration: any, userMessage: any, supabaseCl
         content: aiResponse,
         sender_type: 'ai',
         ai_response_metadata: {
-          model: 'gpt-4',
+          model: 'gpt-4.1-2025-04-14',
           tokens_used: aiData.usage?.total_tokens || 0
         }
       });

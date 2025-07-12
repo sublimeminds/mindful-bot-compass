@@ -81,18 +81,11 @@ export const useStructuredSession = ({
       
       updateMessagesFromConductor();
       
-      toast({
-        title: "Session Started",
-        description: `Your structured ${therapyApproach} therapy session has begun.`,
-      });
+      toast.success(`Your structured ${therapyApproach} therapy session has begun.`);
       
     } catch (error) {
       console.error('Error initializing session:', error);
-      toast({
-        title: "Session Error",
-        description: "Failed to start your therapy session. Please try again.",
-        variant: "destructive"
-      });
+      toast.error("Failed to start your therapy session. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -109,11 +102,11 @@ export const useStructuredSession = ({
         if (health.overallHealth < 70 || health.criticalIssues.length > 0) {
           onHealthAlert?.(health);
           
-          toast({
-            title: "System Health Alert",
-            description: `Therapy system health: ${Math.round(health.overallHealth)}%`,
-            variant: health.overallHealth < 50 ? "destructive" : "default"
-          });
+          if (health.overallHealth < 50) {
+            toast.error(`Therapy system health: ${Math.round(health.overallHealth)}%`);
+          } else {
+            toast.warning(`Therapy system health: ${Math.round(health.overallHealth)}%`);
+          }
         }
         
       } catch (error) {
@@ -149,10 +142,7 @@ export const useStructuredSession = ({
       setPhaseTransitionAlert(`Transitioning to: ${conductor_session.currentPhase.name}`);
       setTimeout(() => setPhaseTransitionAlert(null), 5000);
       
-      toast({
-        title: "Session Phase Update",
-        description: `Now in: ${conductor_session.currentPhase.name}`,
-      });
+      toast.info(`Now in: ${conductor_session.currentPhase.name}`);
     }
   };
 
@@ -197,11 +187,7 @@ export const useStructuredSession = ({
       
     } catch (error) {
       console.error('Error sending message:', error);
-      toast({
-        title: "Message Error",
-        description: "Failed to send your message. Please try again.",
-        variant: "destructive"
-      });
+      toast.error("Failed to send your message. Please try again.");
       return false;
     } finally {
       setIsLoading(false);
@@ -210,18 +196,12 @@ export const useStructuredSession = ({
 
   const pauseSession = () => {
     setIsPaused(true);
-    toast({
-      title: "Session Paused",
-      description: "Your therapy session has been paused.",
-    });
+    toast.info("Your therapy session has been paused.");
   };
 
   const resumeSession = () => {
     setIsPaused(false);
-    toast({
-      title: "Session Resumed",
-      description: "Your therapy session has resumed.",
-    });
+    toast.info("Your therapy session has resumed.");
   };
 
   const endSession = async (): Promise<any> => {
@@ -233,20 +213,13 @@ export const useStructuredSession = ({
       
       onSessionComplete?.(summary);
       
-      toast({
-        title: "Session Complete",
-        description: "Your therapy session has ended successfully.",
-      });
+      toast.success("Your therapy session has ended successfully.");
       
       return summary;
       
     } catch (error) {
       console.error('Error ending session:', error);
-      toast({
-        title: "Session Error",
-        description: "Failed to properly end the session.",
-        variant: "destructive"
-      });
+      toast.error("Failed to properly end the session.");
       return null;
     } finally {
       setIsLoading(false);
