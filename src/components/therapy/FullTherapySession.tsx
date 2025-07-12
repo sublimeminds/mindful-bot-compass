@@ -7,6 +7,7 @@ import EmotionCameraDetection from '@/components/avatar/EmotionCameraDetection';
 import VoiceRecorder from '@/components/voice/VoiceRecorder';
 import EnhancedSessionFlow from '@/components/therapy/EnhancedSessionFlow';
 import StructuredSessionInterface from '@/components/therapy/StructuredSessionInterface';
+import TherapyPrerequisiteCheck from '@/components/therapy/TherapyPrerequisiteCheck';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -36,7 +37,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 
 interface SessionState {
-  phase: 'approach-selection' | 'active' | 'check-out' | 'completed';
+  phase: 'prerequisites' | 'approach-selection' | 'active' | 'check-out' | 'completed';
   startTime: Date | null;
   selectedApproach: any | null;
   checkInData: {
@@ -78,7 +79,7 @@ const FullTherapySession = () => {
   } = useRealEnhancedChat();
 
   const [sessionState, setSessionState] = useState<SessionState>({
-    phase: 'approach-selection',
+    phase: 'prerequisites',
     startTime: null,
     selectedApproach: null,
     checkInData: {
@@ -169,6 +170,13 @@ const FullTherapySession = () => {
     }));
   };
 
+  const handlePrerequisitesMet = () => {
+    setSessionState(prev => ({
+      ...prev,
+      phase: 'approach-selection'
+    }));
+  };
+
   const handleCompleteSession = async () => {
     // Save session data
     const sessionInsights = await analyzeSession();
@@ -232,6 +240,15 @@ const FullTherapySession = () => {
 
   if (!user) {
     return null;
+  }
+
+  // Prerequisites Check Phase
+  if (sessionState.phase === 'prerequisites') {
+    return (
+      <div className="p-6">
+        <TherapyPrerequisiteCheck onAllPrerequisitesMet={handlePrerequisitesMet} />
+      </div>
+    );
   }
 
   // Approach Selection Phase
@@ -375,7 +392,7 @@ const FullTherapySession = () => {
               </Button>
               <Button 
                 onClick={() => setSessionState({
-                  phase: 'approach-selection',
+                  phase: 'prerequisites',
                   startTime: null,
                   selectedApproach: null,
                   checkInData: { mood: 5, concerns: '', goals: [], energy: 5 },
