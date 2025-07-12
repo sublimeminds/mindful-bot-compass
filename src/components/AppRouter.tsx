@@ -435,10 +435,10 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
-      {/* Family Features */}
+      {/* Family Features - Now in Dashboard */}
       <Route path="/family-features" element={
         <PageErrorBoundary pageName="Family Features">
-          <PublicPageWrapper><FamilyFeaturesPage /></PublicPageWrapper>
+          <DashboardPageWrapper><FamilyFeaturesPage /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 

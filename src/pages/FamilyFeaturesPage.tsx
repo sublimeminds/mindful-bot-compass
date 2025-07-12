@@ -28,17 +28,19 @@ import {
   Sparkles
 } from 'lucide-react';
 import GradientLogo from '@/components/ui/GradientLogo';
-import FamilyDashboard from '@/components/family/FamilyDashboard';
-import { useAuth } from '@/hooks/useAuth';
+import FamilyAccessGate from '@/components/family/FamilyAccessGate';
+import FamilyFeaturesLanding from '@/components/family/FamilyFeaturesLanding';
 
 const FamilyFeaturesPage = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  return (
+    <FamilyAccessGate>
+      <FamilyFeaturesContent />
+    </FamilyAccessGate>
+  );
+};
 
-  // If user is logged in, show family dashboard instead of marketing page
-  if (user) {
-    return <FamilyDashboard />;
-  }
+const FamilyFeaturesContent = () => {
+  const navigate = useNavigate();
 
   const handleGetStarted = () => {
     const planSelection = {
@@ -152,7 +154,7 @@ const FamilyFeaturesPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-25 to-calm-25">
-      <Header />
+      <div className="p-6">
       
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-harmony-500 to-balance-500 text-white">
@@ -325,7 +327,7 @@ const FamilyFeaturesPage = () => {
         </div>
       </section>
 
-      <Footer />
+      </div>
     </div>
   );
 };

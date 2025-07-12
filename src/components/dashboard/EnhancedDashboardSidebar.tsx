@@ -3,6 +3,10 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useQuoteOfTheDay } from '@/hooks/useQuoteOfTheDay';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserStats } from '@/hooks/useUserStats';
+import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
+import { useTherapyPlans } from '@/hooks/useTherapyPlans';
+import TherapyPlanSwitcher from '@/components/therapy/TherapyPlanSwitcher';
+import LockedFeatureItem from './LockedFeatureItem';
 import GradientLogo from '@/components/ui/GradientLogo';
 import { Search } from 'lucide-react';
 import { 
@@ -420,9 +424,13 @@ const technicalNav: NavigationItem[] = [
 const accountBillingNav: NavigationItem[] = [
   { name: 'Profile Management', href: '/profile', icon: User },
   { name: 'Subscription & Billing', href: '/subscription', icon: CreditCard },
-  { name: 'Family Features', href: '/family-features', icon: Users },
   { name: 'Security & Privacy', href: '/privacy', icon: Shield },
   { name: 'Notification Center', href: '/notifications', icon: Bell },
+];
+
+const familyFeaturesNav: NavigationItem[] = [
+  { name: 'Family Dashboard', href: '/family-dashboard', icon: Users },
+  { name: 'Family Features', href: '/family-features', icon: Heart },
 ];
 
 const communitySupportNav: NavigationItem[] = [
@@ -440,6 +448,8 @@ const EnhancedDashboardSidebar = () => {
   const { quote } = useQuoteOfTheDay();
   const { data: userStats, isLoading } = useUserStats();
   const { state } = useSidebar();
+  const { canAccessFeature } = useSubscriptionAccess();
+  const [showPlanCreator, setShowPlanCreator] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
     'Core Therapy': true,
     'Progress & Analytics': true,
@@ -453,6 +463,7 @@ const EnhancedDashboardSidebar = () => {
     { title: "Core Therapy", items: coreTherapyNav, icon: Brain },
     { title: "Progress & Analytics", items: progressAnalyticsNav, icon: BarChart3 },
     { title: "AI & Personalization", items: aiPersonalizationNav, icon: Sparkles },
+    { title: "Family Features", items: familyFeaturesNav, icon: Users, locked: true, requiredFeature: 'family-dashboard' },
     { title: "Technical", items: technicalNav, icon: Zap },
     { title: "Account & Billing", items: accountBillingNav, icon: User },
     { title: "Community & Support", items: communitySupportNav, icon: Users },
@@ -507,6 +518,13 @@ const EnhancedDashboardSidebar = () => {
             </div>
           </div>
         )}
+
+        {/* Therapy Plan Switcher */}
+        {state !== "collapsed" && (
+          <div className="mt-3 px-2">
+            <TherapyPlanSwitcher onCreateNew={() => setShowPlanCreator(true)} />
+          </div>
+        )}
       </SidebarHeader>
 
       <SidebarContent className="px-2 py-2">
@@ -541,6 +559,27 @@ const EnhancedDashboardSidebar = () => {
                 <SidebarMenu className="space-y-1">
                   {section.items.map((item) => {
                     const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
+                    
+                    // Check if this is a locked feature
+                    const isLocked = section.locked && section.requiredFeature && !canAccessFeature(section.requiredFeature);
+                    
+                    if (isLocked) {
+                      return (
+                        <SidebarMenuItem key={item.name}>
+                          <LockedFeatureItem
+                            href={item.href}
+                            icon={item.icon}
+                            requiredFeature={section.requiredFeature}
+                            requiredTier="family"
+                            onUpgrade={() => navigate('/subscription')}
+                            isCollapsed={state === "collapsed"}
+                          >
+                            {item.name}
+                          </LockedFeatureItem>
+                        </SidebarMenuItem>
+                      );
+                    }
+                    
                     return (
                       <SidebarMenuItem key={item.name}>
                         <SidebarMenuButton asChild>
