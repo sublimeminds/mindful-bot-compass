@@ -102,8 +102,8 @@ Always respond in a natural, conversational way that shows you care about the us
     context: ConversationContext
   ): Promise<AlexResponse> {
     try {
-      // Enhanced context building
-      const enhancedPrompt = this.buildEnhancedPrompt(userMessage, context);
+      // Enhanced context building with knowledge base
+      const enhancedPrompt = await this.buildEnhancedPrompt(userMessage, context);
       
       // Call OpenAI API with GPT-4.1-2025-04-14
       const { data, error } = await supabase.functions.invoke('alex-ai-chat', {
@@ -136,11 +136,20 @@ Always respond in a natural, conversational way that shows you care about the us
     }
   }
 
-  private static buildEnhancedPrompt(userMessage: string, context: ConversationContext): string {
+  private static async buildEnhancedPrompt(userMessage: string, context: ConversationContext): Promise<string> {
     let prompt = this.systemPrompt;
 
+    // Add knowledge base context
+    const relevantKnowledge = await this.getRelevantKnowledge(userMessage, context);
+    if (relevantKnowledge.length > 0) {
+      prompt += `\n\nKNOWLEDGE BASE CONTEXT:\n`;
+      relevantKnowledge.forEach(knowledge => {
+        prompt += `- ${knowledge.title}: ${knowledge.description}\n`;
+      });
+    }
+
     // Add contextual information
-    prompt += `\n\nCONTEXT:\n`;
+    prompt += `\n\nCURRENT CONTEXT:\n`;
     prompt += `- User is on: ${context.currentPage}\n`;
     prompt += `- Time of day: ${context.timeOfDay}\n`;
     prompt += `- User mood: ${context.userMood || 'unknown'}\n`;
@@ -169,16 +178,74 @@ Always respond in a natural, conversational way that shows you care about the us
       });
     }
 
-    // Add page-specific guidance
+    // Add page-specific guidance with TherapySync knowledge
     if (context.currentPage.includes('dashboard')) {
-      prompt += `\nPage context: User is viewing their wellness dashboard. Focus on progress celebration and data insights.`;
+      prompt += `\nPAGE CONTEXT: User is viewing their wellness dashboard. Focus on progress celebration, data insights, and guidance on using dashboard features effectively.`;
     } else if (context.currentPage.includes('therapy')) {
-      prompt += `\nPage context: User is near therapy features. Guide them appropriately but remind them you're not their therapist.`;
+      prompt += `\nPAGE CONTEXT: User is near therapy features. Guide them appropriately but remind them you're not their therapist. Help them choose between Therapy Chat vs Quick Chat based on their needs.`;
     } else if (context.currentPage.includes('crisis')) {
-      prompt += `\nPage context: User is on crisis support page. Be extra empathetic and supportive.`;
+      prompt += `\nPAGE CONTEXT: User is on crisis support page. Be extra empathetic and supportive. Provide immediate crisis resources if needed.`;
+    } else if (context.currentPage.includes('mood')) {
+      prompt += `\nPAGE CONTEXT: User is on mood tracking page. Help them understand mood patterns and encourage consistent tracking.`;
+    } else if (context.currentPage.includes('goals')) {
+      prompt += `\nPAGE CONTEXT: User is on goals page. Help them set effective, specific goals and track progress meaningfully.`;
     }
 
     return prompt;
+  }
+
+  // Get relevant knowledge from the content library
+  private static async getRelevantKnowledge(userMessage: string, context: ConversationContext): Promise<any[]> {
+    try {
+      const lowerMessage = userMessage.toLowerCase();
+      let searchTags: string[] = [];
+
+      // Determine relevant tags based on user message and context
+      if (lowerMessage.includes('therapy') || lowerMessage.includes('session')) {
+        searchTags.push('therapy', 'getting_started');
+      }
+      if (lowerMessage.includes('mood') || lowerMessage.includes('track')) {
+        searchTags.push('mood_tracking', 'wellness');
+      }
+      if (lowerMessage.includes('goal') || lowerMessage.includes('target')) {
+        searchTags.push('goals', 'motivation');
+      }
+      if (lowerMessage.includes('stress') || lowerMessage.includes('anxious')) {
+        searchTags.push('stress', 'anxiety', 'coping');
+      }
+      if (lowerMessage.includes('crisis') || lowerMessage.includes('help')) {
+        searchTags.push('crisis', 'support');
+      }
+      if (lowerMessage.includes('dashboard') || context.currentPage.includes('dashboard')) {
+        searchTags.push('dashboard', 'platform', 'analytics');
+      }
+      if (lowerMessage.includes('navigate') || lowerMessage.includes('find')) {
+        searchTags.push('platform', 'navigation');
+      }
+
+      // If no specific tags, use general platform tags
+      if (searchTags.length === 0) {
+        searchTags = ['platform', 'general'];
+      }
+
+      // Query knowledge base
+      const { data, error } = await supabase
+        .from('content_library')
+        .select('title, description, category, tags')
+        .eq('is_published', true)
+        .or(searchTags.map(tag => `tags.cs.{${tag}}`).join(','))
+        .limit(3);
+
+      if (error) {
+        console.error('Error fetching knowledge:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error('Error getting relevant knowledge:', error);
+      return [];
+    }
   }
 
   private static processAIResponse(data: any, context: ConversationContext): AlexResponse {
