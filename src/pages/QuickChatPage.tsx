@@ -229,6 +229,7 @@ const QuickChatPageContent = () => {
                         className="w-full h-full"
                         currentMessage={currentMessage}
                         onSpeakingStateChange={setIsSpeaking}
+                        force2D={true}
                       />
                     </div>
                     {currentTherapist && (

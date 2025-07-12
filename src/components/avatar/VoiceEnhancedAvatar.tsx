@@ -13,6 +13,7 @@ interface VoiceEnhancedAvatarProps {
   className?: string;
   currentMessage?: string; // Current message being spoken
   onSpeakingStateChange?: (isSpeaking: boolean) => void;
+  force2D?: boolean; // Force 2D mode to avoid 3D crashes
 }
 
 const VoiceEnhancedAvatar: React.FC<VoiceEnhancedAvatarProps> = ({
@@ -25,7 +26,8 @@ const VoiceEnhancedAvatar: React.FC<VoiceEnhancedAvatarProps> = ({
   showControls = true,
   className = "w-full h-full",
   currentMessage,
-  onSpeakingStateChange
+  onSpeakingStateChange,
+  force2D = false
 }) => {
   const [lipSyncData, setLipSyncData] = useState<Float32Array | undefined>();
   const [isAnalyzingAudio, setIsAnalyzingAudio] = useState(false);
@@ -223,6 +225,7 @@ const VoiceEnhancedAvatar: React.FC<VoiceEnhancedAvatarProps> = ({
       lipSyncData={lipSyncData}
       showControls={showControls}
       className={className}
+      force2D={force2D}
     />
   );
 };
