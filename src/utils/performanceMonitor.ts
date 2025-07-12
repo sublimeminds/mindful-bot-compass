@@ -62,6 +62,13 @@ export class PerformanceMonitor {
    */
   stopMonitoring(): void {
     this.isMonitoring = false;
+    
+    // Clear any pending memory monitoring timeouts
+    if ((this as any).memoryTimeoutId) {
+      clearTimeout((this as any).memoryTimeoutId);
+      (this as any).memoryTimeoutId = null;
+    }
+    
     console.log('🛑 Performance monitoring stopped');
   }
   
@@ -250,14 +257,17 @@ export class PerformanceMonitor {
   
   private observeMemoryUsage(): void {
     if (this.isMonitoring) {
-      // Check memory every 30 seconds
-      setTimeout(() => {
-        if ('memory' in performance) {
+      // Check memory every 2 minutes to reduce overhead
+      const timeoutId = setTimeout(() => {
+        if ('memory' in performance && this.isMonitoring) {
           const memoryInfo = (performance as any).memory;
           this.recordMetric('global', 'totalMemory', memoryInfo.usedJSHeapSize);
         }
         this.observeMemoryUsage();
-      }, 30000);
+      }, 120000); // Changed from 30s to 2 minutes
+      
+      // Store timeout ID for cleanup
+      (this as any).memoryTimeoutId = timeoutId;
     }
   }
   

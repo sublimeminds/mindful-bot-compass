@@ -18,6 +18,7 @@ import ReactSafeWrapper from '@/components/ReactSafeWrapper';
 import AppRouter from '@/components/AppRouter';
 import LiveChatAgent from '@/components/LiveChatAgent';
 import { AvatarManagerProvider } from '@/components/avatar/OptimizedAvatarManager';
+import { TherapistProvider } from '@/contexts/TherapistContext';
 
 import './App.css';
 
@@ -117,18 +118,20 @@ function App() {
         <AppErrorBoundary>
           <BulletproofAuthProvider>
             <SimpleAppProvider>
-              <AvatarManagerProvider maxActiveAvatars={3}>
-                <ContextReadyWrapper>
-                  <SafeRouter>
+              <TherapistProvider>
+                <AvatarManagerProvider maxActiveAvatars={3}>
+                  <ContextReadyWrapper>
+                    <SafeRouter>
                     <div className="min-h-screen bg-background">
                       <AppRouter />
                       <LiveChatAgent />
                       <Toaster />
                       <Sonner />
                     </div>
-                  </SafeRouter>
-                </ContextReadyWrapper>
-              </AvatarManagerProvider>
+                    </SafeRouter>
+                  </ContextReadyWrapper>
+                </AvatarManagerProvider>
+              </TherapistProvider>
             </SimpleAppProvider>
           </BulletproofAuthProvider>
         </AppErrorBoundary>

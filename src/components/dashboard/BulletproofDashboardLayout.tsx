@@ -44,10 +44,14 @@ const BulletproofDashboardLayout = ({ children }: BulletproofDashboardLayoutProp
     }
   }, [warnings, clearWarnings]);
 
-  // Track dashboard render performance
+  // Track dashboard render performance (with cleanup)
   useEffect(() => {
-    performanceMonitor.trackMemoryUsage('BulletproofDashboardLayout');
-  });
+    const intervalId = setInterval(() => {
+      performanceMonitor.trackMemoryUsage('BulletproofDashboardLayout');
+    }, 60000); // Check every minute instead of every render
+    
+    return () => clearInterval(intervalId);
+  }, []);
 
   return performanceMonitor.measureRenderTime('BulletproofDashboardLayout', () => (
     <SafeComponentWrapper name="BulletproofDashboardLayout">

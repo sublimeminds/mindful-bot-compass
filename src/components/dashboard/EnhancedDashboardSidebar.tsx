@@ -610,10 +610,10 @@ const EnhancedDashboardSidebar = () => {
                               isActive 
                                 ? 'bg-gradient-to-r from-therapy-500 to-calm-500 text-white shadow-md hover:text-white' 
                                 : ''
-                            } ${state === "collapsed" ? 'px-2' : 'px-3'}`}
+                            } ${state === "collapsed" ? 'p-3 min-h-[48px] flex items-center justify-center' : 'px-3'}`}
                             title={state === "collapsed" ? item.name : undefined}
                           >
-                            <item.icon className={`${state === "collapsed" ? 'w-5 h-5' : 'w-4 h-4 mr-3'} flex-shrink-0`} />
+                            <item.icon className={`${state === "collapsed" ? 'w-6 h-6' : 'w-4 h-4 mr-3'} flex-shrink-0`} />
                             {state !== "collapsed" && <span className="font-medium">{item.name}</span>}
                           </NavLink>
                         </SidebarMenuButton>
