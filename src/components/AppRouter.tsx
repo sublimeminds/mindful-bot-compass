@@ -218,6 +218,11 @@ const AppRouter = () => {
       {/* USER DASHBOARD PAGES - Use BulletproofDashboardLayout (Sidebar) */}
       
       {/* Onboarding Routes (still dashboard style for logged in users) */}
+      <Route path="/enhanced-onboarding" element={
+        <PageErrorBoundary pageName="Enhanced Onboarding">
+          <EnhancedOnboardingPage />
+        </PageErrorBoundary>
+      } />
       <Route path="/onboarding" element={
         <PageErrorBoundary pageName="Onboarding">
           <EnhancedOnboardingPage />
