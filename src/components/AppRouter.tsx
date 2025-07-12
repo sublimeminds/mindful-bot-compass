@@ -65,6 +65,7 @@ import AdminDashboard from "../pages/AdminDashboard";
 import AdminAI from "../pages/AdminAI";
 import AdminAnalytics from "../pages/AdminAnalytics";
 import AdminContent from "../pages/AdminContent";
+import AdminTherapy from "../pages/AdminTherapyPage";
 import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
 import ContentLibrary from "../pages/ContentLibrary";
 import CompliancePage from '../components/compliance/CompliancePage';
@@ -479,6 +480,12 @@ const AppRouter = () => {
       <Route path="/admin/content" element={
         <PageErrorBoundary pageName="Admin Content">
           <DashboardPageWrapper><AdminContent /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/admin/therapy" element={
+        <PageErrorBoundary pageName="Admin Therapy">
+          <DashboardPageWrapper><AdminTherapy /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 

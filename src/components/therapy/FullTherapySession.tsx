@@ -480,6 +480,10 @@ const FullTherapySession = () => {
               <Heart className="h-3 w-3" />
               Mood: {userEmotion}
             </Badge>
+            <Badge variant="outline" className="flex items-center gap-1">
+              <Brain className="h-3 w-3" />
+              Live Analytics
+            </Badge>
           </div>
           
           <div className="flex items-center gap-2">

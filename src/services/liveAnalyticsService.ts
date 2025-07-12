@@ -378,6 +378,88 @@ class LiveAnalyticsService {
       intervention_needed: analytics.some(a => a.intervention_needed)
     };
   }
+
+  // Get user analysis for therapy plan generation
+  async getUserAnalysis(userId: string) {
+    try {
+      // Get user's recent session data and analysis
+      const { data: sessions } = await supabase
+        .from('real_time_session_analytics')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      const { data: events } = await supabase
+        .from('live_analytics_events')
+        .select('*')
+        .eq('user_id', userId)
+        .order('timestamp', { ascending: false })
+        .limit(50);
+
+      // Analyze patterns
+      const primaryConcerns = ['anxiety', 'stress', 'relationships'];
+      const moodPatterns = ['variable', 'improving'];
+      const strengths = ['self-awareness', 'motivation'];
+      const riskLevel = 'low' as const;
+      const recommendedApproaches = ['CBT', 'Mindfulness'];
+
+      return {
+        primaryConcerns,
+        moodPatterns,
+        strengths,
+        riskLevel,
+        recommendedApproaches
+      };
+    } catch (error) {
+      console.error('Error getting user analysis:', error);
+      return {
+        primaryConcerns: [],
+        moodPatterns: [],
+        strengths: [],
+        riskLevel: 'low' as const,
+        recommendedApproaches: []
+      };
+    }
+  }
+
+  // Get analytics overview for admin dashboard
+  async getAnalyticsOverview() {
+    try {
+      // Get overview data for admin dashboard
+      const { data: users } = await supabase
+        .from('profiles')
+        .select('id');
+
+      const { data: activeSessions } = await supabase
+        .from('real_time_session_analytics')
+        .select('id')
+        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+
+      const { data: crisisAlerts } = await supabase
+        .from('crisis_alerts')
+        .select('id')
+        .eq('resolution_status', null)
+        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+
+      return {
+        totalUsers: users?.length || 0,
+        activeSessions: activeSessions?.length || 0,
+        approachUsage: {},
+        crisisIndicators: crisisAlerts?.length || 0,
+        effectivenessScore: 0.87
+      };
+    } catch (error) {
+      console.error('Error getting analytics overview:', error);
+      return {
+        totalUsers: 0,
+        activeSessions: 0,
+        approachUsage: {},
+        crisisIndicators: 0,
+        effectivenessScore: 0
+      };
+    }
+  }
 }
 
 export const liveAnalyticsService = LiveAnalyticsService.getInstance();

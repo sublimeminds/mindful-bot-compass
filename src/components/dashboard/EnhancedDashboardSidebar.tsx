@@ -43,7 +43,8 @@ import {
   Crown,
   Flame,
   LogOut,
-  MoreHorizontal
+  MoreHorizontal,
+  BookOpen
 } from 'lucide-react';
 import {
   Sidebar,
@@ -453,6 +454,14 @@ const communitySupportNav: NavigationItem[] = [
   { name: 'Help & Support', href: '/help', icon: HelpCircle },
 ];
 
+const adminNav: NavigationItem[] = [
+  { name: 'Admin Dashboard', href: '/admin', icon: Shield },
+  { name: 'AI Management', href: '/admin/ai', icon: Brain },
+  { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+  { name: 'Content Library', href: '/admin/content', icon: BookOpen },
+  { name: 'Therapy Management', href: '/admin/therapy', icon: Activity },
+];
+
 const EnhancedDashboardSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -480,6 +489,7 @@ const EnhancedDashboardSidebar = () => {
     { title: "Technical", items: technicalNav, icon: Zap },
     { title: "Account & Billing", items: accountBillingNav, icon: User },
     { title: "Community & Support", items: communitySupportNav, icon: Users },
+    { title: "Administration", items: adminNav, icon: Shield },
   ];
 
   // Auto-expand groups that contain the active route
