@@ -5376,6 +5376,68 @@ export type Database = {
           },
         ]
       }
+      scheduled_sessions: {
+        Row: {
+          created_at: string
+          duration_minutes: number
+          id: string
+          is_recurring: boolean
+          notes: string | null
+          recurrence_end_date: string | null
+          recurrence_pattern: string | null
+          reminder_sent: boolean
+          scheduled_for: string
+          session_type: string
+          status: string
+          therapist_id: string
+          therapy_plan_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          is_recurring?: boolean
+          notes?: string | null
+          recurrence_end_date?: string | null
+          recurrence_pattern?: string | null
+          reminder_sent?: boolean
+          scheduled_for: string
+          session_type?: string
+          status?: string
+          therapist_id: string
+          therapy_plan_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          is_recurring?: boolean
+          notes?: string | null
+          recurrence_end_date?: string | null
+          recurrence_pattern?: string | null
+          reminder_sent?: boolean
+          scheduled_for?: string
+          session_type?: string
+          status?: string
+          therapist_id?: string
+          therapy_plan_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_sessions_therapy_plan_id_fkey"
+            columns: ["therapy_plan_id"]
+            isOneToOne: false
+            referencedRelation: "therapy_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       security_events: {
         Row: {
           created_at: string
@@ -6862,10 +6924,14 @@ export type Database = {
           created_at: string
           current_phase: string
           description: string
+          estimated_duration_weeks: number | null
+          focus_areas: string[] | null
           goals: Json
           id: string
           is_active: boolean
+          milestones: Json | null
           progress_percentage: number
+          sessions_per_week: number | null
           therapist_id: string
           title: string
           total_phases: number
@@ -6876,10 +6942,14 @@ export type Database = {
           created_at?: string
           current_phase?: string
           description: string
+          estimated_duration_weeks?: number | null
+          focus_areas?: string[] | null
           goals?: Json
           id?: string
           is_active?: boolean
+          milestones?: Json | null
           progress_percentage?: number
+          sessions_per_week?: number | null
           therapist_id: string
           title: string
           total_phases?: number
@@ -6890,10 +6960,14 @@ export type Database = {
           created_at?: string
           current_phase?: string
           description?: string
+          estimated_duration_weeks?: number | null
+          focus_areas?: string[] | null
           goals?: Json
           id?: string
           is_active?: boolean
+          milestones?: Json | null
           progress_percentage?: number
+          sessions_per_week?: number | null
           therapist_id?: string
           title?: string
           total_phases?: number

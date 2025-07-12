@@ -70,7 +70,11 @@ const TherapyPlanPage = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setTherapyPlans(data || []);
+      setTherapyPlans((data || []).map(plan => ({
+        ...plan,
+        goals: Array.isArray(plan.goals) ? plan.goals : [],
+        milestones: Array.isArray(plan.milestones) ? plan.milestones : []
+      })) as TherapyPlan[]);
     } catch (error) {
       console.error('Error loading therapy plans:', error);
       toast({

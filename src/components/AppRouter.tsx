@@ -45,7 +45,7 @@ import VoiceSettings from "../pages/VoiceSettings";
 import Billing from "../pages/Billing";
 import Sessions from "../pages/Sessions";
 import NotificationsPage from "../pages/NotificationsPage";
-import TherapyPlan from "../pages/TherapyPlan";
+import TherapyPlanPage from "../pages/TherapyPlanPage";
 import ProgressOverview from "../pages/ProgressOverview";
 import Subscription from "../pages/Subscription";
 import TherapySessionPage from "../pages/TherapySessionPage";
@@ -280,7 +280,7 @@ const AppRouter = () => {
 
       <Route path="/therapy-plan" element={
         <PageErrorBoundary pageName="Therapy Plan">
-          <DashboardPageWrapper><TherapyPlan /></DashboardPageWrapper>
+          <DashboardPageWrapper><TherapyPlanPage /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 

@@ -1,5 +1,5 @@
 
-project_id = "csuhjqcvkhmyakrnqpnm"
+project_id = "dbwrbjjmraodegffupnx"
 
 [api]
 enabled = true
@@ -144,4 +144,10 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.hume-emotion]
+verify_jwt = false
+
+[functions.enhanced-api]
+verify_jwt = false
+
+[functions.process-notification-queue]
 verify_jwt = false

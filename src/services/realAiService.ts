@@ -1,6 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { OpenAIService, ChatMessage } from './openAiService';
+import { SubscriptionBasedAiService } from './subscriptionBasedAiService';
+import { ChatMessage } from './openAiService';
 
 export interface ConversationContext {
   userId: string;
@@ -62,17 +63,19 @@ class RealAIService {
       // Create system prompt with personalization
       const systemPrompt = this.buildPersonalizedPrompt(enhancedContext);
 
-      // Call OpenAI service with enhanced context including therapist
-      const aiResponse = await OpenAIService.sendTherapyMessage(
+      // Use subscription-based AI service
+      const aiResponse = await SubscriptionBasedAiService.generateResponse(
         userMessage,
-        context.conversationHistory,
-        { 
+        {
           systemPrompt,
           therapist: context.therapist,
           approach: context.therapist?.approach,
-          communicationStyle: context.therapist?.communicationStyle
+          communicationStyle: context.therapist?.communicationStyle,
+          ...enhancedContext
         },
-        context.userId
+        context.userId,
+        'chat',
+        'medium'
       );
 
       // Analyze for crisis indicators

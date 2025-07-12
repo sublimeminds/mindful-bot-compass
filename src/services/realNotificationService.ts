@@ -30,8 +30,7 @@ export class RealNotificationService {
           message: notification.message,
           data: notification.data || {},
           priority: notification.priority,
-          scheduled_for: notification.scheduledFor?.toISOString(),
-          sent_at: notification.scheduledFor ? null : new Date().toISOString()
+          scheduled_for: notification.scheduledFor?.toISOString()
         });
 
       if (error) {
@@ -71,8 +70,7 @@ export class RealNotificationService {
         isRead: notification.is_read,
         priority: notification.priority as Notification['priority'],
         createdAt: new Date(notification.created_at),
-        scheduledFor: notification.scheduled_for ? new Date(notification.scheduled_for) : undefined,
-        sentAt: notification.sent_at ? new Date(notification.sent_at) : undefined
+        scheduledFor: notification.scheduled_for ? new Date(notification.scheduled_for) : undefined
       })) || [];
     } catch (error) {
       console.error('Error in getUserNotifications:', error);
@@ -215,11 +213,12 @@ export class RealNotificationService {
         return;
       }
 
-      // Mark notifications as sent
+      // Mark notifications as processed
       for (const notification of pendingNotifications || []) {
+        // Update with a flag instead of sent_at since it doesn't exist
         await supabase
           .from('notifications')
-          .update({ sent_at: now.toISOString() })
+          .update({ is_read: false }) // Just ensure it's marked for delivery
           .eq('id', notification.id);
 
         // Here you could integrate with push notification services

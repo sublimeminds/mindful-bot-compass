@@ -1,18 +1,16 @@
 import { supabase } from '@/integrations/supabase/client';
 import { MultiModelAIRouter } from './multiModelAiRouter';
 
-interface UserSubscription {
-  planId: string;
-  status: string;
-  plan?: {
-    name: string;
-    features: Record<string, any>;
-    limits: Record<string, any>;
-  };
+interface ModelSelectionCriteria {
+  taskType: 'chat' | 'analysis' | 'crisis' | 'cultural' | 'creative';
+  urgency: 'low' | 'medium' | 'high' | 'critical';
+  complexity: 'simple' | 'moderate' | 'complex';
+  culturalContext?: string;
+  userTier: 'free' | 'premium' | 'enterprise';
 }
 
 export class SubscriptionBasedAiService {
-  private static async getUserSubscriptionTier(userId: string): Promise<'free' | 'premium' | 'pro' | 'enterprise'> {
+  private static async getUserSubscriptionTier(userId: string): Promise<'free' | 'premium' | 'enterprise'> {
     try {
       const { data: subscription } = await supabase
         .from('user_subscriptions')
@@ -29,8 +27,7 @@ export class SubscriptionBasedAiService {
       const planName = subscription.subscription_plans.name.toLowerCase();
       
       if (planName.includes('enterprise')) return 'enterprise';
-      if (planName.includes('pro')) return 'pro';  
-      if (planName.includes('premium')) return 'premium';
+      if (planName.includes('premium') || planName.includes('pro')) return 'premium';
       
       return 'free';
     } catch (error) {
@@ -39,11 +36,10 @@ export class SubscriptionBasedAiService {
     }
   }
 
-  private static getModelForTier(tier: 'free' | 'premium' | 'pro' | 'enterprise'): string {
+  private static getModelForTier(tier: 'free' | 'premium' | 'enterprise'): string {
     switch (tier) {
       case 'enterprise':
         return 'claude-opus-4-20250514'; // Highest quality
-      case 'pro':
       case 'premium':
         return 'claude-sonnet-4-20250514'; // High quality, efficient
       case 'free':
@@ -96,14 +92,12 @@ export class SubscriptionBasedAiService {
 
   private static async trackUsage(userId: string, tier: string, taskType: string) {
     try {
-      // Insert usage tracking record
-      await supabase.from('user_usage').insert({
+      // Track usage in performance_metrics table instead
+      await supabase.from('performance_metrics').insert({
         user_id: userId,
-        resource_type: 'ai_message',
-        usage_count: 1,
-        period_start: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-        period_end: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
-        metadata: { tier, taskType }
+        metric_type: 'ai_usage',
+        metric_value: 1,
+        metadata: { tier, taskType, timestamp: new Date().toISOString() }
       });
     } catch (error) {
       console.error('Error tracking usage:', error);
@@ -118,23 +112,21 @@ export class SubscriptionBasedAiService {
   }> {
     const tier = await this.getUserSubscriptionTier(userId);
     
-    // Get current month usage
+    // Get current month usage from performance_metrics
     const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const { data: usage } = await supabase
-      .from('user_usage')
-      .select('usage_count')
+      .from('performance_metrics')
+      .select('metric_value')
       .eq('user_id', userId)
-      .eq('resource_type', 'ai_message')
-      .gte('period_start', startOfMonth.toISOString())
-      .single();
+      .eq('metric_type', 'ai_usage')
+      .gte('recorded_at', startOfMonth.toISOString());
 
-    const currentUsage = usage?.usage_count || 0;
+    const currentUsage = usage?.reduce((sum, record) => sum + record.metric_value, 0) || 0;
     
     // Define limits based on tier
     const limits = {
       free: 50,
       premium: 500,
-      pro: 1000,
       enterprise: -1 // unlimited
     };
 
