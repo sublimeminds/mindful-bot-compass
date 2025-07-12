@@ -3,7 +3,7 @@ import { useAuth } from './useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface SubscriptionAccess {
-  tier: 'free' | 'premium' | 'family-pro' | 'family-premium' | 'enterprise';
+  tier: 'free' | 'pro' | 'premium' | 'family-pro' | 'family-premium' | 'enterprise';
   hasFamily: boolean;
   familySeats: number;
   maxSeats: number;
@@ -11,14 +11,16 @@ export interface SubscriptionAccess {
   isFamily: boolean;
   isEnterprise: boolean;
   isPremium: boolean;
+  isPro: boolean;
 }
 
 const FEATURE_ACCESS = {
   free: ['basic-chat', 'mood-tracking', 'basic-goals'],
-  premium: ['advanced-chat', 'ai-insights', 'unlimited-sessions', 'progress-tracking'],
+  pro: ['advanced-chat', 'ai-insights', 'unlimited-sessions', 'progress-tracking', 'community-hub'],
+  premium: ['advanced-analytics', 'crisis-intervention', 'priority-support', 'personalized-insights'],
   'family-pro': ['family-dashboard', 'member-monitoring', 'progress-sharing', 'alerts'],
-  'family-premium': ['crisis-intervention', '24-7-support', 'family-therapy', 'advanced-analytics'],
-  enterprise: ['api-access', 'custom-integrations', 'dedicated-support', 'white-label']
+  'family-premium': ['24-7-support', 'family-therapy'],
+  enterprise: ['api-access', 'custom-integrations', 'dedicated-support', 'white-label', 'compliance-tools', 'bulk-management']
 };
 
 export const useSubscriptionAccess = (): SubscriptionAccess => {
@@ -62,6 +64,7 @@ export const useSubscriptionAccess = (): SubscriptionAccess => {
   // Determine tier from subscription or profile
   const tier = subscription?.plan_id || profile?.subscription_plan || 'free';
   const isFamily = tier.includes('family');
+  const isPro = tier === 'pro' || tier.includes('family') || tier === 'premium' || tier === 'enterprise';
   const isPremium = tier === 'premium' || tier.includes('family') || tier === 'enterprise';
   const isEnterprise = tier === 'enterprise';
 
@@ -81,14 +84,15 @@ export const useSubscriptionAccess = (): SubscriptionAccess => {
   }
 
   const canAccessFeature = (feature: string): boolean => {
-    const userFeatures = FEATURE_ACCESS[tier as keyof typeof FEATURE_ACCESS] || [];
+    const baseFeatures = FEATURE_ACCESS.free;
+    const proFeatures = isPro ? FEATURE_ACCESS.pro : [];
     const premiumFeatures = isPremium ? FEATURE_ACCESS.premium : [];
     const familyFeatures = isFamily ? [...FEATURE_ACCESS['family-pro'], ...(tier === 'family-premium' ? FEATURE_ACCESS['family-premium'] : [])] : [];
     const enterpriseFeatures = isEnterprise ? FEATURE_ACCESS.enterprise : [];
     
     const allFeatures = [
-      ...FEATURE_ACCESS.free,
-      ...userFeatures,
+      ...baseFeatures,
+      ...proFeatures,
       ...premiumFeatures,
       ...familyFeatures,
       ...enterpriseFeatures
@@ -106,5 +110,6 @@ export const useSubscriptionAccess = (): SubscriptionAccess => {
     isFamily,
     isEnterprise,
     isPremium,
+    isPro,
   };
 };

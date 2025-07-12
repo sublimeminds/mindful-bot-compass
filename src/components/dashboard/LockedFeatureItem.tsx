@@ -16,13 +16,14 @@ interface LockedFeatureItemProps {
   icon: React.ElementType;
   children: React.ReactNode;
   requiredFeature: string;
-  requiredTier: 'premium' | 'family' | 'enterprise';
+  requiredTier: 'pro' | 'premium' | 'family' | 'enterprise';
   onUpgrade: () => void;
   isCollapsed?: boolean;
 }
 
 const getTierIcon = (tier: string) => {
   switch (tier) {
+    case 'pro': return <Crown className="h-3 w-3" />;
     case 'premium': return <Crown className="h-3 w-3" />;
     case 'family': return <Users className="h-3 w-3" />;
     case 'enterprise': return <Zap className="h-3 w-3" />;
@@ -32,8 +33,9 @@ const getTierIcon = (tier: string) => {
 
 const getTierColor = (tier: string) => {
   switch (tier) {
+    case 'pro': return 'text-blue-600 bg-blue-100';
     case 'premium': return 'text-yellow-600 bg-yellow-100';
-    case 'family': return 'text-blue-600 bg-blue-100';
+    case 'family': return 'text-green-600 bg-green-100';
     case 'enterprise': return 'text-purple-600 bg-purple-100';
     default: return 'text-gray-600 bg-gray-100';
   }

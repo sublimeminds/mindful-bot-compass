@@ -75,6 +75,9 @@ interface NavigationItem {
   children?: NavigationItem[];
   level?: number;
   badge?: string | number;
+  locked?: boolean;
+  requiredFeature?: string;
+  requiredTier?: 'pro' | 'premium' | 'family' | 'enterprise';
 }
 
 // Enhanced User Dropdown Component
@@ -405,7 +408,7 @@ const coreTherapyNav: NavigationItem[] = [
 const progressAnalyticsNav: NavigationItem[] = [
   { name: 'Goals & Milestones', href: '/goals', icon: Target },
   { name: 'Mood Tracking', href: '/mood-tracking', icon: Heart },
-  { name: 'Advanced Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'Advanced Analytics', href: '/analytics', icon: BarChart3, locked: true, requiredFeature: 'advanced-analytics', requiredTier: 'premium' },
   { name: 'Reports & Insights', href: '/reports', icon: BarChart3 },
 ];
 
@@ -435,11 +438,10 @@ const familyFeaturesNav: NavigationItem[] = [
 ];
 
 const communitySupportNav: NavigationItem[] = [
-  { name: 'Community Hub', href: '/community', icon: Users },
+  { name: 'Community Hub', href: '/community', icon: Users, locked: true, requiredFeature: 'community-hub', requiredTier: 'pro' },
   { name: 'Wellness Challenges', href: '/wellness-challenges', icon: Trophy },
-  { name: 'Crisis Support', href: '/chat', icon: AlertTriangle },
+  { name: 'Crisis Support', href: '/chat', icon: AlertTriangle, locked: true, requiredFeature: 'crisis-intervention', requiredTier: 'premium' },
   { name: 'Help & Support', href: '/help', icon: HelpCircle },
-  { name: 'Compliance Dashboard', href: '/compliance', icon: Shield },
 ];
 
 const EnhancedDashboardSidebar = () => {
@@ -454,10 +456,10 @@ const EnhancedDashboardSidebar = () => {
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
     'Core Therapy': true,
     'Progress & Analytics': true,
-    'AI & Personalization': false,
-    'Technical': false,
-    'Account & Billing': false,
-    'Community & Support': false,
+    'AI & Personalization': true,
+    'Technical': true,
+    'Account & Billing': true,
+    'Community & Support': true,
   });
 
   const navigationSections = [
@@ -554,17 +556,19 @@ const EnhancedDashboardSidebar = () => {
                   {section.items.map((item) => {
                     const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
                     
-                    // Check if this is a locked feature
-                    const isLocked = section.locked && section.requiredFeature && !canAccessFeature(section.requiredFeature);
+                    // Check if this specific item is locked OR if the entire section is locked
+                    const itemLocked = item.locked && item.requiredFeature && !canAccessFeature(item.requiredFeature);
+                    const sectionLocked = section.locked && section.requiredFeature && !canAccessFeature(section.requiredFeature);
+                    const isLocked = itemLocked || sectionLocked;
                     
                     if (isLocked) {
                       return (
                         <SidebarMenuItem key={item.name}>
                           <LockedFeatureItem
-                            href={item.href}
+                            href={item.href!}
                             icon={item.icon}
-                            requiredFeature={section.requiredFeature}
-                            requiredTier="family"
+                            requiredFeature={item.requiredFeature || section.requiredFeature!}
+                            requiredTier={item.requiredTier || "family"}
                             onUpgrade={() => navigate('/subscription')}
                             isCollapsed={state === "collapsed"}
                           >
