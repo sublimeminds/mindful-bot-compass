@@ -114,15 +114,28 @@ serve(async (req) => {
       "adaptation_triggers": ["conditions requiring approach modification"]
     }`;
 
+    // Check if Anthropic API key is available
+    if (!anthropicApiKey) {
+      console.error('Anthropic API key not configured');
+      return new Response(
+        JSON.stringify({ 
+          error: 'AI service unavailable', 
+          fallback_available: true,
+          available_approaches: approaches 
+        }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'x-api-key': anthropicApiKey!,
+        'x-api-key': anthropicApiKey,
         'Content-Type': 'application/json',
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-20250514',
+        model: 'claude-3-5-sonnet-20241022', // Fixed model name
         max_tokens: 4000,
         messages: [
           {
@@ -134,11 +147,38 @@ serve(async (req) => {
     });
 
     if (!anthropicResponse.ok) {
-      throw new Error(`Anthropic API error: ${anthropicResponse.status}`);
+      const errorText = await anthropicResponse.text();
+      console.error(`Anthropic API error: ${anthropicResponse.status} - ${errorText}`);
+      
+      // Return fallback with available approaches
+      return new Response(
+        JSON.stringify({ 
+          error: 'AI recommendation failed', 
+          fallback_available: true,
+          available_approaches: approaches,
+          details: `API Error ${anthropicResponse.status}`
+        }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const anthropicData = await anthropicResponse.json();
-    const recommendations = JSON.parse(anthropicData.content[0].text);
+    
+    let recommendations;
+    try {
+      recommendations = JSON.parse(anthropicData.content[0].text);
+    } catch (parseError) {
+      console.error('Failed to parse AI response:', anthropicData.content[0].text);
+      // Return fallback
+      return new Response(
+        JSON.stringify({ 
+          error: 'AI response parsing failed', 
+          fallback_available: true,
+          available_approaches: approaches 
+        }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Find the actual approach objects
     const primaryApproach = approaches.find(a => a.name === recommendations.primary.approach_name);
@@ -178,9 +218,33 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error recommending therapy approaches:', error);
-    return new Response(
-      JSON.stringify({ error: 'Recommendation failed' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    
+    // Try to get fallback approaches
+    try {
+      const { data: fallbackApproaches } = await supabase
+        .from('therapeutic_approach_configs')
+        .select('*')
+        .eq('is_active', true)
+        .limit(3);
+        
+      return new Response(
+        JSON.stringify({ 
+          error: 'Recommendation service failed', 
+          fallback_available: true,
+          available_approaches: fallbackApproaches || [],
+          details: error.message
+        }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    } catch (fallbackError) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Service unavailable', 
+          fallback_available: false,
+          details: 'Could not retrieve therapy approaches'
+        }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
   }
 });
