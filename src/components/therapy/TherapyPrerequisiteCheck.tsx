@@ -49,14 +49,14 @@ const TherapyPrerequisiteCheck = ({ onAllPrerequisitesMet }: TherapyPrerequisite
         onboardingData.goals.length > 0 && 
         onboardingData.preferences.length > 0;
 
-      // Check for therapist assessment
-      const { data: assessments } = await supabase
-        .from('therapist_assessments')
+      // Check for therapist assessment (using assessment_matches table)
+      const { data: assessmentMatches } = await supabase
+        .from('assessment_matches')
         .select('id')
         .eq('user_id', user.id)
         .limit(1);
 
-      const hasTherapistAssessment = assessments && assessments.length > 0;
+      const hasTherapistAssessment = assessmentMatches && assessmentMatches.length > 0;
 
       // Check for active therapist selection
       const therapistSelection = await TherapistSelectionService.getCurrentSelection(user.id);
@@ -96,7 +96,7 @@ const TherapyPrerequisiteCheck = ({ onAllPrerequisitesMet }: TherapyPrerequisite
   };
 
   const handleStartAssessment = () => {
-    navigate('/therapist-assessment');
+    navigate('/therapist-discovery');
   };
 
   const handleSelectTherapist = () => {
