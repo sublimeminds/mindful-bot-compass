@@ -6,6 +6,7 @@ import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import EmotionCameraDetection from '@/components/avatar/EmotionCameraDetection';
 import VoiceRecorder from '@/components/voice/VoiceRecorder';
 import EnhancedSessionFlow from '@/components/therapy/EnhancedSessionFlow';
+import StructuredSessionInterface from '@/components/therapy/StructuredSessionInterface';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -391,211 +392,14 @@ const FullTherapySession = () => {
     );
   }
 
-  // Active Session Phase
+  // Active Session Phase - Use Structured Session Interface
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      {/* Session Header */}
-      <div className="mb-6 bg-white rounded-lg p-4 shadow-sm border">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="font-semibold">Active Session</span>
-            </div>
-            <Badge variant="outline" className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              {formatDuration(sessionDuration)}
-            </Badge>
-            <Badge variant="secondary" className="flex items-center gap-1">
-              <Heart className="h-3 w-3" />
-              Mood: {userEmotion}
-            </Badge>
-            <Badge variant="outline" className="flex items-center gap-1">
-              <Brain className="h-3 w-3" />
-              Live Analytics
-            </Badge>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => setSessionState(prev => ({ ...prev, phase: 'active' }))}>
-              <PauseCircle className="h-4 w-4 mr-1" />
-              Pause
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleStartCheckOut}>
-              <StopCircle className="h-4 w-4 mr-1" />
-              End Session
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-250px)]">
-        {/* Main Chat Area */}
-        <div className="lg:col-span-2 flex flex-col">
-          <Card className="flex-1 flex flex-col">
-            <CardHeader className="flex-shrink-0">
-              <CardTitle className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5" />
-                Therapy Conversation with {currentTherapist?.name || 'AI Therapist'}
-              </CardTitle>
-            </CardHeader>
-            
-            <CardContent className="flex-1 flex flex-col">
-              <ScrollArea className="flex-1 mb-4">
-                <div className="space-y-4 pr-4">
-                  {messages.length === 0 && (
-                    <div className="text-center text-muted-foreground py-8">
-                      <Brain className="h-12 w-12 mx-auto mb-4 text-therapy-300" />
-                      <p className="text-lg font-semibold mb-2">Session Started</p>
-                      <p>Based on your check-in, I understand you're feeling {sessionState.checkInData.mood}/10 today. How can I support you?</p>
-                    </div>
-                  )}
-                  
-                  {messages.map((message, index) => (
-                    <div
-                      key={message.id}
-                      className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div
-                        className={`max-w-[70%] p-4 rounded-lg ${
-                          message.isUser
-                            ? 'bg-therapy-500 text-white'
-                            : 'bg-gray-100 text-gray-900 border border-gray-200'
-                        }`}
-                      >
-                        <p className="text-sm leading-relaxed">{message.content}</p>
-                        
-                        <div className="flex items-center justify-between mt-2 text-xs opacity-70">
-                          <span>{message.timestamp.toLocaleTimeString()}</span>
-                          
-                          {!message.isUser && voiceEnabled && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => playMessage(message.content)}
-                              disabled={isSpeaking}
-                              className="h-6 w-6 p-0"
-                            >
-                              <Volume2 className="h-3 w-3" />
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {isLoading && (
-                    <div className="flex justify-start">
-                      <div className="bg-gray-100 border border-gray-200 p-4 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-therapy-400 rounded-full animate-bounce"></div>
-                            <div className="w-2 h-2 bg-therapy-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                            <div className="w-2 h-2 bg-therapy-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                          </div>
-                          <span className="text-sm text-gray-600">Thinking...</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </ScrollArea>
-
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Share what's on your mind..."
-                  value={messageInput}
-                  onChange={(e) => setMessageInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  disabled={isLoading}
-                  className="flex-1"
-                />
-                
-                <Button
-                  onClick={handleSendMessage}
-                  disabled={isLoading || !messageInput.trim()}
-                  size="sm"
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Avatar & Tools Sidebar */}
-        <div className="space-y-4">
-          {/* Therapist Avatar */}
-          <Card className="overflow-hidden">
-            <CardContent className="p-0">
-              <div className="h-80 bg-gradient-to-br from-therapy-50 to-calm-50 flex items-center justify-center">
-                <Professional2DAvatar
-                  therapistId={currentTherapist?.id || 'dr-sarah-chen'}
-                  therapistName={currentTherapist?.name || 'AI Therapist'}
-                  className="w-full h-full"
-                  size="xl"
-                  showName={true}
-                  emotion={getAvatarEmotion()}
-                  isListening={isListening}
-                  isSpeaking={isSpeaking}
-                  showVoiceIndicator={true}
-                  therapeuticMode={true}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Emotion Detection */}
-          {cameraEnabled && (
-            <EmotionCameraDetection
-              onEmotionDetected={handleEmotionDetected}
-              isActive={cameraEnabled}
-              showPreview={true}
-            />
-          )}
-
-          {/* Voice Recorder */}
-          <VoiceRecorder
-            onTranscription={handleVoiceTranscription}
-            onRecordingStateChange={handleVoiceRecordingStateChange}
-            userId={user?.id}
-            sessionId={currentSessionId}
-            isEnabled={voiceEnabled}
-          />
-
-          {/* Session Controls */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Session Tools</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span>Camera:</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCameraEnabled(!cameraEnabled)}
-                  className={cameraEnabled ? 'bg-green-50' : ''}
-                >
-                  {cameraEnabled ? <Camera className="h-4 w-4" /> : <CameraOff className="h-4 w-4" />}
-                </Button>
-              </div>
-              
-              <div className="flex items-center justify-between text-sm">
-                <span>Voice:</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setVoiceEnabled(!voiceEnabled)}
-                  className={voiceEnabled ? 'bg-blue-50' : ''}
-                >
-                  {voiceEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+    <div className="p-6">
+      <StructuredSessionInterface
+        therapyApproach={sessionState.selectedApproach?.name || 'General Therapy'}
+        onSessionComplete={handleCompleteSession}
+        initialMood={sessionState.checkInData.mood}
+      />
     </div>
   );
 };

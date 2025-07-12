@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import EnhancedTherapyChatWithAvatar from '@/components/therapy/EnhancedTherapyChatWithAvatar';
+import StructuredSessionInterface from '@/components/therapy/StructuredSessionInterface';
 
 const EnhancedTherapy = () => {
   const { user, loading } = useAuth();
@@ -29,8 +29,15 @@ const EnhancedTherapy = () => {
   }
 
   return (
-    <div>
-      <EnhancedTherapyChatWithAvatar />
+    <div className="p-6">
+      <StructuredSessionInterface
+        therapyApproach="Enhanced Therapy"
+        onSessionComplete={(summary) => {
+          console.log('Session completed:', summary);
+          // TODO: Handle session completion
+        }}
+        initialMood={5}
+      />
     </div>
   );
 };
