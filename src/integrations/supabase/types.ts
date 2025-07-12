@@ -6041,6 +6041,36 @@ export type Database = {
           },
         ]
       }
+      session_preparations: {
+        Row: {
+          ai_config: Json
+          created_at: string
+          id: string
+          preparation_data: Json
+          risk_assessment: Json
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          ai_config?: Json
+          created_at?: string
+          id?: string
+          preparation_data?: Json
+          risk_assessment?: Json
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          ai_config?: Json
+          created_at?: string
+          id?: string
+          preparation_data?: Json
+          risk_assessment?: Json
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       session_protocols: {
         Row: {
           created_at: string
@@ -7156,6 +7186,45 @@ export type Database = {
           session_completion_rate?: number | null
           technique_effectiveness?: Json
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      therapy_plan_adaptations: {
+        Row: {
+          adaptation_type: string
+          created_at: string
+          created_by: string
+          id: string
+          implementation_status: string
+          metadata: Json
+          recommendations: Json
+          severity_level: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          adaptation_type: string
+          created_at?: string
+          created_by: string
+          id?: string
+          implementation_status?: string
+          metadata?: Json
+          recommendations?: Json
+          severity_level?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          adaptation_type?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          implementation_status?: string
+          metadata?: Json
+          recommendations?: Json
+          severity_level?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
