@@ -315,7 +315,7 @@ const EnhancedHeader = () => {
             {/* Therapy AI Dropdown */}
             <div className="relative group">
               <HeaderDropdownTrigger icon={Brain} label="Therapy AI" />
-              <HeaderDropdownCard>
+              <HeaderDropdownCard className="dropdown-left">
                 <div className="grid grid-cols-2 gap-4">
                   {therapyAiFeatures.map((feature, index) => (
                     <React.Fragment key={feature.title}>
@@ -401,7 +401,7 @@ const EnhancedHeader = () => {
             {/* Resources Dropdown */}
             <div className="relative group">
               <HeaderDropdownTrigger icon={BookOpen} label="Resources" />
-              <HeaderDropdownCard>
+              <HeaderDropdownCard className="dropdown-right">
                 <div className="grid grid-cols-2 gap-4">
                   {resourcesFeatures.map((feature, index) => (
                     <React.Fragment key={feature.title}>

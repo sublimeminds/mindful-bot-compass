@@ -14,6 +14,12 @@ import GetStarted from "../pages/GetStarted";
 import EnhancedAuth from "../pages/EnhancedAuth";
 import Auth from "../pages/Auth";
 import VoiceTechnology from "../pages/VoiceTechnology";
+import ApiDocs from "../pages/ApiDocs";
+import MobileApps from "../pages/MobileApps";
+import Reports from "../pages/Reports";
+import DataExport from "../pages/DataExport";
+import CustomIntegrations from "../pages/CustomIntegrations";
+import Individuals from "../pages/solutions/Individuals";
 import CulturalAIFeatures from "../pages/CulturalAIFeatures";
 import FeaturesOverview from "../pages/FeaturesOverview";
 import HowItWorks from "../pages/HowItWorks";
@@ -116,6 +122,36 @@ const AppRouter = () => {
       <Route path="/voice-technology" element={
         <PageErrorBoundary pageName="Voice Technology">
           <VoiceTechnology />
+        </PageErrorBoundary>
+      } />
+      <Route path="/api-docs" element={
+        <PageErrorBoundary pageName="API Documentation">
+          <ApiDocs />
+        </PageErrorBoundary>
+      } />
+      <Route path="/mobile-apps" element={
+        <PageErrorBoundary pageName="Mobile Apps">
+          <MobileApps />
+        </PageErrorBoundary>
+      } />
+      <Route path="/reports" element={
+        <PageErrorBoundary pageName="Reports">
+          <Reports />
+        </PageErrorBoundary>
+      } />
+      <Route path="/data-export" element={
+        <PageErrorBoundary pageName="Data Export">
+          <DataExport />
+        </PageErrorBoundary>
+      } />
+      <Route path="/custom-integrations" element={
+        <PageErrorBoundary pageName="Custom Integrations">
+          <CustomIntegrations />
+        </PageErrorBoundary>
+      } />
+      <Route path="/solutions/individuals" element={
+        <PageErrorBoundary pageName="Solutions for Individuals">
+          <Individuals />
         </PageErrorBoundary>
       } />
       
