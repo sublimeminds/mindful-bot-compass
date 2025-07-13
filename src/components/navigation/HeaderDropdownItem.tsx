@@ -62,7 +62,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
             </Badge>
           )}
         </div>
-        <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">
+        <p className="text-xs text-gray-600 leading-relaxed">
           {description}
         </p>
       </div>

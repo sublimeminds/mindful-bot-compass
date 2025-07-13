@@ -29,7 +29,13 @@ import {
   Stethoscope,
   Link as LinkIcon,
   LifeBuoy,
-  CircuitBoard
+  CircuitBoard,
+  Database,
+  Code,
+  Smartphone,
+  Cloud,
+  Lock,
+  BarChart3
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import GradientLogo from '@/components/ui/GradientLogo';
@@ -166,6 +172,57 @@ const EnhancedHeader = () => {
     }
   ];
 
+  // Tech Features
+  const techFeatures = [
+    {
+      icon: Code,
+      title: "API & Integrations",
+      description: "Comprehensive REST API and webhooks for seamless integration with your existing systems and workflows",
+      href: "/tech/api",
+      gradient: "from-blue-500 to-cyan-500",
+      badge: "REST"
+    },
+    {
+      icon: Database,
+      title: "Enterprise Solutions",
+      description: "Scalable infrastructure and dedicated support for large organizations with custom deployment options",
+      href: "/tech/enterprise",
+      gradient: "from-purple-500 to-indigo-500",
+      badge: "SSO"
+    },
+    {
+      icon: Shield,
+      title: "Security & Compliance",
+      description: "HIPAA-compliant infrastructure with end-to-end encryption, audit trails, and security monitoring",
+      href: "/tech/security",
+      gradient: "from-green-500 to-emerald-500",
+      badge: "HIPAA"
+    },
+    {
+      icon: BarChart3,
+      title: "Analytics & Reporting",
+      description: "Advanced analytics dashboard with custom reporting, data export capabilities, and real-time insights",
+      href: "/tech/analytics",
+      gradient: "from-orange-500 to-red-500"
+    },
+    {
+      icon: Cloud,
+      title: "Cloud Infrastructure",
+      description: "99.9% uptime SLA with global CDN, automatic scaling, and disaster recovery protocols",
+      href: "/tech/infrastructure",
+      gradient: "from-cyan-500 to-blue-500",
+      badge: "99.9%"
+    },
+    {
+      icon: Smartphone,
+      title: "Mobile SDKs",
+      description: "Native iOS and Android SDKs for building custom mobile applications with full feature parity",
+      href: "/tech/mobile",
+      gradient: "from-pink-500 to-rose-500",
+      badge: "SDK"
+    }
+  ];
+
   const helpResources = [
     {
       icon: HelpCircle,
@@ -228,9 +285,9 @@ const EnhancedHeader = () => {
 
           {/* Navigation */}
             <nav className="hidden md:flex items-center space-x-6 therapy-brand-override">
-            {/* AI Features Dropdown */}
+            {/* Therapy AI Features Dropdown */}
             <div className="relative group">
-              <HeaderDropdownTrigger icon={Brain} label="AI" />
+              <HeaderDropdownTrigger icon={Brain} label="Therapy AI" />
               <HeaderDropdownCard>
                 <div className="grid grid-cols-2 gap-4">
                   {aiFeatures.map((feature) => (
@@ -261,6 +318,26 @@ const EnhancedHeader = () => {
                       description={feature.description}
                       href={feature.href}
                       gradient={feature.gradient}
+                    />
+                  ))}
+                </div>
+              </HeaderDropdownCard>
+            </div>
+
+            {/* Tech Dropdown */}
+            <div className="relative group">
+              <HeaderDropdownTrigger icon={CircuitBoard} label="Tech" />
+              <HeaderDropdownCard>
+                <div className="grid grid-cols-2 gap-4">
+                  {techFeatures.map((feature) => (
+                    <HeaderDropdownItem
+                      key={feature.title}
+                      icon={feature.icon}
+                      title={feature.title}
+                      description={feature.description}
+                      href={feature.href}
+                      gradient={feature.gradient}
+                      badge={feature.badge}
                     />
                   ))}
                 </div>
