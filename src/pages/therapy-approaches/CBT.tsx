@@ -2,94 +2,163 @@ import React from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Brain, Target, ArrowRight, CheckCircle, Star, Lightbulb, Activity, TrendingUp } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Brain, Target, ArrowRight, CheckCircle, Star, Lightbulb, Activity, TrendingUp, Users, Timer, BookOpen } from 'lucide-react';
 
 const CBTPage = () => {
   return (
     <PageLayout>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background/80 to-primary/5">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-background to-primary/10">
         {/* Hero Section */}
-        <section className="relative py-24 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
+        <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-cyan-500/20"></div>
+          <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Brain className="h-10 w-10 text-white" />
+              <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto mb-8 animate-pulse">
+                <Brain className="h-12 w-12 text-white" />
               </div>
-              <Badge variant="secondary" className="mb-4 bg-blue-100 text-blue-700 border-blue-200">
-                Evidence-Based Therapy
+              <Badge variant="secondary" className="mb-6 bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                #1 Evidence-Based Therapy
               </Badge>
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 bg-clip-text text-transparent mb-6">
-                Cognitive Behavioral Therapy (CBT)
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                Cognitive Behavioral
+                <span className="block bg-gradient-to-r from-cyan-200 to-blue-200 bg-clip-text text-transparent">
+                  Therapy (CBT)
+                </span>
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+              <p className="text-xl text-blue-100 max-w-4xl mx-auto mb-12 leading-relaxed">
                 Transform negative thinking patterns and behaviors with our AI-powered CBT approach. 
-                Evidence-based techniques adapted to your unique needs and learning style.
+                Evidence-based techniques adapted to your unique needs, learning style, and personal goals 
+                through advanced therapeutic intelligence.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                  Start CBT Sessions <ArrowRight className="ml-2 h-5 w-5" />
+              <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 shadow-xl border-0 h-14 px-8 text-lg font-semibold">
+                  Start CBT Journey <ArrowRight className="ml-3 h-6 w-6" />
                 </Button>
-                <Button size="lg" variant="outline">
-                  Learn More About CBT
+                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 h-14 px-8 text-lg">
+                  Explore CBT Techniques
                 </Button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
+                  <Users className="h-8 w-8 text-cyan-200 mx-auto mb-3" />
+                  <h3 className="font-semibold text-lg mb-2">2M+ Users</h3>
+                  <p className="text-blue-100 text-sm">Successfully transformed their lives</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
+                  <Star className="h-8 w-8 text-cyan-200 mx-auto mb-3" />
+                  <h3 className="font-semibold text-lg mb-2">94% Success Rate</h3>
+                  <p className="text-blue-100 text-sm">Clinically proven effectiveness</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
+                  <Timer className="h-8 w-8 text-cyan-200 mx-auto mb-3" />
+                  <h3 className="font-semibold text-lg mb-2">6-12 Weeks</h3>
+                  <p className="text-blue-100 text-sm">Average treatment duration</p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* What is CBT */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
           <div className="max-w-7xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">What is Cognitive Behavioral Therapy?</h2>
-                <p className="text-lg text-muted-foreground mb-6">
-                  CBT is a highly effective, evidence-based therapy that focuses on identifying and changing negative 
-                  thought patterns and behaviors that contribute to emotional distress and mental health challenges.
-                </p>
-                <p className="text-lg text-muted-foreground mb-8">
-                  Our AI-powered CBT approach combines traditional CBT techniques with personalized insights, 
-                  helping you develop practical skills to manage thoughts, emotions, and behaviors more effectively.
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
-                    <span>Scientifically proven effectiveness for anxiety and depression</span>
+            <div className="text-center mb-16">
+              <Badge className="mb-4 bg-blue-100 text-blue-600 border-blue-200">
+                The Science Behind CBT
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Understanding Cognitive 
+                <span className="block text-blue-600">Behavioral Therapy</span>
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                CBT is the gold standard of psychotherapy, backed by decades of research and 
+                proven effective for treating depression, anxiety, PTSD, and many other conditions.
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-16 items-center mb-16">
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-2xl font-bold mb-4">How CBT Works</h3>
+                  <p className="text-lg text-muted-foreground mb-6">
+                    CBT is based on the understanding that our thoughts, feelings, and behaviors are interconnected. 
+                    By identifying and changing negative thought patterns, we can break the cycle of distress and 
+                    develop healthier ways of thinking and behaving.
+                  </p>
+                  <p className="text-lg text-muted-foreground">
+                    Our AI-powered platform makes CBT more accessible and personalized than ever before, 
+                    adapting techniques to your specific needs and providing real-time guidance and support.
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-blue-50 p-6 rounded-xl">
+                    <div className="text-3xl font-bold text-blue-600 mb-2">90%</div>
+                    <p className="text-sm text-blue-700">Improvement in anxiety symptoms</p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
-                    <span>Practical tools you can use in daily life</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
-                    <span>Short-term focused approach with lasting results</span>
+                  <div className="bg-cyan-50 p-6 rounded-xl">
+                    <div className="text-3xl font-bold text-cyan-600 mb-2">85%</div>
+                    <p className="text-sm text-cyan-700">Reduction in depressive episodes</p>
                   </div>
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-8 rounded-2xl">
-                <h3 className="text-xl font-semibold mb-4">CBT Core Principles</h3>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <Lightbulb className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+
+              <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-8 rounded-3xl text-white">
+                <h3 className="text-2xl font-bold mb-6">CBT Core Principles</h3>
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-white/20 p-3 rounded-lg">
+                      <Lightbulb className="h-6 w-6 text-white" />
+                    </div>
                     <div>
-                      <h4 className="font-medium">Thought Awareness</h4>
-                      <p className="text-sm text-muted-foreground">Recognize negative thinking patterns</p>
+                      <h4 className="font-semibold text-lg mb-2">Thought Awareness</h4>
+                      <p className="text-blue-100">Identify automatic negative thoughts and cognitive distortions that impact your mood</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Target className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                  <div className="flex items-start gap-4">
+                    <div className="bg-white/20 p-3 rounded-lg">
+                      <Target className="h-6 w-6 text-white" />
+                    </div>
                     <div>
-                      <h4 className="font-medium">Behavioral Change</h4>
-                      <p className="text-sm text-muted-foreground">Develop healthier behavioral responses</p>
+                      <h4 className="font-semibold text-lg mb-2">Behavioral Change</h4>
+                      <p className="text-blue-100">Replace unhelpful behaviors with positive actions that support your goals</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Activity className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                  <div className="flex items-start gap-4">
+                    <div className="bg-white/20 p-3 rounded-lg">
+                      <Activity className="h-6 w-6 text-white" />
+                    </div>
                     <div>
-                      <h4 className="font-medium">Skill Building</h4>
-                      <p className="text-sm text-muted-foreground">Learn practical coping strategies</p>
+                      <h4 className="font-semibold text-lg mb-2">Skill Building</h4>
+                      <p className="text-blue-100">Master practical coping strategies and problem-solving techniques</p>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-8 rounded-3xl">
+              <div className="grid md:grid-cols-4 gap-6 text-center">
+                <div>
+                  <CheckCircle className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                  <h4 className="font-semibold mb-2">Evidence-Based</h4>
+                  <p className="text-sm text-muted-foreground">Scientifically proven for 50+ conditions</p>
+                </div>
+                <div>
+                  <Target className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                  <h4 className="font-semibold mb-2">Goal-Focused</h4>
+                  <p className="text-sm text-muted-foreground">Structured approach with clear objectives</p>
+                </div>
+                <div>
+                  <Timer className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                  <h4 className="font-semibold mb-2">Time-Limited</h4>
+                  <p className="text-sm text-muted-foreground">Efficient therapy with lasting results</p>
+                </div>
+                <div>
+                  <BookOpen className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                  <h4 className="font-semibold mb-2">Skills-Based</h4>
+                  <p className="text-sm text-muted-foreground">Learn tools you can use forever</p>
                 </div>
               </div>
             </div>

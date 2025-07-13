@@ -41,12 +41,12 @@ export class SubscriptionBasedAiService {
     switch (tier) {
       case 'enterprise':
       case 'premium':
-        return 'claude-opus-20240229'; // Highest quality for premium
+        return 'claude-opus-4-20250514'; // Highest quality Claude 4 for premium
       case 'pro':
-        return 'claude-sonnet-3-5-20241022'; // High quality, efficient for pro
+        return 'claude-sonnet-4-20250514'; // High quality Claude 4 for pro
       case 'free':
       default:
-        return 'gpt-4.1-2025-04-14'; // Cost-effective for free
+        return 'claude-sonnet-4-20250514'; // Claude Sonnet for free (upgraded from GPT)
     }
   }
 

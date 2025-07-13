@@ -34,23 +34,33 @@ export class MultiModelAIRouter {
       available: true
     },
     {
-      id: 'claude-opus-20240229',
-      name: 'Claude Opus',
+      id: 'claude-opus-4-20250514',
+      name: 'Claude 4 Opus',
       provider: 'anthropic',
-      capabilities: ['chat', 'analysis', 'crisis', 'cultural'],
-      costPerToken: 0.00005,
-      averageLatency: 1800,
+      capabilities: ['chat', 'analysis', 'crisis', 'cultural', 'transcription'],
+      costPerToken: 0.00008,
+      averageLatency: 2000,
+      qualityScore: 0.98,
+      available: true
+    },
+    {
+      id: 'claude-sonnet-4-20250514',
+      name: 'Claude 4 Sonnet',
+      provider: 'anthropic',
+      capabilities: ['chat', 'analysis', 'cultural', 'transcription'],
+      costPerToken: 0.00002,
+      averageLatency: 1000,
       qualityScore: 0.95,
       available: true
     },
     {
-      id: 'claude-sonnet-3-5-20241022',
-      name: 'Claude Sonnet 3.5',
+      id: 'claude-3-5-haiku-20241022',
+      name: 'Claude 3.5 Haiku',
       provider: 'anthropic',
-      capabilities: ['chat', 'analysis', 'cultural'],
-      costPerToken: 0.00001,
-      averageLatency: 800,
-      qualityScore: 0.89,
+      capabilities: ['chat', 'quick-analysis'],
+      costPerToken: 0.000005,
+      averageLatency: 500,
+      qualityScore: 0.85,
       available: true
     }
   ];

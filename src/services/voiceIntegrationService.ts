@@ -42,6 +42,45 @@ export class VoiceIntegrationService {
     }
   }
 
+  static async enhancedTranscriptionAnalysis(
+    audioBlob: Blob,
+    userId: string,
+    sessionId: string,
+    options: VoiceToTextOptions = {}
+  ): Promise<{
+    transcript: string;
+    analysis: any;
+    subscription_tier: string;
+    model_used: string;
+  }> {
+    try {
+      // Convert blob to base64
+      const arrayBuffer = await audioBlob.arrayBuffer();
+      const base64Audio = btoa(
+        String.fromCharCode(...new Uint8Array(arrayBuffer))
+      );
+
+      const { data, error } = await supabase.functions.invoke('enhanced-transcription-analysis', {
+        body: {
+          audio: base64Audio,
+          userId,
+          sessionId,
+          language: options.language || 'en'
+        }
+      });
+
+      if (error) {
+        console.error('Enhanced transcription analysis error:', error);
+        throw new Error(error.message || 'Failed to analyze transcription');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Enhanced transcription analysis failed:', error);
+      throw error;
+    }
+  }
+
   static async convertTextToSpeech(
     text: string, 
     options: TextToSpeechOptions = {}
