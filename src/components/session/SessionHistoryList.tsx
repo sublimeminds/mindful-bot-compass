@@ -10,7 +10,9 @@ import {
   TrendingUp, 
   Eye,
   Brain,
-  Heart
+  Heart,
+  FileText,
+  Headphones
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -204,6 +206,24 @@ const SessionHistoryList = ({
                     >
                       <Eye className="h-4 w-4 mr-1" />
                       View
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.location.href = `/session-analytics?session=${session.id}`}
+                      className="ml-2"
+                    >
+                      <FileText className="h-4 w-4 mr-1" />
+                      Transcript
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.location.href = `/session-analytics?session=${session.id}&tab=insights`}
+                      className="ml-2"
+                    >
+                      <Brain className="h-4 w-4 mr-1" />
+                      AI Insights
                     </Button>
                   </div>
 

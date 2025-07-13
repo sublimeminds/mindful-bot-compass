@@ -9,7 +9,8 @@ import {
   TrendingUp, 
   MessageSquare,
   Sparkles,
-  Users
+  Users,
+  FileText
 } from 'lucide-react';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 
@@ -48,6 +49,14 @@ const QuickActionsWidget = () => {
       priority: 'medium'
     },
     {
+      title: 'Session Analytics',
+      subtitle: 'Review transcripts',
+      icon: FileText,
+      color: 'from-therapy-500 to-purple-500',
+      path: '/session-analytics',
+      priority: 'medium'
+    },
+    {
       title: 'View Analytics',
       subtitle: 'See your progress',
       icon: TrendingUp,
@@ -67,7 +76,7 @@ const QuickActionsWidget = () => {
 
   const handleActionClick = (path: string, title: string) => {
     console.log(`Navigating to ${path} for ${title}`);
-    // In real app, use router navigation
+    window.location.href = path;
   };
 
   const getPriorityActions = () => {

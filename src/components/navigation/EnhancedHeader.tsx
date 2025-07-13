@@ -98,7 +98,7 @@ const EnhancedHeader = () => {
       icon: Target,
       title: "AI Personalization",
       description: "Adaptive therapy approaches that learn and evolve with your unique needs",
-      href: "/features-overview",
+      href: "/ai-personalization",
       gradient: "from-harmony-500 to-therapy-500",
       category: "AI Technology"
     },

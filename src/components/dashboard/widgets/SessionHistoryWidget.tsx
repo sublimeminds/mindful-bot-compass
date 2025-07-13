@@ -100,7 +100,12 @@ const SessionHistoryWidget = () => {
                       </div>
                     </div>
                   </div>
-                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                  <Button 
+                    size="sm" 
+                    variant="ghost" 
+                    className="h-8 w-8 p-0"
+                    onClick={() => window.location.href = '/session-analytics'}
+                  >
                     <ArrowRight className="h-3 w-3" />
                   </Button>
                 </div>
@@ -109,8 +114,9 @@ const SessionHistoryWidget = () => {
                 variant="outline" 
                 size="sm" 
                 className="w-full mt-2 text-therapy-600 border-therapy-200 hover:bg-therapy-50"
+                onClick={() => window.location.href = '/session-analytics'}
               >
-                View All Sessions
+                View Session Analytics
               </Button>
             </div>
           ) : (
