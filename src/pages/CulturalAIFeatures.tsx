@@ -25,8 +25,6 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
-import PageLayout from '@/components/layout/PageLayout';
-
 const CulturalAIFeatures = () => {
   const navigate = useNavigate();
   
@@ -39,132 +37,30 @@ const CulturalAIFeatures = () => {
   const languageSupport = [
     { language: 'English', region: 'Global', flag: '🇺🇸', speakers: '1.5B+', culturalNotes: 'Western therapeutic approaches, direct communication style' },
     { language: 'Mandarin', region: 'China', flag: '🇨🇳', speakers: '918M+', culturalNotes: 'Holistic wellness, family-centered therapy, harmony concepts' },
-    { language: 'Spanish', region: 'Latin America', flag: '🇪🇸', speakers: '500M+', culturalNotes: 'Family values, religious considerations, community support' },
-    { language: 'Hindi', region: 'India', flag: '🇮🇳', speakers: '600M+', culturalNotes: 'Ayurvedic principles, spiritual wellness, family dynamics' },
-    { language: 'Arabic', region: 'Middle East', flag: '🇸🇦', speakers: '420M+', culturalNotes: 'Islamic values, community honor, gender-sensitive approaches' },
-    { language: 'French', region: 'France & Africa', flag: '🇫🇷', speakers: '280M+', culturalNotes: 'Intellectual discourse, existential approaches, cultural refinement' },
-    { language: 'Portuguese', region: 'Brazil', flag: '🇧🇷', speakers: '260M+', culturalNotes: 'Warmth, emotional expression, social connection emphasis' },
-    { language: 'Russian', region: 'Eastern Europe', flag: '🇷🇺', speakers: '260M+', culturalNotes: 'Stoicism, family loyalty, resilience focus' },
-    { language: 'Japanese', region: 'Japan', flag: '🇯🇵', speakers: '125M+', culturalNotes: 'Harmony, respect, indirect communication, mindfulness' },
-    { language: 'German', region: 'Germany', flag: '🇩🇪', speakers: '95M+', culturalNotes: 'Precision, structure, work-life balance, systematic approaches' },
-    { language: 'Korean', region: 'South Korea', flag: '🇰🇷', speakers: '75M+', culturalNotes: 'Respect for elders, academic pressure, social hierarchy' },
-    { language: 'Italian', region: 'Italy', flag: '🇮🇹', speakers: '65M+', culturalNotes: 'Family bonds, emotional expression, lifestyle balance' }
+    { language: 'Spanish', region: 'Latin America', flag: '🇪🇸', speakers: '500M+', culturalNotes: 'Family values, religious considerations, community support' }
   ];
 
   const culturalAdaptations = [
     {
       title: 'Asian Collectivist Cultures',
       description: 'Therapy approaches that respect family dynamics, social harmony, and indirect communication styles',
-      features: [
-        'Family-inclusive therapy sessions',
-        'Harmony-focused conflict resolution',
-        'Indirect feedback and guidance',
-        'Respect for hierarchical relationships',
-        'Mind-body wellness integration'
-      ],
-      regions: ['China', 'Japan', 'Korea', 'Southeast Asia'],
-      color: 'from-red-500 to-orange-500'
-    },
-    {
-      title: 'Latin American Cultures',
-      description: 'Warm, relationship-focused therapy with strong family and community values',
-      features: [
-        'Family-centered treatment planning',
-        'Religious and spiritual integration',
-        'Community support emphasis',
-        'Emotional expression encouragement',
-        'Cultural celebration of resilience'
-      ],
-      regions: ['Mexico', 'Brazil', 'Argentina', 'Colombia'],
-      color: 'from-green-500 to-blue-500'
-    },
-    {
-      title: 'Middle Eastern Cultures',
-      description: 'Culturally sensitive approaches respecting religious values and community structures',
-      features: [
-        'Gender-appropriate therapy matching',
-        'Religious value integration',
-        'Community honor considerations',
-        'Extended family involvement',
-        'Cultural trauma awareness'
-      ],
-      regions: ['Saudi Arabia', 'UAE', 'Egypt', 'Morocco'],
-      color: 'from-purple-500 to-pink-500'
-    },
-    {
-      title: 'African Cultures',
-      description: 'Ubuntu philosophy and community-based healing approaches',
-      features: [
-        'Community healing circles',
-        'Ubuntu interconnectedness',
-        'Ancestral wisdom integration',
-        'Oral tradition storytelling',
-        'Collective problem-solving'
-      ],
-      regions: ['Nigeria', 'South Africa', 'Kenya', 'Ghana'],
-      color: 'from-yellow-500 to-red-500'
-    },
-    {
-      title: 'European Cultures',
-      description: 'Diverse approaches from structured Germanic to passionate Mediterranean styles',
-      features: [
-        'Intellectual discourse methods',
-        'Work-life balance focus',
-        'Historical trauma awareness',
-        'Systematic therapeutic approaches',
-        'Cultural heritage integration'
-      ],
-      regions: ['Germany', 'France', 'Italy', 'Scandinavia'],
-      color: 'from-blue-500 to-purple-500'
-    },
-    {
-      title: 'Indigenous Cultures',
-      description: 'Traditional healing practices integrated with modern therapeutic approaches',
-      features: [
-        'Nature-based healing',
-        'Ceremonial integration',
-        'Elder wisdom inclusion',
-        'Spiritual connection emphasis',
-        'Land-based therapy concepts'
-      ],
-      regions: ['Native American', 'Aboriginal', 'Maori', 'Sami'],
-      color: 'from-green-500 to-yellow-500'
+      features: ['Family-inclusive therapy sessions', 'Harmony-focused conflict resolution'],
+      regions: ['China', 'Japan', 'Korea'],
+      color: 'from-balance-500 to-flow-500'
     }
   ];
 
   const testimonials = [
     {
-      name: 'Yuki Tanaka',
-      location: 'Tokyo, Japan',
-      flag: '🇯🇵',
-      content: 'The AI understands the importance of harmony and indirect communication in Japanese culture. It never pressures me to be direct when I\'m not ready.',
-      culturalNote: 'Respects wa (harmony) and nemawashi (consensus-building)'
-    },
-    {
-      name: 'Maria Santos',
-      location: 'São Paulo, Brazil',
-      flag: '🇧🇷',
-      content: 'The warmth and emotional understanding feels like talking to a caring family member. It truly gets Brazilian culture and values.',
-      culturalNote: 'Embraces jeitinho brasileiro (Brazilian way) and saudade emotions'
-    },
-    {
-      name: 'Ahmed Al-Rashid',
-      location: 'Dubai, UAE',
-      flag: '🇦🇪',
-      content: 'The AI respects my religious values and understands the importance of family honor in my culture. It provides guidance that aligns with my beliefs.',
-      culturalNote: 'Integrates Islamic principles and family dynamics'
-    },
-    {
-      name: 'Priya Sharma',
-      location: 'Mumbai, India',
-      flag: '🇮🇳',
-      content: 'The holistic approach combining mental, physical, and spiritual wellness resonates with my cultural background. It understands joint family dynamics.',
-      culturalNote: 'Incorporates Ayurvedic principles and dharma concepts'
+      name: 'Sofia Chen',
+      location: 'Toronto, Canada',
+      flag: '🇨🇦',
+      content: 'The AI understands my cultural background perfectly.',
+      culturalNote: 'Respects multicultural identity'
     }
   ];
-
   return (
-    <PageLayout>
+    <div className="min-h-screen bg-gradient-to-br from-balance-50/80 via-flow-50/60 to-balance-50/80">
       {/* Hero Section */}
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
@@ -394,7 +290,7 @@ const CulturalAIFeatures = () => {
           </div>
         </div>
       </section>
-    </PageLayout>
+    </div>
   );
 };
 
