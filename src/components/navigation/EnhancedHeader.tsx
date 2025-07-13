@@ -41,7 +41,7 @@ import {
   Building,
   GraduationCap
 } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+
 import { useAuth } from '@/hooks/useAuth';
 import GradientLogo from '@/components/ui/GradientLogo';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
@@ -57,7 +57,7 @@ const EnhancedHeader = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Therapy AI Features - Core AI capabilities
+  // Therapy AI Features - Core AI capabilities and therapy approaches
   const therapyAiFeatures = [
     {
       icon: Zap,
@@ -65,7 +65,8 @@ const EnhancedHeader = () => {
       description: "Advanced multi-model AI system powered by OpenAI and Anthropic with real-time insights",
       href: "/therapysync-ai",
       gradient: "from-purple-500 to-indigo-600",
-      badge: "Core"
+      badge: "Core",
+      category: "AI Technology"
     },
     {
       icon: MessageSquare,
@@ -73,7 +74,8 @@ const EnhancedHeader = () => {
       description: "Personalized therapy conversations with evidence-based treatment approaches",
       href: "/therapy-sync-ai",
       gradient: "from-therapy-500 to-calm-500",
-      badge: "Popular"
+      badge: "Popular",
+      category: "AI Technology"
     },
     {
       icon: Mic,
@@ -81,28 +83,65 @@ const EnhancedHeader = () => {
       description: "Natural voice conversations in 29 languages with emotion detection and analysis",
       href: "/voice-technology",
       gradient: "from-flow-500 to-balance-500",
-      badge: "New"
+      badge: "New",
+      category: "AI Technology"
     },
     {
       icon: Globe,
       title: "Cultural AI",
       description: "Culturally sensitive AI trained to understand diverse backgrounds and contexts",
       href: "/cultural-ai-features",
-      gradient: "from-balance-500 to-flow-500"
+      gradient: "from-balance-500 to-flow-500",
+      category: "AI Technology"
     },
     {
       icon: Target,
       title: "AI Personalization",
       description: "Adaptive therapy approaches that learn and evolve with your unique needs",
       href: "/features-overview",
-      gradient: "from-harmony-500 to-therapy-500"
+      gradient: "from-harmony-500 to-therapy-500",
+      category: "AI Technology"
+    },
+    {
+      icon: Brain,
+      title: "Cognitive Behavioral Therapy (CBT)",
+      description: "Evidence-based approach focusing on thought patterns and behavioral changes",
+      href: "/therapy-types?approach=cbt",
+      gradient: "from-blue-500 to-cyan-500",
+      category: "Therapy Approaches"
+    },
+    {
+      icon: Heart,
+      title: "Dialectical Behavior Therapy (DBT)",
+      description: "Skills-based therapy for emotional regulation and interpersonal effectiveness",
+      href: "/therapy-types?approach=dbt", 
+      gradient: "from-green-500 to-emerald-500",
+      category: "Therapy Approaches"
     },
     {
       icon: Lightbulb,
-      title: "Real-time Insights",
-      description: "Instant AI-powered insights into your emotional patterns and progress",
-      href: "/ai-insights",
-      gradient: "from-therapy-500 to-calm-500"
+      title: "Mindfulness-Based Therapy",
+      description: "Present-moment awareness and acceptance-based therapeutic interventions",
+      href: "/therapy-types?approach=mindfulness",
+      gradient: "from-purple-500 to-pink-500",
+      category: "Therapy Approaches"
+    },
+    {
+      icon: Shield,
+      title: "Trauma-Focused Therapy",
+      description: "Specialized approaches for processing and healing from traumatic experiences",
+      href: "/therapy-types?approach=trauma",
+      gradient: "from-orange-500 to-red-500",
+      category: "Therapy Approaches"
+    },
+    {
+      icon: Users,
+      title: "Adaptive Systems",
+      description: "AI that automatically updates therapy plans based on your progress and responses",
+      href: "/ai-architecture",
+      gradient: "from-indigo-500 to-purple-500",
+      badge: "Advanced",
+      category: "AI Technology"
     }
   ];
 
@@ -234,13 +273,6 @@ const EnhancedHeader = () => {
       gradient: "from-purple-500 to-indigo-500"
     },
     {
-      icon: Brain,
-      title: "Therapy Approaches",
-      description: "Explore CBT, DBT, mindfulness, and other evidence-based therapeutic modalities",
-      href: "/therapy-types",
-      gradient: "from-flow-500 to-balance-500"
-    },
-    {
       icon: Calculator,
       title: "Pricing Plans",
       description: "Flexible pricing for individuals, families, providers, and organizations",
@@ -316,20 +348,46 @@ const EnhancedHeader = () => {
             <div className="relative group">
               <HeaderDropdownTrigger icon={Brain} label="Therapy AI" />
               <HeaderDropdownCard className="dropdown-left">
-                <div className="grid grid-cols-2 gap-4">
-                  {therapyAiFeatures.map((feature, index) => (
-                    <React.Fragment key={feature.title}>
-                      <HeaderDropdownItem
-                        icon={feature.icon}
-                        title={feature.title}
-                        description={feature.description}
-                        href={feature.href}
-                        gradient={feature.gradient}
-                        badge={feature.badge}
-                      />
-                      {index === 1 && <div className="col-span-2"><Separator className="my-2" /></div>}
-                    </React.Fragment>
-                  ))}
+                <div className="space-y-6">
+                  {/* AI Technology Section */}
+                  <div>
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
+                      AI Technology
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {therapyAiFeatures.filter(f => f.category === "AI Technology").map((feature) => (
+                        <HeaderDropdownItem
+                          key={feature.title}
+                          icon={feature.icon}
+                          title={feature.title}
+                          description={feature.description}
+                          href={feature.href}
+                          gradient={feature.gradient}
+                          badge={feature.badge}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Therapy Approaches Section */}
+                  <div>
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
+                      Therapy Approaches
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {therapyAiFeatures.filter(f => f.category === "Therapy Approaches").map((feature) => (
+                        <HeaderDropdownItem
+                          key={feature.title}
+                          icon={feature.icon}
+                          title={feature.title}
+                          description={feature.description}
+                          href={feature.href}
+                          gradient={feature.gradient}
+                          badge={feature.badge}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </HeaderDropdownCard>
             </div>
@@ -339,17 +397,15 @@ const EnhancedHeader = () => {
               <HeaderDropdownTrigger icon={Settings} label="Features" />
               <HeaderDropdownCard>
                 <div className="grid grid-cols-2 gap-4">
-                  {platformFeatures.map((feature, index) => (
-                    <React.Fragment key={feature.title}>
-                      <HeaderDropdownItem
-                        icon={feature.icon}
-                        title={feature.title}
-                        description={feature.description}
-                        href={feature.href}
-                        gradient={feature.gradient}
-                      />
-                      {index === 2 && <div className="col-span-2"><Separator className="my-2" /></div>}
-                    </React.Fragment>
+                  {platformFeatures.map((feature) => (
+                    <HeaderDropdownItem
+                      key={feature.title}
+                      icon={feature.icon}
+                      title={feature.title}
+                      description={feature.description}
+                      href={feature.href}
+                      gradient={feature.gradient}
+                    />
                   ))}
                 </div>
               </HeaderDropdownCard>
@@ -360,18 +416,16 @@ const EnhancedHeader = () => {
               <HeaderDropdownTrigger icon={Database} label="Tools & Data" />
               <HeaderDropdownCard>
                 <div className="grid grid-cols-2 gap-4">
-                  {toolsDataFeatures.map((feature, index) => (
-                    <React.Fragment key={feature.title}>
-                      <HeaderDropdownItem
-                        icon={feature.icon}
-                        title={feature.title}
-                        description={feature.description}
-                        href={feature.href}
-                        gradient={feature.gradient}
-                        badge={feature.badge}
-                      />
-                      {index === 2 && <div className="col-span-2"><Separator className="my-2" /></div>}
-                    </React.Fragment>
+                  {toolsDataFeatures.map((feature) => (
+                    <HeaderDropdownItem
+                      key={feature.title}
+                      icon={feature.icon}
+                      title={feature.title}
+                      description={feature.description}
+                      href={feature.href}
+                      gradient={feature.gradient}
+                      badge={feature.badge}
+                    />
                   ))}
                 </div>
               </HeaderDropdownCard>
@@ -382,17 +436,15 @@ const EnhancedHeader = () => {
               <HeaderDropdownTrigger icon={Star} label="Solutions" />
               <HeaderDropdownCard>
                 <div className="grid grid-cols-2 gap-4">
-                  {solutionsFeatures.map((feature, index) => (
-                    <React.Fragment key={feature.title}>
-                      <HeaderDropdownItem
-                        icon={feature.icon}
-                        title={feature.title}
-                        description={feature.description}
-                        href={feature.href}
-                        gradient={feature.gradient}
-                      />
-                      {index === 3 && <div className="col-span-2"><Separator className="my-2" /></div>}
-                    </React.Fragment>
+                  {solutionsFeatures.map((feature) => (
+                    <HeaderDropdownItem
+                      key={feature.title}
+                      icon={feature.icon}
+                      title={feature.title}
+                      description={feature.description}
+                      href={feature.href}
+                      gradient={feature.gradient}
+                    />
                   ))}
                 </div>
               </HeaderDropdownCard>
@@ -403,17 +455,15 @@ const EnhancedHeader = () => {
               <HeaderDropdownTrigger icon={BookOpen} label="Resources" />
               <HeaderDropdownCard className="dropdown-right">
                 <div className="grid grid-cols-2 gap-4">
-                  {resourcesFeatures.map((feature, index) => (
-                    <React.Fragment key={feature.title}>
-                      <HeaderDropdownItem
-                        icon={feature.icon}
-                        title={feature.title}
-                        description={feature.description}
-                        href={feature.href}
-                        gradient={feature.gradient}
-                      />
-                      {index === 2 && <div className="col-span-2"><Separator className="my-2" /></div>}
-                    </React.Fragment>
+                  {resourcesFeatures.map((feature) => (
+                    <HeaderDropdownItem
+                      key={feature.title}
+                      icon={feature.icon}
+                      title={feature.title}
+                      description={feature.description}
+                      href={feature.href}
+                      gradient={feature.gradient}
+                    />
                   ))}
                 </div>
               </HeaderDropdownCard>
