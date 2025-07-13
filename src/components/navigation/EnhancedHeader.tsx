@@ -106,7 +106,7 @@ const EnhancedHeader = () => {
       icon: Brain,
       title: "Cognitive Behavioral Therapy (CBT)",
       description: "Evidence-based approach focusing on thought patterns and behavioral changes",
-      href: "/therapy-types?approach=cbt",
+      href: "/therapy-approaches/cbt",
       gradient: "from-blue-500 to-cyan-500",
       category: "Therapy Approaches"
     },
@@ -114,7 +114,7 @@ const EnhancedHeader = () => {
       icon: Heart,
       title: "Dialectical Behavior Therapy (DBT)",
       description: "Skills-based therapy for emotional regulation and interpersonal effectiveness",
-      href: "/therapy-types?approach=dbt", 
+      href: "/therapy-approaches/dbt", 
       gradient: "from-green-500 to-emerald-500",
       category: "Therapy Approaches"
     },
@@ -122,7 +122,7 @@ const EnhancedHeader = () => {
       icon: Lightbulb,
       title: "Mindfulness-Based Therapy",
       description: "Present-moment awareness and acceptance-based therapeutic interventions",
-      href: "/therapy-types?approach=mindfulness",
+      href: "/therapy-approaches/mindfulness",
       gradient: "from-purple-500 to-pink-500",
       category: "Therapy Approaches"
     },
@@ -130,7 +130,7 @@ const EnhancedHeader = () => {
       icon: Shield,
       title: "Trauma-Focused Therapy",
       description: "Specialized approaches for processing and healing from traumatic experiences",
-      href: "/therapy-types?approach=trauma",
+      href: "/therapy-approaches/trauma",
       gradient: "from-orange-500 to-red-500",
       category: "Therapy Approaches"
     },
@@ -138,7 +138,7 @@ const EnhancedHeader = () => {
       icon: Users,
       title: "Adaptive Systems",
       description: "AI that automatically updates therapy plans based on your progress and responses",
-      href: "/ai-architecture",
+      href: "/adaptive-systems",
       gradient: "from-indigo-500 to-purple-500",
       badge: "Advanced",
       category: "AI Technology"
@@ -180,7 +180,8 @@ const EnhancedHeader = () => {
       title: "Community & Groups",
       description: "Connect with peers and join supportive communities for shared healing journeys",
       href: "/community-features",
-      gradient: "from-flow-500 to-balance-500"
+      gradient: "from-flow-500 to-balance-500",
+      badge: "Pro"
     },
     {
       icon: LinkIcon,
@@ -318,13 +319,6 @@ const EnhancedHeader = () => {
       href: "/learning",
       gradient: "from-flow-500 to-balance-500"
     },
-    {
-      icon: Users,
-      title: "Community Forum",
-      description: "Connect with peers, share experiences, and find support in our moderated community",
-      href: "/community",
-      gradient: "from-balance-500 to-calm-500"
-    }
   ];
 
 

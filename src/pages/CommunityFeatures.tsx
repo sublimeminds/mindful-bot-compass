@@ -21,8 +21,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import PageLayout from '@/components/layout/PageLayout';
 
 const CommunityFeatures = () => {
   const navigate = useNavigate();
@@ -102,12 +101,11 @@ const CommunityFeatures = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
-      <Header />
-      
-      <section className="py-20 lg:py-32">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+    <PageLayout>
+      <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
+        <section className="py-20 lg:py-32">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
             <Badge className="mb-6 therapy-gradient-bg text-white px-8 py-3 text-sm font-semibold shadow-lg border-0">
               <Users className="h-4 w-4 mr-2" />
               Community & Social Features
@@ -242,11 +240,9 @@ const CommunityFeatures = () => {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
+        </section>
+      </div>
+    </PageLayout>
   );
 };
 

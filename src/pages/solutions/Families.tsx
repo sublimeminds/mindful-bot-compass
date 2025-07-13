@@ -34,169 +34,183 @@ const FamilySolutions = () => {
           </div>
         </section>
 
-        {/* Adaptive AI Systems */}
+        {/* Family Features Overview */}
         <section className="py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4 bg-purple-100 text-purple-700 border-purple-200">
-                Adaptive AI Technology
+              <Badge variant="secondary" className="mb-4 bg-blue-100 text-blue-700 border-blue-200">
+                Family Features
               </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">AI That Learns and Adapts to Your Family</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Complete Family Mental Health Platform</h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Our revolutionary adaptive systems automatically update therapy plans and approaches based on each family member's progress, preferences, and changing needs.
+                Comprehensive mental health support designed specifically for families, with shared accounts, parental controls, and coordinated care.
               </p>
             </div>
             
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center p-6 bg-card rounded-xl border">
-                <Zap className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-3">Real-Time Adaptation</h3>
+                <Users className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-3">Family Accounts</h3>
                 <p className="text-muted-foreground">
-                  AI continuously analyzes session responses, mood patterns, and engagement to automatically adjust therapeutic approaches in real-time.
+                  Shared family accounts with individual profiles, privacy controls, and coordinated care plans for all family members.
                 </p>
               </div>
               <div className="text-center p-6 bg-card rounded-xl border">
-                <Target className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-3">Personalized Therapy Plans</h3>
+                <Shield className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-3">Parental Controls</h3>
                 <p className="text-muted-foreground">
-                  Each family member receives a unique therapy plan that evolves - from CBT to DBT to mindfulness - based on what works best for them.
+                  Age-appropriate content, session monitoring, and safety controls to ensure a secure environment for children and teens.
                 </p>
               </div>
               <div className="text-center p-6 bg-card rounded-xl border">
-                <Brain className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-3">Predictive Insights</h3>
+                <Heart className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-3">Family Therapy Sessions</h3>
                 <p className="text-muted-foreground">
-                  Advanced algorithms predict potential challenges and proactively suggest interventions before issues escalate.
+                  Dedicated family therapy sessions that bring everyone together to work on shared goals and improve communication.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Session Transcription & Insights */}
+        {/* Family Pricing & Configurator */}
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4 bg-blue-100 text-blue-700 border-blue-200">
-                Session Intelligence
+              <Badge variant="secondary" className="mb-4 bg-green-100 text-green-700 border-green-200">
+                Family Pricing
               </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Complete Session Transcripts & Insights</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Flexible Plans for Every Family</h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Every therapy session is intelligently transcribed and analyzed to provide actionable insights and track progress over time.
+                Choose the perfect plan for your family size and needs, with options for individuals, couples, and large families.
               </p>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-card p-6 rounded-xl border">
-                <FileText className="h-8 w-8 text-blue-600 mb-4" />
-                <h3 className="text-lg font-semibold mb-3">Full Transcripts</h3>
-                <p className="text-muted-foreground text-sm">
-                  Complete, searchable transcripts of every session with intelligent highlighting of key insights and breakthroughs.
-                </p>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="bg-card p-8 rounded-xl border">
+                <h3 className="text-2xl font-bold mb-4">Family Starter</h3>
+                <div className="text-4xl font-bold mb-4">$49<span className="text-lg text-muted-foreground">/month</span></div>
+                <p className="text-muted-foreground mb-6">Perfect for small families (up to 4 members)</p>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <span>Individual therapy for all members</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <span>Basic parental controls</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <span>Shared progress dashboard</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <span>Crisis support</span>
+                  </li>
+                </ul>
+                <Button className="w-full">Choose Plan</Button>
               </div>
               
-              <div className="bg-card p-6 rounded-xl border">
-                <MessageSquare className="h-8 w-8 text-blue-600 mb-4" />
-                <h3 className="text-lg font-semibold mb-3">Key Content Analysis</h3>
-                <p className="text-muted-foreground text-sm">
-                  AI identifies the most important topics discussed, emotional patterns, and therapeutic breakthroughs in each session.
-                </p>
+              <div className="bg-primary text-primary-foreground p-8 rounded-xl border relative">
+                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-secondary text-secondary-foreground">Most Popular</Badge>
+                <h3 className="text-2xl font-bold mb-4">Family Pro</h3>
+                <div className="text-4xl font-bold mb-4">$89<span className="text-lg opacity-70">/month</span></div>
+                <p className="opacity-80 mb-6">Best for growing families (up to 6 members)</p>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-400" />
+                    <span>Everything in Starter</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-400" />
+                    <span>Family therapy sessions</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-400" />
+                    <span>Advanced analytics</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-400" />
+                    <span>Priority support</span>
+                  </li>
+                </ul>
+                <Button variant="secondary" className="w-full">Choose Plan</Button>
               </div>
               
-              <div className="bg-card p-6 rounded-xl border">
-                <BarChart3 className="h-8 w-8 text-blue-600 mb-4" />
-                <h3 className="text-lg font-semibold mb-3">Session Summaries</h3>
-                <p className="text-muted-foreground text-sm">
-                  Concise summaries highlighting progress made, techniques used, and goals achieved during each therapy session.
-                </p>
-              </div>
-              
-              <div className="bg-card p-6 rounded-xl border">
-                <Lightbulb className="h-8 w-8 text-blue-600 mb-4" />
-                <h3 className="text-lg font-semibold mb-3">Action Items</h3>
-                <p className="text-muted-foreground text-sm">
-                  Personalized recommendations for things to work on, practice exercises, and follow-up activities between sessions.
-                </p>
+              <div className="bg-card p-8 rounded-xl border">
+                <h3 className="text-2xl font-bold mb-4">Family Enterprise</h3>
+                <div className="text-4xl font-bold mb-4">$149<span className="text-lg text-muted-foreground">/month</span></div>
+                <p className="text-muted-foreground mb-6">For large families (unlimited members)</p>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <span>Everything in Pro</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <span>Unlimited family members</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <span>Custom integrations</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <span>Dedicated support</span>
+                  </li>
+                </ul>
+                <Button variant="outline" className="w-full">Contact Sales</Button>
               </div>
             </div>
             
-            {/* Sample Session Transcript */}
-            <div className="mt-12 bg-card rounded-xl border p-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Mic className="h-5 w-5 text-blue-600" />
-                Sample Session Transcript
-              </h3>
-              <div className="bg-muted/50 rounded-lg p-4 space-y-3 text-sm">
-                <div className="border-l-2 border-blue-500 pl-3">
-                  <p className="font-medium text-blue-700">Key Discussion Point</p>
-                  <p className="text-muted-foreground">"We talked about managing anxiety before family gatherings..."</p>
-                </div>
-                <div className="border-l-2 border-green-500 pl-3">
-                  <p className="font-medium text-green-700">Breakthrough Moment</p>
-                  <p className="text-muted-foreground">"I realized that my anxiety often comes from wanting to please everyone..."</p>
-                </div>
-                <div className="border-l-2 border-purple-500 pl-3">
-                  <p className="font-medium text-purple-700">Technique Applied</p>
-                  <p className="text-muted-foreground">"Practiced deep breathing and cognitive reframing techniques..."</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Therapy Approaches */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Evidence-Based Therapy Approaches</h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Our AI automatically selects and adapts the most effective therapeutic approaches for each family member.
+            {/* Family Configurator */}
+            <div className="mt-16 bg-card p-8 rounded-xl border">
+              <h3 className="text-2xl font-bold mb-6 text-center">Family Plan Configurator</h3>
+              <p className="text-muted-foreground text-center mb-8">
+                Customize your family plan based on your specific needs and family size
               </p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-card p-6 rounded-xl border">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                  <Brain className="h-6 w-6 text-blue-600" />
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Number of Family Members</label>
+                  <select className="w-full p-3 border rounded-lg">
+                    <option>2-4 members</option>
+                    <option>5-6 members</option>
+                    <option>7+ members</option>
+                  </select>
                 </div>
-                <h3 className="text-lg font-semibold mb-3">Cognitive Behavioral Therapy (CBT)</h3>
-                <p className="text-muted-foreground text-sm mb-3">
-                  Identify and change negative thought patterns and behaviors for lasting positive change.
-                </p>
-                <Badge variant="outline" className="text-xs">Most Popular</Badge>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Ages of Children (if any)</label>
+                  <select className="w-full p-3 border rounded-lg">
+                    <option>No children</option>
+                    <option>Under 13</option>
+                    <option>13-17 (teens)</option>
+                    <option>Mixed ages</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Primary Concerns</label>
+                  <select className="w-full p-3 border rounded-lg">
+                    <option>Family communication</option>
+                    <option>Child/teen anxiety</option>
+                    <option>Family conflict resolution</option>
+                    <option>General mental wellness</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Preferred Therapy Style</label>
+                  <select className="w-full p-3 border rounded-lg">
+                    <option>Individual + family sessions</option>
+                    <option>Primarily individual</option>
+                    <option>Primarily family-focused</option>
+                    <option>Flexible approach</option>
+                  </select>
+                </div>
               </div>
-              
-              <div className="bg-card p-6 rounded-xl border">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                  <Heart className="h-6 w-6 text-green-600" />
-                </div>
-                <h3 className="text-lg font-semibold mb-3">Dialectical Behavior Therapy (DBT)</h3>
-                <p className="text-muted-foreground text-sm mb-3">
-                  Develop emotional regulation skills and improve interpersonal relationships.
-                </p>
-                <Badge variant="outline" className="text-xs">Family Focused</Badge>
-              </div>
-              
-              <div className="bg-card p-6 rounded-xl border">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                  <Lightbulb className="h-6 w-6 text-purple-600" />
-                </div>
-                <h3 className="text-lg font-semibold mb-3">Mindfulness-Based Therapy</h3>
-                <p className="text-muted-foreground text-sm mb-3">
-                  Cultivate present-moment awareness and reduce stress through mindfulness practices.
-                </p>
-                <Badge variant="outline" className="text-xs">Stress Relief</Badge>
-              </div>
-              
-              <div className="bg-card p-6 rounded-xl border">
-                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="h-6 w-6 text-orange-600" />
-                </div>
-                <h3 className="text-lg font-semibold mb-3">Trauma-Focused Therapy</h3>
-                <p className="text-muted-foreground text-sm mb-3">
-                  Specialized support for processing and healing from traumatic experiences.
-                </p>
-                <Badge variant="outline" className="text-xs">Specialized</Badge>
+              <div className="text-center mt-8">
+                <Button size="lg" className="px-8">
+                  Get Personalized Recommendation
+                </Button>
               </div>
             </div>
           </div>

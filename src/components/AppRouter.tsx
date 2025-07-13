@@ -179,6 +179,46 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
       
+      <Route path="/therapy-approaches/cbt" element={
+        <PageErrorBoundary pageName="Cognitive Behavioral Therapy">
+          <PublicPageWrapper>
+            {React.createElement(React.lazy(() => import('../pages/therapy-approaches/CBT')))}
+          </PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/therapy-approaches/dbt" element={
+        <PageErrorBoundary pageName="Dialectical Behavior Therapy">
+          <PublicPageWrapper>
+            {React.createElement(React.lazy(() => import('../pages/therapy-approaches/DBT')))}
+          </PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/therapy-approaches/mindfulness" element={
+        <PageErrorBoundary pageName="Mindfulness-Based Therapy">
+          <PublicPageWrapper>
+            {React.createElement(React.lazy(() => import('../pages/therapy-approaches/Mindfulness')))}
+          </PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/therapy-approaches/trauma" element={
+        <PageErrorBoundary pageName="Trauma-Focused Therapy">
+          <PublicPageWrapper>
+            {React.createElement(React.lazy(() => import('../pages/therapy-approaches/Trauma')))}
+          </PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/adaptive-systems" element={
+        <PageErrorBoundary pageName="Adaptive AI Systems">
+          <PublicPageWrapper>
+            {React.createElement(React.lazy(() => import('../pages/AdaptiveSystems')))}
+          </PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      
       <Route path="/cultural-ai-features" element={
         <PageErrorBoundary pageName="Cultural AI Features">
           <PublicPageWrapper><CulturalAIFeatures /></PublicPageWrapper>
@@ -235,7 +275,7 @@ const AppRouter = () => {
       
       <Route path="/community-features" element={
         <PageErrorBoundary pageName="Community Features">
-          <PublicPageWrapper><CommunityFeatures /></PublicPageWrapper>
+          <CommunityFeatures />
         </PageErrorBoundary>
       } />
       
