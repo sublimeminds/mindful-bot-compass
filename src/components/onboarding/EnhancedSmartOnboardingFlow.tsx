@@ -13,7 +13,7 @@ import PlanSelectionStep from './PlanSelectionStep';
 import NotificationPreferencesStep from './NotificationPreferencesStep';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import CurrencySelector from '@/components/ui/CurrencySelector';
-import ThemeToggle from '@/components/ui/ThemeToggle';
+
 import { useSEO } from '@/hooks/useSEO';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -169,7 +169,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
               value={selectedCurrency}
               onChange={setSelectedCurrency}
             />
-            <ThemeToggle />
+            
           </div>
           {selectedPlan && (
             <div className="text-sm text-therapy-600 font-medium">

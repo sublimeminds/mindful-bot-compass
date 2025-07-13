@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Users, Shield } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import GradientButton from '@/components/ui/GradientButton';
-import heroImage from '@/assets/hero-therapy-ai.jpg';
+import heroImage from '@/assets/hero-therapy.jpg';
 
 const HeroSection = () => {
   const navigate = useNavigate();

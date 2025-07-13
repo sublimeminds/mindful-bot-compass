@@ -14,7 +14,7 @@ import PlanSelectionStep from './PlanSelectionStep';
 import NotificationPreferencesStep from './NotificationPreferencesStep';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import CurrencySelector from '@/components/ui/CurrencySelector';
-import ThemeToggle from '@/components/ui/ThemeToggle';
+
 import EnhancedButton from '@/components/ui/EnhancedButton';
 import { useSEO } from '@/hooks/useSEO';
 
@@ -227,7 +227,7 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
               value={selectedCurrency}
               onChange={setSelectedCurrency}
             />
-            <ThemeToggle />
+            
           </div>
           {selectedPlan && (
             <div className="text-sm text-white font-medium bg-gradient-to-r from-therapy-500 to-calm-500 px-4 py-2 rounded-full shadow-lg">
