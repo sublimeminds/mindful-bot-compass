@@ -417,7 +417,7 @@ const progressAnalyticsNav: NavigationItem[] = [
 ];
 
 const aiPersonalizationNav: NavigationItem[] = [
-  { name: 'AI Hub', href: '/ai-personalization', icon: Brain },
+  { name: 'AI Hub', href: '/ai-hub', icon: Brain },
   { name: 'Therapist Hub', href: '/therapist-hub', icon: Users },
   { name: 'Personalization', href: '/personalization-settings', icon: Settings },
 ];

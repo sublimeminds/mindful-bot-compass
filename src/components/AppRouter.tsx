@@ -84,6 +84,7 @@ import PrivacyDashboard from '../components/compliance/PrivacyDashboard';
 import AdaptiveSystems from "../pages/AdaptiveSystems";
 import SessionAnalytics from "../pages/SessionAnalytics";
 import AIPersonalization from "../pages/AIPersonalization";
+import AIHub from "../pages/AIHub";
 
 // Component to wrap public pages
 const PublicPageWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -460,10 +461,17 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
-      {/* NEW: AI Personalization Hub */}
+      {/* AI Personalization (Informational) */}
       <Route path="/ai-personalization" element={
         <PageErrorBoundary pageName="AI Personalization">
           <AIPersonalization />
+        </PageErrorBoundary>
+      } />
+
+      {/* AI Hub (Dashboard) */}
+      <Route path="/ai-hub" element={
+        <PageErrorBoundary pageName="AI Hub">
+          <DashboardPageWrapper><AIHub /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
