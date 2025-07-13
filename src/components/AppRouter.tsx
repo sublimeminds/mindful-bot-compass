@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route } from "react-router-dom";
 import { PageErrorBoundary } from "@/components/bulletproof/PageErrorBoundary";
 
@@ -181,41 +181,41 @@ const AppRouter = () => {
       
       <Route path="/therapy-approaches/cbt" element={
         <PageErrorBoundary pageName="Cognitive Behavioral Therapy">
-          <PublicPageWrapper>
+          <Suspense fallback={<div>Loading...</div>}>
             {React.createElement(React.lazy(() => import('../pages/therapy-approaches/CBT')))}
-          </PublicPageWrapper>
+          </Suspense>
         </PageErrorBoundary>
       } />
       
       <Route path="/therapy-approaches/dbt" element={
         <PageErrorBoundary pageName="Dialectical Behavior Therapy">
-          <PublicPageWrapper>
+          <Suspense fallback={<div>Loading...</div>}>
             {React.createElement(React.lazy(() => import('../pages/therapy-approaches/DBT')))}
-          </PublicPageWrapper>
+          </Suspense>
         </PageErrorBoundary>
       } />
       
       <Route path="/therapy-approaches/mindfulness" element={
         <PageErrorBoundary pageName="Mindfulness-Based Therapy">
-          <PublicPageWrapper>
+          <Suspense fallback={<div>Loading...</div>}>
             {React.createElement(React.lazy(() => import('../pages/therapy-approaches/Mindfulness')))}
-          </PublicPageWrapper>
+          </Suspense>
         </PageErrorBoundary>
       } />
       
       <Route path="/therapy-approaches/trauma" element={
         <PageErrorBoundary pageName="Trauma-Focused Therapy">
-          <PublicPageWrapper>
+          <Suspense fallback={<div>Loading...</div>}>
             {React.createElement(React.lazy(() => import('../pages/therapy-approaches/Trauma')))}
-          </PublicPageWrapper>
+          </Suspense>
         </PageErrorBoundary>
       } />
       
       <Route path="/adaptive-systems" element={
         <PageErrorBoundary pageName="Adaptive AI Systems">
-          <PublicPageWrapper>
+          <Suspense fallback={<div>Loading...</div>}>
             {React.createElement(React.lazy(() => import('../pages/AdaptiveSystems')))}
-          </PublicPageWrapper>
+          </Suspense>
         </PageErrorBoundary>
       } />
       

@@ -60,7 +60,7 @@ const EnhancedHeader = () => {
   // Therapy AI Features - Core AI capabilities and therapy approaches
   const therapyAiFeatures = [
     {
-      icon: Zap,
+      icon: Brain,
       title: "TherapySync AI Core",
       description: "Advanced multi-model AI system powered by OpenAI and Anthropic with real-time insights",
       href: "/therapysync-ai",
@@ -135,7 +135,7 @@ const EnhancedHeader = () => {
       category: "Therapy Approaches"
     },
     {
-      icon: Users,
+      icon: Zap,
       title: "Adaptive Systems",
       description: "AI that automatically updates therapy plans based on your progress and responses",
       href: "/adaptive-systems",
