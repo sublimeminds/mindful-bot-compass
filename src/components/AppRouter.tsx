@@ -20,6 +20,10 @@ import Reports from "../pages/Reports";
 import DataExport from "../pages/DataExport";
 import CustomIntegrations from "../pages/CustomIntegrations";
 import Individuals from "../pages/solutions/Individuals";
+import Families from "../pages/solutions/Families";
+import Providers from "../pages/solutions/Providers";
+import Organizations from "../pages/solutions/Organizations";
+import FamilyFeaturesInfo from "../pages/FamilyFeaturesInfo";
 import CulturalAIFeatures from "../pages/CulturalAIFeatures";
 import FeaturesOverview from "../pages/FeaturesOverview";
 import HowItWorks from "../pages/HowItWorks";
@@ -152,6 +156,26 @@ const AppRouter = () => {
       <Route path="/solutions/individuals" element={
         <PageErrorBoundary pageName="Solutions for Individuals">
           <Individuals />
+        </PageErrorBoundary>
+      } />
+      <Route path="/solutions/families" element={
+        <PageErrorBoundary pageName="Solutions for Families">
+          <Families />
+        </PageErrorBoundary>
+      } />
+      <Route path="/solutions/providers" element={
+        <PageErrorBoundary pageName="Solutions for Providers">
+          <Providers />
+        </PageErrorBoundary>
+      } />
+      <Route path="/solutions/organizations" element={
+        <PageErrorBoundary pageName="Solutions for Organizations">
+          <Organizations />
+        </PageErrorBoundary>
+      } />
+      <Route path="/family-features" element={
+        <PageErrorBoundary pageName="Family Features">
+          <FamilyFeaturesInfo />
         </PageErrorBoundary>
       } />
       
@@ -500,9 +524,9 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
-      {/* Family Features - Now in Dashboard */}
-      <Route path="/family-features" element={
-        <PageErrorBoundary pageName="Family Features">
+      {/* Family Features Dashboard - Dashboard functionality */}
+      <Route path="/family-features-dashboard" element={
+        <PageErrorBoundary pageName="Family Features Dashboard">
           <DashboardPageWrapper><FamilyFeaturesPage /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />

@@ -30,7 +30,7 @@ const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
   return (
     <div className={`
       absolute top-full ${getPositioning()} w-[680px] p-6 
-      bg-white shadow-2xl border border-gray-200 
+      bg-card shadow-2xl border border-border 
       rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible 
       transition-all duration-200 ease-out translate-y-2 group-hover:translate-y-0 group-hover:scale-[1.02]
       z-50 ${className}
