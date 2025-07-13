@@ -196,36 +196,45 @@ export class TrackingService {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
-      await supabase.from('conversion_tracking').insert({
-        event_name: conversion.event_name,
-        user_id: user?.id || conversion.user_id,
-        conversion_value: conversion.value || 0,
-        currency: conversion.currency || 'USD',
-        transaction_id: conversion.transaction_id,
-        attribution_data: {
+      await supabase.from('analytics_events').insert({
+        event_type: 'conversion',
+        event_category: 'ecommerce',
+        event_data: {
+          event_name: conversion.event_name,
+          value: conversion.value || 0,
+          currency: conversion.currency || 'USD',
+          transaction_id: conversion.transaction_id,
           timestamp: new Date().toISOString(),
           user_agent: navigator.userAgent,
           referrer: document.referrer
-        }
+        },
+        user_id: user?.id || conversion.user_id,
+        user_agent: navigator.userAgent,
+        referrer: document.referrer || null
       });
     } catch (error) {
       console.error('Error logging conversion:', error);
     }
   }
 
-  // Update user attribution
+  // Update user attribution by storing in analytics_events
   static async updateUserAttribution(source: string, medium: string, campaign?: string) {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      await supabase.rpc('update_user_attribution', {
-        p_user_id: user.id,
-        p_source: source,
-        p_medium: medium,
-        p_campaign: campaign || null,
-        p_content: null,
-        p_term: null
+      await supabase.from('analytics_events').insert({
+        event_type: 'attribution_update',
+        event_category: 'marketing',
+        event_data: {
+          source,
+          medium,
+          campaign,
+          timestamp: new Date().toISOString()
+        },
+        user_id: user.id,
+        user_agent: navigator.userAgent,
+        referrer: document.referrer || null
       });
     } catch (error) {
       console.error('Error updating user attribution:', error);
