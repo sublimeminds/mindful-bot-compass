@@ -35,8 +35,13 @@ import {
   Smartphone,
   Cloud,
   Lock,
-  BarChart3
+  BarChart3,
+  TrendingUp,
+  FileSpreadsheet,
+  Building,
+  GraduationCap
 } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import GradientLogo from '@/components/ui/GradientLogo';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
@@ -52,18 +57,20 @@ const EnhancedHeader = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const aiFeatures = [
+  // Therapy AI Features - Core AI capabilities
+  const therapyAiFeatures = [
     {
-      icon: CircuitBoard,
-      title: "TherapySync AI",
-      description: "Discover our advanced multi-model AI system powered by OpenAI and Anthropic",
+      icon: Zap,
+      title: "TherapySync AI Core",
+      description: "Advanced multi-model AI system powered by OpenAI and Anthropic with real-time insights",
       href: "/therapysync-ai",
-      gradient: "from-purple-500 to-indigo-600"
+      gradient: "from-purple-500 to-indigo-600",
+      badge: "Core"
     },
     {
-      icon: Brain,
+      icon: MessageSquare,
       title: "AI Therapy Chat",
-      description: "Advanced AI-powered therapy conversations with personalized treatment approaches",
+      description: "Personalized therapy conversations with evidence-based treatment approaches",
       href: "/therapy-sync-ai",
       gradient: "from-therapy-500 to-calm-500",
       badge: "Popular"
@@ -71,7 +78,7 @@ const EnhancedHeader = () => {
     {
       icon: Mic,
       title: "Voice AI Technology",
-      description: "Natural voice conversations in 29 languages with emotion detection",
+      description: "Natural voice conversations in 29 languages with emotion detection and analysis",
       href: "/voice-technology",
       gradient: "from-flow-500 to-balance-500",
       badge: "New"
@@ -86,26 +93,20 @@ const EnhancedHeader = () => {
     {
       icon: Target,
       title: "AI Personalization",
-      description: "Personalized therapy approaches adapted to your unique needs and preferences",
+      description: "Adaptive therapy approaches that learn and evolve with your unique needs",
       href: "/features-overview",
       gradient: "from-harmony-500 to-therapy-500"
     },
     {
       icon: Lightbulb,
-      title: "How It Works",
-      description: "Discover how our AI therapy technology works and helps you heal",
-      href: "/how-it-works",
+      title: "Real-time Insights",
+      description: "Instant AI-powered insights into your emotional patterns and progress",
+      href: "/ai-insights",
       gradient: "from-therapy-500 to-calm-500"
-    },
-    {
-      icon: Star,
-      title: "Features Showcase",
-      description: "Explore all the powerful features that make TherapySync unique",
-      href: "/features-showcase",
-      gradient: "from-calm-500 to-harmony-500"
     }
   ];
 
+  // Platform Features - Core therapy features and capabilities
   const platformFeatures = [
     {
       icon: Users,
@@ -115,154 +116,180 @@ const EnhancedHeader = () => {
       gradient: "from-therapy-500 to-calm-500"
     },
     {
-      icon: Users,
-      title: "Family & Account Sharing",
-      description: "Comprehensive family mental health support with account sharing and parental controls",
-      href: "/family-features",
-      gradient: "from-harmony-500 to-balance-500"
+      icon: Heart,
+      title: "Mood & Progress Tracking",
+      description: "Track your emotional journey with AI-powered insights and comprehensive analytics",
+      href: "/mood-tracking",
+      gradient: "from-calm-500 to-therapy-500"
     },
     {
       icon: Shield,
-      title: "Crisis Support",
+      title: "Crisis Support System",
       description: "24/7 crisis intervention with automated detection and emergency resources",
       href: "/crisis-support",
       gradient: "from-therapy-600 to-harmony-600"
     },
     {
-      icon: Heart,
-      title: "Mood Tracking",
-      description: "Track your emotional journey with AI-powered insights and progress analytics",
-      href: "/mood-tracking",
-      gradient: "from-calm-500 to-therapy-500"
-    },
-    {
-      icon: Calculator,
-      title: "Pricing",
-      description: "Flexible pricing plans designed for individuals, families, and organizations",
-      href: "/pricing",
-      gradient: "from-therapy-500 to-calm-500"
+      icon: Users,
+      title: "Family Account Sharing",
+      description: "Comprehensive family mental health support with shared accounts and parental controls",
+      href: "/family-features",
+      gradient: "from-harmony-500 to-balance-500"
     },
     {
       icon: UserPlus,
-      title: "Community Features",
-      description: "Connect with peers and join supportive communities for shared healing",
+      title: "Community & Groups",
+      description: "Connect with peers and join supportive communities for shared healing journeys",
       href: "/community-features",
       gradient: "from-flow-500 to-balance-500"
     },
     {
-      icon: Stethoscope,
-      title: "Therapy Types",
-      description: "Explore different therapeutic approaches including CBT, DBT, and mindfulness",
-      href: "/therapy-types",
-      gradient: "from-balance-500 to-therapy-500"
-    },
-    {
       icon: LinkIcon,
-      title: "Integrations",
-      description: "Connect with your favorite health and wellness apps for seamless care",
+      title: "Integrations Hub",
+      description: "Connect with your favorite health and wellness apps for seamless care coordination",
       href: "/integrations",
       gradient: "from-harmony-500 to-calm-500"
-    },
-    {
-      icon: Shield,
-      title: "Compliance & Security",
-      description: "HIPAA, GDPR compliance and enterprise-grade security standards",
-      href: "/compliance",
-      gradient: "from-therapy-600 to-harmony-600"
     }
   ];
 
-  // Tech Features
-  const techFeatures = [
+  // Tools & Data - Analytics, APIs, and data management
+  const toolsDataFeatures = [
     {
-      icon: Code,
-      title: "API & Integrations",
-      description: "Comprehensive REST API and webhooks for seamless integration with your existing systems and workflows",
-      href: "/tech/api",
-      gradient: "from-blue-500 to-cyan-500",
-      badge: "REST"
+      icon: BarChart3,
+      title: "Analytics Dashboard",
+      description: "Advanced analytics with custom reporting, data visualization, and progress insights",
+      href: "/analytics",
+      gradient: "from-orange-500 to-red-500",
+      badge: "Premium"
     },
     {
-      icon: Database,
-      title: "Enterprise Solutions",
-      description: "Scalable infrastructure and dedicated support for large organizations with custom deployment options",
-      href: "/tech/enterprise",
+      icon: Code,
+      title: "API Access",
+      description: "Comprehensive REST API and webhooks for integration with your systems and workflows",
+      href: "/api-docs",
+      gradient: "from-blue-500 to-cyan-500",
+      badge: "Pro"
+    },
+    {
+      icon: Smartphone,
+      title: "Mobile Apps",
+      description: "Native iOS and Android apps with full feature parity and offline capabilities",
+      href: "/mobile-apps",
+      gradient: "from-pink-500 to-rose-500"
+    },
+    {
+      icon: TrendingUp,
+      title: "Progress Reports",
+      description: "Detailed progress reports and insights for you, families, and healthcare providers",
+      href: "/reports",
+      gradient: "from-green-500 to-emerald-500",
+      badge: "Premium"
+    },
+    {
+      icon: FileSpreadsheet,
+      title: "Data Export",
+      description: "Export your therapy data in multiple formats for personal records or provider sharing",
+      href: "/data-export",
       gradient: "from-purple-500 to-indigo-500",
-      badge: "SSO"
+      badge: "Pro"
+    },
+    {
+      icon: LinkIcon,
+      title: "Custom Integrations",
+      description: "Build custom integrations with our SDK and connect to enterprise health systems",
+      href: "/custom-integrations",
+      gradient: "from-cyan-500 to-blue-500",
+      badge: "Enterprise"
+    }
+  ];
+
+  // Solutions - Different use cases and approaches
+  const solutionsFeatures = [
+    {
+      icon: Users,
+      title: "For Individuals",
+      description: "Personal therapy journey with AI-powered insights and personalized treatment plans",
+      href: "/solutions/individuals",
+      gradient: "from-therapy-500 to-calm-500"
+    },
+    {
+      icon: Heart,
+      title: "For Families",
+      description: "Family mental health support with shared accounts, parental controls, and family therapy",
+      href: "/solutions/families",
+      gradient: "from-harmony-500 to-balance-500"
+    },
+    {
+      icon: Stethoscope,
+      title: "For Healthcare Providers",
+      description: "Professional tools for therapists, clinicians, and healthcare organizations",
+      href: "/solutions/providers",
+      gradient: "from-balance-500 to-therapy-500"
+    },
+    {
+      icon: Building,
+      title: "For Organizations",
+      description: "Employee mental health programs with analytics, compliance, and enterprise features",
+      href: "/solutions/organizations",
+      gradient: "from-purple-500 to-indigo-500"
+    },
+    {
+      icon: Brain,
+      title: "Therapy Approaches",
+      description: "Explore CBT, DBT, mindfulness, and other evidence-based therapeutic modalities",
+      href: "/therapy-types",
+      gradient: "from-flow-500 to-balance-500"
+    },
+    {
+      icon: Calculator,
+      title: "Pricing Plans",
+      description: "Flexible pricing for individuals, families, providers, and organizations",
+      href: "/pricing",
+      gradient: "from-therapy-500 to-calm-500"
+    }
+  ];
+
+  // Resources - Help, support, and learning materials
+  const resourcesFeatures = [
+    {
+      icon: BookOpen,
+      title: "Getting Started",
+      description: "Step-by-step guides to help you begin your therapy journey with confidence",
+      href: "/getting-started",
+      gradient: "from-therapy-500 to-calm-500"
+    },
+    {
+      icon: Lightbulb,
+      title: "How It Works",
+      description: "Learn about our AI therapy technology and how it supports your mental health",
+      href: "/how-it-works",
+      gradient: "from-calm-500 to-therapy-500"
     },
     {
       icon: Shield,
       title: "Security & Compliance",
-      description: "HIPAA-compliant infrastructure with end-to-end encryption, audit trails, and security monitoring",
-      href: "/tech/security",
-      gradient: "from-green-500 to-emerald-500",
-      badge: "HIPAA"
-    },
-    {
-      icon: BarChart3,
-      title: "Analytics & Reporting",
-      description: "Advanced analytics dashboard with custom reporting, data export capabilities, and real-time insights",
-      href: "/tech/analytics",
-      gradient: "from-orange-500 to-red-500"
-    },
-    {
-      icon: Cloud,
-      title: "Cloud Infrastructure",
-      description: "99.9% uptime SLA with global CDN, automatic scaling, and disaster recovery protocols",
-      href: "/tech/infrastructure",
-      gradient: "from-cyan-500 to-blue-500",
-      badge: "99.9%"
-    },
-    {
-      icon: Smartphone,
-      title: "Mobile SDKs",
-      description: "Native iOS and Android SDKs for building custom mobile applications with full feature parity",
-      href: "/tech/mobile",
-      gradient: "from-pink-500 to-rose-500",
-      badge: "SDK"
-    }
-  ];
-
-  const helpResources = [
-    {
-      icon: HelpCircle,
-      title: "FAQ",
-      description: "Frequently asked questions and quick answers",
-      href: "/help",
-      gradient: "from-therapy-500 to-calm-500"
+      description: "HIPAA, GDPR compliance and enterprise-grade security standards for your peace of mind",
+      href: "/security",
+      gradient: "from-therapy-600 to-harmony-600"
     },
     {
       icon: Phone,
-      title: "24/7 Support",
-      description: "Round-the-clock customer support and crisis assistance",
+      title: "Support Center",
+      description: "24/7 customer support, technical help, and crisis assistance when you need it",
       href: "/support",
       gradient: "from-harmony-500 to-balance-500"
     },
     {
-      icon: FileText,
-      title: "Documentation",
-      description: "Complete guides and documentation for all features",
-      href: "/help",
-      gradient: "from-calm-500 to-therapy-500"
-    },
-    {
-      icon: Mail,
-      title: "Contact Us",
-      description: "Get in touch with our support team directly",
-      href: "/support",
+      icon: GraduationCap,
+      title: "Learning Hub",
+      description: "Educational resources, therapy guides, and mental health best practices",
+      href: "/learning",
       gradient: "from-flow-500 to-balance-500"
     },
     {
-      icon: LifeBuoy,
-      title: "Crisis Resources",
-      description: "Emergency mental health resources and immediate crisis support",
-      href: "/crisis-resources",
-      gradient: "from-therapy-600 to-harmony-600"
-    },
-    {
       icon: Users,
-      title: "Community",
-      description: "Join our supportive community and connect with others on similar journeys",
+      title: "Community Forum",
+      description: "Connect with peers, share experiences, and find support in our moderated community",
       href: "/community",
       gradient: "from-balance-500 to-calm-500"
     }
@@ -285,79 +312,108 @@ const EnhancedHeader = () => {
 
           {/* Navigation */}
             <nav className="hidden md:flex items-center space-x-6 therapy-brand-override">
-            {/* Therapy AI Features Dropdown */}
+            {/* Therapy AI Dropdown */}
             <div className="relative group">
               <HeaderDropdownTrigger icon={Brain} label="Therapy AI" />
               <HeaderDropdownCard>
                 <div className="grid grid-cols-2 gap-4">
-                  {aiFeatures.map((feature) => (
-                    <HeaderDropdownItem
-                      key={feature.title}
-                      icon={feature.icon}
-                      title={feature.title}
-                      description={feature.description}
-                      href={feature.href}
-                      gradient={feature.gradient}
-                      badge={feature.badge}
-                    />
+                  {therapyAiFeatures.map((feature, index) => (
+                    <React.Fragment key={feature.title}>
+                      <HeaderDropdownItem
+                        icon={feature.icon}
+                        title={feature.title}
+                        description={feature.description}
+                        href={feature.href}
+                        gradient={feature.gradient}
+                        badge={feature.badge}
+                      />
+                      {index === 1 && <div className="col-span-2"><Separator className="my-2" /></div>}
+                    </React.Fragment>
                   ))}
                 </div>
               </HeaderDropdownCard>
             </div>
 
-            {/* Platform Dropdown */}
+            {/* Features Dropdown */}
             <div className="relative group">
-              <HeaderDropdownTrigger icon={Settings} label="Platform" />
+              <HeaderDropdownTrigger icon={Settings} label="Features" />
               <HeaderDropdownCard>
                 <div className="grid grid-cols-2 gap-4">
-                  {platformFeatures.map((feature) => (
-                    <HeaderDropdownItem
-                      key={feature.title}
-                      icon={feature.icon}
-                      title={feature.title}
-                      description={feature.description}
-                      href={feature.href}
-                      gradient={feature.gradient}
-                    />
+                  {platformFeatures.map((feature, index) => (
+                    <React.Fragment key={feature.title}>
+                      <HeaderDropdownItem
+                        icon={feature.icon}
+                        title={feature.title}
+                        description={feature.description}
+                        href={feature.href}
+                        gradient={feature.gradient}
+                      />
+                      {index === 2 && <div className="col-span-2"><Separator className="my-2" /></div>}
+                    </React.Fragment>
                   ))}
                 </div>
               </HeaderDropdownCard>
             </div>
 
-            {/* Tech Dropdown */}
+            {/* Tools & Data Dropdown */}
             <div className="relative group">
-              <HeaderDropdownTrigger icon={CircuitBoard} label="Tech" />
+              <HeaderDropdownTrigger icon={Database} label="Tools & Data" />
               <HeaderDropdownCard>
                 <div className="grid grid-cols-2 gap-4">
-                  {techFeatures.map((feature) => (
-                    <HeaderDropdownItem
-                      key={feature.title}
-                      icon={feature.icon}
-                      title={feature.title}
-                      description={feature.description}
-                      href={feature.href}
-                      gradient={feature.gradient}
-                      badge={feature.badge}
-                    />
+                  {toolsDataFeatures.map((feature, index) => (
+                    <React.Fragment key={feature.title}>
+                      <HeaderDropdownItem
+                        icon={feature.icon}
+                        title={feature.title}
+                        description={feature.description}
+                        href={feature.href}
+                        gradient={feature.gradient}
+                        badge={feature.badge}
+                      />
+                      {index === 2 && <div className="col-span-2"><Separator className="my-2" /></div>}
+                    </React.Fragment>
                   ))}
                 </div>
               </HeaderDropdownCard>
             </div>
 
-            {/* Help Dropdown */}
+            {/* Solutions Dropdown */}
             <div className="relative group">
-              <HeaderDropdownTrigger icon={HelpCircle} label="Help" />
+              <HeaderDropdownTrigger icon={Star} label="Solutions" />
               <HeaderDropdownCard>
                 <div className="grid grid-cols-2 gap-4">
-                  {helpResources.map((resource) => (
-                    <HeaderDropdownItem
-                      key={resource.title}
-                      icon={resource.icon}
-                      title={resource.title}
-                      description={resource.description}
-                      href={resource.href}
-                      gradient={resource.gradient}
-                    />
+                  {solutionsFeatures.map((feature, index) => (
+                    <React.Fragment key={feature.title}>
+                      <HeaderDropdownItem
+                        icon={feature.icon}
+                        title={feature.title}
+                        description={feature.description}
+                        href={feature.href}
+                        gradient={feature.gradient}
+                      />
+                      {index === 3 && <div className="col-span-2"><Separator className="my-2" /></div>}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </HeaderDropdownCard>
+            </div>
+
+            {/* Resources Dropdown */}
+            <div className="relative group">
+              <HeaderDropdownTrigger icon={BookOpen} label="Resources" />
+              <HeaderDropdownCard>
+                <div className="grid grid-cols-2 gap-4">
+                  {resourcesFeatures.map((feature, index) => (
+                    <React.Fragment key={feature.title}>
+                      <HeaderDropdownItem
+                        icon={feature.icon}
+                        title={feature.title}
+                        description={feature.description}
+                        href={feature.href}
+                        gradient={feature.gradient}
+                      />
+                      {index === 2 && <div className="col-span-2"><Separator className="my-2" /></div>}
+                    </React.Fragment>
                   ))}
                 </div>
               </HeaderDropdownCard>
