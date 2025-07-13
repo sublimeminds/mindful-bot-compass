@@ -1,14 +1,6 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator
-} from '@/components/ui/dropdown-menu';
 import { 
   Brain, 
   Heart, 
@@ -46,12 +38,13 @@ import EnhancedUserMenu from './EnhancedUserMenu';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
 import EnhancedButton from '@/components/ui/EnhancedButton';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
+import HeaderDropdownCard from './HeaderDropdownCard';
+import HeaderDropdownItem from './HeaderDropdownItem';
+import HeaderDropdownTrigger from './HeaderDropdownTrigger';
 
 const EnhancedHeader = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
 
   const aiFeatures = [
     {
@@ -66,14 +59,16 @@ const EnhancedHeader = () => {
       title: "AI Therapy Chat",
       description: "Advanced AI-powered therapy conversations with personalized treatment approaches",
       href: "/therapy-sync-ai",
-      gradient: "from-therapy-500 to-calm-500"
+      gradient: "from-therapy-500 to-calm-500",
+      badge: "Popular"
     },
     {
       icon: Mic,
       title: "Voice AI Technology",
       description: "Natural voice conversations in 29 languages with emotion detection",
       href: "/voice-technology",
-      gradient: "from-flow-500 to-balance-500"
+      gradient: "from-flow-500 to-balance-500",
+      badge: "New"
     },
     {
       icon: Globe,
@@ -216,17 +211,6 @@ const EnhancedHeader = () => {
     }
   ];
 
-  const IconWrapper = ({ icon: Icon, gradient, isHovered }: { icon: any, gradient: string, isHovered: boolean }) => (
-    <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 transform ${
-      isHovered 
-        ? `bg-gradient-to-r ${gradient} shadow-lg scale-110 animate-pulse` 
-        : `bg-gradient-to-r ${gradient} opacity-70 hover:opacity-100`
-    }`}>
-      <Icon className={`h-5 w-5 transition-all duration-300 ${
-        isHovered ? 'text-white scale-110' : 'text-white'
-      }`} />
-    </div>
-  );
 
   return (
     <SafeComponentWrapper name="EnhancedHeader">
@@ -246,122 +230,60 @@ const EnhancedHeader = () => {
             <nav className="hidden md:flex items-center space-x-6 therapy-brand-override">
             {/* AI Features Dropdown */}
             <div className="relative group">
-              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900 therapy-brand-override">
-                <Brain className="icon-therapy-size text-therapy-500 therapy-icon" />
-                <span className="text-gray-900">AI</span>
-                <ChevronDown className="h-4 w-4 text-gray-600" />
-              </Button>
-              <div className="absolute top-full left-0 w-[520px] p-5 bg-white/95 backdrop-blur-md shadow-xl border border-gray-100 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                <div className="text-lg font-semibold mb-4 flex items-center">
-                  <Brain className="h-5 w-5 mr-2 text-therapy-500" />
-                  AI Features
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  {aiFeatures.map((feature, index) => (
-                    <Link
+              <HeaderDropdownTrigger icon={Brain} label="AI" />
+              <HeaderDropdownCard title="AI Features" titleIcon={Brain} width="lg">
+                <div className="grid grid-cols-2 gap-3">
+                  {aiFeatures.map((feature) => (
+                    <HeaderDropdownItem
                       key={feature.title}
-                      to={feature.href}
-                      className="flex items-start space-x-4 p-4 rounded-xl hover:bg-therapy-50 transition-all duration-300 group hover:shadow-md"
-                      onMouseEnter={() => setHoveredIcon(feature.title)}
-                      onMouseLeave={() => setHoveredIcon(null)}
-                    >
-                      <IconWrapper 
-                        icon={feature.icon} 
-                        gradient={feature.gradient}
-                        isHovered={hoveredIcon === feature.title}
-                      />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
-                          {feature.title}
-                        </h4>
-                        <p className="text-xs text-gray-600 mt-1 leading-tight">
-                          {feature.description}
-                        </p>
-                      </div>
-                    </Link>
+                      icon={feature.icon}
+                      title={feature.title}
+                      description={feature.description}
+                      href={feature.href}
+                      gradient={feature.gradient}
+                      badge={feature.badge}
+                    />
                   ))}
                 </div>
-              </div>
+              </HeaderDropdownCard>
             </div>
 
             {/* Platform Dropdown */}
             <div className="relative group">
-              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900 therapy-brand-override">
-                <Settings className="icon-therapy-size text-therapy-500 therapy-icon" />
-                <span className="text-gray-900">Platform</span>
-                <ChevronDown className="h-4 w-4 text-gray-600" />
-              </Button>
-              <div className="absolute top-full left-0 w-[520px] p-5 bg-white/95 backdrop-blur-md shadow-xl border border-gray-100 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                <div className="text-lg font-semibold mb-4 flex items-center">
-                  <Settings className="h-5 w-5 mr-2 text-therapy-500" />
-                  Platform Features
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  {platformFeatures.map((feature, index) => (
-                    <Link
+              <HeaderDropdownTrigger icon={Settings} label="Platform" />
+              <HeaderDropdownCard title="Platform Features" titleIcon={Settings} width="lg">
+                <div className="grid grid-cols-2 gap-3">
+                  {platformFeatures.map((feature) => (
+                    <HeaderDropdownItem
                       key={feature.title}
-                      to={feature.href}
-                      className="flex items-start space-x-4 p-4 rounded-xl hover:bg-therapy-50 transition-all duration-300 group hover:shadow-md"
-                      onMouseEnter={() => setHoveredIcon(feature.title)}
-                      onMouseLeave={() => setHoveredIcon(null)}
-                    >
-                      <IconWrapper 
-                        icon={feature.icon} 
-                        gradient={feature.gradient}
-                        isHovered={hoveredIcon === feature.title}
-                      />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
-                          {feature.title}
-                        </h4>
-                        <p className="text-xs text-gray-600 mt-1 leading-tight">
-                          {feature.description}
-                        </p>
-                      </div>
-                    </Link>
+                      icon={feature.icon}
+                      title={feature.title}
+                      description={feature.description}
+                      href={feature.href}
+                      gradient={feature.gradient}
+                    />
                   ))}
                 </div>
-              </div>
+              </HeaderDropdownCard>
             </div>
 
             {/* Help Dropdown */}
             <div className="relative group">
-              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900 therapy-brand-override">
-                <HelpCircle className="icon-therapy-size text-therapy-500 therapy-icon" />
-                <span className="text-gray-900">Help</span>
-                <ChevronDown className="h-4 w-4 text-gray-600" />
-              </Button>
-              <div className="absolute top-full left-0 w-[520px] p-5 bg-white/95 backdrop-blur-md shadow-xl border border-gray-100 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                <div className="text-lg font-semibold mb-4 flex items-center">
-                  <HelpCircle className="h-5 w-5 mr-2 text-therapy-500" />
-                  Help & Support
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  {helpResources.map((resource, index) => (
-                    <Link
+              <HeaderDropdownTrigger icon={HelpCircle} label="Help" />
+              <HeaderDropdownCard title="Help & Support" titleIcon={HelpCircle} width="md">
+                <div className="grid grid-cols-2 gap-3">
+                  {helpResources.map((resource) => (
+                    <HeaderDropdownItem
                       key={resource.title}
-                      to={resource.href}
-                      className="flex items-start space-x-4 p-4 rounded-xl hover:bg-therapy-50 transition-all duration-300 group hover:shadow-md"
-                      onMouseEnter={() => setHoveredIcon(resource.title)}
-                      onMouseLeave={() => setHoveredIcon(null)}
-                    >
-                      <IconWrapper 
-                        icon={resource.icon} 
-                        gradient={resource.gradient}
-                        isHovered={hoveredIcon === resource.title}
-                      />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm text-gray-900 group-hover:text-therapy-700">
-                          {resource.title}
-                        </h4>
-                        <p className="text-xs text-gray-600 mt-1 leading-tight">
-                          {resource.description}
-                        </p>
-                      </div>
-                    </Link>
+                      icon={resource.icon}
+                      title={resource.title}
+                      description={resource.description}
+                      href={resource.href}
+                      gradient={resource.gradient}
+                    />
                   ))}
                 </div>
-              </div>
+              </HeaderDropdownCard>
             </div>
           </nav>
 

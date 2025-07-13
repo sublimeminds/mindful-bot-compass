@@ -32,7 +32,7 @@ const EnhancedLanguageSelector = () => {
     <div className="flex items-center space-x-2 therapy-brand-override">
       <Languages className="icon-therapy-size text-gray-600 therapy-icon" />
       <Select value={currentLanguage.code} onValueChange={changeLanguage}>
-        <SelectTrigger className="w-40 border-therapy-200 hover:border-therapy-300 focus:border-therapy-500 focus:ring-therapy-500/20 bg-white text-gray-900 btn-therapy-outline">
+        <SelectTrigger className="w-40 h-10 border-therapy-200 hover:border-therapy-300 focus:border-therapy-500 focus:ring-therapy-500/20 bg-white text-gray-900 transition-all duration-200 hover:scale-105 transform-gpu">
           <SelectValue>
             <div className="flex items-center space-x-2">
               <span>{currentLanguage.flag}</span>
@@ -41,7 +41,7 @@ const EnhancedLanguageSelector = () => {
             </div>
           </SelectValue>
         </SelectTrigger>
-        <SelectContent className="bg-white border shadow-lg z-50 max-h-80 overflow-y-auto text-gray-900">
+        <SelectContent className="bg-white/98 backdrop-blur-lg border shadow-xl z-50 max-h-80 overflow-y-auto text-gray-900 rounded-xl">
           {Object.entries(languagesByRegion).map(([region, languages]) => (
             <div key={region}>
               <div className="px-2 py-1 text-xs font-semibold text-therapy-600 border-b border-therapy-100">
