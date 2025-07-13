@@ -33,31 +33,35 @@ const CrisisSupport = () => {
   const crisisFeatures = [
     {
       icon: Shield,
-      title: "AI Crisis Detection",
+      title: "24/7 AI Crisis Detection",
       description: "Advanced AI monitors conversations for crisis indicators and automatically triggers appropriate interventions.",
       details: ["Real-time risk assessment", "Suicide ideation detection", "Immediate alert system", "Safety protocol activation"],
-      tier: "All Plans"
+      tier: "All Users",
+      premium: "Premium users get family crisis coordination and dedicated crisis team"
     },
     {
       icon: Phone,
       title: "Instant Human Support",
       description: "Connect with licensed crisis counselors within 30 seconds when AI detects high-risk situations.",
       details: ["30-second response time", "Licensed crisis counselors", "24/7 availability", "Multi-language support"],
-      tier: "Pro+"
+      tier: "All Users",
+      pro: "Pro users get priority queue and dedicated crisis counselor assignment"
     },
     {
       icon: MapPin,
       title: "Local Emergency Resources",
       description: "Automatic connection to local emergency services, hospitals, and crisis centers based on your location.",
       details: ["GPS-based resource finding", "Emergency service integration", "Hospital locator", "Crisis center directory"],
-      tier: "Premium"
+      tier: "All Users",
+      premium: "Premium users get hospital liaison services and professional provider coordination"
     },
     {
       icon: Heart,
-      title: "Safety Planning",
+      title: "AI Safety Planning",
       description: "AI-assisted creation and maintenance of personalized safety plans for crisis management.",
       details: ["Personalized safety plans", "Coping strategy database", "Emergency contact management", "Warning sign tracking"],
-      tier: "Pro+"
+      tier: "All Users",
+      upgrade: "Premium users enjoy Claude 4 Opus for more sophisticated safety planning and crisis prevention strategies"
     }
   ];
 
@@ -121,42 +125,44 @@ const CrisisSupport = () => {
 
   const crisisPlans = [
     {
-      tier: 'Basic Crisis',
+      tier: 'Free',
       features: [
-        'Basic crisis detection',
-        'Emergency hotline numbers',
-        'Simple safety planning',
-        'Crisis resource directory'
+        '24/7 AI crisis detection',
+        'Instant human counselor access',
+        'Emergency hotline directory',
+        'Basic safety planning',
+        'Crisis resource directory',
+        'Multi-language support'
       ],
       price: '$0',
-      responseTime: '5-10 minutes'
+      responseTime: '< 30 seconds'
     },
     {
-      tier: 'Crisis Pro',
+      tier: 'Pro',
       features: [
-        'Advanced AI crisis monitoring',
-        'Instant human counselor connection',
-        'Personalized safety plans',
+        'Everything in Free',
+        'Priority crisis queue',
+        'Dedicated crisis counselor',
+        'Advanced safety analytics',
         'Emergency contact alerts',
-        'Local resource integration',
         'Crisis follow-up care'
       ],
       price: '$29',
-      responseTime: '< 30 seconds',
+      responseTime: '< 15 seconds',
       highlight: true
     },
     {
-      tier: 'Crisis Premium',
+      tier: 'Premium',
       features: [
         'Everything in Pro',
-        'Family crisis alerts',
-        'Professional provider coordination',
+        'Claude 4 Opus for crisis AI',
+        'Family crisis coordination',
         'Hospital liaison services',
-        'Long-term crisis prevention',
-        'Advanced safety analytics'
+        'Professional provider network',
+        'Predictive crisis prevention'
       ],
       price: '$79',
-      responseTime: '< 15 seconds'
+      responseTime: '< 10 seconds'
     }
   ];
 
@@ -270,7 +276,7 @@ const CrisisSupport = () => {
                       <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
                         <IconComponent className="h-8 w-8 text-white" />
                       </div>
-                      <Badge className={`${feature.tier === 'All Plans' ? 'bg-gray-100 text-gray-700' : feature.tier === 'Premium' ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white' : 'bg-red-100 text-red-700'}`}>
+                      <Badge className="bg-gradient-to-r from-red-500 to-orange-500 text-white">
                         {feature.tier}
                       </Badge>
                     </div>
@@ -286,6 +292,13 @@ const CrisisSupport = () => {
                         </li>
                       ))}
                     </ul>
+                    {(feature.pro || feature.premium || feature.upgrade) && (
+                      <div className="mt-4 p-3 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border border-red-200">
+                        <p className="text-sm text-red-700 font-medium">
+                          🚨 {feature.upgrade || feature.pro || feature.premium}
+                        </p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );

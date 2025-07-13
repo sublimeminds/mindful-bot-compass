@@ -39,28 +39,31 @@ const VoiceTechnology = () => {
       title: "Natural Voice Synthesis",
       description: "State-of-the-art voice generation that sounds human-like and emotionally responsive.",
       details: ["High-quality 48kHz audio output", "Emotion-aware intonation", "Natural speech patterns", "Real-time generation"],
-      tier: "All Plans"
+      tier: "All Users"
     },
     {
       icon: Eye,
-      title: "Emotion Detection",
-      description: "Advanced AI analyzes your voice patterns to detect emotional states and respond appropriately.",
+      title: "Advanced Emotion Detection",
+      description: "AI analyzes voice patterns to detect emotional states and respond with empathy.",
       details: ["Real-time emotion analysis", "Stress level detection", "Mood pattern recognition", "Adaptive responses"],
-      tier: "Pro+"
+      tier: "All Users",
+      proFeature: "Pro users get deeper emotional insights and voice pattern analytics"
     },
     {
       icon: Globe,
       title: "29 Languages Supported",
       description: "Communicate in your preferred language with full cultural sensitivity and context awareness.",
       details: ["Native pronunciation", "Cultural adaptation", "Regional dialects", "Real-time translation"],
-      tier: "Premium"
+      tier: "All Users",
+      premiumFeature: "Premium users get priority access to new languages and dialect variants"
     },
     {
       icon: Brain,
-      title: "Contextual Understanding",
-      description: "AI processes not just words but tone, pace, and emotional context for deeper conversations.",
+      title: "AI Model Excellence",
+      description: "Experience conversations powered by Claude 4 models for exceptional understanding.",
       details: ["Context preservation", "Conversation memory", "Emotional continuity", "Personalized responses"],
-      tier: "Pro+"
+      tier: "All Users",
+      modelUpgrade: "Premium users enjoy Claude 4 Opus for the most nuanced, empathetic conversations vs Claude 4 Sonnet for Free users"
     }
   ];
 
@@ -104,10 +107,12 @@ const VoiceTechnology = () => {
     {
       tier: 'Free',
       features: [
-        'Basic voice chat (5 hours/month)',
-        '3 languages supported',
-        'Standard audio quality',
-        'Basic emotion recognition'
+        'Unlimited voice conversations',
+        '29 languages supported',
+        'High-quality audio (48kHz)',
+        'Advanced emotion detection',
+        'Claude 4 Sonnet AI model',
+        'Real-time conversation'
       ],
       price: '$0',
       highlight: false
@@ -115,12 +120,12 @@ const VoiceTechnology = () => {
     {
       tier: 'Pro',
       features: [
-        'Unlimited voice sessions',
-        '15 languages supported',
-        'High-quality audio (48kHz)',
-        'Advanced emotion detection',
-        'Voice pattern analysis',
-        'Conversation memory'
+        'Everything in Free',
+        'Voice pattern analytics',
+        'Advanced conversation insights',
+        'Priority session access',
+        'Session history & transcripts',
+        'Enhanced emotional analysis'
       ],
       price: '$29',
       highlight: true
@@ -129,11 +134,11 @@ const VoiceTechnology = () => {
       tier: 'Premium',
       features: [
         'Everything in Pro',
-        '29 languages + dialects',
-        'Real-time voice translation',
-        'Cultural context adaptation',
-        'Professional voice analytics',
-        'Family voice profiles'
+        'Claude 4 Opus AI model',
+        'Predictive conversation features',
+        'Family voice coordination',
+        'Professional-grade analytics',
+        'White-label voice solutions'
       ],
       price: '$79',
       highlight: false
@@ -212,7 +217,7 @@ const VoiceTechnology = () => {
                       <div className="w-16 h-16 bg-gradient-to-r from-flow-500 to-balance-500 rounded-2xl flex items-center justify-center shadow-lg">
                         <IconComponent className="h-8 w-8 text-white" />
                       </div>
-                      <Badge className={`${feature.tier === 'All Plans' ? 'bg-gray-100 text-gray-700' : feature.tier === 'Premium' ? 'bg-gradient-to-r from-flow-500 to-balance-500 text-white' : 'bg-flow-100 text-flow-700'}`}>
+                      <Badge className="bg-gradient-to-r from-flow-500 to-balance-500 text-white">
                         {feature.tier}
                       </Badge>
                     </div>
@@ -228,6 +233,13 @@ const VoiceTechnology = () => {
                         </li>
                       ))}
                     </ul>
+                    {(feature.proFeature || feature.premiumFeature || feature.modelUpgrade) && (
+                      <div className="mt-4 p-3 bg-gradient-to-r from-flow-50 to-balance-50 rounded-lg border border-flow-200">
+                        <p className="text-sm text-flow-700 font-medium">
+                          💎 {feature.modelUpgrade || feature.proFeature || feature.premiumFeature}
+                        </p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );

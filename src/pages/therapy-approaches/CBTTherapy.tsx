@@ -32,31 +32,35 @@ const CBTTherapy = () => {
   const cbtFeatures = [
     {
       icon: Brain,
-      title: "Thought Pattern Analysis",
-      description: "AI identifies and helps restructure negative thought patterns with evidence-based CBT techniques.",
+      title: "AI Thought Pattern Analysis",
+      description: "Advanced AI identifies and helps restructure negative thought patterns with evidence-based CBT techniques.",
       details: ["Automatic thought tracking", "Cognitive distortion detection", "Pattern recognition", "Thought challenging exercises"],
-      tier: "Pro+"
+      tier: "All Users",
+      proFeature: "Pro users get advanced analytics powered by Claude 4 Opus for deeper cognitive insights"
     },
     {
       icon: Target,
       title: "Behavioral Intervention",
       description: "Structured behavioral experiments and homework assignments to create lasting change.",
       details: ["Behavioral activation", "Exposure therapy planning", "Activity scheduling", "Progress tracking"],
-      tier: "All Plans"
+      tier: "All Users",
+      premium: "Premium users get predictive behavioral modeling and family therapy coordination"
     },
     {
       icon: Lightbulb,
       title: "Cognitive Restructuring",
       description: "Learn to identify, challenge, and replace unhelpful thinking patterns with balanced thoughts.",
       details: ["Thought challenging worksheets", "Evidence examination", "Alternative perspective training", "Balanced thinking development"],
-      tier: "Pro+"
+      tier: "All Users",
+      upgrade: "Premium users enjoy Claude 4 Opus for more sophisticated cognitive restructuring and personalized interventions"
     },
     {
       icon: TrendingUp,
       title: "Progress Monitoring",
       description: "Track your CBT journey with detailed analytics and mood assessments.",
       details: ["Mood tracking integration", "Thought record analysis", "Behavioral goal monitoring", "Session outcome measurement"],
-      tier: "Premium"
+      tier: "All Users",
+      analytics: "Pro users get advanced progress analytics and predictive treatment outcome modeling"
     }
   ];
 
@@ -267,7 +271,7 @@ const CBTTherapy = () => {
                       <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg">
                         <IconComponent className="h-8 w-8 text-white" />
                       </div>
-                      <Badge className={`${feature.tier === 'All Plans' ? 'bg-gray-100 text-gray-700' : feature.tier === 'Premium' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white' : 'bg-blue-100 text-blue-700'}`}>
+                      <Badge className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
                         {feature.tier}
                       </Badge>
                     </div>
@@ -283,6 +287,13 @@ const CBTTherapy = () => {
                         </li>
                       ))}
                     </ul>
+                    {(feature.proFeature || feature.premium || feature.upgrade || feature.analytics) && (
+                      <div className="mt-4 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+                        <p className="text-sm text-blue-700 font-medium">
+                          🧠 {feature.upgrade || feature.proFeature || feature.premium || feature.analytics}
+                        </p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );

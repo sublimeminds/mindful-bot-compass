@@ -32,31 +32,35 @@ const DBTTherapy = () => {
   const dbtSkills = [
     {
       icon: Heart,
-      title: "Emotional Regulation",
-      description: "Learn to understand, experience, and manage emotions effectively without being overwhelmed.",
+      title: "AI-Powered Emotional Regulation",
+      description: "Learn to understand, experience, and manage emotions effectively with AI guidance.",
       details: ["Emotion identification", "Intensity management", "Emotion surfing", "Opposite action techniques"],
-      tier: "Pro+"
+      tier: "All Users",
+      proFeature: "Pro users get real-time emotion coaching and advanced regulation strategies"
     },
     {
       icon: Users,
       title: "Interpersonal Effectiveness",
       description: "Build healthy relationships while maintaining self-respect and achieving your goals.",
       details: ["DEAR MAN techniques", "Boundary setting", "Relationship skills", "Conflict resolution"],
-      tier: "All Plans"
+      tier: "All Users",
+      family: "Premium users get family DBT sessions and relationship coaching features"
     },
     {
       icon: Brain,
       title: "Distress Tolerance",
       description: "Survive crisis situations without making them worse through impulsive actions.",
       details: ["TIPP techniques", "Distraction methods", "Self-soothing strategies", "Crisis survival skills"],
-      tier: "Pro+"
+      tier: "All Users",
+      upgrade: "Premium users enjoy Claude 4 Opus for more personalized distress tolerance coaching"
     },
     {
       icon: Target,
-      title: "Mindfulness",
-      description: "Develop present-moment awareness and non-judgmental observation of thoughts and feelings.",
+      title: "Mindfulness Training",
+      description: "Develop present-moment awareness and non-judgmental observation with AI guidance.",
       details: ["Wise mind practice", "Observe and describe", "Non-judgmental stance", "One-mindfully focus"],
-      tier: "Premium"
+      tier: "All Users",
+      mindfulness: "Pro users get guided mindfulness sessions and advanced meditation analytics"
     }
   ];
 
@@ -256,7 +260,7 @@ const DBTTherapy = () => {
                       <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
                         <IconComponent className="h-8 w-8 text-white" />
                       </div>
-                      <Badge className={`${skill.tier === 'All Plans' ? 'bg-gray-100 text-gray-700' : skill.tier === 'Premium' ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white' : 'bg-green-100 text-green-700'}`}>
+                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
                         {skill.tier}
                       </Badge>
                     </div>
@@ -272,6 +276,13 @@ const DBTTherapy = () => {
                         </li>
                       ))}
                     </ul>
+                    {(skill.proFeature || skill.family || skill.upgrade || skill.mindfulness) && (
+                      <div className="mt-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                        <p className="text-sm text-green-700 font-medium">
+                          💚 {skill.upgrade || skill.proFeature || skill.family || skill.mindfulness}
+                        </p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );
