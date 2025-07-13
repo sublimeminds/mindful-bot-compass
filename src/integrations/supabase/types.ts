@@ -6045,6 +6045,48 @@ export type Database = {
           },
         ]
       }
+      session_key_moments: {
+        Row: {
+          content_summary: string
+          created_at: string
+          emotional_context: Json
+          id: string
+          importance_score: number
+          moment_type: string
+          session_id: string
+          tags: Json
+          timestamp_end: number
+          timestamp_start: number
+          user_id: string
+        }
+        Insert: {
+          content_summary: string
+          created_at?: string
+          emotional_context?: Json
+          id?: string
+          importance_score?: number
+          moment_type: string
+          session_id: string
+          tags?: Json
+          timestamp_end: number
+          timestamp_start: number
+          user_id: string
+        }
+        Update: {
+          content_summary?: string
+          created_at?: string
+          emotional_context?: Json
+          id?: string
+          importance_score?: number
+          moment_type?: string
+          session_id?: string
+          tags?: Json
+          timestamp_end?: number
+          timestamp_start?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       session_messages: {
         Row: {
           content: string
@@ -6149,6 +6191,48 @@ export type Database = {
         }
         Relationships: []
       }
+      session_summaries: {
+        Row: {
+          action_items: Json
+          created_at: string
+          effectiveness_score: number
+          executive_summary: string
+          goals_addressed: Json
+          id: string
+          key_takeaways: Json
+          mood_correlation: Json
+          session_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_items?: Json
+          created_at?: string
+          effectiveness_score?: number
+          executive_summary: string
+          goals_addressed?: Json
+          id?: string
+          key_takeaways?: Json
+          mood_correlation?: Json
+          session_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_items?: Json
+          created_at?: string
+          effectiveness_score?: number
+          executive_summary?: string
+          goals_addressed?: Json
+          id?: string
+          key_takeaways?: Json
+          mood_correlation?: Json
+          session_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       session_technique_tracking: {
         Row: {
           ai_confidence: number | null
@@ -6188,6 +6272,42 @@ export type Database = {
           user_feedback?: string | null
           user_id?: string
           user_response_score?: number | null
+        }
+        Relationships: []
+      }
+      session_transcripts: {
+        Row: {
+          confidence_scores: Json
+          created_at: string
+          id: string
+          processing_status: string
+          session_id: string
+          speaker_identification: Json
+          transcript_data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          confidence_scores?: Json
+          created_at?: string
+          id?: string
+          processing_status?: string
+          session_id: string
+          speaker_identification?: Json
+          transcript_data?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          confidence_scores?: Json
+          created_at?: string
+          id?: string
+          processing_status?: string
+          session_id?: string
+          speaker_identification?: Json
+          transcript_data?: Json
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
