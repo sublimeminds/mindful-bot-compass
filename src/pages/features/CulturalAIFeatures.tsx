@@ -48,7 +48,24 @@ const CulturalAIFeatures = () => {
     { language: 'Japanese', region: 'Japan', flag: '🇯🇵', speakers: '125M+', culturalNotes: 'Harmony, respect, indirect communication, mindfulness' },
     { language: 'German', region: 'Germany', flag: '🇩🇪', speakers: '95M+', culturalNotes: 'Precision, structure, work-life balance, systematic approaches' },
     { language: 'Korean', region: 'South Korea', flag: '🇰🇷', speakers: '75M+', culturalNotes: 'Respect for elders, academic pressure, social hierarchy' },
-    { language: 'Italian', region: 'Italy', flag: '🇮🇹', speakers: '65M+', culturalNotes: 'Family bonds, emotional expression, lifestyle balance' }
+    { language: 'Italian', region: 'Italy', flag: '🇮🇹', speakers: '65M+', culturalNotes: 'Family bonds, emotional expression, lifestyle balance' },
+    { language: 'Dutch', region: 'Netherlands', flag: '🇳🇱', speakers: '24M+', culturalNotes: 'Direct communication, work-life balance, egalitarian values' },
+    { language: 'Swedish', region: 'Sweden', flag: '🇸🇪', speakers: '10M+', culturalNotes: 'Consensus-building, emotional restraint, nature connection' },
+    { language: 'Norwegian', region: 'Norway', flag: '🇳🇴', speakers: '5M+', culturalNotes: 'Egalitarian values, outdoor therapy integration, community support' },
+    { language: 'Finnish', region: 'Finland', flag: '🇫🇮', speakers: '5M+', culturalNotes: 'Resilience focus, silence appreciation, nature-based healing' },
+    { language: 'Polish', region: 'Poland', flag: '🇵🇱', speakers: '45M+', culturalNotes: 'Strong family bonds, religious integration, historical resilience' },
+    { language: 'Turkish', region: 'Turkey', flag: '🇹🇷', speakers: '80M+', culturalNotes: 'Respect for elders, family honor, hospitality values' },
+    { language: 'Hebrew', region: 'Israel', flag: '🇮🇱', speakers: '9M+', culturalNotes: 'Community strength, historical trauma awareness, resilience' },
+    { language: 'Thai', region: 'Thailand', flag: '🇹🇭', speakers: '69M+', culturalNotes: 'Buddhist mindfulness, respect for hierarchy, emotional harmony' },
+    { language: 'Vietnamese', region: 'Vietnam', flag: '🇻🇳', speakers: '76M+', culturalNotes: 'Family collective, ancestral respect, perseverance values' },
+    { language: 'Indonesian', region: 'Indonesia', flag: '🇮🇩', speakers: '230M+', culturalNotes: 'Religious diversity, community harmony, gentle communication' },
+    { language: 'Tagalog', region: 'Philippines', flag: '🇵🇭', speakers: '45M+', culturalNotes: 'Family orientation, emotional expression, community support' },
+    { language: 'Swahili', region: 'East Africa', flag: '🇰🇪', speakers: '16M+', culturalNotes: 'Ubuntu philosophy, community healing, storytelling tradition' },
+    { language: 'Amharic', region: 'Ethiopia', flag: '🇪🇹', speakers: '32M+', culturalNotes: 'Ancient wisdom, spiritual integration, community guidance' },
+    { language: 'Yoruba', region: 'West Africa', flag: '🇳🇬', speakers: '45M+', culturalNotes: 'Ancestral wisdom, spiritual healing, community rituals' },
+    { language: 'Bengali', region: 'Bangladesh', flag: '🇧🇩', speakers: '300M+', culturalNotes: 'Emotional expressiveness, poetry therapy, family connections' },
+    { language: 'Urdu', region: 'Pakistan', flag: '🇵🇰', speakers: '170M+', culturalNotes: 'Respectful communication, spiritual values, family integration' },
+    { language: 'Persian', region: 'Iran', flag: '🇮🇷', speakers: '110M+', culturalNotes: 'Poetry tradition, philosophical discourse, beauty appreciation' }
   ];
 
   const culturalAdaptations = [
@@ -167,43 +184,30 @@ const CulturalAIFeatures = () => {
     }
   ];
 
-  const tierFeatures = [
+  const culturalIntegration = [
     {
-      tier: 'Free',
-      features: [
-        '3 languages supported',
-        'Basic cultural adaptation',
-        '5 sessions per month',
-        'General therapeutic approaches'
-      ],
-      icon: '🌱',
-      price: '$0'
+      title: 'Voice Technology Integration',
+      description: 'Cultural AI enhances voice therapy with accent-aware recognition and culturally appropriate communication styles.',
+      features: ['29-language voice support', 'Cultural tone adaptation', 'Regional accent recognition', 'Culturally sensitive responses'],
+      icon: '🎙️'
     },
     {
-      tier: 'Pro',
-      features: [
-        '15 languages supported',
-        'Advanced cultural AI',
-        'Unlimited sessions',
-        'Regional dialect support',
-        'Cultural celebration integration'
-      ],
-      icon: '🌟',
-      price: '$29',
-      popular: true
+      title: 'Family Therapy Features',
+      description: 'Adaptive cultural frameworks that respect different family structures and communication patterns.',
+      features: ['Multi-generational dynamics', 'Cultural conflict resolution', 'Family honor considerations', 'Collective decision-making'],
+      icon: '👨‍👩‍👧‍👦'
     },
     {
-      tier: 'Premium',
-      features: [
-        '29 languages supported',
-        'Deep cultural analysis',
-        'Family therapy support',
-        'Cultural trauma expertise',
-        'Traditional healing integration',
-        'Cultural competency reports'
-      ],
-      icon: '👑',
-      price: '$79'
+      title: 'Crisis Support Adaptation',
+      description: 'Crisis intervention that understands cultural approaches to mental health and community support systems.',
+      features: ['Cultural crisis protocols', 'Community resource integration', 'Religious leader coordination', 'Cultural stigma awareness'],
+      icon: '🆘'
+    },
+    {
+      title: 'Adaptive Therapy Plans',
+      description: 'AI therapy plans automatically adjust based on cultural background and communication preferences.',
+      features: ['Cultural therapy matching', 'Adaptive communication styles', 'Traditional healing integration', 'Cultural celebration timing'],
+      icon: '🧠'
     }
   ];
 
@@ -276,58 +280,50 @@ const CulturalAIFeatures = () => {
                 <div className="text-muted-foreground font-medium">Cultural Frameworks</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold bg-gradient-to-r from-flow-600 to-balance-600 bg-clip-text text-transparent mb-2">96%</div>
-                <div className="text-muted-foreground font-medium">Cultural Accuracy</div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-flow-600 to-balance-600 bg-clip-text text-transparent mb-2">24/7</div>
+                <div className="text-muted-foreground font-medium">Cultural Support</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Subscription Tiers with Cultural Features */}
+      {/* Cultural AI Integration with Therapy Features */}
       <section className="py-20 bg-white/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
               <span className="bg-gradient-to-r from-balance-600 to-flow-600 bg-clip-text text-transparent">
-                Cultural AI Plans
+                Integrated Cultural Intelligence
               </span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Choose the level of cultural understanding and support that matches your needs.
+              Cultural AI seamlessly enhances every aspect of your therapy experience, available to all users.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {tierFeatures.map((tier, index) => (
-              <Card key={index} className={`hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-lg ${tier.popular ? 'ring-2 ring-balance-400' : ''}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {culturalIntegration.map((integration, index) => (
+              <Card key={index} className="hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader>
-                  <div className="text-center">
-                    <div className="text-4xl mb-4">{tier.icon}</div>
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <h3 className="text-xl font-bold">{tier.tier}</h3>
-                      {tier.popular && <Badge className="bg-gradient-to-r from-balance-500 to-flow-500 text-white">Popular</Badge>}
-                    </div>
-                    <div className="text-3xl font-bold bg-gradient-to-r from-balance-600 to-flow-600 bg-clip-text text-transparent">
-                      {tier.price}<span className="text-base text-muted-foreground">/month</span>
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="text-4xl">{integration.icon}</div>
+                    <div>
+                      <h3 className="text-xl font-bold">{integration.title}</h3>
+                      <Badge className="bg-balance-100 text-balance-700 mt-1">Available to All Users</Badge>
                     </div>
                   </div>
+                  <p className="text-muted-foreground text-lg leading-relaxed">{integration.description}</p>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
-                    {tier.features.map((feature, featureIndex) => (
+                    {integration.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center space-x-3">
                         <CheckCircle className="h-4 w-4 text-balance-500 flex-shrink-0" />
                         <span className="text-sm text-muted-foreground">{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <Button 
-                    className={`w-full mt-6 ${tier.popular ? 'bg-gradient-to-r from-balance-600 to-flow-600 text-white hover:from-balance-700 hover:to-flow-700' : 'variant-outline border-balance-300 text-balance-700 hover:bg-balance-50'}`}
-                    onClick={() => navigate('/pricing')}
-                  >
-                    {tier.tier === 'Free' ? 'Get Started' : `Upgrade to ${tier.tier}`}
-                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -350,7 +346,7 @@ const CulturalAIFeatures = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {languageSupport.slice(0, 12).map((lang, index) => (
+            {languageSupport.map((lang, index) => (
               <Card key={index} className="hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-lg">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4 mb-4">
