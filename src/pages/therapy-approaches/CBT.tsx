@@ -8,13 +8,13 @@ import { Brain, Target, ArrowRight, CheckCircle, Star, Lightbulb, Activity, Tren
 const CBTPage = () => {
   return (
     <PageLayout>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-background to-primary/10">
+      <div className="min-h-screen bg-gradient-to-br from-calm-50 via-background to-calm-100/30">
         {/* Hero Section */}
-        <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-cyan-500/20"></div>
+        <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-calm-600 via-calm-500 to-calm-700 text-white overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-calm-600/20 to-calm-700/20"></div>
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center">
-              <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto mb-8 animate-pulse">
+              <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-calm-glow">
                 <Brain className="h-12 w-12 text-white" />
               </div>
               <Badge variant="secondary" className="mb-6 bg-white/20 text-white border-white/30 backdrop-blur-sm">
@@ -22,17 +22,17 @@ const CBTPage = () => {
               </Badge>
               <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
                 Cognitive Behavioral
-                <span className="block bg-gradient-to-r from-cyan-200 to-blue-200 bg-clip-text text-transparent">
+                <span className="block bg-gradient-to-r from-calm-200 to-calm-100 bg-clip-text text-transparent">
                   Therapy (CBT)
                 </span>
               </h1>
-              <p className="text-xl text-blue-100 max-w-4xl mx-auto mb-12 leading-relaxed">
+              <p className="text-xl text-calm-100 max-w-4xl mx-auto mb-12 leading-relaxed">
                 Transform negative thinking patterns and behaviors with our AI-powered CBT approach. 
                 Evidence-based techniques adapted to your unique needs, learning style, and personal goals 
                 through advanced therapeutic intelligence.
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 shadow-xl border-0 h-14 px-8 text-lg font-semibold">
+                <Button size="lg" className="bg-white text-calm-600 hover:bg-calm-50 shadow-xl border-0 h-14 px-8 text-lg font-semibold">
                   Start CBT Journey <ArrowRight className="ml-3 h-6 w-6" />
                 </Button>
                 <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 h-14 px-8 text-lg">
@@ -41,19 +41,19 @@ const CBTPage = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
-                  <Users className="h-8 w-8 text-cyan-200 mx-auto mb-3" />
+                  <Users className="h-8 w-8 text-calm-200 mx-auto mb-3" />
                   <h3 className="font-semibold text-lg mb-2">2M+ Users</h3>
-                  <p className="text-blue-100 text-sm">Successfully transformed their lives</p>
+                  <p className="text-calm-100 text-sm">Successfully transformed their lives</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
-                  <Star className="h-8 w-8 text-cyan-200 mx-auto mb-3" />
+                  <Star className="h-8 w-8 text-calm-200 mx-auto mb-3" />
                   <h3 className="font-semibold text-lg mb-2">94% Success Rate</h3>
-                  <p className="text-blue-100 text-sm">Clinically proven effectiveness</p>
+                  <p className="text-calm-100 text-sm">Clinically proven effectiveness</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
-                  <Timer className="h-8 w-8 text-cyan-200 mx-auto mb-3" />
+                  <Timer className="h-8 w-8 text-calm-200 mx-auto mb-3" />
                   <h3 className="font-semibold text-lg mb-2">6-12 Weeks</h3>
-                  <p className="text-blue-100 text-sm">Average treatment duration</p>
+                  <p className="text-calm-100 text-sm">Average treatment duration</p>
                 </div>
               </div>
             </div>

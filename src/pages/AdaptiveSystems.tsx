@@ -7,18 +7,18 @@ import { Zap, Brain, Target, ArrowRight, CheckCircle, Star, TrendingUp, Activity
 const AdaptiveSystemsPage = () => {
   return (
     <PageLayout>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background/80 to-primary/5">
+        <div className="min-h-screen bg-gradient-to-br from-background via-background/80 to-therapy-50/30">
         {/* Hero Section */}
         <section className="relative py-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-gradient-to-r from-therapy-500 to-therapy-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-therapy-glow">
                 <Zap className="h-10 w-10 text-white" />
               </div>
-              <Badge variant="secondary" className="mb-4 bg-indigo-100 text-indigo-700 border-indigo-200">
+              <Badge variant="secondary" className="mb-4 bg-therapy-100 text-therapy-700 border-therapy-200">
                 Advanced AI Technology
               </Badge>
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-500 bg-clip-text text-transparent mb-6">
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-therapy-600 via-therapy-500 to-therapy-700 bg-clip-text text-transparent mb-6">
                 Adaptive AI Systems
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
@@ -27,7 +27,7 @@ const AdaptiveSystemsPage = () => {
                 progress and responses.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700">
+                <Button size="lg" className="bg-therapy-600 hover:bg-therapy-700 shadow-therapy-glow">
                   Experience Adaptive AI <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button size="lg" variant="outline">
@@ -56,40 +56,40 @@ const AdaptiveSystemsPage = () => {
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-indigo-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-therapy-600 flex-shrink-0" />
                     <span>Continuous learning from your unique patterns</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-indigo-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-therapy-600 flex-shrink-0" />
                     <span>Real-time adaptation to your emotional state</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-indigo-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-therapy-600 flex-shrink-0" />
                     <span>Predictive insights for proactive support</span>
                   </div>
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-8 rounded-2xl">
-                <h3 className="text-xl font-semibold mb-4">Adaptive AI Capabilities</h3>
+              <div className="bg-gradient-to-br from-therapy-50 to-therapy-100 p-8 rounded-2xl border border-therapy-200">
+                <h3 className="text-xl font-semibold mb-4 text-therapy-800">Adaptive AI Capabilities</h3>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <Brain className="h-6 w-6 text-indigo-600 flex-shrink-0 mt-1" />
+                    <Brain className="h-6 w-6 text-therapy-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Pattern Recognition</h4>
+                      <h4 className="font-medium text-therapy-700">Pattern Recognition</h4>
                       <p className="text-sm text-muted-foreground">Identifies your unique therapeutic needs</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Target className="h-6 w-6 text-indigo-600 flex-shrink-0 mt-1" />
+                    <Target className="h-6 w-6 text-therapy-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Dynamic Personalization</h4>
+                      <h4 className="font-medium text-therapy-700">Dynamic Personalization</h4>
                       <p className="text-sm text-muted-foreground">Adjusts approach in real-time</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <TrendingUp className="h-6 w-6 text-indigo-600 flex-shrink-0 mt-1" />
+                    <TrendingUp className="h-6 w-6 text-therapy-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Predictive Optimization</h4>
+                      <h4 className="font-medium text-therapy-700">Predictive Optimization</h4>
                       <p className="text-sm text-muted-foreground">Anticipates your therapeutic needs</p>
                     </div>
                   </div>

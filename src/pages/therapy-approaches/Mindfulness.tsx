@@ -7,18 +7,18 @@ import { Lightbulb, Heart, ArrowRight, CheckCircle, Star, Compass, Sun, Waves } 
 const MindfulnessPage = () => {
   return (
     <PageLayout>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background/80 to-primary/5">
+      <div className="min-h-screen bg-gradient-to-br from-harmony-50 via-background/80 to-harmony-100/30">
         {/* Hero Section */}
         <section className="relative py-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-gradient-to-r from-harmony-500 to-harmony-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <Lightbulb className="h-10 w-10 text-white" />
               </div>
-              <Badge variant="secondary" className="mb-4 bg-purple-100 text-purple-700 border-purple-200">
+              <Badge variant="secondary" className="mb-4 bg-harmony-100 text-harmony-700 border-harmony-200">
                 Present-Moment Awareness
               </Badge>
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-6">
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-harmony-600 via-harmony-500 to-harmony-700 bg-clip-text text-transparent mb-6">
                 Mindfulness-Based Therapy
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
@@ -26,7 +26,7 @@ const MindfulnessPage = () => {
                 Reduce stress, increase emotional balance, and discover lasting well-being through ancient wisdom and modern science.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
+                <Button size="lg" className="bg-harmony-600 hover:bg-harmony-700 shadow-lg">
                   Begin Mindfulness Journey <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button size="lg" variant="outline">
@@ -54,40 +54,40 @@ const MindfulnessPage = () => {
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-purple-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-harmony-600 flex-shrink-0" />
                     <span>Reduces stress and anxiety naturally</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-purple-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-harmony-600 flex-shrink-0" />
                     <span>Improves emotional regulation and resilience</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-purple-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-harmony-600 flex-shrink-0" />
                     <span>Enhances focus and mental clarity</span>
                   </div>
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-2xl">
-                <h3 className="text-xl font-semibold mb-4">Core Mindfulness Principles</h3>
+              <div className="bg-gradient-to-br from-harmony-50 to-harmony-100 p-8 rounded-2xl border border-harmony-200">
+                <h3 className="text-xl font-semibold mb-4 text-harmony-800">Core Mindfulness Principles</h3>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <Compass className="h-6 w-6 text-purple-600 flex-shrink-0 mt-1" />
+                    <Compass className="h-6 w-6 text-harmony-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Present-Moment Awareness</h4>
+                      <h4 className="font-medium text-harmony-700">Present-Moment Awareness</h4>
                       <p className="text-sm text-muted-foreground">Focus attention on the here and now</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Heart className="h-6 w-6 text-purple-600 flex-shrink-0 mt-1" />
+                    <Heart className="h-6 w-6 text-harmony-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Non-Judgmental Acceptance</h4>
+                      <h4 className="font-medium text-harmony-700">Non-Judgmental Acceptance</h4>
                       <p className="text-sm text-muted-foreground">Observe without criticism or evaluation</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Waves className="h-6 w-6 text-purple-600 flex-shrink-0 mt-1" />
+                    <Waves className="h-6 w-6 text-harmony-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Gentle Curiosity</h4>
+                      <h4 className="font-medium text-harmony-700">Gentle Curiosity</h4>
                       <p className="text-sm text-muted-foreground">Approach experiences with openness</p>
                     </div>
                   </div>

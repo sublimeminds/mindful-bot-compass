@@ -7,18 +7,18 @@ import { Shield, Heart, ArrowRight, CheckCircle, Star, Lock, Compass, Users } fr
 const TraumaPage = () => {
   return (
     <PageLayout>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background/80 to-primary/5">
+      <div className="min-h-screen bg-gradient-to-br from-flow-50 via-background/80 to-flow-100/30">
         {/* Hero Section */}
         <section className="relative py-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-gradient-to-r from-flow-500 to-flow-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-orange-glow">
                 <Shield className="h-10 w-10 text-white" />
               </div>
-              <Badge variant="secondary" className="mb-4 bg-orange-100 text-orange-700 border-orange-200">
+              <Badge variant="secondary" className="mb-4 bg-flow-100 text-flow-700 border-flow-200">
                 Specialized Trauma Care
               </Badge>
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-orange-600 via-orange-500 to-red-500 bg-clip-text text-transparent mb-6">
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-flow-600 via-flow-500 to-flow-700 bg-clip-text text-transparent mb-6">
                 Trauma-Focused Therapy
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
@@ -26,7 +26,7 @@ const TraumaPage = () => {
                 Our specialized AI approach provides safe, personalized healing support for your unique journey.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-orange-600 hover:bg-orange-700">
+                <Button size="lg" className="bg-flow-600 hover:bg-flow-700 shadow-orange-glow">
                   Begin Trauma Therapy <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button size="lg" variant="outline">
@@ -54,40 +54,40 @@ const TraumaPage = () => {
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-orange-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-flow-600 flex-shrink-0" />
                     <span>Trauma-informed and culturally sensitive approach</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-orange-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-flow-600 flex-shrink-0" />
                     <span>Safety-first therapeutic environment</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-orange-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-flow-600 flex-shrink-0" />
                     <span>Personalized healing at your own pace</span>
                   </div>
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-orange-50 to-red-50 p-8 rounded-2xl">
-                <h3 className="text-xl font-semibold mb-4">Trauma-Informed Principles</h3>
+              <div className="bg-gradient-to-br from-flow-50 to-flow-100 p-8 rounded-2xl border border-flow-200">
+                <h3 className="text-xl font-semibold mb-4 text-flow-800">Trauma-Informed Principles</h3>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <Shield className="h-6 w-6 text-orange-600 flex-shrink-0 mt-1" />
+                    <Shield className="h-6 w-6 text-flow-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Safety First</h4>
+                      <h4 className="font-medium text-flow-700">Safety First</h4>
                       <p className="text-sm text-muted-foreground">Physical and emotional safety are prioritized</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Lock className="h-6 w-6 text-orange-600 flex-shrink-0 mt-1" />
+                    <Lock className="h-6 w-6 text-flow-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Choice & Control</h4>
+                      <h4 className="font-medium text-flow-700">Choice & Control</h4>
                       <p className="text-sm text-muted-foreground">You maintain control over your healing journey</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Heart className="h-6 w-6 text-orange-600 flex-shrink-0 mt-1" />
+                    <Heart className="h-6 w-6 text-flow-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Compassionate Care</h4>
+                      <h4 className="font-medium text-flow-700">Compassionate Care</h4>
                       <p className="text-sm text-muted-foreground">Non-judgmental, empathetic support</p>
                     </div>
                   </div>

@@ -7,18 +7,18 @@ import { Heart, Users, ArrowRight, CheckCircle, Star, Shield, Activity, Target }
 const DBTPage = () => {
   return (
     <PageLayout>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background/80 to-primary/5">
+      <div className="min-h-screen bg-gradient-to-br from-balance-50 via-background/80 to-balance-100/30">
         {/* Hero Section */}
         <section className="relative py-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-gradient-to-r from-balance-500 to-balance-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <Heart className="h-10 w-10 text-white" />
               </div>
-              <Badge variant="secondary" className="mb-4 bg-green-100 text-green-700 border-green-200">
+              <Badge variant="secondary" className="mb-4 bg-balance-100 text-balance-700 border-balance-200">
                 Skills-Based Therapy
               </Badge>
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-green-600 via-green-500 to-emerald-500 bg-clip-text text-transparent mb-6">
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-balance-600 via-balance-500 to-balance-700 bg-clip-text text-transparent mb-6">
                 Dialectical Behavior Therapy (DBT)
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
@@ -26,7 +26,7 @@ const DBTPage = () => {
                 Learn essential life skills for managing intense emotions and building meaningful relationships.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-green-600 hover:bg-green-700">
+                <Button size="lg" className="bg-balance-600 hover:bg-balance-700 shadow-lg">
                   Start DBT Skills Training <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button size="lg" variant="outline">
@@ -54,40 +54,40 @@ const DBTPage = () => {
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-balance-600 flex-shrink-0" />
                     <span>Proven effective for emotional dysregulation</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-balance-600 flex-shrink-0" />
                     <span>Practical skills for daily life situations</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-balance-600 flex-shrink-0" />
                     <span>Focus on building interpersonal effectiveness</span>
                   </div>
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-2xl">
-                <h3 className="text-xl font-semibold mb-4">DBT Core Principles</h3>
+              <div className="bg-gradient-to-br from-balance-50 to-balance-100 p-8 rounded-2xl border border-balance-200">
+                <h3 className="text-xl font-semibold mb-4 text-balance-800">DBT Core Principles</h3>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <Heart className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
+                    <Heart className="h-6 w-6 text-balance-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Radical Acceptance</h4>
+                      <h4 className="font-medium text-balance-700">Radical Acceptance</h4>
                       <p className="text-sm text-muted-foreground">Accept reality while working toward change</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Users className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
+                    <Users className="h-6 w-6 text-balance-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Interpersonal Balance</h4>
+                      <h4 className="font-medium text-balance-700">Interpersonal Balance</h4>
                       <p className="text-sm text-muted-foreground">Maintain relationships while honoring your needs</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Shield className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
+                    <Shield className="h-6 w-6 text-balance-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h4 className="font-medium">Emotional Regulation</h4>
+                      <h4 className="font-medium text-balance-700">Emotional Regulation</h4>
                       <p className="text-sm text-muted-foreground">Manage intense emotions effectively</p>
                     </div>
                   </div>
