@@ -27,6 +27,7 @@ import EnhancedNotificationWidget from './widgets/EnhancedNotificationWidget';
 import DailyGoalsWidget from './widgets/DailyGoalsWidget';
 import StreakTrackerWidget from './widgets/StreakTrackerWidget';
 import MindfulnessWidget from './widgets/MindfulnessWidget';
+import TranscriptionInsightsWidget from './widgets/TranscriptionInsightsWidget';
 import { cn } from '@/lib/utils';
 
 const WIDGET_COMPONENTS = {
@@ -51,6 +52,7 @@ const WIDGET_COMPONENTS = {
   DailyGoalsWidget,
   StreakTrackerWidget,
   MindfulnessWidget,
+  TranscriptionInsightsWidget,
   // Placeholder components for new widgets
   AnalyticsOverviewWidget: () => <div className="p-4 text-center text-muted-foreground">Analytics Overview - Coming Soon</div>,
 };
@@ -75,7 +77,7 @@ const DASHBOARD_VIEWS = {
     name: 'Analytics',
     icon: BarChart3,
     description: 'Data & insights',
-    widgets: ['progress-overview', 'session-history', 'ai-insights', 'compliance-status', 'analytics-overview']
+    widgets: ['progress-overview', 'session-history', 'ai-insights', 'transcription-insights', 'compliance-status', 'analytics-overview']
   },
   wellness: {
     name: 'Wellness',

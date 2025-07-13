@@ -13,6 +13,7 @@ import WelcomeWidget from './widgets/WelcomeWidget';
 import QuickActionsWidget from './widgets/QuickActionsWidget';
 import RecentActivityWidget from './widgets/RecentActivityWidget';
 import ProgressOverviewWidget from './widgets/ProgressOverviewWidget';
+import TranscriptionInsightsWidget from './widgets/TranscriptionInsightsWidget';
 
 interface BulletproofDashboardLayoutProps {
   children?: React.ReactNode;

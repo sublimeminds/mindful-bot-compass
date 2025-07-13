@@ -147,6 +147,18 @@ export const WIDGET_REGISTRY: WidgetConfig[] = [
     component: 'SmartRecommendationsWidget'
   },
   {
+    id: 'transcription-insights',
+    name: 'Session Insights',
+    description: 'AI-generated insights from your therapy sessions',
+    category: 'ai-features',
+    icon: MessageSquare,
+    defaultSize: 'medium',
+    minSize: 'small',
+    maxSize: 'large',
+    isResizable: true,
+    component: 'TranscriptionInsightsWidget'
+  },
+  {
     id: 'therapist-avatar',
     name: 'Therapist Avatar',
     description: 'Your AI therapist companion',
