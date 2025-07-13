@@ -12,10 +12,10 @@ const OrganizationSolutions = () => {
         <section className="relative py-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center">
-              <Badge variant="secondary" className="mb-4 bg-primary/10 text-primary border-primary/20">
+              <Badge variant="secondary" className="mb-4 bg-flow-100 text-flow-700 border-flow-200">
                 Enterprise Employee Wellness
               </Badge>
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-secondary bg-clip-text text-transparent mb-6">
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-flow-600 via-flow-500 to-balance-600 bg-clip-text text-transparent mb-6">
                 Transform Workplace Mental Health
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
@@ -23,7 +23,7 @@ const OrganizationSolutions = () => {
                 and deliver measurable ROI for organizations of all sizes.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
+                <Button size="lg" className="bg-flow-600 hover:bg-flow-700 text-white shadow-flow-glow/30">
                   Request Enterprise Demo <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button size="lg" variant="outline">
@@ -38,22 +38,22 @@ const OrganizationSolutions = () => {
         <section className="py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <TrendingUp className="h-12 w-12 text-primary mx-auto mb-4" />
+              <div className="text-center p-6 bg-card rounded-xl border shadow-flow-glow/20">
+                <TrendingUp className="h-12 w-12 text-flow-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-3">Measurable ROI</h3>
                 <p className="text-muted-foreground">
                   Average 3.2x ROI with reduced absenteeism, lower turnover, and increased productivity.
                 </p>
               </div>
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <Users className="h-12 w-12 text-primary mx-auto mb-4" />
+              <div className="text-center p-6 bg-card rounded-xl border shadow-flow-glow/20">
+                <Users className="h-12 w-12 text-flow-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-3">Scalable Deployment</h3>
                 <p className="text-muted-foreground">
                   From 50 to 50,000+ employees with white-label options and custom integrations.
                 </p>
               </div>
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <Shield className="h-12 w-12 text-primary mx-auto mb-4" />
+              <div className="text-center p-6 bg-card rounded-xl border shadow-flow-glow/20">
+                <Shield className="h-12 w-12 text-flow-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-3">Enterprise Security</h3>
                 <p className="text-muted-foreground">
                   SOC 2 Type II compliance with advanced encryption and audit controls.
@@ -73,24 +73,24 @@ const OrganizationSolutions = () => {
               </p>
             </div>
             
-            <div className="grid md:grid-cols-4 gap-8">
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <div className="text-3xl font-bold text-primary mb-2">42%</div>
-                <p className="text-muted-foreground">Reduction in sick days</p>
+              <div className="grid md:grid-cols-4 gap-8">
+                <div className="text-center p-6 bg-card rounded-xl border shadow-flow-glow/20">
+                  <div className="text-3xl font-bold text-flow-600 mb-2">42%</div>
+                  <p className="text-muted-foreground">Reduction in sick days</p>
+                </div>
+                <div className="text-center p-6 bg-card rounded-xl border shadow-flow-glow/20">
+                  <div className="text-3xl font-bold text-flow-600 mb-2">38%</div>
+                  <p className="text-muted-foreground">Lower employee turnover</p>
+                </div>
+                <div className="text-center p-6 bg-card rounded-xl border shadow-flow-glow/20">
+                  <div className="text-3xl font-bold text-flow-600 mb-2">$2.4M</div>
+                  <p className="text-muted-foreground">Average annual savings</p>
+                </div>
+                <div className="text-center p-6 bg-card rounded-xl border shadow-flow-glow/20">
+                  <div className="text-3xl font-bold text-flow-600 mb-2">95%</div>
+                  <p className="text-muted-foreground">Employee satisfaction</p>
+                </div>
               </div>
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <div className="text-3xl font-bold text-primary mb-2">38%</div>
-                <p className="text-muted-foreground">Lower employee turnover</p>
-              </div>
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <div className="text-3xl font-bold text-primary mb-2">$2.4M</div>
-                <p className="text-muted-foreground">Average annual savings</p>
-              </div>
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <div className="text-3xl font-bold text-primary mb-2">95%</div>
-                <p className="text-muted-foreground">Employee satisfaction</p>
-              </div>
-            </div>
           </div>
         </section>
 

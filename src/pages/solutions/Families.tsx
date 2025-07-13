@@ -38,7 +38,7 @@ const FamilySolutions = () => {
         <section className="py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4 bg-blue-100 text-blue-700 border-blue-200">
+              <Badge variant="secondary" className="mb-4 bg-harmony-100 text-harmony-700 border-harmony-200">
                 Family Features
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Complete Family Mental Health Platform</h2>
@@ -48,22 +48,22 @@ const FamilySolutions = () => {
             </div>
             
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <Users className="h-12 w-12 text-primary mx-auto mb-4" />
+              <div className="text-center p-6 bg-card rounded-xl border shadow-harmony-glow/20">
+                <Users className="h-12 w-12 text-harmony-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-3">Family Accounts</h3>
                 <p className="text-muted-foreground">
                   Shared family accounts with individual profiles, privacy controls, and coordinated care plans for all family members.
                 </p>
               </div>
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <Shield className="h-12 w-12 text-primary mx-auto mb-4" />
+              <div className="text-center p-6 bg-card rounded-xl border shadow-harmony-glow/20">
+                <Shield className="h-12 w-12 text-harmony-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-3">Parental Controls</h3>
                 <p className="text-muted-foreground">
                   Age-appropriate content, session monitoring, and safety controls to ensure a secure environment for children and teens.
                 </p>
               </div>
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <Heart className="h-12 w-12 text-primary mx-auto mb-4" />
+              <div className="text-center p-6 bg-card rounded-xl border shadow-harmony-glow/20">
+                <Heart className="h-12 w-12 text-harmony-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-3">Family Therapy Sessions</h3>
                 <p className="text-muted-foreground">
                   Dedicated family therapy sessions that bring everyone together to work on shared goals and improve communication.
@@ -77,7 +77,7 @@ const FamilySolutions = () => {
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4 bg-green-100 text-green-700 border-green-200">
+              <Badge variant="secondary" className="mb-4 bg-balance-100 text-balance-700 border-balance-200">
                 Family Pricing
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Flexible Plans for Every Family</h2>
@@ -112,8 +112,8 @@ const FamilySolutions = () => {
                 <Button className="w-full">Choose Plan</Button>
               </div>
               
-              <div className="bg-primary text-primary-foreground p-8 rounded-xl border relative">
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-secondary text-secondary-foreground">Most Popular</Badge>
+              <div className="bg-harmony-600 text-white p-8 rounded-xl border relative shadow-harmony-glow">
+                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-balance-600 text-white">Most Popular</Badge>
                 <h3 className="text-2xl font-bold mb-4">Family Pro</h3>
                 <div className="text-4xl font-bold mb-4">$89<span className="text-lg opacity-70">/month</span></div>
                 <p className="opacity-80 mb-6">Best for growing families (up to 6 members)</p>
@@ -135,7 +135,7 @@ const FamilySolutions = () => {
                     <span>Priority support</span>
                   </li>
                 </ul>
-                <Button variant="secondary" className="w-full">Choose Plan</Button>
+                <Button variant="secondary" className="w-full bg-white text-harmony-700 hover:bg-harmony-50">Choose Plan</Button>
               </div>
               
               <div className="bg-card p-8 rounded-xl border">

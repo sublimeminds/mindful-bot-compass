@@ -12,10 +12,10 @@ const ProviderSolutions = () => {
         <section className="relative py-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center">
-              <Badge variant="secondary" className="mb-4 bg-primary/10 text-primary border-primary/20">
+              <Badge variant="secondary" className="mb-4 bg-balance-100 text-balance-700 border-balance-200">
                 Healthcare Provider Solutions
               </Badge>
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-secondary bg-clip-text text-transparent mb-6">
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-balance-600 via-balance-500 to-therapy-600 bg-clip-text text-transparent mb-6">
                 Transform Patient Care with AI
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
@@ -23,7 +23,7 @@ const ProviderSolutions = () => {
                 and integrate seamlessly with existing practice management systems.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
+                <Button size="lg" className="bg-balance-600 hover:bg-balance-700 text-white shadow-balance-glow/30">
                   Request Demo <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button size="lg" variant="outline">
@@ -38,22 +38,22 @@ const ProviderSolutions = () => {
         <section className="py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <Stethoscope className="h-12 w-12 text-primary mx-auto mb-4" />
+              <div className="text-center p-6 bg-card rounded-xl border shadow-balance-glow/20">
+                <Stethoscope className="h-12 w-12 text-balance-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-3">Clinical Integration</h3>
                 <p className="text-muted-foreground">
                   Seamlessly integrate with EMR systems, practice management software, and clinical workflows.
                 </p>
               </div>
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <BarChart3 className="h-12 w-12 text-primary mx-auto mb-4" />
+              <div className="text-center p-6 bg-card rounded-xl border shadow-balance-glow/20">
+                <BarChart3 className="h-12 w-12 text-balance-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-3">Advanced Analytics</h3>
                 <p className="text-muted-foreground">
                   Real-time patient insights, outcome predictions, and evidence-based treatment recommendations.
                 </p>
               </div>
-              <div className="text-center p-6 bg-card rounded-xl border">
-                <Shield className="h-12 w-12 text-primary mx-auto mb-4" />
+              <div className="text-center p-6 bg-card rounded-xl border shadow-balance-glow/20">
+                <Shield className="h-12 w-12 text-balance-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-3">HIPAA Compliance</h3>
                 <p className="text-muted-foreground">
                   Bank-level security with full HIPAA compliance and enterprise-grade data protection.
