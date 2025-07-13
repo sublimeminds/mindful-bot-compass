@@ -243,13 +243,13 @@ const EnhancedHeader = () => {
           </Link>
 
           {/* Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
+            <nav className="hidden md:flex items-center space-x-6">
             {/* AI Features Dropdown */}
             <div className="relative group">
-              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
-                <Brain className="h-4 w-4 text-therapy-500" />
-                <span>AI</span>
-                <ChevronDown className="h-4 w-4" />
+              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900">
+                <Brain className="h-5 w-5 text-therapy-500" />
+                <span className="text-gray-900">AI</span>
+                <ChevronDown className="h-4 w-4 text-gray-600" />
               </Button>
               <div className="absolute top-full left-0 w-[520px] p-5 bg-white/95 backdrop-blur-md shadow-xl border border-gray-100 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <div className="text-lg font-semibold mb-4 flex items-center">
@@ -286,10 +286,10 @@ const EnhancedHeader = () => {
 
             {/* Platform Dropdown */}
             <div className="relative group">
-              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
-                <Settings className="h-4 w-4 text-therapy-500" />
-                <span>Platform</span>
-                <ChevronDown className="h-4 w-4" />
+              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900">
+                <Settings className="h-5 w-5 text-therapy-500" />
+                <span className="text-gray-900">Platform</span>
+                <ChevronDown className="h-4 w-4 text-gray-600" />
               </Button>
               <div className="absolute top-full left-0 w-[520px] p-5 bg-white/95 backdrop-blur-md shadow-xl border border-gray-100 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <div className="text-lg font-semibold mb-4 flex items-center">
@@ -326,10 +326,10 @@ const EnhancedHeader = () => {
 
             {/* Help Dropdown */}
             <div className="relative group">
-              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50">
-                <HelpCircle className="h-4 w-4 text-therapy-500" />
-                <span>Help</span>
-                <ChevronDown className="h-4 w-4" />
+              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900">
+                <HelpCircle className="h-5 w-5 text-therapy-500" />
+                <span className="text-gray-900">Help</span>
+                <ChevronDown className="h-4 w-4 text-gray-600" />
               </Button>
               <div className="absolute top-full left-0 w-[520px] p-5 bg-white/95 backdrop-blur-md shadow-xl border border-gray-100 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <div className="text-lg font-semibold mb-4 flex items-center">
