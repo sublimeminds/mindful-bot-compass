@@ -29,10 +29,10 @@ const EnhancedLanguageSelector = () => {
   }
 
   return (
-    <div className="flex items-center space-x-2">
-      <Languages className="h-5 w-5 text-gray-600" />
+    <div className="flex items-center space-x-2 therapy-brand-override">
+      <Languages className="icon-therapy-size text-gray-600 therapy-icon" />
       <Select value={currentLanguage.code} onValueChange={changeLanguage}>
-        <SelectTrigger className="w-40 border-therapy-200 hover:border-therapy-300 focus:border-therapy-500 focus:ring-therapy-500/20 bg-white text-gray-900">
+        <SelectTrigger className="w-40 border-therapy-200 hover:border-therapy-300 focus:border-therapy-500 focus:ring-therapy-500/20 bg-white text-gray-900 btn-therapy-outline">
           <SelectValue>
             <div className="flex items-center space-x-2">
               <span>{currentLanguage.flag}</span>

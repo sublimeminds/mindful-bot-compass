@@ -243,11 +243,11 @@ const EnhancedHeader = () => {
           </Link>
 
           {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
+            <nav className="hidden md:flex items-center space-x-6 therapy-brand-override">
             {/* AI Features Dropdown */}
             <div className="relative group">
-              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900">
-                <Brain className="h-5 w-5 text-therapy-500" />
+              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900 therapy-brand-override">
+                <Brain className="icon-therapy-size text-therapy-500 therapy-icon" />
                 <span className="text-gray-900">AI</span>
                 <ChevronDown className="h-4 w-4 text-gray-600" />
               </Button>
@@ -286,8 +286,8 @@ const EnhancedHeader = () => {
 
             {/* Platform Dropdown */}
             <div className="relative group">
-              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900">
-                <Settings className="h-5 w-5 text-therapy-500" />
+              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900 therapy-brand-override">
+                <Settings className="icon-therapy-size text-therapy-500 therapy-icon" />
                 <span className="text-gray-900">Platform</span>
                 <ChevronDown className="h-4 w-4 text-gray-600" />
               </Button>
@@ -326,8 +326,8 @@ const EnhancedHeader = () => {
 
             {/* Help Dropdown */}
             <div className="relative group">
-              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900">
-                <HelpCircle className="h-5 w-5 text-therapy-500" />
+              <Button variant="ghost" className="flex items-center space-x-1 hover:bg-therapy-50 text-gray-900 therapy-brand-override">
+                <HelpCircle className="icon-therapy-size text-therapy-500 therapy-icon" />
                 <span className="text-gray-900">Help</span>
                 <ChevronDown className="h-4 w-4 text-gray-600" />
               </Button>

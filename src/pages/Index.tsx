@@ -271,7 +271,6 @@ const Index = () => {
           <div className="text-center mt-8">
             <Button 
               variant="outline" 
-              className="border-therapy-200 text-therapy-700 hover:bg-therapy-50"
               onClick={() => navigate('/compliance')}
             >
               <FileText className="h-4 w-4 mr-2" />

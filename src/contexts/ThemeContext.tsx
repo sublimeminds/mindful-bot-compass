@@ -14,7 +14,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('theme') as Theme;
-    return saved || 'system';
+    return saved || 'light'; // Default to light theme to prevent conflicts
   });
 
   const [isDark, setIsDark] = useState(false);
@@ -36,7 +36,8 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       
       setIsDark(shouldBeDark);
       
-      if (shouldBeDark) {
+      // Only apply dark class if explicitly needed, not by default
+      if (shouldBeDark && theme !== 'light') {
         root.classList.add('dark');
       } else {
         root.classList.remove('dark');

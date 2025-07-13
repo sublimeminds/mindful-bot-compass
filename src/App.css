@@ -3,6 +3,139 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CSS Variables for themes and brand colors */
+:root {
+  /* Shadcn UI theme colors - light mode */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.5rem;
+
+  /* TherapySync brand colors - these override theme colors when needed */
+  --therapy-50: 220 43% 98%;
+  --therapy-100: 220 43% 95%;
+  --therapy-200: 220 43% 89%;
+  --therapy-300: 220 43% 80%;
+  --therapy-400: 220 43% 69%;
+  --therapy-500: 220 43% 56%;
+  --therapy-600: 220 43% 45%;
+  --therapy-700: 220 43% 36%;
+  --therapy-800: 220 43% 27%;
+  --therapy-900: 220 43% 18%;
+  --therapy-950: 220 43% 11%;
+
+  /* Calm colors */
+  --calm-50: 195 100% 98%;
+  --calm-100: 195 100% 95%;
+  --calm-200: 195 100% 89%;
+  --calm-300: 195 100% 80%;
+  --calm-400: 195 100% 69%;
+  --calm-500: 195 100% 56%;
+  --calm-600: 195 100% 45%;
+  --calm-700: 195 100% 36%;
+  --calm-800: 195 100% 27%;
+  --calm-900: 195 100% 18%;
+  --calm-950: 195 100% 11%;
+
+  /* Harmony colors */
+  --harmony-50: 280 100% 98%;
+  --harmony-100: 280 100% 95%;
+  --harmony-200: 280 100% 89%;
+  --harmony-300: 280 100% 80%;
+  --harmony-400: 280 100% 69%;
+  --harmony-500: 280 100% 56%;
+  --harmony-600: 280 100% 45%;
+  --harmony-700: 280 100% 36%;
+  --harmony-800: 280 100% 27%;
+  --harmony-900: 280 100% 18%;
+  --harmony-950: 280 100% 11%;
+
+  /* Balance colors */
+  --balance-50: 142 70% 98%;
+  --balance-100: 142 70% 95%;
+  --balance-200: 142 70% 89%;
+  --balance-300: 142 70% 80%;
+  --balance-400: 142 70% 69%;
+  --balance-500: 142 70% 56%;
+  --balance-600: 142 70% 45%;
+  --balance-700: 142 70% 36%;
+  --balance-800: 142 70% 27%;
+  --balance-900: 142 70% 18%;
+  --balance-950: 142 70% 11%;
+
+  /* Flow colors */
+  --flow-50: 25 100% 98%;
+  --flow-100: 25 100% 95%;
+  --flow-200: 25 100% 89%;
+  --flow-300: 25 100% 80%;
+  --flow-400: 25 100% 69%;
+  --flow-500: 25 100% 56%;
+  --flow-600: 25 100% 45%;
+  --flow-700: 25 100% 36%;
+  --flow-800: 25 100% 27%;
+  --flow-900: 25 100% 18%;
+  --flow-950: 25 100% 11%;
+
+  /* Shadow colors for therapy brand */
+  --shadow-therapy-subtle: 0 4px 6px -1px hsl(var(--therapy-500) / 0.1);
+  --shadow-therapy-glow: 0 0 40px hsl(var(--therapy-500) / 0.4);
+  --shadow-calm-glow: 0 0 40px hsl(var(--calm-500) / 0.4);
+  --shadow-orange-glow: 0 0 40px hsl(var(--flow-500) / 0.4);
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 84% 4.9%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 94.1%;
+}
+
+/* Ensure therapy brand styles take precedence over theme styles */
+.therapy-brand-override {
+  color: hsl(var(--therapy-700)) !important;
+}
+
+.therapy-brand-override .therapy-icon {
+  color: hsl(var(--therapy-500)) !important;
+}
+
+/* Ensure proper icon sizing */
+.icon-therapy-size {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+
 /* Loading spinner animation */
 @keyframes spin {
   0% { transform: rotate(0deg); }
