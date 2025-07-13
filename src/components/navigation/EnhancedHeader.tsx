@@ -231,8 +231,8 @@ const EnhancedHeader = () => {
             {/* AI Features Dropdown */}
             <div className="relative group">
               <HeaderDropdownTrigger icon={Brain} label="AI" />
-              <HeaderDropdownCard title="AI Features" titleIcon={Brain} width="lg">
-                <div className="grid grid-cols-2 gap-3">
+              <HeaderDropdownCard>
+                <div className="grid grid-cols-2 gap-4">
                   {aiFeatures.map((feature) => (
                     <HeaderDropdownItem
                       key={feature.title}
@@ -251,8 +251,8 @@ const EnhancedHeader = () => {
             {/* Platform Dropdown */}
             <div className="relative group">
               <HeaderDropdownTrigger icon={Settings} label="Platform" />
-              <HeaderDropdownCard title="Platform Features" titleIcon={Settings} width="lg">
-                <div className="grid grid-cols-2 gap-3">
+              <HeaderDropdownCard>
+                <div className="grid grid-cols-2 gap-4">
                   {platformFeatures.map((feature) => (
                     <HeaderDropdownItem
                       key={feature.title}
@@ -270,8 +270,8 @@ const EnhancedHeader = () => {
             {/* Help Dropdown */}
             <div className="relative group">
               <HeaderDropdownTrigger icon={HelpCircle} label="Help" />
-              <HeaderDropdownCard title="Help & Support" titleIcon={HelpCircle} width="md">
-                <div className="grid grid-cols-2 gap-3">
+              <HeaderDropdownCard>
+                <div className="grid grid-cols-2 gap-4">
                   {helpResources.map((resource) => (
                     <HeaderDropdownItem
                       key={resource.title}

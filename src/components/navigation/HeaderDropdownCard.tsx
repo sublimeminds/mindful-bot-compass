@@ -3,8 +3,8 @@ import { LucideIcon } from 'lucide-react';
 
 interface HeaderDropdownCardProps {
   width?: 'sm' | 'md' | 'lg';
-  title: string;
-  titleIcon: LucideIcon;
+  title?: string;
+  titleIcon?: LucideIcon;
   children: React.ReactNode;
   className?: string;
 }
@@ -16,24 +16,14 @@ const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
   children,
   className = ''
 }) => {
-  const widthClasses = {
-    sm: 'w-[400px]',
-    md: 'w-[480px]', 
-    lg: 'w-[520px]'
-  };
-
   return (
     <div className={`
-      absolute top-full left-0 ${widthClasses[width]} p-6 
-      bg-white/98 backdrop-blur-lg shadow-xl border border-gray-100/50 
+      absolute top-full left-1/2 transform -translate-x-1/2 w-[560px] p-6 
+      bg-white shadow-2xl border border-gray-200 
       rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible 
-      transition-all duration-300 ease-out transform translate-y-1 group-hover:translate-y-0
+      transition-all duration-200 ease-out translate-y-2 group-hover:translate-y-0 group-hover:scale-[1.02]
       z-50 ${className}
     `}>
-      <div className="flex items-center mb-5">
-        <TitleIcon className="h-5 w-5 mr-3 text-therapy-500" />
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-      </div>
       {children}
     </div>
   );
