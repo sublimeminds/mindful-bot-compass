@@ -15,7 +15,7 @@ import { SimpleAppProvider } from '@/hooks/useSimpleApp';
 import ReactSafeWrapper from '@/components/ReactSafeWrapper';
 
 // App Router
-import AppRouter from '@/components/AppRouter';
+import { LanguageAwareRouter } from '@/components/seo/LanguageAwareRouter';
 import LiveChatAgent from '@/components/LiveChatAgent';
 import { AvatarManagerProvider } from '@/components/avatar/OptimizedAvatarManager';
 import { TherapistProvider } from '@/contexts/TherapistContext';
@@ -88,7 +88,7 @@ function App() {
                     <ContextReadyWrapper>
                       <SafeRouter>
                       <div className="min-h-screen bg-background">
-                        <AppRouter />
+                        <LanguageAwareRouter />
                         <LiveChatAgent />
                         <Toaster />
                         <Sonner />

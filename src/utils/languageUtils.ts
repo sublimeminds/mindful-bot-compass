@@ -72,3 +72,34 @@ export const languageNames: Record<string, string> = {
 export function getLanguageDisplayName(languageCode: string): string {
   return languageNames[languageCode.toLowerCase()] || languageCode;
 }
+
+/**
+ * Detects browser language preference
+ */
+export function getBrowserLanguage(): string {
+  // Try various browser language detection methods
+  const browserLang = 
+    navigator.language ||
+    (navigator as any).userLanguage ||
+    (navigator as any).browserLanguage ||
+    (navigator as any).systemLanguage ||
+    'en';
+    
+  return browserLang.toLowerCase();
+}
+
+/**
+ * Gets the best matching supported language from browser preferences
+ */
+export function detectBestLanguageMatch(supportedLanguages: string[]): string {
+  const browserLangs = navigator.languages || [getBrowserLanguage()];
+  
+  for (const browserLang of browserLangs) {
+    const langCode = browserLang.split('-')[0].toLowerCase();
+    if (supportedLanguages.includes(langCode)) {
+      return langCode;
+    }
+  }
+  
+  return 'en'; // Default fallback
+}
