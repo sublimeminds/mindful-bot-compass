@@ -17,41 +17,45 @@ const PlanSelector = ({ onSelectPlan }: PlanSelectorProps) => {
       id: 'free',
       name: 'Free',
       price: { monthly: 0, yearly: 0 },
-      description: 'Get started with basic features',
+      description: 'Basic therapy features to get started',
       features: [
-        '3 therapy sessions per month',
+        '8 therapy sessions per month',
         'Basic mood tracking',
         'Community access',
-        'Self-help resources'
+        'Email support',
+        '10 AI messages per day'
       ],
       popular: false
     },
     {
-      id: 'basic',
-      name: 'Basic',
-      price: { monthly: 29, yearly: 290 },
-      description: 'Perfect for regular therapy support',
+      id: 'premium',
+      name: 'Premium',
+      price: { monthly: 14.90, yearly: 149 },
+      description: 'Enhanced therapy features for regular users',
       features: [
-        '10 therapy sessions per month',
-        'Advanced mood analytics',
+        'Unlimited therapy sessions',
+        'Advanced analytics',
         'Personalized insights',
+        'Crisis support',
+        'Voice interaction',
         'Priority support',
-        'Goal tracking'
+        'Meditation library'
       ],
       popular: true
     },
     {
-      id: 'premium',
-      name: 'Premium',
-      price: { monthly: 59, yearly: 590 },
-      description: 'Unlimited access to all features',
+      id: 'professional',
+      name: 'Professional',
+      price: { monthly: 24.90, yearly: 249 },
+      description: 'Complete therapy platform with advanced features for power users',
       features: [
         'Unlimited therapy sessions',
-        'Advanced AI insights',
-        'Crisis support priority',
-        'Dedicated therapist matching',
-        'Progress analytics',
-        'Family support resources'
+        'Advanced dashboard',
+        'API access',
+        'White-label features',
+        'Phone support',
+        'Compliance reporting',
+        'Premium content'
       ],
       popular: false
     }
