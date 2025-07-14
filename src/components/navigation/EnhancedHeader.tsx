@@ -52,10 +52,13 @@ import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrap
 import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
 import HeaderDropdownTrigger from './HeaderDropdownTrigger';
+import MobileNavigation from './MobileNavigation';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const EnhancedHeader = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   // Therapy AI Features - Core AI capabilities and therapy approaches
   const therapyAiFeatures = [
@@ -327,14 +330,27 @@ const EnhancedHeader = () => {
       <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
-          >
-            <GradientLogo size="sm" />
-            <span className="text-xl font-bold therapy-text-gradient">TherapySync</span>
-          </Link>
+          <div className="flex items-center space-x-4">
+            {/* Mobile Navigation */}
+            <MobileNavigation
+              therapyAiFeatures={therapyAiFeatures}
+              platformFeatures={platformFeatures}
+              toolsDataFeatures={toolsDataFeatures}
+              solutionsFeatures={solutionsFeatures}
+              resourcesFeatures={resourcesFeatures}
+            />
+            
+            {/* Logo */}
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+            >
+              <GradientLogo size="sm" />
+            <span className="text-lg md:text-xl font-bold therapy-text-gradient">
+                TherapySync
+              </span>
+            </Link>
+          </div>
 
           {/* Navigation */}
             <nav className="hidden md:flex items-center space-x-6 therapy-brand-override">
@@ -465,8 +481,10 @@ const EnhancedHeader = () => {
           </nav>
 
           {/* Right Section */}
-          <div className="flex items-center space-x-4">
-            <EnhancedLanguageSelector />
+          <div className="flex items-center space-x-2 md:space-x-4">
+            <div className="hidden sm:block">
+              <EnhancedLanguageSelector />
+            </div>
             
             {user ? (
               <>
@@ -474,17 +492,17 @@ const EnhancedHeader = () => {
                 <EnhancedUserMenu />
               </>
             ) : (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 md:space-x-3">
                 <Button 
                   variant="ghost" 
                   onClick={() => navigate('/auth')}
-                  className="text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50"
+                  className="text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50 text-sm px-3 py-2"
                 >
                   Sign In
                 </Button>
                 <EnhancedButton 
                   onClick={() => navigate('/onboarding')}
-                  className="px-6 py-2"
+                  className="px-4 py-2 text-sm"
                 >
                   Get Started
                 </EnhancedButton>
