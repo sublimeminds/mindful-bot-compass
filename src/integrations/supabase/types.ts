@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_sharing_alerts: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          action_taken: string | null
+          alert_type: string
+          confidence_score: number | null
+          evidence: Json | null
+          id: string
+          is_resolved: boolean | null
+          triggered_at: string | null
+          user_id: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          action_taken?: string | null
+          alert_type: string
+          confidence_score?: number | null
+          evidence?: Json | null
+          id?: string
+          is_resolved?: boolean | null
+          triggered_at?: string | null
+          user_id: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          action_taken?: string | null
+          alert_type?: string
+          confidence_score?: number | null
+          evidence?: Json | null
+          id?: string
+          is_resolved?: boolean | null
+          triggered_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       achievement_badges: {
         Row: {
           category: string
@@ -3187,6 +3226,48 @@ export type Database = {
           template_key?: string | null
           user_agent?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      email_pin_auth: {
+        Row: {
+          attempts: number | null
+          created_at: string | null
+          email: string
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          max_attempts: number | null
+          pin_code: string
+          user_agent: string | null
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          created_at?: string | null
+          email: string
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          max_attempts?: number | null
+          pin_code: string
+          user_agent?: string | null
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          created_at?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          max_attempts?: number | null
+          pin_code?: string
+          user_agent?: string | null
+          user_id?: string
+          verified_at?: string | null
         }
         Relationships: []
       }
@@ -6791,6 +6872,90 @@ export type Database = {
           },
         ]
       }
+      security_audit_logs: {
+        Row: {
+          action: string
+          admin_user_id: string | null
+          compliance_category: string | null
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          resource_id: string | null
+          resource_type: string
+          risk_level: string | null
+          session_id: string | null
+          timestamp: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          admin_user_id?: string | null
+          compliance_category?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type: string
+          risk_level?: string | null
+          session_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          admin_user_id?: string | null
+          compliance_category?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type?: string
+          risk_level?: string | null
+          session_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      security_configs: {
+        Row: {
+          config_key: string
+          config_type: string
+          config_value: Json
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_global: boolean | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          config_key: string
+          config_type: string
+          config_value: Json
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_global?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          config_key?: string
+          config_type?: string
+          config_value?: Json
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_global?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       security_events: {
         Row: {
           created_at: string
@@ -9339,6 +9504,54 @@ export type Database = {
         }
         Relationships: []
       }
+      user_devices: {
+        Row: {
+          browser: string | null
+          created_at: string | null
+          device_fingerprint: string
+          device_name: string | null
+          device_type: string | null
+          id: string
+          ip_address: unknown | null
+          is_trusted: boolean | null
+          last_used_at: string | null
+          location_data: Json | null
+          os: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          browser?: string | null
+          created_at?: string | null
+          device_fingerprint: string
+          device_name?: string | null
+          device_type?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_trusted?: boolean | null
+          last_used_at?: string | null
+          location_data?: Json | null
+          os?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          browser?: string | null
+          created_at?: string | null
+          device_fingerprint?: string
+          device_name?: string | null
+          device_type?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_trusted?: boolean | null
+          last_used_at?: string | null
+          location_data?: Json | null
+          os?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_experience: {
         Row: {
           created_at: string
@@ -10517,6 +10730,10 @@ export type Database = {
       decrement_post_likes: {
         Args: { post_id: string }
         Returns: undefined
+      }
+      detect_account_sharing: {
+        Args: { user_id_param: string }
+        Returns: Json
       }
       detect_crisis_indicators: {
         Args: {
