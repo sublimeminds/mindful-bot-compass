@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { SafeComponentWrapper } from './SafeComponentWrapper';
@@ -15,10 +15,10 @@ interface BulletproofAuthContextType {
   logout: () => Promise<void>;
 }
 
-const BulletproofAuthContext = createContext<BulletproofAuthContextType | null>(null);
+const BulletproofAuthContext = React.createContext<BulletproofAuthContextType | null>(null);
 
 interface BulletproofAuthProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = ({ children }) => {
@@ -28,12 +28,12 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
     return React.createElement('div', { key: 'loading' }, 'Loading...');
   }
 
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [user, setUser] = React.useState<User | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<Error | null>(null);
 
   // Enhanced session management with error recovery
-  useEffect(() => {
+  React.useEffect(() => {
     let retryCount = 0;
     const maxRetries = 3;
 
@@ -84,7 +84,7 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
   }, []);
 
   // Enhanced signUp with retry and better error handling
-  const signUp = useCallback(async (email: string, password: string) => {
+  const signUp = React.useCallback(async (email: string, password: string) => {
     try {
       const { error } = await supabase.auth.signUp({ 
         email, 
@@ -101,7 +101,7 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
   }, []);
 
   // Enhanced signIn with retry logic
-  const signIn = useCallback(async (email: string, password: string) => {
+  const signIn = React.useCallback(async (email: string, password: string) => {
     let retryCount = 0;
     const maxRetries = 2;
 
@@ -125,7 +125,7 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
   }, []);
 
   // Enhanced signOut with error handling
-  const signOut = useCallback(async () => {
+  const signOut = React.useCallback(async () => {
     try {
       await supabase.auth.signOut();
     } catch (err) {
@@ -161,7 +161,7 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
 };
 
 export const useBulletproofAuth = () => {
-  const context = useContext(BulletproofAuthContext);
+  const context = React.useContext(BulletproofAuthContext);
   if (!context) {
     // More graceful error handling
     console.error('useBulletproofAuth must be used within BulletproofAuthProvider');
