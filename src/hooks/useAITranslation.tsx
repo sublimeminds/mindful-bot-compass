@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { aiTranslationService, TranslationRequest, TranslationResponse, LanguagePreferences } from '@/services/aiTranslationService';
-import { useAuth } from '@/components/bulletproof/BulletproofAuthProvider';
+import { useBulletproofAuth } from '@/components/bulletproof/BulletproofAuthProvider';
 import { useEnhancedLanguage } from './useEnhancedLanguage';
 
 interface UseAITranslationOptions {
@@ -20,7 +20,7 @@ interface TranslationState {
 }
 
 export function useAITranslation(options: UseAITranslationOptions = {}) {
-  const { user } = useAuth();
+  const { user } = useBulletproofAuth();
   const { i18n } = useTranslation();
   const { currentLanguage } = useEnhancedLanguage();
   
