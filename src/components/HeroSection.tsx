@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Users, Shield } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import GradientButton from '@/components/ui/GradientButton';
-import heroImage from '@/assets/hero-therapy-ai-modern.jpg';
+
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -78,19 +78,37 @@ const HeroSection = () => {
           </p>
         </div>
 
-        {/* Hero visual showcase */}
+        {/* Spectacular Animated Hero Display */}
         <div className="relative max-w-5xl mx-auto">
-          <div className="relative overflow-hidden rounded-3xl shadow-2xl border border-therapy-200/50">
-            <img 
-              src={heroImage} 
-              alt="TherapySync AI - Professional mental health support with cutting-edge AI technology" 
-              className="w-full h-[400px] md:h-[500px] object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+          <div className="relative overflow-hidden rounded-3xl shadow-2xl border border-therapy-200/50 min-h-[400px] md:min-h-[500px]">
+            {/* Dynamic Gradient Background */}
+            <div className="absolute inset-0 hero-gradient-bg"></div>
+            
+            {/* Neural Network Animation */}
+            <div className="neural-orb therapy w-16 h-16 top-12 left-1/5" style={{ animationDelay: '0s' }}></div>
+            <div className="neural-orb calm w-12 h-12 top-1/3 right-1/4" style={{ animationDelay: '1.5s' }}></div>
+            <div className="neural-orb harmony w-14 h-14 bottom-1/4 left-1/3" style={{ animationDelay: '3s' }}></div>
+            <div className="neural-orb balance w-10 h-10 top-1/2 right-1/5" style={{ animationDelay: '0.8s' }}></div>
+            
+            {/* Morphing Elements */}
+            <div className="morphing-shape w-20 h-20 top-16 right-1/4" style={{ animationDelay: '0s' }}></div>
+            <div className="morphing-shape w-16 h-16 bottom-20 left-1/2" style={{ animationDelay: '4s' }}></div>
+            
+            {/* Data Particles */}
+            <div className="data-particle left-1/4" style={{ animationDelay: '0s', background: 'hsl(var(--therapy-500))' }}></div>
+            <div className="data-particle right-1/4" style={{ animationDelay: '2s', background: 'hsl(var(--calm-500))' }}></div>
+            <div className="data-particle left-3/4" style={{ animationDelay: '4s', background: 'hsl(var(--harmony-500))' }}></div>
+            
+            {/* Neural Connections */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+              <line className="neural-connection" x1="25%" y1="25%" x2="75%" y2="35%" style={{ animationDelay: '0s' }} />
+              <line className="neural-connection" x1="70%" y1="20%" x2="30%" y2="70%" style={{ animationDelay: '2s' }} />
+              <line className="neural-connection" x1="20%" y1="60%" x2="80%" y2="40%" style={{ animationDelay: '1s' }} />
+            </svg>
             
             {/* Overlay content */}
             <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-              <div className="max-w-3xl">
+              <div className="max-w-3xl relative z-10">
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl">
                     <Heart className="h-6 w-6" />
@@ -103,15 +121,15 @@ const HeroSection = () => {
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="flex items-center space-x-2 text-white/90">
-                    <div className="w-2 h-2 bg-therapy-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-therapy-400 rounded-full animate-pulse"></div>
                     <span>AI-Powered Personalization</span>
                   </div>
                   <div className="flex items-center space-x-2 text-white/90">
-                    <div className="w-2 h-2 bg-harmony-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-harmony-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
                     <span>24/7 Crisis Support</span>
                   </div>
                   <div className="flex items-center space-x-2 text-white/90">
-                    <div className="w-2 h-2 bg-flow-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-flow-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
                     <span>Progress Analytics</span>
                   </div>
                 </div>
