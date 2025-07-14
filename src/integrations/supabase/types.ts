@@ -173,6 +173,45 @@ export type Database = {
         }
         Relationships: []
       }
+      adaptive_learning_profiles: {
+        Row: {
+          created_at: string | null
+          cultural_adaptations: Json | null
+          effectiveness_metrics: Json | null
+          id: string
+          last_updated: string | null
+          learning_patterns: Json | null
+          model_performance: Json | null
+          preference_adjustments: Json | null
+          therapy_outcomes: Json | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          cultural_adaptations?: Json | null
+          effectiveness_metrics?: Json | null
+          id?: string
+          last_updated?: string | null
+          learning_patterns?: Json | null
+          model_performance?: Json | null
+          preference_adjustments?: Json | null
+          therapy_outcomes?: Json | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          cultural_adaptations?: Json | null
+          effectiveness_metrics?: Json | null
+          id?: string
+          last_updated?: string | null
+          learning_patterns?: Json | null
+          model_performance?: Json | null
+          preference_adjustments?: Json | null
+          therapy_outcomes?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       adaptive_therapy_plans: {
         Row: {
           adaptations: Json
@@ -1124,6 +1163,51 @@ export type Database = {
           therapeutic_value?: number
           timestamp?: string
           user_satisfaction?: number
+        }
+        Relationships: []
+      }
+      ai_routing_decisions: {
+        Row: {
+          created_at: string | null
+          cultural_adaptations: Json | null
+          effectiveness_score: number | null
+          id: string
+          priority_level: number
+          reasoning: string | null
+          response_time_ms: number | null
+          selected_model: string
+          session_id: string | null
+          therapy_approach: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          cultural_adaptations?: Json | null
+          effectiveness_score?: number | null
+          id?: string
+          priority_level?: number
+          reasoning?: string | null
+          response_time_ms?: number | null
+          selected_model: string
+          session_id?: string | null
+          therapy_approach: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          cultural_adaptations?: Json | null
+          effectiveness_score?: number | null
+          id?: string
+          priority_level?: number
+          reasoning?: string | null
+          response_time_ms?: number | null
+          selected_model?: string
+          session_id?: string | null
+          therapy_approach?: string
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -2441,6 +2525,7 @@ export type Database = {
           professional_contact_made: boolean | null
           responses: Json
           risk_level: string
+          risk_score: number | null
           severity_indicators: string[] | null
           status: string
           total_score: number | null
@@ -2459,6 +2544,7 @@ export type Database = {
           professional_contact_made?: boolean | null
           responses?: Json
           risk_level?: string
+          risk_score?: number | null
           severity_indicators?: string[] | null
           status?: string
           total_score?: number | null
@@ -2477,6 +2563,7 @@ export type Database = {
           professional_contact_made?: boolean | null
           responses?: Json
           risk_level?: string
+          risk_score?: number | null
           severity_indicators?: string[] | null
           status?: string
           total_score?: number | null
@@ -8049,6 +8136,36 @@ export type Database = {
           overall_health?: number
           recommendations?: string[] | null
           warnings?: string[] | null
+        }
+        Relationships: []
+      }
+      system_intelligence_metrics: {
+        Row: {
+          id: string
+          metadata: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at: string | null
+          session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: string
+          metadata?: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at?: string | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: string
+          metadata?: Json | null
+          metric_type?: string
+          metric_value?: number
+          recorded_at?: string | null
+          session_id?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
