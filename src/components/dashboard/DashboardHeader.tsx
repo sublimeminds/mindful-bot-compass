@@ -1,17 +1,25 @@
 
 import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
   Search,
-  Calendar
+  Calendar,
+  Target,
+  BarChart3,
+  Users,
+  MessageSquare,
+  Brain,
+  Heart
 } from 'lucide-react';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
+import { useScreenSize } from '@/hooks/use-mobile';
 
 const DashboardHeader = () => {
   const { user } = useAuth();
   const location = useLocation();
+  const { isMobile, isTablet, isLaptop, isDesktop } = useScreenSize();
 
   // Get current page title based on route
   const getPageTitle = () => {
@@ -40,18 +48,55 @@ const DashboardHeader = () => {
       : 'Dashboard';
   };
 
+  // Quick navigation links for different screen sizes
+  const getQuickLinks = () => {
+    const baseLinks = [
+      { href: '/goals', icon: Target, label: 'Goals', mobile: false },
+      { href: '/analytics', icon: BarChart3, label: 'Analytics', mobile: false },
+      { href: '/community', icon: Users, label: 'Community', mobile: false },
+      { href: '/chat', icon: MessageSquare, label: 'Quick Chat', mobile: true },
+    ];
+
+    if (isMobile) return baseLinks.filter(link => link.mobile);
+    if (isTablet) return baseLinks.slice(0, 2);
+    if (isLaptop) return baseLinks.slice(0, 3);
+    return baseLinks;
+  };
+
+  const quickLinks = getQuickLinks();
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-gray-200/50 bg-white/95 backdrop-blur-lg shadow-sm supports-[backdrop-filter]:bg-white/60 ml-0">
-      <div className="flex h-16 items-center justify-between px-6">
-        {/* Left section with page title */}
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-3">
-            <span className="text-xl font-semibold text-gray-900">{getPageTitle()}</span>
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6">
+        {/* Left section with page title and quick links */}
+        <div className="flex items-center space-x-4 min-w-0 flex-1">
+          <div className="flex items-center space-x-3 min-w-0">
+            <span className="text-lg sm:text-xl font-semibold text-gray-900 truncate">{getPageTitle()}</span>
           </div>
+          
+          {/* Quick Navigation Links - Progressive disclosure */}
+          {quickLinks.length > 0 && (
+            <nav className="hidden sm:flex items-center space-x-1 ml-6">
+              {quickLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-100 ${
+                    location.pathname === link.href 
+                      ? 'bg-therapy-50 text-therapy-700 border border-therapy-200' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <link.icon className="h-4 w-4" />
+                  <span className="hidden lg:block">{link.label}</span>
+                </Link>
+              ))}
+            </nav>
+          )}
         </div>
 
         {/* Center section - Search */}
-        <div className="hidden md:flex flex-1 max-w-lg mx-8">
+        <div className="hidden md:flex flex-1 max-w-md lg:max-w-lg mx-4 lg:mx-8">
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <input
@@ -63,17 +108,48 @@ const DashboardHeader = () => {
         </div>
 
         {/* Right section */}
-        <div className="flex items-center space-x-4">
-          {/* Quick Actions */}
-          <div className="hidden lg:flex items-center space-x-3">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className="hover:bg-gray-100 text-gray-600 font-medium px-4 py-2"
-            >
-              <Calendar className="h-4 w-4 mr-2" />
-              Schedule
-            </Button>
+        <div className="flex items-center space-x-2 lg:space-x-4">
+          {/* Progressive Quick Actions */}
+          <div className="hidden md:flex items-center space-x-2">
+            {/* Calendar - Always show on md+ */}
+            <Link to="/calendar">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="hover:bg-gray-100 text-gray-600 font-medium px-3 lg:px-4 py-2"
+              >
+                <Calendar className="h-4 w-4 lg:mr-2" />
+                <span className="hidden lg:block">Schedule</span>
+              </Button>
+            </Link>
+            
+            {/* New Session - Show on laptop+ */}
+            {isLaptop && (
+              <Link to="/therapy-session">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="hover:bg-therapy-50 border-therapy-200 text-therapy-700 font-medium px-3 lg:px-4 py-2"
+                >
+                  <Brain className="h-4 w-4 lg:mr-2" />
+                  <span className="hidden lg:block">New Session</span>
+                </Button>
+              </Link>
+            )}
+            
+            {/* Mood Check - Show on desktop */}
+            {isDesktop && (
+              <Link to="/mood-tracking">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="hover:bg-calm-50 text-calm-700 font-medium px-3 lg:px-4 py-2"
+                >
+                  <Heart className="h-4 w-4 lg:mr-2" />
+                  <span className="hidden lg:block">Mood Check</span>
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Notification Center */}

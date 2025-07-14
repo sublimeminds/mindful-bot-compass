@@ -53,12 +53,13 @@ import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
 import HeaderDropdownTrigger from './HeaderDropdownTrigger';
 import MobileNavigation from './MobileNavigation';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile, useScreenSize } from '@/hooks/use-mobile';
 
 const EnhancedHeader = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { isTablet, isLaptop, isDesktop } = useScreenSize();
 
   // Therapy AI Features - Core AI capabilities and therapy approaches
   const therapyAiFeatures = [
@@ -352,8 +353,51 @@ const EnhancedHeader = () => {
             </Link>
           </div>
 
-          {/* Navigation */}
-            <nav className="hidden xl:flex items-center space-x-2 md:space-x-4 xl:space-x-6 therapy-brand-override">
+          {/* Navigation - Progressive disclosure based on screen size */}
+          {!isMobile && (
+            <nav className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 xl:space-x-6 therapy-brand-override">
+              
+              {/* Essential links for tablet+ */}
+              {isTablet && (
+                <>
+                  <Link 
+                    to="/therapy-sync-ai" 
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-therapy-50 hover:text-therapy-700 transition-all duration-200"
+                  >
+                    <Brain className="h-4 w-4" />
+                    <span>AI Chat</span>
+                  </Link>
+                  <Link 
+                    to="/pricing" 
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-therapy-50 hover:text-therapy-700 transition-all duration-200"
+                  >
+                    <span>Pricing</span>
+                  </Link>
+                </>
+              )}
+              
+              {/* Additional links for laptop+ */}
+              {isLaptop && (
+                <>
+                  <Link 
+                    to="/therapist-discovery" 
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-therapy-50 hover:text-therapy-700 transition-all duration-200"
+                  >
+                    <Users className="h-4 w-4" />
+                    <span>Therapists</span>
+                  </Link>
+                  <Link 
+                    to="/solutions/individuals" 
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-therapy-50 hover:text-therapy-700 transition-all duration-200"
+                  >
+                    <span>Solutions</span>
+                  </Link>
+                </>
+              )}
+              
+              {/* Full dropdown navigation for desktop */}
+              {isDesktop && (
+                <>
             {/* Therapy AI Dropdown */}
             <div className="relative group">
               <HeaderDropdownTrigger icon={Brain} label="Therapy AI" />
@@ -478,10 +522,31 @@ const EnhancedHeader = () => {
                 </div>
               </HeaderDropdownCard>
             </div>
-          </nav>
+                </>
+              )}
+            </nav>
+          )}
 
           {/* Right Section */}
           <div className="flex items-center space-x-2 lg:space-x-4">
+            {/* Quick actions for larger screens */}
+            {(isLaptop || isDesktop) && !user && (
+              <div className="hidden lg:flex items-center space-x-3 mr-4">
+                <Link 
+                  to="/how-it-works"
+                  className="text-sm font-medium text-gray-600 hover:text-therapy-700 transition-colors"
+                >
+                  How It Works
+                </Link>
+                <Link 
+                  to="/support"
+                  className="text-sm font-medium text-gray-600 hover:text-therapy-700 transition-colors"
+                >
+                  Support
+                </Link>
+              </div>
+            )}
+            
             <div className="hidden sm:block">
               <EnhancedLanguageSelector />
             </div>
@@ -502,7 +567,7 @@ const EnhancedHeader = () => {
                 </Button>
                 <EnhancedButton 
                   onClick={() => navigate('/onboarding')}
-                  className="px-3 py-2 text-sm"
+                  className="px-3 py-2 text-sm bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                 >
                   Get Started
                 </EnhancedButton>
