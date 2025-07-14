@@ -67,7 +67,7 @@ const EnhancedPricingSection = () => {
         'Personalized insights',
         'Crisis support',
         'Voice interaction',
-        'Claude Opus AI model',
+        'Claude 4 Opus AI model',
         'Priority support',
         'Podcasts & meditation library'
       ],
@@ -87,10 +87,9 @@ const EnhancedPricingSection = () => {
       features: [
         'Everything in Premium',
         '10 therapy plans',
-        'Unlimited AI messages',
         'Advanced dashboard',
         'API access (1,000 calls/month)',
-        'Claude-3.5-Sonnet AI model',
+        'Claude 4 Opus AI model',
         'Phone support',
         'Data export',
         'Premium content'
