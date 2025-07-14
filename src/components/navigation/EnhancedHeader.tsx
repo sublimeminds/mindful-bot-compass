@@ -353,7 +353,7 @@ const EnhancedHeader = () => {
           </div>
 
           {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-6 therapy-brand-override">
+            <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6 therapy-brand-override">
             {/* Therapy AI Dropdown */}
             <div className="relative group">
               <HeaderDropdownTrigger icon={Brain} label="Therapy AI" />
@@ -364,7 +364,7 @@ const EnhancedHeader = () => {
                     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
                       AI Technology
                     </h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
                       {therapyAiFeatures.filter(f => f.category === "AI Technology").map((feature) => (
                         <HeaderDropdownItem
                           key={feature.title}
@@ -384,7 +384,7 @@ const EnhancedHeader = () => {
                     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
                       Therapy Approaches
                     </h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
                       {therapyAiFeatures.filter(f => f.category === "Therapy Approaches").map((feature) => (
                         <HeaderDropdownItem
                           key={feature.title}
@@ -406,7 +406,7 @@ const EnhancedHeader = () => {
             <div className="relative group">
               <HeaderDropdownTrigger icon={Settings} label="Features" />
               <HeaderDropdownCard>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   {platformFeatures.map((feature) => (
                     <HeaderDropdownItem
                       key={feature.title}
@@ -425,7 +425,7 @@ const EnhancedHeader = () => {
             <div className="relative group">
               <HeaderDropdownTrigger icon={Database} label="Tools & Data" />
               <HeaderDropdownCard>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   {toolsDataFeatures.map((feature) => (
                     <HeaderDropdownItem
                       key={feature.title}
@@ -445,7 +445,7 @@ const EnhancedHeader = () => {
             <div className="relative group">
               <HeaderDropdownTrigger icon={Star} label="Solutions" />
               <HeaderDropdownCard>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   {solutionsFeatures.map((feature) => (
                     <HeaderDropdownItem
                       key={feature.title}
@@ -464,7 +464,7 @@ const EnhancedHeader = () => {
             <div className="relative group">
               <HeaderDropdownTrigger icon={BookOpen} label="Resources" />
               <HeaderDropdownCard className="dropdown-right">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   {resourcesFeatures.map((feature) => (
                     <HeaderDropdownItem
                       key={feature.title}
@@ -481,7 +481,7 @@ const EnhancedHeader = () => {
           </nav>
 
           {/* Right Section */}
-          <div className="flex items-center space-x-2 md:space-x-4">
+          <div className="flex items-center space-x-2 lg:space-x-4">
             <div className="hidden sm:block">
               <EnhancedLanguageSelector />
             </div>

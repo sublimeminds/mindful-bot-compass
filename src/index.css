@@ -325,3 +325,44 @@
   background: linear-gradient(135deg, #ff6b9d, #c44569);
   color: white;
 }
+
+/* Enhanced Header Responsive Utilities */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .therapy-brand-override nav {
+    gap: 0.75rem;
+  }
+  
+  .therapy-brand-override .dropdown-card {
+    min-width: 400px;
+    max-width: 500px;
+  }
+  
+  .therapy-brand-override .dropdown-item {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 1279px) {
+  .dropdown-card .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Navigation Enhancements */
+.mobile-nav-slide-enter {
+  transform: translateX(-100%);
+}
+
+.mobile-nav-slide-enter-active {
+  transform: translateX(0);
+  transition: transform 300ms ease-in-out;
+}
+
+.mobile-nav-slide-exit {
+  transform: translateX(0);
+}
+
+.mobile-nav-slide-exit-active {
+  transform: translateX(-100%);
+  transition: transform 300ms ease-in-out;
+}
