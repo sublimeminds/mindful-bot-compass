@@ -20,10 +20,10 @@ interface PricingFeature {
 
 const PRICING_FEATURES: PricingFeature[] = [
   // Core AI Features
-  { name: 'TherapySync AI (GPT-4 Based)', free: '10 messages/session', pro: 'Unlimited (GPT-4)', premium: 'Advanced (GPT-4 + Claude)', category: 'core' },
+  { name: 'TherapySync AI', free: '100 messages/day (GPT-4o)', pro: 'Unlimited (Claude 4 Opus)', premium: 'Unlimited (Claude 4 Sonnet)', category: 'core' },
   { name: 'Quick Chat Sessions', free: true, pro: true, premium: true, category: 'core' },
-  { name: 'Full Therapy Sessions', free: '2/week, 8/month', pro: 'Unlimited', premium: 'Unlimited', category: 'limits' },
-  { name: 'Therapy Plans', free: '1 plan', pro: '3 plans', premium: 'Unlimited', category: 'limits' },
+  { name: 'Full Therapy Sessions', free: '8/month', pro: 'Unlimited', premium: 'Unlimited', category: 'limits' },
+  { name: 'Therapy Plans', free: '1 plan', pro: '3 plans', premium: '10 plans', category: 'limits' },
   { name: 'AI Personality Types', free: '2 therapists', pro: '8 specialized therapists', premium: '12+ expert therapists', category: 'core' },
   { name: 'Mood Tracking', free: true, pro: true, premium: true, category: 'core' },
   { name: 'Basic Goals', free: true, pro: true, premium: true, category: 'core' },
@@ -80,17 +80,18 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
     icon: Heart,
     color: 'from-therapy-400 to-therapy-500',
     features: [
-      'AI therapy chat (GPT-4)',
+      'AI therapy chat (GPT-4o)',
       'Crisis support (24/7)',
       'Basic mood tracking',
-      '1 session/week, 4/month',
+      '8 sessions/month',
+      '100 AI messages/day',
       '2 AI therapist personalities',
       'Basic mindfulness exercises'
     ],
     limitations: [
-      '10 messages per session',
       '1 therapy plan only',
-      'Limited to basic features'
+      'Limited session history',
+      'Basic analytics only'
     ]
   },
   pro: {
@@ -100,6 +101,8 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
     icon: Brain,
     color: 'from-harmony-500 to-harmony-600',
     features: [
+      'Claude 4 Opus AI model',
+      'Unlimited AI messages',
       'Unlimited therapy sessions',
       '8 specialized AI therapists',
       'Advanced breathing exercises',
@@ -119,11 +122,13 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
     color: 'from-flow-500 to-flow-600',
     features: [
       'Everything in Pro',
+      'Claude 4 Sonnet AI model',
+      'Unlimited AI messages',
       '12+ expert AI therapists',
       'Advanced ML insights',
       'Premium meditation library (200+)',
       'Priority support (2h response)',
-      'Unlimited therapy plans',
+      '10 therapy plans',
       'Family dashboard (up to 4)',
       'Direct therapist referrals',
       'Weekly reports + data export'

@@ -31,11 +31,13 @@ const PricingSection = () => {
       yearlyPrice: 0,
       description: 'Basic therapy features to get started',
       features: [
+        '1 therapy plan',
         '8 therapy sessions per month',
+        '100 AI messages per day',
         'Basic mood tracking',
         'Community access',
-        'Email support',
-        '10 AI messages per day'
+        'GPT-4o AI model',
+        'Email support'
       ],
       buttonText: 'Get Started Free',
       popular: false,
@@ -49,14 +51,16 @@ const PricingSection = () => {
       yearlyPrice: 149,
       description: 'Enhanced therapy features for regular users',
       features: [
+        '3 therapy plans',
+        'Unlimited AI messages',
         'Unlimited therapy sessions',
+        'Claude 4 Opus AI model',
         'Advanced analytics',
         'Personalized insights',
         'Crisis support',
         'Voice interaction',
         'Priority support',
-        'Podcasts',
-        'Meditation library'
+        'Podcasts & meditation library'
       ],
       buttonText: 'Start Premium',
       popular: true,
@@ -71,13 +75,14 @@ const PricingSection = () => {
       description: 'Complete therapy platform with advanced features for power users',
       features: [
         'Everything in Premium',
+        '10 therapy plans',
+        'Unlimited AI messages',
         'Advanced dashboard',
-        'API access',
-        'White-label features',
+        'API access (1,000 calls/month)',
+        'Claude 4 Sonnet AI model',
         'Phone support',
-        'Compliance reporting',
-        'Premium content',
-        'Data export'
+        'Data export',
+        'Premium content'
       ],
       buttonText: 'Start Professional',
       popular: false,

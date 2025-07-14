@@ -73,17 +73,17 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
 
   const tiers = {
     pro: {
-      name: 'Family Professional',
+      name: 'Family Premium',
       basePrice: 29.99, // Base includes 2 members
       pricePerMember: 12.99, // Additional members beyond 2
       color: 'from-therapy-500 to-calm-500',
       icon: Star,
       baseMemberCount: 2,
       features: [
-        'Everything in Premium for all members',
-        '10 therapy plans per member',
+        'Claude 4 Opus AI model for all members',
+        'Unlimited AI messages for all members',
+        '3 therapy plans per member',
         'Unlimited AI therapy sessions',
-        'Voice conversations in 29 languages',
         'Family dashboard with shared insights',
         'Parental controls and safety features',
         'Crisis alerts and intervention',
@@ -91,15 +91,16 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
       ]
     },
     premium: {
-      name: 'Family Premium',
-      basePrice: 34.90, // Base includes 2 members
-      pricePerMember: 19.99, // Additional members beyond 2
+      name: 'Family Professional',
+      basePrice: 49.90, // Base includes 2 members
+      pricePerMember: 24.99, // Additional members beyond 2
       color: 'from-therapy-600 to-harmony-600',
       icon: Crown,
       baseMemberCount: 2,
       features: [
-        'Everything in Premium for all members',
-        '3 therapy plans per member',
+        'Claude 4 Sonnet AI model for all members',
+        'Unlimited AI messages for all members',
+        '10 therapy plans per member',
         'Unlimited AI therapy sessions',
         'Advanced emotion detection',
         'Personalized treatment plans',
