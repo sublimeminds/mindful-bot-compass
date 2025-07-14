@@ -1112,6 +1112,66 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_usage_tracking: {
+        Row: {
+          cost_per_token: number
+          created_at: string
+          id: string
+          input_tokens: number
+          metadata: Json | null
+          model_id: string
+          output_tokens: number
+          provider: string
+          response_time_ms: number | null
+          session_id: string | null
+          subscription_tier: string
+          success: boolean | null
+          task_type: string
+          timestamp: string
+          total_cost: number
+          total_tokens: number
+          user_id: string
+        }
+        Insert: {
+          cost_per_token: number
+          created_at?: string
+          id?: string
+          input_tokens?: number
+          metadata?: Json | null
+          model_id: string
+          output_tokens?: number
+          provider: string
+          response_time_ms?: number | null
+          session_id?: string | null
+          subscription_tier: string
+          success?: boolean | null
+          task_type: string
+          timestamp?: string
+          total_cost: number
+          total_tokens?: number
+          user_id: string
+        }
+        Update: {
+          cost_per_token?: number
+          created_at?: string
+          id?: string
+          input_tokens?: number
+          metadata?: Json | null
+          model_id?: string
+          output_tokens?: number
+          provider?: string
+          response_time_ms?: number | null
+          session_id?: string | null
+          subscription_tier?: string
+          success?: boolean | null
+          task_type?: string
+          timestamp?: string
+          total_cost?: number
+          total_tokens?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -2095,6 +2155,93 @@ export type Database = {
           thread_type?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      cost_forecasts: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          forecast_date: string
+          forecast_period: string
+          id: string
+          model_breakdown: Json | null
+          predicted_cost: number
+          predicted_usage: number
+          subscription_tier: string
+          user_id: string | null
+        }
+        Insert: {
+          confidence_score: number
+          created_at?: string
+          forecast_date: string
+          forecast_period: string
+          id?: string
+          model_breakdown?: Json | null
+          predicted_cost: number
+          predicted_usage: number
+          subscription_tier: string
+          user_id?: string | null
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          forecast_date?: string
+          forecast_period?: string
+          id?: string
+          model_breakdown?: Json | null
+          predicted_cost?: number
+          predicted_usage?: number
+          subscription_tier?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      cost_optimization_recommendations: {
+        Row: {
+          acted_upon_at: string | null
+          confidence_score: number
+          created_at: string
+          description: string
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          metadata: Json | null
+          potential_savings: number | null
+          priority: number | null
+          recommendation_type: string
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          acted_upon_at?: string | null
+          confidence_score: number
+          created_at?: string
+          description: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          potential_savings?: number | null
+          priority?: number | null
+          recommendation_type: string
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          acted_upon_at?: string | null
+          confidence_score?: number
+          created_at?: string
+          description?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          potential_savings?: number | null
+          priority?: number | null
+          recommendation_type?: string
+          title?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -4348,6 +4495,54 @@ export type Database = {
           severity_level?: string | null
           total_score?: number | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      model_performance_tracking: {
+        Row: {
+          avg_response_time_ms: number | null
+          created_at: string
+          date: string
+          failed_requests: number | null
+          id: string
+          model_id: string
+          provider: string
+          quality_score: number | null
+          successful_requests: number | null
+          total_cost: number | null
+          total_requests: number | null
+          total_tokens: number | null
+          user_satisfaction_score: number | null
+        }
+        Insert: {
+          avg_response_time_ms?: number | null
+          created_at?: string
+          date: string
+          failed_requests?: number | null
+          id?: string
+          model_id: string
+          provider: string
+          quality_score?: number | null
+          successful_requests?: number | null
+          total_cost?: number | null
+          total_requests?: number | null
+          total_tokens?: number | null
+          user_satisfaction_score?: number | null
+        }
+        Update: {
+          avg_response_time_ms?: number | null
+          created_at?: string
+          date?: string
+          failed_requests?: number | null
+          id?: string
+          model_id?: string
+          provider?: string
+          quality_score?: number | null
+          successful_requests?: number | null
+          total_cost?: number | null
+          total_requests?: number | null
+          total_tokens?: number | null
+          user_satisfaction_score?: number | null
         }
         Relationships: []
       }
@@ -8398,6 +8593,45 @@ export type Database = {
           },
         ]
       }
+      usage_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          id: string
+          is_active: boolean | null
+          last_triggered_at: string | null
+          notification_channels: string[] | null
+          threshold_type: string
+          threshold_value: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          last_triggered_at?: string | null
+          notification_channels?: string[] | null
+          threshold_type: string
+          threshold_value: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          last_triggered_at?: string | null
+          notification_channels?: string[] | null
+          threshold_type?: string
+          threshold_value?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_activity: {
         Row: {
           activity_data: Json | null
@@ -9799,6 +10033,16 @@ export type Database = {
         }
         Returns: number
       }
+      calculate_daily_usage_cost: {
+        Args: { user_id_param: string; date_param: string }
+        Returns: {
+          total_requests: number
+          total_tokens: number
+          total_cost: number
+          avg_response_time: number
+          model_breakdown: Json
+        }[]
+      }
       can_access_member_data: {
         Args: {
           requesting_user_id: string
@@ -9838,6 +10082,15 @@ export type Database = {
           user_history: Json
         }
         Returns: Json
+      }
+      detect_usage_anomalies: {
+        Args: { user_id_param: string; days_lookback?: number }
+        Returns: {
+          anomaly_type: string
+          anomaly_score: number
+          description: string
+          date: string
+        }[]
       }
       generate_backup_codes: {
         Args: Record<PropertyKey, never>

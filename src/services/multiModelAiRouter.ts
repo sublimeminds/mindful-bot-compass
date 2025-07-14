@@ -1,6 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { ConfiguredAIService } from './configuredAiService';
 import { realAIService } from './realAiService';
+import { CostOptimizationService } from './costOptimizationService';
 
 interface ModelSelectionCriteria {
   taskType: 'chat' | 'analysis' | 'crisis' | 'cultural' | 'creative';
@@ -65,15 +66,42 @@ export class MultiModelAIRouter {
     }
   ];
 
-  // Intelligent model selection based on context
+    // Intelligent model selection with cost optimization
   static async selectOptimalModel(criteria: ModelSelectionCriteria): Promise<AIModelProvider> {
     let filteredModels = this.availableModels.filter(model => 
       model.available && model.capabilities.includes(criteria.taskType)
     );
 
+    // Check if user has budget constraints
+    const userId = (criteria as any).userId;
+    let budgetConstraints = null;
+    
+    if (userId) {
+      try {
+        const usageLimits = await CostOptimizationService.checkUsageAlerts(userId);
+        const monthlyUsage = await CostOptimizationService.getUserUsageMetrics(userId, 'month');
+        
+        // If approaching cost limits, prefer cheaper models
+        if (usageLimits.some(alert => alert.type === 'cost_threshold' && alert.current > alert.threshold * 0.8)) {
+          budgetConstraints = 'strict';
+        } else if (monthlyUsage.totalCost > 10) {
+          budgetConstraints = 'moderate';
+        }
+      } catch (error) {
+        console.warn('Could not check budget constraints:', error);
+      }
+    }
+
+    // Apply budget constraints
+    if (budgetConstraints === 'strict') {
+      filteredModels = filteredModels.filter(m => m.costPerToken <= 0.00002);
+    } else if (budgetConstraints === 'moderate' && criteria.taskType !== 'crisis') {
+      filteredModels = filteredModels.filter(m => m.costPerToken <= 0.00008);
+    }
+
     // Priority-based selection
     if (criteria.urgency === 'critical') {
-      // For crisis situations, prioritize quality over speed
+      // For crisis situations, prioritize quality over cost
       filteredModels = filteredModels.filter(m => m.qualityScore > 0.9);
       return filteredModels.reduce((best, current) => 
         current.qualityScore > best.qualityScore ? current : best
@@ -88,33 +116,50 @@ export class MultiModelAIRouter {
       );
     }
 
-    if (criteria.userTier === 'free') {
-      // Cost-optimized for free users
+    if (criteria.userTier === 'free' || budgetConstraints === 'strict') {
+      // Cost-optimized for free users or budget constraints
       return filteredModels.reduce((best, current) => 
         current.costPerToken < best.costPerToken ? current : best
       );
     }
 
     if (criteria.userTier === 'pro') {
-      // Mid-tier: Balance quality and cost
+      // Mid-tier: Balance quality and cost with budget awareness
       return filteredModels.reduce((best, current) => {
-        const currentScore = current.qualityScore * 0.7 + (1 / current.costPerToken) * 0.3;
-        const bestScore = best.qualityScore * 0.7 + (1 / best.costPerToken) * 0.3;
+        const costWeight = budgetConstraints ? 0.5 : 0.3;
+        const qualityWeight = budgetConstraints ? 0.5 : 0.7;
+        const currentScore = current.qualityScore * qualityWeight + (1 / current.costPerToken) * costWeight;
+        const bestScore = best.qualityScore * qualityWeight + (1 / best.costPerToken) * costWeight;
         return currentScore > bestScore ? current : best;
       });
     }
 
     if (criteria.complexity === 'complex' || criteria.culturalContext) {
-      // Use highest quality model for complex tasks
+      // Use highest quality model for complex tasks, but consider cost if constrained
+      if (budgetConstraints) {
+        return filteredModels.reduce((best, current) => {
+          const currentScore = (current.qualityScore * 0.8) + ((1 / current.costPerToken) * 0.2);
+          const bestScore = (best.qualityScore * 0.8) + ((1 / best.costPerToken) * 0.2);
+          return currentScore > bestScore ? current : best;
+        });
+      }
       return filteredModels.reduce((best, current) => 
         current.qualityScore > best.qualityScore ? current : best
       );
     }
 
-    // Default: balanced selection
+    // Default: balanced selection with cost awareness
     return filteredModels.reduce((best, current) => {
-      const currentScore = (current.qualityScore * 0.6) + ((1 / current.averageLatency) * 0.3) + ((1 / current.costPerToken) * 0.1);
-      const bestScore = (best.qualityScore * 0.6) + ((1 / best.averageLatency) * 0.3) + ((1 / best.costPerToken) * 0.1);
+      const costWeight = budgetConstraints ? 0.3 : 0.1;
+      const qualityWeight = budgetConstraints ? 0.5 : 0.6;
+      const speedWeight = 0.2;
+      
+      const currentScore = (current.qualityScore * qualityWeight) + 
+                          ((1 / current.averageLatency) * speedWeight) + 
+                          ((1 / current.costPerToken) * costWeight);
+      const bestScore = (best.qualityScore * qualityWeight) + 
+                       ((1 / best.averageLatency) * speedWeight) + 
+                       ((1 / best.costPerToken) * costWeight);
       return currentScore > bestScore ? current : best;
     });
   }
@@ -144,13 +189,34 @@ export class MultiModelAIRouter {
 
       const responseTime = Date.now() - startTime;
       
-      // Record performance metrics
+      // Record performance metrics and cost tracking
       await this.recordPerformanceMetrics(selectedModel.id, {
         responseTime,
         taskType: criteria.taskType,
         success: true,
         userId: context.userId
       });
+
+      // Track detailed usage for cost optimization
+      if (context.userId && response.tokenUsage) {
+        await CostOptimizationService.trackUsage({
+          userId: context.userId,
+          sessionId: context.sessionId,
+          modelId: selectedModel.id,
+          provider: selectedModel.provider,
+          taskType: criteria.taskType,
+          inputTokens: response.tokenUsage.inputTokens || 0,
+          outputTokens: response.tokenUsage.outputTokens || 0,
+          responseTimeMs: responseTime,
+          subscriptionTier: criteria.userTier,
+          success: true,
+          metadata: {
+            complexity: criteria.complexity,
+            urgency: criteria.urgency,
+            culturalContext: criteria.culturalContext
+          }
+        });
+      }
 
       return {
         ...response,
