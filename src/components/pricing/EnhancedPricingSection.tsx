@@ -72,11 +72,7 @@ const EnhancedPricingSection = () => {
           'Cultural adaptation (30+ cultures)',
           'Claude 4 Opus AI model',
           'Priority support',
-          'Podcasts & meditation library',
-          'Family plan support (2-15 members)',
-          'Shared family dashboard',
-          'Parental controls & monitoring',
-          'Family crisis intervention'
+          'Podcasts & meditation library'
         ],
       limitations: [],
       buttonText: 'Start Premium',
@@ -103,13 +99,7 @@ const EnhancedPricingSection = () => {
           'Claude 4 Opus AI model',
           'Phone support',
           'Data export',
-          'Premium content',
-          'Advanced family plans (2-15 members)',
-          'Multi-family household support',
-          'Advanced parental controls',
-          'Family usage analytics',
-          'Priority family crisis support',
-          'Custom family workflows'
+          'Premium content'
         ],
       limitations: [],
       buttonText: 'Start 7-Day Free Trial',

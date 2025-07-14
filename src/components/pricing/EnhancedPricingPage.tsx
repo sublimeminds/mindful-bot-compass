@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { Check, Crown, Zap, Star, Users, Globe, MapPin } from 'lucide-react';
+import { Check, Crown, Zap, Star, Users, Globe, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import { useEnhancedCurrency } from '@/hooks/useEnhancedCurrency';
 import GradientLogo from '@/components/ui/GradientLogo';
 import AdaptivePlanBuilder from '@/components/family/AdaptivePlanBuilder';
@@ -31,6 +31,7 @@ const EnhancedPricingPage = () => {
   const [showFamilyPlans, setShowFamilyPlans] = useState(false);
   const [taxInfo, setTaxInfo] = useState<any>(null);
   const [loadingTax, setLoadingTax] = useState(false);
+  const [showExtendedFeatures, setShowExtendedFeatures] = useState(false);
 
   const suggestion = suggestCurrencyFromLocation();
 
@@ -359,144 +360,251 @@ const EnhancedPricingPage = () => {
         )}
 
         {/* Comprehensive Feature Comparison Table */}
-        <div className="max-w-7xl mx-auto mb-16">
+        <div className="max-w-6xl mx-auto mb-16">
           <h3 className="text-3xl font-bold text-center text-slate-900 mb-8">
             Complete Feature <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">Comparison</span>
           </h3>
           
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[600px]">
                 <thead className="bg-gradient-to-r from-slate-50 to-therapy-50">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 border-b border-slate-200">Features</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-slate-900 border-b border-slate-200 w-28">Free</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-therapy-700 border-b border-therapy-200 w-28 bg-therapy-50">Premium</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-harmony-700 border-b border-harmony-200 w-28">Professional</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-balance-700 border-b border-balance-200 w-32">Family Plans</th>
+                    <th className="px-4 py-4 text-left text-sm font-semibold text-slate-900 border-b border-slate-200 min-w-[200px]">Features</th>
+                    <th className="px-3 py-4 text-center text-sm font-semibold text-slate-900 border-b border-slate-200 w-20">Free</th>
+                    <th className="px-3 py-4 text-center text-sm font-semibold text-therapy-700 border-b border-therapy-200 w-24 bg-therapy-50">Premium</th>
+                    <th className="px-3 py-4 text-center text-sm font-semibold text-harmony-700 border-b border-harmony-200 w-28">Professional</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {/* Core Features */}
                   <tr className="bg-slate-50/50">
-                    <td className="px-6 py-3 text-sm font-semibold text-slate-700" colSpan={5}>Core Features</td>
+                    <td className="px-4 py-3 text-sm font-semibold text-slate-700" colSpan={4}>Core Features</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">Therapy Plans</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">1</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">3</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">10</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                    <td className="px-4 py-3 text-sm text-slate-700">Therapy Plans</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">1</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">3</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">10</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">AI Therapy Sessions</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">8/month</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                    <td className="px-4 py-3 text-sm text-slate-700">AI Therapy Sessions</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">8/month</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">Unlimited</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">AI Messages per Day</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">100</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                    <td className="px-4 py-3 text-sm text-slate-700">AI Messages per Day</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">100</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">Unlimited</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">AI Therapist Personalities</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">2</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">8</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">12+</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">12+</td>
+                    <td className="px-4 py-3 text-sm text-slate-700">AI Therapist Personalities</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">2</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">8</td>
+                    <td className="px-3 py-3 text-center text-sm text-slate-600">12+</td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-3 text-sm text-slate-700">Basic Mood Tracking</td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-3 text-sm text-slate-700">Community Access</td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
                   </tr>
                   
                   {/* Advanced Features */}
                   <tr className="bg-slate-50/50">
-                    <td className="px-6 py-3 text-sm font-semibold text-slate-700" colSpan={5}>Advanced Features</td>
+                    <td className="px-4 py-3 text-sm font-semibold text-slate-700" colSpan={4}>Advanced Features</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">Voice Interaction</td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
-                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
-                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-balance-500 mx-auto" /></td>
+                    <td className="px-4 py-3 text-sm text-slate-700">Voice Interaction</td>
+                    <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">Cultural Adaptation</td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">30+ cultures</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">30+ cultures</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">30+ cultures</td>
+                    <td className="px-4 py-3 text-sm text-slate-700">Cultural Adaptation</td>
+                    <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">30+ cultures</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">30+ cultures</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">AI Model</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">GPT-4o Mini</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Claude 4 Opus</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Claude 4 Opus</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Claude 4 Opus</td>
+                    <td className="px-4 py-3 text-sm text-slate-700">AI Model</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">GPT-4o Mini</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">Claude 4 Opus</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">Claude 4 Opus</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">API Access</td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">1,000 calls/month</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Included</td>
+                    <td className="px-4 py-3 text-sm text-slate-700">Advanced Mood Analytics</td>
+                    <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-3 text-sm text-slate-700">Real-time AI Insights</td>
+                    <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-3 text-sm text-slate-700">Personalized Reports</td>
+                    <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">Anytime access</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">Anytime access</td>
                   </tr>
                   
-                  {/* Family-Specific Features */}
-                  <tr className="bg-balance-50/50">
-                    <td className="px-6 py-3 text-sm font-semibold text-balance-700" colSpan={5}>Family-Specific Features</td>
+                  {/* Professional Features */}
+                  <tr className="bg-slate-50/50">
+                    <td className="px-4 py-3 text-sm font-semibold text-slate-700" colSpan={4}>Professional Features</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">Family Plan Support</td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">2-15 members</td>
+                    <td className="px-4 py-3 text-sm text-slate-700">API Access</td>
+                    <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">1,000 calls/month</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">Shared Family Dashboard</td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-balance-500 mx-auto" /></td>
+                    <td className="px-4 py-3 text-sm text-slate-700">Data Export</td>
+                    <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">Parental Controls & Monitoring</td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-balance-500 mx-auto" /></td>
+                    <td className="px-4 py-3 text-sm text-slate-700">Premium Content Library</td>
+                    <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">Basic</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">Full access</td>
                   </tr>
-                  <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">Family Crisis Support</td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-balance-500 mx-auto" /></td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">Family Usage Analytics</td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
-                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-balance-500 mx-auto" /></td>
-                  </tr>
+
+                  {/* Extended Features (collapsible) */}
+                  {showExtendedFeatures && (
+                    <>
+                      {/* Content & Media */}
+                      <tr className="bg-slate-50/50">
+                        <td className="px-4 py-3 text-sm font-semibold text-slate-700" colSpan={4}>Content & Media</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-sm text-slate-700">Podcasts & Meditation Library</td>
+                        <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                        <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                        <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-sm text-slate-700">Guided Meditation Sessions</td>
+                        <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                        <td className="px-3 py-3 text-center text-xs text-slate-600">50+ sessions</td>
+                        <td className="px-3 py-3 text-center text-xs text-slate-600">100+ sessions</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-sm text-slate-700">Self-Help Workbooks</td>
+                        <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                        <td className="px-3 py-3 text-center text-xs text-slate-600">Basic</td>
+                        <td className="px-3 py-3 text-center text-xs text-slate-600">Premium</td>
+                      </tr>
+                      
+                      {/* Analytics & Insights */}
+                      <tr className="bg-slate-50/50">
+                        <td className="px-4 py-3 text-sm font-semibold text-slate-700" colSpan={4}>Analytics & Insights</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-sm text-slate-700">Progress Tracking</td>
+                        <td className="px-3 py-3 text-center text-xs text-slate-600">Basic</td>
+                        <td className="px-3 py-3 text-center text-xs text-slate-600">Advanced</td>
+                        <td className="px-3 py-3 text-center text-xs text-slate-600">Professional</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-sm text-slate-700">Trend Analysis</td>
+                        <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                        <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                        <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-sm text-slate-700">Custom Goal Setting</td>
+                        <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                        <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                        <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
+                      </tr>
+                      
+                      {/* Integration & Sharing */}
+                      <tr className="bg-slate-50/50">
+                        <td className="px-4 py-3 text-sm font-semibold text-slate-700" colSpan={4}>Integration & Sharing</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-sm text-slate-700">Calendar Integration</td>
+                        <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                        <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                        <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-sm text-slate-700">Health App Integration</td>
+                        <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                        <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                        <td className="px-3 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-sm text-slate-700">Shareable Progress Reports</td>
+                        <td className="px-3 py-3 text-center"><span className="text-slate-400">×</span></td>
+                        <td className="px-3 py-3 text-center text-xs text-slate-600">Basic</td>
+                        <td className="px-3 py-3 text-center text-xs text-slate-600">Advanced</td>
+                      </tr>
+                    </>
+                  )}
                   
                   {/* Support */}
                   <tr className="bg-slate-50/50">
-                    <td className="px-6 py-3 text-sm font-semibold text-slate-700" colSpan={5}>Support</td>
+                    <td className="px-4 py-3 text-sm font-semibold text-slate-700" colSpan={4}>Support</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 text-sm text-slate-700">Support Type</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Email</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Priority</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Phone</td>
-                    <td className="px-6 py-3 text-center text-sm text-slate-600">Priority Family</td>
+                    <td className="px-4 py-3 text-sm text-slate-700">Support Type</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">Email</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">Priority</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">Phone</td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-3 text-sm text-slate-700">Response Time</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">48 hours</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">24 hours</td>
+                    <td className="px-3 py-3 text-center text-xs text-slate-600">4 hours</td>
                   </tr>
                 </tbody>
               </table>
             </div>
+            
+            {/* Show More/Less Button */}
+            <div className="text-center py-4 border-t border-slate-200 bg-slate-50/50">
+              <Button
+                variant="ghost"
+                onClick={() => setShowExtendedFeatures(!showExtendedFeatures)}
+                className="text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50"
+              >
+                {showExtendedFeatures ? (
+                  <>
+                    <ChevronUp className="h-4 w-4 mr-2" />
+                    Show Less Features
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4 mr-2" />
+                    Show More Features
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+          
+          {/* Family Plans Note */}
+          <div className="text-center mt-6">
+            <p className="text-sm text-slate-600 bg-balance-50 border border-balance-200 rounded-lg p-4 max-w-2xl mx-auto">
+              <Users className="h-4 w-4 inline mr-2 text-balance-600" />
+              <strong>Family Plans:</strong> Available for Premium and Professional tiers with shared family dashboard, 
+              parental controls, and family crisis support. Starting at 2 members with custom pricing.
+            </p>
           </div>
         </div>
 
