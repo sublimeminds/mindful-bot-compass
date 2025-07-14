@@ -39,10 +39,10 @@ const EnhancedPricingSection = () => {
       features: [
         '1 therapy plan',
         '8 AI therapy sessions per month',
-        '50 AI messages per day',
+        '100 AI messages per day',
         'Basic mood tracking',
         'Community access',
-        'GPT-4o Mini AI model',
+        'GPT-4o AI model',
         'Email support'
       ],
       limitations: ['Limited session history', 'Basic analytics only'],
@@ -67,7 +67,7 @@ const EnhancedPricingSection = () => {
         'Personalized insights',
         'Crisis support',
         'Voice interaction',
-        'GPT-4o Mini AI model',
+        'Claude Opus AI model',
         'Priority support',
         'Podcasts & meditation library'
       ],
@@ -90,10 +90,8 @@ const EnhancedPricingSection = () => {
         'Unlimited AI messages',
         'Advanced dashboard',
         'API access (1,000 calls/month)',
-        'White-label features',
         'Claude-3.5-Sonnet AI model',
         'Phone support',
-        'Compliance reporting',
         'Data export',
         'Premium content'
       ],
