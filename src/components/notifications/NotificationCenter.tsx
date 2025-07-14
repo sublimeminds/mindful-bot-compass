@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bell, CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
+import { Bell, CheckCircle2, Clock, AlertTriangle, Info } from 'lucide-react';
 import { useIntelligentNotificationsData } from '@/hooks/useIntelligentNotificationsData';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -23,8 +23,10 @@ const NotificationCenter = () => {
         return <AlertTriangle className="h-4 w-4 text-red-500" />;
       case 'medium':
         return <Clock className="h-4 w-4 text-yellow-500" />;
+      case 'low':
+        return <Info className="h-4 w-4 text-blue-500" />;
       default:
-        return <Bell className="h-4 w-4 text-blue-500" />;
+        return <Bell className="h-4 w-4 text-gray-500" />;
     }
   };
 
@@ -32,7 +34,8 @@ const NotificationCenter = () => {
     switch (priority) {
       case 'high': return 'border-red-200 bg-red-50';
       case 'medium': return 'border-yellow-200 bg-yellow-50';
-      default: return 'border-blue-200 bg-blue-50';
+      case 'low': return 'border-blue-200 bg-blue-50';
+      default: return 'border-gray-200 bg-gray-50';
     }
   };
 

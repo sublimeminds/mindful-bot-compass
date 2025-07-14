@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import NotificationCenter from '@/components/notifications/NotificationCenter';
+import NotificationTester from '@/components/notifications/NotificationTester';
 
 const NotificationCenterPage = () => {
   const { user, loading } = useAuth();
@@ -30,7 +31,14 @@ const NotificationCenterPage = () => {
           </p>
         </div>
         
-        <NotificationCenter />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <NotificationCenter />
+          </div>
+          <div>
+            <NotificationTester />
+          </div>
+        </div>
       </div>
     </div>
   );
