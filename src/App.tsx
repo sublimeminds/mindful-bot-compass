@@ -20,6 +20,7 @@ import LiveChatAgent from '@/components/LiveChatAgent';
 import { AvatarManagerProvider } from '@/components/avatar/OptimizedAvatarManager';
 import { TherapistProvider } from '@/contexts/TherapistContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { useAffiliateTracking } from '@/hooks/useAffiliateTracking';
 
 import './App.css';
 
@@ -113,6 +114,9 @@ function ContextReadyWrapper({ children }: { children: React.ReactNode }) {
 
 // Bulletproof App with enhanced authentication
 function App() {
+  // Initialize affiliate tracking globally
+  useAffiliateTracking();
+  
   return (
     <ReactSafeWrapper>
       <QueryClientProvider client={queryClient}>
