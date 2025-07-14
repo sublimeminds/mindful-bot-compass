@@ -894,6 +894,39 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_feature_toggles: {
+        Row: {
+          conditions: Json | null
+          created_at: string
+          enabled: boolean
+          feature_name: string
+          id: string
+          rollout_percentage: number | null
+          updated_at: string
+          user_type: string
+        }
+        Insert: {
+          conditions?: Json | null
+          created_at?: string
+          enabled?: boolean
+          feature_name: string
+          id?: string
+          rollout_percentage?: number | null
+          updated_at?: string
+          user_type: string
+        }
+        Update: {
+          conditions?: Json | null
+          created_at?: string
+          enabled?: boolean
+          feature_name?: string
+          id?: string
+          rollout_percentage?: number | null
+          updated_at?: string
+          user_type?: string
+        }
+        Relationships: []
+      }
       ai_model_configs: {
         Row: {
           capabilities: string[]
@@ -1055,6 +1088,42 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_routing_rules: {
+        Row: {
+          conditions: Json | null
+          created_at: string
+          enabled: boolean
+          feature_type: string
+          id: string
+          model_config: Json
+          priority: number
+          updated_at: string
+          user_type: string
+        }
+        Insert: {
+          conditions?: Json | null
+          created_at?: string
+          enabled?: boolean
+          feature_type: string
+          id?: string
+          model_config?: Json
+          priority?: number
+          updated_at?: string
+          user_type: string
+        }
+        Update: {
+          conditions?: Json | null
+          created_at?: string
+          enabled?: boolean
+          feature_type?: string
+          id?: string
+          model_config?: Json
+          priority?: number
+          updated_at?: string
+          user_type?: string
+        }
+        Relationships: []
+      }
       ai_therapy_analysis: {
         Row: {
           analysis_version: string
@@ -1168,6 +1237,39 @@ export type Database = {
           timestamp?: string
           total_cost?: number
           total_tokens?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_user_overrides: {
+        Row: {
+          created_at: string
+          created_by: string
+          expires_at: string | null
+          id: string
+          override_type: string
+          override_value: Json
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          expires_at?: string | null
+          id?: string
+          override_type: string
+          override_value: Json
+          reason: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          expires_at?: string | null
+          id?: string
+          override_type?: string
+          override_value?: Json
+          reason?: string
           user_id?: string
         }
         Relationships: []
