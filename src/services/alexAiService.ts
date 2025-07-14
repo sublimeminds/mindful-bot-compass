@@ -105,16 +105,17 @@ Always respond in a natural, conversational way that shows you care about the us
       // Enhanced context building with knowledge base
       const enhancedPrompt = await this.buildEnhancedPrompt(userMessage, context);
       
-      // Call OpenAI API with GPT-4.1-2025-04-14
+      // Call OpenAI API with AI Translation support
       const { data, error } = await supabase.functions.invoke('alex-ai-chat', {
         body: {
           message: userMessage,
           systemPrompt: enhancedPrompt,
           context: context,
+          targetLanguage: context.userPreferences?.language || 'en',
           modelConfig: {
             model: 'gpt-4.1-2025-04-14',
-            temperature: 0.8, // Creative but consistent
-            maxTokens: 1200, // Comprehensive responses
+            temperature: 0.8,
+            maxTokens: 1200,
             topP: 0.9
           }
         }

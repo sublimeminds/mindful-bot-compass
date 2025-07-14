@@ -1307,6 +1307,60 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_translations: {
+        Row: {
+          ai_model: string | null
+          context_type: string
+          created_at: string
+          cultural_context: string | null
+          id: string
+          session_id: string | null
+          source_language: string
+          source_text: string
+          target_language: string
+          therapeutic_context: Json | null
+          translated_text: string
+          translation_quality: number | null
+          updated_at: string
+          usage_count: number | null
+          user_id: string | null
+        }
+        Insert: {
+          ai_model?: string | null
+          context_type?: string
+          created_at?: string
+          cultural_context?: string | null
+          id?: string
+          session_id?: string | null
+          source_language: string
+          source_text: string
+          target_language: string
+          therapeutic_context?: Json | null
+          translated_text: string
+          translation_quality?: number | null
+          updated_at?: string
+          usage_count?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          ai_model?: string | null
+          context_type?: string
+          created_at?: string
+          cultural_context?: string | null
+          id?: string
+          session_id?: string | null
+          source_language?: string
+          source_text?: string
+          target_language?: string
+          therapeutic_context?: Json | null
+          translated_text?: string
+          translation_quality?: number | null
+          updated_at?: string
+          usage_count?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       ai_usage_tracking: {
         Row: {
           cost_per_token: number
@@ -2715,6 +2769,45 @@ export type Database = {
         }
         Relationships: []
       }
+      cultural_adaptations: {
+        Row: {
+          adaptation_rules: Json
+          communication_style: Json | null
+          created_at: string
+          cultural_context: string
+          emotional_expressions: Json | null
+          id: string
+          is_active: boolean | null
+          language_code: string
+          therapeutic_modifications: Json | null
+          updated_at: string
+        }
+        Insert: {
+          adaptation_rules: Json
+          communication_style?: Json | null
+          created_at?: string
+          cultural_context: string
+          emotional_expressions?: Json | null
+          id?: string
+          is_active?: boolean | null
+          language_code: string
+          therapeutic_modifications?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          adaptation_rules?: Json
+          communication_style?: Json | null
+          created_at?: string
+          cultural_context?: string
+          emotional_expressions?: Json | null
+          id?: string
+          is_active?: boolean | null
+          language_code?: string
+          therapeutic_modifications?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       cultural_bias_detection: {
         Row: {
           bias_indicators: string[] | null
@@ -3234,6 +3327,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      dynamic_content_translations: {
+        Row: {
+          approval_status: string | null
+          content_id: string
+          content_type: string
+          created_at: string
+          expires_at: string | null
+          human_reviewer_id: string | null
+          id: string
+          localization_data: Json | null
+          original_content: string
+          source_language: string
+          target_language: string
+          translated_content: string
+          updated_at: string
+        }
+        Insert: {
+          approval_status?: string | null
+          content_id: string
+          content_type: string
+          created_at?: string
+          expires_at?: string | null
+          human_reviewer_id?: string | null
+          id?: string
+          localization_data?: Json | null
+          original_content: string
+          source_language: string
+          target_language: string
+          translated_content: string
+          updated_at?: string
+        }
+        Update: {
+          approval_status?: string | null
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          expires_at?: string | null
+          human_reviewer_id?: string | null
+          id?: string
+          localization_data?: Json | null
+          original_content?: string
+          source_language?: string
+          target_language?: string
+          translated_content?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       email_ab_tests: {
         Row: {
@@ -9157,6 +9298,176 @@ export type Database = {
         }
         Relationships: []
       }
+      translation_analytics: {
+        Row: {
+          api_cost: number | null
+          avg_quality_score: number | null
+          context_type: string
+          created_at: string
+          cultural_adaptations_count: number | null
+          date: string
+          id: string
+          language_pair: string
+          response_time_avg: number | null
+          translation_count: number | null
+          user_satisfaction_avg: number | null
+        }
+        Insert: {
+          api_cost?: number | null
+          avg_quality_score?: number | null
+          context_type: string
+          created_at?: string
+          cultural_adaptations_count?: number | null
+          date: string
+          id?: string
+          language_pair: string
+          response_time_avg?: number | null
+          translation_count?: number | null
+          user_satisfaction_avg?: number | null
+        }
+        Update: {
+          api_cost?: number | null
+          avg_quality_score?: number | null
+          context_type?: string
+          created_at?: string
+          cultural_adaptations_count?: number | null
+          date?: string
+          id?: string
+          language_pair?: string
+          response_time_avg?: number | null
+          translation_count?: number | null
+          user_satisfaction_avg?: number | null
+        }
+        Relationships: []
+      }
+      translation_feedback: {
+        Row: {
+          comments: string | null
+          created_at: string
+          feedback_type: string
+          id: string
+          improvements_suggested: Json | null
+          quality_rating: number | null
+          translation_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          comments?: string | null
+          created_at?: string
+          feedback_type: string
+          id?: string
+          improvements_suggested?: Json | null
+          quality_rating?: number | null
+          translation_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          comments?: string | null
+          created_at?: string
+          feedback_type?: string
+          id?: string
+          improvements_suggested?: Json | null
+          quality_rating?: number | null
+          translation_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "translation_feedback_translation_id_fkey"
+            columns: ["translation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_translations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      translation_sessions: {
+        Row: {
+          context_data: Json | null
+          cultural_adaptations_applied: Json | null
+          ended_at: string | null
+          id: string
+          message_count: number | null
+          session_type: string
+          source_language: string
+          started_at: string
+          target_language: string
+          translation_quality_avg: number | null
+          user_id: string
+        }
+        Insert: {
+          context_data?: Json | null
+          cultural_adaptations_applied?: Json | null
+          ended_at?: string | null
+          id?: string
+          message_count?: number | null
+          session_type: string
+          source_language: string
+          started_at?: string
+          target_language: string
+          translation_quality_avg?: number | null
+          user_id: string
+        }
+        Update: {
+          context_data?: Json | null
+          cultural_adaptations_applied?: Json | null
+          ended_at?: string | null
+          id?: string
+          message_count?: number | null
+          session_type?: string
+          source_language?: string
+          started_at?: string
+          target_language?: string
+          translation_quality_avg?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      translation_versions: {
+        Row: {
+          content: string
+          context_data: Json | null
+          created_at: string
+          created_by: string | null
+          human_reviewed: boolean | null
+          id: string
+          is_active: boolean | null
+          language_code: string
+          quality_score: number | null
+          translation_key: string
+          updated_at: string
+          version_number: number
+        }
+        Insert: {
+          content: string
+          context_data?: Json | null
+          created_at?: string
+          created_by?: string | null
+          human_reviewed?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          language_code: string
+          quality_score?: number | null
+          translation_key: string
+          updated_at?: string
+          version_number?: number
+        }
+        Update: {
+          content?: string
+          context_data?: Json | null
+          created_at?: string
+          created_by?: string | null
+          human_reviewed?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          language_code?: string
+          quality_score?: number | null
+          translation_key?: string
+          updated_at?: string
+          version_number?: number
+        }
+        Relationships: []
+      }
       trauma_history: {
         Row: {
           ace_responses: Json | null
@@ -9994,6 +10305,48 @@ export type Database = {
           mastery_level?: number
           review_count?: number
           unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_language_preferences: {
+        Row: {
+          auto_translate: boolean | null
+          communication_style: string | null
+          created_at: string
+          cultural_sensitivity_level: string | null
+          dialect_preference: string | null
+          id: string
+          preferred_languages: string[]
+          preserve_emotional_context: boolean | null
+          translate_therapy_content: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_translate?: boolean | null
+          communication_style?: string | null
+          created_at?: string
+          cultural_sensitivity_level?: string | null
+          dialect_preference?: string | null
+          id?: string
+          preferred_languages: string[]
+          preserve_emotional_context?: boolean | null
+          translate_therapy_content?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_translate?: boolean | null
+          communication_style?: string | null
+          created_at?: string
+          cultural_sensitivity_level?: string | null
+          dialect_preference?: string | null
+          id?: string
+          preferred_languages?: string[]
+          preserve_emotional_context?: boolean | null
+          translate_therapy_content?: boolean | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -10980,6 +11333,15 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_cached_translation: {
+        Args: {
+          p_source_text: string
+          p_source_lang: string
+          p_target_lang: string
+          p_context_type?: string
+        }
+        Returns: string
+      }
       get_therapist_review_metrics: {
         Args: { therapist_id: string }
         Returns: {
@@ -11068,6 +11430,21 @@ export type Database = {
       }
       request_data_export: {
         Args: { user_id_param: string; export_type?: string }
+        Returns: string
+      }
+      store_translation: {
+        Args: {
+          p_source_text: string
+          p_translated_text: string
+          p_source_lang: string
+          p_target_lang: string
+          p_context_type?: string
+          p_quality?: number
+          p_cultural_context?: string
+          p_therapeutic_context?: Json
+          p_user_id?: string
+          p_session_id?: string
+        }
         Returns: string
       }
       update_consent: {
