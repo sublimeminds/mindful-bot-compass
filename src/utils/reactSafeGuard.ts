@@ -4,11 +4,28 @@ import React from 'react';
 export const isReactReady = (): boolean => {
   try {
     // Check if React is available and properly initialized
-    if (typeof React === 'undefined') return false;
-    if (!React.useState) return false;
-    if (!React.useEffect) return false;
-    if (!React.createContext) return false;
+    if (typeof React === 'undefined' || React === null) {
+      console.warn('isReactReady: React is undefined or null');
+      return false;
+    }
+    if (typeof React.useState !== 'function') {
+      console.warn('isReactReady: React.useState is not available');
+      return false;
+    }
+    if (typeof React.useEffect !== 'function') {
+      console.warn('isReactReady: React.useEffect is not available');
+      return false;
+    }
+    if (typeof React.createContext !== 'function') {
+      console.warn('isReactReady: React.createContext is not available');
+      return false;
+    }
+    if (typeof React.useCallback !== 'function') {
+      console.warn('isReactReady: React.useCallback is not available');
+      return false;
+    }
     
+    console.log('isReactReady: All React hooks and functions are available');
     return true;
   } catch (error) {
     console.error('React readiness check failed:', error);

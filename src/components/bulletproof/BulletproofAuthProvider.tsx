@@ -23,150 +23,188 @@ interface BulletproofAuthProviderProps {
 }
 
 export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = ({ children }) => {
-  // Guard against React not being properly initialized
-  if (!checkReactReadiness('BulletproofAuthProvider')) {
-    console.error('React not properly initialized in BulletproofAuthProvider');
-    return React.createElement('div', { key: 'loading' }, 'Loading...');
-  }
-
-  const [user, setUser] = React.useState<User | null>(null);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<Error | null>(null);
-
-  // Enhanced session management with error recovery
-  React.useEffect(() => {
-    let retryCount = 0;
-    const maxRetries = 3;
-
-    const initializeAuth = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Get initial session with retry logic
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        
-        if (sessionError && retryCount < maxRetries) {
-          retryCount++;
-          console.warn(`Auth session retry ${retryCount}/${maxRetries}:`, sessionError);
-          setTimeout(initializeAuth, 1000 * retryCount); // Exponential backoff
-          return;
+  // Simplified React readiness check
+  try {
+    // Just ensure React and useState are available before proceeding
+    if (!React || typeof React.useState !== 'function') {
+      console.error('BulletproofAuthProvider: React or useState not available');
+      return React.createElement('div', { 
+        style: { 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh' 
         }
+      }, 'Loading authentication...');
+    }
 
-        setUser(session?.user ?? null);
-        setLoading(false);
-      } catch (err) {
-        console.error('Auth initialization error:', err);
-        setError(err as Error);
-        setLoading(false);
-      }
-    };
+    const [user, setUser] = React.useState<User | null>(null);
+    const [loading, setLoading] = React.useState(true);
+    const [error, setError] = React.useState<Error | null>(null);
 
-    initializeAuth();
+    // Enhanced session management with error recovery
+    React.useEffect(() => {
+      let retryCount = 0;
+      const maxRetries = 3;
 
-    // Enhanced auth state change listener with error handling
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      const initializeAuth = async () => {
         try {
+          setLoading(true);
+          setError(null);
+
+          // Get initial session with retry logic
+          const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+          
+          if (sessionError && retryCount < maxRetries) {
+            retryCount++;
+            console.warn(`Auth session retry ${retryCount}/${maxRetries}:`, sessionError);
+            setTimeout(initializeAuth, 1000 * retryCount); // Exponential backoff
+            return;
+          }
+
           setUser(session?.user ?? null);
           setLoading(false);
-          setError(null);
-          
-          // Generate contextual notifications for authenticated users
-          if (session?.user) {
-            // Use setTimeout to avoid blocking the auth state change
-            setTimeout(() => {
-              ContextualNotificationService.runContextualChecks(session.user.id);
-            }, 0);
-          }
-          
-          // Log auth events for debugging
-          console.log('Auth state change:', event, session?.user?.id || 'no user');
         } catch (err) {
-          console.error('Auth state change error:', err);
+          console.error('Auth initialization error:', err);
           setError(err as Error);
+          setLoading(false);
         }
-      }
-    );
+      };
 
-    return () => subscription.unsubscribe();
-  }, []);
+      initializeAuth();
 
-  // Enhanced signUp with retry and better error handling
-  const signUp = React.useCallback(async (email: string, password: string) => {
-    try {
-      const { error } = await supabase.auth.signUp({ 
-        email, 
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`
+      // Enhanced auth state change listener with error handling
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        (event, session) => {
+          try {
+            setUser(session?.user ?? null);
+            setLoading(false);
+            setError(null);
+            
+            // Generate contextual notifications for authenticated users
+            if (session?.user) {
+              // Use setTimeout to avoid blocking the auth state change
+              setTimeout(() => {
+                ContextualNotificationService.runContextualChecks(session.user.id);
+              }, 0);
+            }
+            
+            // Log auth events for debugging
+            console.log('Auth state change:', event, session?.user?.id || 'no user');
+          } catch (err) {
+            console.error('Auth state change error:', err);
+            setError(err as Error);
+          }
         }
-      });
-      return { error };
-    } catch (err) {
-      console.error('SignUp error:', err);
-      return { error: err as Error };
-    }
-  }, []);
+      );
 
-  // Enhanced signIn with retry logic
-  const signIn = React.useCallback(async (email: string, password: string) => {
-    let retryCount = 0;
-    const maxRetries = 2;
+      return () => subscription.unsubscribe();
+    }, []);
 
-    const attemptSignIn = async (): Promise<{ error: Error | null }> => {
+    // Enhanced signUp with retry and better error handling
+    const signUp = React.useCallback(async (email: string, password: string) => {
       try {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signUp({ 
+          email, 
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/dashboard`
+          }
+        });
         return { error };
       } catch (err) {
-        if (retryCount < maxRetries && (err as any)?.message?.includes('network')) {
-          retryCount++;
-          console.warn(`SignIn retry ${retryCount}/${maxRetries}:`, err);
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          return attemptSignIn();
-        }
-        console.error('SignIn error:', err);
+        console.error('SignUp error:', err);
         return { error: err as Error };
       }
+    }, []);
+
+    // Enhanced signIn with retry logic
+    const signIn = React.useCallback(async (email: string, password: string) => {
+      let retryCount = 0;
+      const maxRetries = 2;
+
+      const attemptSignIn = async (): Promise<{ error: Error | null }> => {
+        try {
+          const { error } = await supabase.auth.signInWithPassword({ email, password });
+          return { error };
+        } catch (err) {
+          if (retryCount < maxRetries && (err as any)?.message?.includes('network')) {
+            retryCount++;
+            console.warn(`SignIn retry ${retryCount}/${maxRetries}:`, err);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return attemptSignIn();
+          }
+          console.error('SignIn error:', err);
+          return { error: err as Error };
+        }
+      };
+
+      return attemptSignIn();
+    }, []);
+
+    // Enhanced signOut with error handling
+    const signOut = React.useCallback(async () => {
+      try {
+        await supabase.auth.signOut();
+      } catch (err) {
+        console.error('SignOut error:', err);
+        // Even if signOut fails, clear local state
+        setUser(null);
+      }
+    }, []);
+
+    // Provide aliases for compatibility
+    const register = signUp;
+    const login = signIn;
+    const logout = signOut;
+
+    const value: BulletproofAuthContextType = {
+      user,
+      loading,
+      signUp,
+      signIn,
+      signOut,
+      register,
+      login,
+      logout,
     };
 
-    return attemptSignIn();
-  }, []);
-
-  // Enhanced signOut with error handling
-  const signOut = React.useCallback(async () => {
-    try {
-      await supabase.auth.signOut();
-    } catch (err) {
-      console.error('SignOut error:', err);
-      // Even if signOut fails, clear local state
-      setUser(null);
-    }
-  }, []);
-
-  // Provide aliases for compatibility
-  const register = signUp;
-  const login = signIn;
-  const logout = signOut;
-
-  const value: BulletproofAuthContextType = {
-    user,
-    loading,
-    signUp,
-    signIn,
-    signOut,
-    register,
-    login,
-    logout,
-  };
-
-  return (
-    <SafeComponentWrapper name="BulletproofAuthProvider">
-      <BulletproofAuthContext.Provider value={value}>
-        {children}
-      </BulletproofAuthContext.Provider>
-    </SafeComponentWrapper>
-  );
+    return (
+      <SafeComponentWrapper name="BulletproofAuthProvider">
+        <BulletproofAuthContext.Provider value={value}>
+          {children}
+        </BulletproofAuthContext.Provider>
+      </SafeComponentWrapper>
+    );
+  } catch (error) {
+    console.error('BulletproofAuthProvider: Fatal error:', error);
+    return React.createElement('div', { 
+      style: { 
+        display: 'flex', 
+        flexDirection: 'column',
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        padding: '20px',
+        textAlign: 'center'
+      }
+    }, [
+      React.createElement('h3', { key: 'title', style: { color: 'red', marginBottom: '10px' } }, 'Authentication Error'),
+      React.createElement('p', { key: 'message', style: { marginBottom: '20px' } }, 'Failed to initialize authentication. Please refresh the page.'),
+      React.createElement('button', { 
+        key: 'refresh',
+        onClick: () => window.location.reload(),
+        style: { 
+          padding: '10px 20px',
+          backgroundColor: '#007bff',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }
+      }, 'Refresh Page')
+    ]);
+  }
 };
 
 export const useBulletproofAuth = () => {
