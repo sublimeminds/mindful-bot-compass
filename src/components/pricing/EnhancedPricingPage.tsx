@@ -78,11 +78,7 @@ const EnhancedPricingPage = () => {
           'Cultural adaptation (30+ cultures)',
           'Claude 4 Opus AI model',
           'Priority support',
-          'Podcasts & meditation library',
-          'Family plan support (2-15 members)',
-          'Shared family dashboard',
-          'Parental controls & monitoring',
-          'Family crisis intervention'
+          'Podcasts & meditation library'
         ],
       limitations: [],
       buttonText: 'Start Premium',
@@ -109,13 +105,7 @@ const EnhancedPricingPage = () => {
           'Claude 4 Opus AI model',
           'Phone support',
           'Data export',
-          'Premium content',
-          'Advanced family plans (2-15 members)',
-          'Multi-family household support',
-          'Advanced parental controls',
-          'Family usage analytics',
-          'Priority family crisis support',
-          'Custom family workflows'
+          'Premium content'
         ],
       limitations: [],
       buttonText: 'Start 7-Day Free Trial',
@@ -368,6 +358,148 @@ const EnhancedPricingPage = () => {
           </div>
         )}
 
+        {/* Comprehensive Feature Comparison Table */}
+        <div className="max-w-7xl mx-auto mb-16">
+          <h3 className="text-3xl font-bold text-center text-slate-900 mb-8">
+            Complete Feature <span className="bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">Comparison</span>
+          </h3>
+          
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gradient-to-r from-slate-50 to-therapy-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 border-b border-slate-200">Features</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-slate-900 border-b border-slate-200 w-28">Free</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-therapy-700 border-b border-therapy-200 w-28 bg-therapy-50">Premium</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-harmony-700 border-b border-harmony-200 w-28">Professional</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-balance-700 border-b border-balance-200 w-32">Family Plans</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {/* Core Features */}
+                  <tr className="bg-slate-50/50">
+                    <td className="px-6 py-3 text-sm font-semibold text-slate-700" colSpan={5}>Core Features</td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">Therapy Plans</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">1</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">3</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">10</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">AI Therapy Sessions</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">8/month</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">AI Messages per Day</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">100</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Unlimited</td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">AI Therapist Personalities</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">2</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">8</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">12+</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">12+</td>
+                  </tr>
+                  
+                  {/* Advanced Features */}
+                  <tr className="bg-slate-50/50">
+                    <td className="px-6 py-3 text-sm font-semibold text-slate-700" colSpan={5}>Advanced Features</td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">Voice Interaction</td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-therapy-500 mx-auto" /></td>
+                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-harmony-500 mx-auto" /></td>
+                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-balance-500 mx-auto" /></td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">Cultural Adaptation</td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">30+ cultures</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">30+ cultures</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">30+ cultures</td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">AI Model</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">GPT-4o Mini</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Claude 4 Opus</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Claude 4 Opus</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Claude 4 Opus</td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">API Access</td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">1,000 calls/month</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Included</td>
+                  </tr>
+                  
+                  {/* Family-Specific Features */}
+                  <tr className="bg-balance-50/50">
+                    <td className="px-6 py-3 text-sm font-semibold text-balance-700" colSpan={5}>Family-Specific Features</td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">Family Plan Support</td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">2-15 members</td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">Shared Family Dashboard</td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-balance-500 mx-auto" /></td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">Parental Controls & Monitoring</td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-balance-500 mx-auto" /></td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">Family Crisis Support</td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-balance-500 mx-auto" /></td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">Family Usage Analytics</td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><span className="text-slate-400">×</span></td>
+                    <td className="px-6 py-3 text-center"><Check className="h-4 w-4 text-balance-500 mx-auto" /></td>
+                  </tr>
+                  
+                  {/* Support */}
+                  <tr className="bg-slate-50/50">
+                    <td className="px-6 py-3 text-sm font-semibold text-slate-700" colSpan={5}>Support</td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-3 text-sm text-slate-700">Support Type</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Email</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Priority</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Phone</td>
+                    <td className="px-6 py-3 text-center text-sm text-slate-600">Priority Family</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         {/* Family Plans Section */}
         <div className="text-center mb-12">
           <Card className="max-w-2xl mx-auto bg-gradient-to-r from-harmony-50 to-balance-50 border-harmony-200">
@@ -376,15 +508,27 @@ const EnhancedPricingPage = () => {
                 <Users className="h-8 w-8 text-harmony-600 mr-3" />
                 <h3 className="text-2xl font-bold text-harmony-700">Family Plans Available</h3>
               </div>
-              <p className="text-harmony-600 mb-6">
+              <p className="text-harmony-600 mb-4">
                 Get comprehensive mental health support for your entire family with custom pricing based on your needs. Save more with larger families!
               </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-left">
+                <div className="bg-white/60 p-4 rounded-lg border border-harmony-200">
+                  <h4 className="font-semibold text-harmony-700 mb-2">Family Pro</h4>
+                  <p className="text-sm text-harmony-600 mb-2">Starting at {formatPrice(convertPrice(25))} for 2 members</p>
+                  <p className="text-xs text-harmony-500">{formatPrice(convertPrice(8))} per additional member</p>
+                </div>
+                <div className="bg-white/60 p-4 rounded-lg border border-harmony-200">
+                  <h4 className="font-semibold text-harmony-700 mb-2">Family Premium</h4>
+                  <p className="text-sm text-harmony-600 mb-2">Starting at {formatPrice(convertPrice(40))} for 2 members</p>
+                  <p className="text-xs text-harmony-500">{formatPrice(convertPrice(12))} per additional member</p>
+                </div>
+              </div>
               <Button
                 onClick={() => setShowFamilyPlans(true)}
                 className="bg-gradient-to-r from-harmony-500 to-balance-500 hover:from-harmony-600 hover:to-balance-600 text-white px-8 py-3 font-semibold"
               >
                 <Users className="h-5 w-5 mr-2" />
-                Configure Family Plan
+                Customize Family Plan
               </Button>
             </CardContent>
           </Card>
