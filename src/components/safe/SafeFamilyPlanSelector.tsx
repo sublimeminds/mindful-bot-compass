@@ -8,7 +8,7 @@ interface SafeFamilyPlanSelectorProps {
 
 // Lazy load the actual component to prevent early initialization
 const LazyFamilyPlanSelector = React.lazy(() => 
-  import('@/components/family/FamilyPlanSelector').catch(() => ({
+  import('@/components/family/RestyledFamilyPlanSelector').catch(() => ({
     default: () => null // Fallback component if import fails
   }))
 );

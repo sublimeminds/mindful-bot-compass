@@ -26,9 +26,9 @@ export const adaptivePricingService = {
     return [
       {
         id: 'family-pro',
-        name: 'Family Pro',
-        basePrice: 39,
-        pricePerSeat: 15,
+        name: 'Family Premium',
+        basePrice: 28.90, // Base includes 2 seats (same as Premium plan + family features)
+        pricePerSeat: 12.90, // Additional seat pricing (same as Premium)
         minSeats: 2,
         maxSeats: 10,
         tier: 'pro',
@@ -44,9 +44,9 @@ export const adaptivePricingService = {
       },
       {
         id: 'family-premium',
-        name: 'Family Premium', 
-        basePrice: 59,
-        pricePerSeat: 20,
+        name: 'Family Professional', 
+        basePrice: 46.90, // Base includes 2 seats (same as Professional plan + family features)
+        pricePerSeat: 19.90, // Additional seat pricing (same as Professional)
         minSeats: 2,
         maxSeats: 15,
         tier: 'premium',
@@ -68,7 +68,9 @@ export const adaptivePricingService = {
 
   calculatePricing(plan: AdaptivePlan, seats: number): PricingCalculation {
     const effectiveSeats = Math.max(seats, plan.minSeats);
-    const monthlyPrice = plan.basePrice + (plan.pricePerSeat * (effectiveSeats - 1));
+    // Base price already includes 2 seats, so only charge for additional seats beyond 2
+    const additionalSeats = Math.max(0, effectiveSeats - 2);
+    const monthlyPrice = plan.basePrice + (plan.pricePerSeat * additionalSeats);
     const yearlyPrice = monthlyPrice * 10; // 2 months free
     const savingsAmount = monthlyPrice * 2;
     const savingsPercent = Math.round((savingsAmount / (monthlyPrice * 12)) * 100);

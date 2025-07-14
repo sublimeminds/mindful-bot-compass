@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Check, Crown, Zap, Star, Users } from 'lucide-react';
 import { useEnhancedCurrency } from '@/hooks/useEnhancedCurrency';
 import GradientLogo from '@/components/ui/GradientLogo';
-import AdaptivePlanBuilder from '@/components/family/AdaptivePlanBuilder';
+import RestyledFamilyPlanSelector from '@/components/family/RestyledFamilyPlanSelector';
 
 const EnhancedPricingSection = () => {
   const navigate = useNavigate();
@@ -288,18 +288,9 @@ const EnhancedPricingSection = () => {
         </div>
       </div>
 
-      <AdaptivePlanBuilder
+      <RestyledFamilyPlanSelector
         isOpen={showFamilyPlans}
         onClose={() => setShowFamilyPlans(false)}
-        onPlanSelect={(planId: string, seats: number, billingCycle: 'monthly' | 'yearly') => {
-          localStorage.setItem('selectedPlan', JSON.stringify({
-            name: `Family ${planId}`,
-            seats,
-            billingCycle,
-            selectedAt: new Date().toISOString()
-          }));
-          navigate('/onboarding');
-        }}
       />
     </section>
   );

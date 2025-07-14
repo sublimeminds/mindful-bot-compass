@@ -8,7 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Check, Crown, Zap, Star, Users, Globe, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import { useEnhancedCurrency } from '@/hooks/useEnhancedCurrency';
 import GradientLogo from '@/components/ui/GradientLogo';
-import AdaptivePlanBuilder from '@/components/family/AdaptivePlanBuilder';
+import RestyledFamilyPlanSelector from '@/components/family/RestyledFamilyPlanSelector';
 import CurrencySelector from './CurrencySelector';
 import TaxInformation from './TaxInformation';
 import { AdvancedBillingService } from '@/services/advancedBillingService';
@@ -620,16 +620,16 @@ const EnhancedPricingPage = () => {
                 Get comprehensive mental health support for your entire family with custom pricing based on your needs. Save more with larger families!
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-left">
-                <div className="bg-white/60 p-4 rounded-lg border border-harmony-200">
-                  <h4 className="font-semibold text-harmony-700 mb-2">Family Pro</h4>
-                  <p className="text-sm text-harmony-600 mb-2">Starting at {formatPrice(convertPrice(25))} for 2 members</p>
-                  <p className="text-xs text-harmony-500">{formatPrice(convertPrice(8))} per additional member</p>
-                </div>
-                <div className="bg-white/60 p-4 rounded-lg border border-harmony-200">
-                  <h4 className="font-semibold text-harmony-700 mb-2">Family Premium</h4>
-                  <p className="text-sm text-harmony-600 mb-2">Starting at {formatPrice(convertPrice(40))} for 2 members</p>
-                  <p className="text-xs text-harmony-500">{formatPrice(convertPrice(12))} per additional member</p>
-                </div>
+                 <div className="bg-white/60 p-4 rounded-lg border border-harmony-200">
+                   <h4 className="font-semibold text-harmony-700 mb-2">Family Premium</h4>
+                   <p className="text-sm text-harmony-600 mb-2">Starting at {formatPrice(convertPrice(28.90))} for 2 members</p>
+                   <p className="text-xs text-harmony-500">{formatPrice(convertPrice(12.90))} per additional member</p>
+                 </div>
+                 <div className="bg-white/60 p-4 rounded-lg border border-harmony-200">
+                   <h4 className="font-semibold text-harmony-700 mb-2">Family Professional</h4>
+                   <p className="text-sm text-harmony-600 mb-2">Starting at {formatPrice(convertPrice(46.90))} for 2 members</p>
+                   <p className="text-xs text-harmony-500">{formatPrice(convertPrice(19.90))} per additional member</p>
+                 </div>
               </div>
               <Button
                 onClick={() => setShowFamilyPlans(true)}
@@ -655,10 +655,9 @@ const EnhancedPricingPage = () => {
         </div>
       </div>
 
-      <AdaptivePlanBuilder
+      <RestyledFamilyPlanSelector
         isOpen={showFamilyPlans}
         onClose={() => setShowFamilyPlans(false)}
-        onPlanSelect={handleFamilyPlanSelect}
       />
     </section>
   );

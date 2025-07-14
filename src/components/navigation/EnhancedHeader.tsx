@@ -329,7 +329,7 @@ const EnhancedHeader = () => {
           <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link 
-            to={user ? "/dashboard" : "/"} 
+            to="/" 
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
             <GradientLogo size="sm" />
