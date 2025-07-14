@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
-import { NotificationService, Notification } from '@/services/notificationService';
+import { RealNotificationService, Notification } from '@/services/realNotificationService';
 import { useToast } from '@/hooks/use-toast';
 
 export const useNotifications = () => {
@@ -16,7 +16,7 @@ export const useNotifications = () => {
     refetch
   } = useQuery({
     queryKey: ['notifications', user?.id],
-    queryFn: () => user ? NotificationService.getUserNotifications(user.id) : [],
+    queryFn: () => user ? RealNotificationService.getUserNotifications(user.id) : [],
     enabled: !!user,
     staleTime: 30000, // 30 seconds
     refetchInterval: 60000, // 1 minute
@@ -26,7 +26,7 @@ export const useNotifications = () => {
     if (!user) return false;
 
     try {
-      const success = await NotificationService.markAsRead(notificationId);
+      const success = await RealNotificationService.markAsRead(notificationId);
       
       if (success) {
         // Update the local cache
@@ -70,7 +70,7 @@ export const useNotifications = () => {
       const unreadNotifications = notifications.filter(n => !n.isRead);
       
       // Mark all unread notifications as read
-      const promises = unreadNotifications.map(n => NotificationService.markAsRead(n.id));
+      const promises = unreadNotifications.map(n => RealNotificationService.markAsRead(n.id));
       const results = await Promise.all(promises);
       
       if (results.every(success => success)) {

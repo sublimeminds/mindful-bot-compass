@@ -13,94 +13,45 @@ import {
   TrendingUp,
   Award,
   ChevronRight,
-  Clock
+  Clock,
+  AlertTriangle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
-
-// Enhanced mock data with more realistic notifications
-const SAMPLE_NOTIFICATIONS = [
-  {
-    id: '1',
-    type: 'session_reminder',
-    title: 'Session Reminder',
-    message: 'Your therapy session is scheduled for 3:00 PM today. Don\'t forget to prepare your mood check-in.',
-    priority: 'high' as const,
-    isRead: false,
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-    data: { sessionId: 'sess_123', technique: 'CBT' }
-  },
-  {
-    id: '2',
-    type: 'milestone_achieved',
-    title: 'Milestone Unlocked! 🎉',
-    message: 'Congratulations! You\'ve completed 7 consecutive days of mood tracking. Keep up the excellent work!',
-    priority: 'medium' as const,
-    isRead: false,
-    createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-    data: { achievement: '7_day_streak', xpEarned: 100 }
-  },
-  {
-    id: '3',
-    type: 'insight_generated',
-    title: 'New Insight Available',
-    message: 'Your AI therapist has generated new insights based on your recent mood patterns. Take a look to see personalized recommendations.',
-    priority: 'medium' as const,
-    isRead: true,
-    createdAt: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
-    data: { insightType: 'mood_pattern', confidence: 0.87 }
-  },
-  {
-    id: '4',
-    type: 'mood_check',
-    title: 'Daily Mood Check-in',
-    message: 'How are you feeling today? Take a moment to track your mood and reflect on your emotional state.',
-    priority: 'low' as const,
-    isRead: true,
-    createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-    data: { reminderType: 'daily', streak: 6 }
-  },
-  {
-    id: '5',
-    type: 'progress_update',
-    title: 'Weekly Progress Update',
-    message: 'You\'ve made significant progress this week! Your mood improved by 15% and you completed 4 therapy sessions.',
-    priority: 'low' as const,
-    isRead: true,
-    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-    data: { weeklyImprovement: 15, sessionsCompleted: 4 }
-  }
-];
+import { useNotifications } from '@/hooks/useNotifications';
 
 const EnhancedNotificationWidget = () => {
   const navigate = useNavigate();
-  const notifications = SAMPLE_NOTIFICATIONS;
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  const { 
+    recentNotifications: notifications, 
+    unreadCount, 
+    isLoading, 
+    markAsRead 
+  } = useNotifications();
 
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'session_reminder': return <Calendar className="h-4 w-4 text-therapy-600" />;
       case 'milestone_achieved': return <Award className="h-4 w-4 text-balance-600" />;
-      case 'insight_generated': return <TrendingUp className="h-4 w-4 text-flow-600" />;
-      case 'mood_check': return <Heart className="h-4 w-4 text-harmony-600" />;
-      case 'progress_update': return <Target className="h-4 w-4 text-calm-600" />;
+      case 'progress_update': return <TrendingUp className="h-4 w-4 text-flow-600" />;
+      case 'crisis_alert': return <AlertTriangle className="h-4 w-4 text-red-600" />;
       default: return <Bell className="h-4 w-4 text-gray-600" />;
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return 'border-l-red-500 bg-red-50/50';
+      case 'critical': return 'border-l-red-500 bg-red-50/50';
+      case 'high': return 'border-l-orange-500 bg-orange-50/50';
       case 'medium': return 'border-l-therapy-500 bg-therapy-50/50';
       case 'low': return 'border-l-green-500 bg-green-50/50';
       default: return 'border-l-gray-500 bg-gray-50/50';
     }
   };
 
-  const handleMarkAsRead = (notificationId: string) => {
-    // In real implementation, this would call the API
-    console.log('Marking notification as read:', notificationId);
+  const handleMarkAsRead = async (notificationId: string) => {
+    await markAsRead(notificationId);
   };
 
   return (
@@ -129,7 +80,12 @@ const EnhancedNotificationWidget = () => {
       </CardHeader>
       
       <CardContent className="p-0 flex-1 overflow-hidden">
-        {notifications.length === 0 ? (
+        {isLoading ? (
+          <div className="p-4 text-center">
+            <div className="animate-spin h-6 w-6 border-4 border-therapy-500 border-t-transparent rounded-full mx-auto mb-2"></div>
+            <p className="text-sm text-slate-600">Loading notifications...</p>
+          </div>
+        ) : notifications.length === 0 ? (
           <div className="p-4 text-center text-muted-foreground">
             <BellOff className="h-6 w-6 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No notifications</p>

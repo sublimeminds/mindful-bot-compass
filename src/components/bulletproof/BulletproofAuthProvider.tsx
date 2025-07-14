@@ -3,6 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { SafeComponentWrapper } from './SafeComponentWrapper';
 import { checkReactReadiness } from '@/utils/reactSafeGuard';
+import { ContextualNotificationService } from '@/services/contextualNotificationService';
 
 interface BulletproofAuthContextType {
   user: User | null;
@@ -70,6 +71,14 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
           setUser(session?.user ?? null);
           setLoading(false);
           setError(null);
+          
+          // Generate contextual notifications for authenticated users
+          if (session?.user) {
+            // Use setTimeout to avoid blocking the auth state change
+            setTimeout(() => {
+              ContextualNotificationService.runContextualChecks(session.user.id);
+            }, 0);
+          }
           
           // Log auth events for debugging
           console.log('Auth state change:', event, session?.user?.id || 'no user');
