@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { IntelligentNotificationService, IntelligentNotification } from '@/services/intelligentNotificationService';
+import { NotificationService, Notification } from '@/services/notificationService';
 import { useSimpleApp } from './useSimpleApp';
 
 export const useIntelligentNotificationsData = () => {
@@ -11,17 +11,17 @@ export const useIntelligentNotificationsData = () => {
     isLoading,
     error
   } = useQuery({
-    queryKey: ['intelligent-notifications', user?.id],
-    queryFn: () => user ? IntelligentNotificationService.getUserNotifications(user.id, 20) : [],
+    queryKey: ['notifications', user?.id],
+    queryFn: () => user ? NotificationService.getUserNotifications(user.id) : [],
     enabled: !!user,
     refetchInterval: 30000 // Refetch every 30 seconds for real-time updates
   });
 
   const markAsReadMutation = useMutation({
     mutationFn: (notificationId: string) => 
-      IntelligentNotificationService.markAsRead(notificationId),
+      NotificationService.markAsRead(notificationId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['intelligent-notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     }
   });
 
@@ -33,19 +33,23 @@ export const useIntelligentNotificationsData = () => {
       priority = 'medium',
       data
     }: {
-      type: string;
+      type: 'session_reminder' | 'milestone_achieved' | 'insight_generated' | 'mood_check' | 'progress_update';
       title: string;
       message: string;
       priority?: 'low' | 'medium' | 'high';
       data?: Record<string, any>;
     }) => {
       if (!user) throw new Error('User not authenticated');
-      return IntelligentNotificationService.createCustomNotification(
-        user.id, type, title, message, priority, data
-      );
+      return NotificationService.createNotification(user.id, {
+        type,
+        title,
+        message,
+        priority,
+        data
+      });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['intelligent-notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     }
   });
 
