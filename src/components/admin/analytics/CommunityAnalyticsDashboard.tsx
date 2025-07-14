@@ -21,8 +21,8 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { 
   EnhancedCommunityService, 
-  EnhancedCommunityMetrics, 
-  CulturalCommunityInsight 
+  type EnhancedCommunityMetrics, 
+  type CulturalCommunityInsight 
 } from '@/services/enhancedCommunityService';
 
 const CommunityAnalyticsDashboard = () => {
