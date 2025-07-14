@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { useRealEnhancedChat } from '@/hooks/useRealEnhancedChat';
+import { useEliteSystemIntegration } from '@/hooks/useEliteSystemIntegration';
+import { useEliteSystemActivation } from '@/hooks/useEliteSystemActivation';
+import { useRealTimeEliteIntegration } from '@/hooks/useRealTimeEliteIntegration';
 import BulletproofDashboardLayout from '@/components/dashboard/BulletproofDashboardLayout';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import EmotionCameraDetection from '@/components/avatar/EmotionCameraDetection';
@@ -41,12 +43,22 @@ const EnhancedTherapyChatWithAvatar = () => {
     messages,
     isLoading,
     isPlaying,
+    userPreferences,
     currentSessionId,
     sendMessage,
     playMessage,
     stopPlayback,
-    loadPreferences
-  } = useRealEnhancedChat();
+    loadPreferences,
+    analyzeSession,
+    initiateEliteSession,
+    processMessage
+  } = useEliteSystemIntegration();
+  
+  // Elite System activation and monitoring
+  const { systemStatus, activateEliteSystem } = useEliteSystemActivation();
+  
+  // Real-time Elite integration
+  const realTimeElite = useRealTimeEliteIntegration();
 
   const [messageInput, setMessageInput] = useState('');
   const [currentTherapist, setCurrentTherapist] = useState<TherapistPersonality | null>(null);
@@ -67,6 +79,14 @@ const EnhancedTherapyChatWithAvatar = () => {
       loadCurrentTherapist();
     }
   }, [user, loading, navigate, loadPreferences]);
+
+  // Initialize Elite System when user starts chatting  
+  useEffect(() => {
+    if (user && messages.length === 1 && !systemStatus.isActivated) {
+      console.log('🚀 Auto-activating Elite System for enhanced therapy session');
+      activateEliteSystem();
+    }
+  }, [user, messages.length, systemStatus.isActivated, activateEliteSystem]);
 
   const loadCurrentTherapist = async () => {
     if (!user) return;
@@ -180,6 +200,15 @@ const EnhancedTherapyChatWithAvatar = () => {
               <Badge variant="secondary" className="flex items-center gap-1">
                 <Heart className="h-3 w-3" />
                 Current Mood: {userEmotion}
+              </Badge>
+              
+              {/* Elite System Status Indicator */}
+              <Badge 
+                variant={systemStatus.isActivated ? "default" : "secondary"} 
+                className={systemStatus.isActivated ? "bg-green-600 text-white" : ""}
+              >
+                <Brain className="mr-1 h-3 w-3" />
+                Elite AI {systemStatus.isActivated ? 'Active' : 'Inactive'}
               </Badge>
               
               <Button

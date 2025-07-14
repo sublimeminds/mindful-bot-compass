@@ -8,7 +8,9 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { useRealEnhancedChat } from '@/hooks/useRealEnhancedChat';
+import { useEliteSystemIntegration } from '@/hooks/useEliteSystemIntegration';
+import { useEliteSystemActivation } from '@/hooks/useEliteSystemActivation';
+import { useRealTimeEliteIntegration } from '@/hooks/useRealTimeEliteIntegration';
 import { useTherapist, TherapistProvider } from '@/contexts/TherapistContext';
 import VoiceEnhancedAvatar from '@/components/avatar/VoiceEnhancedAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
@@ -42,8 +44,16 @@ const QuickChatPageContent = () => {
     playMessage,
     stopPlayback,
     loadPreferences,
-    analyzeSession
-  } = useRealEnhancedChat();
+    analyzeSession,
+    initiateEliteSession,
+    processMessage
+  } = useEliteSystemIntegration();
+  
+  // Elite System activation and monitoring
+  const { systemStatus, activateEliteSystem } = useEliteSystemActivation();
+  
+  // Real-time Elite integration for session monitoring
+  const realTimeElite = useRealTimeEliteIntegration();
   
   const [input, setInput] = useState('');
   const [avatarEmotion, setAvatarEmotion] = useState<'neutral' | 'happy' | 'concerned' | 'encouraging' | 'thoughtful'>('neutral');
@@ -67,9 +77,13 @@ const QuickChatPageContent = () => {
     loadPreferences();
   }, [loadPreferences]);
 
+  // Initialize Elite System when user starts chatting
   useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (user && messages.length === 1 && !systemStatus.isActivated) {
+      console.log('🚀 Auto-activating Elite System for new session');
+      activateEliteSystem();
+    }
+  }, [user, messages.length, systemStatus.isActivated, activateEliteSystem]);
 
   const handleVoiceMessage = (message: string, isVoice: boolean) => {
     console.log('Voice message received:', { message, isVoice });
@@ -295,6 +309,14 @@ const QuickChatPageContent = () => {
                         <BarChart3 className="h-4 w-4 mr-1" />
                         Analyze
                       </Button>
+                      {/* Elite System Status Indicator */}
+                      <Badge 
+                        variant={systemStatus.isActivated ? "default" : "secondary"} 
+                        className={systemStatus.isActivated ? "bg-green-600 text-white" : ""}
+                      >
+                        <Brain className="mr-1 h-3 w-3" />
+                        Elite AI {systemStatus.isActivated ? 'Active' : 'Inactive'}
+                      </Badge>
                       <Badge variant="secondary" className="bg-therapy-100 text-therapy-800">
                         <Heart className="mr-1 h-3 w-3" />
                         Quick Chat
