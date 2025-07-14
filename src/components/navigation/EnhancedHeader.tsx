@@ -353,7 +353,7 @@ const EnhancedHeader = () => {
           </div>
 
           {/* Navigation */}
-            <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6 therapy-brand-override">
+            <nav className="hidden xl:flex items-center space-x-2 md:space-x-4 xl:space-x-6 therapy-brand-override">
             {/* Therapy AI Dropdown */}
             <div className="relative group">
               <HeaderDropdownTrigger icon={Brain} label="Therapy AI" />
