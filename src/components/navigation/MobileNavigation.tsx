@@ -83,7 +83,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
         <Button 
           variant="ghost" 
           size="sm" 
-          className="lg:hidden p-2 hover:bg-therapy-50"
+          className="xl:hidden p-2 hover:bg-therapy-50"
         >
           <Menu className="h-6 w-6 text-therapy-600" />
         </Button>
