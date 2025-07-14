@@ -39,10 +39,11 @@ const EnhancedPricingSection = () => {
       features: [
         '1 therapy plan',
         '8 AI therapy sessions per month',
-        '100 AI messages per day',
+        '10 AI messages per day',
+        '2 AI therapist personalities',
         'Basic mood tracking',
         'Community access',
-        'GPT-4o AI model',
+        'GPT-4o Mini AI model',
         'Email support'
       ],
       limitations: ['Limited session history', 'Basic analytics only'],
@@ -62,11 +63,12 @@ const EnhancedPricingSection = () => {
         'Everything in Free',
         '3 therapy plans',
         'Unlimited AI therapy sessions',
-        'Unlimited AI messages',
+        '100 AI messages per day',
+        '8 specialized AI therapists',
         'Advanced mood analytics',
         'Personalized insights',
-        'Crisis support',
         'Voice interaction',
+        'Cultural adaptation (30+ cultures)',
         'Claude 4 Opus AI model',
         'Priority support',
         'Podcasts & meditation library'
@@ -87,12 +89,16 @@ const EnhancedPricingSection = () => {
       features: [
         'Everything in Premium',
         '10 therapy plans',
+        'Unlimited AI messages',
+        '12+ expert AI therapists',
         'Advanced dashboard',
         'API access (1,000 calls/month)',
         'Claude 4 Opus AI model',
         'Phone support',
         'Data export',
-        'Premium content'
+        'Premium content',
+        'White-label options',
+        'Compliance reporting'
       ],
       limitations: [],
       buttonText: 'Start 7-Day Free Trial',

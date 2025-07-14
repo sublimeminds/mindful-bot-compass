@@ -21,18 +21,19 @@ interface PricingFeature {
 
 const PRICING_FEATURES: PricingFeature[] = [
   // Core AI Features
-  { name: 'TherapySync AI', free: '100 messages/day (GPT-4o)', pro: 'Unlimited (Claude 4 Opus)', premium: 'Unlimited (Claude 4 Opus)', category: 'core' },
+  { name: 'TherapySync AI', free: 'GPT-4o Mini', pro: 'Claude 4 Opus', premium: 'Claude 4 Opus', category: 'core' },
   { name: 'Quick Chat Sessions', free: true, pro: true, premium: true, category: 'core' },
   { name: 'Full Therapy Sessions', free: '8/month', pro: 'Unlimited', premium: 'Unlimited', category: 'limits' },
   { name: 'Therapy Plans', free: '1 plan', pro: '3 plans', premium: '10 plans', category: 'limits' },
-  { name: 'AI Personality Types', free: '2 therapists', pro: '8 specialized therapists', premium: '12+ expert therapists', category: 'core' },
+  { name: 'AI Messages per Day', free: '10 messages', pro: '100 messages', premium: 'Unlimited', category: 'limits' },
+  { name: 'AI Therapist Personalities', free: '2 therapists', pro: '8 specialized therapists', premium: '12+ expert therapists', category: 'core' },
   { name: 'Mood Tracking', free: true, pro: true, premium: true, category: 'core' },
-  { name: 'Basic Goals', free: true, pro: true, premium: true, category: 'core' },
+  { name: 'Basic Goals', free: '2 goals', pro: '10 goals', premium: 'Unlimited goals', category: 'core' },
   { name: 'Crisis Support (24/7)', free: true, pro: true, premium: true, category: 'support' },
   
   // Advanced AI Features
   { name: 'Predictive Insights', free: false, pro: 'Advanced ML insights', premium: 'Advanced ML insights', category: 'ai' },
-  { name: 'Personalized Interventions', free: false, pro: true, premium: 'Hyper-personalized', category: 'ai' },
+  { name: 'Personalized Interventions', free: false, pro: 'Advanced', premium: 'Hyper-personalized', category: 'ai' },
   { name: 'Cultural Adaptation', free: 'Basic', pro: '30+ cultures + dialects', premium: '30+ cultures + dialects', category: 'ai' },
   { name: 'Voice Therapy', free: false, pro: 'Full access', premium: 'Full access', category: 'ai' },
   
@@ -40,26 +41,21 @@ const PRICING_FEATURES: PricingFeature[] = [
   { name: 'Mindfulness Exercises', free: '5 exercises', pro: '25+ exercises', premium: '100+ premium exercises', category: 'wellness' },
   { name: 'Breathing Exercises', free: false, pro: '15+ techniques', premium: '50+ advanced techniques', category: 'wellness' },
   { name: 'Meditation Library', free: false, pro: '50+ guided sessions', premium: '200+ premium + offline', category: 'wellness' },
-  { name: 'Audio Content Library', free: 'Limited (10)', pro: 'Extended (100+)', premium: 'Full Access (500+)', category: 'wellness' },
+  { name: 'Podcasts & Audio Content', free: false, pro: 'Full library access', premium: 'Full library access', category: 'wellness' },
   
   // Analytics & Insights
   { name: 'Progress Tracking', free: 'Basic charts', pro: 'Advanced analytics', premium: 'Predictive analytics', category: 'analytics' },
   { name: 'AI Insights', free: false, pro: 'Weekly insights', premium: 'Real-time insights', category: 'analytics' },
-  { name: 'Advanced Analytics', free: false, pro: false, premium: 'Deep behavioral analysis', category: 'analytics' },
+  { name: 'Advanced Dashboard', free: false, pro: false, premium: 'Comprehensive overview', category: 'analytics' },
   { name: 'Personalized Reports', free: false, pro: 'Monthly reports', premium: 'Weekly + custom reports', category: 'analytics' },
   { name: 'Data Export', free: false, pro: 'CSV export', premium: 'Full data portability', category: 'analytics' },
   
   // Community & Support
-  { name: 'Community Hub', free: false, pro: 'Full access', premium: 'VIP community + events', category: 'support' },
-  { name: 'Priority Support', free: 'Email (48h)', pro: 'Email (24h)', premium: 'Chat + Phone (2h)', category: 'support' },
-  { name: 'Direct Therapist Referrals', free: false, pro: false, premium: 'Vetted network access', category: 'support' },
-  { name: 'Expert Consultations', free: false, pro: false, premium: '2 sessions/year', category: 'support' },
-  
-  // Family Features
-  { name: 'Family Members', free: '1 user', pro: '1 user', premium: 'Up to 4 members', category: 'family' },
-  { name: 'Family Dashboard', free: false, pro: false, premium: 'Comprehensive overview', category: 'family' },
-  { name: 'Member Monitoring', free: false, pro: false, premium: 'Privacy-respecting alerts', category: 'family' },
-  { name: 'Progress Sharing', free: false, pro: false, premium: 'Secure family insights', category: 'family' },
+  { name: 'Community Access', free: true, pro: true, premium: true, category: 'support' },
+  { name: 'Priority Support', free: 'Email support', pro: 'Priority support', premium: 'Phone support', category: 'support' },
+  { name: 'API Access', free: false, pro: false, premium: '1,000 calls/month', category: 'analytics' },
+  { name: 'White-label Options', free: false, pro: false, premium: 'Available', category: 'analytics' },
+  { name: 'Compliance Reporting', free: false, pro: false, premium: 'Advanced reports', category: 'analytics' },
 ];
 
 interface PlanDetails {
@@ -97,21 +93,21 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
   },
   pro: {
     name: 'Premium',
-    price: { monthly: 15, yearly: 149 },
+    price: { monthly: 14.90, yearly: 149 },
     description: 'Enhanced therapy features for regular users',
     icon: Brain,
     color: 'from-harmony-500 to-harmony-600',
     features: [
       'Claude 4 Opus AI model',
-      'Unlimited AI messages',
+      '100 AI messages per day',
       'Unlimited therapy sessions',
       '8 specialized AI therapists',
       'Voice interaction',
       'Predictive insights',
-      'Cultural adaptation',
+      'Cultural adaptation (30+ cultures)',
       'Advanced breathing exercises',
       'Extended meditation library (50+)',
-      'Community hub access',
+      'Community access',
       'Up to 3 therapy plans',
       'Priority support'
     ],
@@ -119,13 +115,14 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
   },
   premium: {
     name: 'Professional',
-    price: { monthly: 25, yearly: 249 },
+    price: { monthly: 24.90, yearly: 249 },
     description: 'Complete therapy platform with advanced features for power users',
     icon: Sparkles,
     color: 'from-flow-500 to-flow-600',
     features: [
       'Everything in Premium',
       'Claude 4 Opus AI model',
+      'Unlimited AI messages',
       '12+ expert AI therapists',
       '10 therapy plans',
       'Advanced dashboard',
@@ -405,14 +402,14 @@ const PricingPage = () => {
                     <th className="text-center py-6 px-6">
                       <div className="flex flex-col items-center">
                         <Brain className="h-6 w-6 text-harmony-600 mb-2" />
-                        <span className="font-bold text-harmony-800">Pro</span>
+                        <span className="font-bold text-harmony-800">Premium</span>
                         <Badge className="mt-1 bg-harmony-100 text-harmony-700">Popular</Badge>
                       </div>
                     </th>
                     <th className="text-center py-6 px-6">
                       <div className="flex flex-col items-center">
                         <Sparkles className="h-6 w-6 text-flow-600 mb-2" />
-                        <span className="font-bold text-flow-800">Premium</span>
+                        <span className="font-bold text-flow-800">Professional</span>
                       </div>
                     </th>
                   </tr>
