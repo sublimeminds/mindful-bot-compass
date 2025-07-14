@@ -4,6 +4,10 @@ export interface Message {
   content: string;
   isUser: boolean;
   timestamp: Date;
+  emotion?: string;
+  riskLevel?: 'low' | 'medium' | 'high' | 'crisis';
+  techniques?: string[];
+  insights?: string[];
 }
 
 export interface Session {

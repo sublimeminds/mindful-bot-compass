@@ -168,9 +168,9 @@ export const useRealTimeEliteIntegration = () => {
       // Skip processing AI responses
       if (message.sender === 'ai') return;
 
-  // Get session context
+      // Get session context
       const { data: sessionMessages } = await supabase
-        .from('therapy_session_messages')
+        .from('session_messages')
         .select('*')
         .eq('session_id', event.sessionId)
         .order('created_at', { ascending: true })
