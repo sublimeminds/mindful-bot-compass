@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
-import { useRealEnhancedChat } from '@/hooks/useRealEnhancedChat';
+import { useEliteSystemIntegration } from '@/hooks/useEliteSystemIntegration';
 import { useTherapist } from '@/contexts/TherapistContext';
 import VoiceEnhancedAvatar from '@/components/avatar/VoiceEnhancedAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
@@ -36,8 +36,10 @@ const RealTherapyChatInterface = () => {
     playMessage,
     stopPlayback,
     loadPreferences,
-    analyzeSession
-  } = useRealEnhancedChat();
+    analyzeSession,
+    initiateEliteSession,
+    processMessage
+  } = useEliteSystemIntegration();
   
   const [input, setInput] = useState('');
   const [showInsights, setShowInsights] = useState(false);

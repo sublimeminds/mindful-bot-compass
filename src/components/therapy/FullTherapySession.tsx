@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { useRealEnhancedChat } from '@/hooks/useRealEnhancedChat';
+import { useEliteSystemIntegration } from '@/hooks/useEliteSystemIntegration';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import EmotionCameraDetection from '@/components/avatar/EmotionCameraDetection';
 import VoiceRecorder from '@/components/voice/VoiceRecorder';
@@ -75,8 +75,10 @@ const FullTherapySession = () => {
     playMessage,
     stopPlayback,
     loadPreferences,
-    analyzeSession
-  } = useRealEnhancedChat();
+    analyzeSession,
+    initiateEliteSession,
+    processMessage
+  } = useEliteSystemIntegration();
 
   const [sessionState, setSessionState] = useState<SessionState>({
     phase: 'prerequisites',

@@ -378,7 +378,7 @@ export class RealTimeCulturalAIIntegration {
       /values/gi
     ];
 
-    let awarenes­sIndicators = 0;
+    let awarenessIndicators = 0;
     for (const indicator of culturalAwarenessIndicators) {
       if (indicator.test(response)) {
         awarenessIndicators++;
