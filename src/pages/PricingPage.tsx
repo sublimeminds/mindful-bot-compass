@@ -263,10 +263,14 @@ const PricingPage = () => {
               
               {showFamilyCalculator && (
                 <div className="w-full max-w-4xl">
-                  <AdaptivePlanBuilder onPlanSelect={(planId, seats, billingCycle) => {
-                    console.log('Selected plan:', { planId, seats, billingCycle });
-                    navigate('/signup');
-                  }} />
+                  <AdaptivePlanBuilder 
+                    isOpen={true}
+                    onClose={() => setShowFamilyCalculator(false)}
+                    onPlanSelect={(planId, seats, billingCycle) => {
+                      console.log('Selected plan:', { planId, seats, billingCycle });
+                      navigate('/signup');
+                    }} 
+                  />
                 </div>
               )}
             </div>

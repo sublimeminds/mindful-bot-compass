@@ -172,6 +172,7 @@ export const useEnhancedCurrency = () => {
     supportedCurrencies,
     userLocation,
     loading,
+    loadingCurrencies: loading,
     isLoadingRates,
     changeCurrency,
     convertPrice,

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   Users, 
   Shield, 
@@ -13,16 +14,19 @@ import {
   CheckCircle, 
   Star,
   TrendingUp,
-  Calculator
+  Calculator,
+  X
 } from 'lucide-react';
 import { adaptivePricingService, type AdaptivePlan, type PricingCalculation } from '@/services/adaptivePricingService';
 import { useToast } from '@/hooks/use-toast';
 
 interface AdaptivePlanBuilderProps {
+  isOpen: boolean;
+  onClose: () => void;
   onPlanSelect: (planId: string, seats: number, billingCycle: 'monthly' | 'yearly') => void;
 }
 
-const AdaptivePlanBuilder: React.FC<AdaptivePlanBuilderProps> = ({ onPlanSelect }) => {
+const AdaptivePlanBuilder: React.FC<AdaptivePlanBuilderProps> = ({ isOpen, onClose, onPlanSelect }) => {
   const { toast } = useToast();
   const [selectedSeats, setSelectedSeats] = useState(3);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
@@ -67,7 +71,24 @@ const AdaptivePlanBuilder: React.FC<AdaptivePlanBuilderProps> = ({ onPlanSelect 
   };
 
   return (
-    <div className="space-y-6">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Users className="h-8 w-8 text-harmony-600 mr-3" />
+              <DialogTitle className="text-3xl font-bold text-harmony-700">Family Plan Builder</DialogTitle>
+            </div>
+            <Button variant="ghost" size="sm" onClick={onClose}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          <p className="text-lg text-harmony-600">
+            Customize your family's mental health support plan. Pricing automatically adjusts based on your family size.
+          </p>
+        </DialogHeader>
+        
+        <div className="space-y-6 mt-6">
       {/* Family Size Selector */}
       <Card>
         <CardHeader>
@@ -220,7 +241,9 @@ const AdaptivePlanBuilder: React.FC<AdaptivePlanBuilderProps> = ({ onPlanSelect 
           ))}
         </CardContent>
       </Card>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

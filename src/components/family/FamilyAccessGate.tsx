@@ -58,7 +58,11 @@ const FamilyAccessGate: React.FC<FamilyAccessGateProps> = ({ children }) => {
           </Button>
         </div>
         
-        <AdaptivePlanBuilder onPlanSelect={handlePlanSelect} />
+        <AdaptivePlanBuilder 
+          isOpen={true}
+          onClose={() => setShowUpgrade(false)}
+          onPlanSelect={handlePlanSelect} 
+        />
       </div>
     );
   }
