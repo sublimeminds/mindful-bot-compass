@@ -39,6 +39,7 @@ const EnhancedPricingSection = () => {
       features: [
         '1 therapy plan',
         '8 AI therapy sessions per month',
+        '50 AI messages per day',
         'Basic mood tracking',
         'Community access',
         'GPT-4o Mini AI model',
@@ -58,8 +59,10 @@ const EnhancedPricingSection = () => {
       yearlyPrice: 149,
       description: 'For dedicated users seeking comprehensive mental health support',
       features: [
+        'Everything in Free',
         '3 therapy plans',
         'Unlimited AI therapy sessions',
+        'Unlimited AI messages',
         'Advanced mood analytics',
         'Personalized insights',
         'Crisis support',
@@ -84,10 +87,11 @@ const EnhancedPricingSection = () => {
       features: [
         'Everything in Premium',
         '10 therapy plans',
+        'Unlimited AI messages',
         'Advanced dashboard',
-        'API access',
+        'API access (1,000 calls/month)',
         'White-label features',
-        'GPT-4 AI model',
+        'Claude-3.5-Sonnet AI model',
         'Phone support',
         'Compliance reporting',
         'Data export',

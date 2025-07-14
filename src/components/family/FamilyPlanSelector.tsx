@@ -73,12 +73,15 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
 
   const tiers = {
     pro: {
-      name: 'Family Pro',
-      basePrice: 29.99,
-      pricePerMember: 9.99,
+      name: 'Family Professional',
+      basePrice: 29.99, // Base includes 2 members
+      pricePerMember: 12.99, // Additional members beyond 2
       color: 'from-therapy-500 to-calm-500',
       icon: Star,
+      baseMemberCount: 2,
       features: [
+        'Everything in Premium for all members',
+        '10 therapy plans per member',
         'Unlimited AI therapy sessions',
         'Voice conversations in 29 languages',
         'Family dashboard with shared insights',
@@ -89,12 +92,15 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
     },
     premium: {
       name: 'Family Premium',
-      basePrice: 49.99,
-      pricePerMember: 14.99,
+      basePrice: 34.90, // Base includes 2 members
+      pricePerMember: 19.99, // Additional members beyond 2
       color: 'from-therapy-600 to-harmony-600',
       icon: Crown,
+      baseMemberCount: 2,
       features: [
-        'Everything in Family Pro',
+        'Everything in Premium for all members',
+        '3 therapy plans per member',
+        'Unlimited AI therapy sessions',
         'Advanced emotion detection',
         'Personalized treatment plans',
         'Dedicated family support specialist',
@@ -105,7 +111,9 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
   };
 
   const selectedTierData = tiers[selectedTier];
-  const monthlyPrice = selectedTierData.basePrice + (memberCount * selectedTierData.pricePerMember);
+  // Calculate additional members beyond the base 2 included
+  const additionalMembers = Math.max(0, memberCount - selectedTierData.baseMemberCount);
+  const monthlyPrice = selectedTierData.basePrice + (additionalMembers * selectedTierData.pricePerMember);
   const yearlyPrice = monthlyPrice * 12 * 0.8; // 20% discount for yearly
   const savings = (monthlyPrice * 12) - yearlyPrice;
   
@@ -266,7 +274,8 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
                       {Object.entries(tiers).map(([key, tier]) => {
                         const IconComponent = tier.icon;
                         const isSelected = selectedTier === key;
-                        const tierPrice = tier.basePrice + (memberCount * tier.pricePerMember);
+                        const additionalTierMembers = Math.max(0, memberCount - tier.baseMemberCount);
+                        const tierPrice = tier.basePrice + (additionalTierMembers * tier.pricePerMember);
                         const yearlyTierPrice = tierPrice * 12 * 0.8;
                         const displayTierPrice = billingCycle === 'monthly' ? tierPrice : yearlyTierPrice;
                         
@@ -295,12 +304,12 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
                                   <div className={`w-10 h-10 bg-gradient-to-r ${tier.color} rounded-lg flex items-center justify-center`}>
                                     <IconComponent className="h-5 w-5 text-white" />
                                   </div>
-                                  <div>
-                                    <div className="font-semibold text-lg">{tier.name}</div>
-                                    <div className="text-sm text-muted-foreground">
-                                      Base ${tier.basePrice} + ${tier.pricePerMember}/member
-                                    </div>
-                                  </div>
+                                   <div>
+                                     <div className="font-semibold text-lg">{tier.name}</div>
+                                     <div className="text-sm text-muted-foreground">
+                                       ${tier.basePrice} for {tier.baseMemberCount} members + ${tier.pricePerMember}/additional
+                                     </div>
+                                   </div>
                                 </div>
                                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                                   isSelected ? 'border-therapy-500 bg-therapy-500' : 'border-muted-foreground'
@@ -370,16 +379,18 @@ const FamilyPlanSelector = ({ isOpen, onClose, currentPlan }: FamilyPlanSelector
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-6">
-                        {/* Price Breakdown */}
+                         {/* Price Breakdown */}
                         <div className="space-y-3">
                           <div className="flex justify-between text-sm">
-                            <span>Base Plan:</span>
+                            <span>Base ({selectedTierData.baseMemberCount} members):</span>
                             <span className="font-medium">{formatPrice(selectedTierData.basePrice, 'USD')}</span>
                           </div>
-                          <div className="flex justify-between text-sm">
-                            <span>{memberCount} Members:</span>
-                            <span className="font-medium">{formatPrice(memberCount * selectedTierData.pricePerMember, 'USD')}</span>
-                          </div>
+                          {additionalMembers > 0 && (
+                            <div className="flex justify-between text-sm">
+                              <span>{additionalMembers} Additional:</span>
+                              <span className="font-medium">{formatPrice(additionalMembers * selectedTierData.pricePerMember, 'USD')}</span>
+                            </div>
+                          )}
                           <Separator />
                           <div className="flex justify-between font-semibold">
                             <span>Monthly Total:</span>

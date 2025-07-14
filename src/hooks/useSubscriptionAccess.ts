@@ -111,7 +111,7 @@ export const useSubscriptionAccess = (): SubscriptionAccess => {
 
   const getSessionLimit = (): number => {
     if (tier === 'premium' || tier === 'family-premium' || tier === 'professional' || tier === 'family-professional' || tier === 'enterprise') return -1; // unlimited
-    return 8; // free - 2 per week, 8 per month
+    return 8; // free - 8 per month
   };
 
   return {
