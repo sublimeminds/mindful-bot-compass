@@ -8,7 +8,7 @@ import GradientButton from '@/components/ui/GradientButton';
 import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
 import ProgressTracker from '@/components/landing/ProgressTracker';
 import EnhancedPricingSection from '@/components/pricing/EnhancedPricingSection';
-import therapyHeroTech from '@/assets/therapy-hero-tech.jpg';
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -175,39 +175,53 @@ const Index = () => {
       
       {/* Hero Section */}
       <section id="hero" className="py-20 lg:py-32 relative overflow-hidden">
-        {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${therapyHeroTech}?v=${Date.now()})` }}
-        ></div>
+        {/* Dynamic Gradient Background */}
+        <div className="absolute inset-0 hero-gradient-bg"></div>
         
-        {/* Background Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-therapy-900/30 via-therapy-800/20 to-calm-900/30"></div>
+        {/* Neural Network Orbs */}
+        <div className="neural-orb therapy w-24 h-24 top-20 left-1/4" style={{ animationDelay: '0s' }}></div>
+        <div className="neural-orb calm w-16 h-16 top-1/3 right-1/5" style={{ animationDelay: '2s' }}></div>
+        <div className="neural-orb harmony w-20 h-20 bottom-1/3 left-1/6" style={{ animationDelay: '4s' }}></div>
+        <div className="neural-orb balance w-12 h-12 top-1/2 left-3/4" style={{ animationDelay: '1s' }}></div>
+        <div className="neural-orb flow w-18 h-18 bottom-20 right-1/4" style={{ animationDelay: '3s' }}></div>
         
-        {/* Animated Floating Elements */}
-        <div className="hero-floating-element w-20 h-20 top-20 left-1/4 animate-float-up" style={{ animationDelay: '0s' }}></div>
-        <div className="hero-floating-element w-16 h-16 top-32 right-1/4 animate-float-diagonal" style={{ animationDelay: '1s' }}></div>
-        <div className="hero-floating-element w-12 h-12 top-1/3 left-3/4 animate-float-circle" style={{ animationDelay: '2s' }}></div>
-        <div className="hero-floating-element w-8 h-8 bottom-32 left-1/3 animate-float-up" style={{ animationDelay: '3s' }}></div>
-        <div className="hero-floating-element w-14 h-14 bottom-40 right-1/3 animate-float-diagonal" style={{ animationDelay: '0.5s' }}></div>
+        {/* Morphing Shapes */}
+        <div className="morphing-shape w-32 h-32 top-24 right-1/3" style={{ animationDelay: '0s' }}></div>
+        <div className="morphing-shape w-20 h-20 bottom-32 left-1/2" style={{ animationDelay: '5s' }}></div>
+        <div className="morphing-shape w-16 h-16 top-2/3 left-1/5" style={{ animationDelay: '2.5s' }}></div>
         
-        {/* Particle Elements */}
-        <div className="hero-particle top-24 left-1/2 animate-particle-drift" style={{ animationDelay: '0s' }}></div>
-        <div className="hero-particle top-40 right-1/5 animate-particle-drift" style={{ animationDelay: '2s' }}></div>
-        <div className="hero-particle bottom-48 left-1/5 animate-particle-drift" style={{ animationDelay: '4s' }}></div>
-        <div className="hero-particle top-1/2 right-1/2 animate-particle-drift" style={{ animationDelay: '1s' }}></div>
-        <div className="hero-particle bottom-32 right-3/4 animate-particle-drift" style={{ animationDelay: '3s' }}></div>
-        <div className="hero-particle top-36 left-2/3 animate-particle-drift" style={{ animationDelay: '5s' }}></div>
+        {/* Orbit Elements */}
+        <div className="orbit-element top-1/4 left-1/3">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-therapy-400 to-calm-400 opacity-60"></div>
+        </div>
+        <div className="orbit-element bottom-1/4 right-1/3" style={{ animationDelay: '10s' }}>
+          <div className="w-6 h-6 rounded-full bg-gradient-to-r from-harmony-400 to-balance-400 opacity-60"></div>
+        </div>
         
-        {/* Flowing Waves */}
-        <div className="hero-wave top-1/3 animate-wave-flow" style={{ animationDelay: '0s' }}></div>
-        <div className="hero-wave bottom-1/3 animate-wave-flow" style={{ animationDelay: '6s' }}></div>
+        {/* Data Stream Particles */}
+        <div className="data-particle left-1/6" style={{ animationDelay: '0s', background: 'hsl(var(--therapy-500))' }}></div>
+        <div className="data-particle left-1/4" style={{ animationDelay: '1s', background: 'hsl(var(--calm-500))' }}></div>
+        <div className="data-particle right-1/4" style={{ animationDelay: '2s', background: 'hsl(var(--harmony-500))' }}></div>
+        <div className="data-particle right-1/6" style={{ animationDelay: '3s', background: 'hsl(var(--balance-500))' }}></div>
+        <div className="data-particle left-1/2" style={{ animationDelay: '4s', background: 'hsl(var(--flow-500))' }}></div>
+        <div className="data-particle right-1/2" style={{ animationDelay: '1.5s', background: 'hsl(var(--therapy-400))' }}></div>
+        
+        {/* Neural Connection SVG */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <line className="neural-connection" x1="20%" y1="30%" x2="80%" y2="40%" style={{ animationDelay: '0s' }} />
+          <line className="neural-connection" x1="60%" y1="20%" x2="40%" y2="70%" style={{ animationDelay: '2s' }} />
+          <line className="neural-connection" x1="30%" y1="60%" x2="70%" y2="30%" style={{ animationDelay: '4s' }} />
+          <line className="neural-connection" x1="10%" y1="50%" x2="90%" y2="60%" style={{ animationDelay: '1s' }} />
+          <line className="neural-connection" x1="80%" y1="80%" x2="20%" y2="20%" style={{ animationDelay: '3s' }} />
+        </svg>
         
         <div className="container mx-auto px-4 relative">
           <div className="text-center">
             <div className="flex justify-center mb-8">
-              <div className="relative">
+              <div className="relative hero-breathe">
                 <GradientLogo size="xl" className="animate-swirl-breathe animate-glow-pulse" />
+                {/* Logo Aura Effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-therapy-500/20 to-calm-500/20 rounded-full blur-xl scale-150 -z-10"></div>
               </div>
             </div>
             
