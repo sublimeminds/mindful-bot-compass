@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Check, Crown, Zap, Star, Users } from 'lucide-react';
 import { useEnhancedCurrency } from '@/hooks/useEnhancedCurrency';
 import GradientLogo from '@/components/ui/GradientLogo';
-import SafeFamilyPlanSelector from '@/components/safe/SafeFamilyPlanSelector';
+import AdaptivePlanBuilder from '@/components/family/AdaptivePlanBuilder';
 
 const EnhancedPricingSection = () => {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const EnhancedPricingSection = () => {
       features: [
         '1 therapy plan',
         '8 AI therapy sessions per month',
-        '10 AI messages per day',
+        '100 AI messages per day',
         '2 AI therapist personalities',
         'Basic mood tracking',
         'Community access',
@@ -63,7 +63,7 @@ const EnhancedPricingSection = () => {
         'Everything in Free',
         '3 therapy plans',
         'Unlimited AI therapy sessions',
-        '100 AI messages per day',
+        'Unlimited AI messages',
         '8 specialized AI therapists',
         'Advanced mood analytics',
         'Personalized insights',
@@ -287,9 +287,18 @@ const EnhancedPricingSection = () => {
         </div>
       </div>
 
-      <SafeFamilyPlanSelector
+      <AdaptivePlanBuilder
         isOpen={showFamilyPlans}
         onClose={() => setShowFamilyPlans(false)}
+        onPlanSelect={(planId: string, seats: number, billingCycle: 'monthly' | 'yearly') => {
+          localStorage.setItem('selectedPlan', JSON.stringify({
+            name: `Family ${planId}`,
+            seats,
+            billingCycle,
+            selectedAt: new Date().toISOString()
+          }));
+          navigate('/onboarding');
+        }}
       />
     </section>
   );

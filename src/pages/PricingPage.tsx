@@ -25,7 +25,7 @@ const PRICING_FEATURES: PricingFeature[] = [
   { name: 'Quick Chat Sessions', free: true, pro: true, premium: true, category: 'core' },
   { name: 'Full Therapy Sessions', free: '8/month', pro: 'Unlimited', premium: 'Unlimited', category: 'limits' },
   { name: 'Therapy Plans', free: '1 plan', pro: '3 plans', premium: '10 plans', category: 'limits' },
-  { name: 'AI Messages per Day', free: '10 messages', pro: '100 messages', premium: 'Unlimited', category: 'limits' },
+  { name: 'AI Messages per Day', free: '100 messages', pro: 'Unlimited', premium: 'Unlimited', category: 'limits' },
   { name: 'AI Therapist Personalities', free: '2 therapists', pro: '8 specialized therapists', premium: '12+ expert therapists', category: 'core' },
   { name: 'Mood Tracking', free: true, pro: true, premium: true, category: 'core' },
   { name: 'Basic Goals', free: '2 goals', pro: '10 goals', premium: 'Unlimited goals', category: 'core' },
@@ -99,7 +99,7 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
     color: 'from-harmony-500 to-harmony-600',
     features: [
       'Claude 4 Opus AI model',
-      '100 AI messages per day',
+      'Unlimited AI messages',
       'Unlimited therapy sessions',
       '8 specialized AI therapists',
       'Voice interaction',
@@ -200,7 +200,7 @@ const PricingPage = () => {
               AI-Powered Mental Wellness
             </h1>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
-              Choose the plan that fits your mental health journey. All plans include our advanced TherapySync AI powered by GPT-4, with specialized therapists trained in different approaches.
+              Choose the plan that fits your mental health journey. All plans include our advanced TherapySync AI powered by Claude 4 Opus, with specialized therapists trained in different approaches.
             </p>
             
             {/* AI Technology Highlight */}
@@ -211,7 +211,7 @@ const PricingPage = () => {
                   <h3 className="text-xl font-semibold text-therapy-800">Advanced TherapySync AI</h3>
                 </div>
                 <p className="text-therapy-700 mb-4">
-                  Our AI combines GPT-4's language understanding with specialized therapy training across CBT, DBT, Mindfulness, and Trauma-Focused approaches.
+                  Our AI uses Claude 4 Opus with specialized therapy training across CBT, DBT, Mindfulness, and Trauma-Focused approaches.
                 </p>
                 <div className="grid md:grid-cols-3 gap-4 text-sm">
                   <div className="flex items-center">

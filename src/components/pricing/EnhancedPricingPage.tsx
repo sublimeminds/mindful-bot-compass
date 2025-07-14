@@ -45,7 +45,7 @@ const EnhancedPricingPage = () => {
       features: [
         '1 therapy plan',
         '8 AI therapy sessions per month',
-        '10 AI messages per day',
+        '100 AI messages per day',
         '2 AI therapist personalities',
         'Basic mood tracking',
         'Community access',
@@ -69,7 +69,7 @@ const EnhancedPricingPage = () => {
         'Everything in Free',
         '3 therapy plans',
         'Unlimited AI therapy sessions',
-        '100 AI messages per day',
+        'Unlimited AI messages',
         '8 specialized AI therapists',
         'Advanced mood analytics',
         'Personalized insights',

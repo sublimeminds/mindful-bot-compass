@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
-import PageLayout from '@/components/layout/PageLayout';
 import EnhancedPricingPage from '@/components/pricing/EnhancedPricingPage';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const Pricing = () => {
   useSafeSEO({
@@ -12,9 +13,11 @@ const Pricing = () => {
   });
 
   return (
-    <PageLayout>
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
+      <Header />
       <EnhancedPricingPage />
-    </PageLayout>
+      <Footer />
+    </div>
   );
 };
 
