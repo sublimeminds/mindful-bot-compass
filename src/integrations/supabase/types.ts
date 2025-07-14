@@ -182,6 +182,7 @@ export type Database = {
           last_updated: string | null
           learning_patterns: Json | null
           model_performance: Json | null
+          next_session_recommendations: Json | null
           preference_adjustments: Json | null
           therapy_outcomes: Json | null
           user_id: string
@@ -194,6 +195,7 @@ export type Database = {
           last_updated?: string | null
           learning_patterns?: Json | null
           model_performance?: Json | null
+          next_session_recommendations?: Json | null
           preference_adjustments?: Json | null
           therapy_outcomes?: Json | null
           user_id: string
@@ -206,6 +208,7 @@ export type Database = {
           last_updated?: string | null
           learning_patterns?: Json | null
           model_performance?: Json | null
+          next_session_recommendations?: Json | null
           preference_adjustments?: Json | null
           therapy_outcomes?: Json | null
           user_id?: string

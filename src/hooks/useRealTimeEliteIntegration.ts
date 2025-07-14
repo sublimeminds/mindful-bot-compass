@@ -40,7 +40,7 @@ export const useRealTimeEliteIntegration = () => {
       }, (payload) => {
         handleSessionEvent({
           type: payload.eventType === 'INSERT' ? 'session_started' : 'session_completed',
-          sessionId: payload.new?.id || payload.old?.id,
+          sessionId: (payload.new as any)?.id || (payload.old as any)?.id,
           data: payload
         });
       })
@@ -57,7 +57,7 @@ export const useRealTimeEliteIntegration = () => {
       }, (payload) => {
         handleSessionEvent({
           type: 'message_sent',
-          sessionId: payload.new.session_id,
+          sessionId: (payload.new as any).session_id,
           data: payload.new
         });
       })
@@ -74,7 +74,7 @@ export const useRealTimeEliteIntegration = () => {
       }, (payload) => {
         handleSessionEvent({
           type: 'crisis_detected',
-          sessionId: payload.new.session_id,
+          sessionId: (payload.new as any).session_id,
           data: payload.new
         });
       })
