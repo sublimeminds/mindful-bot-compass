@@ -1,369 +1,520 @@
 import { supabase } from '@/integrations/supabase/client';
-import { CommunityService } from './communityService';
-import { culturalAIService } from './culturalAiService';
-import { 
-  CulturalContentLibraryService, 
-  CulturalSupportGroupService, 
-  CulturalPeerMatchingService 
-} from './culturalEnhancedServices';
 
-export interface EnhancedCommunityMetrics {
-  totalMembers: number;
-  culturalBackgrounds: number;
-  activeLanguages: number;
-  crossCulturalConnections: number;
-  culturalContentEngagement: number;
-  familyIntegrationRate: number;
-  culturalEventsThisMonth: number;
-  peerMatchingSuccessRate: number;
-}
-
-export interface CulturalCommunityInsight {
-  type: 'cultural_trend' | 'engagement_pattern' | 'community_health' | 'optimization';
-  title: string;
-  description: string;
-  impact: 'high' | 'medium' | 'low';
-  confidence: number;
-  actionable: boolean;
-  metadata: any;
-}
-
-export interface SmartCommunityRecommendation {
+export interface ExtendedSupportGroup {
   id: string;
-  userId: string;
-  type: 'peer_match' | 'cultural_event' | 'support_group' | 'content' | 'celebration';
-  title: string;
+  name: string;
   description: string;
-  reason: string;
-  culturalRelevance: number;
-  priority: number;
-  expiresAt?: Date;
+  category: string;
+  cultural_focus?: string[];
+  languages?: string[];
+  privacy_level: 'public' | 'private' | 'invite_only';
+  max_members: number;
+  member_count: number;
+  facilitator_id?: string;
+  created_by?: string;
+  is_active: boolean;
+  meeting_schedule?: any;
+  group_rules?: string;
+  therapeutic_focus?: string[];
+  age_range?: string;
+  created_at: string;
+  updated_at: string;
 }
 
-export class EnhancedCommunityService extends CommunityService {
-  // Enhanced Community Analytics
-  static async getCommunityMetrics(): Promise<EnhancedCommunityMetrics> {
+export interface PeerConnection {
+  id: string;
+  requester_id: string;
+  requested_id: string;
+  connection_type: 'buddy' | 'mentor' | 'peer' | 'cultural_buddy' | 'family_support' | 'language_exchange';
+  status: 'pending' | 'accepted' | 'declined' | 'blocked';
+  compatibility_score?: number;
+  shared_goals?: string[];
+  cultural_compatibility?: number;
+  connection_reason?: string;
+  matched_by?: string;
+  last_interaction?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CommunityChallenge {
+  id: string;
+  title: string;
+  description: string;
+  challenge_type: 'wellness' | 'mindfulness' | 'habit_building' | 'cultural' | 'family';
+  category: string;
+  start_date: string;
+  end_date: string;
+  created_by?: string;
+  participant_count: number;
+  max_participants?: number;
+  reward_points: number;
+  difficulty_level: 'beginner' | 'intermediate' | 'advanced';
+  cultural_themes?: string[];
+  required_commitment?: string;
+  is_active: boolean;
+  challenge_rules?: any;
+  progress_tracking?: any;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CommunityResource {
+  id: string;
+  title: string;
+  description?: string;
+  content_type: 'article' | 'video' | 'audio' | 'pdf' | 'link' | 'tool' | 'worksheet';
+  content_url?: string;
+  content_data?: any;
+  category: string;
+  cultural_relevance?: string[];
+  target_audience?: string[];
+  difficulty_level: 'beginner' | 'intermediate' | 'advanced' | 'all';
+  therapeutic_approaches?: string[];
+  languages?: string[];
+  created_by?: string;
+  upvotes: number;
+  downloads: number;
+  is_verified: boolean;
+  verified_by?: string;
+  tags?: string[];
+  accessibility_features?: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LiveEvent {
+  id: string;
+  title: string;
+  description?: string;
+  event_type: 'support_group' | 'workshop' | 'cultural_celebration' | 'peer_session' | 'meditation' | 'storytelling';
+  facilitator_id?: string;
+  start_time: string;
+  end_time: string;
+  timezone: string;
+  max_participants: number;
+  participant_count: number;
+  is_virtual: boolean;
+  meeting_link?: string;
+  meeting_password?: string;
+  location?: string;
+  cultural_focus?: string[];
+  languages?: string[];
+  accessibility_features?: string[];
+  content_warnings?: string[];
+  registration_required: boolean;
+  is_recurring: boolean;
+  recurrence_pattern?: any;
+  tags?: string[];
+  created_by?: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MentorshipProgram {
+  id: string;
+  program_name: string;
+  description?: string;
+  program_type: 'peer_mentorship' | 'cultural_mentorship' | 'family_mentorship' | 'professional_mentorship';
+  mentor_id: string;
+  mentee_id: string;
+  matching_criteria?: any;
+  program_duration?: number;
+  meeting_frequency?: string;
+  goals?: string[];
+  progress_tracking?: any;
+  status: 'pending' | 'active' | 'completed' | 'paused' | 'terminated';
+  cultural_focus?: string[];
+  language_support?: string[];
+  started_at?: string;
+  completed_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export class EnhancedCommunityService {
+  // Support Groups
+  static async getSupportGroups(category?: string, culturalFocus?: string[]): Promise<ExtendedSupportGroup[]> {
     try {
-      // Get basic community metrics
-      const [
-        totalMembers,
-        culturalProfiles,
-        connections,
-        contentEngagement
-      ] = await Promise.all([
-        this.getTotalMembers(),
-        this.getCulturalDiversity(),
-        this.getCrossCulturalConnections(),
-        this.getCulturalContentEngagement()
-      ]);
-
-      return {
-        totalMembers,
-        culturalBackgrounds: culturalProfiles.uniqueBackgrounds,
-        activeLanguages: culturalProfiles.activeLanguages,
-        crossCulturalConnections: connections,
-        culturalContentEngagement: contentEngagement,
-        familyIntegrationRate: 0.68, // Mock data
-        culturalEventsThisMonth: 12, // Mock data
-        peerMatchingSuccessRate: 0.84 // Mock data
-      };
-    } catch (error) {
-      console.error('Error getting community metrics:', error);
-      throw error;
-    }
-  }
-
-  private static async getTotalMembers(): Promise<number> {
-    const { count, error } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true });
-    
-    if (error) throw error;
-    return count || 0;
-  }
-
-  private static async getCulturalDiversity(): Promise<{
-    uniqueBackgrounds: number;
-    activeLanguages: number;
-  }> {
-    const { data, error } = await supabase
-      .from('user_cultural_profiles')
-      .select('cultural_background, primary_language');
-
-    if (error) throw error;
-
-    const backgrounds = new Set(data?.map(p => p.cultural_background).filter(Boolean));
-    const languages = new Set(data?.map(p => p.primary_language).filter(Boolean));
-
-    return {
-      uniqueBackgrounds: backgrounds.size,
-      activeLanguages: languages.size
-    };
-  }
-
-  private static async getCrossCulturalConnections(): Promise<number> {
-    // Mock implementation - in real app, analyze peer connections across different cultures
-    return 234;
-  }
-
-  private static async getCulturalContentEngagement(): Promise<number> {
-    const { data, error } = await supabase
-      .from('cultural_effectiveness_tracking')
-      .select('user_satisfaction')
-      .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
-
-    if (error) throw error;
-
-    if (!data || data.length === 0) return 0;
-    
-    const avgSatisfaction = data.reduce((sum, item) => sum + (item.user_satisfaction || 0), 0) / data.length;
-    return avgSatisfaction;
-  }
-
-  // AI-Powered Community Intelligence
-  static async generateCommunityInsights(): Promise<CulturalCommunityInsight[]> {
-    try {
-      const metrics = await this.getCommunityMetrics();
-      const insights: CulturalCommunityInsight[] = [];
-
-      // Analyze community health patterns
-      if (metrics.crossCulturalConnections > 200) {
-        insights.push({
-          type: 'community_health',
-          title: 'Strong Cross-Cultural Bonding',
-          description: `${metrics.crossCulturalConnections} cross-cultural connections indicate excellent community diversity and integration.`,
-          impact: 'high',
-          confidence: 0.92,
-          actionable: true,
-          metadata: { connections: metrics.crossCulturalConnections }
-        });
-      }
-
-      // Cultural engagement patterns
-      if (metrics.culturalContentEngagement > 0.8) {
-        insights.push({
-          type: 'engagement_pattern',
-          title: 'High Cultural Content Engagement',
-          description: 'Users are highly engaged with culturally adapted content, showing strong cultural relevance.',
-          impact: 'high',
-          confidence: 0.89,
-          actionable: true,
-          metadata: { engagement: metrics.culturalContentEngagement }
-        });
-      }
-
-      // Family integration opportunities
-      if (metrics.familyIntegrationRate < 0.7) {
-        insights.push({
-          type: 'optimization',
-          title: 'Family Integration Opportunity',
-          description: 'Family integration rate could be improved with targeted outreach to family-oriented cultures.',
-          impact: 'medium',
-          confidence: 0.76,
-          actionable: true,
-          metadata: { currentRate: metrics.familyIntegrationRate }
-        });
-      }
-
-      return insights;
-    } catch (error) {
-      console.error('Error generating community insights:', error);
-      return [];
-    }
-  }
-
-  // Smart Community Recommendations
-  static async getPersonalizedCommunityRecommendations(userId: string): Promise<SmartCommunityRecommendation[]> {
-    try {
-      const culturalContext = await culturalAIService.getEnhancedCulturalContext(userId);
-      if (!culturalContext) return [];
-
-      const recommendations: SmartCommunityRecommendation[] = [];
-
-      // Recommend cultural peers
-      const culturalPeers = await CulturalPeerMatchingService.findCulturalPeers(userId);
-      if (culturalPeers.length > 0) {
-        recommendations.push({
-          id: `peer-rec-${userId}`,
-          userId,
-          type: 'peer_match',
-          title: 'Cultural Peer Connection Available',
-          description: `Found ${culturalPeers.length} highly compatible cultural peers to connect with.`,
-          reason: `Based on your ${culturalContext.culturalBackground} background and shared interests`,
-          culturalRelevance: 0.95,
-          priority: 9
-        });
-      }
-
-      // Recommend cultural support groups
-      const supportGroups = await CulturalSupportGroupService.getCulturalSupportGroups(userId);
-      if (supportGroups.length > 0) {
-        recommendations.push({
-          id: `group-rec-${userId}`,
-          userId,
-          type: 'support_group',
-          title: 'Cultural Support Group Match',
-          description: `Join a support group specifically designed for ${culturalContext.culturalBackground} community members.`,
-          reason: 'Culturally adapted group therapy shows 34% better outcomes',
-          culturalRelevance: 0.88,
-          priority: 8
-        });
-      }
-
-      // Recommend cultural content
-      const culturalContent = await CulturalContentLibraryService.getRecommendedContent(userId);
-      if (culturalContent.length > 0) {
-        recommendations.push({
-          id: `content-rec-${userId}`,
-          userId,
-          type: 'content',
-          title: 'Personalized Cultural Content',
-          description: `New therapeutic content adapted for your cultural background and language preferences.`,
-          reason: `Content matches your ${culturalContext.primaryLanguage} language preference`,
-          culturalRelevance: 0.82,
-          priority: 7
-        });
-      }
-
-      return recommendations.sort((a, b) => b.priority - a.priority);
-    } catch (error) {
-      console.error('Error getting personalized recommendations:', error);
-      return [];
-    }
-  }
-
-  // Advanced Community Matching
-  static async findCulturallyCompatibleCommunities(userId: string): Promise<any[]> {
-    try {
-      const culturalContext = await culturalAIService.getEnhancedCulturalContext(userId);
-      if (!culturalContext) return [];
-
-      // Find communities with high cultural compatibility
-      const { data: communities, error } = await supabase
-        .from('support_groups')
+      let query = supabase
+        .from('wellness_challenges')
         .select('*')
         .eq('is_active', true);
 
-      if (error) throw error;
+      if (category) {
+        query = query.eq('category', category);
+      }
 
-      return (communities || [])
-        .map(community => ({
-          ...community,
-          culturalCompatibility: this.calculateCommunityCompatibility(culturalContext, community),
-          reasons: this.getCommunityMatchReasons(culturalContext, community)
-        }))
-        .filter(community => community.culturalCompatibility > 0.6)
-        .sort((a, b) => b.culturalCompatibility - a.culturalCompatibility);
+      const { data, error } = await query.order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
     } catch (error) {
-      console.error('Error finding culturally compatible communities:', error);
+      console.error('Error fetching support groups:', error);
       return [];
     }
   }
 
-  private static calculateCommunityCompatibility(userContext: any, community: any): number {
-    let score = 0.5; // Base score
-
-    // Cultural background match (if community has cultural focus)
-    if (community.category?.toLowerCase().includes(userContext.culturalBackground?.toLowerCase())) {
-      score += 0.3;
-    }
-
-    // Communication style compatibility
-    if (community.description?.toLowerCase().includes('family') && 
-        userContext.communicationStyle?.familyInvolvement === 'high') {
-      score += 0.2;
-    }
-
-    return Math.min(1.0, score);
-  }
-
-  private static getCommunityMatchReasons(userContext: any, community: any): string[] {
-    const reasons: string[] = [];
-
-    if (community.category?.toLowerCase().includes(userContext.culturalBackground?.toLowerCase())) {
-      reasons.push(`Matches your ${userContext.culturalBackground} cultural background`);
-    }
-
-    if (community.description?.toLowerCase().includes('family')) {
-      reasons.push('Supports family-centered approach to healing');
-    }
-
-    if (community.description?.toLowerCase().includes('language')) {
-      reasons.push(`Offers support in your native language`);
-    }
-
-    return reasons;
-  }
-
-  // Community Gamification & Recognition
-  static async updateCommunityPoints(userId: string, action: string, points: number): Promise<void> {
+  static async createSupportGroup(groupData: Partial<ExtendedSupportGroup>): Promise<ExtendedSupportGroup | null> {
     try {
-      // Update user's community points based on cultural engagement
-      const pointsMultiplier = await this.getCulturalEngagementMultiplier(userId, action);
-      const adjustedPoints = Math.round(points * pointsMultiplier);
+      const { data, error } = await supabase
+        .from('community_support_groups')
+        .insert([groupData])
+        .select()
+        .single();
 
-      // In a real implementation, this would update a community_points table
-      console.log(`Awarding ${adjustedPoints} points to user ${userId} for ${action}`);
+      if (error) throw error;
+      return data;
     } catch (error) {
-      console.error('Error updating community points:', error);
+      console.error('Error creating support group:', error);
+      return null;
     }
   }
 
-  private static async getCulturalEngagementMultiplier(userId: string, action: string): Promise<number> {
-    // Give bonus points for cross-cultural interactions
-    if (action.includes('cross_cultural')) {
-      return 1.5;
-    }
-
-    // Give bonus points for family integration activities
-    if (action.includes('family')) {
-      return 1.3;
-    }
-
-    // Standard multiplier
-    return 1.0;
-  }
-
-  // Real-time Community Health Monitoring
-  static async monitorCommunityHealth(): Promise<{
-    status: 'healthy' | 'warning' | 'critical';
-    issues: string[];
-    recommendations: string[];
-  }> {
+  // Peer Connections
+  static async findPeerMatches(userId: string, connectionType?: string): Promise<PeerConnection[]> {
     try {
-      const metrics = await this.getCommunityMetrics();
-      const issues: string[] = [];
-      const recommendations: string[] = [];
+      let query = supabase
+        .from('community_peer_connections')
+        .select('*')
+        .or(`requester_id.eq.${userId},requested_id.eq.${userId}`)
+        .eq('status', 'accepted');
 
-      // Check cultural diversity
-      if (metrics.culturalBackgrounds < 5) {
-        issues.push('Low cultural diversity in community');
-        recommendations.push('Implement targeted outreach to diverse cultural communities');
+      if (connectionType) {
+        query = query.eq('connection_type', connectionType);
       }
 
-      // Check engagement levels
-      if (metrics.culturalContentEngagement < 0.6) {
-        issues.push('Low cultural content engagement');
-        recommendations.push('Review and improve cultural content quality and relevance');
-      }
+      const { data, error } = await query.order('created_at', { ascending: false });
 
-      // Check cross-cultural connections
-      if (metrics.crossCulturalConnections < 50) {
-        issues.push('Limited cross-cultural interactions');
-        recommendations.push('Create more cross-cultural events and matching opportunities');
-      }
-
-      const status = issues.length === 0 ? 'healthy' : 
-                    issues.length <= 2 ? 'warning' : 'critical';
-
-      return { status, issues, recommendations };
+      if (error) throw error;
+      return data || [];
     } catch (error) {
-      console.error('Error monitoring community health:', error);
+      console.error('Error fetching peer matches:', error);
+      return [];
+    }
+  }
+
+  static async createPeerConnection(connectionData: Partial<PeerConnection>): Promise<PeerConnection | null> {
+    try {
+      const { data, error } = await supabase
+        .from('community_peer_connections')
+        .insert([connectionData])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error creating peer connection:', error);
+      return null;
+    }
+  }
+
+  static async updatePeerConnectionStatus(connectionId: string, status: string): Promise<boolean> {
+    try {
+      const { error } = await supabase
+        .from('community_peer_connections')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', connectionId);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error updating peer connection status:', error);
+      return false;
+    }
+  }
+
+  // Community Challenges
+  static async getCommunityBuilders(): Promise<CommunityChallenge[]> {
+    try {
+      const { data, error } = await supabase
+        .from('wellness_challenges')
+        .select('*')
+        .eq('is_active', true)
+        .gte('end_date', new Date().toISOString().split('T')[0])
+        .order('start_date', { ascending: true });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching community challenges:', error);
+      return [];
+    }
+  }
+
+  static async createChallenge(challengeData: Partial<CommunityChallenge>): Promise<CommunityChallenge | null> {
+    try {
+      const { data, error } = await supabase
+        .from('wellness_challenges')
+        .insert([challengeData])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error creating challenge:', error);
+      return null;
+    }
+  }
+
+  static async joinChallenge(challengeId: string, userId: string): Promise<boolean> {
+    try {
+      // First increment participant count
+      const { error: updateError } = await supabase
+        .from('wellness_challenges')
+        .update({ 
+          participant_count: supabase.rpc('increment_participant_count', { challenge_id: challengeId })
+        })
+        .eq('id', challengeId);
+
+      if (updateError) throw updateError;
+
+      // Add participation record (would need a separate table for this)
+      return true;
+    } catch (error) {
+      console.error('Error joining challenge:', error);
+      return false;
+    }
+  }
+
+  // Community Resources
+  static async getCommunityResources(category?: string, culturalRelevance?: string[]): Promise<CommunityResource[]> {
+    try {
+      let query = supabase
+        .from('community_resource_library')
+        .select('*')
+        .eq('is_verified', true);
+
+      if (category) {
+        query = query.eq('category', category);
+      }
+
+      if (culturalRelevance && culturalRelevance.length > 0) {
+        query = query.overlaps('cultural_relevance', culturalRelevance);
+      }
+
+      const { data, error } = await query.order('upvotes', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching community resources:', error);
+      return [];
+    }
+  }
+
+  static async createResource(resourceData: Partial<CommunityResource>): Promise<CommunityResource | null> {
+    try {
+      const { data, error } = await supabase
+        .from('community_resource_library')
+        .insert([resourceData])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error creating resource:', error);
+      return null;
+    }
+  }
+
+  static async upvoteResource(resourceId: string): Promise<boolean> {
+    try {
+      const { error } = await supabase
+        .from('community_resource_library')
+        .update({ 
+          upvotes: supabase.rpc('increment_upvotes', { resource_id: resourceId })
+        })
+        .eq('id', resourceId);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error upvoting resource:', error);
+      return false;
+    }
+  }
+
+  // Live Events
+  static async getLiveEvents(eventType?: string, culturalFocus?: string[]): Promise<LiveEvent[]> {
+    try {
+      let query = supabase
+        .from('community_live_events')
+        .select('*')
+        .eq('is_active', true)
+        .gte('start_time', new Date().toISOString());
+
+      if (eventType) {
+        query = query.eq('event_type', eventType);
+      }
+
+      if (culturalFocus && culturalFocus.length > 0) {
+        query = query.overlaps('cultural_focus', culturalFocus);
+      }
+
+      const { data, error } = await query.order('start_time', { ascending: true });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching live events:', error);
+      return [];
+    }
+  }
+
+  static async createLiveEvent(eventData: Partial<LiveEvent>): Promise<LiveEvent | null> {
+    try {
+      const { data, error } = await supabase
+        .from('community_live_events')
+        .insert([eventData])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error creating live event:', error);
+      return null;
+    }
+  }
+
+  static async joinLiveEvent(eventId: string, userId: string): Promise<boolean> {
+    try {
+      const { error } = await supabase
+        .from('community_live_events')
+        .update({ 
+          participant_count: supabase.rpc('increment_participant_count', { event_id: eventId })
+        })
+        .eq('id', eventId);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error joining live event:', error);
+      return false;
+    }
+  }
+
+  // Mentorship Programs
+  static async getMentorshipPrograms(userId: string): Promise<MentorshipProgram[]> {
+    try {
+      const { data, error } = await supabase
+        .from('community_mentorship_programs')
+        .select('*')
+        .or(`mentor_id.eq.${userId},mentee_id.eq.${userId}`)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching mentorship programs:', error);
+      return [];
+    }
+  }
+
+  static async createMentorshipProgram(programData: Partial<MentorshipProgram>): Promise<MentorshipProgram | null> {
+    try {
+      const { data, error } = await supabase
+        .from('community_mentorship_programs')
+        .insert([programData])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error creating mentorship program:', error);
+      return null;
+    }
+  }
+
+  // Advanced Community Features
+  static async getCommunityStats(): Promise<any> {
+    try {
+      const [
+        supportGroupsCount,
+        activeChallengesCount,
+        totalPeerConnections,
+        liveEventsCount,
+        resourcesCount
+      ] = await Promise.all([
+        supabase.from('community_support_groups').select('id', { count: 'exact' }).eq('is_active', true),
+        supabase.from('wellness_challenges').select('id', { count: 'exact' }).eq('is_active', true),
+        supabase.from('community_peer_connections').select('id', { count: 'exact' }).eq('status', 'accepted'),
+        supabase.from('community_live_events').select('id', { count: 'exact' }).eq('is_active', true),
+        supabase.from('community_resource_library').select('id', { count: 'exact' }).eq('is_verified', true)
+      ]);
+
       return {
-        status: 'critical',
-        issues: ['Unable to assess community health'],
-        recommendations: ['Check system connectivity and database access']
+        supportGroups: supportGroupsCount.count || 0,
+        activeChallenges: activeChallengesCount.count || 0,
+        peerConnections: totalPeerConnections.count || 0,
+        liveEvents: liveEventsCount.count || 0,
+        resources: resourcesCount.count || 0
       };
+    } catch (error) {
+      console.error('Error fetching community stats:', error);
+      return {
+        supportGroups: 0,
+        activeChallenges: 0,
+        peerConnections: 0,
+        liveEvents: 0,
+        resources: 0
+      };
+    }
+  }
+
+  static async searchCommunityContent(searchTerm: string, filters?: any): Promise<any> {
+    try {
+      const searchResults = await Promise.all([
+        // Search support groups
+        supabase
+          .from('community_support_groups')
+          .select('id, name, description, category, "support_group" as type')
+          .or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
+          .eq('is_active', true)
+          .limit(5),
+        
+        // Search challenges
+        supabase
+          .from('wellness_challenges')
+          .select('id, title as name, description, challenge_type as category, "challenge" as type')
+          .or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
+          .eq('is_active', true)
+          .limit(5),
+        
+        // Search resources
+        supabase
+          .from('community_resource_library')
+          .select('id, title as name, description, category, "resource" as type')
+          .or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
+          .eq('is_verified', true)
+          .limit(5),
+        
+        // Search events
+        supabase
+          .from('community_live_events')
+          .select('id, title as name, description, event_type as category, "event" as type')
+          .or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
+          .eq('is_active', true)
+          .limit(5)
+      ]);
+
+      const allResults = searchResults.reduce((acc, result) => {
+        if (result.data) {
+          acc.push(...result.data);
+        }
+        return acc;
+      }, []);
+
+      return allResults;
+    } catch (error) {
+      console.error('Error searching community content:', error);
+      return [];
     }
   }
 }
