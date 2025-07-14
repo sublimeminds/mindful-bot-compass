@@ -13,7 +13,8 @@ import {
   Zap, 
   AlertTriangle,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  Languages
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -57,6 +58,11 @@ const AdminSidebarEnhanced = () => {
       title: 'Content',
       href: '/admin/content',
       icon: FileText
+    },
+    {
+      title: 'Translations',
+      href: '/admin/translations',
+      icon: Languages
     }
   ];
 

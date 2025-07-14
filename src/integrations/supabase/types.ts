@@ -2326,6 +2326,66 @@ export type Database = {
         }
         Relationships: []
       }
+      content_translations: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          content_key: string
+          content_type: string
+          context_type: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          is_approved: boolean | null
+          original_text: string
+          quality_score: number | null
+          source_language: string
+          target_language: string
+          translated_text: string
+          translation_method: string | null
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          content_key: string
+          content_type: string
+          context_type?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_approved?: boolean | null
+          original_text: string
+          quality_score?: number | null
+          source_language?: string
+          target_language: string
+          translated_text: string
+          translation_method?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          content_key?: string
+          content_type?: string
+          context_type?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_approved?: boolean | null
+          original_text?: string
+          quality_score?: number | null
+          source_language?: string
+          target_language?: string
+          translated_text?: string
+          translation_method?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       conversation_memories: {
         Row: {
           conversation_flow: Json
@@ -7319,6 +7379,69 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_translations: {
+        Row: {
+          canonical_url: string | null
+          created_at: string
+          created_by: string | null
+          hreflang_data: Json | null
+          id: string
+          is_active: boolean
+          language_code: string
+          meta_description: string | null
+          meta_keywords: string[] | null
+          meta_title: string | null
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
+          page_key: string
+          schema_data: Json | null
+          twitter_description: string | null
+          twitter_title: string | null
+          updated_at: string
+        }
+        Insert: {
+          canonical_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          hreflang_data?: Json | null
+          id?: string
+          is_active?: boolean
+          language_code: string
+          meta_description?: string | null
+          meta_keywords?: string[] | null
+          meta_title?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_key: string
+          schema_data?: Json | null
+          twitter_description?: string | null
+          twitter_title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          canonical_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          hreflang_data?: Json | null
+          id?: string
+          is_active?: boolean
+          language_code?: string
+          meta_description?: string | null
+          meta_keywords?: string[] | null
+          meta_title?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_key?: string
+          schema_data?: Json | null
+          twitter_description?: string | null
+          twitter_title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       session_analytics: {
         Row: {
           created_at: string
@@ -9381,6 +9504,145 @@ export type Database = {
           },
         ]
       }
+      translation_jobs: {
+        Row: {
+          actual_cost: number | null
+          completed_at: string | null
+          completed_items: number
+          created_at: string
+          created_by: string | null
+          error_details: Json | null
+          estimated_cost: number | null
+          failed_items: number
+          id: string
+          job_config: Json | null
+          job_name: string
+          job_type: string
+          results_summary: Json | null
+          source_language: string
+          status: string
+          target_languages: string[]
+          total_items: number
+          updated_at: string
+        }
+        Insert: {
+          actual_cost?: number | null
+          completed_at?: string | null
+          completed_items?: number
+          created_at?: string
+          created_by?: string | null
+          error_details?: Json | null
+          estimated_cost?: number | null
+          failed_items?: number
+          id?: string
+          job_config?: Json | null
+          job_name: string
+          job_type: string
+          results_summary?: Json | null
+          source_language?: string
+          status?: string
+          target_languages: string[]
+          total_items?: number
+          updated_at?: string
+        }
+        Update: {
+          actual_cost?: number | null
+          completed_at?: string | null
+          completed_items?: number
+          created_at?: string
+          created_by?: string | null
+          error_details?: Json | null
+          estimated_cost?: number | null
+          failed_items?: number
+          id?: string
+          job_config?: Json | null
+          job_name?: string
+          job_type?: string
+          results_summary?: Json | null
+          source_language?: string
+          status?: string
+          target_languages?: string[]
+          total_items?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      translation_review_queue: {
+        Row: {
+          assigned_to: string | null
+          content_translation_id: string | null
+          created_at: string
+          created_by: string | null
+          cultural_notes: string | null
+          id: string
+          priority_level: number | null
+          quality_metrics: Json | null
+          review_type: string
+          reviewed_at: string | null
+          reviewer_notes: string | null
+          seo_translation_id: string | null
+          status: string
+          updated_at: string
+          url_translation_id: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          content_translation_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          cultural_notes?: string | null
+          id?: string
+          priority_level?: number | null
+          quality_metrics?: Json | null
+          review_type: string
+          reviewed_at?: string | null
+          reviewer_notes?: string | null
+          seo_translation_id?: string | null
+          status?: string
+          updated_at?: string
+          url_translation_id?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          content_translation_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          cultural_notes?: string | null
+          id?: string
+          priority_level?: number | null
+          quality_metrics?: Json | null
+          review_type?: string
+          reviewed_at?: string | null
+          reviewer_notes?: string | null
+          seo_translation_id?: string | null
+          status?: string
+          updated_at?: string
+          url_translation_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "translation_review_queue_content_translation_id_fkey"
+            columns: ["content_translation_id"]
+            isOneToOne: false
+            referencedRelation: "content_translations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "translation_review_queue_seo_translation_id_fkey"
+            columns: ["seo_translation_id"]
+            isOneToOne: false
+            referencedRelation: "seo_translations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "translation_review_queue_url_translation_id_fkey"
+            columns: ["url_translation_id"]
+            isOneToOne: false
+            referencedRelation: "url_translations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       translation_sessions: {
         Row: {
           context_data: Json | null
@@ -9727,6 +9989,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      url_translations: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          language_code: string
+          original_path: string
+          page_key: string
+          translated_path: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          language_code: string
+          original_path: string
+          page_key: string
+          translated_path: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          language_code?: string
+          original_path?: string
+          page_key?: string
+          translated_path?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       usage_alerts: {
         Row: {
