@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Languages } from 'lucide-react';
+import { Languages, Zap } from 'lucide-react';
 import { useCookieLanguage } from '@/hooks/useCookieLanguage';
+import { useAITranslation } from '@/hooks/useAITranslation';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
 
 const EnhancedLanguageSelector = () => {
   const {
@@ -12,6 +15,8 @@ const EnhancedLanguageSelector = () => {
     hasConfirmedLanguage,
     isI18nReady
   } = useCookieLanguage();
+
+  const { userPreferences, updatePreferences } = useAITranslation();
 
   // Don't show language suggestion dialog if already confirmed
   const languagesByRegion = getLanguagesByRegion();
@@ -38,10 +43,29 @@ const EnhancedLanguageSelector = () => {
               <span>{currentLanguage.flag}</span>
               <span className="hidden sm:inline">{currentLanguage.name}</span>
               <span className="sm:hidden">{currentLanguage.code.toUpperCase()}</span>
+              {userPreferences?.autoTranslate && (
+                <Badge variant="secondary" className="ml-1 bg-therapy-100 text-therapy-700">
+                  <Zap className="h-3 w-3" />
+                </Badge>
+              )}
             </div>
           </SelectValue>
         </SelectTrigger>
         <SelectContent className="bg-white/98 backdrop-blur-lg border shadow-xl z-50 max-h-80 overflow-y-auto text-gray-900 rounded-xl">
+          <div className="p-3 border-b border-therapy-100">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">AI Translation</span>
+              <Switch
+                checked={userPreferences?.autoTranslate || false}
+                onCheckedChange={(enabled) => 
+                  updatePreferences({ autoTranslate: enabled })
+                }
+              />
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Enable AI-powered translation for missing content
+            </p>
+          </div>
           {Object.entries(languagesByRegion).map(([region, languages]) => (
             <div key={region}>
               <div className="px-2 py-1 text-xs font-semibold text-therapy-600 border-b border-therapy-100">

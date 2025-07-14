@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
 import { useScreenSize } from '@/hooks/use-mobile';
+import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
+import { TranslationWidget } from '@/components/translation/TranslationWidget';
 
 const DashboardHeader = () => {
   const { user } = useAuth();
@@ -151,6 +153,14 @@ const DashboardHeader = () => {
               </Link>
             )}
           </div>
+
+          {/* Translation Tools */}
+          <div className="hidden lg:block">
+            <TranslationWidget />
+          </div>
+
+          {/* Language Selector */}
+          <EnhancedLanguageSelector />
 
           {/* Notification Center */}
           <EnhancedNotificationCenter />
