@@ -3,9 +3,15 @@ import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import NotificationCenter from '@/components/notifications/NotificationCenter';
 import NotificationTester from '@/components/notifications/NotificationTester';
+import NotificationAdminDashboard from '@/components/admin/NotificationAdminDashboard';
+import { useRealTimeNotificationTriggers } from '@/hooks/useRealTimeNotificationTriggers';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const NotificationCenterPage = () => {
   const { user, loading } = useAuth();
+  
+  // Initialize real-time notification triggers
+  useRealTimeNotificationTriggers();
 
   if (loading) {
     return (
@@ -21,24 +27,42 @@ const NotificationCenterPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold therapy-text-gradient mb-2">
             Notification Center
           </h1>
           <p className="text-gray-600">
-            Stay up to date with your therapy journey and important alerts
+            Intelligent notifications and analytics dashboard
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <NotificationCenter />
-          </div>
-          <div>
+        <Tabs defaultValue="notifications" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            <TabsTrigger value="testing">Testing Tools</TabsTrigger>
+            <TabsTrigger value="admin">Admin Dashboard</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="notifications" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <NotificationCenter />
+              </div>
+              <div>
+                <NotificationTester />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="testing" className="space-y-6">
             <NotificationTester />
-          </div>
-        </div>
+          </TabsContent>
+
+          <TabsContent value="admin" className="space-y-6">
+            <NotificationAdminDashboard />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
