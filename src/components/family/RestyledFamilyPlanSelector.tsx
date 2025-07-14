@@ -15,7 +15,7 @@ interface RestyledFamilyPlanSelectorProps {
 }
 
 const RestyledFamilyPlanSelector = ({ isOpen, onClose, currentPlan }: RestyledFamilyPlanSelectorProps) => {
-  const [memberCount, setMemberCount] = useState(4);
+  const [memberCount, setMemberCount] = useState(2);
   const [selectedTier, setSelectedTier] = useState<'pro' | 'premium'>('pro');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   
@@ -55,7 +55,7 @@ const RestyledFamilyPlanSelector = ({ isOpen, onClose, currentPlan }: RestyledFa
       icon: Crown,
       baseMemberCount: 2,
       features: [
-        'Claude 4 Sonnet AI model for all members',
+        'Claude 4 Opus AI model for all members',
         'Unlimited AI messages for all members',
         '10 therapy plans per member',
         'Unlimited AI therapy sessions',
