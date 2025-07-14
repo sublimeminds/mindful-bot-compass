@@ -42,6 +42,44 @@ export class VoiceIntegrationService {
     }
   }
 
+  static async convertSpeechToTextAndTranslate(
+    audioBlob: Blob,
+    sourceLanguage: string,
+    targetLanguage: string,
+    culturalContext?: string
+  ): Promise<{ originalText: string; translatedText: string }> {
+    try {
+      // First, convert speech to text in source language
+      const originalText = await this.convertSpeechToText(audioBlob, { language: sourceLanguage });
+
+      // If target language is the same as source, return original text
+      if (sourceLanguage === targetLanguage) {
+        return { originalText, translatedText: originalText };
+      }
+
+      // Translate the text
+      const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
+        body: {
+          texts: [originalText],
+          targetLanguage: targetLanguage,
+          context: 'conversation',
+          culturalContext: culturalContext
+        }
+      });
+
+      if (translationError) {
+        console.error('Translation error:', translationError);
+        return { originalText, translatedText: originalText };
+      }
+
+      const translatedText = translationData.translations[0] || originalText;
+      return { originalText, translatedText };
+    } catch (error) {
+      console.error('Speech to text and translation failed:', error);
+      throw error;
+    }
+  }
+
   static async enhancedTranscriptionAnalysis(
     audioBlob: Blob,
     userId: string,
@@ -103,6 +141,50 @@ export class VoiceIntegrationService {
       return data.audioContent || '';
     } catch (error) {
       console.error('Text to speech conversion failed:', error);
+      throw error;
+    }
+  }
+
+  static async translateAndConvertToSpeech(
+    text: string,
+    sourceLanguage: string,
+    targetLanguage: string,
+    options: TextToSpeechOptions = {},
+    culturalContext?: string
+  ): Promise<{ originalAudio: string; translatedAudio: string; translatedText: string }> {
+    try {
+      // If source and target languages are the same, just convert to speech
+      if (sourceLanguage === targetLanguage) {
+        const audioContent = await this.convertTextToSpeech(text, options);
+        return { originalAudio: audioContent, translatedAudio: audioContent, translatedText: text };
+      }
+
+      // Translate the text first
+      const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
+        body: {
+          texts: [text],
+          targetLanguage: targetLanguage,
+          context: 'conversation',
+          culturalContext: culturalContext
+        }
+      });
+
+      if (translationError) {
+        console.error('Translation error:', translationError);
+        throw new Error('Failed to translate text');
+      }
+
+      const translatedText = translationData.translations[0] || text;
+
+      // Convert both original and translated text to speech
+      const [originalAudio, translatedAudio] = await Promise.all([
+        this.convertTextToSpeech(text, options),
+        this.convertTextToSpeech(translatedText, options)
+      ]);
+
+      return { originalAudio, translatedAudio, translatedText };
+    } catch (error) {
+      console.error('Translate and text to speech conversion failed:', error);
       throw error;
     }
   }

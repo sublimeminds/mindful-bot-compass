@@ -27,7 +27,7 @@ export const useContentLibrary = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchContent = async (includeUnpublished = false) => {
+  const fetchContent = async (includeUnpublished = false, userLanguage?: string, culturalContext?: string) => {
     try {
       setLoading(true);
       let query = supabase
@@ -42,7 +42,43 @@ export const useContentLibrary = () => {
       const { data, error } = await query;
 
       if (error) throw error;
-      setContent((data as ContentItem[]) || []);
+      
+      let contentItems = (data as ContentItem[]) || [];
+
+      // Translate content if needed
+      if (userLanguage && userLanguage !== 'en' && contentItems.length > 0) {
+        try {
+          const textsToTranslate = contentItems.flatMap(item => [
+            item.title,
+            item.description || ''
+          ]).filter(text => text.length > 0);
+
+          const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
+            body: {
+              texts: textsToTranslate,
+              targetLanguage: userLanguage,
+              context: 'educational_content',
+              culturalContext: culturalContext
+            }
+          });
+
+          if (!translationError && translationData) {
+            const translations = translationData.translations;
+            let translationIndex = 0;
+
+            contentItems = contentItems.map(item => ({
+              ...item,
+              title: translations[translationIndex++] || item.title,
+              description: item.description ? (translations[translationIndex++] || item.description) : item.description
+            }));
+          }
+        } catch (translationError) {
+          console.error('Error translating content library:', translationError);
+          // Continue with original content if translation fails
+        }
+      }
+
+      setContent(contentItems);
     } catch (error) {
       console.error('Error fetching content:', error);
       toast({

@@ -23,6 +23,8 @@ export interface AIResponse {
   recommendations?: string[];
 }
 
+import { getUserLanguagePreference, shouldTranslate } from '@/utils/languageUtils';
+
 class RealAIService {
   async generateTherapyResponse(
     userMessage: string,
@@ -63,7 +65,11 @@ class RealAIService {
       // Create system prompt with personalization
       const systemPrompt = this.buildPersonalizedPrompt(enhancedContext);
 
-      // Use subscription-based AI service
+      // Detect user language preference
+      const languagePreference = getUserLanguagePreference(profile, personalization);
+      const userLanguage = languagePreference.language;
+
+      // Use subscription-based AI service with translation support
       const aiResponse = await SubscriptionBasedAiService.generateResponse(
         userMessage,
         {
@@ -71,6 +77,8 @@ class RealAIService {
           therapist: context.therapist,
           approach: context.therapist?.approach,
           communicationStyle: context.therapist?.communicationStyle,
+          targetLanguage: userLanguage,
+          culturalContext: personalization?.cultural_context,
           ...enhancedContext
         },
         context.userId,
@@ -96,14 +104,48 @@ class RealAIService {
         enhancedContext
       );
 
+      // Translate response if needed
+      let translatedMessage = aiResponse.message;
+      let translatedTechniques = aiResponse.techniques;
+      let translatedInsights = aiResponse.insights;
+      let translatedQuestions = followUpQuestions;
+      let translatedRecommendations = riskAssessment.recommendations;
+
+      if (shouldTranslate(userLanguage)) {
+        // Use translation service for therapeutic content
+        const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
+          body: {
+            texts: [
+              aiResponse.message,
+              ...(aiResponse.techniques || []),
+              ...(aiResponse.insights || []),
+              ...followUpQuestions,
+              ...riskAssessment.recommendations
+            ],
+            targetLanguage: userLanguage,
+            context: 'therapy',
+            culturalContext: languagePreference.culturalContext
+          }
+        });
+
+        if (!translationError && translationData) {
+          const translations = translationData.translations;
+          translatedMessage = translations[0] || aiResponse.message;
+          translatedTechniques = translations.slice(1, 1 + (aiResponse.techniques?.length || 0));
+          translatedInsights = translations.slice(1 + (aiResponse.techniques?.length || 0), 1 + (aiResponse.techniques?.length || 0) + (aiResponse.insights?.length || 0));
+          translatedQuestions = translations.slice(1 + (aiResponse.techniques?.length || 0) + (aiResponse.insights?.length || 0), 1 + (aiResponse.techniques?.length || 0) + (aiResponse.insights?.length || 0) + followUpQuestions.length);
+          translatedRecommendations = translations.slice(-riskAssessment.recommendations.length);
+        }
+      }
+
       return {
-        message: aiResponse.message,
+        message: translatedMessage,
         emotion: aiResponse.emotion,
-        techniques: aiResponse.techniques,
-        insights: aiResponse.insights,
-        followUpQuestions,
+        techniques: translatedTechniques,
+        insights: translatedInsights,
+        followUpQuestions: translatedQuestions,
         riskLevel: riskAssessment.level,
-        recommendations: riskAssessment.recommendations
+        recommendations: translatedRecommendations
       };
 
     } catch (error) {

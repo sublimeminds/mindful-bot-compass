@@ -155,8 +155,8 @@ export interface CulturalCommunityInsight {
 }
 
 export class EnhancedCommunityService {
-  // Support Groups
-  static async getSupportGroups(category?: string, culturalFocus?: string[]): Promise<ExtendedSupportGroup[]> {
+  // Support Groups with Translation Support
+  static async getSupportGroups(category?: string, culturalFocus?: string[], userLanguage?: string, culturalContext?: string): Promise<ExtendedSupportGroup[]> {
     try {
       // Use existing wellness_challenges table as support groups for now
       let query = supabase
@@ -173,7 +173,7 @@ export class EnhancedCommunityService {
       if (error) throw error;
       
       // Transform wellness challenges to support group format
-      return (data || []).map(challenge => ({
+      let supportGroups = (data || []).map(challenge => ({
         id: challenge.id,
         name: challenge.title,
         description: challenge.description,
@@ -185,6 +185,41 @@ export class EnhancedCommunityService {
         created_at: challenge.created_at,
         updated_at: challenge.created_at
       }));
+
+      // Translate content if needed
+      if (userLanguage && userLanguage !== 'en' && supportGroups.length > 0) {
+        try {
+          const textsToTranslate = supportGroups.flatMap(group => [
+            group.name,
+            group.description || ''
+          ]).filter(text => text.length > 0);
+
+          const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
+            body: {
+              texts: textsToTranslate,
+              targetLanguage: userLanguage,
+              context: 'community_support',
+              culturalContext: culturalContext
+            }
+          });
+
+          if (!translationError && translationData) {
+            const translations = translationData.translations;
+            let translationIndex = 0;
+
+            supportGroups = supportGroups.map(group => ({
+              ...group,
+              name: translations[translationIndex++] || group.name,
+              description: group.description ? (translations[translationIndex++] || group.description) : group.description
+            }));
+          }
+        } catch (translationError) {
+          console.error('Error translating support groups:', translationError);
+          // Continue with original content if translation fails
+        }
+      }
+
+      return supportGroups;
     } catch (error) {
       console.error('Error fetching support groups:', error);
       return [];

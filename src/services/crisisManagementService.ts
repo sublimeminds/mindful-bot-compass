@@ -258,8 +258,8 @@ export class CrisisManagementService {
     }
   }
 
-  // Crisis Resources
-  static async getCrisisResources(filters?: { resourceType?: string; specialty?: string }): Promise<CrisisResource[]> {
+  // Crisis Resources with Translation Support
+  static async getCrisisResources(filters?: { resourceType?: string; specialty?: string; userLanguage?: string; culturalContext?: string }): Promise<CrisisResource[]> {
     try {
       let query = supabase
         .from('crisis_resources')
@@ -275,10 +275,51 @@ export class CrisisManagementService {
         query = query.contains('specialties', [filters.specialty]);
       }
 
+      // Filter by language support if specified
+      if (filters?.userLanguage && filters.userLanguage !== 'en') {
+        query = query.contains('language_support', [filters.userLanguage]);
+      }
+
       const { data, error } = await query;
 
       if (error) throw error;
-      return data || [];
+      
+      let resources = data || [];
+
+      // Translate resource content if needed
+      if (filters?.userLanguage && filters.userLanguage !== 'en' && resources.length > 0) {
+        try {
+          const textsToTranslate = resources.flatMap(resource => [
+            resource.name,
+            resource.description || ''
+          ]).filter(text => text.length > 0);
+
+          const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
+            body: {
+              texts: textsToTranslate,
+              targetLanguage: filters.userLanguage,
+              context: 'crisis_support',
+              culturalContext: filters.culturalContext
+            }
+          });
+
+          if (!translationError && translationData) {
+            const translations = translationData.translations;
+            let translationIndex = 0;
+
+            resources = resources.map(resource => ({
+              ...resource,
+              name: translations[translationIndex++] || resource.name,
+              description: resource.description ? (translations[translationIndex++] || resource.description) : resource.description
+            }));
+          }
+        } catch (translationError) {
+          console.error('Error translating crisis resources:', translationError);
+          // Continue with original resources if translation fails
+        }
+      }
+
+      return resources;
     } catch (error) {
       console.error('Error fetching crisis resources:', error);
       return [];
