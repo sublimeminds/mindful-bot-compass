@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import React from 'react';
 import { AffiliateTrackingService } from '@/services/affiliateTrackingService';
 import { TrackingService } from '@/services/trackingService';
 
 export const useAffiliateTracking = () => {
-  useEffect(() => {
+  React.useEffect(() => {
     // Initialize affiliate tracking
     AffiliateTrackingService.init();
 
