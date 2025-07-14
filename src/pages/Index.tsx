@@ -175,15 +175,40 @@ const Index = () => {
       
       {/* Hero Section */}
       <section id="hero" className="py-20 lg:py-32 relative overflow-hidden">
+        {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${therapyHeroTech}?v=${Date.now()})` }}
         ></div>
+        
+        {/* Background Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-therapy-900/30 via-therapy-800/20 to-calm-900/30"></div>
+        
+        {/* Animated Floating Elements */}
+        <div className="hero-floating-element w-20 h-20 top-20 left-1/4 animate-float-up" style={{ animationDelay: '0s' }}></div>
+        <div className="hero-floating-element w-16 h-16 top-32 right-1/4 animate-float-diagonal" style={{ animationDelay: '1s' }}></div>
+        <div className="hero-floating-element w-12 h-12 top-1/3 left-3/4 animate-float-circle" style={{ animationDelay: '2s' }}></div>
+        <div className="hero-floating-element w-8 h-8 bottom-32 left-1/3 animate-float-up" style={{ animationDelay: '3s' }}></div>
+        <div className="hero-floating-element w-14 h-14 bottom-40 right-1/3 animate-float-diagonal" style={{ animationDelay: '0.5s' }}></div>
+        
+        {/* Particle Elements */}
+        <div className="hero-particle top-24 left-1/2 animate-particle-drift" style={{ animationDelay: '0s' }}></div>
+        <div className="hero-particle top-40 right-1/5 animate-particle-drift" style={{ animationDelay: '2s' }}></div>
+        <div className="hero-particle bottom-48 left-1/5 animate-particle-drift" style={{ animationDelay: '4s' }}></div>
+        <div className="hero-particle top-1/2 right-1/2 animate-particle-drift" style={{ animationDelay: '1s' }}></div>
+        <div className="hero-particle bottom-32 right-3/4 animate-particle-drift" style={{ animationDelay: '3s' }}></div>
+        <div className="hero-particle top-36 left-2/3 animate-particle-drift" style={{ animationDelay: '5s' }}></div>
+        
+        {/* Flowing Waves */}
+        <div className="hero-wave top-1/3 animate-wave-flow" style={{ animationDelay: '0s' }}></div>
+        <div className="hero-wave bottom-1/3 animate-wave-flow" style={{ animationDelay: '6s' }}></div>
+        
         <div className="container mx-auto px-4 relative">
           <div className="text-center">
             <div className="flex justify-center mb-8">
-              <GradientLogo size="xl" className="animate-swirl-breathe" />
+              <div className="relative">
+                <GradientLogo size="xl" className="animate-swirl-breathe animate-glow-pulse" />
+              </div>
             </div>
             
             <Badge className="mb-6 therapy-gradient-bg text-white px-8 py-3 text-sm font-semibold shadow-lg border-0 animate-fade-in">
@@ -206,7 +231,7 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-in">
               <GradientButton 
                 size="lg" 
-                className="px-8 py-4 text-lg font-bold"
+                className="px-8 py-4 text-lg font-bold hover-scale transition-all duration-300"
                 onClick={() => navigate('/onboarding')}
               >
                 <Heart className="h-5 w-5 mr-2" />
@@ -214,7 +239,7 @@ const Index = () => {
               </GradientButton>
               <Button 
                 size="lg" 
-                className="bg-white border-2 border-therapy-300 text-therapy-700 hover:bg-therapy-50 hover:border-therapy-400 px-8 py-4 text-lg font-bold transition-all duration-300"
+                className="bg-white/90 backdrop-blur-sm border-2 border-therapy-300 text-therapy-700 hover:bg-therapy-50 hover:border-therapy-400 px-8 py-4 text-lg font-bold transition-all duration-300 hover-scale"
                 onClick={scrollToDemo}
               >
                 <MessageSquare className="h-5 w-5 mr-2" />
