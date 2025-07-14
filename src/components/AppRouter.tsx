@@ -43,8 +43,7 @@ import Features from "../pages/Features";
 import FAQAndBlog from "../pages/FAQAndBlog";
 import { AffiliateProgramPage } from "../pages/AffiliateProgramPage";
 import AffiliateRoutes from "../pages/affiliate";
-import { CostOptimizationDashboard } from "../components/admin/analytics/CostOptimizationDashboard";
-import { UsageMonitoring } from "../components/dashboard/UsageMonitoring";
+// AI monitoring components moved to admin AI section
 
 // Dashboard Pages (should use BulletproofDashboardLayout - sidebar)
 import Dashboard from "../pages/Dashboard";

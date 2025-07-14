@@ -1,9 +1,9 @@
 
 import React from 'react';
-import AIConfigurationDashboard from '@/components/admin/ai/AIConfigurationDashboard';
+import AdminAIOverview from '@/components/admin/ai/AdminAIOverview';
 
 const AdminAI = () => {
-  return <AIConfigurationDashboard />;
+  return <AdminAIOverview />;
 };
 
 export default AdminAI;
