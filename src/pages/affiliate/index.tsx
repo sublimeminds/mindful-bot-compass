@@ -1,12 +1,12 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { AffiliatePortal } from '@/components/affiliate/AffiliatePortal';
+import { EnhancedAffiliateDashboard } from '@/components/affiliate/EnhancedAffiliateDashboard';
 
 const AffiliateRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<AffiliatePortal />} />
-      <Route path="/dashboard" element={<AffiliatePortal />} />
+      <Route path="/" element={<EnhancedAffiliateDashboard />} />
+      <Route path="/dashboard" element={<EnhancedAffiliateDashboard />} />
     </Routes>
   );
 };

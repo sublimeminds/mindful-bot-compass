@@ -245,6 +245,69 @@ export type Database = {
         }
         Relationships: []
       }
+      affiliate_applications: {
+        Row: {
+          application_data: Json | null
+          business_name: string | null
+          created_at: string | null
+          expected_monthly_referrals: number | null
+          id: string
+          marketing_channels: string[] | null
+          marketing_experience: string | null
+          marketing_plan: string | null
+          previous_affiliate_experience: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          social_profiles: Json | null
+          status: string | null
+          tax_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          website_url: string | null
+        }
+        Insert: {
+          application_data?: Json | null
+          business_name?: string | null
+          created_at?: string | null
+          expected_monthly_referrals?: number | null
+          id?: string
+          marketing_channels?: string[] | null
+          marketing_experience?: string | null
+          marketing_plan?: string | null
+          previous_affiliate_experience?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          social_profiles?: Json | null
+          status?: string | null
+          tax_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          application_data?: Json | null
+          business_name?: string | null
+          created_at?: string | null
+          expected_monthly_referrals?: number | null
+          id?: string
+          marketing_channels?: string[] | null
+          marketing_experience?: string | null
+          marketing_plan?: string | null
+          previous_affiliate_experience?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          social_profiles?: Json | null
+          status?: string | null
+          tax_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       affiliate_commission_rules: {
         Row: {
           commission_rate: number | null
@@ -349,6 +412,51 @@ export type Database = {
           },
         ]
       }
+      affiliate_marketing_materials: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          dimensions: string | null
+          download_count: number | null
+          file_url: string | null
+          id: string
+          is_active: boolean | null
+          material_type: string
+          preview_url: string | null
+          tier_required: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          dimensions?: string | null
+          download_count?: number | null
+          file_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          material_type: string
+          preview_url?: string | null
+          tier_required?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          dimensions?: string | null
+          download_count?: number | null
+          file_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          material_type?: string
+          preview_url?: string | null
+          tier_required?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       affiliate_metrics: {
         Row: {
           affiliate_id: string
@@ -362,6 +470,8 @@ export type Database = {
           metric_date: string
           returning_visitors: number
           revenue: number
+          rolling_12m_referrals: number | null
+          rolling_12m_revenue: number | null
           unique_visitors: number
         }
         Insert: {
@@ -376,6 +486,8 @@ export type Database = {
           metric_date: string
           returning_visitors?: number
           revenue?: number
+          rolling_12m_referrals?: number | null
+          rolling_12m_revenue?: number | null
           unique_visitors?: number
         }
         Update: {
@@ -390,6 +502,8 @@ export type Database = {
           metric_date?: string
           returning_visitors?: number
           revenue?: number
+          rolling_12m_referrals?: number | null
+          rolling_12m_revenue?: number | null
           unique_visitors?: number
         }
         Relationships: [
@@ -559,6 +673,7 @@ export type Database = {
       affiliate_tiers: {
         Row: {
           base_commission_rate: number
+          benefits: Json | null
           bonus_commission_rate: number
           created_at: string
           description: string | null
@@ -566,12 +681,15 @@ export type Database = {
           is_active: boolean
           min_referrals: number
           min_revenue: number
+          monthly_min_referrals: number | null
+          monthly_min_revenue: number | null
           name: string
           priority_level: number
           updated_at: string
         }
         Insert: {
           base_commission_rate?: number
+          benefits?: Json | null
           bonus_commission_rate?: number
           created_at?: string
           description?: string | null
@@ -579,12 +697,15 @@ export type Database = {
           is_active?: boolean
           min_referrals?: number
           min_revenue?: number
+          monthly_min_referrals?: number | null
+          monthly_min_revenue?: number | null
           name: string
           priority_level?: number
           updated_at?: string
         }
         Update: {
           base_commission_rate?: number
+          benefits?: Json | null
           bonus_commission_rate?: number
           created_at?: string
           description?: string | null
@@ -592,6 +713,8 @@ export type Database = {
           is_active?: boolean
           min_referrals?: number
           min_revenue?: number
+          monthly_min_referrals?: number | null
+          monthly_min_revenue?: number | null
           name?: string
           priority_level?: number
           updated_at?: string
