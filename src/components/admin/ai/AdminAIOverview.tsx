@@ -15,13 +15,15 @@ import {
   RefreshCw,
   AlertTriangle,
   CheckCircle,
-  XCircle
+  XCircle,
+  Globe
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import AITestingHub from './AITestingHub';
 import AIModelRoutingConfig from './AIModelRoutingConfig';
 import AIUsageMonitoring from './AIUsageMonitoring';
 import AIPerformanceMonitor from './AIPerformanceMonitor';
+import CulturalAIMonitoring from './CulturalAIMonitoring';
 import { AITestingService, TestResult } from '@/services/aiTestingService';
 
 const AdminAIOverview = () => {
@@ -243,7 +245,7 @@ const AdminAIOverview = () => {
 
       {/* AI Management Tabs */}
       <Tabs defaultValue="testing" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="testing" className="flex items-center gap-2">
             <TestTube className="h-4 w-4" />
             Testing Hub
@@ -259,6 +261,10 @@ const AdminAIOverview = () => {
           <TabsTrigger value="performance" className="flex items-center gap-2">
             <TrendingUp className="h-4 w-4" />
             Performance
+          </TabsTrigger>
+          <TabsTrigger value="cultural" className="flex items-center gap-2">
+            <Globe className="h-4 w-4" />
+            Cultural AI
           </TabsTrigger>
         </TabsList>
 
@@ -276,6 +282,10 @@ const AdminAIOverview = () => {
 
         <TabsContent value="performance">
           <AIPerformanceMonitor />
+        </TabsContent>
+
+        <TabsContent value="cultural">
+          <CulturalAIMonitoring />
         </TabsContent>
       </Tabs>
     </div>

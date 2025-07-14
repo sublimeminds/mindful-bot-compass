@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
+import EnhancedCommunityHub from '@/components/community/EnhancedCommunityHub';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -383,68 +384,10 @@ const CommunityHub = () => {
 
   return (
     <DashboardLayoutWithSidebar>
-      <div className="p-6 max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <Users className="h-8 w-8 mr-3 text-therapy-600" />
-                Community Hub
-              </h1>
-              <p className="text-gray-600 mt-2">Connect, share, and grow together on your wellness journey</p>
-            </div>
-            <div className="flex gap-3">
-              <Button variant="outline" size="sm">
-                <Bell className="h-4 w-4 mr-2" />
-                Notifications
-              </Button>
-              <Button variant="outline" size="sm">
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </Button>
-            </div>
-          </div>
-          
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            <Card className="p-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-therapy-600">{myGroups.length}</div>
-                <div className="text-sm text-gray-600">Your Groups</div>
-              </div>
-            </Card>
-            <Card className="p-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-calm-600">{peerConnections.length}</div>
-                <div className="text-sm text-gray-600">Connections</div>
-              </div>
-            </Card>
-            <Card className="p-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-harmony-600">127</div>
-                <div className="text-sm text-gray-600">Community Points</div>
-              </div>
-            </Card>
-            <Card className="p-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">15</div>
-                <div className="text-sm text-gray-600">Days Active</div>
-              </div>
-            </Card>
-          </div>
-        </div>
+      <EnhancedCommunityHub />
+    </DashboardLayoutWithSidebar>
+  );
 
-        {/* Main Content */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="feed">Feed</TabsTrigger>
-            <TabsTrigger value="groups">Groups</TabsTrigger>
-            <TabsTrigger value="events">Events</TabsTrigger>
-            <TabsTrigger value="connections">Connections</TabsTrigger>
-            <TabsTrigger value="activities">Activities</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-          </TabsList>
 
           {/* Community Feed */}
           <TabsContent value="feed" className="space-y-6">
@@ -1059,11 +1002,7 @@ const CommunityHub = () => {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </DashboardLayoutWithSidebar>
-  );
+};
 };
 
 export default CommunityHub;
