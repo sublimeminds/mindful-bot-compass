@@ -5738,6 +5738,39 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_routing_rules: {
+        Row: {
+          channels: string[]
+          conditions: Json | null
+          created_at: string
+          id: string
+          is_active: boolean
+          notification_type: string
+          priority: string
+          updated_at: string
+        }
+        Insert: {
+          channels?: string[]
+          conditions?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          notification_type: string
+          priority: string
+          updated_at?: string
+        }
+        Update: {
+          channels?: string[]
+          conditions?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          notification_type?: string
+          priority?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notification_templates: {
         Row: {
           created_at: string
@@ -5812,36 +5845,57 @@ export type Database = {
       }
       notifications: {
         Row: {
+          action_buttons: Json | null
           created_at: string
           data: Json | null
+          deep_link_url: string | null
+          delivery_channels: string[] | null
+          expires_at: string | null
           id: string
+          interaction_data: Json | null
           is_read: boolean
           message: string
+          personalization_score: number | null
           priority: string
+          rich_content: Json | null
           scheduled_for: string | null
           title: string
           type: string
           user_id: string
         }
         Insert: {
+          action_buttons?: Json | null
           created_at?: string
           data?: Json | null
+          deep_link_url?: string | null
+          delivery_channels?: string[] | null
+          expires_at?: string | null
           id?: string
+          interaction_data?: Json | null
           is_read?: boolean
           message: string
+          personalization_score?: number | null
           priority?: string
+          rich_content?: Json | null
           scheduled_for?: string | null
           title: string
           type: string
           user_id: string
         }
         Update: {
+          action_buttons?: Json | null
           created_at?: string
           data?: Json | null
+          deep_link_url?: string | null
+          delivery_channels?: string[] | null
+          expires_at?: string | null
           id?: string
+          interaction_data?: Json | null
           is_read?: boolean
           message?: string
+          personalization_score?: number | null
           priority?: string
+          rich_content?: Json | null
           scheduled_for?: string | null
           title?: string
           type?: string
@@ -7690,6 +7744,48 @@ export type Database = {
           milestone_type?: string
           support_count?: number | null
           title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      smart_notification_preferences: {
+        Row: {
+          ai_optimization_enabled: boolean | null
+          created_at: string
+          crisis_override: boolean | null
+          frequency_limit: number | null
+          id: string
+          notification_type: string
+          preferred_channels: string[] | null
+          preferred_times: Json | null
+          quiet_hours: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_optimization_enabled?: boolean | null
+          created_at?: string
+          crisis_override?: boolean | null
+          frequency_limit?: number | null
+          id?: string
+          notification_type: string
+          preferred_channels?: string[] | null
+          preferred_times?: Json | null
+          quiet_hours?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_optimization_enabled?: boolean | null
+          created_at?: string
+          crisis_override?: boolean | null
+          frequency_limit?: number | null
+          id?: string
+          notification_type?: string
+          preferred_channels?: string[] | null
+          preferred_times?: Json | null
+          quiet_hours?: Json | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
