@@ -2586,6 +2586,221 @@ export type Database = {
         }
         Relationships: []
       }
+      cultural_bias_detection: {
+        Row: {
+          bias_indicators: string[] | null
+          bias_score: number
+          content_text: string
+          content_type: string
+          corrective_actions: string[] | null
+          cultural_context: Json | null
+          detected_at: string
+          flagged_phrases: string[] | null
+          id: string
+          reviewed_by: string | null
+          status: string
+        }
+        Insert: {
+          bias_indicators?: string[] | null
+          bias_score: number
+          content_text: string
+          content_type: string
+          corrective_actions?: string[] | null
+          cultural_context?: Json | null
+          detected_at?: string
+          flagged_phrases?: string[] | null
+          id?: string
+          reviewed_by?: string | null
+          status?: string
+        }
+        Update: {
+          bias_indicators?: string[] | null
+          bias_score?: number
+          content_text?: string
+          content_type?: string
+          corrective_actions?: string[] | null
+          cultural_context?: Json | null
+          detected_at?: string
+          flagged_phrases?: string[] | null
+          id?: string
+          reviewed_by?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      cultural_celebrations: {
+        Row: {
+          celebration_date: string
+          community_activities: Json | null
+          created_at: string
+          cultural_origin: string
+          description: string | null
+          id: string
+          is_recurring: boolean | null
+          name: string
+          recurrence_pattern: string | null
+          therapeutic_themes: string[] | null
+        }
+        Insert: {
+          celebration_date: string
+          community_activities?: Json | null
+          created_at?: string
+          cultural_origin: string
+          description?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          name: string
+          recurrence_pattern?: string | null
+          therapeutic_themes?: string[] | null
+        }
+        Update: {
+          celebration_date?: string
+          community_activities?: Json | null
+          created_at?: string
+          cultural_origin?: string
+          description?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          name?: string
+          recurrence_pattern?: string | null
+          therapeutic_themes?: string[] | null
+        }
+        Relationships: []
+      }
+      cultural_content_library: {
+        Row: {
+          content: Json
+          content_type: string
+          created_at: string
+          created_by: string | null
+          cultural_backgrounds: string[]
+          difficulty_level: string
+          effectiveness_score: number | null
+          id: string
+          is_active: boolean | null
+          languages: string[]
+          target_audience: string[]
+          therapy_approaches: string[]
+          title: string
+          updated_at: string
+          usage_count: number | null
+        }
+        Insert: {
+          content: Json
+          content_type: string
+          created_at?: string
+          created_by?: string | null
+          cultural_backgrounds?: string[]
+          difficulty_level?: string
+          effectiveness_score?: number | null
+          id?: string
+          is_active?: boolean | null
+          languages?: string[]
+          target_audience?: string[]
+          therapy_approaches?: string[]
+          title: string
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Update: {
+          content?: Json
+          content_type?: string
+          created_at?: string
+          created_by?: string | null
+          cultural_backgrounds?: string[]
+          difficulty_level?: string
+          effectiveness_score?: number | null
+          id?: string
+          is_active?: boolean | null
+          languages?: string[]
+          target_audience?: string[]
+          therapy_approaches?: string[]
+          title?: string
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Relationships: []
+      }
+      cultural_effectiveness_tracking: {
+        Row: {
+          adaptation_success: number
+          content_id: string | null
+          cultural_relevance: number
+          cultural_sensitivity_score: number
+          feedback_text: string | null
+          id: string
+          improvement_suggestions: string[] | null
+          session_id: string | null
+          tracked_at: string
+          user_id: string
+          user_satisfaction: number
+        }
+        Insert: {
+          adaptation_success: number
+          content_id?: string | null
+          cultural_relevance: number
+          cultural_sensitivity_score: number
+          feedback_text?: string | null
+          id?: string
+          improvement_suggestions?: string[] | null
+          session_id?: string | null
+          tracked_at?: string
+          user_id: string
+          user_satisfaction: number
+        }
+        Update: {
+          adaptation_success?: number
+          content_id?: string | null
+          cultural_relevance?: number
+          cultural_sensitivity_score?: number
+          feedback_text?: string | null
+          id?: string
+          improvement_suggestions?: string[] | null
+          session_id?: string | null
+          tracked_at?: string
+          user_id?: string
+          user_satisfaction?: number
+        }
+        Relationships: []
+      }
+      cultural_group_memberships: {
+        Row: {
+          cultural_compatibility_score: number | null
+          group_id: string
+          id: string
+          is_active: boolean | null
+          joined_at: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          cultural_compatibility_score?: number | null
+          group_id: string
+          id?: string
+          is_active?: boolean | null
+          joined_at?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          cultural_compatibility_score?: number | null
+          group_id?: string
+          id?: string
+          is_active?: boolean | null
+          joined_at?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cultural_group_memberships_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "cultural_support_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cultural_interactions: {
         Row: {
           cultural_context: Json
@@ -2607,6 +2822,93 @@ export type Database = {
           interaction_type?: string
           timestamp?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      cultural_peer_matches: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          ended_at: string | null
+          id: string
+          match_criteria: Json
+          match_score: number
+          match_type: string
+          matched_user_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          match_criteria: Json
+          match_score: number
+          match_type?: string
+          matched_user_id: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          match_criteria?: Json
+          match_score?: number
+          match_type?: string
+          matched_user_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      cultural_support_groups: {
+        Row: {
+          created_at: string
+          cultural_backgrounds: string[]
+          current_members: number | null
+          description: string | null
+          facilitator_id: string | null
+          group_type: string
+          id: string
+          is_active: boolean | null
+          languages: string[]
+          max_members: number | null
+          meeting_schedule: Json | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          cultural_backgrounds: string[]
+          current_members?: number | null
+          description?: string | null
+          facilitator_id?: string | null
+          group_type?: string
+          id?: string
+          is_active?: boolean | null
+          languages: string[]
+          max_members?: number | null
+          meeting_schedule?: Json | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          cultural_backgrounds?: string[]
+          current_members?: number | null
+          description?: string | null
+          facilitator_id?: string | null
+          group_type?: string
+          id?: string
+          is_active?: boolean | null
+          languages?: string[]
+          max_members?: number | null
+          meeting_schedule?: Json | null
+          name?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -3424,6 +3726,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      family_integration_profiles: {
+        Row: {
+          created_at: string
+          cultural_decision_making: string | null
+          cultural_family_roles: Json | null
+          emergency_family_contact: string | null
+          family_involvement_level: string
+          family_members: Json | null
+          family_therapy_consent: boolean | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          cultural_decision_making?: string | null
+          cultural_family_roles?: Json | null
+          emergency_family_contact?: string | null
+          family_involvement_level?: string
+          family_members?: Json | null
+          family_therapy_consent?: boolean | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          cultural_decision_making?: string | null
+          cultural_family_roles?: Json | null
+          emergency_family_contact?: string | null
+          family_involvement_level?: string
+          family_members?: Json | null
+          family_therapy_consent?: boolean | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       family_invitations: {
         Row: {
