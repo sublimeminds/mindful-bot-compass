@@ -72,7 +72,7 @@ const AdaptivePlanBuilder: React.FC<AdaptivePlanBuilderProps> = ({ isOpen, onClo
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -184,9 +184,9 @@ const AdaptivePlanBuilder: React.FC<AdaptivePlanBuilderProps> = ({ isOpen, onClo
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 {calc.plan.features.map((feature, index) => (
-                  <div key={index} className="flex items-center space-x-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                    <span>{feature}</span>
+                  <div key={index} className="flex items-start gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-700">{feature}</span>
                   </div>
                 ))}
               </div>

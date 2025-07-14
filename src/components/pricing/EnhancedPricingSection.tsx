@@ -72,7 +72,11 @@ const EnhancedPricingSection = () => {
           'Cultural adaptation (30+ cultures)',
           'Claude 4 Opus AI model',
           'Priority support',
-          'Podcasts & meditation library'
+          'Podcasts & meditation library',
+          'Family plan support (2-15 members)',
+          'Shared family dashboard',
+          'Parental controls & monitoring',
+          'Family crisis intervention'
         ],
       limitations: [],
       buttonText: 'Start Premium',
@@ -99,7 +103,13 @@ const EnhancedPricingSection = () => {
           'Claude 4 Opus AI model',
           'Phone support',
           'Data export',
-          'Premium content'
+          'Premium content',
+          'Advanced family plans (2-15 members)',
+          'Multi-family household support',
+          'Advanced parental controls',
+          'Family usage analytics',
+          'Priority family crisis support',
+          'Custom family workflows'
         ],
       limitations: [],
       buttonText: 'Start 7-Day Free Trial',
@@ -218,10 +228,10 @@ const EnhancedPricingSection = () => {
                 </CardHeader>
 
                 <CardContent className="pt-0 px-6 pb-8">
-                  <ul className="space-y-3 mb-8">
+                  <ul className="space-y-2 mb-8">
                      {plan.features.map((feature, featureIndex) => (
-                       <li key={featureIndex} className="flex items-start gap-3">
-                         <Check className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                       <li key={featureIndex} className="flex items-start gap-2">
+                         <Check className="h-4 w-4 text-therapy-500 flex-shrink-0 mt-0.5" />
                          <span className="text-slate-700 text-sm">{feature}</span>
                        </li>
                      ))}
