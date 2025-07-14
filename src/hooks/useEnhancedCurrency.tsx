@@ -61,10 +61,17 @@ export const useEnhancedCurrency = () => {
       const location = await enhancedCurrencyService.detectUserLocation();
       setUserLocation(location);
       
-      // If user doesn't have a saved preference, suggest based on location
-      if (!user && location) {
-        const locationCurrency = await enhancedCurrencyService.getCurrencyData(location.currency);
-        setCurrency(locationCurrency);
+      // Auto-apply detected currency for all users unless they have saved preferences
+      if (location) {
+        const savedCurrency = user ? 
+          await enhancedCurrencyService.getUserCurrencyPreference(user.id) :
+          localStorage.getItem('preferred-currency');
+          
+        // Only auto-apply if no saved preference exists
+        if (!savedCurrency) {
+          const locationCurrency = await enhancedCurrencyService.getCurrencyData(location.currency);
+          setCurrency(locationCurrency);
+        }
       }
     } catch (error) {
       console.error('Error detecting user location:', error);

@@ -23,7 +23,7 @@ const PricingCTA: React.FC<PricingCTAProps> = ({
   const { user } = useAuth();
 
   const handleClick = () => {
-    // Store plan selection in localStorage for onboarding
+    // Store plan selection in localStorage for later use
     const planSelection = {
       name: planName,
       price: planPrice,
@@ -33,8 +33,18 @@ const PricingCTA: React.FC<PricingCTAProps> = ({
     
     localStorage.setItem('selectedPlan', JSON.stringify(planSelection));
     
-    // Always go to onboarding regardless of auth status
-    navigate('/onboarding');
+    // Implement proper user flow: check auth -> sign up -> billing -> onboarding
+    if (!user) {
+      // Not authenticated - go to sign up with plan selection
+      navigate('/auth?redirect=billing&plan=' + encodeURIComponent(planName));
+    } else {
+      // Authenticated - go to billing if paid plan, otherwise onboarding
+      if (planPrice && planPrice > 0) {
+        navigate('/billing');
+      } else {
+        navigate('/onboarding');
+      }
+    }
   };
 
   return (

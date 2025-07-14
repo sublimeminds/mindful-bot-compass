@@ -59,6 +59,7 @@ import Profile from "../pages/Profile";
 import Settings from "../pages/Settings";
 import VoiceSettings from "../pages/VoiceSettings";
 import Billing from "../pages/Billing";
+import BillingPage from "../pages/BillingPage";
 import Sessions from "../pages/Sessions";
 import NotificationsPage from "../pages/NotificationsPage";
 import TherapyPlanPage from "../pages/TherapyPlanPage";
@@ -434,8 +435,8 @@ const AppRouter = () => {
 
       {/* Legacy routes - redirect to unified page */}
       <Route path="/billing" element={
-        <PageErrorBoundary pageName="Billing (Legacy)">
-          <DashboardPageWrapper><AccountBilling /></DashboardPageWrapper>
+        <PageErrorBoundary pageName="Billing">
+          <BillingPage />
         </PageErrorBoundary>
       } />
 

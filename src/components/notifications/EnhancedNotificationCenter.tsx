@@ -18,72 +18,24 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-interface NotificationItem {
-  id: string;
-  type: 'reminder' | 'achievement' | 'insight' | 'mood_check' | 'milestone' | 'system';
-  title: string;
-  message: string;
-  priority: 'high' | 'medium' | 'low';
-  isRead: boolean;
-  createdAt: Date;
-}
+import { useNotifications } from '@/hooks/useNotifications';
 
 const EnhancedNotificationCenter = () => {
   const [isOpen, setIsOpen] = useState(false);
-  
-  // Mock notifications - in real app, fetch from API
-  const [notifications, setNotifications] = useState<NotificationItem[]>([
-    {
-      id: '1',
-      type: 'reminder',
-      title: 'Therapy Session Reminder',
-      message: 'Your scheduled session starts in 30 minutes. Prepare a quiet space.',
-      priority: 'high',
-      isRead: false,
-      createdAt: new Date(Date.now() - 30 * 60 * 1000)
-    },
-    {
-      id: '2',
-      type: 'achievement',
-      title: 'Milestone Achieved! 🎉',
-      message: 'Congratulations! You\'ve completed 7 consecutive days of mood tracking.',
-      priority: 'medium',
-      isRead: false,
-      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000)
-    },
-    {
-      id: '3',
-      type: 'insight',
-      title: 'Weekly Insight Generated',
-      message: 'Your anxiety levels have decreased by 15% this week. Great progress!',
-      priority: 'medium',
-      isRead: true,
-      createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000)
-    },
-    {
-      id: '4',
-      type: 'mood_check',
-      title: 'Time for Mood Check-in',
-      message: 'How are you feeling today? Take a moment to record your mood.',
-      priority: 'low',
-      isRead: false,
-      createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000)
-    }
-  ]);
+  const { 
+    notifications, 
+    unreadCount, 
+    isLoading, 
+    markAsRead, 
+    markAllAsRead 
+  } = useNotifications();
 
-  const unreadCount = notifications.filter(n => !n.isRead).length;
-
-  const handleMarkAsRead = (notificationId: string) => {
-    setNotifications(prev => 
-      prev.map(n => 
-        n.id === notificationId ? { ...n, isRead: true } : n
-      )
-    );
+  const handleMarkAsRead = async (notificationId: string) => {
+    await markAsRead(notificationId);
   };
 
-  const handleMarkAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+  const handleMarkAllAsRead = async () => {
+    await markAllAsRead();
   };
 
   const getPriorityColor = (priority: string) => {
@@ -97,12 +49,10 @@ const EnhancedNotificationCenter = () => {
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'reminder': return <Calendar className="h-4 w-4 text-therapy-600" />;
-      case 'achievement': return <Award className="h-4 w-4 text-balance-600" />;
-      case 'insight': return <TrendingUp className="h-4 w-4 text-flow-600" />;
-      case 'mood_check': return <Heart className="h-4 w-4 text-harmony-600" />;
-      case 'milestone': return <Target className="h-4 w-4 text-calm-600" />;
-      case 'system': return <AlertTriangle className="h-4 w-4 text-orange-600" />;
+      case 'session_reminder': return <Calendar className="h-4 w-4 text-therapy-600" />;
+      case 'milestone_achieved': return <Award className="h-4 w-4 text-balance-600" />;
+      case 'progress_update': return <TrendingUp className="h-4 w-4 text-flow-600" />;
+      case 'crisis_alert': return <AlertTriangle className="h-4 w-4 text-red-600" />;
       default: return <Bell className="h-4 w-4 text-gray-600" />;
     }
   };
@@ -162,7 +112,12 @@ const EnhancedNotificationCenter = () => {
           
           <CardContent className="p-0">
             <ScrollArea className="h-96">
-              {notifications.length === 0 ? (
+              {isLoading ? (
+                <div className="p-6 text-center">
+                  <div className="animate-spin h-8 w-8 border-4 border-therapy-500 border-t-transparent rounded-full mx-auto mb-3"></div>
+                  <p className="text-sm text-slate-600">Loading notifications...</p>
+                </div>
+              ) : notifications.length === 0 ? (
                 <div className="p-6 text-center text-muted-foreground">
                   <BellOff className="h-12 w-12 mx-auto mb-3 opacity-50" />
                   <p className="text-lg font-medium mb-1">All caught up!</p>

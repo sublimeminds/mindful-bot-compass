@@ -79,27 +79,27 @@ class EnhancedCurrencyService {
     } catch (error) {
       console.error('Failed to update live exchange rates, using static fallback:', error);
       
-      // Enhanced fallback rates with accurate values
+      // Updated fallback rates with current accurate values
       this.exchangeRates.set('USD', 1.0);
-      this.exchangeRates.set('IDR', 15750.0);
-      this.exchangeRates.set('EUR', 0.85);
-      this.exchangeRates.set('GBP', 0.73);
-      this.exchangeRates.set('JPY', 110.0);
-      this.exchangeRates.set('CAD', 1.25);
-      this.exchangeRates.set('AUD', 1.35);
-      this.exchangeRates.set('CHF', 0.92);
-      this.exchangeRates.set('CNY', 6.45);
-      this.exchangeRates.set('INR', 74.0);
-      this.exchangeRates.set('SGD', 1.35);
-      this.exchangeRates.set('MYR', 4.15);
-      this.exchangeRates.set('THB', 33.0);
-      this.exchangeRates.set('KRW', 1180.0);
-      this.exchangeRates.set('BRL', 5.2);
-      this.exchangeRates.set('MXN', 20.0);
-      this.exchangeRates.set('ZAR', 14.5);
-      this.exchangeRates.set('PLN', 3.9);
-      this.exchangeRates.set('SEK', 8.5);
-      this.exchangeRates.set('NOK', 8.8);
+      this.exchangeRates.set('IDR', 15680.0); // Updated IDR rate
+      this.exchangeRates.set('EUR', 0.92);
+      this.exchangeRates.set('GBP', 0.79);
+      this.exchangeRates.set('JPY', 149.0);
+      this.exchangeRates.set('CAD', 1.36);
+      this.exchangeRates.set('AUD', 1.53);
+      this.exchangeRates.set('CHF', 0.90);
+      this.exchangeRates.set('CNY', 7.25);
+      this.exchangeRates.set('INR', 83.0);
+      this.exchangeRates.set('SGD', 1.34);
+      this.exchangeRates.set('MYR', 4.47);
+      this.exchangeRates.set('THB', 35.5);
+      this.exchangeRates.set('KRW', 1320.0);
+      this.exchangeRates.set('BRL', 5.9);
+      this.exchangeRates.set('MXN', 17.2);
+      this.exchangeRates.set('ZAR', 18.5);
+      this.exchangeRates.set('PLN', 4.1);
+      this.exchangeRates.set('SEK', 10.8);
+      this.exchangeRates.set('NOK', 10.9);
       
       this.lastUpdate = new Date();
     } finally {
