@@ -8,7 +8,7 @@ import GradientButton from '@/components/ui/GradientButton';
 import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
 import ProgressTracker from '@/components/landing/ProgressTracker';
 import EnhancedPricingSection from '@/components/pricing/EnhancedPricingSection';
-import therapyHeroAnimated from '@/assets/therapy-hero-animated.jpg';
+import therapyHeroTech from '@/assets/therapy-hero-tech.jpg';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -177,7 +177,7 @@ const Index = () => {
       <section id="hero" className="py-20 lg:py-32 relative overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${therapyHeroAnimated}?v=${Date.now()})` }}
+          style={{ backgroundImage: `url(${therapyHeroTech}?v=${Date.now()})` }}
         ></div>
         <div className="absolute inset-0 bg-gradient-to-br from-therapy-900/30 via-therapy-800/20 to-calm-900/30"></div>
         <div className="container mx-auto px-4 relative">
