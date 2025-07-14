@@ -341,7 +341,7 @@ const EnhancedHeader = () => {
             />
             
             {/* Logo */}
-            <Link 
+            <Link
               to="/" 
               className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
             >
@@ -496,13 +496,13 @@ const EnhancedHeader = () => {
                 <Button 
                   variant="ghost" 
                   onClick={() => navigate('/auth')}
-                  className="text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50 text-sm px-3 py-2"
+                  className="hidden sm:inline-flex text-therapy-600 hover:text-therapy-700 hover:bg-therapy-50 text-sm px-3 py-2"
                 >
                   Sign In
                 </Button>
                 <EnhancedButton 
                   onClick={() => navigate('/onboarding')}
-                  className="px-4 py-2 text-sm"
+                  className="px-3 py-2 text-sm"
                 >
                   Get Started
                 </EnhancedButton>
