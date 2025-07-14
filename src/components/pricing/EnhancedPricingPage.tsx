@@ -65,20 +65,21 @@ const EnhancedPricingPage = () => {
       monthlyPrice: 14.90,
       yearlyPrice: 149,
       description: 'For dedicated users seeking comprehensive mental health support',
-      features: [
-        'Everything in Free',
-        '3 therapy plans',
-        'Unlimited AI therapy sessions',
-        'Unlimited AI messages',
-        '8 specialized AI therapists',
-        'Advanced mood analytics',
-        'Personalized insights',
-        'Voice interaction',
-        'Cultural adaptation (30+ cultures)',
-        'Claude 4 Opus AI model',
-        'Priority support',
-        'Podcasts & meditation library'
-      ],
+        features: [
+          'Everything in Free',
+          '3 therapy plans',
+          'Unlimited AI therapy sessions',
+          'Unlimited AI messages',
+          '8 specialized AI therapists',
+          'Advanced mood analytics',
+          'Real-time AI insights',
+          'Personalized reports (anytime access)',
+          'Voice interaction',
+          'Cultural adaptation (30+ cultures)',
+          'Claude 4 Opus AI model',
+          'Priority support',
+          'Podcasts & meditation library'
+        ],
       limitations: [],
       buttonText: 'Start Premium',
       popular: true,
@@ -92,20 +93,20 @@ const EnhancedPricingPage = () => {
       monthlyPrice: 24.90,
       yearlyPrice: 249,
       description: 'Advanced features for mental health professionals and coaches',
-      features: [
-        'Everything in Premium',
-        '10 therapy plans',
-        'Unlimited AI messages',
-        '12+ expert AI therapists',
-        'Advanced dashboard',
-        'API access (1,000 calls/month)',
-        'Claude 4 Opus AI model',
-        'Phone support',
-        'Data export',
-        'Premium content',
-        'White-label options',
-        'Compliance reporting'
-      ],
+        features: [
+          'Everything in Premium',
+          '10 therapy plans',
+          'Unlimited AI messages',
+          '12+ expert AI therapists',
+          'Advanced dashboard',
+          'Real-time AI insights',
+          'Personalized reports (anytime access)',
+          'API access (1,000 calls/month)',
+          'Claude 4 Opus AI model',
+          'Phone support',
+          'Data export',
+          'Premium content'
+        ],
       limitations: [],
       buttonText: 'Start 7-Day Free Trial',
       popular: false,
@@ -309,12 +310,12 @@ const EnhancedPricingPage = () => {
 
                 <CardContent className="pt-0 px-6 pb-8">
                   <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-3">
-                        <Check className={`${plan.popular ? 'h-5 w-5 text-therapy-500' : 'h-5 w-5 text-therapy-500'} flex-shrink-0 mt-0.5`} />
-                        <span className={`text-slate-700 ${plan.popular ? 'text-sm' : 'text-sm'}`}>{feature}</span>
-                      </li>
-                    ))}
+                     {plan.features.map((feature, featureIndex) => (
+                       <li key={featureIndex} className="flex items-start gap-3">
+                         <Check className="h-5 w-5 text-therapy-500 flex-shrink-0 mt-0.5" />
+                         <span className="text-slate-700 text-sm">{feature}</span>
+                       </li>
+                     ))}
                     {plan.limitations.map((limitation, limitIndex) => (
                       <li key={limitIndex} className="flex items-start gap-3 opacity-60">
                         <span className="h-5 w-5 flex items-center justify-center flex-shrink-0 mt-0.5">
