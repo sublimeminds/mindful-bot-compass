@@ -19,8 +19,8 @@ export interface AIRoutingRule {
     language?: string[];
     customCriteria?: any;
   };
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface AIFeatureToggle {
@@ -30,8 +30,8 @@ export interface AIFeatureToggle {
   enabled: boolean;
   rolloutPercentage?: number;
   conditions?: any;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface UserOverride {
@@ -41,7 +41,7 @@ export interface UserOverride {
   overrideValue: any;
   reason: string;
   expiresAt?: Date;
-  created_at: Date;
+  createdAt: Date;
   createdBy: string;
 }
 
@@ -55,19 +55,34 @@ export class AIRoutingConfigService {
         .order('priority', { ascending: true });
 
       if (error) throw error;
-      return data || [];
+      return (data || []).map(rule => ({
+        id: rule.id,
+        userType: rule.user_type as AIRoutingRule['userType'],
+        featureType: rule.feature_type as AIRoutingRule['featureType'],
+        modelConfig: rule.model_config as AIRoutingRule['modelConfig'],
+        conditions: rule.conditions as AIRoutingRule['conditions'],
+        priority: rule.priority,
+        enabled: rule.enabled,
+        createdAt: new Date(rule.created_at),
+        updatedAt: new Date(rule.updated_at)
+      }));
     } catch (error) {
       console.error('Error fetching routing rules:', error);
       return this.getDefaultRoutingRules();
     }
   }
 
-  static async createRoutingRule(rule: Omit<AIRoutingRule, 'id' | 'created_at' | 'updated_at'>): Promise<AIRoutingRule> {
+  static async createRoutingRule(rule: Omit<AIRoutingRule, 'id' | 'createdAt' | 'updatedAt'>): Promise<AIRoutingRule> {
     try {
       const { data, error } = await supabase
         .from('ai_routing_rules')
         .insert([{
-          ...rule,
+          user_type: rule.userType,
+          feature_type: rule.featureType,
+          model_config: rule.modelConfig,
+          conditions: rule.conditions,
+          priority: rule.priority,
+          enabled: rule.enabled,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         }])
@@ -75,7 +90,17 @@ export class AIRoutingConfigService {
         .single();
 
       if (error) throw error;
-      return data;
+      return {
+        id: data.id,
+        userType: data.user_type as AIRoutingRule['userType'],
+        featureType: data.feature_type as AIRoutingRule['featureType'],
+        modelConfig: data.model_config as AIRoutingRule['modelConfig'],
+        conditions: data.conditions as AIRoutingRule['conditions'],
+        priority: data.priority,
+        enabled: data.enabled,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at)
+      };
     } catch (error) {
       console.error('Error creating routing rule:', error);
       throw error;
@@ -84,18 +109,33 @@ export class AIRoutingConfigService {
 
   static async updateRoutingRule(id: string, updates: Partial<AIRoutingRule>): Promise<AIRoutingRule> {
     try {
+      const dbUpdates: any = { updated_at: new Date().toISOString() };
+      if (updates.userType) dbUpdates.user_type = updates.userType;
+      if (updates.featureType) dbUpdates.feature_type = updates.featureType;
+      if (updates.modelConfig) dbUpdates.model_config = updates.modelConfig;
+      if (updates.conditions !== undefined) dbUpdates.conditions = updates.conditions;
+      if (updates.priority !== undefined) dbUpdates.priority = updates.priority;
+      if (updates.enabled !== undefined) dbUpdates.enabled = updates.enabled;
+
       const { data, error } = await supabase
         .from('ai_routing_rules')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString()
-        })
+        .update(dbUpdates)
         .eq('id', id)
         .select()
         .single();
 
       if (error) throw error;
-      return data;
+      return {
+        id: data.id,
+        userType: data.user_type as AIRoutingRule['userType'],
+        featureType: data.feature_type as AIRoutingRule['featureType'],
+        modelConfig: data.model_config as AIRoutingRule['modelConfig'],
+        conditions: data.conditions as AIRoutingRule['conditions'],
+        priority: data.priority,
+        enabled: data.enabled,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at)
+      };
     } catch (error) {
       console.error('Error updating routing rule:', error);
       throw error;
@@ -122,10 +162,19 @@ export class AIRoutingConfigService {
       const { data, error } = await supabase
         .from('ai_feature_toggles')
         .select('*')
-        .order('featureName');
+        .order('feature_name');
 
       if (error) throw error;
-      return data || [];
+      return (data || []).map(toggle => ({
+        id: toggle.id,
+        featureName: toggle.feature_name,
+        userType: toggle.user_type as AIFeatureToggle['userType'],
+        enabled: toggle.enabled,
+        rolloutPercentage: toggle.rollout_percentage || 0,
+        conditions: toggle.conditions,
+        createdAt: new Date(toggle.created_at),
+        updatedAt: new Date(toggle.updated_at)
+      }));
     } catch (error) {
       console.error('Error fetching feature toggles:', error);
       return this.getDefaultFeatureToggles();
@@ -134,18 +183,31 @@ export class AIRoutingConfigService {
 
   static async updateFeatureToggle(id: string, updates: Partial<AIFeatureToggle>): Promise<AIFeatureToggle> {
     try {
+      const dbUpdates: any = { updated_at: new Date().toISOString() };
+      if (updates.featureName) dbUpdates.feature_name = updates.featureName;
+      if (updates.userType) dbUpdates.user_type = updates.userType;
+      if (updates.enabled !== undefined) dbUpdates.enabled = updates.enabled;
+      if (updates.rolloutPercentage !== undefined) dbUpdates.rollout_percentage = updates.rolloutPercentage;
+      if (updates.conditions !== undefined) dbUpdates.conditions = updates.conditions;
+
       const { data, error } = await supabase
         .from('ai_feature_toggles')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString()
-        })
+        .update(dbUpdates)
         .eq('id', id)
         .select()
         .single();
 
       if (error) throw error;
-      return data;
+      return {
+        id: data.id,
+        featureName: data.feature_name,
+        userType: data.user_type as AIFeatureToggle['userType'],
+        enabled: data.enabled,
+        rolloutPercentage: data.rollout_percentage || 0,
+        conditions: data.conditions,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at)
+      };
     } catch (error) {
       console.error('Error updating feature toggle:', error);
       throw error;
@@ -161,26 +223,49 @@ export class AIRoutingConfigService {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+      return (data || []).map(override => ({
+        id: override.id,
+        userId: override.user_id,
+        overrideType: override.override_type as UserOverride['overrideType'],
+        overrideValue: override.override_value,
+        reason: override.reason,
+        createdBy: override.created_by,
+        createdAt: new Date(override.created_at),
+        expiresAt: override.expires_at ? new Date(override.expires_at) : undefined
+      }));
     } catch (error) {
       console.error('Error fetching user overrides:', error);
       return [];
     }
   }
 
-  static async createUserOverride(override: Omit<UserOverride, 'id' | 'created_at'>): Promise<UserOverride> {
+  static async createUserOverride(override: Omit<UserOverride, 'id' | 'createdAt'>): Promise<UserOverride> {
     try {
       const { data, error } = await supabase
         .from('ai_user_overrides')
         .insert([{
-          ...override,
+          user_id: override.userId,
+          override_type: override.overrideType,
+          override_value: override.overrideValue,
+          reason: override.reason,
+          created_by: override.createdBy,
+          expires_at: override.expiresAt?.toISOString(),
           created_at: new Date().toISOString()
         }])
         .select()
         .single();
 
       if (error) throw error;
-      return data;
+      return {
+        id: data.id,
+        userId: data.user_id,
+        overrideType: data.override_type as UserOverride['overrideType'],
+        overrideValue: data.override_value,
+        reason: data.reason,
+        createdBy: data.created_by,
+        createdAt: new Date(data.created_at),
+        expiresAt: data.expires_at ? new Date(data.expires_at) : undefined
+      };
     } catch (error) {
       console.error('Error creating user override:', error);
       throw error;
@@ -215,7 +300,12 @@ export class AIRoutingConfigService {
       const { data, error } = await supabase
         .from('ai_ab_tests')
         .insert([{
-          ...test,
+          name: test.name,
+          description: test.description,
+          model_a_id: test.modelAId,
+          model_b_id: test.modelBId,
+          target_metric: test.targetMetric,
+          user_segment: test.userSegment,
           status: 'running',
           results: {},
           created_at: new Date().toISOString()
@@ -312,8 +402,8 @@ export class AIRoutingConfigService {
         },
         enabled: true,
         priority: 1,
-        created_at: new Date(),
-        updated_at: new Date()
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         id: 'default-pro-chat',
@@ -328,15 +418,15 @@ export class AIRoutingConfigService {
         },
         enabled: true,
         priority: 1,
-        created_at: new Date(),
-        updated_at: new Date()
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         id: 'default-premium-chat',
         userType: 'premium',
         featureType: 'chat',
         modelConfig: {
-          primary: 'claude-3-sonnet-20240229',
+          primary: 'claude-sonnet-4-20250514',
           fallback: 'gpt-4o',
           maxTokens: 1000,
           temperature: 0.8,
@@ -344,8 +434,8 @@ export class AIRoutingConfigService {
         },
         enabled: true,
         priority: 1,
-        created_at: new Date(),
-        updated_at: new Date()
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ];
   }
@@ -358,8 +448,8 @@ export class AIRoutingConfigService {
         userType: 'pro',
         enabled: true,
         rolloutPercentage: 100,
-        created_at: new Date(),
-        updated_at: new Date()
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         id: 'adaptive-therapy',
@@ -367,8 +457,8 @@ export class AIRoutingConfigService {
         userType: 'premium',
         enabled: true,
         rolloutPercentage: 100,
-        created_at: new Date(),
-        updated_at: new Date()
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         id: 'cultural-ai',
@@ -376,8 +466,8 @@ export class AIRoutingConfigService {
         userType: 'all',
         enabled: true,
         rolloutPercentage: 75,
-        created_at: new Date(),
-        updated_at: new Date()
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ];
   }

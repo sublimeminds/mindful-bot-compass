@@ -37,10 +37,11 @@ export class AITestingService {
     const startTime = Date.now();
     
     try {
-      const response = await realAIService.sendMessage(testScenario, {
+      const response = await realAIService.generateTherapyResponse(testScenario, {
         userId: 'test-user',
         sessionId: 'test-session',
-        therapistPersonality: persona
+        conversationHistory: [],
+        userProfile: null
       });
 
       const responseTime = Date.now() - startTime;
@@ -188,10 +189,11 @@ export class AITestingService {
     const startTime = Date.now();
     
     try {
-      const response = await realAIService.sendMessage(message, {
+      const response = await realAIService.generateTherapyResponse(message, {
         userId: 'test-user',
         sessionId: 'test-session',
-        culturalContext
+        conversationHistory: [],
+        userProfile: null
       });
 
       const responseTime = Date.now() - startTime;
