@@ -6,11 +6,11 @@ interface ModelSelectionCriteria {
   urgency: 'low' | 'medium' | 'high' | 'critical';
   complexity: 'simple' | 'moderate' | 'complex';
   culturalContext?: string;
-  userTier: 'free' | 'premium' | 'enterprise' | 'pro';
+  userTier: 'free' | 'premium' | 'professional' | 'enterprise' | 'pro';
 }
 
 export class SubscriptionBasedAiService {
-  private static async getUserSubscriptionTier(userId: string): Promise<'free' | 'premium' | 'enterprise' | 'pro'> {
+  private static async getUserSubscriptionTier(userId: string): Promise<'free' | 'premium' | 'professional' | 'enterprise' | 'pro'> {
     try {
       const { data: subscription } = await supabase
         .from('user_subscriptions')
@@ -27,7 +27,8 @@ export class SubscriptionBasedAiService {
       const planName = subscription.subscription_plans.name.toLowerCase();
       
       if (planName.includes('enterprise')) return 'enterprise';
-      if (planName.includes('premium')) return 'premium';
+      if (planName.includes('professional')) return 'premium';
+      if (planName.includes('premium')) return 'pro';
       if (planName.includes('pro')) return 'pro';
       
       return 'free';
@@ -37,16 +38,16 @@ export class SubscriptionBasedAiService {
     }
   }
 
-  private static getModelForTier(tier: 'free' | 'premium' | 'enterprise' | 'pro'): string {
+  private static getModelForTier(tier: 'free' | 'premium' | 'professional' | 'enterprise' | 'pro'): string {
     switch (tier) {
       case 'enterprise':
       case 'premium':
-        return 'claude-opus-4-20250514'; // Highest quality Claude 4 for premium
+      case 'professional':
       case 'pro':
-        return 'claude-sonnet-4-20250514'; // High quality Claude 4 for pro
+        return 'claude-opus-4-20250514'; // Claude 4 Opus for premium and professional
       case 'free':
       default:
-        return 'claude-sonnet-4-20250514'; // Claude Sonnet for free (upgraded from GPT)
+        return 'claude-sonnet-4-20250514'; // Claude Sonnet for free
     }
   }
 

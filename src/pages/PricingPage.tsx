@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AdaptivePlanBuilder from '@/components/family/AdaptivePlanBuilder';
 
 interface PricingFeature {
   name: string;
@@ -20,7 +21,7 @@ interface PricingFeature {
 
 const PRICING_FEATURES: PricingFeature[] = [
   // Core AI Features
-  { name: 'TherapySync AI', free: '100 messages/day (GPT-4o)', pro: 'Unlimited (Claude 4 Opus)', premium: 'Unlimited (Claude 4 Sonnet)', category: 'core' },
+  { name: 'TherapySync AI', free: '100 messages/day (GPT-4o)', pro: 'Unlimited (Claude 4 Opus)', premium: 'Unlimited (Claude 4 Opus)', category: 'core' },
   { name: 'Quick Chat Sessions', free: true, pro: true, premium: true, category: 'core' },
   { name: 'Full Therapy Sessions', free: '8/month', pro: 'Unlimited', premium: 'Unlimited', category: 'limits' },
   { name: 'Therapy Plans', free: '1 plan', pro: '3 plans', premium: '10 plans', category: 'limits' },
@@ -30,10 +31,10 @@ const PRICING_FEATURES: PricingFeature[] = [
   { name: 'Crisis Support (24/7)', free: true, pro: true, premium: true, category: 'support' },
   
   // Advanced AI Features
-  { name: 'Predictive Insights', free: false, pro: 'Basic predictions', premium: 'Advanced ML insights', category: 'ai' },
+  { name: 'Predictive Insights', free: false, pro: 'Advanced ML insights', premium: 'Advanced ML insights', category: 'ai' },
   { name: 'Personalized Interventions', free: false, pro: true, premium: 'Hyper-personalized', category: 'ai' },
-  { name: 'Cultural Adaptation', free: 'Basic', pro: '15+ cultures', premium: '30+ cultures + dialects', category: 'ai' },
-  { name: 'Voice Therapy (Coming Soon)', free: false, pro: false, premium: 'Beta access', category: 'ai' },
+  { name: 'Cultural Adaptation', free: 'Basic', pro: '30+ cultures + dialects', premium: '30+ cultures + dialects', category: 'ai' },
+  { name: 'Voice Therapy', free: false, pro: 'Full access', premium: 'Full access', category: 'ai' },
   
   // Wellness Resources
   { name: 'Mindfulness Exercises', free: '5 exercises', pro: '25+ exercises', premium: '100+ premium exercises', category: 'wellness' },
@@ -95,9 +96,9 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
     ]
   },
   pro: {
-    name: 'Pro',
-    price: { monthly: 19, yearly: 190 },
-    description: 'Advanced AI therapy with unlimited access',
+    name: 'Premium',
+    price: { monthly: 15, yearly: 149 },
+    description: 'Enhanced therapy features for regular users',
     icon: Brain,
     color: 'from-harmony-500 to-harmony-600',
     features: [
@@ -105,33 +106,35 @@ const PLAN_DETAILS: Record<string, PlanDetails> = {
       'Unlimited AI messages',
       'Unlimited therapy sessions',
       '8 specialized AI therapists',
+      'Voice interaction',
+      'Predictive insights',
+      'Cultural adaptation',
       'Advanced breathing exercises',
       'Extended meditation library (50+)',
       'Community hub access',
       'Up to 3 therapy plans',
-      'Predictive insights',
-      'Monthly detailed reports'
+      'Priority support'
     ],
     popular: true
   },
   premium: {
-    name: 'Premium',
-    price: { monthly: 39, yearly: 390 },
-    description: 'Complete mental wellness ecosystem',
+    name: 'Professional',
+    price: { monthly: 25, yearly: 249 },
+    description: 'Complete therapy platform with advanced features for power users',
     icon: Sparkles,
     color: 'from-flow-500 to-flow-600',
     features: [
-      'Everything in Pro',
-      'Claude 4 Sonnet AI model',
-      'Unlimited AI messages',
+      'Everything in Premium',
+      'Claude 4 Opus AI model',
       '12+ expert AI therapists',
-      'Advanced ML insights',
-      'Premium meditation library (200+)',
-      'Priority support (2h response)',
       '10 therapy plans',
-      'Family dashboard (up to 4)',
-      'Direct therapist referrals',
-      'Weekly reports + data export'
+      'Advanced dashboard',
+      'API access (1,000 calls/month)',
+      'Phone support',
+      'Data export',
+      'Premium content',
+      'Advanced compliance reporting',
+      'White-label options'
     ]
   }
 };
@@ -251,43 +254,22 @@ const PricingPage = () => {
                 )}
               </div>
               
-              <Button
+            <Button
                 variant="outline"
                 onClick={() => setShowFamilyCalculator(!showFamilyCalculator)}
                 className="text-therapy-600 border-therapy-200 hover:bg-therapy-50"
               >
                 <Users className="h-4 w-4 mr-2" />
-                Family Plan Calculator
+                Advanced Family Plan Builder
                 {showFamilyCalculator ? <ChevronUp className="h-4 w-4 ml-2" /> : <ChevronDown className="h-4 w-4 ml-2" />}
               </Button>
               
               {showFamilyCalculator && (
-                <div className="w-full max-w-md p-4 bg-white rounded-lg border border-therapy-200 shadow-sm">
-                  <h4 className="font-medium text-therapy-800 mb-3">Family Members: {familyMembers[0]}</h4>
-                  <Slider
-                    value={familyMembers}
-                    onValueChange={setFamilyMembers}
-                    max={6}
-                    min={2}
-                    step={1}
-                    className="mb-4"
-                  />
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="p-3 bg-harmony-50 rounded-lg text-center">
-                      <p className="font-medium text-harmony-800">Pro Family</p>
-                      <p className="text-lg font-bold text-harmony-700">
-                        ${calculateFamilyPrice(familyMembers[0], 'pro')[isYearly ? 'yearly' : 'monthly']}
-                        <span className="text-xs">/{isYearly ? 'year' : 'month'}</span>
-                      </p>
-                    </div>
-                    <div className="p-3 bg-flow-50 rounded-lg text-center">
-                      <p className="font-medium text-flow-800">Premium Family</p>
-                      <p className="text-lg font-bold text-flow-700">
-                        ${calculateFamilyPrice(familyMembers[0], 'premium')[isYearly ? 'yearly' : 'monthly']}
-                        <span className="text-xs">/{isYearly ? 'year' : 'month'}</span>
-                      </p>
-                    </div>
-                  </div>
+                <div className="w-full max-w-4xl">
+                  <AdaptivePlanBuilder onPlanSelect={(planId, seats, billingCycle) => {
+                    console.log('Selected plan:', { planId, seats, billingCycle });
+                    navigate('/signup');
+                  }} />
                 </div>
               )}
             </div>

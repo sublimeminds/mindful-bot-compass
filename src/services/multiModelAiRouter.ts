@@ -8,7 +8,7 @@ interface ModelSelectionCriteria {
   urgency: 'low' | 'medium' | 'high' | 'critical';
   complexity: 'simple' | 'moderate' | 'complex';
   culturalContext?: string;
-  userTier: 'free' | 'pro' | 'premium' | 'enterprise';
+  userTier: 'free' | 'pro' | 'premium' | 'professional' | 'enterprise';
 }
 
 interface AIModelProvider {
@@ -123,11 +123,11 @@ export class MultiModelAIRouter {
       );
     }
 
-    if (criteria.userTier === 'pro') {
-      // Mid-tier: Balance quality and cost with budget awareness
+    if (criteria.userTier === 'pro' || criteria.userTier === 'premium' || criteria.userTier === 'professional') {
+      // Premium/Professional: Prioritize quality, but still consider cost if constrained
       return filteredModels.reduce((best, current) => {
-        const costWeight = budgetConstraints ? 0.5 : 0.3;
-        const qualityWeight = budgetConstraints ? 0.5 : 0.7;
+        const costWeight = budgetConstraints ? 0.3 : 0.1;
+        const qualityWeight = budgetConstraints ? 0.7 : 0.9;
         const currentScore = current.qualityScore * qualityWeight + (1 / current.costPerToken) * costWeight;
         const bestScore = best.qualityScore * qualityWeight + (1 / best.costPerToken) * costWeight;
         return currentScore > bestScore ? current : best;
