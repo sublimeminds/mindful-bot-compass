@@ -9,7 +9,8 @@ import {
   Star, 
   BookOpen,
   ChevronRight,
-  ChevronDown
+  ChevronDown,
+  HelpCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -106,6 +107,39 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
           </div>
           
           <div className="flex flex-col h-full">
+            {/* Quick Actions Section */}
+            <div className="border-b border-gray-100 p-4">
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                Quick Actions
+              </h3>
+              <div className="space-y-2">
+                <Link
+                  to="/getting-started"
+                  onClick={handleLinkClick}
+                  className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors"
+                >
+                  <BookOpen className="h-4 w-4 text-therapy-600" />
+                  <span className="text-sm font-medium text-gray-900">Get Started</span>
+                </Link>
+                <Link
+                  to="/pricing"
+                  onClick={handleLinkClick}
+                  className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors"
+                >
+                  <Star className="h-4 w-4 text-therapy-600" />
+                  <span className="text-sm font-medium text-gray-900">View Pricing</span>
+                </Link>
+                <Link
+                  to="/support"
+                  onClick={handleLinkClick}
+                  className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors"
+                >
+                  <HelpCircle className="h-4 w-4 text-therapy-600" />
+                  <span className="text-sm font-medium text-gray-900">Get Help</span>
+                </Link>
+              </div>
+            </div>
+            
             <nav className="flex-1 overflow-y-auto p-4 space-y-2">
               {sections.map((section) => {
                 const Icon = section.icon;

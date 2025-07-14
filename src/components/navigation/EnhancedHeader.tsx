@@ -357,16 +357,27 @@ const EnhancedHeader = () => {
           {!isMobile && (
             <nav className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 xl:space-x-6 therapy-brand-override">
               
-              {/* Essential links for tablet+ */}
+              {/* Compact features dropdown for tablet */}
               {isTablet && (
                 <>
-                  <Link 
-                    to="/therapy-sync-ai" 
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-therapy-50 hover:text-therapy-700 transition-all duration-200"
-                  >
-                    <Brain className="h-4 w-4" />
-                    <span>AI Chat</span>
-                  </Link>
+                  <div className="relative group">
+                    <HeaderDropdownTrigger icon={Heart} label="Features" />
+                    <HeaderDropdownCard className="dropdown-left w-64">
+                      <div className="space-y-3">
+                        {platformFeatures.slice(0, 3).map((feature) => (
+                          <HeaderDropdownItem
+                            key={feature.title}
+                            icon={feature.icon}
+                            title={feature.title}
+                            description={feature.description}
+                            href={feature.href}
+                            gradient={feature.gradient}
+                            compact={true}
+                          />
+                        ))}
+                      </div>
+                    </HeaderDropdownCard>
+                  </div>
                   <Link 
                     to="/pricing" 
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-therapy-50 hover:text-therapy-700 transition-all duration-200"
@@ -376,21 +387,45 @@ const EnhancedHeader = () => {
                 </>
               )}
               
-              {/* Additional links for laptop+ */}
+              {/* Quick Access dropdown for laptop+ */}
               {isLaptop && (
                 <>
+                  <div className="relative group">
+                    <HeaderDropdownTrigger icon={Sparkles} label="Quick Access" />
+                    <HeaderDropdownCard className="dropdown-left w-80">
+                      <div className="space-y-3">
+                        <HeaderDropdownItem
+                          icon={BookOpen}
+                          title="Getting Started"
+                          description="Step-by-step guides to begin your therapy journey"
+                          href="/getting-started"
+                          gradient="from-therapy-500 to-calm-500"
+                          compact={true}
+                        />
+                        <HeaderDropdownItem
+                          icon={Lightbulb}
+                          title="How It Works"
+                          description="Learn about our AI therapy technology"
+                          href="/how-it-works"
+                          gradient="from-calm-500 to-therapy-500"
+                          compact={true}
+                        />
+                        <HeaderDropdownItem
+                          icon={Phone}
+                          title="Support Center"
+                          description="24/7 customer support and crisis assistance"
+                          href="/support"
+                          gradient="from-harmony-500 to-balance-500"
+                          compact={true}
+                        />
+                      </div>
+                    </HeaderDropdownCard>
+                  </div>
                   <Link 
-                    to="/therapist-discovery" 
+                    to="/pricing" 
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-therapy-50 hover:text-therapy-700 transition-all duration-200"
                   >
-                    <Users className="h-4 w-4" />
-                    <span>Therapists</span>
-                  </Link>
-                  <Link 
-                    to="/solutions/individuals" 
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-therapy-50 hover:text-therapy-700 transition-all duration-200"
-                  >
-                    <span>Solutions</span>
+                    <span>Pricing</span>
                   </Link>
                 </>
               )}
