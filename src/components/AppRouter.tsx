@@ -41,6 +41,8 @@ import TherapistDiscovery from "../pages/TherapistDiscovery";
 import Community from "../pages/Community";
 import Features from "../pages/Features";
 import FAQAndBlog from "../pages/FAQAndBlog";
+import { AffiliateProgramPage } from "../pages/AffiliateProgramPage";
+import AffiliateRoutes from "../pages/affiliate";
 
 // Dashboard Pages (should use BulletproofDashboardLayout - sidebar)
 import Dashboard from "../pages/Dashboard";
@@ -316,6 +318,19 @@ const AppRouter = () => {
       <Route path="/community" element={
         <PageErrorBoundary pageName="Community">
           <Community />
+        </PageErrorBoundary>
+      } />
+      
+      {/* Affiliate Program Routes */}
+      <Route path="/affiliate-program" element={
+        <PageErrorBoundary pageName="Affiliate Program">
+          <PublicPageWrapper><AffiliateProgramPage /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      
+      <Route path="/affiliate/*" element={
+        <PageErrorBoundary pageName="Affiliate Dashboard">
+          <DashboardPageWrapper><AffiliateRoutes /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
       
