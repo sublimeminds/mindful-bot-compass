@@ -4,8 +4,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import { SimpleAuthProvider } from '@/components/SimpleAuthProvider';
-import OptimizedLanguageRouter from '@/components/seo/OptimizedLanguageRouter';
-import LoadingBoundary from '@/components/LoadingBoundary';
+import SimpleLanguageRouter from '@/components/seo/SimpleLanguageRouter';
+import { serviceManager } from '@/services/serviceManager';
 
 // Create a simple, reliable QueryClient
 const queryClient = new QueryClient({
@@ -30,17 +30,32 @@ const LoadingFallback = () => (
 
 // Main SafeApp component with minimal complexity
 class SafeApp extends Component {
+  state = { servicesReady: false };
+
+  async componentDidMount() {
+    try {
+      // Initialize services before rendering main app
+      await serviceManager.initialize();
+      this.setState({ servicesReady: true });
+    } catch (error) {
+      console.warn('Service initialization failed, continuing with defaults:', error);
+      this.setState({ servicesReady: true });
+    }
+  }
+
   render() {
+    if (!this.state.servicesReady) {
+      return <LoadingFallback />;
+    }
+
     return (
       <SimpleErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <Router>
             <SimpleAuthProvider>
-              <LoadingBoundary timeout={8000}>
-                <React.Suspense fallback={<LoadingFallback />}>
-                  <OptimizedLanguageRouter />
-                </React.Suspense>
-              </LoadingBoundary>
+              <React.Suspense fallback={<LoadingFallback />}>
+                <SimpleLanguageRouter />
+              </React.Suspense>
             </SimpleAuthProvider>
           </Router>
         </QueryClientProvider>

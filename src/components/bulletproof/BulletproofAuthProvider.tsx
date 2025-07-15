@@ -52,21 +52,14 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
           setLoading(true);
           setError(null);
 
-          // Get initial session with retry logic
-          const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-          
-          if (sessionError && retryCount < maxRetries) {
-            retryCount++;
-            console.warn(`Auth session retry ${retryCount}/${maxRetries}:`, sessionError);
-            setTimeout(initializeAuth, 1000 * retryCount); // Exponential backoff
-            return;
-          }
-
+          // Simple session check without retry logic
+          const { data: { session } } = await supabase.auth.getSession();
           setUser(session?.user ?? null);
           setLoading(false);
         } catch (err) {
           console.error('Auth initialization error:', err);
           setError(err as Error);
+          setUser(null);
           setLoading(false);
         }
       };
@@ -81,13 +74,7 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
             setLoading(false);
             setError(null);
             
-            // Generate contextual notifications for authenticated users
-            if (session?.user) {
-              // Use setTimeout to avoid blocking the auth state change
-              setTimeout(() => {
-                ContextualNotificationService.runContextualChecks(session.user.id);
-              }, 0);
-            }
+            // Skip complex operations during initial load
             
             // Log auth events for debugging
             console.log('Auth state change:', event, session?.user?.id || 'no user');
