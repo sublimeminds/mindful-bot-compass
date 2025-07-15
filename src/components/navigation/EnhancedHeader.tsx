@@ -44,7 +44,7 @@ import {
 
 import { useAuth } from '@/hooks/useAuth';
 import GradientLogo from '@/components/ui/GradientLogo';
-import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
+import CompactRegionalSelector from '@/components/regional/CompactRegionalSelector';
 import EnhancedUserMenu from './EnhancedUserMenu';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
 import EnhancedButton from '@/components/ui/EnhancedButton';
@@ -567,23 +567,11 @@ const EnhancedHeader = () => {
             {/* Quick actions for larger screens */}
             {(isLaptop || isDesktop) && !user && (
               <div className="hidden lg:flex items-center space-x-3 mr-4">
-                <Link 
-                  to="/how-it-works"
-                  className="text-sm font-medium text-gray-600 hover:text-therapy-700 transition-colors"
-                >
-                  How It Works
-                </Link>
-                <Link 
-                  to="/support"
-                  className="text-sm font-medium text-gray-600 hover:text-therapy-700 transition-colors"
-                >
-                  Support
-                </Link>
               </div>
             )}
             
             <div className="hidden sm:block">
-              <EnhancedLanguageSelector />
+              <CompactRegionalSelector />
             </div>
             
             {user ? (
