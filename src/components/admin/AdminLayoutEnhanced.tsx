@@ -4,7 +4,11 @@ import { Outlet } from 'react-router-dom';
 import AdminSidebarEnhanced from './AdminSidebarEnhanced';
 import AdminHeaderEnhanced from './AdminHeaderEnhanced';
 
-const AdminLayoutEnhanced = () => {
+interface AdminLayoutEnhancedProps {
+  children?: React.ReactNode;
+}
+
+const AdminLayoutEnhanced = ({ children }: AdminLayoutEnhancedProps) => {
   return (
     <div className="min-h-screen bg-gray-950">
       <div className="flex h-screen">
@@ -13,7 +17,7 @@ const AdminLayoutEnhanced = () => {
           <AdminHeaderEnhanced />
           <main className="flex-1 overflow-auto bg-gradient-to-br from-gray-900 to-gray-950">
             <div className="p-6">
-              <Outlet />
+              {children || <Outlet />}
             </div>
           </main>
         </div>

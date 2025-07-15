@@ -8,6 +8,9 @@ import PageLayout from "@/components/layout/PageLayout";
 // Dashboard Layout wrapper for authenticated user pages  
 import BulletproofDashboardLayout from "@/components/dashboard/BulletproofDashboardLayout";
 
+// Admin Layout wrapper for admin pages
+import AdminLayoutEnhanced from "@/components/admin/AdminLayoutEnhanced";
+
 // Public Pages (should use PageLayout - header + footer)
 import Index from "../pages/Index";
 import GetStarted from "../pages/GetStarted";
@@ -99,6 +102,11 @@ const PublicPageWrapper = ({ children }: { children: React.ReactNode }) => (
 // Component to wrap dashboard pages
 const DashboardPageWrapper = ({ children }: { children: React.ReactNode }) => (
   <BulletproofDashboardLayout>{children}</BulletproofDashboardLayout>
+);
+
+// Component to wrap admin pages
+const AdminLayoutWrapper = ({ children }: { children: React.ReactNode }) => (
+  <AdminLayoutEnhanced>{children}</AdminLayoutEnhanced>
 );
 
 const AppRouter = () => {
@@ -610,37 +618,37 @@ const AppRouter = () => {
       {/* Admin Routes */}
       <Route path="/admin" element={
         <PageErrorBoundary pageName="Admin Dashboard">
-          <DashboardPageWrapper><AdminDashboard /></DashboardPageWrapper>
+          <AdminLayoutWrapper><AdminDashboard /></AdminLayoutWrapper>
         </PageErrorBoundary>
       } />
 
       <Route path="/admin/ai" element={
         <PageErrorBoundary pageName="Admin AI">
-          <DashboardPageWrapper><AdminAI /></DashboardPageWrapper>
+          <AdminLayoutWrapper><AdminAI /></AdminLayoutWrapper>
         </PageErrorBoundary>
       } />
 
       <Route path="/admin/analytics" element={
         <PageErrorBoundary pageName="Admin Analytics">
-          <DashboardPageWrapper><AdminAnalytics /></DashboardPageWrapper>
+          <AdminLayoutWrapper><AdminAnalytics /></AdminLayoutWrapper>
         </PageErrorBoundary>
       } />
 
       <Route path="/admin/content" element={
         <PageErrorBoundary pageName="Admin Content">
-          <DashboardPageWrapper><AdminContent /></DashboardPageWrapper>
+          <AdminLayoutWrapper><AdminContent /></AdminLayoutWrapper>
         </PageErrorBoundary>
       } />
 
       <Route path="/admin/translations" element={
         <PageErrorBoundary pageName="Admin Translations">
-          <DashboardPageWrapper><AdminTranslations /></DashboardPageWrapper>
+          <AdminLayoutWrapper><AdminTranslations /></AdminLayoutWrapper>
         </PageErrorBoundary>
       } />
 
       <Route path="/admin/therapy" element={
         <PageErrorBoundary pageName="Admin Therapy">
-          <DashboardPageWrapper><AdminTherapy /></DashboardPageWrapper>
+          <AdminLayoutWrapper><AdminTherapy /></AdminLayoutWrapper>
         </PageErrorBoundary>
       } />
 
