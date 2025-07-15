@@ -36,13 +36,16 @@ export const LanguageAwareRouter: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <Routes>
-      {/* Language-prefixed routes */}
-      <Route path="/:lang/*" element={<LanguagePrefixHandler />} />
-      
-      {/* Default English routes */}
-      <Route path="/*" element={<AppRouter />} />
-    </Routes>
+    <>
+      <SuperAdminRouter />
+      <Routes>
+        {/* Language-prefixed routes */}
+        <Route path="/:lang/*" element={<LanguagePrefixHandler />} />
+        
+        {/* Default English routes */}
+        <Route path="/*" element={<AppRouter />} />
+      </Routes>
+    </>
   );
 };
 
