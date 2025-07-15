@@ -615,40 +615,40 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
-      {/* Admin Routes */}
+      {/* OLD ADMIN ROUTES - Redirect to user dashboard equivalents */}
       <Route path="/admin" element={
-        <PageErrorBoundary pageName="Admin Dashboard">
-          <AdminLayoutWrapper><AdminDashboard /></AdminLayoutWrapper>
+        <PageErrorBoundary pageName="Dashboard">
+          <DashboardPageWrapper><Dashboard /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
       <Route path="/admin/ai" element={
-        <PageErrorBoundary pageName="Admin AI">
-          <AdminLayoutWrapper><AdminAI /></AdminLayoutWrapper>
+        <PageErrorBoundary pageName="AI Personalization">
+          <DashboardPageWrapper><AIPersonalization /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
       <Route path="/admin/analytics" element={
-        <PageErrorBoundary pageName="Admin Analytics">
-          <AdminLayoutWrapper><AdminAnalytics /></AdminLayoutWrapper>
+        <PageErrorBoundary pageName="Analytics">
+          <DashboardPageWrapper><AnalyticsPage /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
       <Route path="/admin/content" element={
-        <PageErrorBoundary pageName="Admin Content">
-          <AdminLayoutWrapper><AdminContent /></AdminLayoutWrapper>
+        <PageErrorBoundary pageName="Content Library">
+          <DashboardPageWrapper><ContentLibrary /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
       <Route path="/admin/translations" element={
-        <PageErrorBoundary pageName="Admin Translations">
-          <AdminLayoutWrapper><AdminTranslations /></AdminLayoutWrapper>
+        <PageErrorBoundary pageName="Personalization Settings">
+          <DashboardPageWrapper><PersonalizationSettingsPage /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
       <Route path="/admin/therapy" element={
-        <PageErrorBoundary pageName="Admin Therapy">
-          <AdminLayoutWrapper><AdminTherapy /></AdminLayoutWrapper>
+        <PageErrorBoundary pageName="Therapist Hub">
+          <DashboardPageWrapper><TherapistHub /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 
