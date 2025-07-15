@@ -6,8 +6,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Globe, Users, MessageCircle, Brain, Heart, Target, Flower, Palette, TreePine, Mountain, Handshake } from 'lucide-react';
+import { ArrowLeft, Globe, Users, MessageCircle, Brain, Heart, Target, Flower, Palette, TreePine, Mountain, Handshake, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { StepValidation } from '@/components/ui/StepValidation';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -28,8 +29,8 @@ const CulturalPreferencesStep = ({
   const [localPreferences, setLocalPreferences] = useState({
     primaryLanguage: 'en',
     culturalBackground: '',
-    familyStructure: 'individual',
-    communicationStyle: 'direct',
+    familyStructure: '',
+    communicationStyle: '',
     religiousConsiderations: false,
     religiousDetails: '',
     therapyApproachPreferences: [],
@@ -171,6 +172,12 @@ const CulturalPreferencesStep = ({
   }, [localPreferences, onPreferencesChange]);
 
   const handleSubmit = async () => {
+    // Validate required fields (only primary language is required)
+    if (!localPreferences.primaryLanguage) {
+      toast.error('Please select your primary language');
+      return;
+    }
+
     try {
       // Get current user
       const { data: { user } } = await supabase.auth.getUser();
@@ -184,8 +191,8 @@ const CulturalPreferencesStep = ({
         p_user_id: user.id,
         p_cultural_background: localPreferences.culturalBackground || null,
         p_primary_language: localPreferences.primaryLanguage || 'en',
-        p_family_structure: localPreferences.familyStructure || 'individual',
-        p_communication_style: localPreferences.communicationStyle || 'direct',
+        p_family_structure: localPreferences.familyStructure || null,
+        p_communication_style: localPreferences.communicationStyle || null,
         p_religious_considerations: localPreferences.religiousConsiderations || false,
         p_religious_details: localPreferences.religiousDetails || null,
         p_therapy_approach_preferences: localPreferences.therapyApproachPreferences || [],
@@ -230,7 +237,10 @@ const CulturalPreferencesStep = ({
         <CardContent className="space-y-6">
           {/* Primary Language */}
           <div className="space-y-2">
-            <Label>{t('onboarding.cultural.primaryLanguage')}</Label>
+            <Label className="flex items-center justify-between">
+              {t('onboarding.cultural.primaryLanguage')} <span className="text-red-500">*</span>
+              {localPreferences.primaryLanguage && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+            </Label>
             <Select 
               value={localPreferences.primaryLanguage} 
               onValueChange={(value) => updatePreferences('primaryLanguage', value)}
@@ -250,7 +260,7 @@ const CulturalPreferencesStep = ({
 
           {/* Cultural Background */}
           <div className="space-y-2">
-            <Label>{t('onboarding.cultural.background')} <span className="text-muted-foreground">(Optional)</span></Label>
+            <Label>Cultural Background <span className="text-muted-foreground">(Optional)</span></Label>
             <Select 
               value={localPreferences.culturalBackground} 
               onValueChange={(value) => updatePreferences('culturalBackground', value)}
@@ -270,16 +280,19 @@ const CulturalPreferencesStep = ({
 
           {/* Family Structure */}
           <div className="space-y-2">
-            <Label className="flex items-center space-x-2">
-              <Users className="h-4 w-4" />
-              <span>{t('onboarding.cultural.familyStructure')}</span>
+            <Label className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Users className="h-4 w-4" />
+                <span>{t('onboarding.cultural.familyStructure')} <span className="text-muted-foreground">(Optional)</span></span>
+              </div>
+              {localPreferences.familyStructure && <CheckCircle2 className="h-4 w-4 text-green-500" />}
             </Label>
             <Select 
               value={localPreferences.familyStructure} 
               onValueChange={(value) => updatePreferences('familyStructure', value)}
             >
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue placeholder="Select your family structure" />
               </SelectTrigger>
               <SelectContent>
                 {familyStructures.map(structure => (
@@ -293,16 +306,19 @@ const CulturalPreferencesStep = ({
 
           {/* Communication Style */}
           <div className="space-y-2">
-            <Label className="flex items-center space-x-2">
-              <MessageCircle className="h-4 w-4" />
-              <span>{t('onboarding.cultural.communicationStyle')}</span>
+            <Label className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <MessageCircle className="h-4 w-4" />
+                <span>{t('onboarding.cultural.communicationStyle')} <span className="text-muted-foreground">(Optional)</span></span>
+              </div>
+              {localPreferences.communicationStyle && <CheckCircle2 className="h-4 w-4 text-green-500" />}
             </Label>
             <Select 
               value={localPreferences.communicationStyle} 
               onValueChange={(value) => updatePreferences('communicationStyle', value)}
             >
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue placeholder="Select your communication style" />
               </SelectTrigger>
               <SelectContent>
                 {communicationStyles.map(style => (
@@ -436,6 +452,17 @@ const CulturalPreferencesStep = ({
           </div>
         </CardContent>
       </Card>
+
+      {/* Step Validation */}
+      <StepValidation 
+        fields={[
+          { name: 'primaryLanguage', label: 'Primary Language', isValid: !!localPreferences.primaryLanguage, isRequired: true },
+          { name: 'culturalBackground', label: 'Cultural Background', isValid: !!localPreferences.culturalBackground, isRequired: false },
+          { name: 'familyStructure', label: 'Family Structure', isValid: !!localPreferences.familyStructure, isRequired: false },
+          { name: 'communicationStyle', label: 'Communication Style', isValid: !!localPreferences.communicationStyle, isRequired: false }
+        ]} 
+        className="mb-4" 
+      />
 
       {/* Navigation Buttons */}
       <div className="flex justify-between">

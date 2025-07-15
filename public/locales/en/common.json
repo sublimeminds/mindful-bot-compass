@@ -62,8 +62,8 @@
       "matchFactors": "Why this therapist is a good match for you:"
     },
     "progress": {
-      "fieldCompletion": "Field Completion",
-      "requiredFields": "Required fields",
+      "fieldCompletion": "Field completion status",
+      "requiredFields": "Required fields completed",
       "optionalFields": "Optional fields",
       "nextStepHint": "Complete all required fields to continue"
     }
