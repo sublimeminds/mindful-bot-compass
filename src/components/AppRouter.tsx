@@ -355,7 +355,7 @@ const AppRouter = () => {
       } />
       <Route path="/onboarding" element={
         <PageErrorBoundary pageName="Onboarding">
-          <EnhancedOnboardingPage />
+          <DashboardPageWrapper><EnhancedOnboardingPage /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
       <Route path="/onboarding-old" element={
