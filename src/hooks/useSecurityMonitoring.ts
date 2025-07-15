@@ -19,6 +19,21 @@ interface SecurityMetrics {
   threats: number;
   blocked: number;
   allowed: number;
+  totalIncidents: number;
+  criticalIncidents: number;
+  resolvedIncidents: number;
+  averageResolutionTime: number;
+}
+
+interface SecurityIncident {
+  id: string;
+  incident_type: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  description: string;
+  detected_at: string;
+  detection_method: string;
+  status: string;
+  affected_users_count: number;
 }
 
 interface SecurityConfig {
@@ -28,6 +43,7 @@ interface SecurityConfig {
 
 export const useSecurityMonitoring = () => {
   const [alerts, setAlerts] = useState<SecurityAlert[]>([]);
+  const [incidents, setIncidents] = useState<SecurityIncident[]>([]);
   const [metrics, setMetrics] = useState<SecurityMetrics>({
     threatLevel: 'low',
     activeThreats: 0,
@@ -35,7 +51,11 @@ export const useSecurityMonitoring = () => {
     complianceScore: 95,
     threats: 0,
     blocked: 0,
-    allowed: 0
+    allowed: 0,
+    totalIncidents: 0,
+    criticalIncidents: 0,
+    resolvedIncidents: 0,
+    averageResolutionTime: 0
   });
   const [config, setConfig] = useState<SecurityConfig>({
     enabled: true,
@@ -68,6 +88,19 @@ export const useSecurityMonitoring = () => {
         }
       ];
 
+      const mockIncidents: SecurityIncident[] = [
+        {
+          id: '1',
+          incident_type: 'authentication',
+          severity: 'medium',
+          description: 'Multiple failed login attempts detected',
+          detected_at: new Date(Date.now() - 300000).toISOString(),
+          detection_method: 'automated',
+          status: 'investigating',
+          affected_users_count: 1
+        }
+      ];
+
       const mockMetrics: SecurityMetrics = {
         threatLevel: Math.random() > 0.8 ? 'medium' : 'low',
         activeThreats: Math.floor(Math.random() * 3),
@@ -75,10 +108,15 @@ export const useSecurityMonitoring = () => {
         complianceScore: Math.floor(Math.random() * 5) + 95,
         threats: Math.floor(Math.random() * 50),
         blocked: Math.floor(Math.random() * 20),
-        allowed: Math.floor(Math.random() * 100)
+        allowed: Math.floor(Math.random() * 100),
+        totalIncidents: 12,
+        criticalIncidents: 2,
+        resolvedIncidents: 8,
+        averageResolutionTime: 4.5
       };
 
       setAlerts(mockAlerts);
+      setIncidents(mockIncidents);
       setMetrics(mockMetrics);
       setError(null);
     } catch (err) {
@@ -131,8 +169,19 @@ export const useSecurityMonitoring = () => {
     setConfig(prev => ({ ...prev, ...newConfig }));
   }, []);
 
+  const fetchIncidents = useCallback(() => {
+    refreshData();
+  }, [refreshData]);
+
+  const resolveIncident = useCallback((incidentId: string, resolution: string) => {
+    setIncidents(prev => prev.map(incident => 
+      incident.id === incidentId ? { ...incident, status: 'resolved' } : incident
+    ));
+  }, []);
+
   return {
     alerts,
+    incidents,
     metrics,
     config,
     isLoading,
@@ -140,6 +189,8 @@ export const useSecurityMonitoring = () => {
     error,
     acknowledgeAlert,
     refreshData,
-    updateConfig
+    updateConfig,
+    fetchIncidents,
+    resolveIncident
   };
 };

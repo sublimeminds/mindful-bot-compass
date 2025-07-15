@@ -50,7 +50,11 @@ const EnhancedMFASetup: React.FC<EnhancedMFASetupProps> = ({ adminId }) => {
   const handleSetupMFA = async () => {
     const result = await setupEnhancedMFA(adminId);
     if (result.success && result.backupCodes) {
-      setBackupCodes(result.backupCodes.map((code: any) => code.code));
+      // Handle the JSON array of backup codes
+      const codes = Array.isArray(result.backupCodes) 
+        ? result.backupCodes.map((code: any) => typeof code === 'string' ? code : code.code)
+        : [];
+      setBackupCodes(codes);
       setShowBackupCodes(true);
     }
   };
