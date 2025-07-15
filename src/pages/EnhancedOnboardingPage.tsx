@@ -1,6 +1,6 @@
 
 import React from 'react';
-import EnhancedOnboardingFlow from '@/components/onboarding/EnhancedOnboardingFlow';
+import EnhancedSmartOnboardingFlow from '@/components/onboarding/EnhancedSmartOnboardingFlow';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -85,7 +85,7 @@ const EnhancedOnboardingPage = () => {
     }
   };
 
-  return <EnhancedOnboardingFlow onComplete={handleOnboardingComplete} />;
+  return <EnhancedSmartOnboardingFlow onComplete={handleOnboardingComplete} />;
 };
 
 export default EnhancedOnboardingPage;
