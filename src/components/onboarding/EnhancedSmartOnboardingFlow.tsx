@@ -125,7 +125,9 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   // Filter steps based on subscription status
   const steps = shouldShowPlanSelection() 
     ? allSteps 
-    : allSteps.filter((_, index) => index !== 12); // Remove plan selection step
+    : allSteps.filter((_, index) => index !== 11); // Remove plan selection step (index 11, not 12)
+  
+  console.log("🔢 EnhancedSmartOnboardingFlow: Total steps =", steps.length, "Show plan selection =", shouldShowPlanSelection());
 
   const handleGetStarted = () => {
     setShowIntro(false);

@@ -85,6 +85,7 @@ const EnhancedOnboardingPage = () => {
     }
   };
 
+  console.log("🚀 EnhancedOnboardingPage: Using EnhancedSmartOnboardingFlow (14 steps)");
   return <EnhancedSmartOnboardingFlow onComplete={handleOnboardingComplete} />;
 };
 
