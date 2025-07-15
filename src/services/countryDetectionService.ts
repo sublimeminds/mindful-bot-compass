@@ -125,16 +125,33 @@ class CountryDetectionService {
 
   private async detectFromIP(): Promise<DetectionResult | null> {
     try {
-      // Try multiple IP geolocation services
+      // Try multiple IP geolocation services with better error handling
       const services = [
-        'https://ipapi.co/json/',
-        'https://ip-api.com/json/',
-        'https://ipinfo.io/json'
+        { url: 'https://ipinfo.io/json', name: 'ipinfo' },
+        { url: 'https://api.ipify.org/?format=json', name: 'ipify' },
+        { url: 'https://httpbin.org/ip', name: 'httpbin' }
       ];
 
       for (const service of services) {
         try {
-          const response = await fetch(service);
+          console.log(`Trying IP service: ${service.name}`);
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+          const response = await fetch(service.url, {
+            signal: controller.signal,
+            headers: {
+              'Accept': 'application/json',
+            }
+          });
+          
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            console.log(`IP service ${service.name} returned ${response.status}`);
+            continue;
+          }
+          
           const data = await response.json();
           
           let countryCode: string | null = null;
@@ -143,20 +160,23 @@ class CountryDetectionService {
           else if (data.country) countryCode = data.country;
 
           if (countryCode && await this.isValidCountryCode(countryCode)) {
+            console.log(`Successfully detected country from ${service.name}: ${countryCode}`);
             return {
               countryCode: countryCode.toUpperCase(),
-              confidence: 0.9,
+              confidence: 0.8, // Reduced confidence due to API reliability issues
               method: 'ip_geolocation',
               metadata: { ip: data.ip }
             };
           }
         } catch (serviceError) {
-          console.log(`IP service ${service} failed:`, serviceError);
+          console.log(`IP service ${service.name} failed:`, serviceError);
           continue;
         }
       }
+
+      console.log('All IP geolocation services failed, using fallback detection');
     } catch (error) {
-      console.log('All IP detection services failed');
+      console.log('IP detection completely failed, using other methods');
     }
     return null;
   }
