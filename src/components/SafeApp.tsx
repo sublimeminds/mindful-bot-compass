@@ -4,7 +4,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import { SimpleAuthProvider } from '@/components/SimpleAuthProvider';
-import LanguageAwareRouter from '@/components/seo/LanguageAwareRouter';
+import OptimizedLanguageRouter from '@/components/seo/OptimizedLanguageRouter';
+import LoadingBoundary from '@/components/LoadingBoundary';
 
 // Create a simple, reliable QueryClient
 const queryClient = new QueryClient({
@@ -35,9 +36,11 @@ class SafeApp extends Component {
         <QueryClientProvider client={queryClient}>
           <Router>
             <SimpleAuthProvider>
-              <React.Suspense fallback={<LoadingFallback />}>
-                <LanguageAwareRouter />
-              </React.Suspense>
+              <LoadingBoundary timeout={8000}>
+                <React.Suspense fallback={<LoadingFallback />}>
+                  <OptimizedLanguageRouter />
+                </React.Suspense>
+              </LoadingBoundary>
             </SimpleAuthProvider>
           </Router>
         </QueryClientProvider>

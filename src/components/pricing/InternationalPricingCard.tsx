@@ -31,7 +31,7 @@ const InternationalPricingCard = ({ plan, isYearly = false, onSelect }: Internat
     const calculateRegionalPrice = async () => {
       if (userLocation) {
         const basePrice = isYearly ? plan.yearlyBasePrice : plan.basePrice;
-        const adjustedPrice = await getRegionalPrice(basePrice, userLocation.region);
+        const adjustedPrice = await getRegionalPrice(basePrice);
         setRegionalPrice(adjustedPrice);
       }
     };
