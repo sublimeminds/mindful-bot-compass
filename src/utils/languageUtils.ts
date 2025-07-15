@@ -103,3 +103,5 @@ export function detectBestLanguageMatch(supportedLanguages: string[]): string {
   
   return 'en'; // Default fallback
 }
+
+// Export verification - function is properly exported above
