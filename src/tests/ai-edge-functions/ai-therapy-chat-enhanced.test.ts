@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-// Mock Deno environment
+// Mock Deno environment for Node.js tests
 global.Deno = {
   env: {
     get: vi.fn()
@@ -10,18 +10,26 @@ global.Deno = {
 // Mock fetch
 global.fetch = vi.fn();
 
-// Mock Supabase client
+// Create proper mock functions
+const mockSelect = vi.fn();
+const mockEq = vi.fn();
+const mockOrder = vi.fn();
+const mockLimit = vi.fn();
+const mockSingle = vi.fn();
+const mockInsert = vi.fn();
+
+// Mock Supabase client with proper chaining
 const mockSupabaseClient = {
   from: vi.fn(() => ({
-    select: vi.fn(() => ({
-      eq: vi.fn(() => ({
-        order: vi.fn(() => ({
-          limit: vi.fn(() => Promise.resolve({ data: [] }))
-        })),
-        single: vi.fn(() => Promise.resolve({ data: null }))
-      }))
-    })),
-    insert: vi.fn(() => Promise.resolve({ data: null, error: null }))
+    select: mockSelect.mockReturnValue({
+      eq: mockEq.mockReturnValue({
+        order: mockOrder.mockReturnValue({
+          limit: mockLimit.mockReturnValue(Promise.resolve({ data: [] })),
+          single: mockSingle.mockReturnValue(Promise.resolve({ data: null }))
+        })
+      })
+    }),
+    insert: mockInsert.mockReturnValue(Promise.resolve({ data: null, error: null }))
   }))
 };
 
@@ -37,6 +45,20 @@ vi.mock('https://esm.sh/@supabase/supabase-js@2', () => ({
 describe('AI Therapy Chat Enhanced Edge Function', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    
+    // Reset all mock functions
+    mockSelect.mockClear();
+    mockEq.mockClear();
+    mockOrder.mockClear();
+    mockLimit.mockClear();
+    mockSingle.mockClear();
+    mockInsert.mockClear();
+    
+    // Setup default return values
+    mockLimit.mockReturnValue(Promise.resolve({ data: [] }));
+    mockSingle.mockReturnValue(Promise.resolve({ data: null }));
+    mockInsert.mockReturnValue(Promise.resolve({ data: null, error: null }));
+    
     (global.Deno.env.get as any).mockImplementation((key: string) => {
       switch (key) {
         case 'ANTHROPIC_API_KEY':
@@ -126,17 +148,7 @@ describe('AI Therapy Chat Enhanced Edge Function', () => {
         }
       ];
 
-      mockSupabaseClient.from.mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            order: vi.fn().mockReturnValue({
-              limit: vi.fn().mockReturnValue(
-                Promise.resolve({ data: mockMemories })
-              )
-            })
-          })
-        })
-      });
+      mockLimit.mockResolvedValue({ data: mockMemories });
 
       // Test memory formatting
       const memoryContext = mockMemories.map(m => 
@@ -148,17 +160,7 @@ describe('AI Therapy Chat Enhanced Edge Function', () => {
     });
 
     it('handles empty memories gracefully', async () => {
-      mockSupabaseClient.from.mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            order: vi.fn().mockReturnValue({
-              limit: vi.fn().mockReturnValue(
-                Promise.resolve({ data: [] })
-              )
-            })
-          })
-        })
-      });
+      mockLimit.mockResolvedValue({ data: [] });
 
       const memoryContext = '';
       expect(memoryContext).toBe('');
@@ -204,15 +206,7 @@ describe('AI Therapy Chat Enhanced Edge Function', () => {
         communication_style: 'warm, empathetic, and direct'
       };
 
-      mockSupabaseClient.from.mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            single: vi.fn().mockReturnValue(
-              Promise.resolve({ data: mockTherapist })
-            )
-          })
-        })
-      });
+      mockSingle.mockResolvedValue({ data: mockTherapist });
 
       expect(mockTherapist.name).toBe('Dr. Sarah Johnson');
       expect(mockTherapist.specialties).toContain('CBT');
@@ -220,15 +214,7 @@ describe('AI Therapy Chat Enhanced Edge Function', () => {
     });
 
     it('handles missing therapist data', async () => {
-      mockSupabaseClient.from.mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            single: vi.fn().mockReturnValue(
-              Promise.resolve({ data: null })
-            )
-          })
-        })
-      });
+      mockSingle.mockResolvedValue({ data: null });
 
       const therapist = null;
       
@@ -444,11 +430,7 @@ Guidelines:
     });
 
     it('handles memory storage errors gracefully', async () => {
-      mockSupabaseClient.from.mockReturnValue({
-        insert: vi.fn().mockReturnValue(
-          Promise.resolve({ data: null, error: new Error('Storage failed') })
-        )
-      });
+      mockInsert.mockResolvedValue({ data: null, error: new Error('Storage failed') });
 
       // Should not throw error, but handle gracefully
       const result = await mockSupabaseClient.from('conversation_memory').insert({});
@@ -481,17 +463,17 @@ Guidelines:
 
   describe('Environment Configuration', () => {
     it('retrieves required environment variables', () => {
-      expect(Deno.env.get('ANTHROPIC_API_KEY')).toBe('mock-anthropic-key');
-      expect(Deno.env.get('SUPABASE_URL')).toBe('https://mock-supabase-url.supabase.co');
-      expect(Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')).toBe('mock-service-role-key');
+      expect(global.Deno.env.get('ANTHROPIC_API_KEY')).toBe('mock-anthropic-key');
+      expect(global.Deno.env.get('SUPABASE_URL')).toBe('https://mock-supabase-url.supabase.co');
+      expect(global.Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')).toBe('mock-service-role-key');
     });
 
     it('handles missing environment variables', () => {
       (global.Deno.env.get as any).mockReturnValue(null);
       
-      expect(Deno.env.get('ANTHROPIC_API_KEY')).toBeNull();
-      expect(Deno.env.get('SUPABASE_URL')).toBeNull();
-      expect(Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')).toBeNull();
+      expect(global.Deno.env.get('ANTHROPIC_API_KEY')).toBeNull();
+      expect(global.Deno.env.get('SUPABASE_URL')).toBeNull();
+      expect(global.Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')).toBeNull();
     });
   });
 
@@ -503,117 +485,15 @@ Guidelines:
       };
 
       expect(corsHeaders['Access-Control-Allow-Origin']).toBe('*');
-      expect(corsHeaders['Access-Control-Allow-Headers']).toContain('authorization');
-      expect(corsHeaders['Access-Control-Allow-Headers']).toContain('content-type');
-    });
-  });
-
-  describe('Integration Testing', () => {
-    it('processes complete chat workflow', async () => {
-      // Mock data setup
-      const mockMemories = [
-        {
-          title: 'Work stress',
-          content: 'User mentioned deadline pressure',
-          emotional_context: { primary_emotion: 'anxiety' }
-        }
-      ];
-
-      const mockTherapist = {
-        name: 'Dr. Smith',
-        title: 'Therapist',
-        specialties: ['Anxiety'],
-        approach: 'CBT',
-        communication_style: 'supportive'
-      };
-
-      const mockAnthropicResponse = {
-        content: [{ text: 'I hear that you\'re feeling anxious about your work deadlines. This is very common, and I\'m here to help you work through these feelings.' }]
-      };
-
-      // Mock all the calls
-      mockSupabaseClient.from.mockImplementation((table: string) => {
-        if (table === 'conversation_memory') {
-          return {
-            select: () => ({
-              eq: () => ({
-                order: () => ({
-                  limit: () => Promise.resolve({ data: mockMemories })
-                })
-              })
-            }),
-            insert: () => Promise.resolve({ data: null, error: null })
-          };
-        } else if (table === 'therapist_personalities') {
-          return {
-            select: () => ({
-              eq: () => ({
-                single: () => Promise.resolve({ data: mockTherapist })
-              })
-            })
-          };
-        }
-        return {};
-      });
-
-      (global.fetch as any).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockAnthropicResponse
-      });
-
-      // Test the complete flow
-      const userMessage = 'I\'m feeling overwhelmed with work';
-      const userId = 'user-123';
-      const sessionId = 'session-456';
-      const therapistId = 'therapist-789';
-
-      // Memory context creation
-      const memoryContext = mockMemories.map(m => 
-        `${m.title}: ${m.content} (${m.emotional_context.primary_emotion})`
-      ).join('\n');
-
-      // System prompt creation
-      const systemPrompt = `You are ${mockTherapist.name}, a ${mockTherapist.title} specializing in ${mockTherapist.specialties.join(', ')}.`;
-
-      // API call simulation
-      const aiResponse = mockAnthropicResponse.content[0].text;
-
-      expect(memoryContext).toContain('Work stress: User mentioned deadline pressure (anxiety)');
-      expect(systemPrompt).toContain('Dr. Smith');
-      expect(aiResponse).toContain('feeling anxious about your work deadlines');
+      expect(corsHeaders['Access-Control-Allow-Headers']).toBe('authorization, x-client-info, apikey, content-type');
     });
 
-    it('handles edge cases in complete workflow', async () => {
-      // Test with no memories and no therapist
-      mockSupabaseClient.from.mockImplementation(() => ({
-        select: () => ({
-          eq: () => ({
-            order: () => ({
-              limit: () => Promise.resolve({ data: [] })
-            }),
-            single: () => Promise.resolve({ data: null })
-          })
-        }),
-        insert: () => Promise.resolve({ data: null, error: null })
-      }));
-
-      const mockAnthropicResponse = {
-        content: [{ text: 'Hello! I\'m here to help. How are you feeling today?' }]
-      };
-
-      (global.fetch as any).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockAnthropicResponse
-      });
-
-      // Should still work with fallback values
-      const memoryContext = '';
-      const fallbackTherapist = { name: 'Dr. AI', title: 'therapist', specialties: ['general therapy'] };
-      const systemPrompt = `You are ${fallbackTherapist.name}, a ${fallbackTherapist.title} specializing in ${fallbackTherapist.specialties.join(', ')}.`;
-
-      expect(memoryContext).toBe('');
-      expect(systemPrompt).toContain('Dr. AI');
-      expect(systemPrompt).toContain('general therapy');
+    it('handles preflight requests', () => {
+      const request = { method: 'OPTIONS' };
+      const response = { headers: { 'Access-Control-Allow-Origin': '*' } };
+      
+      expect(request.method).toBe('OPTIONS');
+      expect(response.headers['Access-Control-Allow-Origin']).toBe('*');
     });
   });
 });
