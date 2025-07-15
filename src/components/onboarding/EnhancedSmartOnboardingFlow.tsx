@@ -28,6 +28,8 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useOnboardingProgress } from '@/hooks/useOnboardingProgress';
 import { scrollToTop } from '@/hooks/useScrollToTop';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import GradientButton from '@/components/ui/GradientButton';
 
 interface EnhancedSmartOnboardingFlowProps {
   onComplete: (data: any) => void;
@@ -38,12 +40,13 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   const { user } = useAuth();
   const navigate = useNavigate();
   const subscriptionAccess = useSubscriptionAccess();
-  const { progress, saveProgress, updateStep, clearProgress } = useOnboardingProgress();
-  const [showIntro, setShowIntro] = useState(!progress.lastSavedAt);
-  const [currentStep, setCurrentStep] = useState(progress.currentStep);
+  const { progress, saveProgress, updateStep, clearProgress, hasProgress } = useOnboardingProgress();
+  const [showIntro, setShowIntro] = useState(!progress?.lastSavedAt);
+  const [currentStep, setCurrentStep] = useState(progress?.currentStep || 0);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
-  const [onboardingData, setOnboardingData] = useState<any>(progress.data);
+  const [onboardingData, setOnboardingData] = useState<any>(progress?.data || {});
+  const [showResumePrompt, setShowResumePrompt] = useState(false);
 
   useSEO({
     title: 'Get Started - TherapySync',
@@ -175,14 +178,63 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     }));
   };
 
-  // If user is authenticated, skip auth step but only once during initial load
+  // Check for saved progress and show resume prompt
   useEffect(() => {
-    if (user && currentStep === 1 && !progress.lastSavedAt) {
+    if (user && hasProgress() && !showResumePrompt) {
+      setShowResumePrompt(true);
+    } else if (user && currentStep === 1 && !progress?.lastSavedAt) {
       console.log('🔄 User authenticated, skipping auth step');
       setCurrentStep(2);
       updateStep(2);
     }
-  }, [user]);
+  }, [user, hasProgress]);
+
+  const handleResumeProgress = () => {
+    setCurrentStep(progress?.currentStep || 0);
+    setOnboardingData(progress?.data || {});
+    setShowResumePrompt(false);
+  };
+
+  const handleStartFresh = () => {
+    clearProgress();
+    setCurrentStep(0);
+    setOnboardingData({});
+    setShowResumePrompt(false);
+    setShowIntro(true);
+  };
+
+  // Show resume prompt if user has progress
+  if (showResumePrompt && user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-harmony-50 to-flow-50 dark:from-harmony-950 dark:to-flow-950 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Resume Your Progress?</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              You have saved progress from step {(progress?.currentStep || 0) + 1} of {steps.length}. 
+              Would you like to continue where you left off?
+            </p>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-harmony-500 to-flow-500 h-2 rounded-full"
+                style={{ width: `${((progress?.currentStep || 0) + 1) / steps.length * 100}%` }}
+              />
+            </div>
+            <div className="flex space-x-2">
+              <GradientButton onClick={handleResumeProgress} className="flex-1">
+                Continue Progress
+              </GradientButton>
+              <GradientButton onClick={handleStartFresh} variant="outline" className="flex-1">
+                Start Fresh
+              </GradientButton>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (showIntro) {
     return <AnimatedOnboardingIntro onGetStarted={handleGetStarted} />;

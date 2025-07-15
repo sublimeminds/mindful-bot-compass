@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Globe, Users, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Globe, Users, MessageCircle, Brain, Heart, Target, Flower, Palette, TreePine, Mountain, Handshake } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface CulturalPreferencesStepProps {
@@ -79,25 +79,89 @@ const CulturalPreferencesStep = ({
   ];
 
   const therapyApproaches = [
-    'Culturally-adapted CBT',
-    'Narrative Therapy',
-    'Family Systems Therapy',
-    'Mindfulness-based approaches',
-    'Somatic Therapy',
-    'Art/Creative Therapy',
-    'Traditional healing integration',
-    'Community-based approaches'
+    { 
+      name: 'Culturally-adapted CBT', 
+      icon: Brain, 
+      description: 'Cognitive-behavioral therapy adapted to your cultural context' 
+    },
+    { 
+      name: 'Narrative Therapy', 
+      icon: Heart, 
+      description: 'Focus on your personal story and cultural identity' 
+    },
+    { 
+      name: 'Family Systems Therapy', 
+      icon: Users, 
+      description: 'Therapy that includes family and cultural dynamics' 
+    },
+    { 
+      name: 'Mindfulness-based approaches', 
+      icon: Flower, 
+      description: 'Meditation and mindfulness practices from various traditions' 
+    },
+    { 
+      name: 'Somatic Therapy', 
+      icon: Target, 
+      description: 'Body-based therapy recognizing cultural trauma patterns' 
+    },
+    { 
+      name: 'Art/Creative Therapy', 
+      icon: Palette, 
+      description: 'Creative expression honoring cultural artistic traditions' 
+    },
+    { 
+      name: 'Traditional healing integration', 
+      icon: TreePine, 
+      description: 'Combining therapy with traditional cultural healing practices' 
+    },
+    { 
+      name: 'Community-based approaches', 
+      icon: Handshake, 
+      description: 'Therapy that considers community and collective wellbeing' 
+    }
   ];
 
   const culturalSensitivities = [
-    'Gender roles and expectations',
-    'Family hierarchy and respect',
-    'Religious/spiritual practices',
-    'Language barriers',
-    'Immigration/acculturation stress',
-    'Intergenerational trauma',
-    'Discrimination experiences',
-    'Cultural identity conflicts'
+    { 
+      name: 'Gender roles and expectations', 
+      icon: Users, 
+      description: 'Understanding cultural gender norms and expectations' 
+    },
+    { 
+      name: 'Family hierarchy and respect', 
+      icon: Mountain, 
+      description: 'Honoring family structure and respect traditions' 
+    },
+    { 
+      name: 'Religious/spiritual practices', 
+      icon: TreePine, 
+      description: 'Integrating faith and spiritual beliefs in therapy' 
+    },
+    { 
+      name: 'Language barriers', 
+      icon: MessageCircle, 
+      description: 'Addressing communication challenges and language needs' 
+    },
+    { 
+      name: 'Immigration/acculturation stress', 
+      icon: Globe, 
+      description: 'Support for cultural transition and adaptation challenges' 
+    },
+    { 
+      name: 'Intergenerational trauma', 
+      icon: Heart, 
+      description: 'Healing trauma passed down through generations' 
+    },
+    { 
+      name: 'Discrimination experiences', 
+      icon: Target, 
+      description: 'Addressing impacts of discrimination and bias' 
+    },
+    { 
+      name: 'Cultural identity conflicts', 
+      icon: Brain, 
+      description: 'Navigating between different cultural identities' 
+    }
   ];
 
   useEffect(() => {
@@ -246,24 +310,46 @@ const CulturalPreferencesStep = ({
           {/* Therapy Approach Preferences */}
           <div className="space-y-3">
             <Label>Preferred Therapy Approaches <span className="text-gray-500">(Optional)</span></Label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {therapyApproaches.map(approach => (
-                <div key={approach} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={approach}
-                    checked={localPreferences.therapyApproachPreferences.includes(approach)}
-                    onCheckedChange={(checked) => {
-                      const newPreferences = checked
-                        ? [...localPreferences.therapyApproachPreferences, approach]
-                        : localPreferences.therapyApproachPreferences.filter(p => p !== approach);
+            <div className="grid grid-cols-1 gap-3">
+              {therapyApproaches.map(approach => {
+                const IconComponent = approach.icon;
+                return (
+                  <div 
+                    key={approach.name} 
+                    className={`flex items-start space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                      localPreferences.therapyApproachPreferences.includes(approach.name)
+                        ? 'bg-harmony-50 border-harmony-300 dark:bg-harmony-950 dark:border-harmony-700'
+                        : 'hover:bg-gray-50 dark:hover:bg-gray-900'
+                    }`}
+                    onClick={() => {
+                      const newPreferences = localPreferences.therapyApproachPreferences.includes(approach.name)
+                        ? localPreferences.therapyApproachPreferences.filter(p => p !== approach.name)
+                        : [...localPreferences.therapyApproachPreferences, approach.name];
                       updatePreferences('therapyApproachPreferences', newPreferences);
                     }}
-                  />
-                  <Label htmlFor={approach} className="text-sm">
-                    {approach}
-                  </Label>
-                </div>
-              ))}
+                  >
+                    <Checkbox
+                      id={approach.name}
+                      checked={localPreferences.therapyApproachPreferences.includes(approach.name)}
+                      onCheckedChange={(checked) => {
+                        const newPreferences = checked
+                          ? [...localPreferences.therapyApproachPreferences, approach.name]
+                          : localPreferences.therapyApproachPreferences.filter(p => p !== approach.name);
+                        updatePreferences('therapyApproachPreferences', newPreferences);
+                      }}
+                    />
+                    <IconComponent className="h-5 w-5 text-harmony-600 dark:text-harmony-400 mt-0.5" />
+                    <div className="flex-1">
+                      <Label htmlFor={approach.name} className="text-sm font-medium cursor-pointer">
+                        {approach.name}
+                      </Label>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {approach.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -273,24 +359,46 @@ const CulturalPreferencesStep = ({
             <p className="text-sm text-muted-foreground">
               Select areas that are important to consider in your therapy
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {culturalSensitivities.map(sensitivity => (
-                <div key={sensitivity} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={sensitivity}
-                    checked={localPreferences.culturalSensitivities.includes(sensitivity)}
-                    onCheckedChange={(checked) => {
-                      const newSensitivities = checked
-                        ? [...localPreferences.culturalSensitivities, sensitivity]
-                        : localPreferences.culturalSensitivities.filter(s => s !== sensitivity);
+            <div className="grid grid-cols-1 gap-3">
+              {culturalSensitivities.map(sensitivity => {
+                const IconComponent = sensitivity.icon;
+                return (
+                  <div 
+                    key={sensitivity.name} 
+                    className={`flex items-start space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                      localPreferences.culturalSensitivities.includes(sensitivity.name)
+                        ? 'bg-flow-50 border-flow-300 dark:bg-flow-950 dark:border-flow-700'
+                        : 'hover:bg-gray-50 dark:hover:bg-gray-900'
+                    }`}
+                    onClick={() => {
+                      const newSensitivities = localPreferences.culturalSensitivities.includes(sensitivity.name)
+                        ? localPreferences.culturalSensitivities.filter(s => s !== sensitivity.name)
+                        : [...localPreferences.culturalSensitivities, sensitivity.name];
                       updatePreferences('culturalSensitivities', newSensitivities);
                     }}
-                  />
-                  <Label htmlFor={sensitivity} className="text-sm">
-                    {sensitivity}
-                  </Label>
-                </div>
-              ))}
+                  >
+                    <Checkbox
+                      id={sensitivity.name}
+                      checked={localPreferences.culturalSensitivities.includes(sensitivity.name)}
+                      onCheckedChange={(checked) => {
+                        const newSensitivities = checked
+                          ? [...localPreferences.culturalSensitivities, sensitivity.name]
+                          : localPreferences.culturalSensitivities.filter(s => s !== sensitivity.name);
+                        updatePreferences('culturalSensitivities', newSensitivities);
+                      }}
+                    />
+                    <IconComponent className="h-5 w-5 text-flow-600 dark:text-flow-400 mt-0.5" />
+                    <div className="flex-1">
+                      <Label htmlFor={sensitivity.name} className="text-sm font-medium cursor-pointer">
+                        {sensitivity.name}
+                      </Label>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {sensitivity.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </CardContent>

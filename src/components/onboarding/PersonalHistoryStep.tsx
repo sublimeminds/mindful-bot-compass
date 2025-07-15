@@ -464,7 +464,7 @@ const PersonalHistoryStep = ({ onNext, onBack, onboardingData }: PersonalHistory
           disabled={!isComplete}
           className={!isComplete ? 'opacity-50 cursor-not-allowed' : ''}
         >
-          Continue
+          Continue to Next Step
         </GradientButton>
       </div>
     </div>

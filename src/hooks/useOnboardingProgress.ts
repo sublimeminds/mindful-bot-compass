@@ -10,6 +10,7 @@ interface OnboardingProgress {
 
 export const useOnboardingProgress = () => {
   const [progress, setProgress] = useState<OnboardingProgress | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const saveProgress = useCallback((stepData: any, stepNumber: number) => {
     const now = new Date().toISOString();
@@ -61,12 +62,23 @@ export const useOnboardingProgress = () => {
   }, [progress]);
 
   const hasProgress = useCallback(() => {
-    return !!progress && !progress.completed;
+    return !!progress && !progress.completed && progress.currentStep > 0;
   }, [progress]);
 
   useEffect(() => {
-    loadProgress();
-  }, [loadProgress]);
+    const loaded = loadProgress();
+    setIsLoaded(true);
+    if (!loaded) {
+      // Initialize empty progress if none exists
+      setProgress({
+        currentStep: 0,
+        data: {},
+        lastUpdated: '',
+        lastSavedAt: '',
+        completed: false
+      });
+    }
+  }, []);
 
   return {
     progress,
@@ -75,6 +87,7 @@ export const useOnboardingProgress = () => {
     loadProgress,
     clearProgress,
     markCompleted,
-    hasProgress
+    hasProgress,
+    isLoaded
   };
 };

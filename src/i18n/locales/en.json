@@ -17,7 +17,11 @@
     "yes": "Yes",
     "no": "No",
     "confirm": "Confirm",
-    "welcome": "Welcome"
+    "welcome": "Welcome",
+    "continueToNext": "Continue to Next Step",
+    "proceedToTherapist": "Proceed to Therapist Selection",
+    "selectPlan": "Select This Plan",
+    "completeOnboarding": "Complete Onboarding"
   },
   "navigation": {
     "home": "Home",
@@ -285,7 +289,9 @@
       "selectTherapist": "Choose This Therapist",
       "matchFactors": "Why This Matches You",
       "viewProfile": "View Full Profile",
-      "showAll": "Show All Therapists"
+      "showAll": "Show All Therapists",
+      "viewAllTherapists": "View All Available Therapists",
+      "showTopMatches": "Show Top Matches Only"
     },
     "validation": {
       "selectOption": "Please select an option",

@@ -110,7 +110,7 @@ const ChildhoodHistoryStep = ({ onNext, onBack, onboardingData }: ChildhoodHisto
     onNext(childhoodData);
   };
 
-  const isComplete = childhoodCountry && familyStructure && familyDynamics && educationLevel;
+  const isComplete = childhoodCountry && familyStructure && familyDynamics && educationLevel && parentingStyle;
   const countryOptions = countries.map(country => ({
     value: country.country_code,
     label: country.name
@@ -179,11 +179,14 @@ const ChildhoodHistoryStep = ({ onNext, onBack, onboardingData }: ChildhoodHisto
       </Card>
 
       {/* Parenting Style */}
-      <Card>
+      <Card className={`transition-all ${!parentingStyle ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Heart className="h-5 w-5 text-red-600" />
-            <span>How would you describe your primary caregiver's parenting style?</span>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Heart className="h-5 w-5 text-red-600" />
+              <span>How would you describe your primary caregiver's parenting style? <span className="text-red-500">*</span></span>
+            </div>
+            {parentingStyle && <CheckCircle2 className="h-4 w-4 text-green-500" />}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -197,13 +200,19 @@ const ChildhoodHistoryStep = ({ onNext, onBack, onboardingData }: ChildhoodHisto
               ))}
             </div>
           </RadioGroup>
+          {!parentingStyle && (
+            <p className="text-sm text-orange-600 mt-2">Please select your primary caregiver's parenting style to continue</p>
+          )}
         </CardContent>
       </Card>
 
       {/* Family Dynamics */}
-      <Card>
+      <Card className={`transition-all ${!familyDynamics ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle>Overall Family Dynamics</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            <span>Overall Family Dynamics <span className="text-red-500">*</span></span>
+            {familyDynamics && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <RadioGroup value={familyDynamics} onValueChange={setFamilyDynamics}>
@@ -230,15 +239,21 @@ const ChildhoodHistoryStep = ({ onNext, onBack, onboardingData }: ChildhoodHisto
               </div>
             </div>
           </RadioGroup>
+          {!familyDynamics && (
+            <p className="text-sm text-orange-600 mt-2">Please select your family dynamics to continue</p>
+          )}
         </CardContent>
       </Card>
 
       {/* Education Level */}
-      <Card>
+      <Card className={`transition-all ${!educationLevel ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <GraduationCap className="h-5 w-5 text-purple-600" />
-            <span>Highest Education Level Completed</span>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <GraduationCap className="h-5 w-5 text-purple-600" />
+              <span>Highest Education Level Completed <span className="text-red-500">*</span></span>
+            </div>
+            {educationLevel && <CheckCircle2 className="h-4 w-4 text-green-500" />}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -270,6 +285,9 @@ const ChildhoodHistoryStep = ({ onNext, onBack, onboardingData }: ChildhoodHisto
               </div>
             </div>
           </RadioGroup>
+          {!educationLevel && (
+            <p className="text-sm text-orange-600 mt-2">Please select your education level to continue</p>
+          )}
         </CardContent>
       </Card>
 
@@ -343,8 +361,15 @@ const ChildhoodHistoryStep = ({ onNext, onBack, onboardingData }: ChildhoodHisto
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
           <p className="text-sm text-orange-800 flex items-center">
             <AlertTriangle className="h-4 w-4 mr-2" />
-            Please complete all required fields (marked with *) to continue
+            Please complete all required fields (marked with *) to continue:
           </p>
+          <ul className="text-xs text-orange-700 mt-2 ml-6 list-disc">
+            {!childhoodCountry && <li>Childhood country</li>}
+            {!familyStructure && <li>Family structure</li>}
+            {!parentingStyle && <li>Parenting style</li>}
+            {!familyDynamics && <li>Family dynamics</li>}
+            {!educationLevel && <li>Education level</li>}
+          </ul>
         </div>
       )}
 
@@ -357,7 +382,7 @@ const ChildhoodHistoryStep = ({ onNext, onBack, onboardingData }: ChildhoodHisto
           disabled={!isComplete}
           className={!isComplete ? 'opacity-50 cursor-not-allowed' : ''}
         >
-          {t('common.continue')}
+          {t('common.continueToNext')}
         </GradientButton>
       </div>
     </div>
