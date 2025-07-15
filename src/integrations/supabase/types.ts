@@ -9234,6 +9234,7 @@ export type Database = {
           specialties: string[]
           success_rate: number | null
           therapeutic_techniques: string[] | null
+          therapist_tier: string | null
           title: string
           total_sessions: number | null
           user_rating: number | null
@@ -9260,6 +9261,7 @@ export type Database = {
           specialties?: string[]
           success_rate?: number | null
           therapeutic_techniques?: string[] | null
+          therapist_tier?: string | null
           title: string
           total_sessions?: number | null
           user_rating?: number | null
@@ -9286,6 +9288,7 @@ export type Database = {
           specialties?: string[]
           success_rate?: number | null
           therapeutic_techniques?: string[] | null
+          therapist_tier?: string | null
           title?: string
           total_sessions?: number | null
           user_rating?: number | null
@@ -12333,6 +12336,20 @@ export type Database = {
       update_goal_streak: {
         Args: { goal_id_param: string }
         Returns: undefined
+      }
+      upsert_user_cultural_profile: {
+        Args: {
+          p_user_id: string
+          p_cultural_background?: string
+          p_primary_language?: string
+          p_family_structure?: string
+          p_communication_style?: string
+          p_religious_considerations?: boolean
+          p_religious_details?: string
+          p_therapy_approach_preferences?: string[]
+          p_cultural_sensitivities?: string[]
+        }
+        Returns: string
       }
       validate_admin_session: {
         Args: { _session_token: string }

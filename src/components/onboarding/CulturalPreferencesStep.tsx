@@ -8,6 +8,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Globe, Users, MessageCircle, Brain, Heart, Target, Flower, Palette, TreePine, Mountain, Handshake } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface CulturalPreferencesStepProps {
   onNext: (data: any) => void;
@@ -168,8 +170,39 @@ const CulturalPreferencesStep = ({
     onPreferencesChange(localPreferences);
   }, [localPreferences, onPreferencesChange]);
 
-  const handleSubmit = () => {
-    onNext({ culturalPreferences: localPreferences });
+  const handleSubmit = async () => {
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('You must be logged in to save preferences');
+        return;
+      }
+
+      // Use the safe upsert function to save cultural profile
+      const { data, error } = await supabase.rpc('upsert_user_cultural_profile', {
+        p_user_id: user.id,
+        p_cultural_background: localPreferences.culturalBackground || null,
+        p_primary_language: localPreferences.primaryLanguage || 'en',
+        p_family_structure: localPreferences.familyStructure || 'individual',
+        p_communication_style: localPreferences.communicationStyle || 'direct',
+        p_religious_considerations: localPreferences.religiousConsiderations || false,
+        p_religious_details: localPreferences.religiousDetails || null,
+        p_therapy_approach_preferences: localPreferences.therapyApproachPreferences || [],
+        p_cultural_sensitivities: localPreferences.culturalSensitivities || []
+      });
+
+      if (error) {
+        console.error('Error saving cultural profile:', error);
+        toast.error('Failed to save cultural preferences');
+        return;
+      }
+
+      onNext({ culturalPreferences: localPreferences });
+    } catch (error) {
+      console.error('Error saving cultural profile:', error);
+      toast.error('Failed to save cultural preferences');
+    }
   };
 
   const updatePreferences = (key: string, value: any) => {
