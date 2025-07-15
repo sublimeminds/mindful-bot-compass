@@ -29,11 +29,17 @@ const CompletionStep = ({ onNext, onboardingData }: CompletionStepProps) => {
   const summary = getSummaryData();
 
   const handleComplete = () => {
+    console.log('🎯 CompletionStep: handleComplete called');
+    console.log('🎯 CompletionStep: onboardingData:', onboardingData);
+    
     const completionData = {
       completedAt: new Date().toISOString(),
       onboardingVersion: '2.0',
-      summary
+      summary,
+      ...onboardingData // Include all existing onboarding data
     };
+    
+    console.log('🎯 CompletionStep: Calling onNext with data:', completionData);
     onNext(completionData);
   };
 

@@ -131,6 +131,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   const handleNext = (stepData?: any) => {
     console.log('🎯 EnhancedSmartOnboardingFlow: handleNext called with stepData:', stepData);
     console.log('🎯 Current step:', currentStep, 'Total steps:', steps.length);
+    
     const newData = stepData ? { ...onboardingData, ...stepData } : onboardingData;
     
     if (stepData) {
@@ -138,16 +139,19 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       saveProgress(stepData, currentStep);
     }
 
+    console.log('🎯 Is last step?', currentStep >= steps.length - 1);
+    
     if (currentStep < steps.length - 1) {
       const nextStep = currentStep + 1;
+      console.log('🎯 Moving to next step:', nextStep);
       setCurrentStep(nextStep);
       updateStep(nextStep);
       // Auto-scroll to top when advancing to next step
       setTimeout(() => scrollToTop(), 100);
     } else {
+      console.log('🎯 Onboarding complete, calling onComplete with data:', newData);
       localStorage.removeItem('selectedPlan');
       clearProgress();
-      console.log('Onboarding complete, sending data to Elite AI Hub:', newData);
       onComplete(newData);
     }
   };
