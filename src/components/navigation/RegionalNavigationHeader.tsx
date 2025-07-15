@@ -80,7 +80,7 @@ const RegionalNavigationHeader = () => {
             <div className="flex items-center space-x-3">
               
               {/* Regional Preferences Selector */}
-              <UnifiedRegionalSelector className="hidden sm:flex" />
+              <UnifiedRegionalSelector />
               
               {user ? (
                 <>

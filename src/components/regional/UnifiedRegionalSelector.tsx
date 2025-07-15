@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Globe, MapPin, DollarSign, Languages, Settings, Zap, AlertCircle } from 'lucide-react';
 import { useRegionalPreferences } from '@/hooks/useRegionalPreferences';
 import { useCountryDetection } from '@/hooks/useCountryDetection';
-import { useCookieLanguage } from '@/hooks/useCookieLanguage';
+import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
 import { useEnhancedCurrency } from '@/hooks/useEnhancedCurrency';
 
 interface UnifiedRegionalSelectorProps {
@@ -41,8 +41,8 @@ const UnifiedRegionalSelector = ({
   const { 
     currentLanguage, 
     changeLanguage, 
-    getLanguagesByRegion 
-  } = useCookieLanguage();
+    supportedLanguages 
+  } = useEnhancedLanguage();
   
   const { 
     currency, 
@@ -224,25 +224,18 @@ const UnifiedRegionalSelector = ({
                 </SelectValue>
               </SelectTrigger>
               <SelectContent className="max-h-80">
-                {Object.entries(getLanguagesByRegion()).map(([region, languages]) => (
-                  <div key={region}>
-                    <div className="px-2 py-1 text-xs font-semibold text-therapy-600 border-b border-therapy-100">
-                      {region}
+                {supportedLanguages.map((lang) => (
+                  <SelectItem key={lang.code} value={lang.code}>
+                    <div className="flex items-center gap-2">
+                      <span>{lang.flag}</span>
+                      <div className="flex flex-col">
+                        <span>{lang.name}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {lang.nativeName}
+                        </span>
+                      </div>
                     </div>
-                    {languages.map((lang) => (
-                      <SelectItem key={lang.code} value={lang.code}>
-                        <div className="flex items-center gap-2">
-                          <span>{lang.flag}</span>
-                          <div className="flex flex-col">
-                            <span>{lang.name}</span>
-                            <span className="text-xs text-muted-foreground">
-                              {lang.nativeName}
-                            </span>
-                          </div>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </div>
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
