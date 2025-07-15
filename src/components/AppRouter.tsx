@@ -112,6 +112,28 @@ const AdminLayoutWrapper = ({ children }: { children: React.ReactNode }) => (
 const AppRouter = () => {
   return (
     <Routes>
+      {/* ONBOARDING ROUTES (HIGHEST PRIORITY - full-screen without dashboard wrapper) */}
+      <Route path="/onboarding" element={
+        <PageErrorBoundary pageName="Onboarding">
+          <EnhancedOnboardingPage />
+        </PageErrorBoundary>
+      } />
+      <Route path="/enhanced-onboarding" element={
+        <PageErrorBoundary pageName="Enhanced Onboarding">
+          <EnhancedOnboardingPage />
+        </PageErrorBoundary>
+      } />
+      <Route path="/onboarding-old" element={
+        <PageErrorBoundary pageName="Onboarding (Legacy)">
+          <OnboardingPage />
+        </PageErrorBoundary>
+      } />
+      <Route path="/onboarding-legacy" element={
+        <PageErrorBoundary pageName="Onboarding (Original)">
+          <Onboarding />
+        </PageErrorBoundary>
+      } />
+      
       {/* PUBLIC PAGES - Use PageLayout (Header + Footer) */}
       
       {/* Core Public Routes */}
@@ -346,28 +368,6 @@ const AppRouter = () => {
       } />
       
       {/* USER DASHBOARD PAGES - Use BulletproofDashboardLayout (Sidebar) */}
-      
-      {/* Onboarding Routes (full-screen without dashboard wrapper) */}
-      <Route path="/enhanced-onboarding" element={
-        <PageErrorBoundary pageName="Enhanced Onboarding">
-          <EnhancedOnboardingPage />
-        </PageErrorBoundary>
-      } />
-      <Route path="/onboarding" element={
-        <PageErrorBoundary pageName="Onboarding">
-          <EnhancedOnboardingPage />
-        </PageErrorBoundary>
-      } />
-      <Route path="/onboarding-old" element={
-        <PageErrorBoundary pageName="Onboarding (Legacy)">
-          <OnboardingPage />
-        </PageErrorBoundary>
-      } />
-      <Route path="/onboarding-legacy" element={
-        <PageErrorBoundary pageName="Onboarding (Original)">
-          <Onboarding />
-        </PageErrorBoundary>
-      } />
       
       {/* Dashboard Routes */}
       <Route path="/dashboard" element={
