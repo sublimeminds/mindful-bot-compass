@@ -154,3 +154,6 @@ verify_jwt = false
 
 [functions.adaptive-therapy-planner]
 verify_jwt = false
+
+[functions.ai-therapist-matching]
+verify_jwt = false

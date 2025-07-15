@@ -64,6 +64,7 @@
     "progress": {
       "fieldCompletion": "Progress Tracker",
       "requiredFields": "Required Fields",
+      "requiredFieldsCompleted": "required fields completed",
       "optionalFields": "Optional Fields",
       "nextStepHint": "Complete all required fields to continue to the next step"
     }

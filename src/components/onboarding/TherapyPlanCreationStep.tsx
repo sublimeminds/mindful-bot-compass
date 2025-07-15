@@ -522,17 +522,25 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
 
         {/* Action Button */}
         <Card>
-          <CardContent className="p-6 text-center">
+          <CardContent className="p-6 text-center space-y-4">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-center justify-center space-x-2 text-green-700">
+                <CheckCircle className="h-5 w-5" />
+                <span className="font-medium">Your personalized therapy plan is ready!</span>
+              </div>
+            </div>
+            
             <Button 
               onClick={() => onComplete(true, planData)}
               size="lg"
-              className="w-full md:w-auto px-8"
+              className="w-full md:w-auto px-8 bg-therapy-600 hover:bg-therapy-700"
             >
               Continue to Dashboard
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            <p className="text-sm text-muted-foreground mt-3">
-              Your therapy plan will be available in your dashboard, and you can schedule your first session.
+            
+            <p className="text-sm text-muted-foreground">
+              You can review and modify your plan anytime from your dashboard
             </p>
           </CardContent>
         </Card>

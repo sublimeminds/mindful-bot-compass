@@ -122,18 +122,17 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
   // Apply emotion-based styling with therapeutic enhancements
   const getEmotionStyling = () => {
     const baseClasses = "transition-all duration-500 ease-in-out";
-    const breathingAnimation = therapeuticMode ? "animate-pulse" : "";
     
     switch (emotion) {
       case 'happy':
       case 'encouraging':
-        return `${baseClasses} ${breathingAnimation} brightness-110 saturate-110 ring-2 ring-therapy-200 shadow-therapy-glow`;
+        return `${baseClasses} brightness-110 saturate-110 ring-2 ring-therapy-200 shadow-therapy-glow`;
       case 'concerned':
-        return `${baseClasses} ${breathingAnimation} brightness-90 contrast-110 ring-2 ring-orange-200 shadow-orange-glow`;
+        return `${baseClasses} brightness-90 contrast-110 ring-2 ring-orange-200 shadow-orange-glow`;
       case 'thoughtful':
-        return `${baseClasses} ${breathingAnimation} brightness-95 contrast-105 ring-2 ring-calm-200 shadow-calm-glow`;
+        return `${baseClasses} brightness-95 contrast-105 ring-2 ring-calm-200 shadow-calm-glow`;
       default:
-        return `${baseClasses} ${breathingAnimation} ring-2 ring-therapy-100 shadow-therapy-subtle`;
+        return `${baseClasses} ring-2 ring-therapy-100 shadow-therapy-subtle`;
     }
   };
 

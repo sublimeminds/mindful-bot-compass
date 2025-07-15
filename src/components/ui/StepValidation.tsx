@@ -31,7 +31,7 @@ export const StepValidation: React.FC<StepValidationProps> = ({ fields, classNam
       <div className="flex items-center justify-between">
         <h4 className="text-sm font-medium">{t('onboarding.progress.fieldCompletion')}</h4>
         <div className="text-xs text-muted-foreground">
-          {completedRequired}/{totalRequired} {t('onboarding.progress.requiredFields')}
+          {completedRequired}/{totalRequired} {t('onboarding.progress.requiredFieldsCompleted')}
         </div>
       </div>
       
