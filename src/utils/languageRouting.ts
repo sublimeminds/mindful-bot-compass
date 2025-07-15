@@ -1,6 +1,6 @@
 import React from 'react';
 import { SEOService } from '@/services/seoService';
-import { getBrowserLanguage, detectBestLanguageMatch } from '@/utils/languageUtils';
+// Temporarily inline language detection to fix module resolution conflict
 
 // Language routing configuration
 export const SUPPORTED_LANGUAGES = [
@@ -59,25 +59,34 @@ export class LanguageRouter {
     return this.extractLanguageFromPath(path).cleanPath;
   }
 
-  // Detect user's preferred language
+  // Detect user's preferred language (simplified to avoid module conflicts)
   static detectPreferredLanguage(): string {
-    // 1. Check URL
-    const urlLang = this.getCurrentLanguage();
-    if (urlLang !== 'en') return urlLang;
+    try {
+      // 1. Check URL
+      const urlLang = this.getCurrentLanguage();
+      if (urlLang !== 'en') return urlLang;
 
-    // 2. Check localStorage
-    const savedLang = localStorage.getItem('preferred-language');
-    if (savedLang && SUPPORTED_LANGUAGES.find(l => l.code === savedLang)) {
-      return savedLang;
+      // 2. Check localStorage
+      const savedLang = localStorage.getItem('preferred-language');
+      if (savedLang && SUPPORTED_LANGUAGES.find(l => l.code === savedLang)) {
+        return savedLang;
+      }
+
+      // 3. Check browser language (inline to avoid import conflicts)
+      const browserLang = navigator.language || 'en';
+      const langCode = browserLang.split('-')[0].toLowerCase();
+      const supportedCodes = SUPPORTED_LANGUAGES.map(l => l.code);
+      
+      if (supportedCodes.includes(langCode)) {
+        return langCode;
+      }
+
+      // 4. Default to English
+      return 'en';
+    } catch (error) {
+      console.warn('Language detection failed, using English:', error);
+      return 'en';
     }
-
-    // 3. Check browser language
-    const supportedCodes = SUPPORTED_LANGUAGES.map(l => l.code);
-    const browserLang = detectBestLanguageMatch(supportedCodes);
-    if (browserLang !== 'en') return browserLang;
-
-    // 4. Default to English
-    return 'en';
   }
 
   // Generate all language alternatives for current page

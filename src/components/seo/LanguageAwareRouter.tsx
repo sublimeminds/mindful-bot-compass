@@ -8,8 +8,16 @@ export const LanguageAwareRouter: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Initialize language routing and SEO on app start
-    LanguageRouter.initializeLanguageRouting();
+    // SAFE INITIALIZATION: Defer to prevent blocking app load
+    const timer = setTimeout(() => {
+      try {
+        LanguageRouter.initializeLanguageRouting();
+      } catch (error) {
+        console.warn('Language routing initialization failed:', error);
+      }
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {

@@ -44,18 +44,33 @@ export const useEnhancedCurrency = () => {
   const [userLocation, setUserLocation] = useState<LocationData | null>(null);
 
   useEffect(() => {
-    // SIMPLIFIED: Only initialize once to prevent infinite loops
-    if (loading) {
-      initializeCurrency();
-      loadSupportedCurrencies();
+    // CIRCUIT BREAKER: Only initialize if not already loading
+    let mounted = true;
+    
+    if (loading && mounted) {
+      const initializeWithTimeout = async () => {
+        try {
+          await Promise.race([
+            initializeCurrency(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Currency init timeout')), 5000))
+          ]);
+          if (mounted) {
+            loadSupportedCurrencies();
+          }
+        } catch (error) {
+          console.warn('Currency initialization failed, using defaults:', error);
+          if (mounted) {
+            setLoading(false);
+          }
+        }
+      };
+      
+      initializeWithTimeout();
     }
     
-    // DISABLED: Periodic updates and location detection causing infinite loading
-    // detectUserLocation();
-    // const interval = setInterval(() => {
-    //   enhancedCurrencyService.updateExchangeRates();
-    // }, 60 * 60 * 1000);
-    // return () => clearInterval(interval);
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const detectUserLocation = async () => {

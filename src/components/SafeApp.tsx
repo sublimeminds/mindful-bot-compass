@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SimpleErrorBoundary from '@/components/SimpleErrorBoundary';
 import { SimpleAuthProvider } from '@/components/SimpleAuthProvider';
-import AppRouter from '@/components/AppRouter';
+import LanguageAwareRouter from '@/components/seo/LanguageAwareRouter';
 
 // Create a simple, reliable QueryClient
 const queryClient = new QueryClient({
@@ -36,7 +36,7 @@ class SafeApp extends Component {
           <Router>
             <SimpleAuthProvider>
               <React.Suspense fallback={<LoadingFallback />}>
-                <AppRouter />
+                <LanguageAwareRouter />
               </React.Suspense>
             </SimpleAuthProvider>
           </Router>
