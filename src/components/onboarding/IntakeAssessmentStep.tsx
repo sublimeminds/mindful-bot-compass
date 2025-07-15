@@ -82,7 +82,7 @@ const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessme
         </CardHeader>
         <CardContent>
           <Slider
-            defaultValue={[stressLevel]}
+            value={[stressLevel]}
             max={10}
             min={1}
             step={1}
@@ -103,7 +103,7 @@ const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessme
         </CardHeader>
         <CardContent>
           <Slider
-            defaultValue={[anxietyLevel]}
+            value={[anxietyLevel]}
             max={10}
             min={1}
             step={1}

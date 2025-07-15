@@ -54,7 +54,7 @@ const notificationOptions: NotificationPreference[] = [
 ];
 
 interface NotificationPreferencesStepProps {
-  onNext: () => void;
+  onNext: (data?: any) => void;
   onBack: () => void;
 }
 
@@ -130,7 +130,7 @@ const NotificationPreferencesStep: React.FC<NotificationPreferencesStepProps> = 
         <GradientButton variant="outline" onClick={onBack}>
           {t('common.back')}
         </GradientButton>
-        <GradientButton onClick={onNext}>
+        <GradientButton onClick={() => onNext({ notificationPreferences: preferences })}>
           {t('onboarding.completion.completeSetup')}
         </GradientButton>
       </div>
