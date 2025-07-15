@@ -1,10 +1,10 @@
 
 import React from 'react';
-import EnhancedHeader from '@/components/navigation/EnhancedHeader';
+import RegionalNavigationHeader from '@/components/navigation/RegionalNavigationHeader';
 
-// Enhanced Header component 
+// Regional Header component with unified country/currency/language selection
 const Header = () => {
-  return <EnhancedHeader />;
+  return <RegionalNavigationHeader />;
 };
 
 export default Header;

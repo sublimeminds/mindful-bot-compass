@@ -6,26 +6,14 @@ import { Switch } from '@/components/ui/switch';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Check, Crown, Zap, Star, Users, Globe, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
-import { useEnhancedCurrency } from '@/hooks/useEnhancedCurrency';
 import GradientLogo from '@/components/ui/GradientLogo';
 import RestyledFamilyPlanSelector from '@/components/family/RestyledFamilyPlanSelector';
-import CurrencySelector from './CurrencySelector';
-import TaxInformation from './TaxInformation';
-import { AdvancedBillingService } from '@/services/advancedBillingService';
+import RegionalPricingContainer from './RegionalPricingContainer';
 
 const EnhancedPricingPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { 
-    currency, 
-    formatPrice, 
-    convertPrice, 
-    changeCurrency, 
-    supportedCurrencies, 
-    userLocation,
-    suggestCurrencyFromLocation,
-    loadingCurrencies
-  } = useEnhancedCurrency();
+  // Regional preferences will be handled by RegionalPricingContainer
   
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [showFamilyPlans, setShowFamilyPlans] = useState(false);
@@ -259,7 +247,16 @@ const EnhancedPricingPage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-12">
+        {/* Regional Pricing Container */}
+        <RegionalPricingContainer
+          plans={plans}
+          billingCycle={billingCycle}
+          onPlanSelect={handleGetStarted}
+          className="mb-12"
+        />
+
+        {/* Keep the old grid as fallback, but hide it since we're using RegionalPricingContainer
+        <div className="hidden grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-12">
           {plans.map((plan, index) => {
             const IconComponent = plan.icon;
             const savings = getSavings(plan);

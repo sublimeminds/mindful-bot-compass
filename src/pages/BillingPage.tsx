@@ -4,14 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { useEnhancedCurrency } from '@/hooks/useEnhancedCurrency';
+import { useRegionalPreferences } from '@/hooks/useRegionalPreferences';
 import { CreditCard, Lock, CheckCircle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const BillingPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { formatPrice, convertPrice } = useEnhancedCurrency();
+  const { formatPrice, calculateRegionalPricing, calculateTax } = useRegionalPreferences();
   const { toast } = useToast();
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -67,7 +67,7 @@ const BillingPage = () => {
   }
 
   const planPrice = selectedPlan.price || 0;
-  const formattedPrice = formatPrice(convertPrice(planPrice));
+  const formattedPrice = formatPrice(planPrice);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50 py-12">
