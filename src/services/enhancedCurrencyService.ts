@@ -33,28 +33,57 @@ class EnhancedCurrencyService {
   private readonly UPDATE_INTERVAL = 1000 * 60 * 60; // 1 hour
   private isLoading: boolean = false;
 
-  // Expanded currency symbols and names with more major currencies
+  // Comprehensive major world currencies
   private readonly currencyInfo = {
+    // Americas
     USD: { symbol: '$', name: 'US Dollar', region: 'Americas' },
-    IDR: { symbol: 'Rp', name: 'Indonesian Rupiah', region: 'Asia' },
-    EUR: { symbol: '€', name: 'Euro', region: 'Europe' },
-    GBP: { symbol: '£', name: 'British Pound', region: 'Europe' },
-    JPY: { symbol: '¥', name: 'Japanese Yen', region: 'Asia' },
     CAD: { symbol: 'C$', name: 'Canadian Dollar', region: 'Americas' },
-    AUD: { symbol: 'A$', name: 'Australian Dollar', region: 'Oceania' },
-    CHF: { symbol: 'CHF', name: 'Swiss Franc', region: 'Europe' },
-    CNY: { symbol: '¥', name: 'Chinese Yuan', region: 'Asia' },
-    INR: { symbol: '₹', name: 'Indian Rupee', region: 'Asia' },
-    SGD: { symbol: 'S$', name: 'Singapore Dollar', region: 'Asia' },
-    MYR: { symbol: 'RM', name: 'Malaysian Ringgit', region: 'Asia' },
-    THB: { symbol: '฿', name: 'Thai Baht', region: 'Asia' },
-    KRW: { symbol: '₩', name: 'South Korean Won', region: 'Asia' },
     BRL: { symbol: 'R$', name: 'Brazilian Real', region: 'Americas' },
     MXN: { symbol: '$', name: 'Mexican Peso', region: 'Americas' },
-    ZAR: { symbol: 'R', name: 'South African Rand', region: 'Africa' },
+    ARS: { symbol: '$', name: 'Argentine Peso', region: 'Americas' },
+    CLP: { symbol: '$', name: 'Chilean Peso', region: 'Americas' },
+    COP: { symbol: '$', name: 'Colombian Peso', region: 'Americas' },
+    PEN: { symbol: 'S/', name: 'Peruvian Sol', region: 'Americas' },
+    
+    // Europe
+    EUR: { symbol: '€', name: 'Euro', region: 'Europe' },
+    GBP: { symbol: '£', name: 'British Pound', region: 'Europe' },
+    CHF: { symbol: 'CHF', name: 'Swiss Franc', region: 'Europe' },
     PLN: { symbol: 'zł', name: 'Polish Zloty', region: 'Europe' },
     SEK: { symbol: 'kr', name: 'Swedish Krona', region: 'Europe' },
     NOK: { symbol: 'kr', name: 'Norwegian Krone', region: 'Europe' },
+    DKK: { symbol: 'kr', name: 'Danish Krone', region: 'Europe' },
+    CZK: { symbol: 'Kč', name: 'Czech Koruna', region: 'Europe' },
+    HUF: { symbol: 'Ft', name: 'Hungarian Forint', region: 'Europe' },
+    RUB: { symbol: '₽', name: 'Russian Ruble', region: 'Europe' },
+    TRY: { symbol: '₺', name: 'Turkish Lira', region: 'Europe' },
+    
+    // Asia
+    JPY: { symbol: '¥', name: 'Japanese Yen', region: 'Asia' },
+    CNY: { symbol: '¥', name: 'Chinese Yuan', region: 'Asia' },
+    INR: { symbol: '₹', name: 'Indian Rupee', region: 'Asia' },
+    KRW: { symbol: '₩', name: 'South Korean Won', region: 'Asia' },
+    SGD: { symbol: 'S$', name: 'Singapore Dollar', region: 'Asia' },
+    HKD: { symbol: 'HK$', name: 'Hong Kong Dollar', region: 'Asia' },
+    TWD: { symbol: 'NT$', name: 'Taiwan Dollar', region: 'Asia' },
+    THB: { symbol: '฿', name: 'Thai Baht', region: 'Asia' },
+    MYR: { symbol: 'RM', name: 'Malaysian Ringgit', region: 'Asia' },
+    IDR: { symbol: 'Rp', name: 'Indonesian Rupiah', region: 'Asia' },
+    PHP: { symbol: '₱', name: 'Philippine Peso', region: 'Asia' },
+    VND: { symbol: '₫', name: 'Vietnamese Dong', region: 'Asia' },
+    
+    // Middle East
+    AED: { symbol: 'د.إ', name: 'UAE Dirham', region: 'Middle East' },
+    SAR: { symbol: '﷼', name: 'Saudi Riyal', region: 'Middle East' },
+    ILS: { symbol: '₪', name: 'Israeli Shekel', region: 'Middle East' },
+    
+    // Africa
+    ZAR: { symbol: 'R', name: 'South African Rand', region: 'Africa' },
+    EGP: { symbol: '£', name: 'Egyptian Pound', region: 'Africa' },
+    
+    // Oceania
+    AUD: { symbol: 'A$', name: 'Australian Dollar', region: 'Oceania' },
+    NZD: { symbol: 'NZ$', name: 'New Zealand Dollar', region: 'Oceania' },
   };
 
   async updateExchangeRates(): Promise<void> {
@@ -66,27 +95,56 @@ class EnhancedCurrencyService {
       // Use static fallback rates instead
       console.log('Using static exchange rates to prevent infinite loading');
       
-      // Updated fallback rates with current accurate values
+      // Updated fallback rates with current accurate values (all vs USD)
+      // Americas
       this.exchangeRates.set('USD', 1.0);
-      this.exchangeRates.set('IDR', 15680.0);
-      this.exchangeRates.set('EUR', 0.92);
-      this.exchangeRates.set('GBP', 0.79);
-      this.exchangeRates.set('JPY', 149.0);
       this.exchangeRates.set('CAD', 1.36);
-      this.exchangeRates.set('AUD', 1.53);
-      this.exchangeRates.set('CHF', 0.90);
-      this.exchangeRates.set('CNY', 7.25);
-      this.exchangeRates.set('INR', 83.0);
-      this.exchangeRates.set('SGD', 1.34);
-      this.exchangeRates.set('MYR', 4.47);
-      this.exchangeRates.set('THB', 35.5);
-      this.exchangeRates.set('KRW', 1320.0);
       this.exchangeRates.set('BRL', 5.9);
       this.exchangeRates.set('MXN', 17.2);
-      this.exchangeRates.set('ZAR', 18.5);
+      this.exchangeRates.set('ARS', 365.0);
+      this.exchangeRates.set('CLP', 950.0);
+      this.exchangeRates.set('COP', 3950.0);
+      this.exchangeRates.set('PEN', 3.7);
+      
+      // Europe
+      this.exchangeRates.set('EUR', 0.92);
+      this.exchangeRates.set('GBP', 0.79);
+      this.exchangeRates.set('CHF', 0.90);
       this.exchangeRates.set('PLN', 4.1);
       this.exchangeRates.set('SEK', 10.8);
       this.exchangeRates.set('NOK', 10.9);
+      this.exchangeRates.set('DKK', 6.9);
+      this.exchangeRates.set('CZK', 23.5);
+      this.exchangeRates.set('HUF', 365.0);
+      this.exchangeRates.set('RUB', 75.0);
+      this.exchangeRates.set('TRY', 29.0);
+      
+      // Asia
+      this.exchangeRates.set('JPY', 149.0);
+      this.exchangeRates.set('CNY', 7.25);
+      this.exchangeRates.set('INR', 83.0);
+      this.exchangeRates.set('KRW', 1320.0);
+      this.exchangeRates.set('SGD', 1.34);
+      this.exchangeRates.set('HKD', 7.8);
+      this.exchangeRates.set('TWD', 31.5);
+      this.exchangeRates.set('THB', 35.5);
+      this.exchangeRates.set('MYR', 4.47);
+      this.exchangeRates.set('IDR', 15680.0);
+      this.exchangeRates.set('PHP', 56.0);
+      this.exchangeRates.set('VND', 24500.0);
+      
+      // Middle East
+      this.exchangeRates.set('AED', 3.67);
+      this.exchangeRates.set('SAR', 3.75);
+      this.exchangeRates.set('ILS', 3.7);
+      
+      // Africa
+      this.exchangeRates.set('ZAR', 18.5);
+      this.exchangeRates.set('EGP', 31.0);
+      
+      // Oceania
+      this.exchangeRates.set('AUD', 1.53);
+      this.exchangeRates.set('NZD', 1.65);
       
       this.lastUpdate = new Date();
     } catch (error) {
@@ -165,16 +223,21 @@ class EnhancedCurrencyService {
     const info = this.currencyInfo[currencyCode as keyof typeof this.currencyInfo];
     
     try {
+      // Currencies that don't use decimal places
+      const noDecimalCurrencies = ['IDR', 'JPY', 'KRW', 'VND', 'CLP', 'HUF', 'COP'];
+      const useDecimals = !noDecimalCurrencies.includes(currencyCode);
+      
       return new Intl.NumberFormat(locale || 'en-US', {
         style: 'currency',
         currency: currencyCode,
-        minimumFractionDigits: ['IDR', 'JPY', 'KRW'].includes(currencyCode) ? 0 : 2,
-        maximumFractionDigits: ['IDR', 'JPY', 'KRW'].includes(currencyCode) ? 0 : 2,
+        minimumFractionDigits: useDecimals ? 2 : 0,
+        maximumFractionDigits: useDecimals ? 2 : 0,
       }).format(amount);
     } catch (error) {
       // Fallback formatting - prevent double currency code display
       const symbol = info?.symbol || '';
-      const formattedAmount = ['IDR', 'JPY', 'KRW'].includes(currencyCode)
+      const noDecimalCurrencies = ['IDR', 'JPY', 'KRW', 'VND', 'CLP', 'HUF', 'COP'];
+      const formattedAmount = noDecimalCurrencies.includes(currencyCode)
         ? Math.round(amount).toLocaleString()
         : amount.toFixed(2);
       return `${symbol}${formattedAmount}`;
