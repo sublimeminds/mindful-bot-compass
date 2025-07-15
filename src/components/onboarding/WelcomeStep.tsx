@@ -9,6 +9,7 @@ interface WelcomeStepProps {
 }
 
 const WelcomeStep: React.FC<WelcomeStepProps> = ({ onNext }) => {
+  console.log('🚀 WelcomeStep: onNext function received:', typeof onNext);
   return (
     <div className="text-center space-y-8">
       <div className="space-y-4">
@@ -55,7 +56,10 @@ const WelcomeStep: React.FC<WelcomeStepProps> = ({ onNext }) => {
           unique needs, cultural background, and therapy goals to create the most effective personalized plan.
         </p>
         <GradientButton 
-          onClick={onNext} 
+          onClick={() => {
+            console.log('🔥 WelcomeStep: Begin Your Journey button clicked!');
+            onNext();
+          }} 
           size="lg" 
           className="w-full max-w-md"
         >

@@ -56,7 +56,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       if (!user?.id) return 0;
       
       const { count } = await supabase
-        .from('therapy_plans')
+        .from('adaptive_therapy_plans')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', user.id);
         
@@ -117,7 +117,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   // Filter steps based on subscription status
   const steps = shouldShowPlanSelection() 
     ? allSteps 
-    : allSteps.filter((_, index) => index !== 11); // Remove plan selection step (index 11, not 12)
+    : allSteps.filter((_, index) => index !== 12); // Remove plan selection step (index 12)
   
   console.log("🔢 EnhancedSmartOnboardingFlow: Total steps =", steps.length, "Show plan selection =", shouldShowPlanSelection());
 
@@ -126,6 +126,8 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   };
 
   const handleNext = (stepData?: any) => {
+    console.log('🎯 EnhancedSmartOnboardingFlow: handleNext called with stepData:', stepData);
+    console.log('🎯 Current step:', currentStep, 'Total steps:', steps.length);
     const newData = stepData ? { ...onboardingData, ...stepData } : onboardingData;
     
     if (stepData) {
@@ -162,12 +164,14 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     }));
   };
 
-  // If user is authenticated, skip auth step
+  // If user is authenticated, skip auth step but only once during initial load
   useEffect(() => {
-    if (user && currentStep === 1) {
+    if (user && currentStep === 1 && !progress.lastSavedAt) {
+      console.log('🔄 User authenticated, skipping auth step');
       setCurrentStep(2);
+      updateStep(2);
     }
-  }, [user, currentStep]);
+  }, [user]);
 
   if (showIntro) {
     return <AnimatedOnboardingIntro onGetStarted={handleGetStarted} />;
