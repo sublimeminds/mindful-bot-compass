@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { PageErrorBoundary } from "@/components/bulletproof/PageErrorBoundary";
 
 // Public Layout wrapper for marketing/public pages
@@ -621,12 +621,8 @@ const AppRouter = () => {
         </PageErrorBoundary>
       } />
 
-      {/* OLD ADMIN ROUTES - Redirect to user dashboard equivalents */}
-      <Route path="/admin" element={
-        <PageErrorBoundary pageName="Dashboard">
-          <DashboardPageWrapper><Dashboard /></DashboardPageWrapper>
-        </PageErrorBoundary>
-      } />
+      {/* ADMIN ROUTES - Redirect to secure admin portal */}
+      <Route path="/admin" element={<Navigate to="/secure-admin-portal-x9k2" replace />} />
 
       <Route path="/admin/ai" element={
         <PageErrorBoundary pageName="AI Personalization">
