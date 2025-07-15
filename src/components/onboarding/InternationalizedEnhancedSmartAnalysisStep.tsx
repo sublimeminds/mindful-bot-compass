@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import GradientButton from '@/components/ui/GradientButton';
 import { Progress } from '@/components/ui/progress';
 import { Brain, Heart, Target, CheckCircle, Clock, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -70,12 +70,12 @@ const InternationalizedEnhancedSmartAnalysisStep: React.FC<EnhancedSmartAnalysis
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
+        <GradientButton variant="outline" onClick={onBack}>
           {t('common.back', 'Back')}
-        </Button>
-        <Button onClick={onNext} disabled={!analysisComplete}>
-          {t('common.next', 'Next')}
-        </Button>
+        </GradientButton>
+        <GradientButton onClick={onNext} disabled={!analysisComplete}>
+          {t('onboarding.completion.choosingTherapist', 'Choose Your Therapist')}
+        </GradientButton>
       </div>
     </div>
   );

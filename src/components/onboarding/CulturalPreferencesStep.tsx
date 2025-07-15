@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import GradientButton from '@/components/ui/GradientButton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, ArrowRight, Globe, Users, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Globe, Users, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface CulturalPreferencesStepProps {
@@ -298,14 +298,13 @@ const CulturalPreferencesStep = ({
 
       {/* Navigation Buttons */}
       <div className="flex justify-between">
-        <Button onClick={onBack} variant="outline">
+        <GradientButton onClick={onBack} variant="outline">
           <ArrowLeft className="h-4 w-4 mr-2" />
           {t('common.back')}
-        </Button>
-        <Button onClick={handleSubmit}>
+        </GradientButton>
+        <GradientButton onClick={handleSubmit}>
           {t('common.continue')}
-          <ArrowRight className="h-4 w-4 ml-2" />
-        </Button>
+        </GradientButton>
       </div>
     </div>
   );

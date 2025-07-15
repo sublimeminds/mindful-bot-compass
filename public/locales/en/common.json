@@ -43,7 +43,7 @@
       "mentalHealth": "Mental Health Screening",
       "cultural": "Cultural Preferences",
       "analysis": "AI Analysis",
-      "therapist": "Choose Therapist",
+      "therapistMatch": "Choose Therapist",
       "plan": "Select Plan",
       "notifications": "Notifications"
     },
@@ -52,6 +52,20 @@
       "choosingTherapist": "Now choose your preferred therapist",
       "readyToStart": "You're ready to start your therapy journey!",
       "completeSetup": "Complete Setup"
+    },
+    "therapistMatch": {
+      "title": "Therapist Match Results",
+      "subtitle": "Based on your assessment, we've matched you with compatible therapists",
+      "compatibilityScore": "Compatibility Score",
+      "selectTherapist": "Select This Therapist",
+      "viewProfile": "View Full Profile",
+      "matchFactors": "Why this therapist is a good match for you:"
+    },
+    "progress": {
+      "fieldCompletion": "Field Completion",
+      "requiredFields": "Required fields",
+      "optionalFields": "Optional fields",
+      "nextStepHint": "Complete all required fields to continue"
     }
   }
 }

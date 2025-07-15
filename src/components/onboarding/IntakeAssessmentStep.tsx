@@ -178,22 +178,6 @@ const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessme
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
-            <span>Additional Information (Optional)</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            placeholder="Share anything else that might help us understand your situation better..."
-            value={additionalNotes}
-            onChange={(e) => setAdditionalNotes(e.target.value)}
-            rows={3}
-          />
-        </CardContent>
-      </Card>
 
       {!isComplete && (
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">

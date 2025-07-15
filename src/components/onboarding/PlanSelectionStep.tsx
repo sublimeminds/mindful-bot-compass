@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import GradientButton from '@/components/ui/GradientButton';
 import { Badge } from '@/components/ui/badge';
-import { Check, Crown, Zap, Heart, Star, Sparkles, AlertCircle } from 'lucide-react';
+import { Check, Crown, Zap, Heart, Star, Sparkles, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 import { useAuth } from '@/hooks/useAuth';
@@ -45,49 +45,56 @@ const PlanSelectionStep = ({ onNext, onBack, onboardingData, showAsOptionalUpsel
   const plans = [
     {
       id: 'free',
-      name: 'Free',
+      name: 'Essential',
       price: '$0',
       period: '/month',
       features: [
         'Basic mood tracking',
-        '3 therapy sessions per month',
-        'Community support',
-        'Basic insights'
+        '3 AI therapy sessions per month',
+        'Community forum access',
+        'Basic progress insights',
+        'Self-guided exercises'
       ],
       icon: Heart,
-      popular: false
+      popular: false,
+      description: 'Perfect for getting started with digital therapy'
     },
     {
       id: 'premium',
-      name: 'Premium',
-      price: '$29',
+      name: 'Professional',
+      price: '$39',
       period: '/month',
+      originalPrice: '$49',
       features: [
+        'Unlimited AI therapy sessions',
+        'Personalized therapy plans',
         'Advanced mood analytics',
-        'Unlimited therapy sessions',
-        'Personalized insights',
-        'Priority support',
-        'Goal tracking',
-        'Progress reports'
+        'Priority support (24/7)',
+        'Goal tracking & milestones',
+        'Progress reports & insights',
+        'Crisis intervention support'
       ],
       icon: Star,
-      popular: true
+      popular: true,
+      description: 'Most comprehensive therapy experience with unlimited access'
     },
     {
       id: 'pro',
-      name: 'Pro',
-      price: '$49',
+      name: 'Enterprise',
+      price: '$79',
       period: '/month',
       features: [
-        'Everything in Premium',
-        'AI-powered recommendations',
-        'Custom therapy plans',
-        'Family sharing',
-        'Expert consultations',
-        'Advanced analytics'
+        'Everything in Professional',
+        'Family account (up to 5 members)',
+        'Human therapist consultations',
+        'Custom therapy protocols',
+        'Advanced analytics dashboard',
+        'API access for integrations',
+        'Dedicated account manager'
       ],
       icon: Crown,
-      popular: false
+      popular: false,
+      description: 'Enterprise-grade solution for organizations and families'
     }
   ];
 
@@ -146,11 +153,17 @@ const PlanSelectionStep = ({ onNext, onBack, onboardingData, showAsOptionalUpsel
                 <IconComponent className="h-12 w-12 mx-auto text-therapy-500" />
                 <CardTitle className="text-xl">{plan.name}</CardTitle>
                 <div className="text-3xl font-bold">
+                  {plan.originalPrice && (
+                    <span className="text-lg line-through text-muted-foreground mr-2">
+                      {plan.originalPrice}
+                    </span>
+                  )}
                   {plan.price}
                   <span className="text-sm font-normal text-muted-foreground">
                     {plan.period}
                   </span>
                 </div>
+                <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
               </CardHeader>
               
               <CardContent className="space-y-4">
@@ -163,13 +176,13 @@ const PlanSelectionStep = ({ onNext, onBack, onboardingData, showAsOptionalUpsel
                   ))}
                 </ul>
                 
-                <Button
+                <GradientButton
                   variant={selectedPlan === plan.id ? 'default' : 'outline'}
                   className="w-full"
                   onClick={() => setSelectedPlan(plan.id)}
                 >
                   {selectedPlan === plan.id ? 'Selected' : 'Select Plan'}
-                </Button>
+                </GradientButton>
               </CardContent>
             </Card>
           );
@@ -177,21 +190,21 @@ const PlanSelectionStep = ({ onNext, onBack, onboardingData, showAsOptionalUpsel
       </div>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
-          Previous
-        </Button>
+        <GradientButton variant="outline" onClick={onBack}>
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          {t('common.back')}
+        </GradientButton>
         <div className="flex space-x-3">
           {showAsOptionalUpsell && !selectedPlan && (
-            <Button 
+            <GradientButton 
               variant="outline"
               onClick={() => onNext({ skipPlanSelection: true })}
             >
               Skip for now
-            </Button>
+            </GradientButton>
           )}
-          <Button 
+          <GradientButton 
             onClick={() => onNext({ selectedPlan, planData: plans.find(p => p.id === selectedPlan) })} 
-            className="bg-therapy-500 hover:bg-therapy-600"
             disabled={!selectedPlan}
           >
             {selectedPlan 
@@ -200,7 +213,7 @@ const PlanSelectionStep = ({ onNext, onBack, onboardingData, showAsOptionalUpsel
               ? 'Select a plan to continue'
               : 'Select a plan'
             }
-          </Button>
+          </GradientButton>
         </div>
       </div>
     </div>

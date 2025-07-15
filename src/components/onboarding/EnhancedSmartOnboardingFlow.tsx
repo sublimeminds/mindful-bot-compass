@@ -13,7 +13,7 @@ import RelationshipHistoryStep from './RelationshipHistoryStep';
 import MentalHealthScreeningStep from './MentalHealthScreeningStep';
 import CulturalPreferencesStep from './CulturalPreferencesStep';
 import InternationalizedEnhancedSmartAnalysisStep from './InternationalizedEnhancedSmartAnalysisStep';
-import TherapistPersonalityStep from './TherapistPersonalityStep';
+import TherapistMatchStep from './TherapistMatchStep';
 import PlanSelectionStep from './PlanSelectionStep';
 import NotificationPreferencesStep from './NotificationPreferencesStep';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useOnboardingProgress } from '@/hooks/useOnboardingProgress';
 
 interface EnhancedSmartOnboardingFlowProps {
   onComplete: (data: any) => void;
@@ -35,21 +36,12 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   const { user } = useAuth();
   const navigate = useNavigate();
   const subscriptionAccess = useSubscriptionAccess();
-  const [showIntro, setShowIntro] = useState(true);
-  const [currentStep, setCurrentStep] = useState(0);
+  const { progress, saveProgress, updateStep, clearProgress } = useOnboardingProgress();
+  const [showIntro, setShowIntro] = useState(!progress.lastSavedAt);
+  const [currentStep, setCurrentStep] = useState(progress.currentStep);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
-  const [onboardingData, setOnboardingData] = useState<any>({
-    culturalPreferences: {
-      primaryLanguage: 'en',
-      culturalBackground: '',
-      familyStructure: 'individual',
-      communicationStyle: 'direct',
-      religiousConsiderations: false,
-      therapyApproachPreferences: [],
-      culturalSensitivities: []
-    }
-  });
+  const [onboardingData, setOnboardingData] = useState<any>(progress.data);
 
   useSEO({
     title: 'Get Started - TherapySync',
@@ -117,7 +109,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     { component: MentalHealthScreeningStep, titleKey: 'Mental Health Screening' },
     { component: CulturalPreferencesStep, titleKey: 'Cultural Preferences' },
     { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'AI Analysis' },
-    { component: TherapistPersonalityStep, titleKey: 'Choose Your Therapist' },
+    { component: TherapistMatchStep, titleKey: 'Choose Your Therapist' },
     { component: PlanSelectionStep, titleKey: 'Select Your Plan' },
     { component: NotificationPreferencesStep, titleKey: 'Notification Settings' }
   ];
@@ -134,23 +126,30 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   };
 
   const handleNext = (stepData?: any) => {
+    const newData = stepData ? { ...onboardingData, ...stepData } : onboardingData;
+    
     if (stepData) {
-      setOnboardingData(prev => ({ ...prev, ...stepData }));
+      setOnboardingData(newData);
+      saveProgress(stepData, currentStep);
     }
 
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      updateStep(nextStep);
     } else {
       localStorage.removeItem('selectedPlan');
-      // Trigger Elite AI Hub integration here
-      console.log('Onboarding complete, sending data to Elite AI Hub:', onboardingData);
-      onComplete(onboardingData);
+      clearProgress();
+      console.log('Onboarding complete, sending data to Elite AI Hub:', newData);
+      onComplete(newData);
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
+      updateStep(prevStep);
     } else {
       setShowIntro(true);
     }
