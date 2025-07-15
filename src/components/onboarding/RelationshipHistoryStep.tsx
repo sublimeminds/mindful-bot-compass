@@ -7,7 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
-import { Users, Heart, MessageCircle, Shield, Phone, Frown } from 'lucide-react';
+import { Users, Heart, MessageCircle, Shield, Phone, Frown, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { StepValidation } from '@/components/ui/StepValidation';
+import GradientButton from '@/components/ui/GradientButton';
 
 interface RelationshipHistoryStepProps {
   onNext: (data: any) => void;
@@ -16,16 +18,16 @@ interface RelationshipHistoryStepProps {
 }
 
 const RelationshipHistoryStep = ({ onNext, onBack, onboardingData }: RelationshipHistoryStepProps) => {
-  const [relationshipStatus, setRelationshipStatus] = useState('');
-  const [relationshipSatisfaction, setRelationshipSatisfaction] = useState(5);
-  const [attachmentStyle, setAttachmentStyle] = useState('');
-  const [socialSupport, setSocialSupport] = useState(5);
-  const [communicationStyle, setCommunicationStyle] = useState('');
-  const [relationshipChallenges, setRelationshipChallenges] = useState<string[]>([]);
-  const [conflictResolution, setConflictResolution] = useState('');
-  const [socialAnxiety, setSocialAnxiety] = useState('');
-  const [relationshipGoals, setRelationshipGoals] = useState('');
-  const [supportNetwork, setSupportNetwork] = useState<string[]>([]);
+  const [relationshipStatus, setRelationshipStatus] = useState(onboardingData?.relationshipHistory?.relationshipStatus || '');
+  const [relationshipSatisfaction, setRelationshipSatisfaction] = useState(onboardingData?.relationshipHistory?.relationshipSatisfaction || 5);
+  const [attachmentStyle, setAttachmentStyle] = useState(onboardingData?.relationshipHistory?.attachmentStyle || '');
+  const [socialSupport, setSocialSupport] = useState(onboardingData?.relationshipHistory?.socialSupport || 5);
+  const [communicationStyle, setCommunicationStyle] = useState(onboardingData?.relationshipHistory?.communicationStyle || '');
+  const [relationshipChallenges, setRelationshipChallenges] = useState<string[]>(onboardingData?.relationshipHistory?.relationshipChallenges || []);
+  const [conflictResolution, setConflictResolution] = useState(onboardingData?.relationshipHistory?.conflictResolution || '');
+  const [socialAnxiety, setSocialAnxiety] = useState(onboardingData?.relationshipHistory?.socialAnxiety || '');
+  const [relationshipGoals, setRelationshipGoals] = useState(onboardingData?.relationshipHistory?.relationshipGoals || '');
+  const [supportNetwork, setSupportNetwork] = useState<string[]>(onboardingData?.relationshipHistory?.supportNetwork || []);
 
   const relationshipStatuses = [
     'Single, not dating',
@@ -163,6 +165,17 @@ const RelationshipHistoryStep = ({ onNext, onBack, onboardingData }: Relationshi
   };
 
   const isComplete = relationshipStatus && attachmentStyle && communicationStyle && conflictResolution && socialAnxiety;
+
+  // Validation fields for step validation component
+  const validationFields = [
+    { name: 'relationshipStatus', label: 'Relationship Status', isValid: !!relationshipStatus, isRequired: true },
+    { name: 'attachmentStyle', label: 'Attachment Style', isValid: !!attachmentStyle, isRequired: true },
+    { name: 'communicationStyle', label: 'Communication Style', isValid: !!communicationStyle, isRequired: true },
+    { name: 'conflictResolution', label: 'Conflict Resolution', isValid: !!conflictResolution, isRequired: true },
+    { name: 'socialAnxiety', label: 'Social Comfort Level', isValid: !!socialAnxiety, isRequired: true },
+    { name: 'supportNetwork', label: 'Support Network', isValid: supportNetwork.length > 0, isRequired: false },
+    { name: 'relationshipGoals', label: 'Relationship Goals', isValid: !!relationshipGoals, isRequired: false }
+  ];
 
   return (
     <div className="space-y-6">
@@ -460,17 +473,20 @@ const RelationshipHistoryStep = ({ onNext, onBack, onboardingData }: Relationshi
         </Card>
       )}
 
+      {/* Step Validation */}
+      <StepValidation fields={validationFields} className="mb-4" />
+
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
+        <GradientButton variant="outline" onClick={onBack}>
           Back
-        </Button>
-        <Button 
+        </GradientButton>
+        <GradientButton 
           onClick={handleSubmit}
           disabled={!isComplete}
-          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
+          className={`${isComplete ? 'bg-green-500 hover:bg-green-600' : 'opacity-50 cursor-not-allowed'}`}
         >
           Continue
-        </Button>
+        </GradientButton>
       </div>
     </div>
   );

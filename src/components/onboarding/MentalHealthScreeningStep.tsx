@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Heart, Brain, CheckCircle2 } from 'lucide-react';
 import GradientButton from '@/components/ui/GradientButton';
 import { useTranslation } from 'react-i18next';
+import { StepValidation } from '@/components/ui/StepValidation';
 
 interface MentalHealthScreeningStepProps {
   onNext: (data?: any) => void;
@@ -62,6 +63,12 @@ const MentalHealthScreeningStep = ({ onNext, onBack, onboardingData }: MentalHea
   };
 
   const progress = (phq9Score !== null && gad7Score !== null) ? 100 : (phq9Score !== null || gad7Score !== null) ? 50 : 0;
+
+  // Validation fields for step validation component
+  const validationFields = [
+    { name: 'phq9Score', label: 'PHQ-9 Depression Assessment', isValid: phq9Score !== null, isRequired: true },
+    { name: 'gad7Score', label: 'GAD-7 Anxiety Assessment', isValid: gad7Score !== null, isRequired: true }
+  ];
 
   return (
     <div className="space-y-4 max-w-3xl mx-auto">
@@ -171,14 +178,8 @@ const MentalHealthScreeningStep = ({ onNext, onBack, onboardingData }: MentalHea
         </div>
       )}
 
-      {(phq9Score === null || gad7Score === null) && (
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-          <p className="text-sm text-orange-800 flex items-center">
-            <AlertTriangle className="h-4 w-4 mr-2" />
-            Please complete both assessments to continue
-          </p>
-        </div>
-      )}
+      {/* Step Validation */}
+      <StepValidation fields={validationFields} className="mb-4" />
 
       <div className="flex justify-between pt-4">
         <GradientButton variant="outline" onClick={onBack}>
@@ -187,7 +188,7 @@ const MentalHealthScreeningStep = ({ onNext, onBack, onboardingData }: MentalHea
         <GradientButton
           onClick={handleSubmit}
           disabled={phq9Score === null || gad7Score === null}
-          className={(phq9Score === null || gad7Score === null) ? 'opacity-50 cursor-not-allowed' : ''}
+          className={`${(phq9Score !== null && gad7Score !== null) ? 'bg-green-500 hover:bg-green-600' : 'opacity-50 cursor-not-allowed'}`}
         >
           {t('common.continue')}
         </GradientButton>

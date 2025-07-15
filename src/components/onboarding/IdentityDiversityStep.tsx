@@ -6,7 +6,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Brain, Users, Accessibility } from 'lucide-react';
+import { Heart, Brain, Users, Accessibility, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { StepValidation } from '@/components/ui/StepValidation';
+import GradientButton from '@/components/ui/GradientButton';
 
 interface IdentityDiversityStepProps {
   onNext: (data: any) => void;
@@ -15,15 +17,15 @@ interface IdentityDiversityStepProps {
 }
 
 const IdentityDiversityStep = ({ onNext, onBack, onboardingData }: IdentityDiversityStepProps) => {
-  const [genderIdentity, setGenderIdentity] = useState('');
-  const [sexualOrientation, setSexualOrientation] = useState('');
-  const [lgbtqSupport, setLgbtqSupport] = useState(false);
-  const [neurodiversity, setNeurodiversity] = useState<string[]>([]);
-  const [disabilities, setDisabilities] = useState<string[]>([]);
-  const [accessibilityNeeds, setAccessibilityNeeds] = useState<string[]>([]);
-  const [culturalIdentity, setCulturalIdentity] = useState<string[]>([]);
-  const [religiousIdentity, setReligiousIdentity] = useState('');
-  const [additionalIdentities, setAdditionalIdentities] = useState('');
+  const [genderIdentity, setGenderIdentity] = useState(onboardingData?.identityDiversity?.genderIdentity || '');
+  const [sexualOrientation, setSexualOrientation] = useState(onboardingData?.identityDiversity?.sexualOrientation || '');
+  const [lgbtqSupport, setLgbtqSupport] = useState(onboardingData?.identityDiversity?.lgbtqSupport || false);
+  const [neurodiversity, setNeurodiversity] = useState<string[]>(onboardingData?.identityDiversity?.neurodiversity || []);
+  const [disabilities, setDisabilities] = useState<string[]>(onboardingData?.identityDiversity?.disabilities || []);
+  const [accessibilityNeeds, setAccessibilityNeeds] = useState<string[]>(onboardingData?.identityDiversity?.accessibilityNeeds || []);
+  const [culturalIdentity, setCulturalIdentity] = useState<string[]>(onboardingData?.identityDiversity?.culturalIdentity || []);
+  const [religiousIdentity, setReligiousIdentity] = useState(onboardingData?.identityDiversity?.religiousIdentity || '');
+  const [additionalIdentities, setAdditionalIdentities] = useState(onboardingData?.identityDiversity?.additionalIdentities || '');
 
   const genderOptions = [
     'Woman', 'Man', 'Non-binary', 'Genderfluid', 'Genderqueer', 
@@ -107,6 +109,16 @@ const IdentityDiversityStep = ({ onNext, onBack, onboardingData }: IdentityDiver
     };
     onNext(data);
   };
+
+  // Validation fields for step validation component
+  const validationFields = [
+    { name: 'genderIdentity', label: 'Gender Identity', isValid: !!genderIdentity, isRequired: false },
+    { name: 'sexualOrientation', label: 'Sexual Orientation', isValid: !!sexualOrientation, isRequired: false },
+    { name: 'culturalIdentity', label: 'Cultural Identity', isValid: culturalIdentity.length > 0, isRequired: false },
+    { name: 'religiousIdentity', label: 'Religious Identity', isValid: !!religiousIdentity, isRequired: false }
+  ];
+
+  const completedFields = validationFields.filter(f => f.isValid).length;
 
   return (
     <div className="space-y-6">
@@ -327,16 +339,19 @@ const IdentityDiversityStep = ({ onNext, onBack, onboardingData }: IdentityDiver
         </Card>
       )}
 
+      {/* Step Validation */}
+      <StepValidation fields={validationFields} className="mb-4" />
+
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
+        <GradientButton variant="outline" onClick={onBack}>
           Previous
-        </Button>
-        <Button 
+        </GradientButton>
+        <GradientButton 
           onClick={handleNext}
-          className="bg-therapy-500 hover:bg-therapy-600"
+          className={`${completedFields > 0 ? 'bg-green-500 hover:bg-green-600' : ''}`}
         >
           Continue
-        </Button>
+        </GradientButton>
       </div>
     </div>
   );

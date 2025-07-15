@@ -36,6 +36,14 @@ const TherapistMatchStep = ({ onNext, onBack, onboardingData }: TherapistMatchSt
     },
   });
 
+  // Helper function to determine therapist access - MOVED BEFORE USE
+  const getTherapistAccess = (therapistTier: string, userTier: string) => {
+    const tierHierarchy = { free: 0, premium: 1, professional: 2 };
+    const therapistLevel = tierHierarchy[therapistTier as keyof typeof tierHierarchy] || 0;
+    const userLevel = tierHierarchy[userTier as keyof typeof tierHierarchy] || 0;
+    return userLevel >= therapistLevel;
+  };
+
   // Calculate match scores and access levels
   const therapistMatches = useMemo(() => {
     if (!onboardingData || !therapists.length) return [];
@@ -97,21 +105,17 @@ const TherapistMatchStep = ({ onNext, onBack, onboardingData }: TherapistMatchSt
         isAccessible
       };
     }).sort((a, b) => {
-      // Sort by accessibility first (accessible therapists first), then by match score
+      // Sort by match score first (best matches at top), then by accessibility
+      const scoreDiff = b.matchScore - a.matchScore;
+      if (scoreDiff !== 0) return scoreDiff;
+      
+      // If scores are equal, prioritize accessible therapists
       if (a.isAccessible !== b.isAccessible) {
         return a.isAccessible ? -1 : 1;
       }
-      return b.matchScore - a.matchScore;
+      return 0;
     });
   }, [therapists, onboardingData, subscriptionAccess.tier]);
-
-  // Helper function to determine therapist access
-  const getTherapistAccess = (therapistTier: string, userTier: string) => {
-    const tierHierarchy = { free: 0, premium: 1, professional: 2 };
-    const therapistLevel = tierHierarchy[therapistTier as keyof typeof tierHierarchy] || 0;
-    const userLevel = tierHierarchy[userTier as keyof typeof tierHierarchy] || 0;
-    return userLevel >= therapistLevel;
-  };
 
   // Get tier icon and badge
   const getTierBadge = (tier: string) => {
