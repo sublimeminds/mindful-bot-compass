@@ -12,11 +12,12 @@ import { Progress } from '@/components/ui/progress';
 import { Heart, Brain, Shield, AlertTriangle, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
 
 interface IntakeAssessmentStepProps {
-  onNext: () => void;
+  onNext: (data?: any) => void;
   onBack: () => void;
+  onboardingData?: any;
 }
 
-const IntakeAssessmentStep = ({ onNext, onBack }: IntakeAssessmentStepProps) => {
+const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessmentStepProps) => {
   const [stressLevel, setStressLevel] = useState(5);
   const [anxietyLevel, setAnxietyLevel] = useState(5);
   const [sleepQuality, setSleepQuality] = useState('average');
@@ -37,10 +38,12 @@ const IntakeAssessmentStep = ({ onNext, onBack }: IntakeAssessmentStepProps) => 
       sleepQuality,
       copingMechanisms,
       additionalNotes,
+      goals: copingMechanisms, // Pass goals data
+      preferences: [sleepQuality] // Pass preferences data
     };
     
     console.log('Assessment data:', assessmentData);
-    onNext();
+    onNext(assessmentData);
   };
 
   return (

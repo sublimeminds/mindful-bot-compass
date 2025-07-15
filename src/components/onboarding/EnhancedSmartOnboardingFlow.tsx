@@ -5,6 +5,7 @@ import AnimatedOnboardingIntro from './AnimatedOnboardingIntro';
 import WelcomeStep from './WelcomeStep';
 import EmbeddedAuthStep from './EmbeddedAuthStep';
 import IntakeAssessmentStep from './IntakeAssessmentStep';
+import ProblemAssessmentStep from './ProblemAssessmentStep';
 import MentalHealthScreeningStep from './MentalHealthScreeningStep';
 import CulturalPreferencesStep from './CulturalPreferencesStep';
 import InternationalizedEnhancedSmartAnalysisStep from './InternationalizedEnhancedSmartAnalysisStep';
@@ -66,15 +67,16 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   }, []);
 
   const steps = [
-    { component: WelcomeStep, titleKey: 'onboarding.steps.welcome' },
+    { component: WelcomeStep, titleKey: 'Welcome' },
     { component: EmbeddedAuthStep, titleKey: 'Create Your Account' },
-    { component: IntakeAssessmentStep, titleKey: 'onboarding.steps.goals' },
-    { component: MentalHealthScreeningStep, titleKey: 'onboarding.steps.preferences' },
-    { component: CulturalPreferencesStep, titleKey: 'onboarding.steps.cultural' },
-    { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'onboarding.steps.analysis' },
-    { component: TherapistPersonalityStep, titleKey: 'onboarding.steps.therapist' },
-    { component: PlanSelectionStep, titleKey: 'onboarding.steps.plan' },
-    { component: NotificationPreferencesStep, titleKey: 'onboarding.steps.notifications' }
+    { component: IntakeAssessmentStep, titleKey: 'Basic Information' },
+    { component: ProblemAssessmentStep, titleKey: 'Tell Us About Your Challenges' },
+    { component: MentalHealthScreeningStep, titleKey: 'Mental Health Screening' },
+    { component: CulturalPreferencesStep, titleKey: 'Cultural Preferences' },
+    { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'AI Analysis' },
+    { component: TherapistPersonalityStep, titleKey: 'Choose Your Therapist' },
+    { component: PlanSelectionStep, titleKey: 'Select Your Plan' },
+    { component: NotificationPreferencesStep, titleKey: 'Notification Settings' }
   ];
 
   const handleGetStarted = () => {
@@ -123,7 +125,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   const CurrentStepComponent = steps[currentStep].component;
 
   const getStepProps = () => {
-    const baseProps = {
+    const baseProps: any = {
       onNext: handleNext,
       onBack: handleBack,
       onboardingData,
@@ -147,11 +149,23 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       };
     }
 
-    // Add pre-selected plan for Plan Selection step
-    if (currentStep === 7 && selectedPlan) { // Plan Selection step (adjusted for auth step)
+    // Add therapist step props - fix the filter error
+    if (currentStep === 7) { // TherapistPersonalityStep
       return {
         ...baseProps,
-        preSelectedPlan: selectedPlan
+        selectedPersonality: onboardingData.selectedPersonality || null,
+        selectedGoals: onboardingData.goals || [],
+        selectedPreferences: onboardingData.preferences || [],
+        onPersonalitySelect: (personalityId: string) => {
+          setOnboardingData(prev => ({ ...prev, selectedPersonality: personalityId }));
+        }
+      };
+    }
+
+    // Move plan selection to last and remove pre-selection
+    if (currentStep === 8) { // Plan Selection step - no pre-selection
+      return {
+        ...baseProps
       };
     }
 
@@ -193,9 +207,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
             />
           </div>
           <p className="text-center text-sm font-medium text-harmony-600 dark:text-harmony-400 mt-2">
-            {typeof steps[currentStep].titleKey === 'string' && steps[currentStep].titleKey.startsWith('onboarding.') 
-              ? t(steps[currentStep].titleKey) 
-              : steps[currentStep].titleKey}
+            {steps[currentStep].titleKey}
           </p>
         </div>
 

@@ -7,13 +7,14 @@ import { Check, Crown, Zap, Heart, Star, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface PlanSelectionStepProps {
-  onNext: () => void;
+  onNext: (data?: any) => void;
   onBack: () => void;
+  onboardingData?: any;
 }
 
-const PlanSelectionStep = ({ onNext, onBack }: PlanSelectionStepProps) => {
+const PlanSelectionStep = ({ onNext, onBack, onboardingData }: PlanSelectionStepProps) => {
   const { t } = useTranslation();
-  const [selectedPlan, setSelectedPlan] = useState<string>('free');
+  const [selectedPlan, setSelectedPlan] = useState<string>('premium'); // Default to premium, not free
 
   const plans = [
     {
@@ -133,7 +134,10 @@ const PlanSelectionStep = ({ onNext, onBack }: PlanSelectionStepProps) => {
         <Button variant="outline" onClick={onBack}>
           Previous
         </Button>
-        <Button onClick={onNext} className="bg-therapy-500 hover:bg-therapy-600">
+        <Button 
+          onClick={() => onNext({ selectedPlan, planData: plans.find(p => p.id === selectedPlan) })} 
+          className="bg-therapy-500 hover:bg-therapy-600"
+        >
           Continue with {plans.find(p => p.id === selectedPlan)?.name}
         </Button>
       </div>

@@ -9,11 +9,12 @@ import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Heart, Brain } from 'lucide-react';
 
 interface MentalHealthScreeningStepProps {
-  onNext: () => void;
+  onNext: (data?: any) => void;
   onBack: () => void;
+  onboardingData?: any;
 }
 
-const MentalHealthScreeningStep = ({ onNext, onBack }: MentalHealthScreeningStepProps) => {
+const MentalHealthScreeningStep = ({ onNext, onBack, onboardingData }: MentalHealthScreeningStepProps) => {
   const [phq9Score, setPhq9Score] = useState<number | null>(null);
   const [gad7Score, setGad7Score] = useState<number | null>(null);
 
@@ -34,10 +35,11 @@ const MentalHealthScreeningStep = ({ onNext, onBack }: MentalHealthScreeningStep
     const screeningData = {
       phq9Score,
       gad7Score,
+      preferences: [`phq9_${phq9Score}`, `gad7_${gad7Score}`] // Add this for therapist matching
     };
     
     console.log('Screening data:', screeningData);
-    onNext();
+    onNext(screeningData);
   };
 
   const phq9Interpretation = () => {

@@ -1,0 +1,233 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { AlertTriangle, Heart, Brain, Users, Briefcase, Home } from 'lucide-react';
+
+interface ProblemAssessmentStepProps {
+  onNext: (data: any) => void;
+  onBack: () => void;
+  onboardingData?: any;
+}
+
+const ProblemAssessmentStep = ({ onNext, onBack, onboardingData }: ProblemAssessmentStepProps) => {
+  const [specificProblems, setSpecificProblems] = useState<string[]>([]);
+  const [problemDescription, setProblemDescription] = useState('');
+  const [therapyGoals, setTherapyGoals] = useState('');
+  const [triggersAndStressors, setTriggersAndStressors] = useState<string[]>([]);
+
+  const problemAreas = [
+    { id: 'anxiety', label: 'Anxiety & Panic', icon: AlertTriangle, color: 'text-yellow-600' },
+    { id: 'depression', label: 'Depression & Mood', icon: Heart, color: 'text-red-600' },
+    { id: 'stress', label: 'Stress Management', icon: Brain, color: 'text-blue-600' },
+    { id: 'relationships', label: 'Relationship Issues', icon: Users, color: 'text-purple-600' },
+    { id: 'work', label: 'Work/Career Stress', icon: Briefcase, color: 'text-green-600' },
+    { id: 'family', label: 'Family Dynamics', icon: Home, color: 'text-orange-600' }
+  ];
+
+  const commonTriggers = [
+    'Work deadlines', 'Social situations', 'Financial stress', 'Health concerns',
+    'Family conflicts', 'Public speaking', 'Change/transitions', 'Perfectionism',
+    'Past trauma', 'Relationship conflicts', 'Academic pressure', 'Social media'
+  ];
+
+  const handleProblemToggle = (problemId: string) => {
+    setSpecificProblems(prev =>
+      prev.includes(problemId)
+        ? prev.filter(p => p !== problemId)
+        : [...prev, problemId]
+    );
+  };
+
+  const handleTriggerToggle = (trigger: string) => {
+    setTriggersAndStressors(prev =>
+      prev.includes(trigger)
+        ? prev.filter(t => t !== trigger)
+        : [...prev, trigger]
+    );
+  };
+
+  const handleSubmit = () => {
+    const assessmentData = {
+      specificProblems,
+      problemDescription,
+      therapyGoals,
+      triggersAndStressors,
+      goals: [...specificProblems, 'therapy_goals'], // For therapist matching
+      preferences: triggersAndStressors // For therapy approach matching
+    };
+
+    onNext(assessmentData);
+  };
+
+  const isComplete = specificProblems.length > 0 && problemDescription.trim() && therapyGoals.trim();
+
+  return (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold mb-2">Tell Us About Your Challenges</h2>
+        <p className="text-muted-foreground">
+          Help us understand what you'd like to work on so we can create the best therapy plan for you
+        </p>
+      </div>
+
+      {/* Specific Problem Areas */}
+      <Card>
+        <CardHeader>
+          <CardTitle>What areas would you like to focus on? (Select all that apply)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {problemAreas.map((problem) => {
+              const IconComponent = problem.icon;
+              const isSelected = specificProblems.includes(problem.id);
+              
+              return (
+                <div
+                  key={problem.id}
+                  className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                    isSelected 
+                      ? 'bg-harmony-50 border-harmony-300 dark:bg-harmony-950 dark:border-harmony-700' 
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-900'
+                  }`}
+                  onClick={() => handleProblemToggle(problem.id)}
+                >
+                  <Checkbox
+                    checked={isSelected}
+                    onChange={() => handleProblemToggle(problem.id)}
+                  />
+                  <IconComponent className={`h-5 w-5 ${problem.color}`} />
+                  <span className="font-medium">{problem.label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Problem Description */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Describe your current challenges in detail</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Textarea
+            placeholder="Tell us more about what you're experiencing. What brings you to therapy? How are these challenges affecting your daily life?"
+            value={problemDescription}
+            onChange={(e) => setProblemDescription(e.target.value)}
+            rows={5}
+            className="w-full"
+          />
+        </CardContent>
+      </Card>
+
+      {/* Therapy Goals */}
+      <Card>
+        <CardHeader>
+          <CardTitle>What would you like to achieve through therapy?</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Textarea
+            placeholder="What are your goals? What would success look like for you? How would you like your life to be different?"
+            value={therapyGoals}
+            onChange={(e) => setTherapyGoals(e.target.value)}
+            rows={4}
+            className="w-full"
+          />
+        </CardContent>
+      </Card>
+
+      {/* Triggers and Stressors */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Common triggers or stressors (Optional)</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Select any situations or circumstances that tend to trigger your symptoms
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {commonTriggers.map((trigger) => (
+              <div
+                key={trigger}
+                className={`flex items-center space-x-2 p-2 rounded-md border cursor-pointer transition-all ${
+                  triggersAndStressors.includes(trigger)
+                    ? 'bg-flow-50 border-flow-300 dark:bg-flow-950 dark:border-flow-700'
+                    : 'hover:bg-gray-50 dark:hover:bg-gray-900'
+                }`}
+                onClick={() => handleTriggerToggle(trigger)}
+              >
+                <Checkbox
+                  checked={triggersAndStressors.includes(trigger)}
+                  onChange={() => handleTriggerToggle(trigger)}
+                />
+                <Label className="text-sm cursor-pointer">{trigger}</Label>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Selected Summary */}
+      {(specificProblems.length > 0 || triggersAndStressors.length > 0) && (
+        <Card className="bg-harmony-50 dark:bg-harmony-950">
+          <CardContent className="pt-6">
+            <h4 className="font-medium mb-3">Summary of your selections:</h4>
+            <div className="space-y-2">
+              {specificProblems.length > 0 && (
+                <div>
+                  <span className="text-sm font-medium">Focus areas: </span>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {specificProblems.map(problemId => {
+                      const problem = problemAreas.find(p => p.id === problemId);
+                      return (
+                        <Badge key={problemId} variant="secondary" className="text-xs">
+                          {problem?.label}
+                        </Badge>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              {triggersAndStressors.length > 0 && (
+                <div>
+                  <span className="text-sm font-medium">Common triggers: </span>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {triggersAndStressors.slice(0, 5).map(trigger => (
+                      <Badge key={trigger} variant="outline" className="text-xs">
+                        {trigger}
+                      </Badge>
+                    ))}
+                    {triggersAndStressors.length > 5 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{triggersAndStressors.length - 5} more
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="flex justify-between">
+        <Button variant="outline" onClick={onBack}>
+          Back
+        </Button>
+        <Button 
+          onClick={handleSubmit}
+          disabled={!isComplete}
+          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
+        >
+          Continue
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default ProblemAssessmentStep;

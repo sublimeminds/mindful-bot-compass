@@ -177,7 +177,7 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
   const CurrentStepComponent = currentStepConfig.component;
 
   const getStepProps = () => {
-    const baseProps = {
+    const baseProps: any = {
       onNext: handleNext,
       onBack: handleBack,
       onboardingData,
@@ -198,6 +198,19 @@ const EnhancedOnboardingFlow = ({ onComplete }: EnhancedOnboardingFlowProps) => 
       return {
         ...baseProps,
         selectedPlan
+      };
+    }
+
+    // Add therapist step props - fix the filter error
+    if (currentStepConfig.component === TherapistPersonalityStep) {
+      return {
+        ...baseProps,
+        selectedPersonality: onboardingData.selectedPersonality || null,
+        selectedGoals: onboardingData.goals || [],
+        selectedPreferences: onboardingData.preferences || [],
+        onPersonalitySelect: (personalityId: string) => {
+          setOnboardingData(prev => ({ ...prev, selectedPersonality: personalityId }));
+        }
       };
     }
 
