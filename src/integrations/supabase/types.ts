@@ -5491,6 +5491,81 @@ export type Database = {
         }
         Relationships: []
       }
+      mfa_recovery_attempts: {
+        Row: {
+          attempt_type: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          success: boolean
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          attempt_type: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          success?: boolean
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          attempt_type?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          success?: boolean
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mfa_trusted_devices: {
+        Row: {
+          created_at: string
+          device_fingerprint: string
+          device_name: string
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          is_active: boolean
+          last_used_at: string | null
+          trust_token: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_fingerprint: string
+          device_name: string
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean
+          last_used_at?: string | null
+          trust_token: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_fingerprint?: string
+          device_name?: string
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean
+          last_used_at?: string | null
+          trust_token?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       model_performance_tracking: {
         Row: {
           avg_response_time_ms: number | null
@@ -7394,6 +7469,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      security_alerts: {
+        Row: {
+          acknowledged: boolean
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          alert_type: string
+          created_at: string
+          description: string
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          resolved: boolean
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string
+          title: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          acknowledged?: boolean
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type: string
+          created_at?: string
+          description: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          title: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          acknowledged?: boolean
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          title?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       security_audit_logs: {
         Row: {
@@ -10069,43 +10201,70 @@ export type Database = {
       two_factor_auth: {
         Row: {
           backup_codes: string[] | null
+          backup_codes_generated_at: string | null
+          backup_codes_remaining: number | null
           created_at: string
+          device_trust_tokens: Json | null
+          emergency_recovery_code: string | null
           id: string
           is_enabled: boolean | null
           last_used: string | null
           last_used_at: string | null
           phone_number: string | null
+          rate_limit_attempts: number | null
+          rate_limit_reset_at: string | null
           recovery_codes_used: number | null
+          recovery_email: string | null
           secret: string
+          security_notifications_enabled: boolean | null
           setup_completed_at: string | null
+          trusted_devices: Json | null
           updated_at: string
           user_id: string
         }
         Insert: {
           backup_codes?: string[] | null
+          backup_codes_generated_at?: string | null
+          backup_codes_remaining?: number | null
           created_at?: string
+          device_trust_tokens?: Json | null
+          emergency_recovery_code?: string | null
           id?: string
           is_enabled?: boolean | null
           last_used?: string | null
           last_used_at?: string | null
           phone_number?: string | null
+          rate_limit_attempts?: number | null
+          rate_limit_reset_at?: string | null
           recovery_codes_used?: number | null
+          recovery_email?: string | null
           secret: string
+          security_notifications_enabled?: boolean | null
           setup_completed_at?: string | null
+          trusted_devices?: Json | null
           updated_at?: string
           user_id: string
         }
         Update: {
           backup_codes?: string[] | null
+          backup_codes_generated_at?: string | null
+          backup_codes_remaining?: number | null
           created_at?: string
+          device_trust_tokens?: Json | null
+          emergency_recovery_code?: string | null
           id?: string
           is_enabled?: boolean | null
           last_used?: string | null
           last_used_at?: string | null
           phone_number?: string | null
+          rate_limit_attempts?: number | null
+          rate_limit_reset_at?: string | null
           recovery_codes_used?: number | null
+          recovery_email?: string | null
           secret?: string
+          security_notifications_enabled?: boolean | null
           setup_completed_at?: string | null
+          trusted_devices?: Json | null
           updated_at?: string
           user_id?: string
         }
@@ -11830,6 +11989,16 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      create_trusted_device: {
+        Args: {
+          user_id_param: string
+          device_name_param: string
+          device_fingerprint_param: string
+          user_agent_param?: string
+          ip_address_param?: unknown
+        }
+        Returns: string
+      }
       decrement_event_participants: {
         Args: { event_id: string }
         Returns: undefined
@@ -11860,6 +12029,18 @@ export type Database = {
         }[]
       }
       generate_backup_codes: {
+        Args: Record<PropertyKey, never>
+        Returns: string[]
+      }
+      generate_device_trust_token: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_emergency_recovery_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_enhanced_backup_codes: {
         Args: Record<PropertyKey, never>
         Returns: string[]
       }
@@ -11965,6 +12146,10 @@ export type Database = {
         Args: { user_id_param: string; needed_specialties: string[] }
         Returns: Json
       }
+      regenerate_backup_codes: {
+        Args: { user_id_param: string }
+        Returns: Json
+      }
       request_data_deletion: {
         Args: {
           user_id_param: string
@@ -12009,6 +12194,10 @@ export type Database = {
       validate_admin_session: {
         Args: { _session_token: string }
         Returns: string
+      }
+      verify_backup_code: {
+        Args: { user_id_param: string; code_param: string }
+        Returns: boolean
       }
       verify_totp_code: {
         Args: { user_id_param: string; code_param: string }

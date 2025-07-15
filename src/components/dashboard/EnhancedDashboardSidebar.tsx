@@ -400,66 +400,48 @@ const EnhancedUserDropdown = ({
   );
 };
 
-// 6-Section Navigation Structure for Professional Multi-Therapist Platform
-const coreTherapyNav: NavigationItem[] = [
+// Clean User Navigation Structure - No Admin Section
+const therapyNav: NavigationItem[] = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'AI Chat', href: '/chat', icon: MessageCircle },
   { name: 'Full Session', href: '/therapy-session', icon: Brain },
   { name: 'Quick Chat', href: '/therapy', icon: MessageCircle },
-  { name: 'Therapy Plan', href: '/therapy-plan', icon: Calendar },
-  { name: 'Sessions', href: '/sessions', icon: Calendar },
-];
-
-const progressAnalyticsNav: NavigationItem[] = [
-  { name: 'Goals & Milestones', href: '/goals', icon: Target },
-  { name: 'Mood Tracking', href: '/mood-tracking', icon: Heart },
-  { name: 'Advanced Analytics', href: '/analytics', icon: BarChart3, locked: true, requiredFeature: 'advanced-analytics', requiredTier: 'premium' },
-  { name: 'Reports & Insights', href: '/reports', icon: BarChart3 },
-];
-
-const aiPersonalizationNav: NavigationItem[] = [
-  { name: 'AI Hub', href: '/ai-hub', icon: Brain },
   { name: 'Therapist Hub', href: '/therapist-hub', icon: Users },
-  { name: 'Personalization', href: '/personalization-settings', icon: Settings },
+  { name: 'Calendar', href: '/calendar', icon: Calendar },
+  { name: 'Mood Tracking', href: '/mood-tracking', icon: Heart },
 ];
 
-const technicalNav: NavigationItem[] = [
-  { name: 'Integrations', href: '/integrations', icon: Zap },
-  { name: 'Therapy Settings', href: '/therapy-settings', icon: Settings },
+const progressNav: NavigationItem[] = [
+  { name: 'Goals & Milestones', href: '/goals', icon: Target },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'Reports & Insights', href: '/reports', icon: BarChart3 },
+  { name: 'Achievements', href: '/achievements', icon: Sparkles },
+];
+
+const communityNav: NavigationItem[] = [
+  { name: 'Community Hub', href: '/community', icon: Users, locked: true, requiredFeature: 'community-hub', requiredTier: 'pro' },
+  { name: 'Wellness Challenges', href: '/wellness-challenges', icon: Trophy },
+  { name: 'Notifications', href: '/notifications', icon: Bell },
+];
+
+const toolsNav: NavigationItem[] = [
   { name: 'Smart Triggers', href: '/smart-triggers', icon: Zap },
-  { name: 'API & Webhooks', href: '/api-webhooks', icon: Server },
-];
-
-const accountBillingNav: NavigationItem[] = [
-  { name: 'Profile Management', href: '/profile', icon: User },
-  { name: 'Subscription & Billing', href: '/subscription', icon: CreditCard },
-  { name: 'Security & Privacy', href: '/privacy', icon: Shield },
-  { name: 'Notification Center', href: '/notifications', icon: Bell },
-];
-
-const familyFeaturesNav: NavigationItem[] = [
-  { name: 'Family Dashboard', href: '/family-dashboard', icon: Users },
-  { name: 'Family Features', href: '/family-features', icon: Heart },
-];
-
-const wellnessResourcesNav: NavigationItem[] = [
+  { name: 'AI Personalization', href: '/personalization-settings', icon: Sparkles },
   { name: 'Breathing Exercises', href: '/breathing-exercises', icon: Heart, locked: true, requiredFeature: 'breathing-exercises', requiredTier: 'pro' },
   { name: 'Meditation Library', href: '/meditation-library', icon: Brain, locked: true, requiredFeature: 'meditation-library', requiredTier: 'premium' },
   { name: 'Mindfulness', href: '/mindfulness', icon: Sparkles },
 ];
 
-const communitySupportNav: NavigationItem[] = [
-  { name: 'Community Hub', href: '/community', icon: Users, locked: true, requiredFeature: 'community-hub', requiredTier: 'pro' },
-  { name: 'Wellness Challenges', href: '/wellness-challenges', icon: Trophy },
-  { name: 'Crisis Support', href: '/chat', icon: AlertTriangle },
+const accountNav: NavigationItem[] = [
+  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Account & Billing', href: '/account-billing', icon: CreditCard },
+  { name: 'Privacy', href: '/privacy', icon: Shield },
   { name: 'Help & Support', href: '/help', icon: HelpCircle },
 ];
 
-const adminNav: NavigationItem[] = [
-  { name: 'Admin Dashboard', href: '/admin', icon: Shield },
-  { name: 'AI Management', href: '/admin/ai', icon: Brain },
-  { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
-  { name: 'Content Library', href: '/admin/content', icon: BookOpen },
-  { name: 'Therapy Management', href: '/admin/therapy', icon: Activity },
+const familyFeaturesNav: NavigationItem[] = [
+  { name: 'Family Dashboard', href: '/family-dashboard', icon: Users },
+  { name: 'Family Features', href: '/family-features', icon: Heart },
 ];
 
 const EnhancedDashboardSidebar = () => {
@@ -472,24 +454,21 @@ const EnhancedDashboardSidebar = () => {
   const { canAccessFeature } = useSubscriptionAccess();
   const [showPlanCreator, setShowPlanCreator] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
-    'Core Therapy': true,
-    'Progress & Analytics': true,
-    'AI & Personalization': true,
-    'Technical': true,
-    'Account & Billing': true,
-    'Community & Support': true,
+    'Therapy': true,
+    'Progress': true,
+    'Community': true,
+    'Tools': true,
+    'Account': true,
+    'Family Features': false,
   });
 
   const navigationSections = [
-    { title: "Core Therapy", items: coreTherapyNav, icon: Brain },
-    { title: "Progress & Analytics", items: progressAnalyticsNav, icon: BarChart3 },
-    { title: "AI & Personalization", items: aiPersonalizationNav, icon: Sparkles },
-    { title: "Wellness Resources", items: wellnessResourcesNav, icon: Heart },
+    { title: "Therapy", items: therapyNav, icon: Brain },
+    { title: "Progress", items: progressNav, icon: BarChart3 },
+    { title: "Community", items: communityNav, icon: Users },
+    { title: "Tools", items: toolsNav, icon: Zap },
+    { title: "Account", items: accountNav, icon: User },
     { title: "Family Features", items: familyFeaturesNav, icon: Users, locked: true, requiredFeature: 'family-dashboard' },
-    { title: "Technical", items: technicalNav, icon: Zap },
-    { title: "Account & Billing", items: accountBillingNav, icon: User },
-    { title: "Community & Support", items: communitySupportNav, icon: Users },
-    { title: "Administration", items: adminNav, icon: Shield },
   ];
 
   // Auto-expand groups that contain the active route
