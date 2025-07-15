@@ -40,6 +40,19 @@ const CompactRegionalSelector = ({ className = "" }: CompactRegionalSelectorProp
 
   const isLoading = regionLoading || countryLoading;
 
+  // Debug logging
+  console.log('CompactRegionalSelector Debug:', {
+    regionalPreferences,
+    regionLoading,
+    availableCountries: availableCountries?.length,
+    countryLoading,
+    currentLanguage,
+    currency,
+    supportedLanguages: supportedLanguages?.length,
+    supportedCurrencies: supportedCurrencies?.length,
+    isLoading
+  });
+
   const getCountryFlag = (countryCode: string) => {
     if (!countryCode || countryCode.length !== 2) return '🌍';
     try {

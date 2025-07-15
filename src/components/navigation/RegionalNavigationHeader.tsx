@@ -52,27 +52,8 @@ const RegionalNavigationHeader = () => {
               </Link>
             </div>
 
-            {/* Center Section - Navigation Links (Desktop) */}
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link 
-                to="/how-it-works" 
-                className="text-sm font-medium text-gray-700 hover:text-therapy-700 transition-colors"
-              >
-                How it works
-              </Link>
-              <Link 
-                to="/pricing" 
-                className="text-sm font-medium text-gray-700 hover:text-therapy-700 transition-colors"
-              >
-                Pricing
-              </Link>
-              <Link 
-                to="/support" 
-                className="text-sm font-medium text-gray-700 hover:text-therapy-700 transition-colors"
-              >
-                Support
-              </Link>
-            </nav>
+            {/* Spacer for center alignment */}
+            <div className="flex-1"></div>
 
             {/* Right Section - Regional Selector, Notifications, User Menu */}
             <div className="flex items-center space-x-3">
