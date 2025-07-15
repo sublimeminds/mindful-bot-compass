@@ -74,11 +74,21 @@ const EnhancedOnboardingPage = () => {
         return;
       }
 
+      // Mark onboarding as complete
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ onboarding_complete: true })
+        .eq('id', user.id);
+
+      if (profileError) {
+        console.error('Error updating onboarding status:', profileError);
+      }
+
       toast.success('Your personalized therapy plan has been created successfully!');
       console.log('Comprehensive therapy plan created with cultural AI integration:', planData);
       
-      // Navigate to therapy session or dashboard
-      navigate('/therapy-session');
+      // Navigate to dashboard
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error completing onboarding:', error);
       toast.error('An error occurred during onboarding completion');

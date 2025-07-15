@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import GradientButton from '@/components/ui/GradientButton';
 import { Brain, Target, TrendingUp } from 'lucide-react';
 import GradientLogo from '@/components/ui/GradientLogo';
 
@@ -54,13 +54,13 @@ const WelcomeStep: React.FC<WelcomeStepProps> = ({ onNext }) => {
           This comprehensive assessment will take about 10-15 minutes and helps us understand your 
           unique needs, cultural background, and therapy goals to create the most effective personalized plan.
         </p>
-        <Button 
+        <GradientButton 
           onClick={onNext} 
           size="lg" 
-          className="w-full max-w-md bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+          className="w-full max-w-md"
         >
           Begin Your Journey
-        </Button>
+        </GradientButton>
       </div>
     </div>
   );

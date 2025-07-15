@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import OnboardingGuard from './OnboardingGuard';
 import EnhancedDashboardSidebar from './EnhancedDashboardSidebar';
 import DashboardHeader from './DashboardHeader';
 import DashboardLayout from './DashboardLayout';
@@ -12,7 +13,8 @@ interface DashboardLayoutWithSidebarProps {
 
 const DashboardLayoutWithSidebar = ({ children }: DashboardLayoutWithSidebarProps) => {
   return (
-    <SidebarProvider>
+    <OnboardingGuard>
+      <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <EnhancedDashboardSidebar />
         <SidebarInset className="flex-1 min-h-screen">
@@ -26,6 +28,7 @@ const DashboardLayoutWithSidebar = ({ children }: DashboardLayoutWithSidebarProp
         </SidebarInset>
       </div>
     </SidebarProvider>
+    </OnboardingGuard>
   );
 };
 

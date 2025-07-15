@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { performanceMonitor } from '@/utils/performanceMonitor';
+import OnboardingGuard from './OnboardingGuard';
 import EnhancedDashboardSidebar from './EnhancedDashboardSidebar';
 import DashboardHeader from './DashboardHeader';
 import ModularDashboard from './ModularDashboard';
@@ -56,7 +57,8 @@ const BulletproofDashboardLayout = ({ children }: BulletproofDashboardLayoutProp
 
   return performanceMonitor.measureRenderTime('BulletproofDashboardLayout', () => (
     <SafeComponentWrapper name="BulletproofDashboardLayout">
-      <SidebarProvider>
+      <OnboardingGuard>
+        <SidebarProvider>
         <div className="min-h-screen flex w-full">
           {/* Bulletproof Sidebar */}
           <SafeComponentWrapper 
@@ -116,6 +118,7 @@ const BulletproofDashboardLayout = ({ children }: BulletproofDashboardLayoutProp
           </SidebarInset>
         </div>
       </SidebarProvider>
+      </OnboardingGuard>
     </SafeComponentWrapper>
   ));
 };
