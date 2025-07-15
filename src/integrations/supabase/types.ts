@@ -293,6 +293,107 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_audit_logs: {
+        Row: {
+          action: string
+          admin_id: string
+          created_at: string
+          error_message: string | null
+          id: string
+          ip_address: unknown
+          new_values: Json | null
+          old_values: Json | null
+          resource_id: string | null
+          resource_type: string
+          session_id: string | null
+          success: boolean
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          admin_id: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          ip_address: unknown
+          new_values?: Json | null
+          old_values?: Json | null
+          resource_id?: string | null
+          resource_type: string
+          session_id?: string | null
+          success?: boolean
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          ip_address?: unknown
+          new_values?: Json | null
+          old_values?: Json | null
+          resource_id?: string | null
+          resource_type?: string
+          session_id?: string | null
+          success?: boolean
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_audit_logs_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "super_admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_audit_logs_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "admin_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_configuration: {
+        Row: {
+          config_key: string
+          config_value: Json
+          description: string | null
+          id: string
+          is_sensitive: boolean
+          updated_at: string
+          updated_by: string
+        }
+        Insert: {
+          config_key: string
+          config_value: Json
+          description?: string | null
+          id?: string
+          is_sensitive?: boolean
+          updated_at?: string
+          updated_by: string
+        }
+        Update: {
+          config_key?: string
+          config_value?: Json
+          description?: string | null
+          id?: string
+          is_sensitive?: boolean
+          updated_at?: string
+          updated_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_configuration_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "super_admins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       admin_permissions: {
         Row: {
           can_delete: boolean | null
@@ -325,6 +426,83 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"]
         }
         Relationships: []
+      }
+      admin_role_permissions: {
+        Row: {
+          created_at: string
+          granted: boolean
+          id: string
+          permission: Database["public"]["Enums"]["admin_permission"]
+          role: Database["public"]["Enums"]["super_admin_role"]
+        }
+        Insert: {
+          created_at?: string
+          granted?: boolean
+          id?: string
+          permission: Database["public"]["Enums"]["admin_permission"]
+          role: Database["public"]["Enums"]["super_admin_role"]
+        }
+        Update: {
+          created_at?: string
+          granted?: boolean
+          id?: string
+          permission?: Database["public"]["Enums"]["admin_permission"]
+          role?: Database["public"]["Enums"]["super_admin_role"]
+        }
+        Relationships: []
+      }
+      admin_sessions: {
+        Row: {
+          admin_id: string
+          created_at: string
+          device_fingerprint: string | null
+          expires_at: string
+          id: string
+          ip_address: unknown
+          is_active: boolean
+          last_activity: string | null
+          revoked_at: string | null
+          revoked_reason: string | null
+          session_token: string
+          user_agent: string | null
+        }
+        Insert: {
+          admin_id: string
+          created_at?: string
+          device_fingerprint?: string | null
+          expires_at: string
+          id?: string
+          ip_address: unknown
+          is_active?: boolean
+          last_activity?: string | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          session_token: string
+          user_agent?: string | null
+        }
+        Update: {
+          admin_id?: string
+          created_at?: string
+          device_fingerprint?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: unknown
+          is_active?: boolean
+          last_activity?: string | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          session_token?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_sessions_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "super_admins"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       affiliate_applications: {
         Row: {
@@ -8263,6 +8441,68 @@ export type Database = {
         }
         Relationships: []
       }
+      super_admins: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          email: string
+          id: string
+          ip_whitelist: string[] | null
+          is_active: boolean
+          last_login_at: string | null
+          locked_until: string | null
+          login_attempts: number | null
+          password_hash: string
+          requires_mfa: boolean
+          role: Database["public"]["Enums"]["super_admin_role"]
+          session_timeout_minutes: number | null
+          updated_at: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          email: string
+          id?: string
+          ip_whitelist?: string[] | null
+          is_active?: boolean
+          last_login_at?: string | null
+          locked_until?: string | null
+          login_attempts?: number | null
+          password_hash: string
+          requires_mfa?: boolean
+          role?: Database["public"]["Enums"]["super_admin_role"]
+          session_timeout_minutes?: number | null
+          updated_at?: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          id?: string
+          ip_whitelist?: string[] | null
+          is_active?: boolean
+          last_login_at?: string | null
+          locked_until?: string | null
+          login_attempts?: number | null
+          password_hash?: string
+          requires_mfa?: boolean
+          role?: Database["public"]["Enums"]["super_admin_role"]
+          session_timeout_minutes?: number | null
+          updated_at?: string
+          username?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "super_admins_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "super_admins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       support_groups: {
         Row: {
           category: string
@@ -11714,6 +11954,13 @@ export type Database = {
         Args: { _user_id: string }
         Returns: boolean
       }
+      is_super_admin: {
+        Args: {
+          _admin_id: string
+          _permission?: Database["public"]["Enums"]["admin_permission"]
+        }
+        Returns: boolean
+      }
       recommend_therapist_combinations: {
         Args: { user_id_param: string; needed_specialties: string[] }
         Returns: Json
@@ -11759,18 +12006,39 @@ export type Database = {
         Args: { goal_id_param: string }
         Returns: undefined
       }
+      validate_admin_session: {
+        Args: { _session_token: string }
+        Returns: string
+      }
       verify_totp_code: {
         Args: { user_id_param: string; code_param: string }
         Returns: boolean
       }
     }
     Enums: {
+      admin_permission:
+        | "user_management"
+        | "system_config"
+        | "ai_management"
+        | "content_management"
+        | "translation_management"
+        | "crisis_management"
+        | "platform_analytics"
+        | "security_management"
+        | "audit_logs"
+        | "admin_management"
       app_role:
         | "super_admin"
         | "content_admin"
         | "support_admin"
         | "analytics_admin"
         | "user"
+      super_admin_role:
+        | "super_admin"
+        | "content_admin"
+        | "support_admin"
+        | "analytics_admin"
+        | "security_admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -11898,12 +12166,31 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      admin_permission: [
+        "user_management",
+        "system_config",
+        "ai_management",
+        "content_management",
+        "translation_management",
+        "crisis_management",
+        "platform_analytics",
+        "security_management",
+        "audit_logs",
+        "admin_management",
+      ],
       app_role: [
         "super_admin",
         "content_admin",
         "support_admin",
         "analytics_admin",
         "user",
+      ],
+      super_admin_role: [
+        "super_admin",
+        "content_admin",
+        "support_admin",
+        "analytics_admin",
+        "security_admin",
       ],
     },
   },
