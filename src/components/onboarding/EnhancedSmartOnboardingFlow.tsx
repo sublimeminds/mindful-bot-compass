@@ -140,10 +140,8 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     
     if (stepData) {
       setOnboardingData(newData);
-      // Only save progress if we're not on the first step or if user is authenticated
-      if (currentStep > 0 || user) {
-        saveProgress(newData, currentStep + 1);
-      }
+      // Save progress after each completed step to maintain state when navigating back
+      saveProgress(newData, currentStep + 1);
     }
 
     console.log('🎯 Is last step?', currentStep >= steps.length - 1);
