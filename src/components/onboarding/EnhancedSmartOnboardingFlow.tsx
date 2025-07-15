@@ -21,6 +21,9 @@ import CurrencySelector from '@/components/ui/CurrencySelector';
 import { useSEO } from '@/hooks/useSEO';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 interface EnhancedSmartOnboardingFlowProps {
   onComplete: (data: any) => void;
@@ -30,6 +33,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const subscriptionAccess = useSubscriptionAccess();
   const [showIntro, setShowIntro] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
@@ -52,6 +56,22 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     keywords: 'mental health assessment, therapy onboarding, wellness setup'
   });
 
+  // Get current therapy plan count
+  const { data: therapyPlanCount = 0 } = useQuery({
+    queryKey: ['therapy-plan-count', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return 0;
+      
+      const { count } = await supabase
+        .from('therapy_plans')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+        
+      return count || 0;
+    },
+    enabled: !!user?.id,
+  });
+
   // Check for pre-selected plan from pricing
   useEffect(() => {
     const savedPlan = localStorage.getItem('selectedPlan');
@@ -69,7 +89,22 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     }
   }, []);
 
-  const steps = [
+  // Determine if plan selection should be shown
+  const shouldShowPlanSelection = () => {
+    if (!user) return true; // New users always see plan selection
+    
+    const isPremiumOrPro = subscriptionAccess.isPremium || subscriptionAccess.isProfessional;
+    const isAtLimit = therapyPlanCount >= subscriptionAccess.therapyPlanLimit;
+    const isFreeUnderLimit = subscriptionAccess.tier === 'free' && !isAtLimit;
+    
+    // Skip for premium/pro users
+    if (isPremiumOrPro) return false;
+    
+    // Show for free users (either as upsell or mandatory upgrade)
+    return subscriptionAccess.tier === 'free';
+  };
+
+  const allSteps = [
     { component: WelcomeStep, titleKey: 'Welcome' },
     { component: EmbeddedAuthStep, titleKey: 'Create Your Account' },
     { component: IntakeAssessmentStep, titleKey: 'Basic Information' },
@@ -84,6 +119,11 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     { component: PlanSelectionStep, titleKey: 'Select Your Plan' },
     { component: NotificationPreferencesStep, titleKey: 'Notification Settings' }
   ];
+
+  // Filter steps based on subscription status
+  const steps = shouldShowPlanSelection() 
+    ? allSteps 
+    : allSteps.filter((_, index) => index !== 11); // Remove plan selection step
 
   const handleGetStarted = () => {
     setShowIntro(false);
@@ -170,10 +210,15 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       };
     }
 
-    // Move plan selection to last and remove pre-selection
-    if (currentStep === 11) { // Plan Selection step - no pre-selection (updated index)
+    // Plan selection step with conditional logic
+    const planStepIndex = shouldShowPlanSelection() ? 11 : -1;
+    if (currentStep === planStepIndex && planStepIndex !== -1) {
+      const isAtLimit = therapyPlanCount >= subscriptionAccess.therapyPlanLimit;
+      const showAsOptionalUpsell = subscriptionAccess.tier === 'free' && !isAtLimit;
+      
       return {
-        ...baseProps
+        ...baseProps,
+        showAsOptionalUpsell
       };
     }
 
