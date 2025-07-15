@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import GradientLogo from '@/components/ui/GradientLogo';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
 import EnhancedUserMenu from './EnhancedUserMenu';
-import UnifiedRegionalSelector from '@/components/regional/UnifiedRegionalSelector';
+import CompactRegionalSelector from '@/components/regional/CompactRegionalSelector';
 import MobileNavigation from './MobileNavigation';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
@@ -31,7 +31,7 @@ const RegionalNavigationHeader = () => {
             
             {/* Left Section - Logo and Mobile Nav */}
             <div className="flex items-center space-x-4">
-              {isMobile && (
+              <div className="md:hidden">
                 <MobileNavigation
                   therapyAiFeatures={[]}
                   platformFeatures={[]}
@@ -39,7 +39,7 @@ const RegionalNavigationHeader = () => {
                   solutionsFeatures={[]}
                   resourcesFeatures={[]}
                 />
-              )}
+              </div>
               
               <Link
                 to="/" 
@@ -53,34 +53,32 @@ const RegionalNavigationHeader = () => {
             </div>
 
             {/* Center Section - Navigation Links (Desktop) */}
-            {!isMobile && (
-              <nav className="flex items-center space-x-6">
-                <Link 
-                  to="/how-it-works" 
-                  className="text-sm font-medium text-gray-700 hover:text-therapy-700 transition-colors"
-                >
-                  How it works
-                </Link>
-                <Link 
-                  to="/pricing" 
-                  className="text-sm font-medium text-gray-700 hover:text-therapy-700 transition-colors"
-                >
-                  Pricing
-                </Link>
-                <Link 
-                  to="/support" 
-                  className="text-sm font-medium text-gray-700 hover:text-therapy-700 transition-colors"
-                >
-                  Support
-                </Link>
-              </nav>
-            )}
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link 
+                to="/how-it-works" 
+                className="text-sm font-medium text-gray-700 hover:text-therapy-700 transition-colors"
+              >
+                How it works
+              </Link>
+              <Link 
+                to="/pricing" 
+                className="text-sm font-medium text-gray-700 hover:text-therapy-700 transition-colors"
+              >
+                Pricing
+              </Link>
+              <Link 
+                to="/support" 
+                className="text-sm font-medium text-gray-700 hover:text-therapy-700 transition-colors"
+              >
+                Support
+              </Link>
+            </nav>
 
             {/* Right Section - Regional Selector, Notifications, User Menu */}
             <div className="flex items-center space-x-3">
               
               {/* Regional Preferences Selector */}
-              <UnifiedRegionalSelector />
+              <CompactRegionalSelector />
               
               {user ? (
                 <>
