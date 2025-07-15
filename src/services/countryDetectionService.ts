@@ -14,46 +14,76 @@ class CountryDetectionService {
   private lastCacheUpdate: number = 0;
 
   async detectCountry(userId?: string): Promise<CountryDetectionData> {
-    const detectionResults = await this.runDetectionMethods();
-    
-    // Sort by confidence and priority
-    detectionResults.sort((a, b) => {
-      const priorityMap: Record<DetectionMethod, number> = {
-        'user_preference': 100,
-        'ip_geolocation': 80,
-        'browser_language': 60,
-        'timezone': 40,
-        'default_fallback': 10
-      };
-      
-      const scoreDiff = (b.confidence * priorityMap[b.method]) - (a.confidence * priorityMap[a.method]);
-      return scoreDiff;
-    });
+    try {
+      // Check user preference first if userId provided
+      if (userId) {
+        const userPreference = await this.getUserPreference(userId);
+        if (userPreference) {
+          const countryData = await this.getCountryData(userPreference.countryCode);
+          if (countryData) {
+            return {
+              countryCode: countryData.country_code,
+              countryName: countryData.name,
+              currency: countryData.currency_code,
+              currencySymbol: countryData.currency_symbol,
+              language: countryData.language_code,
+              region: countryData.region,
+              timezone: countryData.timezone,
+              callingCode: countryData.calling_code,
+              confidence: userPreference.confidence,
+              detectionMethod: userPreference.method
+            };
+          }
+        }
+      }
 
-    const bestResult = detectionResults[0];
-    const countryData = await this.getCountryData(bestResult.countryCode);
-    
-    if (!countryData) {
+      const detectionResults = await this.runDetectionMethods();
+      
+      // Sort by confidence and priority
+      detectionResults.sort((a, b) => {
+        const priorityMap: Record<DetectionMethod, number> = {
+          'user_preference': 100,
+          'ip_geolocation': 80,
+          'browser_language': 60,
+          'timezone': 40,
+          'default_fallback': 10
+        };
+        
+        const scoreDiff = (b.confidence * priorityMap[b.method]) - (a.confidence * priorityMap[a.method]);
+        return scoreDiff;
+      });
+
+      const bestResult = detectionResults[0];
+      const countryData = await this.getCountryData(bestResult.countryCode);
+      
+      if (!countryData) {
+        console.warn('Country data not found for:', bestResult.countryCode);
+        return this.getDefaultCountryData();
+      }
+
+      // Save detection result for user if provided (non-blocking)
+      if (userId) {
+        this.saveUserDetection(userId, bestResult).catch(error => {
+          console.warn('Failed to save user detection (non-blocking):', error);
+        });
+      }
+
+      return {
+        countryCode: countryData.country_code,
+        countryName: countryData.name,
+        currency: countryData.currency_code,
+        currencySymbol: countryData.currency_symbol,
+        language: countryData.language_code,
+        region: countryData.region,
+        timezone: countryData.timezone,
+        callingCode: countryData.calling_code,
+        confidence: bestResult.confidence,
+        detectionMethod: bestResult.method
+      };
+    } catch (error) {
+      console.error('Country detection failed, using fallback:', error);
       return this.getDefaultCountryData();
     }
-
-    // Save detection result for user if provided
-    if (userId) {
-      await this.saveUserDetection(userId, bestResult);
-    }
-
-    return {
-      countryCode: countryData.country_code,
-      countryName: countryData.name,
-      currency: countryData.currency_code,
-      currencySymbol: countryData.currency_symbol,
-      language: countryData.language_code,
-      region: countryData.region,
-      timezone: countryData.timezone,
-      callingCode: countryData.calling_code,
-      confidence: bestResult.confidence,
-      detectionMethod: bestResult.method
-    };
   }
 
   private async runDetectionMethods(): Promise<DetectionResult[]> {

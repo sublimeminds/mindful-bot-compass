@@ -18,8 +18,20 @@ export const useCountryDetection = () => {
       const detected = await countryDetectionService.detectCountry(user?.id);
       setCountryData(detected);
     } catch (err) {
-      setError('Failed to detect country');
-      console.error('Country detection error:', err);
+      console.warn('Country detection failed, using fallback:', err);
+      // Set a fallback instead of showing an error to user
+      setCountryData({
+        countryCode: 'US',
+        countryName: 'United States',
+        currency: 'USD',
+        currencySymbol: '$',
+        language: 'en',
+        region: 'Americas',
+        timezone: 'UTC-5',
+        callingCode: '+1',
+        confidence: 0.1,
+        detectionMethod: 'default_fallback'
+      });
     } finally {
       setIsLoading(false);
     }
