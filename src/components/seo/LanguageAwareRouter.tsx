@@ -17,13 +17,20 @@ export const LanguageAwareRouter: React.FC = () => {
     const cleanPath = LanguageRouter.getCleanPath();
     const pageName = cleanPath.slice(1) || 'home';
     
-    // Update SEO meta tags for current language and page
-    const seoConfig = LanguageRouter.getCurrentPageSEO();
-    setTimeout(() => {
+    // Update SEO meta tags for current language and page with translation support
+    setTimeout(async () => {
       // Small delay to ensure page is rendered
-      import('@/services/seoService').then(({ SEOService }) => {
+      const { SEOService } = await import('@/services/seoService');
+      
+      try {
+        // Try to get translated SEO config
+        const seoConfig = await SEOService.getMultilingualPageSEOConfigAsync(pageName, language);
         SEOService.updateMetaTags(seoConfig);
-      });
+      } catch (error) {
+        // Fallback to static config
+        const fallbackConfig = LanguageRouter.getCurrentPageSEO();
+        SEOService.updateMetaTags(fallbackConfig);
+      }
     }, 100);
   }, [location.pathname]);
 

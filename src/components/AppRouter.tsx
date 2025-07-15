@@ -80,6 +80,7 @@ import AdminDashboard from "../pages/AdminDashboard";
 import AdminAI from "../pages/AdminAI";
 import AdminAnalytics from "../pages/AdminAnalytics";
 import AdminContent from "../pages/AdminContent";
+import AdminTranslations from "../pages/AdminTranslations";
 import AdminTherapy from "../pages/AdminTherapyPage";
 import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
 import ContentLibrary from "../pages/ContentLibrary";
@@ -628,6 +629,12 @@ const AppRouter = () => {
       <Route path="/admin/content" element={
         <PageErrorBoundary pageName="Admin Content">
           <DashboardPageWrapper><AdminContent /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/admin/translations" element={
+        <PageErrorBoundary pageName="Admin Translations">
+          <DashboardPageWrapper><AdminTranslations /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 

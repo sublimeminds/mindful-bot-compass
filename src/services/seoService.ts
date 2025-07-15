@@ -260,7 +260,55 @@ export class SEOService {
     return preferredLang === 'en' ? `${baseUrl}${cleanPath}` : `${baseUrl}/${preferredLang}${cleanPath}`;
   }
 
-  // Get multilingual page SEO config
+  // Get multilingual page SEO config with translation integration (async)
+  static async getMultilingualPageSEOConfigAsync(pageName: string, language: string = 'en'): Promise<Partial<SEOMetaData>> {
+    const baseConfig = this.getPageSEOConfig(pageName);
+    const currentPath = window.location.pathname;
+    
+    // Try to get translated SEO content from database
+    let translatedConfig = baseConfig;
+    if (language !== 'en') {
+      try {
+        // Dynamically import Supabase to avoid circular dependencies
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabase = createClient(
+          'https://dbwrbjjmraodegffupnx.supabase.co',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRid3JiamptcmFvZGVnZmZ1cG54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk0NjcwNTksImV4cCI6MjA2NTA0MzA1OX0.cY8oKDsNDOzYj7GsWFjFvFoze47lZQe9JM9khJMc6G4'
+        );
+        
+        const { data: seoTranslations } = await supabase
+          .from('seo_translations')
+          .select('meta_title, meta_description, meta_keywords')
+          .eq('page_key', pageName)
+          .eq('target_language', language)
+          .eq('is_active', true)
+          .single();
+
+        if (seoTranslations) {
+          translatedConfig = {
+            ...baseConfig,
+            title: seoTranslations.meta_title,
+            description: seoTranslations.meta_description,
+            keywords: Array.isArray(seoTranslations.meta_keywords) 
+              ? seoTranslations.meta_keywords.join(', ')
+              : seoTranslations.meta_keywords || baseConfig.keywords
+          };
+        }
+      } catch (error) {
+        console.warn(`No SEO translations found for ${pageName} in ${language}:`, error);
+      }
+    }
+    
+    return {
+      ...translatedConfig,
+      language,
+      canonical: this.getCanonicalUrl(currentPath, 'en'), // Always canonical to English version
+      hreflang: this.generateHreflangUrls(currentPath),
+      alternateUrls: this.generateAlternateUrls(currentPath)
+    };
+  }
+
+  // Legacy sync method for backward compatibility
   static getMultilingualPageSEOConfig(pageName: string, language: string = 'en'): Partial<SEOMetaData> {
     const baseConfig = this.getPageSEOConfig(pageName);
     const currentPath = window.location.pathname;
@@ -268,7 +316,7 @@ export class SEOService {
     return {
       ...baseConfig,
       language,
-      canonical: this.getCanonicalUrl(currentPath, 'en'), // Always canonical to English version
+      canonical: this.getCanonicalUrl(currentPath, 'en'),
       hreflang: this.generateHreflangUrls(currentPath),
       alternateUrls: this.generateAlternateUrls(currentPath)
     };
