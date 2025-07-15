@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -10,6 +9,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Heart, Brain, Shield, AlertTriangle, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
+import GradientButton from '@/components/ui/GradientButton';
+import { useTranslation } from 'react-i18next';
 
 interface IntakeAssessmentStepProps {
   onNext: (data?: any) => void;
@@ -18,11 +19,12 @@ interface IntakeAssessmentStepProps {
 }
 
 const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessmentStepProps) => {
-  const [stressLevel, setStressLevel] = useState(5);
-  const [anxietyLevel, setAnxietyLevel] = useState(5);
-  const [sleepQuality, setSleepQuality] = useState('average');
-  const [copingMechanisms, setCopingMechanisms] = useState<string[]>([]);
-  const [additionalNotes, setAdditionalNotes] = useState('');
+  const { t } = useTranslation();
+  const [stressLevel, setStressLevel] = useState(onboardingData?.stressLevel || 5);
+  const [anxietyLevel, setAnxietyLevel] = useState(onboardingData?.anxietyLevel || 5);
+  const [sleepQuality, setSleepQuality] = useState(onboardingData?.sleepQuality || '');
+  const [copingMechanisms, setCopingMechanisms] = useState<string[]>(onboardingData?.copingMechanisms || []);
+  const [additionalNotes, setAdditionalNotes] = useState(onboardingData?.additionalNotes || '');
 
   const handleCopingMechanismToggle = (mechanism: string) => {
     setCopingMechanisms((prev) =>
@@ -31,28 +33,44 @@ const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessme
   };
 
   const handleSubmit = async () => {
-    // Store data locally for now - no database operations
+    // Validation
+    if (!sleepQuality || copingMechanisms.length === 0) {
+      return;
+    }
+
     const assessmentData = {
       stressLevel,
       anxietyLevel,
       sleepQuality,
       copingMechanisms,
       additionalNotes,
-      goals: copingMechanisms, // Pass goals data
-      preferences: [sleepQuality] // Pass preferences data
+      goals: copingMechanisms, 
+      preferences: [sleepQuality] 
     };
     
     console.log('Assessment data:', assessmentData);
     onNext(assessmentData);
   };
 
+  const isComplete = sleepQuality && copingMechanisms.length > 0;
+  const progressValue = () => {
+    let progress = 0;
+    if (stressLevel !== 5) progress += 20;
+    if (anxietyLevel !== 5) progress += 20; 
+    if (sleepQuality) progress += 30;
+    if (copingMechanisms.length > 0) progress += 30;
+    return progress;
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold">Initial Mental Health Assessment</h2>
+    <div className="space-y-4 max-w-3xl mx-auto">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold mb-2">Initial Mental Health Assessment</h2>
         <p className="text-muted-foreground">
-          Help us understand your current mental health state.
+          Help us understand your current mental health state to create your personalized plan.
         </p>
+        <Progress value={progressValue()} className="mt-4 h-2" />
+        <p className="text-sm text-muted-foreground mt-2">{Math.round(progressValue())}% complete</p>
       </div>
 
       <Card>
@@ -97,15 +115,18 @@ const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessme
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className={`transition-all ${!sleepQuality ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Shield className="h-4 w-4 text-blue-500" />
-            <span>Sleep Quality</span>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Shield className="h-4 w-4 text-blue-500" />
+              <span>Sleep Quality <span className="text-red-500">*</span></span>
+            </div>
+            {sleepQuality && <CheckCircle2 className="h-4 w-4 text-green-500" />}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <RadioGroup defaultValue={sleepQuality} onValueChange={setSleepQuality}>
+          <RadioGroup value={sleepQuality} onValueChange={setSleepQuality}>
             <div className="grid grid-cols-3 gap-2">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="poor" id="sleep-poor" />
@@ -121,15 +142,22 @@ const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessme
               </div>
             </div>
           </RadioGroup>
+          {!sleepQuality && (
+            <p className="text-sm text-orange-600 mt-2">Please select your sleep quality to continue</p>
+          )}
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className={`transition-all ${copingMechanisms.length === 0 ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <AlertTriangle className="h-4 w-4 text-orange-500" />
-            <span>Coping Mechanisms</span>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <AlertTriangle className="h-4 w-4 text-orange-500" />
+              <span>Current Coping Mechanisms <span className="text-red-500">*</span></span>
+            </div>
+            {copingMechanisms.length > 0 && <CheckCircle2 className="h-4 w-4 text-green-500" />}
           </CardTitle>
+          <p className="text-sm text-muted-foreground">Select the methods you currently use (choose at least one)</p>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -144,6 +172,9 @@ const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessme
               </div>
             ))}
           </div>
+          {copingMechanisms.length === 0 && (
+            <p className="text-sm text-orange-600 mt-2">Please select at least one coping mechanism to continue</p>
+          )}
         </CardContent>
       </Card>
 
@@ -151,27 +182,41 @@ const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessme
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <CheckCircle2 className="h-4 w-4 text-green-500" />
-            <span>Additional Notes</span>
+            <span>Additional Information (Optional)</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
-            placeholder="Anything else you'd like to share?"
+            placeholder="Share anything else that might help us understand your situation better..."
             value={additionalNotes}
             onChange={(e) => setAdditionalNotes(e.target.value)}
+            rows={3}
           />
         </CardContent>
       </Card>
 
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
+      {!isComplete && (
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+          <p className="text-sm text-orange-800 flex items-center">
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            Please complete all required fields (marked with *) to continue
+          </p>
+        </div>
+      )}
+
+      <div className="flex justify-between pt-4">
+        <GradientButton variant="outline" onClick={onBack}>
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
-        </Button>
-        <Button onClick={handleSubmit}>
-          Next
+          {t('common.back')}
+        </GradientButton>
+        <GradientButton 
+          onClick={handleSubmit}
+          disabled={!isComplete}
+          className={!isComplete ? 'opacity-50 cursor-not-allowed' : ''}
+        >
+          {t('common.continue')}
           <ArrowRight className="h-4 w-4 ml-2" />
-        </Button>
+        </GradientButton>
       </div>
     </div>
   );

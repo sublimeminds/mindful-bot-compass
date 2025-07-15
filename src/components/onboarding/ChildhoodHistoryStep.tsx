@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Home, GraduationCap, Heart, AlertTriangle } from 'lucide-react';
+import { MapPin, Home, GraduationCap, Heart, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import GradientButton from '@/components/ui/GradientButton';
+import { useTranslation } from 'react-i18next';
 
 interface ChildhoodHistoryStepProps {
   onNext: (data: any) => void;
@@ -23,14 +24,15 @@ interface Country {
 }
 
 const ChildhoodHistoryStep = ({ onNext, onBack, onboardingData }: ChildhoodHistoryStepProps) => {
+  const { t } = useTranslation();
   const [countries, setCountries] = useState<Country[]>([]);
-  const [childhoodCountry, setChildhoodCountry] = useState('');
-  const [familyStructure, setFamilyStructure] = useState('');
-  const [familyDynamics, setFamilyDynamics] = useState('');
-  const [significantEvents, setSignificantEvents] = useState<string[]>([]);
-  const [educationLevel, setEducationLevel] = useState('');
-  const [childhoodDescription, setChildhoodDescription] = useState('');
-  const [parentingStyle, setParentingStyle] = useState('');
+  const [childhoodCountry, setChildhoodCountry] = useState(onboardingData?.childhoodHistory?.childhoodCountry || '');
+  const [familyStructure, setFamilyStructure] = useState(onboardingData?.childhoodHistory?.familyStructure || '');
+  const [familyDynamics, setFamilyDynamics] = useState(onboardingData?.childhoodHistory?.familyDynamics || '');
+  const [significantEvents, setSignificantEvents] = useState<string[]>(onboardingData?.childhoodHistory?.significantEvents || []);
+  const [educationLevel, setEducationLevel] = useState(onboardingData?.childhoodHistory?.educationLevel || '');
+  const [childhoodDescription, setChildhoodDescription] = useState(onboardingData?.childhoodHistory?.childhoodDescription || '');
+  const [parentingStyle, setParentingStyle] = useState(onboardingData?.childhoodHistory?.parentingStyle || '');
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -109,46 +111,54 @@ const ChildhoodHistoryStep = ({ onNext, onBack, onboardingData }: ChildhoodHisto
   };
 
   const isComplete = childhoodCountry && familyStructure && familyDynamics && educationLevel;
+  const countryOptions = countries.map(country => ({
+    value: country.country_code,
+    label: country.name
+  }));
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
+    <div className="space-y-4 max-w-3xl mx-auto">
+      <div className="text-center mb-6">
         <h2 className="text-2xl font-bold mb-2">Childhood & Early Life History</h2>
         <p className="text-muted-foreground">
-          Understanding your background helps us provide culturally sensitive and personalized therapy
+          Understanding your background helps us provide culturally sensitive and personalized therapy.
         </p>
       </div>
 
       {/* Childhood Location */}
-      <Card>
+      <Card className={`transition-all ${!childhoodCountry ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <MapPin className="h-5 w-5 text-blue-600" />
-            <span>Where did you spend most of your childhood?</span>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <MapPin className="h-5 w-5 text-blue-600" />
+              <span>Where did you spend most of your childhood? <span className="text-red-500">*</span></span>
+            </div>
+            {childhoodCountry && <CheckCircle2 className="h-4 w-4 text-green-500" />}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Select value={childhoodCountry} onValueChange={setChildhoodCountry}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select country where you grew up" />
-            </SelectTrigger>
-            <SelectContent>
-              {countries.map((country) => (
-                <SelectItem key={country.id} value={country.country_code}>
-                  {country.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Combobox
+            options={countryOptions}
+            value={childhoodCountry}
+            onValueChange={setChildhoodCountry}
+            placeholder="Search and select your childhood country..."
+            emptyText="No country found"
+          />
+          {!childhoodCountry && (
+            <p className="text-sm text-orange-600 mt-2">Please select your childhood country to continue</p>
+          )}
         </CardContent>
       </Card>
 
       {/* Family Structure */}
-      <Card>
+      <Card className={`transition-all ${!familyStructure ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Home className="h-5 w-5 text-green-600" />
-            <span>Family Structure During Childhood</span>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Home className="h-5 w-5 text-green-600" />
+              <span>Family Structure During Childhood <span className="text-red-500">*</span></span>
+            </div>
+            {familyStructure && <CheckCircle2 className="h-4 w-4 text-green-500" />}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -162,6 +172,9 @@ const ChildhoodHistoryStep = ({ onNext, onBack, onboardingData }: ChildhoodHisto
               ))}
             </div>
           </RadioGroup>
+          {!familyStructure && (
+            <p className="text-sm text-orange-600 mt-2">Please select your family structure to continue</p>
+          )}
         </CardContent>
       </Card>
 
@@ -326,17 +339,26 @@ const ChildhoodHistoryStep = ({ onNext, onBack, onboardingData }: ChildhoodHisto
         </Card>
       )}
 
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
-          Back
-        </Button>
-        <Button 
+      {!isComplete && (
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+          <p className="text-sm text-orange-800 flex items-center">
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            Please complete all required fields (marked with *) to continue
+          </p>
+        </div>
+      )}
+
+      <div className="flex justify-between pt-4">
+        <GradientButton variant="outline" onClick={onBack}>
+          {t('common.back')}
+        </GradientButton>
+        <GradientButton 
           onClick={handleSubmit}
           disabled={!isComplete}
-          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
+          className={!isComplete ? 'opacity-50 cursor-not-allowed' : ''}
         >
-          Continue
-        </Button>
+          {t('common.continue')}
+        </GradientButton>
       </div>
     </div>
   );

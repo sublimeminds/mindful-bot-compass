@@ -1,9 +1,10 @@
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Brain, Heart, Lightbulb, Target, Users, Compass, Sparkles, Info } from "lucide-react";
+import GradientButton from '@/components/ui/GradientButton';
+import { useTranslation } from 'react-i18next';
 
 interface TherapistPersonality {
   id: string;
@@ -110,6 +111,7 @@ const TherapistPersonalityStep = ({
   onNext, 
   onBack 
 }: TherapistPersonalityStepProps) => {
+  const { t } = useTranslation();
   const getMatchScore = (therapist: TherapistPersonality) => {
     let score = 0;
     
@@ -138,11 +140,11 @@ const TherapistPersonalityStep = ({
   const bestMatch = sortedTherapists[0];
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Choose Your AI Therapist</h2>
+    <div className="space-y-4 max-w-5xl mx-auto">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold mb-2">{t('onboarding.completion.choosingTherapist')}</h2>
         <p className="text-muted-foreground">
-          We've matched therapists based on your goals and preferences
+          Based on your assessment, here are therapists matched to your specific needs and preferences.
         </p>
       </div>
 
@@ -229,22 +231,31 @@ const TherapistPersonalityStep = ({
       </div>
 
       <div className="text-center">
-        <Button variant="outline" size="sm" className="text-xs">
+        <p className="text-xs text-muted-foreground bg-blue-50 p-2 rounded">
           💡 Don't worry - you can easily change your therapist anytime in settings
-        </Button>
+        </p>
       </div>
 
+      {!selectedPersonality && (
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+          <p className="text-sm text-orange-800 flex items-center">
+            <Info className="h-4 w-4 mr-2" />
+            Please select a therapist to continue with your personalized therapy plan
+          </p>
+        </div>
+      )}
+
       <div className="flex justify-between pt-6">
-        <Button variant="outline" onClick={onBack}>
-          Back
-        </Button>
-        <Button 
+        <GradientButton variant="outline" onClick={onBack}>
+          {t('common.back')}
+        </GradientButton>
+        <GradientButton 
           onClick={onNext}
           disabled={!selectedPersonality}
-          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
+          className={!selectedPersonality ? 'opacity-50 cursor-not-allowed' : ''}
         >
-          Continue with {selectedPersonality ? sortedTherapists.find(t => t.id === selectedPersonality)?.name : 'Therapist'}
-        </Button>
+          Continue with {selectedPersonality ? sortedTherapists.find(t => t.id === selectedPersonality)?.name : 'Selected Therapist'}
+        </GradientButton>
       </div>
     </div>
   );

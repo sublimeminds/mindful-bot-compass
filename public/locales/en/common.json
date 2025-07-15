@@ -1,0 +1,57 @@
+{
+  "common": {
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "skip": "Skip",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "required": "Required",
+    "optional": "Optional",
+    "complete": "Complete",
+    "incomplete": "Incomplete"
+  },
+  "onboarding": {
+    "title": "Welcome to TherapySync",
+    "subtitle": "Let's create your personalized therapy journey",
+    "progress": "Step {{current}} of {{total}}",
+    "cultural": {
+      "title": "Cultural Preferences",
+      "primaryLanguage": "Primary Language",
+      "background": "Cultural Background",
+      "familyStructure": "Family Structure", 
+      "communicationStyle": "Communication Style",
+      "religiousConsiderations": "Religious or spiritual considerations are important to me"
+    },
+    "validation": {
+      "pleaseComplete": "Please complete all required fields to continue",
+      "fieldRequired": "This field is required",
+      "selectOption": "Please select an option",
+      "minimumSelection": "Please select at least one option"
+    },
+    "steps": {
+      "welcome": "Welcome",
+      "auth": "Create Account", 
+      "intake": "Basic Information",
+      "problems": "Your Challenges",
+      "identity": "Identity & Diversity",
+      "childhood": "Childhood History",
+      "personal": "Personal History", 
+      "relationships": "Relationships",
+      "mentalHealth": "Mental Health Screening",
+      "cultural": "Cultural Preferences",
+      "analysis": "AI Analysis",
+      "therapist": "Choose Therapist",
+      "plan": "Select Plan",
+      "notifications": "Notifications"
+    },
+    "completion": {
+      "analysisComplete": "Analysis Complete",
+      "choosingTherapist": "Now choose your preferred therapist",
+      "readyToStart": "You're ready to start your therapy journey!",
+      "completeSetup": "Complete Setup"
+    }
+  }
+}

@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Bell, Clock, TrendingUp, Target, MessageCircle, Calendar } from "lucide-react";
+import GradientButton from '@/components/ui/GradientButton';
+import { useTranslation } from 'react-i18next';
 
 interface NotificationPreference {
   id: string;
@@ -58,6 +59,7 @@ interface NotificationPreferencesStepProps {
 }
 
 const NotificationPreferencesStep: React.FC<NotificationPreferencesStepProps> = ({ onNext, onBack }) => {
+  const { t } = useTranslation();
   const [preferences, setPreferences] = useState<Record<string, boolean>>(
     notificationOptions.reduce((acc, option) => ({
       ...acc,
@@ -125,15 +127,12 @@ const NotificationPreferencesStep: React.FC<NotificationPreferencesStepProps> = 
       </div>
 
       <div className="flex justify-between pt-6">
-        <Button variant="outline" onClick={onBack}>
-          Back
-        </Button>
-        <Button 
-          onClick={onNext}
-          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
-        >
-          Continue
-        </Button>
+        <GradientButton variant="outline" onClick={onBack}>
+          {t('common.back')}
+        </GradientButton>
+        <GradientButton onClick={onNext}>
+          {t('onboarding.completion.completeSetup')}
+        </GradientButton>
       </div>
     </div>
   );

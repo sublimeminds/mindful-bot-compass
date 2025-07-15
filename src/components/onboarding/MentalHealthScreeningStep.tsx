@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Heart, Brain } from 'lucide-react';
+import { AlertTriangle, Heart, Brain, CheckCircle2 } from 'lucide-react';
+import GradientButton from '@/components/ui/GradientButton';
+import { useTranslation } from 'react-i18next';
 
 interface MentalHealthScreeningStepProps {
   onNext: (data?: any) => void;
@@ -15,8 +16,9 @@ interface MentalHealthScreeningStepProps {
 }
 
 const MentalHealthScreeningStep = ({ onNext, onBack, onboardingData }: MentalHealthScreeningStepProps) => {
-  const [phq9Score, setPhq9Score] = useState<number | null>(null);
-  const [gad7Score, setGad7Score] = useState<number | null>(null);
+  const { t } = useTranslation();
+  const [phq9Score, setPhq9Score] = useState<number | null>(onboardingData?.phq9Score || null);
+  const [gad7Score, setGad7Score] = useState<number | null>(onboardingData?.gad7Score || null);
 
   const handlePhq9Change = (value: string) => {
     setPhq9Score(parseInt(value, 10));
@@ -62,21 +64,24 @@ const MentalHealthScreeningStep = ({ onNext, onBack, onboardingData }: MentalHea
   const progress = (phq9Score !== null && gad7Score !== null) ? 100 : (phq9Score !== null || gad7Score !== null) ? 50 : 0;
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold">Mental Health Screening</h2>
+    <div className="space-y-4 max-w-3xl mx-auto">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold mb-2">Standardized Mental Health Assessment</h2>
         <p className="text-muted-foreground">
-          Answer these questions to help us understand your mental health needs.
+          These are clinical screening tools to better understand your current state and tailor your treatment.
         </p>
+        <Progress value={progress} className="mt-4 h-2" />
+        <p className="text-sm text-muted-foreground mt-2">{Math.round(progress)}% complete</p>
       </div>
 
-      <Progress value={progress} className="h-2" />
-
-      <Card>
+      <Card className={`transition-all ${phq9Score === null ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <Heart className="h-5 w-5 mr-2 text-red-500" />
-            PHQ-9 Depression Assessment
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Heart className="h-5 w-5 mr-2 text-red-500" />
+              PHQ-9 Depression Assessment <span className="text-red-500">*</span>
+            </div>
+            {phq9Score !== null && <CheckCircle2 className="h-4 w-4 text-green-500" />}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -108,14 +113,20 @@ const MentalHealthScreeningStep = ({ onNext, onBack, onboardingData }: MentalHea
               Score: {phq9Score} - {phq9Interpretation()}
             </Badge>
           )}
+          {phq9Score === null && (
+            <p className="text-sm text-orange-600 mt-2">Please select an option to continue</p>
+          )}
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className={`transition-all ${gad7Score === null ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <Brain className="h-5 w-5 mr-2 text-blue-500" />
-            GAD-7 Anxiety Assessment
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Brain className="h-5 w-5 mr-2 text-blue-500" />
+              GAD-7 Anxiety Assessment <span className="text-red-500">*</span>
+            </div>
+            {gad7Score !== null && <CheckCircle2 className="h-4 w-4 text-green-500" />}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -147,6 +158,9 @@ const MentalHealthScreeningStep = ({ onNext, onBack, onboardingData }: MentalHea
               Score: {gad7Score} - {gad7Interpretation()}
             </Badge>
           )}
+          {gad7Score === null && (
+            <p className="text-sm text-orange-600 mt-2">Please select an option to continue</p>
+          )}
         </CardContent>
       </Card>
 
@@ -157,16 +171,26 @@ const MentalHealthScreeningStep = ({ onNext, onBack, onboardingData }: MentalHea
         </div>
       )}
 
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
-          Back
-        </Button>
-        <Button
+      {(phq9Score === null || gad7Score === null) && (
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+          <p className="text-sm text-orange-800 flex items-center">
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            Please complete both assessments to continue
+          </p>
+        </div>
+      )}
+
+      <div className="flex justify-between pt-4">
+        <GradientButton variant="outline" onClick={onBack}>
+          {t('common.back')}
+        </GradientButton>
+        <GradientButton
           onClick={handleSubmit}
           disabled={phq9Score === null || gad7Score === null}
+          className={(phq9Score === null || gad7Score === null) ? 'opacity-50 cursor-not-allowed' : ''}
         >
-          Continue
-        </Button>
+          {t('common.continue')}
+        </GradientButton>
       </div>
     </div>
   );
