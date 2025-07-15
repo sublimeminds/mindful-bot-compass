@@ -44,64 +44,48 @@ export const useEnhancedCurrency = () => {
   const [userLocation, setUserLocation] = useState<LocationData | null>(null);
 
   useEffect(() => {
-    initializeCurrency();
-    loadSupportedCurrencies();
-    detectUserLocation();
+    // SIMPLIFIED: Only initialize once to prevent infinite loops
+    if (loading) {
+      initializeCurrency();
+      loadSupportedCurrencies();
+    }
     
-    // Update exchange rates every hour
-    const interval = setInterval(() => {
-      enhancedCurrencyService.updateExchangeRates();
-    }, 60 * 60 * 1000);
-
-    return () => clearInterval(interval);
-  }, [user]);
+    // DISABLED: Periodic updates and location detection causing infinite loading
+    // detectUserLocation();
+    // const interval = setInterval(() => {
+    //   enhancedCurrencyService.updateExchangeRates();
+    // }, 60 * 60 * 1000);
+    // return () => clearInterval(interval);
+  }, []);
 
   const detectUserLocation = async () => {
-    try {
-      const location = await enhancedCurrencyService.detectUserLocation();
-      setUserLocation(location);
-      
-      // Auto-apply detected currency for all users unless they have saved preferences
-      if (location) {
-        const savedCurrency = user ? 
-          await enhancedCurrencyService.getUserCurrencyPreference(user.id) :
-          localStorage.getItem('preferred-currency');
-          
-        // Only auto-apply if no saved preference exists
-        if (!savedCurrency) {
-          const locationCurrency = await enhancedCurrencyService.getCurrencyData(location.currency);
-          setCurrency(locationCurrency);
-        }
-      }
-    } catch (error) {
-      console.error('Error detecting user location:', error);
-    }
+    // DISABLED: Location detection causing infinite loading
+    console.log('Location detection disabled to prevent infinite loading');
+    setUserLocation({
+      country: 'United States',
+      countryCode: 'US',
+      currency: 'USD',
+      timezone: 'UTC',
+      region: 'Americas'
+    });
   };
 
   const initializeCurrency = async () => {
     try {
       setLoading(true);
       
-      // Ensure exchange rates are loaded first
+      // SIMPLIFIED: Use static rates to prevent infinite loading
       await enhancedCurrencyService.ensureExchangeRatesLoaded();
       
       let selectedCurrency;
       
-      if (user) {
-        // Get user's saved preference
-        const savedCurrency = await enhancedCurrencyService.getUserCurrencyPreference(user.id);
-        selectedCurrency = await enhancedCurrencyService.getCurrencyData(savedCurrency);
+      // Check localStorage first for both auth and non-auth users
+      const localCurrency = localStorage.getItem('preferred-currency');
+      if (localCurrency) {
+        selectedCurrency = await enhancedCurrencyService.getCurrencyData(localCurrency);
       } else {
-        // Check localStorage for non-authenticated users
-        const localCurrency = localStorage.getItem('preferred-currency');
-        if (localCurrency) {
-          selectedCurrency = await enhancedCurrencyService.getCurrencyData(localCurrency);
-        } else {
-          // Try to detect from location
-          const location = await enhancedCurrencyService.detectUserLocation();
-          const currencyCode = location?.currency || 'USD';
-          selectedCurrency = await enhancedCurrencyService.getCurrencyData(currencyCode);
-        }
+        // Default to USD to prevent API calls
+        selectedCurrency = await enhancedCurrencyService.getCurrencyData('USD');
       }
       
       setCurrency(selectedCurrency);

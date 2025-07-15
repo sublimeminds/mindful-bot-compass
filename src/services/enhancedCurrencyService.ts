@@ -59,29 +59,13 @@ class EnhancedCurrencyService {
     this.isLoading = true;
 
     try {
-      // Try to get live rates from exchangerate-api.io
-      const response = await fetch('https://api.exchangerate-api.io/v4/latest/USD');
-      const data = await response.json();
-      
-      if (data.rates) {
-        // Update rates from API
-        Object.entries(data.rates).forEach(([currency, rate]) => {
-          if (this.currencyInfo[currency as keyof typeof this.currencyInfo]) {
-            this.exchangeRates.set(currency, rate as number);
-          }
-        });
-        console.log('Live exchange rates updated:', this.exchangeRates);
-      } else {
-        throw new Error('Failed to fetch live rates');
-      }
-
-      this.lastUpdate = new Date();
-    } catch (error) {
-      console.error('Failed to update live exchange rates, using static fallback:', error);
+      // TEMPORARILY DISABLED: API calls causing infinite loading
+      // Use static fallback rates instead
+      console.log('Using static exchange rates to prevent infinite loading');
       
       // Updated fallback rates with current accurate values
       this.exchangeRates.set('USD', 1.0);
-      this.exchangeRates.set('IDR', 15680.0); // Updated IDR rate
+      this.exchangeRates.set('IDR', 15680.0);
       this.exchangeRates.set('EUR', 0.92);
       this.exchangeRates.set('GBP', 0.79);
       this.exchangeRates.set('JPY', 149.0);
@@ -102,6 +86,8 @@ class EnhancedCurrencyService {
       this.exchangeRates.set('NOK', 10.9);
       
       this.lastUpdate = new Date();
+    } catch (error) {
+      console.error('Error in currency service:', error);
     } finally {
       this.isLoading = false;
     }
@@ -116,16 +102,14 @@ class EnhancedCurrencyService {
 
   async detectUserLocation(): Promise<LocationData | null> {
     try {
-      // Try to get location from IP geolocation service
-      const response = await fetch('https://ipapi.co/json/');
-      const data = await response.json();
-      
+      // TEMPORARILY DISABLED: Location API calls causing infinite loading
+      console.log('Using default location to prevent infinite loading');
       return {
-        country: data.country_name || 'United States',
-        countryCode: data.country_code || 'US',
-        currency: data.currency || 'USD',
-        timezone: data.timezone || 'UTC',
-        region: this.getRegionFromCountry(data.country_code || 'US')
+        country: 'United States',
+        countryCode: 'US',
+        currency: 'USD',
+        timezone: 'UTC',
+        region: 'Americas'
       };
     } catch (error) {
       console.error('Failed to detect location:', error);
