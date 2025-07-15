@@ -112,9 +112,9 @@ const IdentityDiversityStep = ({ onNext, onBack, onboardingData }: IdentityDiver
 
   // Validation fields for step validation component
   const validationFields = [
-    { name: 'genderIdentity', label: 'Gender Identity', isValid: !!genderIdentity, isRequired: false },
+    { name: 'genderIdentity', label: 'Gender Identity *', isValid: !!genderIdentity, isRequired: true },
     { name: 'sexualOrientation', label: 'Sexual Orientation', isValid: !!sexualOrientation, isRequired: false },
-    { name: 'culturalIdentity', label: 'Cultural Identity', isValid: culturalIdentity.length > 0, isRequired: false },
+    { name: 'culturalIdentity', label: 'Cultural Identity *', isValid: culturalIdentity.length > 0, isRequired: true },
     { name: 'religiousIdentity', label: 'Religious Identity', isValid: !!religiousIdentity, isRequired: false }
   ];
 
@@ -144,7 +144,10 @@ const IdentityDiversityStep = ({ onNext, onBack, onboardingData }: IdentityDiver
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Gender Identity</Label>
+              <Label className="flex items-center justify-between">
+                Gender Identity <span className="text-red-500">*</span>
+                {genderIdentity && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+              </Label>
               <Select value={genderIdentity} onValueChange={setGenderIdentity}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select your gender identity" />
@@ -264,7 +267,10 @@ const IdentityDiversityStep = ({ onNext, onBack, onboardingData }: IdentityDiver
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Cultural/Ethnic Background</Label>
+              <Label className="flex items-center justify-between">
+                Cultural/Ethnic Background <span className="text-red-500">*</span>
+                {culturalIdentity.length > 0 && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+              </Label>
               <div className="grid grid-cols-1 gap-2">
                 {culturalOptions.map(option => (
                   <div key={option} className="flex items-center space-x-2">
@@ -348,7 +354,8 @@ const IdentityDiversityStep = ({ onNext, onBack, onboardingData }: IdentityDiver
         </GradientButton>
         <GradientButton 
           onClick={handleNext}
-          className={`${completedFields > 0 ? 'bg-green-500 hover:bg-green-600' : ''}`}
+          disabled={!genderIdentity || culturalIdentity.length === 0}
+          className={`${(genderIdentity && culturalIdentity.length > 0) ? 'bg-green-500 hover:bg-green-600' : 'opacity-50 cursor-not-allowed'}`}
         >
           Continue
         </GradientButton>

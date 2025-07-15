@@ -27,15 +27,14 @@ const CulturalPreferencesStep = ({
 }: CulturalPreferencesStepProps) => {
   const { t } = useTranslation();
   const [localPreferences, setLocalPreferences] = useState({
-    primaryLanguage: 'en',
-    culturalBackground: '',
-    familyStructure: '',
-    communicationStyle: '',
-    religiousConsiderations: false,
-    religiousDetails: '',
-    therapyApproachPreferences: [],
-    culturalSensitivities: [],
-    ...preferences
+    primaryLanguage: preferences?.primaryLanguage || 'en',
+    culturalBackground: preferences?.culturalBackground || '',
+    familyStructure: preferences?.familyStructure || '',
+    communicationStyle: preferences?.communicationStyle || '',
+    religiousConsiderations: preferences?.religiousConsiderations || false,
+    religiousDetails: preferences?.religiousDetails || '',
+    therapyApproachPreferences: preferences?.therapyApproachPreferences || [],
+    culturalSensitivities: preferences?.culturalSensitivities || []
   });
 
   const languages = [
@@ -456,7 +455,7 @@ const CulturalPreferencesStep = ({
       {/* Step Validation */}
       <StepValidation 
         fields={[
-          { name: 'primaryLanguage', label: 'Primary Language', isValid: !!localPreferences.primaryLanguage, isRequired: true },
+          { name: 'primaryLanguage', label: 'Primary Language *', isValid: !!localPreferences.primaryLanguage, isRequired: true },
           { name: 'culturalBackground', label: 'Cultural Background', isValid: !!localPreferences.culturalBackground, isRequired: false },
           { name: 'familyStructure', label: 'Family Structure', isValid: !!localPreferences.familyStructure, isRequired: false },
           { name: 'communicationStyle', label: 'Communication Style', isValid: !!localPreferences.communicationStyle, isRequired: false }

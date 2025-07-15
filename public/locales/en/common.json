@@ -63,7 +63,7 @@
     },
     "progress": {
       "fieldCompletion": "Field Completion",
-      "requiredFields": "required fields",
+      "requiredFields": "required fields completed",
       "optionalFields": "Optional Fields",
       "nextStepHint": "Complete all required fields to continue"
     }

@@ -170,42 +170,53 @@ const TherapistMatchStep = ({ onNext, onBack, onboardingData }: TherapistMatchSt
               onClick={() => handleTherapistSelect(therapist.id, therapist.therapist_tier)}
             >
               <CardHeader className="pb-3">
-                 <div className="flex items-start justify-between">
-                   <div className="flex items-center space-x-3">
-                       <Professional2DAvatar 
-                         therapistId={therapist.id}
-                         therapistName={therapist.name}
-                         size="md"
-                         className="w-12 h-12"
-                       />
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <CardTitle className="text-lg">{therapist.name}</CardTitle>
-                          <Badge className={`text-xs px-2 py-1 ${tierBadge.color}`}>
-                            <tierBadge.icon className="h-3 w-3 mr-1" />
-                            {tierBadge.label}
-                          </Badge>
-                          {!therapist.isAccessible && (
-                            <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
-                              Requires {tierBadge.label}
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground">{therapist.title}</p>
-                      </div>
-                   </div>
-                  <div className="text-right">
-                    <div className="flex items-center space-x-1 mb-1">
-                      <Progress 
-                        value={therapist.matchScore} 
-                        className="w-16 h-2"
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0">
+                    {/* 2D Avatar */}
+                    <div className="h-20 w-20 rounded-xl bg-gradient-to-br from-harmony-100 to-flow-100 dark:from-harmony-800 dark:to-flow-800 flex items-center justify-center overflow-hidden shadow-md">
+                      <Professional2DAvatar 
+                        therapistId={therapist.id}
+                        therapistName={therapist.name}
+                        size="lg"
+                        className="w-16 h-16"
                       />
-                      <span className="text-sm font-medium text-therapy-600">
-                        {therapist.matchScore}%
-                      </span>
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {t('onboarding.therapistMatch.compatibilityScore')}
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold text-lg leading-tight">{therapist.name}</h3>
+                        <p className="text-sm text-muted-foreground mb-2">{therapist.title}</p>
+                        
+                        <div className="flex items-center space-x-3">
+                          <div className="flex items-center space-x-2">
+                            <Progress 
+                              value={therapist.matchScore} 
+                              className="w-20 h-2"
+                            />
+                            <span className="text-sm font-medium text-therapy-600">
+                              {therapist.matchScore}%
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {t('onboarding.therapistMatch.compatibilityScore')}
+                        </div>
+                      </div>
+                      
+                      {/* Plan Badge - Show only one badge */}
+                      {therapist.therapist_tier && therapist.therapist_tier !== 'free' && (
+                        <Badge 
+                          variant="outline" 
+                          className={`text-xs flex-shrink-0 ${therapist.therapist_tier === 'premium' 
+                            ? 'border-purple-300 text-purple-700 bg-purple-50' 
+                            : 'border-blue-300 text-blue-700 bg-blue-50'
+                          }`}
+                        >
+                          {therapist.therapist_tier === 'premium' ? 'Premium' : 'Professional'}
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </div>

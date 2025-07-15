@@ -189,9 +189,12 @@ const RelationshipHistoryStep = ({ onNext, onBack, onboardingData }: Relationshi
       {/* Relationship Status */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Heart className="h-5 w-5 text-red-600" />
-            <span>Current Relationship Status</span>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Heart className="h-5 w-5 text-red-600" />
+              <span>Current Relationship Status <span className="text-red-500">*</span></span>
+            </div>
+            {relationshipStatus && <CheckCircle2 className="h-4 w-4 text-green-500" />}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -232,13 +235,18 @@ const RelationshipHistoryStep = ({ onNext, onBack, onboardingData }: Relationshi
       {/* Attachment Style */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Shield className="h-5 w-5 text-blue-600" />
-            <span>Attachment Style in Relationships</span>
+          <CardTitle className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center space-x-2">
+                <Shield className="h-5 w-5 text-blue-600" />
+                <span>Attachment Style in Relationships <span className="text-red-500">*</span></span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                How do you typically behave in close relationships?
+              </p>
+            </div>
+            {attachmentStyle && <CheckCircle2 className="h-4 w-4 text-green-500" />}
           </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            How do you typically behave in close relationships?
-          </p>
         </CardHeader>
         <CardContent>
           <RadioGroup value={attachmentStyle} onValueChange={setAttachmentStyle}>
@@ -480,7 +488,7 @@ const RelationshipHistoryStep = ({ onNext, onBack, onboardingData }: Relationshi
         <GradientButton variant="outline" onClick={onBack}>
           Back
         </GradientButton>
-        <GradientButton 
+        <GradientButton
           onClick={handleSubmit}
           disabled={!isComplete}
           className={`${isComplete ? 'bg-green-500 hover:bg-green-600' : 'opacity-50 cursor-not-allowed'}`}
