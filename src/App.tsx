@@ -21,6 +21,7 @@ import { AvatarManagerProvider } from '@/components/avatar/OptimizedAvatarManage
 import { TherapistProvider } from '@/contexts/TherapistContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { useAffiliateTracking } from '@/hooks/useAffiliateTracking';
+import { SuperAdminProvider } from '@/contexts/SuperAdminContext';
 
 import './App.css';
 
@@ -84,18 +85,20 @@ function App() {
             <SimpleAppProvider>
               <ThemeProvider>
                 <TherapistProvider>
-                  <AvatarManagerProvider maxActiveAvatars={3}>
-                    <ContextReadyWrapper>
-                      <SafeRouter>
-                      <div className="min-h-screen bg-background">
-                        <LanguageAwareRouter />
-                        <LiveChatAgent />
-                        <Toaster />
-                        <Sonner />
-                      </div>
-                      </SafeRouter>
-                    </ContextReadyWrapper>
-                  </AvatarManagerProvider>
+                  <SuperAdminProvider>
+                    <AvatarManagerProvider maxActiveAvatars={3}>
+                      <ContextReadyWrapper>
+                        <SafeRouter>
+                        <div className="min-h-screen bg-background">
+                          <LanguageAwareRouter />
+                          <LiveChatAgent />
+                          <Toaster />
+                          <Sonner />
+                        </div>
+                        </SafeRouter>
+                      </ContextReadyWrapper>
+                    </AvatarManagerProvider>
+                  </SuperAdminProvider>
                 </TherapistProvider>
               </ThemeProvider>
             </SimpleAppProvider>

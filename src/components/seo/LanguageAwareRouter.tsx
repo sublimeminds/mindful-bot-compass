@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { LanguageRouter } from '@/utils/languageRouting';
 import AppRouter from '@/components/AppRouter';
+import SuperAdminRouter from '@/components/SuperAdminRouter';
 
 export const LanguageAwareRouter: React.FC = () => {
   const location = useLocation();
