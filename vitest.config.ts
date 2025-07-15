@@ -10,16 +10,31 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/tests/setup.ts'],
     css: true,
+    testTimeout: 30000,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       exclude: [
         'node_modules/',
-        'src/tests/',
+        'src/tests/setup.ts',
         '**/*.d.ts',
         '**/*.config.*',
-        '**/dist/**'
-      ]
+        '**/dist/**',
+        'src/integrations/supabase/types.ts'
+      ],
+      include: [
+        'src/**/*.{ts,tsx}',
+        '!src/**/*.test.{ts,tsx}',
+        '!src/**/*.stories.{ts,tsx}'
+      ],
+      thresholds: {
+        global: {
+          branches: 80,
+          functions: 80,
+          lines: 80,
+          statements: 80
+        }
+      }
     }
   },
   resolve: {

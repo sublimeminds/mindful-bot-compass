@@ -23,7 +23,13 @@ const EnhancedOnboardingPage = () => {
         return;
       }
 
-      // Save the cultural profile first
+      // Validate required data before proceeding
+      if (!data || Object.keys(data).length === 0) {
+        toast.error('Invalid onboarding data. Please complete all steps.');
+        return;
+      }
+
+      // Save the cultural profile first with proper error handling
       if (data.culturalPreferences) {
         const culturalProfile: UserCulturalProfile = {
           userId: user.id,
@@ -48,15 +54,9 @@ const EnhancedOnboardingPage = () => {
         console.log('Cultural profile saved successfully');
       }
 
-      // Mark onboarding as complete
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ onboarding_complete: true })
-        .eq('id', user.id);
-
-      if (profileError) {
-        console.error('Error updating onboarding status:', profileError);
-      }
+      // Do NOT mark onboarding as complete until therapy plan is successfully created
+      // This was the main issue - marking complete too early
+      console.log('Onboarding data processed, proceeding to therapy plan creation');
 
       // Store data and show plan creation step
       setOnboardingData(data);
@@ -67,9 +67,28 @@ const EnhancedOnboardingPage = () => {
     }
   };
 
-  const handlePlanCreationComplete = (success: boolean, planData?: any) => {
-    if (success) {
+  const handlePlanCreationComplete = async (success: boolean, planData?: any) => {
+    if (success && user) {
       console.log('Therapy plan created successfully:', planData);
+      
+      try {
+        // NOW mark onboarding as complete after successful therapy plan creation
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({ onboarding_complete: true })
+          .eq('id', user.id);
+
+        if (profileError) {
+          console.error('Error updating onboarding status:', profileError);
+          toast.error('Plan created but failed to update profile. Please contact support.');
+        } else {
+          console.log('Onboarding marked as complete successfully');
+          toast.success('Welcome! Your personalized therapy journey begins now.');
+        }
+      } catch (error) {
+        console.error('Error marking onboarding complete:', error);
+      }
+      
       navigate('/dashboard');
     } else {
       // Go back to onboarding or show error

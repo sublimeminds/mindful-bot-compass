@@ -213,33 +213,72 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
 
   const createTherapyPlan = async () => {
     try {
+      console.log('Starting therapy plan creation for user:', user?.id);
       toast.loading('Creating your personalized therapy plan...');
 
-      const { data, error } = await supabase.functions.invoke('adaptive-therapy-planner', {
-        body: {
-          userId: user.id,
-          onboardingData,
-          culturalProfile: onboardingData.culturalPreferences,
-          traumaHistory: onboardingData.traumaHistory,
-          therapistSelection: onboardingData.therapistSelection,
-          assessmentResults: onboardingData.assessmentResults || {},
-          mentalHealthAssessments: onboardingData.mentalHealthAssessments || {},
-          clinicalData: onboardingData.clinicalData || {},
-          riskAssessment: onboardingData.riskAssessment || {},
-          preferences: {
-            cultural: onboardingData.culturalPreferences,
-            therapy: onboardingData.therapyPreferences,
-            communication: onboardingData.communicationPreferences
-          }
+      // Validate user is authenticated
+      if (!user?.id) {
+        throw new Error('User not authenticated');
+      }
+
+      // Validate onboarding data is present
+      if (!onboardingData || Object.keys(onboardingData).length === 0) {
+        throw new Error('Missing onboarding data');
+      }
+
+      const planPayload = {
+        userId: user.id,
+        onboardingData,
+        culturalProfile: onboardingData.culturalPreferences,
+        traumaHistory: onboardingData.traumaHistory,
+        therapistSelection: onboardingData.therapistSelection,
+        assessmentResults: onboardingData.assessmentResults || {},
+        mentalHealthAssessments: onboardingData.mentalHealthAssessments || {},
+        clinicalData: onboardingData.clinicalData || {},
+        riskAssessment: onboardingData.riskAssessment || {},
+        preferences: {
+          cultural: onboardingData.culturalPreferences,
+          therapy: onboardingData.therapyPreferences,
+          communication: onboardingData.communicationPreferences
         }
+      };
+
+      console.log('Invoking adaptive-therapy-planner with payload:', planPayload);
+
+      const { data, error } = await supabase.functions.invoke('adaptive-therapy-planner', {
+        body: planPayload
       });
 
+      console.log('Edge function response:', { data, error });
+
       if (error) {
-        throw new Error(error.message);
+        console.error('Edge function error:', error);
+        throw new Error(error.message || 'Edge function failed');
       }
+
+      if (!data) {
+        throw new Error('No data returned from therapy plan creation');
+      }
+
+      // Verify the plan was actually saved to the database
+      const { data: savedPlan, error: verifyError } = await supabase
+        .from('adaptive_therapy_plans')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (verifyError || !savedPlan) {
+        console.error('Plan verification failed:', verifyError);
+        throw new Error('Therapy plan was not saved properly. Please try again.');
+      }
+
+      console.log('Therapy plan verified in database:', savedPlan);
 
       setPlanData(data);
       setIsComplete(true);
+      toast.dismiss(); // Remove loading toast
       toast.success('Your personalized therapy plan has been created successfully!');
       
       // Show summary after 1 second
@@ -249,8 +288,10 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
 
     } catch (error) {
       console.error('Error creating therapy plan:', error);
-      setError('Failed to create therapy plan. Please try again.');
-      toast.error('Failed to create therapy plan. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create therapy plan';
+      setError(errorMessage);
+      toast.dismiss(); // Remove loading toast
+      toast.error(errorMessage);
     }
   };
 
