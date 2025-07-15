@@ -1,4 +1,3 @@
-
 {
   "common": {
     "loading": "Loading...",
@@ -98,40 +97,26 @@
         "title": "Profile Settings",
         "features": {
           "personal": "Personal Info",
-          "preferences": "Therapy Preferences",
+          "therapy": "Therapy Preferences",
           "privacy": "Privacy Settings"
         },
         "actions": {
           "update": "Update Profile",
-          "security": "Security Settings",
-          "preferences": "Set Preferences"
+          "preferences": "Set Preferences",
+          "export": "Export Data"
         },
         "help": {
-          "setup": "Profile Setup",
+          "editing": "Editing Profile",
           "privacy": "Privacy Controls",
           "data": "Data Management"
-        }
-      },
-      "default": {
-        "title": "TherapySync Help",
-        "features": {
-          "general": "General Support"
-        },
-        "actions": {
-          "help": "Get Help",
-          "contact": "Contact Support"
-        },
-        "help": {
-          "general": "General Help",
-          "contact": "Contact Support"
         }
       }
     }
   },
   "couplesTherapy": {
-    "badge": "Couples Therapy",
-    "title": "Strengthen Your Relationship Together",
-    "subtitle": "AI-powered couples therapy designed to improve communication, resolve conflicts, and build deeper connection between partners.",
+    "badge": "Couples Support",
+    "title": "AI-Powered Couples Therapy",
+    "subtitle": "Strengthen your relationship with 24/7 AI guidance designed for couples. Address conflicts, improve communication, and build deeper intimacy together.",
     "cta": {
       "start": "Start Couples Session",
       "learn": "Learn More"
@@ -268,13 +253,29 @@
     "title": "Getting Started",
     "steps": {
       "welcome": "Welcome",
-      "goals": "Your Goals",
-      "preferences": "Preferences",
+      "auth": "Create Account",
+      "basic": "Basic Information",
+      "problems": "Your Challenges",
+      "childhood": "Childhood History",
+      "personal": "Personal History",
+      "relationships": "Social History",
+      "mental": "Mental Health",
       "cultural": "Cultural Context",
       "analysis": "AI Analysis",
-      "therapist": "Therapist Selection",
-      "plan": "Choose Plan",
+      "therapist": "Choose Therapist",
+      "plan": "Select Plan",
       "notifications": "Notifications"
+    },
+    "cultural": {
+      "title": "Cultural Preferences",
+      "description": "Help us understand your cultural background to provide more personalized care",
+      "primaryLanguage": "Primary Language",
+      "culturalBackground": "Cultural Background",
+      "familyStructure": "Family Structure",
+      "communicationStyle": "Communication Style",
+      "religiousConsiderations": "Religious/Spiritual Considerations",
+      "therapyPreferences": "Therapy Approach Preferences",
+      "culturalSensitivities": "Cultural Sensitivities to Consider"
     }
   }
 }

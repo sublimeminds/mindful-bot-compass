@@ -6,6 +6,7 @@ import WelcomeStep from './WelcomeStep';
 import EmbeddedAuthStep from './EmbeddedAuthStep';
 import IntakeAssessmentStep from './IntakeAssessmentStep';
 import ProblemAssessmentStep from './ProblemAssessmentStep';
+import IdentityDiversityStep from './IdentityDiversityStep';
 import ChildhoodHistoryStep from './ChildhoodHistoryStep';
 import PersonalHistoryStep from './PersonalHistoryStep';
 import RelationshipHistoryStep from './RelationshipHistoryStep';
@@ -109,6 +110,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     { component: EmbeddedAuthStep, titleKey: 'Create Your Account' },
     { component: IntakeAssessmentStep, titleKey: 'Basic Information' },
     { component: ProblemAssessmentStep, titleKey: 'Tell Us About Your Challenges' },
+    { component: IdentityDiversityStep, titleKey: 'Identity & Diversity' },
     { component: ChildhoodHistoryStep, titleKey: 'Childhood & Early Life' },
     { component: PersonalHistoryStep, titleKey: 'Personal History' },
     { component: RelationshipHistoryStep, titleKey: 'Relationships & Social Life' },
@@ -123,7 +125,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   // Filter steps based on subscription status
   const steps = shouldShowPlanSelection() 
     ? allSteps 
-    : allSteps.filter((_, index) => index !== 11); // Remove plan selection step
+    : allSteps.filter((_, index) => index !== 12); // Remove plan selection step
 
   const handleGetStarted = () => {
     setShowIntro(false);
@@ -198,7 +200,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     }
 
     // Add therapist step props - fix the filter error
-    if (currentStep === 10) { // TherapistPersonalityStep (updated index)
+    if (currentStep === 11) { // TherapistPersonalityStep (updated index)
       return {
         ...baseProps,
         selectedPersonality: onboardingData.selectedPersonality || null,
@@ -211,7 +213,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     }
 
     // Plan selection step with conditional logic
-    const planStepIndex = shouldShowPlanSelection() ? 11 : -1;
+    const planStepIndex = shouldShowPlanSelection() ? 12 : -1;
     if (currentStep === planStepIndex && planStepIndex !== -1) {
       const isAtLimit = therapyPlanCount >= subscriptionAccess.therapyPlanLimit;
       const showAsOptionalUpsell = subscriptionAccess.tier === 'free' && !isAtLimit;
@@ -238,11 +240,6 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
             />
             
           </div>
-          {selectedPlan && (
-            <div className="text-sm text-therapy-600 font-medium">
-              Selected: {selectedPlan.name}
-            </div>
-          )}
         </div>
 
         {/* Progress Indicator */}
