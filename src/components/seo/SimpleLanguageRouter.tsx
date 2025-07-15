@@ -34,23 +34,24 @@ const LanguagePrefixHandler: React.FC = () => {
   
   // Simple synchronous language extraction
   const pathParts = location.pathname.split('/').filter(Boolean);
-  const language = pathParts[0] || 'en';
-  const cleanPath = '/' + pathParts.slice(1).join('/');
+  const potentialLanguage = pathParts[0] || 'en';
   
-  // Basic language validation
+  // Basic language validation - only treat as language if it's exactly 2 chars and supported
   const supportedLanguages = ['en', 'de', 'es', 'fr', 'it', 'pt', 'ja', 'ko', 'zh', 'ar'];
   
-  if (!supportedLanguages.includes(language)) {
-    return <Navigate to={cleanPath} replace />;
+  // Only redirect if the first part is actually a valid language code (2 chars) and supported
+  if (potentialLanguage.length === 2 && supportedLanguages.includes(potentialLanguage)) {
+    // Save language preference without async operations
+    try {
+      localStorage.setItem('preferred-language', potentialLanguage);
+    } catch (error) {
+      // Ignore localStorage errors
+    }
+
+    return <AppRouter />;
   }
 
-  // Save language preference without async operations
-  try {
-    localStorage.setItem('preferred-language', language);
-  } catch (error) {
-    // Ignore localStorage errors
-  }
-
+  // If not a valid language prefix, treat as regular path
   return <AppRouter />;
 };
 
