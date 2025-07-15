@@ -62,7 +62,7 @@ export const useOnboardingProgress = () => {
   }, [progress]);
 
   const hasProgress = useCallback(() => {
-    return !!progress && !progress.completed && progress.currentStep > 0;
+    return !!progress && !progress.completed && progress.currentStep > 0 && progress.lastSavedAt;
   }, [progress]);
 
   useEffect(() => {

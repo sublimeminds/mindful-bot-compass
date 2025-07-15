@@ -40,13 +40,14 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
   const { user } = useAuth();
   const navigate = useNavigate();
   const subscriptionAccess = useSubscriptionAccess();
-  const { progress, saveProgress, updateStep, clearProgress, hasProgress } = useOnboardingProgress();
-  const [showIntro, setShowIntro] = useState(!progress?.lastSavedAt);
-  const [currentStep, setCurrentStep] = useState(progress?.currentStep || 0);
+  const { progress, saveProgress, updateStep, clearProgress, hasProgress, isLoaded } = useOnboardingProgress();
+  const [showIntro, setShowIntro] = useState(true);
+  const [currentStep, setCurrentStep] = useState(0);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
-  const [onboardingData, setOnboardingData] = useState<any>(progress?.data || {});
+  const [onboardingData, setOnboardingData] = useState<any>({});
   const [showResumePrompt, setShowResumePrompt] = useState(false);
+  const [hasCheckedProgress, setHasCheckedProgress] = useState(false);
 
   useSEO({
     title: 'Get Started - TherapySync',
@@ -139,7 +140,10 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     
     if (stepData) {
       setOnboardingData(newData);
-      saveProgress(stepData, currentStep);
+      // Only save progress if we're not on the first step or if user is authenticated
+      if (currentStep > 0 || user) {
+        saveProgress(newData, currentStep + 1);
+      }
     }
 
     console.log('🎯 Is last step?', currentStep >= steps.length - 1);
@@ -178,21 +182,36 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     }));
   };
 
-  // Check for saved progress and show resume prompt
+  // Check for saved progress and show resume prompt - only once when component loads
   useEffect(() => {
-    if (user && hasProgress() && !showResumePrompt) {
+    if (!isLoaded || hasCheckedProgress) return;
+
+    // Only check progress once the hook has loaded and user exists
+    if (user && hasProgress()) {
+      console.log('📚 Found saved progress, showing resume prompt');
       setShowResumePrompt(true);
-    } else if (user && currentStep === 1 && !progress?.lastSavedAt) {
-      console.log('🔄 User authenticated, skipping auth step');
+      setShowIntro(false);
+    } else if (user) {
+      // User is authenticated but no progress, skip auth step
+      console.log('🔄 User authenticated, no saved progress');
       setCurrentStep(2);
-      updateStep(2);
+      setShowIntro(false);
+    } else {
+      // No user, start from beginning
+      console.log('👤 No user, starting fresh');
+      setShowIntro(true);
     }
-  }, [user, hasProgress]);
+    
+    setHasCheckedProgress(true);
+  }, [user, hasProgress, isLoaded, hasCheckedProgress]);
 
   const handleResumeProgress = () => {
-    setCurrentStep(progress?.currentStep || 0);
-    setOnboardingData(progress?.data || {});
+    if (progress) {
+      setCurrentStep(progress.currentStep);
+      setOnboardingData(progress.data || {});
+    }
     setShowResumePrompt(false);
+    setShowIntro(false);
   };
 
   const handleStartFresh = () => {
