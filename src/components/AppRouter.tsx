@@ -347,15 +347,15 @@ const AppRouter = () => {
       
       {/* USER DASHBOARD PAGES - Use BulletproofDashboardLayout (Sidebar) */}
       
-      {/* Onboarding Routes (still dashboard style for logged in users) */}
+      {/* Onboarding Routes (full-screen without dashboard wrapper) */}
       <Route path="/enhanced-onboarding" element={
         <PageErrorBoundary pageName="Enhanced Onboarding">
-          <DashboardPageWrapper><EnhancedOnboardingPage /></DashboardPageWrapper>
+          <EnhancedOnboardingPage />
         </PageErrorBoundary>
       } />
       <Route path="/onboarding" element={
         <PageErrorBoundary pageName="Onboarding">
-          <DashboardPageWrapper><EnhancedOnboardingPage /></DashboardPageWrapper>
+          <EnhancedOnboardingPage />
         </PageErrorBoundary>
       } />
       <Route path="/onboarding-old" element={
