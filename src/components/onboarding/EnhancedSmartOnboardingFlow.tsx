@@ -6,6 +6,9 @@ import WelcomeStep from './WelcomeStep';
 import EmbeddedAuthStep from './EmbeddedAuthStep';
 import IntakeAssessmentStep from './IntakeAssessmentStep';
 import ProblemAssessmentStep from './ProblemAssessmentStep';
+import ChildhoodHistoryStep from './ChildhoodHistoryStep';
+import PersonalHistoryStep from './PersonalHistoryStep';
+import RelationshipHistoryStep from './RelationshipHistoryStep';
 import MentalHealthScreeningStep from './MentalHealthScreeningStep';
 import CulturalPreferencesStep from './CulturalPreferencesStep';
 import InternationalizedEnhancedSmartAnalysisStep from './InternationalizedEnhancedSmartAnalysisStep';
@@ -71,6 +74,9 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     { component: EmbeddedAuthStep, titleKey: 'Create Your Account' },
     { component: IntakeAssessmentStep, titleKey: 'Basic Information' },
     { component: ProblemAssessmentStep, titleKey: 'Tell Us About Your Challenges' },
+    { component: ChildhoodHistoryStep, titleKey: 'Childhood & Early Life' },
+    { component: PersonalHistoryStep, titleKey: 'Personal History' },
+    { component: RelationshipHistoryStep, titleKey: 'Relationships & Social Life' },
     { component: MentalHealthScreeningStep, titleKey: 'Mental Health Screening' },
     { component: CulturalPreferencesStep, titleKey: 'Cultural Preferences' },
     { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'AI Analysis' },
@@ -92,6 +98,8 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       setCurrentStep(currentStep + 1);
     } else {
       localStorage.removeItem('selectedPlan');
+      // Trigger Elite AI Hub integration here
+      console.log('Onboarding complete, sending data to Elite AI Hub:', onboardingData);
       onComplete(onboardingData);
     }
   };
@@ -150,7 +158,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     }
 
     // Add therapist step props - fix the filter error
-    if (currentStep === 7) { // TherapistPersonalityStep
+    if (currentStep === 10) { // TherapistPersonalityStep (updated index)
       return {
         ...baseProps,
         selectedPersonality: onboardingData.selectedPersonality || null,
@@ -163,7 +171,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     }
 
     // Move plan selection to last and remove pre-selection
-    if (currentStep === 8) { // Plan Selection step - no pre-selection
+    if (currentStep === 11) { // Plan Selection step - no pre-selection (updated index)
       return {
         ...baseProps
       };
