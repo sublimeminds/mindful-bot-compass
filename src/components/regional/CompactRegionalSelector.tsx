@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Globe, ChevronDown } from 'lucide-react';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Globe, ChevronDown, Search, Check } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useRegionalPreferences } from '@/hooks/useRegionalPreferences';
 import { useCountryDetection } from '@/hooks/useCountryDetection';
 import { useEnhancedLanguage } from '@/hooks/useEnhancedLanguage';
@@ -14,6 +15,9 @@ interface CompactRegionalSelectorProps {
 
 const CompactRegionalSelector = ({ className = "" }: CompactRegionalSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [countryOpen, setCountryOpen] = useState(false);
+  const [currencyOpen, setCurrencyOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
   
   const { 
     regionalPreferences, 
@@ -81,6 +85,38 @@ const CompactRegionalSelector = ({ className = "" }: CompactRegionalSelectorProp
   const displayCurrency = currency?.code || 'USD';
   const displayLanguage = currentLanguage?.code || 'en';
 
+  // Smart suggestions based on country
+  const getCountrySuggestions = (countryCode: string) => {
+    const suggestions = {
+      US: { currency: 'USD', language: 'en' },
+      GB: { currency: 'GBP', language: 'en' },
+      DE: { currency: 'EUR', language: 'de' },
+      FR: { currency: 'EUR', language: 'fr' },
+      ES: { currency: 'EUR', language: 'es' },
+      IT: { currency: 'EUR', language: 'it' },
+      JP: { currency: 'JPY', language: 'ja' },
+      CN: { currency: 'CNY', language: 'zh' },
+      IN: { currency: 'INR', language: 'en' },
+      BR: { currency: 'BRL', language: 'pt' },
+    };
+    return suggestions[countryCode as keyof typeof suggestions];
+  };
+
+  const handleCountryChange = (newCountryCode: string) => {
+    setCountryPreference(newCountryCode);
+    const suggestions = getCountrySuggestions(newCountryCode);
+    if (suggestions) {
+      // Auto-suggest but don't force
+      if (supportedCurrencies.find(c => c.code === suggestions.currency)) {
+        changeCurrency(suggestions.currency);
+      }
+      if (supportedLanguages.find(l => l.code === suggestions.language)) {
+        changeLanguage(suggestions.language);
+      }
+    }
+    setCountryOpen(false);
+  };
+
   return (
     <div className={`flex items-center ${className}`}>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -88,109 +124,218 @@ const CompactRegionalSelector = ({ className = "" }: CompactRegionalSelectorProp
           <Button 
             variant="ghost" 
             size="sm" 
-            className="h-8 px-2 text-xs gap-1 hover:bg-therapy-50"
+            className="h-8 px-3 text-xs gap-2 hover:bg-muted/50 border border-transparent hover:border-border/50 transition-all duration-200"
           >
-            <span>{getCountryFlag(displayCountryCode)}</span>
-            <span className="hidden sm:inline">{displayCurrency}</span>
-            <span className="hidden sm:inline">{displayLanguage.toUpperCase()}</span>
-            <ChevronDown className="h-3 w-3" />
+            <span className="text-base">{currentLanguage?.flag || getCountryFlag(displayCountryCode)}</span>
+            <span className="hidden sm:inline font-medium">{currentLanguage?.name || 'English'}</span>
+            <span className="hidden lg:inline text-muted-foreground">•</span>
+            <span className="font-mono font-semibold">{currency?.symbol || '$'}</span>
+            <ChevronDown className="h-3 w-3 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 p-4" align="end">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <Globe className="h-4 w-4 text-therapy-600" />
-              <h3 className="font-medium text-sm">Regional Preferences</h3>
+        <PopoverContent className="w-96 p-0" align="end" sideOffset={4}>
+          <div className="p-4 border-b border-border/50">
+            <div className="flex items-center gap-2">
+              <Globe className="h-4 w-4 text-primary" />
+              <h3 className="font-semibold text-sm">Regional Preferences</h3>
             </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Customize your language, currency and region
+            </p>
+          </div>
 
-            {/* Country Selection */}
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-slate-700">Country</label>
-              <Select 
-                value={displayCountryCode} 
-                onValueChange={setCountryPreference}
-              >
-                <SelectTrigger className="w-full h-8 text-xs">
-                  <SelectValue>
+          <div className="p-4 space-y-6">
+            {/* Language Selection - Primary */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-sm">🗣️</span>
+                <label className="text-sm font-medium">Language (Interface)</label>
+              </div>
+              <Popover open={languageOpen} onOpenChange={setLanguageOpen}>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    role="combobox"
+                    aria-expanded={languageOpen}
+                    className="w-full justify-between h-10"
+                  >
                     <div className="flex items-center gap-2">
-                      <span>{getCountryFlag(displayCountryCode)}</span>
-                      <span>{regionalPreferences?.countryName || 'Select Country'}</span>
+                      <span className="text-base">{currentLanguage?.flag || '🌍'}</span>
+                      <span className="font-medium">{currentLanguage?.name || 'English'}</span>
+                      <span className="text-xs text-muted-foreground uppercase">{displayLanguage}</span>
                     </div>
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent className="max-h-60">
-                  {availableCountries.map((country) => (
-                    <SelectItem key={country.country_code} value={country.country_code}>
-                      <div className="flex items-center gap-2 text-xs">
-                        <span>{getCountryFlag(country.country_code)}</span>
-                        <span>{country.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search languages..." className="h-9" />
+                    <CommandList>
+                      <CommandEmpty>No language found.</CommandEmpty>
+                      <CommandGroup>
+                        {supportedLanguages.map((lang) => (
+                          <CommandItem
+                            key={lang.code}
+                            value={`${lang.name} ${lang.nativeName} ${lang.code}`}
+                            onSelect={() => {
+                              changeLanguage(lang.code);
+                              setLanguageOpen(false);
+                            }}
+                          >
+                            <div className="flex items-center gap-3 flex-1">
+                              <span className="text-lg">{lang.flag}</span>
+                              <div className="flex flex-col">
+                                <span className="font-medium">{lang.name}</span>
+                                <span className="text-xs text-muted-foreground">{lang.nativeName}</span>
+                              </div>
+                            </div>
+                            <Check
+                              className={cn(
+                                "h-4 w-4",
+                                displayLanguage === lang.code ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
 
-            {/* Currency Selection */}
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-slate-700">Currency</label>
-              <Select 
-                value={displayCurrency} 
-                onValueChange={changeCurrency}
-              >
-                <SelectTrigger className="w-full h-8 text-xs">
-                  <SelectValue>
+            {/* Currency Selection - Secondary */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-sm">💰</span>
+                <label className="text-sm font-medium">Currency (Pricing)</label>
+              </div>
+              <Popover open={currencyOpen} onOpenChange={setCurrencyOpen}>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    role="combobox"
+                    aria-expanded={currencyOpen}
+                    className="w-full justify-between h-10"
+                  >
                     <div className="flex items-center gap-2">
-                      <span>{currency?.symbol || '$'}</span>
-                      <span>{displayCurrency}</span>
+                      <span className="font-mono font-bold text-base">{currency?.symbol || '$'}</span>
+                      <span className="font-medium">{currency?.name || 'US Dollar'}</span>
+                      <span className="text-xs text-muted-foreground uppercase">{displayCurrency}</span>
                     </div>
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent className="max-h-60">
-                  {supportedCurrencies.map((curr) => (
-                    <SelectItem key={curr.code} value={curr.code}>
-                      <div className="flex items-center gap-2 text-xs">
-                        <span>{curr.symbol}</span>
-                        <span>{curr.code} - {curr.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search currencies..." className="h-9" />
+                    <CommandList>
+                      <CommandEmpty>No currency found.</CommandEmpty>
+                      <CommandGroup>
+                        {supportedCurrencies.map((curr) => (
+                          <CommandItem
+                            key={curr.code}
+                            value={`${curr.name} ${curr.code} ${curr.symbol}`}
+                            onSelect={() => {
+                              changeCurrency(curr.code);
+                              setCurrencyOpen(false);
+                            }}
+                          >
+                            <div className="flex items-center gap-3 flex-1">
+                              <span className="font-mono font-bold text-lg w-6 text-center">{curr.symbol}</span>
+                              <div className="flex flex-col">
+                                <span className="font-medium">{curr.name}</span>
+                                <span className="text-xs text-muted-foreground uppercase">{curr.code}</span>
+                              </div>
+                            </div>
+                            <Check
+                              className={cn(
+                                "h-4 w-4",
+                                displayCurrency === curr.code ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
 
-            {/* Language Selection */}
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-slate-700">Language</label>
-              <Select 
-                value={displayLanguage} 
-                onValueChange={changeLanguage}
-              >
-                <SelectTrigger className="w-full h-8 text-xs">
-                  <SelectValue>
+            {/* Country Selection - Tertiary */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-sm">🌍</span>
+                <label className="text-sm font-medium">Region (Content)</label>
+              </div>
+              <Popover open={countryOpen} onOpenChange={setCountryOpen}>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    role="combobox"
+                    aria-expanded={countryOpen}
+                    className="w-full justify-between h-10"
+                  >
                     <div className="flex items-center gap-2">
-                      <span>{currentLanguage?.flag || '🌍'}</span>
-                      <span>{currentLanguage?.name || 'English'}</span>
+                      <span className="text-base">{getCountryFlag(displayCountryCode)}</span>
+                      <span className="font-medium">{regionalPreferences?.countryName || 'United States'}</span>
+                      <span className="text-xs text-muted-foreground uppercase">{displayCountryCode}</span>
                     </div>
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent className="max-h-60">
-                  {supportedLanguages.map((lang) => (
-                    <SelectItem key={lang.code} value={lang.code}>
-                      <div className="flex items-center gap-2 text-xs">
-                        <span>{lang.flag}</span>
-                        <span>{lang.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search countries..." className="h-9" />
+                    <CommandList>
+                      <CommandEmpty>No country found.</CommandEmpty>
+                      <CommandGroup>
+                        {availableCountries.map((country) => (
+                          <CommandItem
+                            key={country.country_code}
+                            value={`${country.name} ${country.country_code}`}
+                            onSelect={() => handleCountryChange(country.country_code)}
+                          >
+                            <div className="flex items-center gap-3 flex-1">
+                              <span className="text-lg">{getCountryFlag(country.country_code)}</span>
+                              <div className="flex flex-col">
+                                <span className="font-medium">{country.name}</span>
+                                <span className="text-xs text-muted-foreground uppercase">{country.country_code}</span>
+                              </div>
+                            </div>
+                            <Check
+                              className={cn(
+                                "h-4 w-4",
+                                displayCountryCode === country.country_code ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
+          </div>
 
-            {/* Current Summary */}
-            <div className="pt-2 border-t border-slate-200">
-              <div className="text-xs text-slate-500">
-                Current: {getCountryFlag(displayCountryCode)} {displayCurrency} {displayLanguage.toUpperCase()}
+          {/* Summary Footer */}
+          <div className="p-4 border-t border-border/50 bg-muted/30">
+            <div className="flex items-center justify-center gap-3 text-sm">
+              <div className="flex items-center gap-1">
+                <span className="text-base">{currentLanguage?.flag || getCountryFlag(displayCountryCode)}</span>
+                <span className="font-medium">{currentLanguage?.name || 'English'}</span>
+              </div>
+              <span className="text-muted-foreground">•</span>
+              <div className="flex items-center gap-1">
+                <span className="font-mono font-bold">{currency?.symbol || '$'}</span>
+                <span className="font-medium">{currency?.name || 'US Dollar'}</span>
+              </div>
+              <span className="text-muted-foreground">•</span>
+              <div className="flex items-center gap-1">
+                <span className="text-base">{getCountryFlag(displayCountryCode)}</span>
+                <span className="font-medium">{regionalPreferences?.countryName || 'United States'}</span>
               </div>
             </div>
           </div>
