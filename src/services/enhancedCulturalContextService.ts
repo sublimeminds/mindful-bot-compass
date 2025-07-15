@@ -34,6 +34,9 @@ export class EnhancedCulturalContextService {
           therapy_approach_preferences: profile.therapyApproachPreferences,
           cultural_sensitivities: profile.culturalSensitivities,
           updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id',
+          ignoreDuplicates: false
         });
 
       if (error) {
