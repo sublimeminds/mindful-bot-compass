@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { cacheService } from '@/services/cachingService';
+import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
+import { useCountryDetection } from '@/hooks/useCountryDetection';
 
 interface CurrencyData {
   code: string;
@@ -17,33 +19,56 @@ interface LocationData {
   region: string;
 }
 
-// Static currency data to prevent API calls during initialization
-const DEFAULT_CURRENCIES: CurrencyData[] = [
-  { code: 'USD', symbol: '$', name: 'US Dollar', exchangeRate: 1, region: 'Americas' },
-  { code: 'EUR', symbol: '€', name: 'Euro', exchangeRate: 0.85, region: 'Europe' },
-  { code: 'GBP', symbol: '£', name: 'British Pound', exchangeRate: 0.75, region: 'Europe' },
-  { code: 'JPY', symbol: '¥', name: 'Japanese Yen', exchangeRate: 110, region: 'Asia' },
-  { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar', exchangeRate: 1.25, region: 'Americas' },
-];
+// Default fallback currency
+const DEFAULT_CURRENCY: CurrencyData = { code: 'USD', symbol: '$', name: 'US Dollar', exchangeRate: 1, region: 'Americas' };
 
 export const useOptimizedCurrency = () => {
-  const [currency, setCurrency] = useState<CurrencyData>(DEFAULT_CURRENCIES[0]);
+  const [currency, setCurrency] = useState<CurrencyData>(DEFAULT_CURRENCY);
   const [loading, setLoading] = useState(false);
-  const [supportedCurrencies] = useState<CurrencyData[]>(DEFAULT_CURRENCIES);
+  const [supportedCurrencies, setSupportedCurrencies] = useState<CurrencyData[]>([]);
   const [userLocation, setUserLocation] = useState<LocationData | null>(null);
+  
+  // Use country detection hook
+  const { countryData, countryCode } = useCountryDetection();
+
+  // Load currencies from enhanced service
+  useEffect(() => {
+    const loadCurrencies = async () => {
+      try {
+        const currencies = await enhancedCurrencyService.getSupportedCurrencies();
+        setSupportedCurrencies(currencies);
+      } catch (error) {
+        console.warn('Failed to load currencies, using default:', error);
+        setSupportedCurrencies([DEFAULT_CURRENCY]);
+      }
+    };
+    loadCurrencies();
+  }, []);
 
   // Memoize currency lookup
   const getCurrencyByCode = useCallback((code: string): CurrencyData => {
-    return supportedCurrencies.find(c => c.code === code) || DEFAULT_CURRENCIES[0];
+    return supportedCurrencies.find(c => c.code === code) || DEFAULT_CURRENCY;
   }, [supportedCurrencies]);
 
-  // Initialize currency from cache or localStorage
+  // Initialize currency with auto-detection
   useEffect(() => {
+    if (supportedCurrencies.length === 0) return; // Wait for currencies to load
+    
     const initializeCurrency = () => {
       try {
         // Check cache first
         const cachedCurrency = cacheService.get<string>('user-currency');
-        const preferredCode = cachedCurrency || localStorage.getItem('preferred-currency') || 'USD';
+        const storedCurrency = localStorage.getItem('preferred-currency');
+        
+        // Auto-detect currency from country if no preference exists
+        let preferredCode = cachedCurrency || storedCurrency;
+        
+        if (!preferredCode && countryData?.currency) {
+          preferredCode = countryData.currency;
+          console.log(`Auto-detected currency ${preferredCode} for country ${countryData.countryCode}`);
+        }
+        
+        preferredCode = preferredCode || 'USD';
         
         const selectedCurrency = getCurrencyByCode(preferredCode);
         setCurrency(selectedCurrency);
@@ -52,12 +77,12 @@ export const useOptimizedCurrency = () => {
         cacheService.set('user-currency', preferredCode, 3600000); // 1 hour cache
       } catch (error) {
         console.warn('Currency initialization failed, using USD:', error);
-        setCurrency(DEFAULT_CURRENCIES[0]);
+        setCurrency(DEFAULT_CURRENCY);
       }
     };
 
     initializeCurrency();
-  }, [getCurrencyByCode]);
+  }, [getCurrencyByCode, supportedCurrencies, countryData]);
 
   // Optimized currency change with caching
   const changeCurrency = useCallback(async (currencyCode: string) => {
@@ -100,22 +125,28 @@ export const useOptimizedCurrency = () => {
     }
   }, [currency, getCurrencyByCode]);
 
-  // Optimized price formatting
+  // Optimized price formatting with proper decimal handling
   const formatPrice = useCallback((amount: number, fromCurrency: string = 'USD', locale?: string): string => {
     try {
       const convertedAmount = convertPrice(amount, fromCurrency);
       
+      // Handle currencies that don't use decimals
+      const noDecimalCurrencies = ['JPY', 'KRW', 'VND', 'IDR', 'CLP', 'HUF'];
+      const useDecimals = !noDecimalCurrencies.includes(currency.code);
+      
       const formatter = new Intl.NumberFormat(locale || 'en-US', {
         style: 'currency',
         currency: currency.code,
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+        minimumFractionDigits: useDecimals ? 2 : 0,
+        maximumFractionDigits: useDecimals ? 2 : 0,
       });
       
       return formatter.format(convertedAmount);
     } catch (error) {
       console.warn('Price formatting failed:', error);
-      return `${currency.symbol}${amount.toFixed(2)}`;
+      const noDecimalCurrencies = ['JPY', 'KRW', 'VND', 'IDR', 'CLP', 'HUF'];
+      const useDecimals = !noDecimalCurrencies.includes(currency.code);
+      return `${currency.symbol}${useDecimals ? amount.toFixed(2) : Math.round(amount)}`;
     }
   }, [currency, convertPrice]);
 
@@ -133,10 +164,10 @@ export const useOptimizedCurrency = () => {
     convertPrice,
     formatPrice,
     getRegionalPrice: async (basePrice: number) => basePrice, // Simplified
-    suggestCurrencyFromLocation: () => ({ 
-      suggested: false, 
-      currency: undefined as string | undefined,
-      country: undefined as string | undefined
+    suggestCurrencyFromLocation: () => ({
+      suggested: !!countryData?.currency,
+      currency: countryData?.currency,
+      country: countryData?.countryName
     })
   }), [currency, supportedCurrencies, userLocation, loading, changeCurrency, convertPrice, formatPrice]);
 };
