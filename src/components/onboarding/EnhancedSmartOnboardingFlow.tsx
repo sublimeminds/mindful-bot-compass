@@ -113,6 +113,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'AI Analysis' },
     { component: TherapistMatchStep, titleKey: 'Choose Your Therapist' },
     { component: PlanSelectionStep, titleKey: 'Select Your Plan' },
+    { component: NotificationPreferencesStep, titleKey: 'Notification Preferences' },
     { component: CompletionStep, titleKey: 'Setup Complete' }
   ];
 
