@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle, Brain, Sparkles, Settings, FileText, Zap } from 'lucide-react';
+import { CheckCircle, Brain, Sparkles, Settings, FileText, Zap, Target, Clock, Users, Lightbulb, Calendar, TrendingUp, ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -29,6 +30,7 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
   const [overallProgress, setOverallProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [planData, setPlanData] = useState<any>(null);
 
@@ -240,10 +242,10 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
       setIsComplete(true);
       toast.success('Your personalized therapy plan has been created successfully!');
       
-      // Auto-complete after showing success for 2 seconds
+      // Show summary after 1 second
       setTimeout(() => {
-        onComplete(true, data);
-      }, 2000);
+        setShowSummary(true);
+      }, 1000);
 
     } catch (error) {
       console.error('Error creating therapy plan:', error);
@@ -281,6 +283,257 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
             >
               Try Again
             </button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show summary view if completed and summary should be shown
+  if (showSummary && planData) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header */}
+        <Card>
+          <CardContent className="p-8 text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mb-6">
+              <CheckCircle className="h-10 w-10 text-white" />
+            </div>
+            <h1 className="text-4xl font-bold mb-4">Your Personalized Therapy Plan</h1>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Based on your assessment and cultural preferences, we've created a comprehensive therapy plan tailored specifically for you.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Therapy Approaches */}
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <Brain className="h-6 w-6 text-primary mr-3" />
+                <h3 className="text-xl font-semibold">Primary Approach</h3>
+              </div>
+              <div className="space-y-3">
+                <h4 className="font-medium text-lg">{planData.primaryApproach || 'Cognitive Behavioral Therapy (CBT)'}</h4>
+                <p className="text-muted-foreground">{planData.primaryDescription || 'Evidence-based approach focusing on identifying and changing negative thought patterns and behaviors.'}</p>
+                <div className="bg-primary/10 p-3 rounded-lg">
+                  <p className="text-sm font-medium">Why this approach:</p>
+                  <p className="text-sm text-muted-foreground">{planData.primaryReasoning || 'Best suited for your specific needs and assessment results.'}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <Sparkles className="h-6 w-6 text-secondary mr-3" />
+                <h3 className="text-xl font-semibold">Secondary Approach</h3>
+              </div>
+              <div className="space-y-3">
+                <h4 className="font-medium text-lg">{planData.secondaryApproach || 'Mindfulness-Based Therapy'}</h4>
+                <p className="text-muted-foreground">{planData.secondaryDescription || 'Complementary techniques to enhance awareness and emotional regulation.'}</p>
+                <div className="bg-secondary/10 p-3 rounded-lg">
+                  <p className="text-sm font-medium">Integration:</p>
+                  <p className="text-sm text-muted-foreground">{planData.secondaryReasoning || 'Supports your primary therapy with mindfulness and relaxation techniques.'}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Goals and Focus Areas */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center mb-6">
+              <Target className="h-6 w-6 text-accent mr-3" />
+              <h3 className="text-xl font-semibold">Your Therapy Goals</h3>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium mb-3">Primary Focus Areas</h4>
+                <div className="space-y-2">
+                  {(planData.goals || ['Anxiety Management', 'Stress Reduction', 'Emotional Regulation']).map((goal: string, index: number) => (
+                    <div key={index} className="flex items-center">
+                      <div className="w-2 h-2 bg-accent rounded-full mr-3" />
+                      <span className="text-sm">{goal}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4 className="font-medium mb-3">Expected Outcomes</h4>
+                <div className="space-y-2">
+                  {(planData.expectedOutcomes || ['Improved coping skills', 'Better emotional balance', 'Enhanced well-being']).map((outcome: string, index: number) => (
+                    <div key={index} className="flex items-center">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mr-3" />
+                      <span className="text-sm">{outcome}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Session Structure and Timeline */}
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <Clock className="h-6 w-6 text-blue-500 mr-3" />
+                <h3 className="text-xl font-semibold">Session Structure</h3>
+              </div>
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Frequency:</span>
+                  <span className="font-medium">{planData.sessionFrequency || 'Weekly'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Duration:</span>
+                  <span className="font-medium">{planData.sessionDuration || '50 minutes'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Format:</span>
+                  <span className="font-medium">{planData.sessionFormat || 'Individual'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Estimated Duration:</span>
+                  <span className="font-medium">{planData.treatmentDuration || '12-16 weeks'}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <Calendar className="h-6 w-6 text-purple-500 mr-3" />
+                <h3 className="text-xl font-semibold">Progress Timeline</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-xs font-medium">1-3</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Initial Phase</p>
+                    <p className="text-xs text-muted-foreground">Building rapport and assessment</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-xs font-medium">4-10</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Active Treatment</p>
+                    <p className="text-xs text-muted-foreground">Core therapy work and skill building</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-xs font-medium">11+</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Maintenance</p>
+                    <p className="text-xs text-muted-foreground">Reinforcement and relapse prevention</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Cultural Adaptations */}
+        {planData.culturalAdaptations && (
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <Users className="h-6 w-6 text-orange-500 mr-3" />
+                <h3 className="text-xl font-semibold">Cultural Adaptations</h3>
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-medium mb-3">Communication Style</h4>
+                  <p className="text-muted-foreground text-sm">
+                    {planData.culturalAdaptations.communicationStyle || 'Adapted to your preferred communication approach and cultural background.'}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium mb-3">Cultural Considerations</h4>
+                  <p className="text-muted-foreground text-sm">
+                    {planData.culturalAdaptations.considerations || 'Therapy approaches modified to respect your cultural values and beliefs.'}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Recommended Techniques */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center mb-4">
+              <Lightbulb className="h-6 w-6 text-yellow-500 mr-3" />
+              <h3 className="text-xl font-semibold">Recommended Techniques</h3>
+            </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              {(planData.techniques || ['Cognitive Restructuring', 'Mindfulness Meditation', 'Progressive Muscle Relaxation', 'Journaling', 'Breathing Exercises', 'Behavioral Activation']).map((technique: string, index: number) => (
+                <div key={index} className="bg-gradient-to-br from-primary/10 to-secondary/10 p-4 rounded-lg">
+                  <h5 className="font-medium text-sm mb-2">{technique}</h5>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Next Steps */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center mb-4">
+              <TrendingUp className="h-6 w-6 text-green-500 mr-3" />
+              <h3 className="text-xl font-semibold">Next Steps</h3>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-green-50 dark:bg-green-950/20 p-4 rounded-lg">
+                <h4 className="font-medium mb-2">Your First Session</h4>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Your first session will focus on building rapport with your therapist and discussing your goals in detail.
+                </p>
+                <ul className="text-sm space-y-1">
+                  <li className="flex items-center">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2" />
+                    Review your therapy plan together
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2" />
+                    Establish session goals and expectations
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2" />
+                    Begin initial therapeutic work
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Action Button */}
+        <Card>
+          <CardContent className="p-6 text-center">
+            <Button 
+              onClick={() => onComplete(true, planData)}
+              size="lg"
+              className="w-full md:w-auto px-8"
+            >
+              Continue to Dashboard
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <p className="text-sm text-muted-foreground mt-3">
+              Your therapy plan will be available in your dashboard, and you can schedule your first session.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -392,7 +645,7 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
             })}
           </div>
 
-          {isComplete && planData && (
+          {isComplete && !showSummary && planData && (
             <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 rounded-lg">
               <div className="text-center">
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
@@ -400,11 +653,8 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
                   Plan Created Successfully!
                 </h3>
                 <p className="text-green-600 dark:text-green-300 mb-4">
-                  Your personalized therapy plan is ready. You'll be redirected to your dashboard shortly.
+                  Your personalized therapy plan is ready. Preparing summary...
                 </p>
-                <div className="text-sm text-green-600 dark:text-green-400">
-                  Redirecting in 2 seconds...
-                </div>
               </div>
             </div>
           )}
