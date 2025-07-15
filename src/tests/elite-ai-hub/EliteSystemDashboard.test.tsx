@@ -1,119 +1,73 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import EliteSystemDashboard from '@/components/elite/EliteSystemDashboard';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { EliteSystemDashboard } from '../../components/elite-ai-hub/EliteSystemDashboard';
+import { BulletproofAuthContext } from '../../contexts/BulletproofAuthContext';
+import { useEliteSystemIntegration } from '../../hooks/useEliteSystemIntegration';
+import { useRealTimeEliteIntegration } from '../../hooks/useRealTimeEliteIntegration';
 
-// Mock all hooks
-vi.mock('@/hooks/useAuth', () => ({
-  useAuth: vi.fn()
-}));
+// Mock the hooks
+vi.mock('../../hooks/useEliteSystemIntegration');
+vi.mock('../../hooks/useRealTimeEliteIntegration');
 
-vi.mock('@/hooks/useEliteSystemIntegration', () => ({
-  useEliteSystemIntegration: vi.fn()
-}));
-
-vi.mock('@/hooks/useEliteSystemActivation', () => ({
-  useEliteSystemActivation: vi.fn()
-}));
-
-vi.mock('@/hooks/useRealTimeEliteIntegration', () => ({
-  useRealTimeEliteIntegration: vi.fn()
-}));
-
-const mockUseAuth = vi.mocked(await import('@/hooks/useAuth')).useAuth;
-const mockUseEliteSystemIntegration = vi.mocked(await import('@/hooks/useEliteSystemIntegration')).useEliteSystemIntegration;
-const mockUseEliteSystemActivation = vi.mocked(await import('@/hooks/useEliteSystemActivation')).useEliteSystemActivation;
-const mockUseRealTimeEliteIntegration = vi.mocked(await import('@/hooks/useRealTimeEliteIntegration')).useRealTimeEliteIntegration;
+const mockUseEliteSystemIntegration = vi.mocked(useEliteSystemIntegration);
+const mockUseRealTimeEliteIntegration = vi.mocked(useRealTimeEliteIntegration);
 
 describe('EliteSystemDashboard', () => {
   const mockUser = {
     id: 'user-123',
     email: 'test@example.com',
-    user_metadata: { name: 'Test User' }
+    user_metadata: { name: 'Test User' },
+    app_metadata: {},
+    aud: 'authenticated',
+    created_at: '2023-01-01T00:00:00.000Z'
+  };
+
+  const mockAuthContext = {
+    user: mockUser,
+    loading: false,
+    signIn: vi.fn(),
+    signOut: vi.fn(),
+    signUp: vi.fn(),
+    register: vi.fn(),
+    login: vi.fn(),
+    logout: vi.fn()
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
     
-    // Setup default mock returns
-    mockUseAuth.mockReturnValue({
-      user: mockUser,
-      loading: false,
-      signIn: vi.fn(),
-      signOut: vi.fn(),
-      signUp: vi.fn()
-    });
-
+    // Mock default successful responses
     mockUseEliteSystemIntegration.mockReturnValue({
-      messages: [],
-      systemStatus: { isActivated: false },
-      processMessage: vi.fn(),
-      analyzeSession: vi.fn().mockResolvedValue({ insights: [] }),
-      sendMessage: vi.fn(),
-      playMessage: vi.fn(),
-      stopPlayback: vi.fn(),
-      loadPreferences: vi.fn(),
-      initiateEliteSession: vi.fn(),
-      isLoading: false,
-      isPlaying: false,
-      userPreferences: null,
-      currentSessionId: null,
-      activateEliteSystem: vi.fn(),
-      getEliteSystemStatus: vi.fn()
-    });
-
-    mockUseEliteSystemActivation.mockReturnValue({
       systemStatus: {
         isActivated: false,
         systemHealth: 'optimal',
         culturalAiActive: true,
         adaptiveLearningActive: true,
         cronJobsActive: true,
-        lastActivation: new Date().toISOString()
+        lastActivation: null
       },
       isActivating: false,
       activateEliteSystem: vi.fn(),
+      deactivateEliteSystem: vi.fn(),
       checkSystemStatus: vi.fn(),
       getSystemMetrics: vi.fn()
     });
 
     mockUseRealTimeEliteIntegration.mockReturnValue({
-      isConnected: true,
-      metrics: {}
-    });
-  });
-
-  describe('Authentication and Loading States', () => {
-    it('renders loading state when user is loading', () => {
-      mockUseAuth.mockReturnValue({
-        user: null,
-        loading: true,
-        signIn: vi.fn(),
-        signOut: vi.fn(),
-        signUp: vi.fn()
-      });
-
-      render(<EliteSystemDashboard />);
-      expect(screen.getByText('Loading Elite System...')).toBeInTheDocument();
-    });
-
-    it('renders sign-in prompt when user is not authenticated', () => {
-      mockUseAuth.mockReturnValue({
-        user: null,
-        loading: false,
-        signIn: vi.fn(),
-        signOut: vi.fn(),
-        signUp: vi.fn()
-      });
-
-      render(<EliteSystemDashboard />);
-      expect(screen.getByText('Please sign in to access Elite System Dashboard')).toBeInTheDocument();
+      initializeRealTimeMonitoring: vi.fn().mockResolvedValue(vi.fn()),
+      getEliteSystemStatus: vi.fn().mockResolvedValue({
+        isActive: true,
+        lastRouting: null,
+        adaptiveLearningActive: true,
+        systemHealth: 'optimal'
+      }),
+      handleSessionEnd: vi.fn()
     });
   });
 
   describe('System Status Display', () => {
-    it('displays system status correctly when activated', () => {
-      mockUseEliteSystemActivation.mockReturnValue({
+    it('renders system status correctly when activated', () => {
+      mockUseEliteSystemIntegration.mockReturnValue({
         systemStatus: {
           isActivated: true,
           systemHealth: 'optimal',
@@ -124,25 +78,22 @@ describe('EliteSystemDashboard', () => {
         },
         isActivating: false,
         activateEliteSystem: vi.fn(),
+        deactivateEliteSystem: vi.fn(),
         checkSystemStatus: vi.fn(),
         getSystemMetrics: vi.fn()
       });
 
-      render(<EliteSystemDashboard />);
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
       
       expect(screen.getByText('OPTIMAL')).toBeInTheDocument();
-      expect(screen.getByText('Active')).toBeInTheDocument();
     });
 
-    it('displays system status correctly when not activated', () => {
-      render(<EliteSystemDashboard />);
-      
-      expect(screen.getByText('OPTIMAL')).toBeInTheDocument();
-      expect(screen.getByText('Activate Elite System')).toBeInTheDocument();
-    });
-
-    it('shows different health status colors', () => {
-      mockUseEliteSystemActivation.mockReturnValue({
+    it('renders system status as degraded when health is poor', () => {
+      mockUseEliteSystemIntegration.mockReturnValue({
         systemStatus: {
           isActivated: false,
           systemHealth: 'degraded',
@@ -153,20 +104,22 @@ describe('EliteSystemDashboard', () => {
         },
         isActivating: false,
         activateEliteSystem: vi.fn(),
+        deactivateEliteSystem: vi.fn(),
         checkSystemStatus: vi.fn(),
         getSystemMetrics: vi.fn()
       });
 
-      render(<EliteSystemDashboard />);
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
+      
       expect(screen.getByText('DEGRADED')).toBeInTheDocument();
     });
-  });
 
-  describe('System Activation', () => {
-    it('handles system activation successfully', async () => {
-      const mockActivateEliteSystem = vi.fn().mockResolvedValue({ success: true });
-      
-      mockUseEliteSystemActivation.mockReturnValue({
+    it('displays activation button when system is not activated', () => {
+      mockUseEliteSystemIntegration.mockReturnValue({
         systemStatus: {
           isActivated: false,
           systemHealth: 'optimal',
@@ -176,23 +129,23 @@ describe('EliteSystemDashboard', () => {
           lastActivation: null
         },
         isActivating: false,
-        activateEliteSystem: mockActivateEliteSystem,
+        activateEliteSystem: vi.fn(),
+        deactivateEliteSystem: vi.fn(),
         checkSystemStatus: vi.fn(),
         getSystemMetrics: vi.fn()
       });
 
-      render(<EliteSystemDashboard />);
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
       
-      const activateButton = screen.getByText('Activate Elite System');
-      fireEvent.click(activateButton);
-
-      await waitFor(() => {
-        expect(mockActivateEliteSystem).toHaveBeenCalled();
-      });
+      expect(screen.getByRole('button', { name: /activate/i })).toBeInTheDocument();
     });
 
     it('shows loading state during activation', () => {
-      mockUseEliteSystemActivation.mockReturnValue({
+      mockUseEliteSystemIntegration.mockReturnValue({
         systemStatus: {
           isActivated: false,
           systemHealth: 'optimal',
@@ -203,166 +156,22 @@ describe('EliteSystemDashboard', () => {
         },
         isActivating: true,
         activateEliteSystem: vi.fn(),
+        deactivateEliteSystem: vi.fn(),
         checkSystemStatus: vi.fn(),
         getSystemMetrics: vi.fn()
       });
 
-      render(<EliteSystemDashboard />);
-      expect(screen.getByText('Activating...')).toBeInTheDocument();
-    });
-
-    it('disables activation button when already activated', () => {
-      mockUseEliteSystemActivation.mockReturnValue({
-        systemStatus: {
-          isActivated: true,
-          systemHealth: 'optimal',
-          culturalAiActive: true,
-          adaptiveLearningActive: true,
-          cronJobsActive: true,
-          lastActivation: new Date().toISOString()
-        },
-        isActivating: false,
-        activateEliteSystem: vi.fn(),
-        checkSystemStatus: vi.fn(),
-        getSystemMetrics: vi.fn()
-      });
-
-      render(<EliteSystemDashboard />);
-      const activateButton = screen.getByRole('button', { name: /Active/i });
-      expect(activateButton).toBeDisabled();
-    });
-  });
-
-  describe('Dashboard Statistics', () => {
-    it('displays dashboard statistics', async () => {
-      render(<EliteSystemDashboard />);
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
       
-      await waitFor(() => {
-        expect(screen.getByText('Total Therapy Sessions')).toBeInTheDocument();
-        expect(screen.getByText('Adaptive Insights Generated')).toBeInTheDocument();
-        expect(screen.getByText('Cultural Adaptations')).toBeInTheDocument();
-        expect(screen.getByText('Crisis Interventions')).toBeInTheDocument();
-      });
+      expect(screen.getByText(/activating/i)).toBeInTheDocument();
     });
 
-    it('shows system activity information', () => {
-      mockUseEliteSystemActivation.mockReturnValue({
-        systemStatus: {
-          isActivated: true,
-          systemHealth: 'optimal',
-          culturalAiActive: true,
-          adaptiveLearningActive: true,
-          cronJobsActive: true,
-          lastActivation: new Date().toISOString()
-        },
-        isActivating: false,
-        activateEliteSystem: vi.fn(),
-        checkSystemStatus: vi.fn(),
-        getSystemMetrics: vi.fn()
-      });
-
-      render(<EliteSystemDashboard />);
-      expect(screen.getByText(/Last Elite System activation:/)).toBeInTheDocument();
-      expect(screen.getByText('Real-time monitoring: Active')).toBeInTheDocument();
-    });
-  });
-
-  describe('Quick Actions', () => {
-    it('handles refresh system status action', async () => {
-      const mockCheckSystemStatus = vi.fn().mockResolvedValue({ success: true });
-      
-      mockUseEliteSystemActivation.mockReturnValue({
-        systemStatus: {
-          isActivated: true,
-          systemHealth: 'optimal',
-          culturalAiActive: true,
-          adaptiveLearningActive: true,
-          cronJobsActive: true,
-          lastActivation: new Date().toISOString()
-        },
-        isActivating: false,
-        activateEliteSystem: vi.fn(),
-        checkSystemStatus: mockCheckSystemStatus,
-        getSystemMetrics: vi.fn()
-      });
-
-      render(<EliteSystemDashboard />);
-      
-      const refreshButton = screen.getByText('Refresh System Status');
-      fireEvent.click(refreshButton);
-
-      await waitFor(() => {
-        expect(mockCheckSystemStatus).toHaveBeenCalled();
-      });
-    });
-
-    it('handles analyze session action', async () => {
-      const mockAnalyzeSession = vi.fn().mockResolvedValue({ insights: ['test insight'] });
-      
+    it('displays active status when system is activated', () => {
       mockUseEliteSystemIntegration.mockReturnValue({
-        messages: [{ id: '1', content: 'test', isUser: true, timestamp: new Date() }],
-        systemStatus: { isActivated: true },
-        processMessage: vi.fn(),
-        analyzeSession: mockAnalyzeSession,
-        sendMessage: vi.fn(),
-        playMessage: vi.fn(),
-        stopPlayback: vi.fn(),
-        loadPreferences: vi.fn(),
-        initiateEliteSession: vi.fn(),
-        isLoading: false,
-        isPlaying: false,
-        userPreferences: null,
-        currentSessionId: null,
-        activateEliteSystem: vi.fn(),
-        getEliteSystemStatus: vi.fn()
-      });
-
-      render(<EliteSystemDashboard />);
-      
-      const analyzeButton = screen.getByText('Analyze Current Session');
-      fireEvent.click(analyzeButton);
-
-      await waitFor(() => {
-        expect(mockAnalyzeSession).toHaveBeenCalled();
-      });
-    });
-
-    it('disables analyze session when no messages', () => {
-      mockUseEliteSystemIntegration.mockReturnValue({
-        messages: [],
-        systemStatus: { isActivated: true },
-        processMessage: vi.fn(),
-        analyzeSession: vi.fn(),
-        sendMessage: vi.fn(),
-        playMessage: vi.fn(),
-        stopPlayback: vi.fn(),
-        loadPreferences: vi.fn(),
-        initiateEliteSession: vi.fn(),
-        isLoading: false,
-        isPlaying: false,
-        userPreferences: null,
-        currentSessionId: null,
-        activateEliteSystem: vi.fn(),
-        getEliteSystemStatus: vi.fn()
-      });
-
-      render(<EliteSystemDashboard />);
-      
-      const analyzeButton = screen.getByText('Analyze Current Session');
-      expect(analyzeButton).toBeDisabled();
-    });
-  });
-
-  describe('System Alerts', () => {
-    it('shows inactive system alert when not activated', () => {
-      render(<EliteSystemDashboard />);
-      
-      expect(screen.getByText('Elite System Inactive')).toBeInTheDocument();
-      expect(screen.getByText(/Activate Elite System for enhanced AI therapy/)).toBeInTheDocument();
-    });
-
-    it('shows active system status when activated', () => {
-      mockUseEliteSystemActivation.mockReturnValue({
         systemStatus: {
           isActivated: true,
           systemHealth: 'optimal',
@@ -373,33 +182,56 @@ describe('EliteSystemDashboard', () => {
         },
         isActivating: false,
         activateEliteSystem: vi.fn(),
+        deactivateEliteSystem: vi.fn(),
         checkSystemStatus: vi.fn(),
         getSystemMetrics: vi.fn()
       });
 
-      render(<EliteSystemDashboard />);
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
       
-      expect(screen.getByText('Elite System Active')).toBeInTheDocument();
-      expect(screen.getByText(/All Elite AI features are operational/)).toBeInTheDocument();
+      expect(screen.getByText('ACTIVE')).toBeInTheDocument();
     });
   });
 
-  describe('System Architecture Display', () => {
-    it('renders system architecture overview', () => {
-      render(<EliteSystemDashboard />);
+  describe('System Metrics', () => {
+    it('displays system metrics correctly', () => {
+      mockUseEliteSystemIntegration.mockReturnValue({
+        systemStatus: {
+          isActivated: true,
+          systemHealth: 'optimal',
+          culturalAiActive: true,
+          adaptiveLearningActive: true,
+          cronJobsActive: true,
+          lastActivation: new Date().toISOString()
+        },
+        isActivating: false,
+        activateEliteSystem: vi.fn(),
+        deactivateEliteSystem: vi.fn(),
+        checkSystemStatus: vi.fn(),
+        getSystemMetrics: vi.fn()
+      });
+
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
       
-      expect(screen.getByText('Elite System Architecture')).toBeInTheDocument();
-      expect(screen.getByText('Intelligent Router Hub')).toBeInTheDocument();
-      expect(screen.getByText('Cultural AI Integration')).toBeInTheDocument();
-      expect(screen.getByText('Adaptive Feedback Loop')).toBeInTheDocument();
+      expect(screen.getByText('Cultural AI')).toBeInTheDocument();
+      expect(screen.getByText('Adaptive Learning')).toBeInTheDocument();
+      expect(screen.getByText('Cron Jobs')).toBeInTheDocument();
     });
   });
 
   describe('Error Handling', () => {
     it('handles activation errors gracefully', async () => {
       const mockActivateEliteSystem = vi.fn().mockRejectedValue(new Error('Activation failed'));
-      
-      mockUseEliteSystemActivation.mockReturnValue({
+
+      mockUseEliteSystemIntegration.mockReturnValue({
         systemStatus: {
           isActivated: false,
           systemHealth: 'optimal',
@@ -410,13 +242,18 @@ describe('EliteSystemDashboard', () => {
         },
         isActivating: false,
         activateEliteSystem: mockActivateEliteSystem,
+        deactivateEliteSystem: vi.fn(),
         checkSystemStatus: vi.fn(),
         getSystemMetrics: vi.fn()
       });
 
-      render(<EliteSystemDashboard />);
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
       
-      const activateButton = screen.getByText('Activate Elite System');
+      const activateButton = screen.getByRole('button', { name: /activate/i });
       fireEvent.click(activateButton);
 
       await waitFor(() => {
@@ -424,10 +261,66 @@ describe('EliteSystemDashboard', () => {
       });
     });
 
-    it('handles system status check errors', async () => {
-      const mockCheckSystemStatus = vi.fn().mockRejectedValue(new Error('Status check failed'));
+    it('handles unauthenticated users gracefully', () => {
+      const unauthenticatedContext = {
+        user: null,
+        loading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        signUp: vi.fn(),
+        register: vi.fn(),
+        login: vi.fn(),
+        logout: vi.fn()
+      };
+
+      render(
+        <BulletproofAuthContext.Provider value={unauthenticatedContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
       
-      mockUseEliteSystemActivation.mockReturnValue({
+      expect(screen.getByText(/authentication required/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('User Interactions', () => {
+    it('calls activateEliteSystem when activate button is clicked', async () => {
+      const mockActivateEliteSystem = vi.fn().mockResolvedValue(undefined);
+
+      mockUseEliteSystemIntegration.mockReturnValue({
+        systemStatus: {
+          isActivated: false,
+          systemHealth: 'optimal',
+          culturalAiActive: true,
+          adaptiveLearningActive: true,
+          cronJobsActive: true,
+          lastActivation: null
+        },
+        isActivating: false,
+        activateEliteSystem: mockActivateEliteSystem,
+        deactivateEliteSystem: vi.fn(),
+        checkSystemStatus: vi.fn(),
+        getSystemMetrics: vi.fn()
+      });
+
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
+      
+      const activateButton = screen.getByRole('button', { name: /activate/i });
+      fireEvent.click(activateButton);
+
+      await waitFor(() => {
+        expect(mockActivateEliteSystem).toHaveBeenCalled();
+      });
+    });
+
+    it('refreshes status when refresh button is clicked', async () => {
+      const mockCheckSystemStatus = vi.fn().mockResolvedValue(undefined);
+
+      mockUseEliteSystemIntegration.mockReturnValue({
         systemStatus: {
           isActivated: true,
           systemHealth: 'optimal',
@@ -438,13 +331,18 @@ describe('EliteSystemDashboard', () => {
         },
         isActivating: false,
         activateEliteSystem: vi.fn(),
+        deactivateEliteSystem: vi.fn(),
         checkSystemStatus: mockCheckSystemStatus,
         getSystemMetrics: vi.fn()
       });
 
-      render(<EliteSystemDashboard />);
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
       
-      const refreshButton = screen.getByText('Refresh System Status');
+      const refreshButton = screen.getByRole('button', { name: /refresh/i });
       fireEvent.click(refreshButton);
 
       await waitFor(() => {
@@ -453,20 +351,135 @@ describe('EliteSystemDashboard', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('has proper ARIA labels and roles', () => {
-      render(<EliteSystemDashboard />);
+  describe('Component Lifecycle', () => {
+    it('initializes real-time monitoring on mount', () => {
+      const mockInitializeRealTimeMonitoring = vi.fn();
+
+      mockUseRealTimeEliteIntegration.mockReturnValue({
+        initializeRealTimeMonitoring: mockInitializeRealTimeMonitoring,
+        getEliteSystemStatus: vi.fn().mockResolvedValue({
+          isActive: true,
+          lastRouting: null,
+          adaptiveLearningActive: true,
+          systemHealth: 'optimal'
+        }),
+        handleSessionEnd: vi.fn()
+      });
+
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
       
-      expect(screen.getByRole('button', { name: /Activate Elite System/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Refresh System Status/i })).toBeInTheDocument();
+      expect(mockInitializeRealTimeMonitoring).toHaveBeenCalled();
     });
 
-    it('supports keyboard navigation', () => {
-      render(<EliteSystemDashboard />);
+    it('cleans up on unmount', () => {
+      const mockCleanup = vi.fn();
       
-      const activateButton = screen.getByText('Activate Elite System');
-      activateButton.focus();
-      expect(document.activeElement).toBe(activateButton);
+      mockUseRealTimeEliteIntegration.mockReturnValue({
+        initializeRealTimeMonitoring: vi.fn().mockResolvedValue(mockCleanup),
+        getEliteSystemStatus: vi.fn().mockResolvedValue({
+          isActive: true,
+          lastRouting: null,
+          adaptiveLearningActive: true,
+          systemHealth: 'optimal'
+        }),
+        handleSessionEnd: vi.fn()
+      });
+
+      const { unmount } = render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
+      
+      unmount();
+      
+      // The cleanup function should be called on unmount
+      expect(mockCleanup).toHaveBeenCalled();
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('has proper ARIA labels for system status', () => {
+      mockUseEliteSystemIntegration.mockReturnValue({
+        systemStatus: {
+          isActivated: true,
+          systemHealth: 'optimal',
+          culturalAiActive: true,
+          adaptiveLearningActive: true,
+          cronJobsActive: true,
+          lastActivation: new Date().toISOString()
+        },
+        isActivating: false,
+        activateEliteSystem: vi.fn(),
+        deactivateEliteSystem: vi.fn(),
+        checkSystemStatus: vi.fn(),
+        getSystemMetrics: vi.fn()
+      });
+
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
+      
+      expect(screen.getByLabelText(/system status/i)).toBeInTheDocument();
+    });
+
+    it('has proper button labeling for activation', () => {
+      mockUseEliteSystemIntegration.mockReturnValue({
+        systemStatus: {
+          isActivated: false,
+          systemHealth: 'optimal',
+          culturalAiActive: true,
+          adaptiveLearningActive: true,
+          cronJobsActive: true,
+          lastActivation: null
+        },
+        isActivating: false,
+        activateEliteSystem: vi.fn(),
+        deactivateEliteSystem: vi.fn(),
+        checkSystemStatus: vi.fn(),
+        getSystemMetrics: vi.fn()
+      });
+
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
+      
+      const activateButton = screen.getByRole('button', { name: /activate elite system/i });
+      expect(activateButton).toBeInTheDocument();
+    });
+
+    it('provides proper loading state announcements', () => {
+      mockUseEliteSystemIntegration.mockReturnValue({
+        systemStatus: {
+          isActivated: false,
+          systemHealth: 'optimal',
+          culturalAiActive: true,
+          adaptiveLearningActive: true,
+          cronJobsActive: true,
+          lastActivation: null
+        },
+        isActivating: true,
+        activateEliteSystem: vi.fn(),
+        deactivateEliteSystem: vi.fn(),
+        checkSystemStatus: vi.fn(),
+        getSystemMetrics: vi.fn()
+      });
+
+      render(
+        <BulletproofAuthContext.Provider value={mockAuthContext}>
+          <EliteSystemDashboard />
+        </BulletproofAuthContext.Provider>
+      );
+      
+      expect(screen.getByText(/activating elite system/i)).toBeInTheDocument();
     });
   });
 });

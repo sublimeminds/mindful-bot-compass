@@ -32,7 +32,7 @@ const originalEnv = import.meta.env;
 beforeEach(() => {
   vi.clearAllMocks();
   mockSessionStorage.getItem.mockReturnValue(null);
-  mockSessionRecommendationService.getSmartFollowUpQuestions.mockReturnValue([
+  (mockSessionRecommendationService.getSmartFollowUpQuestions as any).mockReturnValue([
     'How does that make you feel?',
     'Can you tell me more about that?'
   ]);
@@ -440,7 +440,7 @@ describe('aiService', () => {
         { content: 'I feel anxious', isUser: true, id: '1', timestamp: new Date() }
       ];
 
-      mockSessionRecommendationService.getSmartFollowUpQuestions.mockReturnValue([
+      (mockSessionRecommendationService.getSmartFollowUpQuestions as any).mockReturnValue([
         'What triggers your anxiety?',
         'How long have you been feeling this way?'
       ]);
@@ -466,7 +466,7 @@ describe('aiService', () => {
         { content: 'Hello', isUser: true, id: '1', timestamp: new Date() }
       ];
 
-      mockSessionRecommendationService.getSmartFollowUpQuestions.mockReturnValue([]);
+      (mockSessionRecommendationService.getSmartFollowUpQuestions as any).mockReturnValue([]);
 
       const response = await sendMessage('How are you?', conversationHistory);
 
