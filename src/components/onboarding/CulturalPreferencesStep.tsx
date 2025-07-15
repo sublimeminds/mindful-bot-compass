@@ -153,7 +153,7 @@ const CulturalPreferencesStep = ({
 
           {/* Cultural Background */}
           <div className="space-y-2">
-            <Label>{t('onboarding.cultural.background')}</Label>
+            <Label>{t('onboarding.cultural.background')} <span className="text-gray-500">(Optional)</span></Label>
             <Select 
               value={localPreferences.culturalBackground} 
               onValueChange={(value) => updatePreferences('culturalBackground', value)}
@@ -245,7 +245,7 @@ const CulturalPreferencesStep = ({
 
           {/* Therapy Approach Preferences */}
           <div className="space-y-3">
-            <Label>Preferred Therapy Approaches</Label>
+            <Label>Preferred Therapy Approaches <span className="text-gray-500">(Optional)</span></Label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {therapyApproaches.map(approach => (
                 <div key={approach} className="flex items-center space-x-2">
@@ -269,7 +269,7 @@ const CulturalPreferencesStep = ({
 
           {/* Cultural Sensitivities */}
           <div className="space-y-3">
-            <Label>Cultural Considerations & Sensitivities</Label>
+            <Label>Cultural Considerations & Sensitivities <span className="text-gray-500">(Optional)</span></Label>
             <p className="text-sm text-muted-foreground">
               Select areas that are important to consider in your therapy
             </p>

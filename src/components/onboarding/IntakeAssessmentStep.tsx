@@ -20,8 +20,8 @@ interface IntakeAssessmentStepProps {
 
 const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessmentStepProps) => {
   const { t } = useTranslation();
-  const [stressLevel, setStressLevel] = useState(onboardingData?.stressLevel || 5);
-  const [anxietyLevel, setAnxietyLevel] = useState(onboardingData?.anxietyLevel || 5);
+  const [stressLevel, setStressLevel] = useState(onboardingData?.stressLevel || null);
+  const [anxietyLevel, setAnxietyLevel] = useState(onboardingData?.anxietyLevel || null);
   const [sleepQuality, setSleepQuality] = useState(onboardingData?.sleepQuality || '');
   const [copingMechanisms, setCopingMechanisms] = useState<string[]>(onboardingData?.copingMechanisms || []);
   const [additionalNotes, setAdditionalNotes] = useState(onboardingData?.additionalNotes || '');
@@ -52,11 +52,11 @@ const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessme
     onNext(assessmentData);
   };
 
-  const isComplete = sleepQuality && copingMechanisms.length > 0;
+  const isComplete = stressLevel && anxietyLevel && sleepQuality && copingMechanisms.length > 0;
   const progressValue = () => {
     let progress = 0;
-    if (stressLevel !== 5) progress += 20;
-    if (anxietyLevel !== 5) progress += 20; 
+    if (stressLevel) progress += 20;
+    if (anxietyLevel) progress += 20; 
     if (sleepQuality) progress += 30;
     if (copingMechanisms.length > 0) progress += 30;
     return progress;
@@ -77,20 +77,23 @@ const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessme
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Heart className="h-4 w-4 text-red-500" />
-            <span>Stress Level (1-10)</span>
+            <span>Stress Level (1-10) <span className="text-red-500">*</span></span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Slider
-            value={[stressLevel]}
+            value={stressLevel ? [stressLevel] : [1]}
             max={10}
             min={1}
             step={1}
             onValueChange={(value) => setStressLevel(value[0])}
           />
           <div className="text-sm text-muted-foreground text-center mt-2">
-            Current: {stressLevel}
+            Current: {stressLevel || 'Not selected'}
           </div>
+          {!stressLevel && (
+            <p className="text-sm text-orange-600 mt-2 text-center">Please select your stress level to continue</p>
+          )}
         </CardContent>
       </Card>
 
@@ -98,20 +101,23 @@ const IntakeAssessmentStep = ({ onNext, onBack, onboardingData }: IntakeAssessme
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Brain className="h-4 w-4 text-yellow-500" />
-            <span>Anxiety Level (1-10)</span>
+            <span>Anxiety Level (1-10) <span className="text-red-500">*</span></span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Slider
-            value={[anxietyLevel]}
+            value={anxietyLevel ? [anxietyLevel] : [1]}
             max={10}
             min={1}
             step={1}
             onValueChange={(value) => setAnxietyLevel(value[0])}
           />
           <div className="text-sm text-muted-foreground text-center mt-2">
-            Current: {anxietyLevel}
+            Current: {anxietyLevel || 'Not selected'}
           </div>
+          {!anxietyLevel && (
+            <p className="text-sm text-orange-600 mt-2 text-center">Please select your anxiety level to continue</p>
+          )}
         </CardContent>
       </Card>
 

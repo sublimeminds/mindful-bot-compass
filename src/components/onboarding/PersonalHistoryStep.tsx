@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { Home, Briefcase, Heart, Clock, Pill, Brain } from 'lucide-react';
+import { Home, Briefcase, Heart, Clock, Pill, Brain, AlertTriangle } from 'lucide-react';
+import GradientButton from '@/components/ui/GradientButton';
 
 interface PersonalHistoryStepProps {
   onNext: (data: any) => void;
@@ -160,7 +161,7 @@ const PersonalHistoryStep = ({ onNext, onBack, onboardingData }: PersonalHistory
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Home className="h-5 w-5 text-blue-600" />
-            <span>Current Living Situation</span>
+            <span>Current Living Situation <span className="text-red-500">*</span></span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -182,7 +183,7 @@ const PersonalHistoryStep = ({ onNext, onBack, onboardingData }: PersonalHistory
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Briefcase className="h-5 w-5 text-green-600" />
-            <span>Employment Status</span>
+            <span>Employment Status <span className="text-red-500">*</span></span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -202,7 +203,7 @@ const PersonalHistoryStep = ({ onNext, onBack, onboardingData }: PersonalHistory
       {/* Financial Stress */}
       <Card>
         <CardHeader>
-          <CardTitle>Financial Stress Level</CardTitle>
+          <CardTitle>Financial Stress Level <span className="text-red-500">*</span></CardTitle>
         </CardHeader>
         <CardContent>
           <RadioGroup value={financialStress} onValueChange={setFinancialStress}>
@@ -223,7 +224,7 @@ const PersonalHistoryStep = ({ onNext, onBack, onboardingData }: PersonalHistory
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Heart className="h-5 w-5 text-red-600" />
-            <span>Current Medical Conditions</span>
+            <span>Current Medical Conditions <span className="text-gray-500">(Optional)</span></span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -273,7 +274,7 @@ const PersonalHistoryStep = ({ onNext, onBack, onboardingData }: PersonalHistory
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Brain className="h-5 w-5 text-indigo-600" />
-            <span>Previous Therapy Experience</span>
+            <span>Previous Therapy Experience <span className="text-red-500">*</span></span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -327,7 +328,7 @@ const PersonalHistoryStep = ({ onNext, onBack, onboardingData }: PersonalHistory
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Clock className="h-5 w-5 text-orange-600" />
-            <span>Sleep Pattern</span>
+            <span>Sleep Pattern <span className="text-red-500">*</span></span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -347,7 +348,7 @@ const PersonalHistoryStep = ({ onNext, onBack, onboardingData }: PersonalHistory
       {/* Exercise Habits */}
       <Card>
         <CardHeader>
-          <CardTitle>Exercise & Physical Activity</CardTitle>
+          <CardTitle>Exercise & Physical Activity <span className="text-red-500">*</span></CardTitle>
         </CardHeader>
         <CardContent>
           <RadioGroup value={exerciseHabits} onValueChange={setExerciseHabits}>
@@ -366,7 +367,7 @@ const PersonalHistoryStep = ({ onNext, onBack, onboardingData }: PersonalHistory
       {/* Substance Use */}
       <Card>
         <CardHeader>
-          <CardTitle>Substance Use (Confidential)</CardTitle>
+          <CardTitle>Substance Use <span className="text-gray-500">(Confidential & Optional)</span></CardTitle>
           <p className="text-sm text-muted-foreground">
             This information helps us provide safe and appropriate care
           </p>
@@ -445,17 +446,26 @@ const PersonalHistoryStep = ({ onNext, onBack, onboardingData }: PersonalHistory
         </Card>
       )}
 
+      {!isComplete && (
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+          <p className="text-sm text-orange-800 flex items-center">
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            Please complete all required fields (marked with *) to continue
+          </p>
+        </div>
+      )}
+
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
+        <GradientButton variant="outline" onClick={onBack}>
           Back
-        </Button>
-        <Button 
+        </GradientButton>
+        <GradientButton 
           onClick={handleSubmit}
           disabled={!isComplete}
-          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
+          className={!isComplete ? 'opacity-50 cursor-not-allowed' : ''}
         >
           Continue
-        </Button>
+        </GradientButton>
       </div>
     </div>
   );

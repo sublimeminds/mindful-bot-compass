@@ -16,6 +16,7 @@ import InternationalizedEnhancedSmartAnalysisStep from './InternationalizedEnhan
 import TherapistMatchStep from './TherapistMatchStep';
 import PlanSelectionStep from './PlanSelectionStep';
 import NotificationPreferencesStep from './NotificationPreferencesStep';
+import CompletionStep from './CompletionStep';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import CurrencySelector from '@/components/ui/CurrencySelector';
 
@@ -26,6 +27,7 @@ import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useOnboardingProgress } from '@/hooks/useOnboardingProgress';
+import { scrollToTop } from '@/hooks/useScrollToTop';
 
 interface EnhancedSmartOnboardingFlowProps {
   onComplete: (data: any) => void;
@@ -111,7 +113,7 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
     { component: InternationalizedEnhancedSmartAnalysisStep, titleKey: 'AI Analysis' },
     { component: TherapistMatchStep, titleKey: 'Choose Your Therapist' },
     { component: PlanSelectionStep, titleKey: 'Select Your Plan' },
-    { component: NotificationPreferencesStep, titleKey: 'Notification Settings' }
+    { component: CompletionStep, titleKey: 'Setup Complete' }
   ];
 
   // Filter steps based on subscription status
@@ -139,6 +141,8 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
       updateStep(nextStep);
+      // Auto-scroll to top when advancing to next step
+      setTimeout(() => scrollToTop(), 100);
     } else {
       localStorage.removeItem('selectedPlan');
       clearProgress();
@@ -152,6 +156,8 @@ const EnhancedSmartOnboardingFlow = ({ onComplete }: EnhancedSmartOnboardingFlow
       const prevStep = currentStep - 1;
       setCurrentStep(prevStep);
       updateStep(prevStep);
+      // Auto-scroll to top when going back
+      setTimeout(() => scrollToTop(), 100);
     } else {
       setShowIntro(true);
     }

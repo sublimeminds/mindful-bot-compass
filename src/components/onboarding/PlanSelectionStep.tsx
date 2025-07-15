@@ -30,7 +30,7 @@ const PlanSelectionStep = ({ onNext, onBack, onboardingData, showAsOptionalUpsel
       if (!user?.id) return 0;
       
       const { count } = await supabase
-        .from('therapy_plans')
+        .from('adaptive_therapy_plans')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', user.id);
         

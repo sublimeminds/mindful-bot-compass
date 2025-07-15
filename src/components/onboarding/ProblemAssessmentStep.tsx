@@ -5,7 +5,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Heart, Brain, Users, Briefcase, Home } from 'lucide-react';
+import GradientButton from '@/components/ui/GradientButton';
+import { AlertTriangle, Heart, Brain, Users, Briefcase, Home, CheckCircle2 } from 'lucide-react';
 
 interface ProblemAssessmentStepProps {
   onNext: (data: any) => void;
@@ -75,9 +76,13 @@ const ProblemAssessmentStep = ({ onNext, onBack, onboardingData }: ProblemAssess
       </div>
 
       {/* Specific Problem Areas */}
-      <Card>
+      <Card className={`transition-all ${specificProblems.length === 0 ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle>What areas would you like to focus on? (Select all that apply)</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            <span>What areas would you like to focus on? <span className="text-red-500">*</span></span>
+            {specificProblems.length > 0 && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">Select at least one area to continue</p>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -105,13 +110,19 @@ const ProblemAssessmentStep = ({ onNext, onBack, onboardingData }: ProblemAssess
               );
             })}
           </div>
+          {specificProblems.length === 0 && (
+            <p className="text-sm text-orange-600 mt-2">Please select at least one focus area to continue</p>
+          )}
         </CardContent>
       </Card>
 
       {/* Problem Description */}
-      <Card>
+      <Card className={`transition-all ${!problemDescription.trim() ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle>Describe your current challenges in detail</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            <span>Describe your current challenges in detail <span className="text-red-500">*</span></span>
+            {problemDescription.trim() && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
@@ -121,13 +132,19 @@ const ProblemAssessmentStep = ({ onNext, onBack, onboardingData }: ProblemAssess
             rows={5}
             className="w-full"
           />
+          {!problemDescription.trim() && (
+            <p className="text-sm text-orange-600 mt-2">Please describe your challenges to continue</p>
+          )}
         </CardContent>
       </Card>
 
       {/* Therapy Goals */}
-      <Card>
+      <Card className={`transition-all ${!therapyGoals.trim() ? 'border-orange-200 bg-orange-50' : 'border-green-200 bg-green-50'}`}>
         <CardHeader>
-          <CardTitle>What would you like to achieve through therapy?</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            <span>What would you like to achieve through therapy? <span className="text-red-500">*</span></span>
+            {therapyGoals.trim() && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
@@ -137,13 +154,16 @@ const ProblemAssessmentStep = ({ onNext, onBack, onboardingData }: ProblemAssess
             rows={4}
             className="w-full"
           />
+          {!therapyGoals.trim() && (
+            <p className="text-sm text-orange-600 mt-2">Please describe your therapy goals to continue</p>
+          )}
         </CardContent>
       </Card>
 
       {/* Triggers and Stressors */}
       <Card>
         <CardHeader>
-          <CardTitle>Common triggers or stressors (Optional)</CardTitle>
+          <CardTitle>Common triggers or stressors <span className="text-gray-500">(Optional)</span></CardTitle>
           <p className="text-sm text-muted-foreground">
             Select any situations or circumstances that tend to trigger your symptoms
           </p>
@@ -214,17 +234,26 @@ const ProblemAssessmentStep = ({ onNext, onBack, onboardingData }: ProblemAssess
         </Card>
       )}
 
+      {!isComplete && (
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+          <p className="text-sm text-orange-800 flex items-center">
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            Please complete all required fields (marked with *) to continue
+          </p>
+        </div>
+      )}
+
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
+        <GradientButton variant="outline" onClick={onBack}>
           Back
-        </Button>
-        <Button 
+        </GradientButton>
+        <GradientButton 
           onClick={handleSubmit}
           disabled={!isComplete}
-          className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600"
+          className={!isComplete ? 'opacity-50 cursor-not-allowed' : ''}
         >
           Continue
-        </Button>
+        </GradientButton>
       </div>
     </div>
   );

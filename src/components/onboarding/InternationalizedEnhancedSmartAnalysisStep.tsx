@@ -73,8 +73,15 @@ const InternationalizedEnhancedSmartAnalysisStep: React.FC<EnhancedSmartAnalysis
         <GradientButton variant="outline" onClick={onBack}>
           {t('common.back', 'Back')}
         </GradientButton>
-        <GradientButton onClick={onNext} disabled={!analysisComplete}>
-          {t('onboarding.completion.choosingTherapist', 'Choose Your Therapist')}
+        <GradientButton 
+          onClick={() => {
+            console.log('🚀 Analysis complete - proceeding to next step');
+            onNext();
+          }}
+          disabled={!analysisComplete}
+          className={!analysisComplete ? 'opacity-50 cursor-not-allowed' : ''}
+        >
+          {t('common.continue', 'Continue')}
         </GradientButton>
       </div>
     </div>
