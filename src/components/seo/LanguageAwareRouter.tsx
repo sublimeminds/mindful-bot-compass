@@ -47,8 +47,17 @@ export const LanguageAwareRouter: React.FC = () => {
     <>
       <SuperAdminRouter />
       <Routes>
-        {/* Language-prefixed routes */}
-        <Route path="/:lang/*" element={<LanguagePrefixHandler />} />
+        {/* Language-prefixed routes - only match actual supported languages */}
+        <Route path="/en/*" element={<LanguagePrefixHandler />} />
+        <Route path="/de/*" element={<LanguagePrefixHandler />} />
+        <Route path="/es/*" element={<LanguagePrefixHandler />} />
+        <Route path="/fr/*" element={<LanguagePrefixHandler />} />
+        <Route path="/it/*" element={<LanguagePrefixHandler />} />
+        <Route path="/pt/*" element={<LanguagePrefixHandler />} />
+        <Route path="/ja/*" element={<LanguagePrefixHandler />} />
+        <Route path="/ko/*" element={<LanguagePrefixHandler />} />
+        <Route path="/zh/*" element={<LanguagePrefixHandler />} />
+        <Route path="/ar/*" element={<LanguagePrefixHandler />} />
         
         {/* Default English routes */}
         <Route path="/*" element={<AppRouter />} />
