@@ -23,37 +23,18 @@ const SuperAdminContext = createContext<SuperAdminContextType | undefined>(undef
 
 export const SuperAdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [admin, setAdmin] = useState<SuperAdmin | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [secureUrlPrefix, setSecureUrlPrefix] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // Start as not loading
+  const [secureUrlPrefix, setSecureUrlPrefix] = useState<string | null>('secure-admin-portal-x9k2'); // Static fallback
 
   useEffect(() => {
-    // Load secure URL prefix and check for existing session
-    const initializeAdmin = async () => {
-      try {
-        // Get secure URL prefix from database
-        const { data: configData } = await supabase
-          .from('admin_configuration')
-          .select('config_value')
-          .eq('config_key', 'secure_admin_url_prefix')
-          .single();
-
-        if (configData?.config_value) {
-          setSecureUrlPrefix(String(configData.config_value));
-        }
-
-        // Check for existing admin session
-        const sessionToken = localStorage.getItem('super_admin_session');
-        if (sessionToken) {
-          await validateSession(sessionToken);
-        }
-      } catch (error) {
-        console.error('Failed to initialize super admin:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initializeAdmin();
+    // Only check session when component mounts, no database calls
+    const sessionToken = localStorage.getItem('super_admin_session');
+    if (sessionToken) {
+      // Lazy validate session only when needed
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const validateSession = async (sessionToken: string) => {

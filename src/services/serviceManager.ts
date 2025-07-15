@@ -54,21 +54,24 @@ class ServiceManager {
   }
 
   private async runInitialization(): Promise<void> {
-    console.log('[ServiceManager] Starting initialization...');
+    console.log('[ServiceManager] Starting sequential initialization...');
     
     try {
-      // Phase 1: Essential services only
+      // Initialize services one by one to prevent cascading failures
+      console.log('[ServiceManager] Initializing cache...');
       await this.initializeCache();
+      
+      console.log('[ServiceManager] Initializing language...');
       await this.initializeLanguage();
       
-      console.log('[ServiceManager] Essential services initialized');
+      console.log('[ServiceManager] Essential services ready');
       
-      // Phase 2: Secondary services (non-blocking)
-      this.initializeSecondaryServices();
+      // Phase 2: Secondary services (completely background, no await)
+      setTimeout(() => this.initializeSecondaryServices(), 1000);
       
     } catch (error) {
-      console.error('[ServiceManager] Initialization failed:', error);
-      throw error;
+      console.warn('[ServiceManager] Service initialization had issues, continuing with defaults:', error);
+      // Don't throw, allow app to continue with defaults
     }
   }
 

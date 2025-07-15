@@ -18,36 +18,14 @@ import SuperAdminSystem from '@/pages/super-admin/SuperAdminSystem';
 import SuperAdminSecurity from '@/pages/super-admin/SuperAdminSecurity';
 
 const SuperAdminRouter = () => {
-  const { admin, secureUrlPrefix, loading } = useSuperAdmin();
+  const { admin, loading } = useSuperAdmin();
   const location = useLocation();
-  const [validPrefix, setValidPrefix] = useState<string | null>(null);
+  
+  // Use static fallback prefix to avoid database calls during initial load
+  const validPrefix = 'secure-admin-portal-x9k2';
 
-  useEffect(() => {
-    const fetchUrlPrefix = async () => {
-      try {
-        const { data } = await supabase
-          .from('admin_configuration')
-          .select('config_value')
-          .eq('config_key', 'secure_admin_url_prefix')
-          .single();
-
-        if (data?.config_value) {
-          setValidPrefix(String(data.config_value).replace(/"/g, ''));
-        }
-      } catch (error) {
-        console.error('Failed to fetch admin URL prefix:', error);
-      }
-    };
-
-    fetchUrlPrefix();
-  }, []);
-
-  if (loading || !validPrefix) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-900">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    );
+  if (loading) {
+    return null; // Don't block initial load
   }
 
   // Check if current path matches the secure admin prefix

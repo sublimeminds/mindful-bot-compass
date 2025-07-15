@@ -28,18 +28,33 @@ const LoadingFallback = () => (
   </div>
 );
 
-// Main SafeApp component with minimal complexity
+// Main SafeApp component with emergency timeout
 class SafeApp extends Component {
-  state = { servicesReady: false };
+  state = { servicesReady: false, emergencyTimeout: false };
+  private emergencyTimer: NodeJS.Timeout | null = null;
 
   async componentDidMount() {
+    // Emergency timeout - if services take too long, continue anyway
+    this.emergencyTimer = setTimeout(() => {
+      console.warn('Emergency timeout triggered - continuing with minimal services');
+      this.setState({ servicesReady: true, emergencyTimeout: true });
+    }, 3000); // 3 second emergency timeout
+
     try {
       // Initialize services before rendering main app
       await serviceManager.initialize();
+      if (this.emergencyTimer) clearTimeout(this.emergencyTimer);
       this.setState({ servicesReady: true });
     } catch (error) {
       console.warn('Service initialization failed, continuing with defaults:', error);
+      if (this.emergencyTimer) clearTimeout(this.emergencyTimer);
       this.setState({ servicesReady: true });
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.emergencyTimer) {
+      clearTimeout(this.emergencyTimer);
     }
   }
 

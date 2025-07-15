@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import AppRouter from '@/components/AppRouter';
-import SuperAdminRouter from '@/components/SuperAdminRouter';
+
+// Lazy load SuperAdminRouter to prevent initial load blocking
+const SuperAdminRouter = lazy(() => import('@/components/SuperAdminRouter'));
 
 export const SimpleLanguageRouter: React.FC = () => {
+  const location = useLocation();
+  
+  // Only load SuperAdminRouter for admin paths
+  const isAdminPath = location.pathname.includes('/admin') || location.pathname.includes('/secure');
+  
   return (
     <>
-      <SuperAdminRouter />
+      {isAdminPath && (
+        <Suspense fallback={null}>
+          <SuperAdminRouter />
+        </Suspense>
+      )}
       <Routes>
         {/* Language-prefixed routes */}
         <Route path="/:lang/*" element={<LanguagePrefixHandler />} />
