@@ -1,5 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
+import { countryDetectionService } from './countryDetectionService';
+import type { CountryDetectionData } from '@/types/countryDetection';
 
 interface ExchangeRate {
   base_currency: string;
@@ -8,6 +10,7 @@ interface ExchangeRate {
   last_updated: string;
 }
 
+// Legacy interface for backward compatibility
 interface LocationData {
   country: string;
   countryCode: string;
@@ -102,14 +105,13 @@ class EnhancedCurrencyService {
 
   async detectUserLocation(): Promise<LocationData | null> {
     try {
-      // TEMPORARILY DISABLED: Location API calls causing infinite loading
-      console.log('Using default location to prevent infinite loading');
+      const countryData = await countryDetectionService.detectCountry();
       return {
-        country: 'United States',
-        countryCode: 'US',
-        currency: 'USD',
-        timezone: 'UTC',
-        region: 'Americas'
+        country: countryData.countryName,
+        countryCode: countryData.countryCode,
+        currency: countryData.currency,
+        timezone: countryData.timezone,
+        region: countryData.region
       };
     } catch (error) {
       console.error('Failed to detect location:', error);
@@ -121,6 +123,10 @@ class EnhancedCurrencyService {
         region: 'Americas'
       };
     }
+  }
+
+  async detectUserLocationEnhanced(): Promise<CountryDetectionData> {
+    return await countryDetectionService.detectCountry();
   }
 
   private getRegionFromCountry(countryCode: string): string {
@@ -208,11 +214,17 @@ class EnhancedCurrencyService {
       'Asia': 0.7,      // 30% discount for Asian markets
       'Americas': 1.0,   // Standard pricing
       'Europe': 1.1,     // 10% premium for European markets
-      'Oceania': 1.05    // 5% premium for Oceania
+      'Oceania': 1.05,   // 5% premium for Oceania
+      'Africa': 0.6,     // 40% discount for African markets
+      'Middle East': 0.8 // 20% discount for Middle Eastern markets
     };
 
     const multiplier = regionMultipliers[region as keyof typeof regionMultipliers] || 1.0;
     return basePrice * multiplier;
+  }
+
+  async getCountrySpecificPricing(countryCode: string, priceTier: string): Promise<number | null> {
+    return await countryDetectionService.getRegionalPricing(countryCode, priceTier);
   }
 
   async getUserCurrencyPreference(userId: string): Promise<string> {

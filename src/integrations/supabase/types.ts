@@ -2765,6 +2765,48 @@ export type Database = {
         }
         Relationships: []
       }
+      countries: {
+        Row: {
+          calling_code: string
+          country_code: string
+          created_at: string
+          currency_code: string
+          currency_symbol: string
+          id: string
+          is_active: boolean
+          language_code: string
+          name: string
+          region: string
+          timezone: string
+        }
+        Insert: {
+          calling_code: string
+          country_code: string
+          created_at?: string
+          currency_code: string
+          currency_symbol: string
+          id?: string
+          is_active?: boolean
+          language_code: string
+          name: string
+          region: string
+          timezone: string
+        }
+        Update: {
+          calling_code?: string
+          country_code?: string
+          created_at?: string
+          currency_code?: string
+          currency_symbol?: string
+          id?: string
+          is_active?: boolean
+          language_code?: string
+          name?: string
+          region?: string
+          timezone?: string
+        }
+        Relationships: []
+      }
       crisis_alerts: {
         Row: {
           ai_confidence: number
@@ -6972,12 +7014,15 @@ export type Database = {
           country_code: string | null
           created_at: string
           date_of_birth: string | null
+          detected_country_code: string | null
+          detection_confidence: number | null
           email: string
           id: string
           name: string
           onboarding_complete: boolean | null
           phone: string | null
           plan: string | null
+          preferred_country_code: string | null
           preferred_currency: string | null
           preferred_language: string | null
           privacy_settings: Json | null
@@ -6992,12 +7037,15 @@ export type Database = {
           country_code?: string | null
           created_at?: string
           date_of_birth?: string | null
+          detected_country_code?: string | null
+          detection_confidence?: number | null
           email: string
           id: string
           name: string
           onboarding_complete?: boolean | null
           phone?: string | null
           plan?: string | null
+          preferred_country_code?: string | null
           preferred_currency?: string | null
           preferred_language?: string | null
           privacy_settings?: Json | null
@@ -7012,12 +7060,15 @@ export type Database = {
           country_code?: string | null
           created_at?: string
           date_of_birth?: string | null
+          detected_country_code?: string | null
+          detection_confidence?: number | null
           email?: string
           id?: string
           name?: string
           onboarding_complete?: boolean | null
           phone?: string | null
           plan?: string | null
+          preferred_country_code?: string | null
           preferred_currency?: string | null
           preferred_language?: string | null
           privacy_settings?: Json | null
@@ -7264,6 +7315,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      regional_pricing: {
+        Row: {
+          base_price: number
+          country_code: string
+          created_at: string
+          currency_code: string
+          id: string
+          is_active: boolean
+          price_tier: string
+          regional_multiplier: number
+          updated_at: string
+        }
+        Insert: {
+          base_price: number
+          country_code: string
+          created_at?: string
+          currency_code: string
+          id?: string
+          is_active?: boolean
+          price_tier: string
+          regional_multiplier?: number
+          updated_at?: string
+        }
+        Update: {
+          base_price?: number
+          country_code?: string
+          created_at?: string
+          currency_code?: string
+          id?: string
+          is_active?: boolean
+          price_tier?: string
+          regional_multiplier?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "regional_pricing_country_code_fkey"
+            columns: ["country_code"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["country_code"]
+          },
+        ]
       }
       risk_assessments: {
         Row: {
@@ -10680,6 +10775,54 @@ export type Database = {
           user_agent?: string | null
           user_id?: string
           withdrawn_at?: string | null
+        }
+        Relationships: []
+      }
+      user_country_preferences: {
+        Row: {
+          browser_language: string | null
+          created_at: string
+          detected_country_code: string | null
+          detection_confidence: number | null
+          detection_method: string | null
+          id: string
+          ip_address: unknown | null
+          is_manual_override: boolean | null
+          preferred_country_code: string | null
+          timezone: string | null
+          updated_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          browser_language?: string | null
+          created_at?: string
+          detected_country_code?: string | null
+          detection_confidence?: number | null
+          detection_method?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_manual_override?: boolean | null
+          preferred_country_code?: string | null
+          timezone?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          browser_language?: string | null
+          created_at?: string
+          detected_country_code?: string | null
+          detection_confidence?: number | null
+          detection_method?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_manual_override?: boolean | null
+          preferred_country_code?: string | null
+          timezone?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string
         }
         Relationships: []
       }

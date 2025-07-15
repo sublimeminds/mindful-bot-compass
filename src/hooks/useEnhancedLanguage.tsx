@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { enhancedCurrencyService } from '@/services/enhancedCurrencyService';
+import { countryDetectionService } from '@/services/countryDetectionService';
 
 interface LanguageData {
   code: string;
@@ -64,9 +64,9 @@ export const useEnhancedLanguage = () => {
 
   const detectLocationLanguage = async () => {
     try {
-      const location = await enhancedCurrencyService.detectUserLocation();
-      if (location && location.countryCode) {
-        const suggestedLang = languageByCountry[location.countryCode];
+      const countryData = await countryDetectionService.detectCountry();
+      if (countryData && countryData.countryCode) {
+        const suggestedLang = languageByCountry[countryData.countryCode] || countryData.language;
         if (suggestedLang && suggestedLang !== i18n.language) {
           setSuggestedLanguage(suggestedLang);
         }
