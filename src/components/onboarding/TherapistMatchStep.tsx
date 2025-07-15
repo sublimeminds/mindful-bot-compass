@@ -4,6 +4,7 @@ import GradientButton from '@/components/ui/GradientButton';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Brain, Heart, Users, Zap, Star, CheckCircle, ArrowLeft } from 'lucide-react';
+import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -113,7 +114,7 @@ const TherapistMatchStep = ({ onNext, onBack, onboardingData }: TherapistMatchSt
       </div>
 
       <div className="grid gap-6">
-        {therapistMatches.slice(0, 3).map((therapist) => {
+        {therapistMatches.map((therapist) => {
           const isSelected = selectedTherapist === therapist.id;
           const IconComponent = therapist.icon === 'Brain' ? Brain : 
                                therapist.icon === 'Heart' ? Heart :
@@ -130,16 +131,19 @@ const TherapistMatchStep = ({ onNext, onBack, onboardingData }: TherapistMatchSt
               onClick={() => handleTherapistSelect(therapist.id)}
             >
               <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className={`p-3 rounded-full bg-gradient-to-r ${therapist.color_scheme}`}>
-                      <IconComponent className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg">{therapist.name}</CardTitle>
-                      <p className="text-sm text-muted-foreground">{therapist.title}</p>
-                    </div>
-                  </div>
+                 <div className="flex items-start justify-between">
+                   <div className="flex items-center space-x-3">
+                       <Professional2DAvatar 
+                         therapistId={therapist.id}
+                         therapistName={therapist.name}
+                         size="md"
+                         className="w-12 h-12"
+                       />
+                     <div>
+                       <CardTitle className="text-lg">{therapist.name}</CardTitle>
+                       <p className="text-sm text-muted-foreground">{therapist.title}</p>
+                     </div>
+                   </div>
                   <div className="text-right">
                     <div className="flex items-center space-x-1 mb-1">
                       <Progress 

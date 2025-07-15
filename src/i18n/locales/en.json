@@ -9,7 +9,8 @@
     "edit": "Edit",
     "submit": "Submit",
     "back": "Back",
-    "next": "Next",
+    "next": "Next Step",
+    "continue": "Continue",
     "previous": "Previous",
     "close": "Close",
     "open": "Open",
@@ -270,12 +271,36 @@
       "title": "Cultural Preferences",
       "description": "Help us understand your cultural background to provide more personalized care",
       "primaryLanguage": "Primary Language",
-      "culturalBackground": "Cultural Background",
+      "culturalBackground": "Cultural Background (Optional)",
       "familyStructure": "Family Structure",
       "communicationStyle": "Communication Style",
       "religiousConsiderations": "Religious/Spiritual Considerations",
       "therapyPreferences": "Therapy Approach Preferences",
       "culturalSensitivities": "Cultural Sensitivities to Consider"
+    },
+    "therapistMatch": {
+      "title": "Your Perfect Therapist Match",
+      "subtitle": "Based on your responses, we've found therapists specially suited to your needs",
+      "compatibilityScore": "Match Score",
+      "selectTherapist": "Choose This Therapist",
+      "matchFactors": "Why This Matches You",
+      "viewProfile": "View Full Profile",
+      "showAll": "Show All Therapists"
+    },
+    "validation": {
+      "selectOption": "Please select an option",
+      "required": "This field is required",
+      "skipToNext": "Skip to Next Step"
+    },
+    "progress": {
+      "nextStepHint": "Complete current step to continue"
+    },
+    "buttons": {
+      "continue": "Continue",
+      "completeSetup": "Complete Setup & Continue",
+      "saveProgress": "Save Progress",
+      "previousStep": "Previous Step",
+      "nextStep": "Next Step"
     }
   }
 }

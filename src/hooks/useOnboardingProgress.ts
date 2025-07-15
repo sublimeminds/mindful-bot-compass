@@ -1,100 +1,80 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-const STORAGE_KEY = 'onboarding_progress';
-
-export interface OnboardingProgress {
+interface OnboardingProgress {
   currentStep: number;
   data: any;
-  completedSteps: number[];
+  lastUpdated: string;
   lastSavedAt: string;
+  completed: boolean;
 }
 
 export const useOnboardingProgress = () => {
-  const [progress, setProgress] = useState<OnboardingProgress>({
-    currentStep: 0,
-    data: {
-      culturalPreferences: {
-        primaryLanguage: 'en',
-        culturalBackground: '',
-        familyStructure: 'individual',
-        communicationStyle: 'direct',
-        religiousConsiderations: false,
-        therapyApproachPreferences: [],
-        culturalSensitivities: []
-      }
-    },
-    completedSteps: [],
-    lastSavedAt: ''
-  });
+  const [progress, setProgress] = useState<OnboardingProgress | null>(null);
 
-  // Load progress on mount
-  useEffect(() => {
-    const savedProgress = localStorage.getItem(STORAGE_KEY);
-    if (savedProgress) {
-      try {
-        const parsed = JSON.parse(savedProgress);
-        setProgress(parsed);
-      } catch (error) {
-        console.error('Error loading onboarding progress:', error);
-      }
-    }
+  const saveProgress = useCallback((stepData: any, stepNumber: number) => {
+    const now = new Date().toISOString();
+    const progressData: OnboardingProgress = {
+      currentStep: stepNumber,
+      data: stepData,
+      lastUpdated: now,
+      lastSavedAt: now,
+      completed: false
+    };
+    
+    localStorage.setItem('onboarding_progress', JSON.stringify(progressData));
+    setProgress(progressData);
   }, []);
 
-  const saveProgress = (stepData: any, stepNumber?: number) => {
-    const newProgress = {
-      ...progress,
-      data: { ...progress.data, ...stepData },
-      currentStep: stepNumber !== undefined ? stepNumber : progress.currentStep,
-      completedSteps: stepNumber !== undefined && !progress.completedSteps.includes(stepNumber) 
-        ? [...progress.completedSteps, stepNumber] 
-        : progress.completedSteps,
-      lastSavedAt: new Date().toISOString()
-    };
-    
-    setProgress(newProgress);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newProgress));
-  };
+  const updateStep = useCallback((stepNumber: number) => {
+    if (progress) {
+      const updatedProgress = { ...progress, currentStep: stepNumber };
+      localStorage.setItem('onboarding_progress', JSON.stringify(updatedProgress));
+      setProgress(updatedProgress);
+    }
+  }, [progress]);
 
-  const updateStep = (stepNumber: number) => {
-    const newProgress = {
-      ...progress,
-      currentStep: stepNumber,
-      lastSavedAt: new Date().toISOString()
-    };
-    
-    setProgress(newProgress);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newProgress));
-  };
+  const loadProgress = useCallback(() => {
+    try {
+      const saved = localStorage.getItem('onboarding_progress');
+      if (saved) {
+        const parsed = JSON.parse(saved) as OnboardingProgress;
+        setProgress(parsed);
+        return parsed;
+      }
+    } catch (error) {
+      console.error('Error loading onboarding progress:', error);
+    }
+    return null;
+  }, []);
 
-  const clearProgress = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    setProgress({
-      currentStep: 0,
-      data: {
-        culturalPreferences: {
-          primaryLanguage: 'en',
-          culturalBackground: '',
-          familyStructure: 'individual',
-          communicationStyle: 'direct',
-          religiousConsiderations: false,
-          therapyApproachPreferences: [],
-          culturalSensitivities: []
-        }
-      },
-      completedSteps: [],
-      lastSavedAt: ''
-    });
-  };
+  const clearProgress = useCallback(() => {
+    localStorage.removeItem('onboarding_progress');
+    setProgress(null);
+  }, []);
 
-  const isStepCompleted = (stepNumber: number) => {
-    return progress.completedSteps.includes(stepNumber);
-  };
+  const markCompleted = useCallback(() => {
+    if (progress) {
+      const completedProgress = { ...progress, completed: true };
+      localStorage.setItem('onboarding_progress', JSON.stringify(completedProgress));
+      setProgress(completedProgress);
+    }
+  }, [progress]);
+
+  const hasProgress = useCallback(() => {
+    return !!progress && !progress.completed;
+  }, [progress]);
+
+  useEffect(() => {
+    loadProgress();
+  }, [loadProgress]);
 
   return {
     progress,
     saveProgress,
     updateStep,
+    loadProgress,
     clearProgress,
-    isStepCompleted
+    markCompleted,
+    hasProgress
   };
 };

@@ -10,6 +10,7 @@ import { Mail, Lock, User, Heart, ArrowRight, Loader2, CheckCircle } from 'lucid
 import GradientButton from '@/components/ui/GradientButton';
 import { toast } from '@/hooks/use-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import PasswordResetModal from '@/components/ui/PasswordResetModal';
 
 const EnhancedAuthForm = () => {
   const { signUp, signIn } = useAuth();
@@ -17,6 +18,7 @@ const EnhancedAuthForm = () => {
   const [searchParams] = useSearchParams();
   const [isSignUp, setIsSignUp] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -317,7 +319,7 @@ const EnhancedAuthForm = () => {
               </GradientButton>
             </form>
 
-            <div className="text-center pt-4">
+            <div className="text-center pt-4 space-y-3">
               <button
                 type="button"
                 onClick={() => setIsSignUp(!isSignUp)}
@@ -329,6 +331,19 @@ const EnhancedAuthForm = () => {
                   : 'Need an account? Sign up'
                 }
               </button>
+              
+              {!isSignUp && (
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setShowPasswordReset(true)}
+                    className="text-sm text-slate-500 hover:text-therapy-600 transition-colors"
+                    disabled={loading}
+                  >
+                    Forgot your password?
+                  </button>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -338,6 +353,12 @@ const EnhancedAuthForm = () => {
           <p>Protected by enterprise-grade security • HIPAA compliant</p>
         </div>
       </div>
+
+      {/* Password Reset Modal */}
+      <PasswordResetModal 
+        isOpen={showPasswordReset} 
+        onClose={() => setShowPasswordReset(false)} 
+      />
     </div>
   );
 };
