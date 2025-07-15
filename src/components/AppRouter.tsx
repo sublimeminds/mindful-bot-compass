@@ -16,6 +16,7 @@ import Index from "../pages/Index";
 import GetStarted from "../pages/GetStarted";
 import EnhancedAuth from "../pages/EnhancedAuth";
 import Auth from "../pages/Auth";
+import EmailPinAuthPage from "../pages/EmailPinAuthPage";
 import VoiceTechnology from "../pages/VoiceTechnology";
 import ApiDocs from "../pages/ApiDocs";
 import MobileApps from "../pages/MobileApps";
@@ -153,6 +154,11 @@ const AppRouter = () => {
       <Route path="/auth" element={
         <PageErrorBoundary pageName="Authentication">
           <EnhancedAuth />
+        </PageErrorBoundary>
+      } />
+      <Route path="/auth/email-pin" element={
+        <PageErrorBoundary pageName="Email PIN Authentication">
+          <EmailPinAuthPage />
         </PageErrorBoundary>
       } />
       <Route path="/auth-old" element={

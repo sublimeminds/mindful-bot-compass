@@ -24,13 +24,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode }) => {
     setLoading(true);
 
     try {
-      const { error } = await signIn(email, password);
-      if (error) {
+      const result = await signIn(email, password) as any;
+      if (result.error) {
         toast({
           title: "Sign In Failed",
-          description: error.message,
+          description: result.error.message,
           variant: "destructive",
         });
+      } else if (result.needsEmailPin) {
+        // Redirect to email PIN auth flow
+        navigate(`/auth/email-pin?email=${encodeURIComponent(email)}`);
       } else {
         // Redirect to onboarding for new users, dashboard for existing users
         navigate('/onboarding');

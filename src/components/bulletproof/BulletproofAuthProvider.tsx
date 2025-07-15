@@ -105,14 +105,33 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
       }
     }, []);
 
-    // Enhanced signIn with retry logic
+    // Enhanced signIn with 2FA check and email PIN fallback
     const signIn = React.useCallback(async (email: string, password: string) => {
       let retryCount = 0;
       const maxRetries = 2;
 
-      const attemptSignIn = async (): Promise<{ error: Error | null }> => {
+      const attemptSignIn = async (): Promise<{ error: Error | null; needsEmailPin?: boolean; userEmail?: string }> => {
         try {
           const { error } = await supabase.auth.signInWithPassword({ email, password });
+          
+          if (!error) {
+            // Check if user has 2FA configured
+            const { data } = await supabase.auth.getSession();
+            if (data.session?.user) {
+              const { data: twoFactorData } = await supabase
+                .from('two_factor_auth')
+                .select('is_enabled')
+                .eq('user_id', data.session.user.id)
+                .eq('is_enabled', true)
+                .single();
+
+              // If no 2FA configured, trigger email PIN
+              if (!twoFactorData) {
+                return { error: null, needsEmailPin: true, userEmail: email };
+              }
+            }
+          }
+          
           return { error };
         } catch (err) {
           if (retryCount < maxRetries && (err as any)?.message?.includes('network')) {
