@@ -17,6 +17,7 @@ import TherapistMatchStep from './TherapistMatchStep';
 import PlanSelectionStep from './PlanSelectionStep';
 import NotificationPreferencesStep from './NotificationPreferencesStep';
 import CompletionStep from './CompletionStep';
+import TherapyPlanCreationStep from './TherapyPlanCreationStep';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 import CurrencySelector from '@/components/ui/CurrencySelector';
 

@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import EnhancedSmartOnboardingFlow from '@/components/onboarding/EnhancedSmartOnboardingFlow';
+import TherapyPlanCreationStep from '@/components/onboarding/TherapyPlanCreationStep';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +11,8 @@ import { EnhancedCulturalContextService, UserCulturalProfile } from '@/services/
 const EnhancedOnboardingPage = () => {
   const { user } = useSimpleApp();
   const navigate = useNavigate();
+  const [showPlanCreation, setShowPlanCreation] = useState(false);
+  const [onboardingData, setOnboardingData] = useState<any>(null);
 
   const handleOnboardingComplete = async (data: any) => {
     try {
@@ -20,9 +23,7 @@ const EnhancedOnboardingPage = () => {
         return;
       }
 
-      toast.loading('Saving your profile and creating personalized therapy plan...');
-
-      // First, save the cultural profile to database if cultural preferences exist
+      // Save the cultural profile first
       if (data.culturalPreferences) {
         const culturalProfile: UserCulturalProfile = {
           userId: user.id,
@@ -47,33 +48,6 @@ const EnhancedOnboardingPage = () => {
         console.log('Cultural profile saved successfully');
       }
 
-      // Create therapy plan using the adaptive therapy planner with all comprehensive data
-      const { data: planData, error } = await supabase.functions.invoke('adaptive-therapy-planner', {
-        body: {
-          userId: user.id,
-          onboardingData: data,
-          culturalProfile: data.culturalPreferences,
-          traumaHistory: data.traumaHistory,
-          therapistSelection: data.therapistSelection,
-          assessmentResults: data.assessmentResults || {},
-          // Include all mental health standard compliance data
-          mentalHealthAssessments: data.mentalHealthAssessments || {},
-          clinicalData: data.clinicalData || {},
-          riskAssessment: data.riskAssessment || {},
-          preferences: {
-            cultural: data.culturalPreferences,
-            therapy: data.therapyPreferences,
-            communication: data.communicationPreferences
-          }
-        }
-      });
-
-      if (error) {
-        console.error('Error creating therapy plan:', error);
-        toast.error('Failed to create therapy plan. Please try again.');
-        return;
-      }
-
       // Mark onboarding as complete
       const { error: profileError } = await supabase
         .from('profiles')
@@ -84,18 +58,37 @@ const EnhancedOnboardingPage = () => {
         console.error('Error updating onboarding status:', profileError);
       }
 
-      toast.success('Your personalized therapy plan has been created successfully!');
-      console.log('Comprehensive therapy plan created with cultural AI integration:', planData);
-      
-      // Navigate to dashboard
-      navigate('/dashboard');
+      // Store data and show plan creation step
+      setOnboardingData(data);
+      setShowPlanCreation(true);
     } catch (error) {
       console.error('Error completing onboarding:', error);
       toast.error('An error occurred during onboarding completion');
     }
   };
 
+  const handlePlanCreationComplete = (success: boolean, planData?: any) => {
+    if (success) {
+      console.log('Therapy plan created successfully:', planData);
+      navigate('/dashboard');
+    } else {
+      // Go back to onboarding or show error
+      setShowPlanCreation(false);
+      toast.error('Failed to create therapy plan. Please try again.');
+    }
+  };
+
   console.log("🚀 EnhancedOnboardingPage: Using EnhancedSmartOnboardingFlow (14 steps)");
+  
+  if (showPlanCreation && onboardingData) {
+    return (
+      <TherapyPlanCreationStep
+        onboardingData={onboardingData}
+        onComplete={handlePlanCreationComplete}
+      />
+    );
+  }
+  
   return <EnhancedSmartOnboardingFlow onComplete={handleOnboardingComplete} />;
 };
 
