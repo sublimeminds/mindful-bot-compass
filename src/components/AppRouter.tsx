@@ -350,12 +350,12 @@ const AppRouter = () => {
       {/* Onboarding Routes (still dashboard style for logged in users) */}
       <Route path="/enhanced-onboarding" element={
         <PageErrorBoundary pageName="Enhanced Onboarding">
-          <EnhancedOnboardingPage />
+          <DashboardPageWrapper><EnhancedOnboardingPage /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
       <Route path="/onboarding" element={
         <PageErrorBoundary pageName="Onboarding">
-          <EnhancedOnboardingPage />
+          <DashboardPageWrapper><EnhancedOnboardingPage /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
       <Route path="/onboarding-old" element={
