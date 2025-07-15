@@ -8,7 +8,7 @@ import VoiceRecorder from '@/components/voice/VoiceRecorder';
 import EnhancedSessionFlow from '@/components/therapy/EnhancedSessionFlow';
 import StructuredSessionInterface from '@/components/therapy/StructuredSessionInterface';
 import TherapyPrerequisiteCheck from '@/components/therapy/TherapyPrerequisiteCheck';
-import { RealTimeTranslationChat } from '@/components/translation/RealTimeTranslationChat';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -412,13 +412,9 @@ const FullTherapySession = () => {
     );
   }
 
-  // Active Session Phase - Use Structured Session Interface with Translation
+  // Active Session Phase - Use Structured Session Interface
   return (
     <div className="p-6 space-y-4">
-      <RealTimeTranslationChat 
-        sessionId={currentSessionId} 
-        sessionType="therapy"
-      />
       <StructuredSessionInterface
         therapyApproach={sessionState.selectedApproach?.name || 'General Therapy'}
         onSessionComplete={handleCompleteSession}

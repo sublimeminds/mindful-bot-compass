@@ -111,32 +111,7 @@ class RealAIService {
       let translatedQuestions = followUpQuestions;
       let translatedRecommendations = riskAssessment.recommendations;
 
-      if (shouldTranslate(userLanguage)) {
-        // Use translation service for therapeutic content
-        const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
-          body: {
-            texts: [
-              aiResponse.message,
-              ...(aiResponse.techniques || []),
-              ...(aiResponse.insights || []),
-              ...followUpQuestions,
-              ...riskAssessment.recommendations
-            ],
-            targetLanguage: userLanguage,
-            context: 'therapy',
-            culturalContext: languagePreference.culturalContext
-          }
-        });
-
-        if (!translationError && translationData) {
-          const translations = translationData.translations;
-          translatedMessage = translations[0] || aiResponse.message;
-          translatedTechniques = translations.slice(1, 1 + (aiResponse.techniques?.length || 0));
-          translatedInsights = translations.slice(1 + (aiResponse.techniques?.length || 0), 1 + (aiResponse.techniques?.length || 0) + (aiResponse.insights?.length || 0));
-          translatedQuestions = translations.slice(1 + (aiResponse.techniques?.length || 0) + (aiResponse.insights?.length || 0), 1 + (aiResponse.techniques?.length || 0) + (aiResponse.insights?.length || 0) + followUpQuestions.length);
-          translatedRecommendations = translations.slice(-riskAssessment.recommendations.length);
-        }
-      }
+      // Translation functionality removed - content will be handled by admin backend
 
       return {
         message: translatedMessage,

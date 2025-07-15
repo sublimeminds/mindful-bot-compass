@@ -45,38 +45,8 @@ export const useContentLibrary = () => {
       
       let contentItems = (data as ContentItem[]) || [];
 
-      // Translate content if needed
-      if (userLanguage && userLanguage !== 'en' && contentItems.length > 0) {
-        try {
-          const textsToTranslate = contentItems.flatMap(item => [
-            item.title,
-            item.description || ''
-          ]).filter(text => text.length > 0);
-
-          const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
-            body: {
-              texts: textsToTranslate,
-              targetLanguage: userLanguage,
-              context: 'educational_content',
-              culturalContext: culturalContext
-            }
-          });
-
-          if (!translationError && translationData) {
-            const translations = translationData.translations;
-            let translationIndex = 0;
-
-            contentItems = contentItems.map(item => ({
-              ...item,
-              title: translations[translationIndex++] || item.title,
-              description: item.description ? (translations[translationIndex++] || item.description) : item.description
-            }));
-          }
-        } catch (translationError) {
-          console.error('Error translating content library:', translationError);
-          // Continue with original content if translation fails
-        }
-      }
+      // Translation functionality removed - will be handled by admin backend
+      // Content will be shown in original language
 
       setContent(contentItems);
     } catch (error) {

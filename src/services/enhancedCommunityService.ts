@@ -187,37 +187,7 @@ export class EnhancedCommunityService {
       }));
 
       // Translate content if needed
-      if (userLanguage && userLanguage !== 'en' && supportGroups.length > 0) {
-        try {
-          const textsToTranslate = supportGroups.flatMap(group => [
-            group.name,
-            group.description || ''
-          ]).filter(text => text.length > 0);
-
-          const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
-            body: {
-              texts: textsToTranslate,
-              targetLanguage: userLanguage,
-              context: 'community_support',
-              culturalContext: culturalContext
-            }
-          });
-
-          if (!translationError && translationData) {
-            const translations = translationData.translations;
-            let translationIndex = 0;
-
-            supportGroups = supportGroups.map(group => ({
-              ...group,
-              name: translations[translationIndex++] || group.name,
-              description: group.description ? (translations[translationIndex++] || group.description) : group.description
-            }));
-          }
-        } catch (translationError) {
-          console.error('Error translating support groups:', translationError);
-          // Continue with original content if translation fails
-        }
-      }
+      // Translation functionality removed - content will be handled by admin backend
 
       return supportGroups;
     } catch (error) {

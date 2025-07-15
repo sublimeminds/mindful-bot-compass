@@ -16,7 +16,6 @@ import {
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
 import { useScreenSize } from '@/hooks/use-mobile';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
-import { TranslationWidget } from '@/components/translation/TranslationWidget';
 
 const DashboardHeader = () => {
   const { user } = useAuth();
@@ -156,7 +155,7 @@ const DashboardHeader = () => {
 
           {/* Translation Tools */}
           <div className="hidden lg:block">
-            <TranslationWidget />
+            <EnhancedLanguageSelector />
           </div>
 
           {/* Language Selector */}

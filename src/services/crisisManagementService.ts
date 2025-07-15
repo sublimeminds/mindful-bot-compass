@@ -287,37 +287,7 @@ export class CrisisManagementService {
       let resources = data || [];
 
       // Translate resource content if needed
-      if (filters?.userLanguage && filters.userLanguage !== 'en' && resources.length > 0) {
-        try {
-          const textsToTranslate = resources.flatMap(resource => [
-            resource.name,
-            resource.description || ''
-          ]).filter(text => text.length > 0);
-
-          const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
-            body: {
-              texts: textsToTranslate,
-              targetLanguage: filters.userLanguage,
-              context: 'crisis_support',
-              culturalContext: filters.culturalContext
-            }
-          });
-
-          if (!translationError && translationData) {
-            const translations = translationData.translations;
-            let translationIndex = 0;
-
-            resources = resources.map(resource => ({
-              ...resource,
-              name: translations[translationIndex++] || resource.name,
-              description: resource.description ? (translations[translationIndex++] || resource.description) : resource.description
-            }));
-          }
-        } catch (translationError) {
-          console.error('Error translating crisis resources:', translationError);
-          // Continue with original resources if translation fails
-        }
-      }
+      // Translation functionality removed - content will be handled by admin backend
 
       return resources;
     } catch (error) {

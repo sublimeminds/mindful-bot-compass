@@ -52,30 +52,11 @@ export class VoiceIntegrationService {
       // First, convert speech to text in source language
       const originalText = await this.convertSpeechToText(audioBlob, { language: sourceLanguage });
 
-      // If target language is the same as source, return original text
-      if (sourceLanguage === targetLanguage) {
-        return { originalText, translatedText: originalText };
-      }
-
-      // Translate the text
-      const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
-        body: {
-          texts: [originalText],
-          targetLanguage: targetLanguage,
-          context: 'conversation',
-          culturalContext: culturalContext
-        }
-      });
-
-      if (translationError) {
-        console.error('Translation error:', translationError);
-        return { originalText, translatedText: originalText };
-      }
-
-      const translatedText = translationData.translations[0] || originalText;
-      return { originalText, translatedText };
+      // Translation functionality removed - will be handled by admin backend
+      // Return original text as translation
+      return { originalText, translatedText: originalText };
     } catch (error) {
-      console.error('Speech to text and translation failed:', error);
+      console.error('Speech to text conversion failed:', error);
       throw error;
     }
   }
@@ -159,30 +140,10 @@ export class VoiceIntegrationService {
         return { originalAudio: audioContent, translatedAudio: audioContent, translatedText: text };
       }
 
-      // Translate the text first
-      const { data: translationData, error: translationError } = await supabase.functions.invoke('ai-translate', {
-        body: {
-          texts: [text],
-          targetLanguage: targetLanguage,
-          context: 'conversation',
-          culturalContext: culturalContext
-        }
-      });
-
-      if (translationError) {
-        console.error('Translation error:', translationError);
-        throw new Error('Failed to translate text');
-      }
-
-      const translatedText = translationData.translations[0] || text;
-
-      // Convert both original and translated text to speech
-      const [originalAudio, translatedAudio] = await Promise.all([
-        this.convertTextToSpeech(text, options),
-        this.convertTextToSpeech(translatedText, options)
-      ]);
-
-      return { originalAudio, translatedAudio, translatedText };
+      // Translation functionality removed - will be handled by admin backend
+      // Convert original text to speech
+      const audioContent = await this.convertTextToSpeech(text, options);
+      return { originalAudio: audioContent, translatedAudio: audioContent, translatedText: text };
     } catch (error) {
       console.error('Translate and text to speech conversion failed:', error);
       throw error;
