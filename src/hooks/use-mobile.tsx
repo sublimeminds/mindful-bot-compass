@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 
 const MOBILE_BREAKPOINT = 768
 const TABLET_BREAKPOINT = 1024
@@ -9,7 +9,7 @@ const DESKTOP_BREAKPOINT = 1536
 export function useIsMobile() {
   const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
     const onChange = () => {
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
@@ -37,7 +37,7 @@ export function useScreenSize() {
     width: 0
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     const updateScreenSize = () => {
       const width = window.innerWidth
       setScreenSize({
