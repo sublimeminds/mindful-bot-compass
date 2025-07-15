@@ -129,17 +129,16 @@ const TherapistMatchStep = ({ onNext, onBack, onboardingData }: TherapistMatchSt
     }
   };
 
-  const handleTherapistSelect = (therapistId: string, isAccessible: boolean) => {
-    if (isAccessible) {
-      setSelectedTherapist(therapistId);
-    }
+  const handleTherapistSelect = (therapistId: string, therapistTier: string) => {
+    setSelectedTherapist(therapistId);
   };
 
   const handleContinue = () => {
     const selectedTherapistData = therapistMatches.find(t => t.id === selectedTherapist);
     onNext({ 
       selectedTherapist,
-      therapistSelection: selectedTherapistData
+      therapistSelection: selectedTherapistData,
+      needsUpgrade: !selectedTherapistData?.isAccessible
     });
   };
 
@@ -163,16 +162,12 @@ const TherapistMatchStep = ({ onNext, onBack, onboardingData }: TherapistMatchSt
           return (
             <Card
               key={therapist.id}
-              className={`transition-all border-2 relative ${
-                !therapist.isAccessible
-                  ? 'cursor-not-allowed opacity-75 border-gray-300 bg-gray-50 dark:bg-gray-900'
-                  : `cursor-pointer ${
-                      isSelected 
-                        ? 'border-therapy-500 shadow-lg bg-therapy-50 dark:bg-therapy-950' 
-                        : 'border-border hover:border-therapy-300 hover:shadow-md'
-                    }`
+              className={`transition-all border-2 cursor-pointer ${
+                isSelected 
+                  ? 'border-therapy-500 shadow-lg bg-therapy-50 dark:bg-therapy-950' 
+                  : 'border-border hover:border-therapy-300 hover:shadow-md'
               }`}
-              onClick={() => handleTherapistSelect(therapist.id, therapist.isAccessible)}
+              onClick={() => handleTherapistSelect(therapist.id, therapist.therapist_tier)}
             >
               <CardHeader className="pb-3">
                  <div className="flex items-start justify-between">
@@ -183,16 +178,21 @@ const TherapistMatchStep = ({ onNext, onBack, onboardingData }: TherapistMatchSt
                          size="md"
                          className="w-12 h-12"
                        />
-                     <div>
-                       <div className="flex items-center gap-2">
-                         <CardTitle className="text-lg">{therapist.name}</CardTitle>
-                         <Badge className={`text-xs px-2 py-1 ${tierBadge.color}`}>
-                           <tierBadge.icon className="h-3 w-3 mr-1" />
-                           {tierBadge.label}
-                         </Badge>
-                       </div>
-                       <p className="text-sm text-muted-foreground">{therapist.title}</p>
-                     </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <CardTitle className="text-lg">{therapist.name}</CardTitle>
+                          <Badge className={`text-xs px-2 py-1 ${tierBadge.color}`}>
+                            <tierBadge.icon className="h-3 w-3 mr-1" />
+                            {tierBadge.label}
+                          </Badge>
+                          {!therapist.isAccessible && (
+                            <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
+                              Requires {tierBadge.label}
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-muted-foreground">{therapist.title}</p>
+                      </div>
                    </div>
                   <div className="text-right">
                     <div className="flex items-center space-x-1 mb-1">
@@ -209,25 +209,7 @@ const TherapistMatchStep = ({ onNext, onBack, onboardingData }: TherapistMatchSt
                     </div>
                   </div>
                 </div>
-                
-                {/* Lock overlay for inaccessible therapists */}
-                {!therapist.isAccessible && (
-                  <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px] flex items-center justify-center rounded-lg">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg text-center max-w-xs">
-                      <Lock className="h-8 w-8 mx-auto mb-2 text-gray-500" />
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                        {tierBadge.label} Therapist
-                      </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
-                        Upgrade to access this therapist
-                      </p>
-                      <GradientButton size="sm">
-                        Upgrade Plan
-                      </GradientButton>
-                    </div>
-                  </div>
-                )}
-              </CardHeader>
+               </CardHeader>
               
               <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground">{therapist.description}</p>
