@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useSafeSEO } from '@/hooks/useSafeSEO';
-import EnhancedHeader from '@/components/navigation/EnhancedHeader';
+import RegionalNavigationHeader from '@/components/navigation/RegionalNavigationHeader';
 import Footer from '@/components/Footer';
 import GradientLogo from '@/components/ui/GradientLogo';
 import GradientButton from '@/components/ui/GradientButton';
@@ -171,7 +171,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
-      <EnhancedHeader />
+      <RegionalNavigationHeader />
       <ProgressTracker />
       
       {/* Hero Section */}

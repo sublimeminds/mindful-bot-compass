@@ -29,7 +29,7 @@ const HeaderDropdowns = () => {
   const { user } = useAuth();
 
   return (
-    <div className="hidden md:flex lg:hidden items-center space-x-1">
+    <div className="hidden md:flex items-center space-x-1">
       {/* Therapy & AI dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
