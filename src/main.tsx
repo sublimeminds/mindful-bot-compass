@@ -8,7 +8,7 @@ if (!React || typeof React.createElement !== 'function') {
   window.location.reload();
 }
 
-import App from './App.tsx';
+import AppSelector from './AppSelector.tsx';
 import './index.css';
 
 // Import the safeguard AFTER React is confirmed to be working
@@ -64,7 +64,7 @@ if (!React || typeof React.createElement !== 'function') {
 } else {
   root.render(
     <React.StrictMode>
-      <App />
+      <AppSelector />
     </React.StrictMode>
   );
 }
