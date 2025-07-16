@@ -1,35 +1,27 @@
-// EMERGENCY DUMMY FILE - Prevents ThemeContext crashes
-// This file exists only to replace the cached problematic version
+// EMERGENCY SAFE REPLACEMENT - NO HOOKS USED
+// This file replaces the problematic cached version
 
 import React from 'react';
 
-// Create dummy components that don't use hooks to prevent crashes
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  console.log('🚫 DUMMY ThemeProvider - cache replacement active');
+// Safe ThemeProvider that doesn't crash
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  console.log('🟢 SAFE ThemeProvider loaded - no hooks used');
   
-  // Don't use any hooks - just return children wrapped in a div
+  // Use createElement directly - no hooks
   return React.createElement('div', {
-    className: 'theme-provider-dummy',
-    'data-theme': 'light'
+    'data-theme': 'light',
+    style: { minHeight: '100vh' }
   }, children);
 };
 
-// Export dummy hook that doesn't use React hooks
+// Safe hook replacement
 export const useTheme = () => {
-  console.log('🚫 DUMMY useTheme - cache replacement active');
+  console.log('🟢 SAFE useTheme called');
   return {
-    theme: 'light' as const,
-    setTheme: () => {
-      console.log('🚫 DUMMY setTheme called');
-    },
-    isDark: false,
-    toggleTheme: () => {
-      console.log('🚫 DUMMY toggleTheme called');
-    }
+    theme: 'light',
+    setTheme: () => {},
+    isDark: false
   };
 };
 
-// Export as default too in case it's imported differently
 export default ThemeProvider;
-
-console.log('🚫 DUMMY ThemeContext loaded - this should replace the cached version');

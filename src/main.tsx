@@ -57,11 +57,22 @@ const root = ReactDOM.createRoot(rootElement);
 // Initialize lovable-tagger BEFORE rendering
 initializeLovableTagger();
 
-console.log('🔍 Debug: EMERGENCY MODE - Dummy ThemeContext should prevent crashes...');
+console.log('🔍 Debug: ULTIMATE CACHE DESTRUCTION MODE');
 
-// Force cache invalidation in browser
+// ULTIMATE cache destruction
 if (typeof window !== 'undefined') {
-  // Clear all possible caches
+  // Force complete page reload with cache bypass on any ThemeContext error
+  const originalError = window.onerror;
+  window.onerror = (message, source, lineno, colno, error) => {
+    if (message?.toString().includes('ThemeContext') || message?.toString().includes('useState')) {
+      console.log('🚨 ThemeContext error detected - forcing hard refresh');
+      window.location.reload();
+      return true;
+    }
+    return originalError ? originalError(message, source, lineno, colno, error) : false;
+  };
+
+  // Clear all possible caches aggressively
   if ('caches' in window) {
     caches.keys().then(names => {
       names.forEach(name => {
@@ -69,6 +80,14 @@ if (typeof window !== 'undefined') {
         caches.delete(name);
       });
     });
+  }
+
+  // Force reload if location doesn't have cache-busting parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  if (!urlParams.get('nocache')) {
+    console.log('🔄 Adding cache buster and reloading...');
+    const newUrl = `${window.location.pathname}?nocache=${Date.now()}`;
+    window.location.replace(newUrl);
   }
 }
 

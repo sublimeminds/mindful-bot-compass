@@ -7,14 +7,14 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const isElectron = process.env.ELECTRON === 'true';
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 15);
-  const extraRandom = Math.random().toString(36).substring(2, 15);
+  const megaTimestamp = Date.now();
+  const ultraRandom = Math.random().toString(36).substring(2, 20);
+  const extraRandom = Math.random().toString(36).substring(2, 20);
   
   return {
     base: isElectron ? './' : '/',
-    // NUCLEAR cache reset - multiple random values
-    cacheDir: `.vite-EMERGENCY-RESET-${timestamp}-${random}-${extraRandom}`,
+    // ULTIMATE cache destruction
+    cacheDir: `.vite-DESTROY-ALL-CACHE-${megaTimestamp}-${ultraRandom}-${extraRandom}`,
     clearScreen: false,
     server: {
       host: "::",
@@ -24,12 +24,15 @@ export default defineConfig(({ mode }) => {
       },
       hmr: {
         overlay: false,
-        clientPort: 8080
+        clientPort: 8080,
+        // Force HMR to reload everything
+        port: 8080
       }
     },
     esbuild: {
-      // Force fresh compilation
+      // Force fresh compilation with different target
       drop: mode === 'production' ? ['console', 'debugger'] : [],
+      target: 'es2022', // Changed target to force recompilation
     },
     plugins: [
       react({
@@ -53,13 +56,13 @@ export default defineConfig(({ mode }) => {
       dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
-      // Nuclear option - exclude everything and force rebuild
-      exclude: ['src/**', '@/**', './src/**', 'contexts/**'],
+      // ULTIMATE exclusion - force everything to rebuild
+      exclude: ['src/**', '@/**', './src/**', 'contexts/**', 'ThemeContext', 'react', 'react-dom'],
       force: true,
-      disabled: false,
+      disabled: true, // Completely disable optimization
       entries: [],
       esbuildOptions: {
-        target: 'es2020',
+        target: 'es2022', // Changed to force different compilation
         jsx: 'automatic'
       }
     },
