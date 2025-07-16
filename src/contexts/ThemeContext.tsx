@@ -10,12 +10,23 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  // Simple theme provider without hooks to avoid React hook errors
-  return (
-    <ThemeContext.Provider value={{ theme: 'light', setTheme: () => {}, isDark: false }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  // Add safety checks for React availability
+  try {
+    if (typeof React === 'undefined' || !React || typeof React.useState !== 'function') {
+      console.warn('ThemeProvider: React not ready, returning fallback');
+      return <div className="min-h-screen bg-slate-900">{children}</div>;
+    }
+    
+    // Simple theme provider without hooks to avoid React hook errors
+    return (
+      <ThemeContext.Provider value={{ theme: 'light', setTheme: () => {}, isDark: false }}>
+        {children}
+      </ThemeContext.Provider>
+    );
+  } catch (error) {
+    console.error('ThemeProvider error:', error);
+    return <div className="min-h-screen bg-slate-900">{children}</div>;
+  }
 };
 
 export const useTheme = () => {

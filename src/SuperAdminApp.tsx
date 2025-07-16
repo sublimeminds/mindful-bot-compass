@@ -9,6 +9,9 @@ import { SuperAdminProvider } from '@/contexts/SuperAdminContext';
 import SuperAdminRouter from '@/components/SuperAdminRouter';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
+// Add React safety wrapper for admin
+import ReactSafeWrapper from '@/components/ReactSafeWrapper';
+
 // Configure React Query for admin
 const adminQueryClient = new QueryClient({
   defaultOptions: {
@@ -24,20 +27,24 @@ const adminQueryClient = new QueryClient({
 });
 
 const SuperAdminApp: React.FC = () => {
+  console.log('SuperAdminApp: Initializing admin panel');
+  
   return (
-    <QueryClientProvider client={adminQueryClient}>
-      <ThemeProvider>
-        <SuperAdminProvider>
-          <BrowserRouter>
-            <div className="min-h-screen bg-background">
-              <SuperAdminRouter />
-              <Toaster />
-              <Sonner />
-            </div>
-          </BrowserRouter>
-        </SuperAdminProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ReactSafeWrapper>
+      <QueryClientProvider client={adminQueryClient}>
+        <ThemeProvider>
+          <SuperAdminProvider>
+            <BrowserRouter>
+              <div className="min-h-screen bg-background">
+                <SuperAdminRouter />
+                <Toaster />
+                <Sonner />
+              </div>
+            </BrowserRouter>
+          </SuperAdminProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ReactSafeWrapper>
   );
 };
 
