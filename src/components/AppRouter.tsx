@@ -92,6 +92,9 @@ import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
 import ContentLibrary from "../pages/ContentLibrary";
 import CompliancePage from '../components/compliance/CompliancePage';
 import PrivacyDashboard from '../components/compliance/PrivacyDashboard';
+import PrivacyPolicy from '../pages/PrivacyPolicy';
+import TermsOfService from '../pages/TermsOfService';
+import CookiePolicy from '../pages/CookiePolicy';
 import AdaptiveSystems from "../pages/AdaptiveSystems";
 import SessionAnalytics from "../pages/SessionAnalytics";
 import AIPersonalization from "../pages/AIPersonalization";
@@ -601,11 +604,28 @@ const AppRouter = () => {
       } />
 
       {/* Privacy Dashboard - User dashboard page */}
-      <Route path="/privacy" element={
+      <Route path="/privacy-dashboard" element={
         <PageErrorBoundary pageName="Privacy Dashboard">
           <DashboardPageWrapper>
             <PrivacyDashboard />
           </DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* Legal Pages */}
+      <Route path="/privacy" element={
+        <PageErrorBoundary pageName="Privacy Policy">
+          <PublicPageWrapper><PrivacyPolicy /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      <Route path="/terms" element={
+        <PageErrorBoundary pageName="Terms of Service">
+          <PublicPageWrapper><TermsOfService /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      <Route path="/cookies" element={
+        <PageErrorBoundary pageName="Cookie Policy">
+          <PublicPageWrapper><CookiePolicy /></PublicPageWrapper>
         </PageErrorBoundary>
       } />
 
