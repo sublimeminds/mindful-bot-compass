@@ -87,6 +87,7 @@ import AdminAnalytics from "../pages/AdminAnalytics";
 import AdminContent from "../pages/AdminContent";
 import AdminTranslations from "../pages/AdminTranslations";
 import AdminTherapy from "../pages/AdminTherapyPage";
+import AdminFraudMonitoring from "../pages/AdminFraudMonitoring";
 import FamilyFeaturesPage from "../pages/FamilyFeaturesPage";
 import ContentLibrary from "../pages/ContentLibrary";
 import CompliancePage from '../components/compliance/CompliancePage';
@@ -624,6 +625,12 @@ const AppRouter = () => {
 
       {/* ADMIN ROUTES - Redirect to secure admin portal */}
       <Route path="/admin" element={<Navigate to="/secure-admin-portal-x9k2" replace />} />
+
+      <Route path="/admin/fraud-monitoring" element={
+        <PageErrorBoundary pageName="Regional Fraud Monitoring">
+          <AdminFraudMonitoring />
+        </PageErrorBoundary>
+      } />
 
       <Route path="/admin/ai" element={
         <PageErrorBoundary pageName="AI Personalization">
