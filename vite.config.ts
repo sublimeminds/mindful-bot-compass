@@ -18,15 +18,14 @@ export default defineConfig(({ mode }) => {
     clearScreen: false,
     server: {
       host: "::",
-      port: 8081, // Changed port to force complete restart
+      port: 8080,
       fs: {
         strict: false
       },
       hmr: {
         overlay: false,
-        clientPort: 8081, // Match new port
-        // Force HMR to reload everything
-        port: 8081 // Match new port
+        clientPort: 8080,
+        port: 8080
       }
     },
     esbuild: {

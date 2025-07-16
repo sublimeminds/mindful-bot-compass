@@ -100,11 +100,7 @@ if (typeof window !== 'undefined') {
     });
   }
 
-  // Check if we're on the new port - if not, redirect
-  if (window.location.port === '8080') {
-    console.log('🔄 Redirecting to new port 8081...');
-    window.location.href = window.location.href.replace(':8080', ':8081');
-  }
+  // Remove port check since we're back to 8080
 }
 
 // Emergency measure - block any ThemeContext loading and catch crashes
