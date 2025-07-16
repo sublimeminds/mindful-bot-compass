@@ -14,7 +14,6 @@ import ReactSafeWrapper from '@/components/ReactSafeWrapper';
 
 // Main App Router
 import { CleanLanguageAwareRouter } from '@/components/seo/CleanLanguageAwareRouter';
-import { ThemeProvider } from '@/contexts/ThemeContext';
 
 import './App.css';
 
@@ -43,15 +42,13 @@ const MainApp: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <AppErrorBoundary>
           <BulletproofAuthProvider>
-            <ThemeProvider>
+            <div className="min-h-screen bg-background text-foreground">
               <SafeRouter>
-                <div className="min-h-screen bg-background">
-                  <CleanLanguageAwareRouter />
-                  <Toaster />
-                  <Sonner />
-                </div>
+                <CleanLanguageAwareRouter />
+                <Toaster />
+                <Sonner />
               </SafeRouter>
-            </ThemeProvider>
+            </div>
           </BulletproofAuthProvider>
         </AppErrorBoundary>
       </QueryClientProvider>

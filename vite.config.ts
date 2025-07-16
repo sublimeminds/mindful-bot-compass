@@ -10,8 +10,7 @@ export default defineConfig(({ mode }) => {
   
   return {
     base: isElectron ? './' : '/',
-    // Force complete cache invalidation and dependency rebuild
-    cacheDir: '.vite-cache-' + Math.random().toString(36).substring(7),
+    cacheDir: '.vite-cache-new-' + Date.now(),
     clearScreen: false,
     server: {
       host: "::",

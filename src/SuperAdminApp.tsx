@@ -7,7 +7,7 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 // Super Admin specific imports
 import { SuperAdminProvider } from '@/contexts/SuperAdminContext';
 import SuperAdminRouter from '@/components/SuperAdminRouter';
-import { ThemeProvider } from '@/contexts/ThemeContext';
+// Removed theme context import - using direct styling
 
 // Add React safety wrapper for admin
 import ReactSafeWrapper from '@/components/ReactSafeWrapper';
@@ -32,17 +32,15 @@ const SuperAdminApp: React.FC = () => {
   return (
     <ReactSafeWrapper>
       <QueryClientProvider client={adminQueryClient}>
-        <ThemeProvider>
-          <SuperAdminProvider>
-            <BrowserRouter>
-              <div className="min-h-screen bg-background">
-                <SuperAdminRouter />
-                <Toaster />
-                <Sonner />
-              </div>
-            </BrowserRouter>
-          </SuperAdminProvider>
-        </ThemeProvider>
+        <SuperAdminProvider>
+          <BrowserRouter>
+            <div className="min-h-screen bg-slate-900 text-white">
+              <SuperAdminRouter />
+              <Toaster />
+              <Sonner />
+            </div>
+          </BrowserRouter>
+        </SuperAdminProvider>
       </QueryClientProvider>
     </ReactSafeWrapper>
   );
