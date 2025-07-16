@@ -1,114 +1,68 @@
-// BULLETPROOF THEME SYSTEM
-// Uses CSS variables and localStorage for persistence
+// BULLETPROOF THEME SYSTEM - PURE JAVASCRIPT VERSION
+// No React dependencies - prevents useState errors during initialization
 
-import React from 'react';
+console.log('🛡️ BULLETPROOF: Loading pure JavaScript theme system');
 
 const THEME_KEY = 'bulletproof-theme';
-const THEME_CHANGE_EVENT = 'theme-changed';
-
 type Theme = 'light' | 'dark';
 
-class BulletproofThemeManager {
-  private currentTheme: Theme = 'light';
-  private listeners: Set<(theme: Theme) => void> = new Set();
+// Global theme state - pure JavaScript
+let globalTheme: Theme = 'light';
 
-  constructor() {
-    this.initializeTheme();
-  }
-
-  private initializeTheme() {
+// Initialize theme immediately without React
+const initializeBulletproofTheme = () => {
+  try {
     const stored = localStorage.getItem(THEME_KEY) as Theme;
-    if (stored && (stored === 'light' || stored === 'dark')) {
-      this.currentTheme = stored;
-    } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      this.currentTheme = prefersDark ? 'dark' : 'light';
-    }
-    
-    this.applyTheme();
-    
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem(THEME_KEY)) {
-        this.currentTheme = e.matches ? 'dark' : 'light';
-        this.applyTheme();
-        this.notifyListeners();
-      }
-    });
+    globalTheme = (stored === 'light' || stored === 'dark') ? stored : 'light';
+  } catch (e) {
+    globalTheme = 'light';
   }
-
-  private applyTheme() {
+  
+  // Apply to DOM immediately
+  try {
     const root = document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(this.currentTheme);
-    root.setAttribute('data-theme', this.currentTheme);
-    
-    window.dispatchEvent(new CustomEvent(THEME_CHANGE_EVENT, { 
-      detail: { theme: this.currentTheme } 
-    }));
+    root.className = root.className.replace(/(^|\s)(light|dark)(\s|$)/g, ' ').trim();
+    root.classList.add(globalTheme);
+    root.setAttribute('data-theme', globalTheme);
+    console.log('🛡️ BULLETPROOF: Applied theme', globalTheme);
+  } catch (e) {
+    console.warn('Bulletproof theme application failed:', e);
   }
+};
 
-  private notifyListeners() {
-    this.listeners.forEach(listener => listener(this.currentTheme));
-  }
+// Execute immediately
+initializeBulletproofTheme();
 
-  getTheme(): Theme {
-    return this.currentTheme;
-  }
+// Pure functions - no React
+export const getTheme = (): Theme => globalTheme;
+export const isDark = (): boolean => globalTheme === 'dark';
+export const setTheme = (theme: Theme) => {
+  globalTheme = theme;
+  try { 
+    localStorage.setItem(THEME_KEY, theme); 
+  } catch (e) {}
+  initializeBulletproofTheme();
+};
+export const toggleTheme = () => {
+  setTheme(globalTheme === 'light' ? 'dark' : 'light');
+};
 
-  setTheme(theme: Theme) {
-    if (theme !== this.currentTheme) {
-      this.currentTheme = theme;
-      localStorage.setItem(THEME_KEY, theme);
-      this.applyTheme();
-      this.notifyListeners();
-    }
-  }
-
-  toggleTheme() {
-    this.setTheme(this.currentTheme === 'light' ? 'dark' : 'light');
-  }
-
-  isDark(): boolean {
-    return this.currentTheme === 'dark';
-  }
-
-  subscribe(listener: (theme: Theme) => void): () => void {
-    this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
-  }
-}
-
-const bulletproofTheme = new BulletproofThemeManager();
+// ZERO React components - just return children
+export const ThemeProvider = ({ children }: any) => {
+  console.log('🛡️ BULLETPROOF ThemeProvider: No React hooks, just children');
+  initializeBulletproofTheme(); // Ensure theme is applied
+  return children;
+};
 
 export const useTheme = () => {
-  const [theme, setThemeState] = React.useState(bulletproofTheme.getTheme());
-
-  React.useEffect(() => {
-    const unsubscribe = bulletproofTheme.subscribe(setThemeState);
-    return unsubscribe;
-  }, []);
-
+  console.log('🛡️ BULLETPROOF useTheme: Pure JavaScript response');
   return {
-    theme,
-    setTheme: bulletproofTheme.setTheme.bind(bulletproofTheme),
-    isDark: theme === 'dark'
+    theme: getTheme(),
+    setTheme,
+    isDark: isDark()
   };
 };
 
-export const getTheme = () => bulletproofTheme.getTheme();
-export const setTheme = (theme: Theme) => bulletproofTheme.setTheme(theme);
-export const toggleTheme = () => bulletproofTheme.toggleTheme();
-export const isDark = () => bulletproofTheme.isDark();
+export default { ThemeProvider, useTheme };
 
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  React.useEffect(() => {
-    bulletproofTheme.getTheme();
-  }, []);
-  
-  return <>{children}</>;
-};
-
-export default {
-  ThemeProvider,
-  useTheme
-};
+console.log('✅ BULLETPROOF: Pure JavaScript theme loaded');
