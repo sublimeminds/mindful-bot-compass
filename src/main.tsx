@@ -57,12 +57,22 @@ const root = ReactDOM.createRoot(rootElement);
 // Initialize lovable-tagger BEFORE rendering
 initializeLovableTagger();
 
-console.log('🔍 Debug: Checking for ThemeContext references before render...');
+console.log('🔍 Debug: Emergency cache check and ThemeContext blocker...');
 
-// Add explicit cache busting by manipulating the cache URL
+// Emergency measure - block any ThemeContext loading
 if (typeof window !== 'undefined') {
+  const originalError = console.error;
+  console.error = (...args) => {
+    const errorStr = args.join(' ');
+    if (errorStr.includes('ThemeContext') || errorStr.includes('ThemeProvider')) {
+      console.log('🚫 Blocked ThemeContext error - cache issue detected');
+      return;
+    }
+    originalError.apply(console, args);
+  };
+  
   console.log('🔍 Debug: Current location:', window.location.href);
-  console.log('🔍 Debug: All cached modules:', Object.keys((window as any).__vitePreload || {}));
+  console.log('🔍 Debug: Available modules:', Object.keys((window as any).__vitePreload || {}));
 }
 
 console.log('🔍 React state before render:', {

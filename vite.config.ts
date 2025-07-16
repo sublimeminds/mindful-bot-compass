@@ -7,11 +7,13 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const isElectron = process.env.ELECTRON === 'true';
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substring(2, 15);
   
   return {
     base: isElectron ? './' : '/',
-    // Force nuclear cache reset - different every time
-    cacheDir: `.vite-destroy-cache-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`,
+    // Force nuclear cache reset with timestamp and random
+    cacheDir: `.vite-emergency-reset-${timestamp}-${random}`,
     clearScreen: false,
     server: {
       host: "::",
@@ -23,6 +25,10 @@ export default defineConfig(({ mode }) => {
         overlay: false,
         clientPort: 8080
       }
+    },
+    esbuild: {
+      // Force fresh compilation
+      drop: mode === 'production' ? ['console', 'debugger'] : [],
     },
     plugins: [
       react({
@@ -46,10 +52,11 @@ export default defineConfig(({ mode }) => {
       dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
-      // Force complete rebuild and exclude all source files
-      exclude: ['src/**', '@/**', './src/**'],
+      // Nuclear option - exclude everything and force rebuild
+      exclude: ['src/**', '@/**', './src/**', 'contexts/**'],
       force: true,
       disabled: false,
+      entries: [],
       esbuildOptions: {
         target: 'es2020',
         jsx: 'automatic'
