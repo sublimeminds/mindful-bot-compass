@@ -45,16 +45,16 @@ const MockDashboard = ({ profileData }: { profileData: any }) => (
 
 // Mock Supabase
 const mockSupabase = {
-  from: vi.fn(() => ({
-    select: vi.fn(() => ({
-      eq: vi.fn(() => ({
+  from: vi.fn().mockReturnValue({
+    select: vi.fn().mockReturnValue({
+      eq: vi.fn().mockReturnValue({
         single: vi.fn().mockResolvedValue({ data: mockProfile, error: null }),
-      })),
-    })),
-    update: vi.fn(() => ({
+      }),
+    }),
+    update: vi.fn().mockReturnValue({
       eq: vi.fn().mockResolvedValue({ data: {}, error: null }),
-    })),
-  })),
+    }),
+  }),
   functions: {
     invoke: vi.fn(),
   },
@@ -152,16 +152,16 @@ describe('Post-Onboarding Dashboard State', () => {
       };
 
       // Simulate profile update
-    mockSupabase.from.mockImplementation(() => ({
-        select: vi.fn(() => ({
-          eq: vi.fn(() => ({
+      mockSupabase.from.mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({ data: mockProfile, error: null }),
-          })),
-        })),
-        update: vi.fn(() => ({
+          }),
+        }),
+        update: vi.fn().mockReturnValue({
           eq: vi.fn().mockResolvedValue({ data: updateData, error: null }),
-        })),
-      }));
+        }),
+      });
 
       // In a real test, this would be triggered by onboarding completion
       const result = await mockSupabase
@@ -186,7 +186,7 @@ describe('Post-Onboarding Dashboard State', () => {
       });
 
       // Verify that onboarding completion is persisted
-      const storedData = JSON.parse(mockLocalStorage.getItem('onboarding_state') || '{}');
+      const storedData = JSON.parse(mockLocalStorage.getItem() || '{}');
       
       // In a real app, this would check localStorage for completion status
       expect(mockLocalStorage.getItem).toBeDefined();
@@ -203,22 +203,22 @@ describe('Post-Onboarding Dashboard State', () => {
         created_at: new Date().toISOString()
       };
 
-      mockSupabase.from.mockImplementation((table) => {
+      mockSupabase.from.mockImplementation((table: string) => {
         if (table === 'adaptive_therapy_plans') {
           return {
-            select: vi.fn(() => ({
-              eq: vi.fn(() => ({
+            select: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
                 single: vi.fn().mockResolvedValue({ data: mockTherapyPlan, error: null }),
-              })),
-            })),
+              }),
+            }),
           };
         }
         return {
-          select: vi.fn(() => ({
-            eq: vi.fn(() => ({
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
               single: vi.fn().mockResolvedValue({ data: mockProfile, error: null }),
-            })),
-          })),
+            }),
+          }),
         };
       });
 
@@ -243,22 +243,22 @@ describe('Post-Onboarding Dashboard State', () => {
         created_at: new Date().toISOString()
       };
 
-      mockSupabase.from.mockImplementation((table) => {
+      mockSupabase.from.mockImplementation((table: string) => {
         if (table === 'user_cultural_profiles') {
           return {
-            select: vi.fn(() => ({
-              eq: vi.fn(() => ({
+            select: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
                 single: vi.fn().mockResolvedValue({ data: mockCulturalProfile, error: null }),
-              })),
-            })),
+              }),
+            }),
           };
         }
         return {
-          select: vi.fn(() => ({
-            eq: vi.fn(() => ({
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
               single: vi.fn().mockResolvedValue({ data: mockProfile, error: null }),
-            })),
-          })),
+            }),
+          }),
         };
       });
 
@@ -291,13 +291,16 @@ describe('Post-Onboarding Dashboard State', () => {
 
   describe('Error Handling', () => {
     it('should handle missing profile data gracefully', async () => {
-      mockSupabase.from.mockImplementation(() => ({
-        select: vi.fn(() => ({
-          eq: vi.fn(() => ({
+      mockSupabase.from.mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({ data: null, error: { message: 'Profile not found' } }),
-          })),
-        })),
-      }));
+          }),
+        }),
+        update: vi.fn().mockReturnValue({
+          eq: vi.fn().mockResolvedValue({ data: {}, error: null }),
+        }),
+      });
 
       // Should handle missing profile without crashing
       const { data: profile, error } = await mockSupabase
@@ -311,13 +314,16 @@ describe('Post-Onboarding Dashboard State', () => {
     });
 
     it('should handle database connection errors', async () => {
-      mockSupabase.from.mockImplementation(() => ({
-        select: vi.fn(() => ({
-          eq: vi.fn(() => ({
+      mockSupabase.from.mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
             single: vi.fn().mockRejectedValue(new Error('Database connection failed')),
-          })),
-        })),
-      }));
+          }),
+        }),
+        update: vi.fn().mockReturnValue({
+          eq: vi.fn().mockResolvedValue({ data: {}, error: null }),
+        }),
+      });
 
       // Should handle database errors gracefully
       try {

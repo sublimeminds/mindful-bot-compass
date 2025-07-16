@@ -111,19 +111,14 @@ describe('Onboarding to Therapy Plan Integration', () => {
     });
 
     // Mock profile update
-    mockSupabase.from.mockImplementation((table) => {
-      if (table === 'profiles') {
-        return {
-          update: vi.fn(() => ({
-            eq: vi.fn().mockResolvedValue({ data: {}, error: null }),
-          })),
-        };
-      }
-      return {
-        select: vi.fn(() => ({
-          eq: vi.fn().mockResolvedValue({ data: [], error: null }),
-        })),
-      };
+    mockSupabase.from.mockReturnValue({
+      update: vi.fn().mockReturnValue({
+        eq: vi.fn().mockResolvedValue({ data: {}, error: null }),
+      }),
+      insert: vi.fn().mockResolvedValue({ data: {}, error: null }),
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockResolvedValue({ data: [], error: null }),
+      }),
     });
   });
 
@@ -374,8 +369,8 @@ describe('Onboarding to Therapy Plan Integration', () => {
         expect(mockSupabase.from).toHaveBeenCalledWith('profiles');
       }, { timeout: 20000 });
 
-      // Verify the update call structure
-      const updateCall = mockSupabase.from.mock.calls.find(call => call[0] === 'profiles');
+      // Verify the update call structure  
+      const updateCall = mockSupabase.from.mock.calls.find((call: any[]) => call[0] === 'profiles');
       expect(updateCall).toBeDefined();
     });
   });
