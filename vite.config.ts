@@ -10,13 +10,17 @@ export default defineConfig(({ mode }) => {
   
   return {
     base: isElectron ? './' : '/',
-    cacheDir: '.vite-cache-new-' + Date.now(),
+    // Force complete cache invalidation
+    cacheDir: '.vite-fresh-' + Date.now(),
     clearScreen: false,
     server: {
       host: "::",
       port: 8080,
       fs: {
         strict: false
+      },
+      hmr: {
+        overlay: false
       }
     },
     plugins: [
@@ -45,10 +49,15 @@ export default defineConfig(({ mode }) => {
       include: [
         'react',
         'react-dom',
-        'zustand',
-        '@tanstack/react-query'
+        'zustand'
       ],
-      force: true
+      exclude: [
+        'src/contexts/ThemeContext.tsx'
+      ],
+      force: true,
+      esbuildOptions: {
+        target: 'es2020'
+      }
     },
     define: {
       global: 'globalThis',
