@@ -8,6 +8,7 @@ import GradientButton from '@/components/ui/GradientButton';
 import InteractiveChatDemo from '@/components/demo/InteractiveChatDemo';
 import ProgressTracker from '@/components/landing/ProgressTracker';
 import EnhancedPricingPage from '@/components/pricing/EnhancedPricingPage';
+import UnifiedSearch from '@/components/search/UnifiedSearch';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -242,7 +243,7 @@ const Index = () => {
               voice technology, and 24/7 crisis support. Start your healing journey today.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-in">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 animate-fade-in">
               <GradientButton 
                 size="lg" 
                 className="px-8 py-4 text-lg font-bold hover-scale transition-all duration-300"
@@ -259,6 +260,19 @@ const Index = () => {
                 <MessageSquare className="h-5 w-5 mr-2" />
                 Try Demo
               </Button>
+            </div>
+            
+            {/* Search Bar */}
+            <div className="max-w-2xl mx-auto mb-12 animate-fade-in">
+              <div className="text-center mb-4">
+                <p className="text-sm text-slate-600">
+                  🔍 Search for therapy topics, features, or get help
+                </p>
+              </div>
+              <UnifiedSearch 
+                placeholder="Search for therapy types, features, pricing, help..."
+                variant="overlay"
+              />
             </div>
           </div>
         </div>

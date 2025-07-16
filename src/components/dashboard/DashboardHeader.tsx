@@ -4,7 +4,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
-  Search,
   Calendar,
   Target,
   BarChart3,
@@ -15,6 +14,7 @@ import {
 } from 'lucide-react';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
+import UnifiedSearch from '@/components/search/UnifiedSearch';
 
 // Inline responsive logic to bypass Vite caching issues
 const useScreenSize = () => {
@@ -131,14 +131,10 @@ const DashboardHeader = () => {
 
         {/* Center section - Search */}
         <div className="hidden md:flex flex-1 max-w-md lg:max-w-lg mx-4 lg:mx-8">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <input
-              type="text"
-              placeholder="Search sessions, insights, goals..."
-              className="w-full pl-10 pr-4 py-2.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-therapy-400 focus:border-transparent transition-all duration-200 placeholder:text-gray-500"
-            />
-          </div>
+          <UnifiedSearch 
+            placeholder="Search sessions, insights, goals..." 
+            variant="dashboard"
+          />
         </div>
 
         {/* Right section */}

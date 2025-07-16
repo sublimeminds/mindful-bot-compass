@@ -8,6 +8,8 @@ import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotif
 import EnhancedUserMenu from './EnhancedUserMenu';
 import CompactRegionalSelector from '@/components/regional/CompactRegionalSelector';
 import MobileNavigation from './MobileNavigation';
+import HeaderDropdowns from './HeaderDropdowns';
+import UnifiedSearch from '../search/UnifiedSearch';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 // Inline responsive logic to bypass Vite caching issues
 const useIsMobile = () => {
@@ -85,8 +87,19 @@ const RegionalNavigationHeader = () => {
               </Link>
             </div>
 
-            {/* Spacer for center alignment */}
-            <div className="flex-1"></div>
+            {/* Center Section - Navigation Dropdowns and Search */}
+            <div className="flex items-center space-x-4 flex-1 justify-center max-w-2xl">
+              {/* Header Dropdowns for medium screens */}
+              <HeaderDropdowns />
+              
+              {/* Search Bar for larger screens */}
+              <div className="hidden lg:block flex-1 max-w-md">
+                <UnifiedSearch 
+                  placeholder={user ? "Search sessions, goals, community..." : "Search features, help, pricing..."} 
+                  variant="header"
+                />
+              </div>
+            </div>
 
             {/* Right Section - Regional Selector, Notifications, User Menu */}
             <div className="flex items-center space-x-3">
