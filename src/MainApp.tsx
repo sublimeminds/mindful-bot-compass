@@ -6,13 +6,13 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 // Add i18n initialization
 import './i18n';
 
-// Bulletproof Components
+// Core Components
 import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAuthProvider';
 import { SafeRouter } from '@/components/bulletproof/SafeRouter';
-import { AppErrorBoundary } from '@/components/bulletproof/MultiLevelErrorBoundary';
+import AppErrorBoundary from '@/components/core/AppErrorBoundary';
 import ReactSafeWrapper from '@/components/ReactSafeWrapper';
 
-// Main App Router (cleaned of super admin)
+// Main App Router
 import { CleanLanguageAwareRouter } from '@/components/seo/CleanLanguageAwareRouter';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 

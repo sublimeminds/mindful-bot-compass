@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import BundleAnalysisDashboard from '@/components/performance/BundleAnalysisDashboard';
 import PerformanceMonitoringDashboard from '@/components/performance/PerformanceMonitoringDashboard';
-import ErrorBoundary from '@/components/performance/ErrorBoundary';
+import AppErrorBoundary from '@/components/core/AppErrorBoundary';
 
 const PerformanceDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -45,7 +45,7 @@ const PerformanceDashboard = () => {
   };
 
   return (
-    <ErrorBoundary>
+    <AppErrorBoundary>
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
@@ -254,7 +254,7 @@ const PerformanceDashboard = () => {
           </Tabs>
         </div>
       </div>
-    </ErrorBoundary>
+    </AppErrorBoundary>
   );
 };
 

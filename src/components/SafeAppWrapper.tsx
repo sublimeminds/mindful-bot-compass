@@ -1,7 +1,7 @@
 
 import React, { Component, ReactNode } from 'react';
 import { SimpleAuthProvider } from '@/components/SimpleAuthProvider';
-import MinimalErrorBoundary from '@/components/MinimalErrorBoundary';
+import AppErrorBoundary from '@/components/core/AppErrorBoundary';
 
 interface Props {
   children: ReactNode;
@@ -76,11 +76,11 @@ class SafeAppWrapper extends Component<Props, State> {
     }
 
     return (
-      <MinimalErrorBoundary>
+      <AppErrorBoundary>
         <SimpleAuthProvider>
           {this.props.children}
         </SimpleAuthProvider>
-      </MinimalErrorBoundary>
+      </AppErrorBoundary>
     );
   }
 }

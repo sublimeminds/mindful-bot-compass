@@ -4,13 +4,6 @@ import React from 'react';
 export { SafeHookProvider, useSafeHooks } from './SafeHookProvider';
 export { BulletproofAuthProvider, useBulletproofAuth } from './BulletproofAuthProvider';
 export { SafeComponentWrapper, useSafeComponent } from './SafeComponentWrapper';
-export { 
-  MultiLevelErrorBoundary, 
-  AppErrorBoundary, 
-  PageErrorBoundary, 
-  ComponentErrorBoundary, 
-  HookErrorBoundary 
-} from './MultiLevelErrorBoundary';
 export { SafeRouter, useSafeNavigation } from './SafeRouter';
 
 // Version info

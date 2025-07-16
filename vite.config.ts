@@ -44,23 +44,12 @@ export default defineConfig(({ mode }) => {
     },
     optimizeDeps: {
       include: [
-        'react', 
-        'react-dom', 
-        'react/jsx-runtime',
-        '@supabase/supabase-js',
-        '@tanstack/react-query',
-        'lucide-react'
+        'react',
+        'react-dom',
+        'zustand',
+        '@tanstack/react-query'
       ],
-      exclude: [
-        'src/hooks/use-mobile.tsx',
-        'src/hooks/useResponsive.tsx',
-        'src/hooks/index.ts'
-      ],
-      force: true,
-      esbuildOptions: {
-        // Force fresh builds
-        target: 'es2020'
-      }
+      force: true
     },
     define: {
       global: 'globalThis',
