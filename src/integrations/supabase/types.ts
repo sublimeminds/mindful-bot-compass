@@ -7369,6 +7369,48 @@ export type Database = {
           },
         ]
       }
+      regional_pricing_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          description: string
+          evidence: Json
+          id: string
+          resolution_notes: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          description: string
+          evidence: Json
+          id?: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          description?: string
+          evidence?: Json
+          id?: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       risk_assessments: {
         Row: {
           alcohol_use_frequency: string | null
@@ -10751,6 +10793,54 @@ export type Database = {
         }
         Relationships: []
       }
+      user_behavioral_analytics: {
+        Row: {
+          country_claimed: string | null
+          country_detected: string | null
+          created_at: string
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          language_preference: string | null
+          risk_score: number | null
+          session_id: string | null
+          suspicious_patterns: Json | null
+          timezone_offset: number | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          country_claimed?: string | null
+          country_detected?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          language_preference?: string | null
+          risk_score?: number | null
+          session_id?: string | null
+          suspicious_patterns?: Json | null
+          timezone_offset?: number | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          country_claimed?: string | null
+          country_detected?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          language_preference?: string | null
+          risk_score?: number | null
+          session_id?: string | null
+          suspicious_patterns?: Json | null
+          timezone_offset?: number | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_consent: {
         Row: {
           consent_type: string
@@ -11203,6 +11293,54 @@ export type Database = {
         }
         Relationships: []
       }
+      user_location_confidence: {
+        Row: {
+          behavioral_consistency_score: number | null
+          confidence_score: number
+          created_at: string
+          current_country_code: string
+          flags: Json | null
+          id: string
+          ip_consistency_score: number | null
+          last_verified_at: string | null
+          payment_consistency_score: number | null
+          trust_level: string
+          updated_at: string
+          user_id: string
+          verification_count: number | null
+        }
+        Insert: {
+          behavioral_consistency_score?: number | null
+          confidence_score?: number
+          created_at?: string
+          current_country_code: string
+          flags?: Json | null
+          id?: string
+          ip_consistency_score?: number | null
+          last_verified_at?: string | null
+          payment_consistency_score?: number | null
+          trust_level?: string
+          updated_at?: string
+          user_id: string
+          verification_count?: number | null
+        }
+        Update: {
+          behavioral_consistency_score?: number | null
+          confidence_score?: number
+          created_at?: string
+          current_country_code?: string
+          flags?: Json | null
+          id?: string
+          ip_consistency_score?: number | null
+          last_verified_at?: string | null
+          payment_consistency_score?: number | null
+          trust_level?: string
+          updated_at?: string
+          user_id?: string
+          verification_count?: number | null
+        }
+        Relationships: []
+      }
       user_notification_preferences: {
         Row: {
           created_at: string | null
@@ -11586,6 +11724,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_trust_milestones: {
+        Row: {
+          achieved_at: string
+          discount_unlocked: number | null
+          id: string
+          milestone_type: string
+          notes: string | null
+          requirements_met: Json
+          user_id: string
+        }
+        Insert: {
+          achieved_at?: string
+          discount_unlocked?: number | null
+          id?: string
+          milestone_type: string
+          notes?: string | null
+          requirements_met: Json
+          user_id: string
+        }
+        Update: {
+          achieved_at?: string
+          discount_unlocked?: number | null
+          id?: string
+          milestone_type?: string
+          notes?: string | null
+          requirements_met?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_usage: {
         Row: {
           created_at: string
@@ -11616,6 +11784,42 @@ export type Database = {
           updated_at?: string
           usage_count?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_verification_history: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          data_point: string
+          detection_method: string
+          id: string
+          metadata: Json | null
+          user_id: string
+          value: string
+          verification_type: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          data_point: string
+          detection_method: string
+          id?: string
+          metadata?: Json | null
+          user_id: string
+          value: string
+          verification_type: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          data_point?: string
+          detection_method?: string
+          id?: string
+          metadata?: Json | null
+          user_id?: string
+          value?: string
+          verification_type?: string
         }
         Relationships: []
       }

@@ -53,33 +53,42 @@ class RegionalPreferencesService {
     'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'
   ];
 
-  // Purchasing power parity adjustments (relative to USD)
+  // Purchasing power parity adjustments with fraud-resistant multipliers (max 60% discount)
   private readonly PPP_MULTIPLIERS: Record<string, number> = {
     'US': 1.0,
-    'GB': 0.75,
+    'GB': 0.80,
     'CA': 0.85,
     'AU': 0.80,
-    'DE': 0.70,
-    'FR': 0.72,
-    'JP': 0.65,
-    'IN': 0.25,
-    'BR': 0.45,
-    'MX': 0.50,
-    'RU': 0.35,
-    'CN': 0.40,
-    'ZA': 0.45,
-    'AR': 0.35,
-    'TH': 0.40,
-    'PH': 0.30,
-    'VN': 0.25,
-    'ID': 0.30,
-    'MY': 0.45,
-    'TR': 0.40,
-    'EG': 0.25,
-    'NG': 0.20,
-    'KE': 0.25,
-    'PK': 0.20,
-    'BD': 0.18
+    'DE': 0.75,
+    'FR': 0.75,
+    'JP': 0.70,
+    'IN': 0.40,
+    'BR': 0.50,
+    'MX': 0.55,
+    'RU': 0.45,
+    'CN': 0.50,
+    'ZA': 0.50,
+    'AR': 0.45,
+    'TH': 0.50,
+    'PH': 0.40,
+    'VN': 0.40,
+    'ID': 0.40,
+    'MY': 0.55,
+    'TR': 0.50,
+    'EG': 0.40,
+    'NG': 0.40,
+    'KE': 0.40,
+    'PK': 0.40,
+    'BD': 0.40
+  };
+
+  // Trust-based progressive discount levels
+  private readonly TRUST_MULTIPLIERS: Record<string, number> = {
+    'new': 0.3, // 30% discount initially
+    'building': 0.5, // 50% discount after some verification
+    'trusted': 1.0, // Full regional discount
+    'suspicious': 0.8, // Reduced discount
+    'blocked': 1.0 // No discount
   };
 
   public static getInstance(): RegionalPreferencesService {
@@ -190,7 +199,8 @@ class RegionalPreferencesService {
     countryCode: string,
     enablePPP: boolean = true,
     isBusinessCustomer: boolean = false,
-    customerVATNumber?: string
+    customerVATNumber?: string,
+    userId?: string
   ): Promise<RegionalPricing> {
     try {
       // Get country data for currency info
@@ -200,8 +210,33 @@ class RegionalPreferencesService {
         .eq('country_code', countryCode.toUpperCase())
         .single();
       
-      // Apply purchasing power parity if enabled
-      const pppMultiplier = enablePPP ? (this.PPP_MULTIPLIERS[countryCode] || 1.0) : 1.0;
+      // Get user trust level if userId provided
+      let trustLevel = 'new';
+      if (userId && enablePPP) {
+        const { data: trustData } = await supabase
+          .from('user_location_confidence')
+          .select('trust_level')
+          .eq('user_id', userId)
+          .single();
+        
+        trustLevel = trustData?.trust_level || 'new';
+      }
+
+      // Apply fraud-resistant pricing with trust-based progression
+      let pppMultiplier = 1.0;
+      if (enablePPP) {
+        const basePPP = this.PPP_MULTIPLIERS[countryCode] || 1.0;
+        const trustMultiplier = this.TRUST_MULTIPLIERS[trustLevel] || 0.3;
+        
+        // Progressive discount: start at 30%, build to full regional pricing
+        if (basePPP < 1.0) {
+          const discountAmount = (1.0 - basePPP) * trustMultiplier;
+          pppMultiplier = 1.0 - discountAmount;
+        } else {
+          pppMultiplier = basePPP;
+        }
+      }
+
       const adjustedPrice = basePrice * pppMultiplier;
 
       // Convert currency using enhanced currency service
@@ -220,6 +255,11 @@ class RegionalPreferencesService {
       // Calculate tax
       const taxInfo = await this.calculateTax(convertedPrice, countryCode, isBusinessCustomer, customerVATNumber);
 
+      // Log pricing calculation for analytics
+      if (userId) {
+        await this.logPricingEvent(userId, countryCode, basePrice, convertedPrice, pppMultiplier, trustLevel);
+      }
+
       return {
         basePrice,
         convertedPrice,
@@ -237,6 +277,123 @@ class RegionalPreferencesService {
         currencySymbol: '$',
         purchasingPowerMultiplier: 1.0
       };
+    }
+  }
+
+  // New fraud prevention methods
+  async recordVerificationData(
+    userId: string, 
+    verificationType: string, 
+    dataPoint: string, 
+    value: string, 
+    confidence: number,
+    method: string,
+    metadata: any = {}
+  ): Promise<void> {
+    try {
+      await supabase.from('user_verification_history').insert({
+        user_id: userId,
+        verification_type: verificationType,
+        data_point: dataPoint,
+        value,
+        confidence_score: confidence,
+        detection_method: method,
+        metadata
+      });
+    } catch (error) {
+      console.error('Failed to record verification data:', error);
+    }
+  }
+
+  async updateLocationConfidence(userId: string, countryCode: string, verificationData: any): Promise<void> {
+    try {
+      const { data: existing } = await supabase
+        .from('user_location_confidence')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      const confidenceScore = this.calculateConfidenceScore(verificationData);
+      const trustLevel = this.determineTrustLevel(confidenceScore, existing?.verification_count || 0);
+
+      if (existing) {
+        await supabase
+          .from('user_location_confidence')
+          .update({
+            current_country_code: countryCode,
+            confidence_score: confidenceScore,
+            trust_level: trustLevel,
+            verification_count: (existing.verification_count || 0) + 1,
+            last_verified_at: new Date().toISOString(),
+            ip_consistency_score: verificationData.ipConsistency || 0.5,
+            behavioral_consistency_score: verificationData.behavioralConsistency || 0.5,
+            payment_consistency_score: verificationData.paymentConsistency || 0.5
+          })
+          .eq('user_id', userId);
+      } else {
+        await supabase.from('user_location_confidence').insert({
+          user_id: userId,
+          current_country_code: countryCode,
+          confidence_score: confidenceScore,
+          trust_level: trustLevel,
+          verification_count: 1,
+          last_verified_at: new Date().toISOString(),
+          ip_consistency_score: verificationData.ipConsistency || 0.5,
+          behavioral_consistency_score: verificationData.behavioralConsistency || 0.5,
+          payment_consistency_score: verificationData.paymentConsistency || 0.5
+        });
+      }
+    } catch (error) {
+      console.error('Failed to update location confidence:', error);
+    }
+  }
+
+  private calculateConfidenceScore(verificationData: any): number {
+    let score = 0;
+    let factors = 0;
+
+    if (verificationData.ipConsistency !== undefined) {
+      score += verificationData.ipConsistency * 0.3;
+      factors += 0.3;
+    }
+    if (verificationData.behavioralConsistency !== undefined) {
+      score += verificationData.behavioralConsistency * 0.3;
+      factors += 0.3;
+    }
+    if (verificationData.paymentConsistency !== undefined) {
+      score += verificationData.paymentConsistency * 0.4;
+      factors += 0.4;
+    }
+
+    return factors > 0 ? Math.min(score / factors, 1.0) : 0.5;
+  }
+
+  private determineTrustLevel(confidenceScore: number, verificationCount: number): string {
+    if (confidenceScore < 0.3) return 'suspicious';
+    if (confidenceScore < 0.5 || verificationCount < 3) return 'new';
+    if (confidenceScore < 0.7 || verificationCount < 10) return 'building';
+    return 'trusted';
+  }
+
+  private async logPricingEvent(
+    userId: string, 
+    countryCode: string, 
+    basePrice: number, 
+    finalPrice: number, 
+    multiplier: number, 
+    trustLevel: string
+  ): Promise<void> {
+    try {
+      await supabase.from('user_behavioral_analytics').insert({
+        user_id: userId,
+        event_type: 'pricing_calculation',
+        country_claimed: countryCode,
+        country_detected: countryCode,
+        suspicious_patterns: [],
+        risk_score: trustLevel === 'suspicious' ? 0.8 : trustLevel === 'new' ? 0.4 : 0.1
+      });
+    } catch (error) {
+      console.error('Failed to log pricing event:', error);
     }
   }
 

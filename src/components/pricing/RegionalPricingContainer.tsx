@@ -5,9 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Zap, Globe, Info, Percent } from 'lucide-react';
-import { useRegionalPreferences } from '@/hooks/useRegionalPreferences';
+import { useEnhancedRegionalPreferences } from '@/hooks/useEnhancedRegionalPreferences';
 import EnhancedTaxDisplay from '@/components/billing/EnhancedTaxDisplay';
 import UnifiedRegionalSelector from '@/components/regional/UnifiedRegionalSelector';
+import FraudPreventionNotices from '@/components/regional/FraudPreventionNotices';
 import type { RegionalPricing, TaxCalculationResult } from '@/services/RegionalPreferencesService';
 
 interface RegionalPricingContainerProps {
@@ -40,12 +41,48 @@ const RegionalPricingContainer = ({
 
   const {
     regionalPreferences,
+    trustInfo,
+    alerts,
     calculateRegionalPricing,
-    formatPrice,
+    countryCode,
+    countryName,
+    currency,
+    currencySymbol,
+    trustLevel,
+    confidenceScore,
+    availableDiscount,
+    hasAlerts,
     isEligibleForPPP,
     getPPPMultiplier,
-    isEUCountry
-  } = useRegionalPreferences();
+    dismissAlert
+  } = useEnhancedRegionalPreferences();
+
+  // Helper function for formatting prices
+  const formatPrice = (amount: number, currency?: string): string => {
+    const targetCurrency = currency || regionalPreferences?.currency || 'USD';
+    const targetSymbol = regionalPreferences?.currencySymbol || '$';
+    
+    try {
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: targetCurrency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      
+      return formatter.format(amount);
+    } catch (error) {
+      return `${targetSymbol}${amount.toFixed(2)}`;
+    }
+  };
+
+  // Helper function for EU country check
+  const isEUCountry = (countryCode?: string) => {
+    const target = countryCode || regionalPreferences?.countryCode;
+    if (!target) return false;
+    const euCountries = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
+    return euCountries.includes(target.toUpperCase());
+  };
 
   useEffect(() => {
     const calculatePricing = async () => {
@@ -152,18 +189,17 @@ const RegionalPricingContainer = ({
         </div>
       </div>
 
-      {/* PPP Information Alert */}
+      {/* Enhanced Fraud Prevention Notices */}
       {isEligibleForPPP() && enablePPP && (
-        <Alert className="border-green-200 bg-green-50">
-          <Zap className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-sm">
-            <strong className="font-medium text-green-800">
-              Purchasing Power Parity pricing enabled!
-            </strong>{' '}
-            You're getting a {Math.round((1 - getPPPMultiplier()) * 100)}% discount 
-            based on your location's purchasing power.
-          </AlertDescription>
-        </Alert>
+        <div className="mb-6">
+          <FraudPreventionNotices
+            trustLevel={trustLevel}
+            confidenceScore={confidenceScore}
+            availableDiscount={availableDiscount}
+            alerts={alerts}
+            onDismissAlert={dismissAlert}
+          />
+        </div>
       )}
 
       {/* Business Customer Alert */}
