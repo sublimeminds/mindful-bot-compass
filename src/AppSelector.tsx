@@ -1,13 +1,15 @@
 import React from 'react';
 
+// Move lazy imports outside component to prevent recreation on each render
+const SuperAdminApp = React.lazy(() => import('./SuperAdminApp'));
+const MainApp = React.lazy(() => import('./MainApp'));
+
 const AppSelector: React.FC = () => {
   // Check if current path is for super admin
   const currentPath = window.location.pathname;
   const isAdminPath = currentPath.startsWith('/secure-admin-');
 
   if (isAdminPath) {
-    // Dynamically import and render SuperAdminApp
-    const SuperAdminApp = React.lazy(() => import('./SuperAdminApp'));
     return (
       <React.Suspense fallback={
         <div className="min-h-screen bg-slate-900 flex items-center justify-center">
@@ -20,7 +22,6 @@ const AppSelector: React.FC = () => {
   }
 
   // Otherwise, render the main app
-  const MainApp = React.lazy(() => import('./MainApp'));
   return (
     <React.Suspense fallback={
       <div className="min-h-screen bg-background flex items-center justify-center">
