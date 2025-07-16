@@ -66,6 +66,7 @@ import Billing from "../pages/Billing";
 import BillingPage from "../pages/BillingPage";
 import Sessions from "../pages/Sessions";
 import NotificationsPage from "../pages/NotificationsPage";
+import NotificationsInbox from "../pages/NotificationsInbox";
 import TherapyPlanPage from "../pages/TherapyPlanPage";
 import ProgressOverview from "../pages/ProgressOverview";
 import Subscription from "../pages/Subscription";
@@ -414,7 +415,7 @@ const AppRouter = () => {
 
       <Route path="/notifications" element={
         <PageErrorBoundary pageName="Notifications">
-          <DashboardPageWrapper><NotificationsPage /></DashboardPageWrapper>
+          <DashboardPageWrapper><NotificationsInbox /></DashboardPageWrapper>
         </PageErrorBoundary>
       } />
 

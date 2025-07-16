@@ -6440,7 +6440,10 @@ export type Database = {
           id: string
           interaction_data: Json | null
           is_read: boolean
+          is_sticky: boolean | null
+          last_updated: string | null
           message: string
+          notification_key: string | null
           personalization_score: number | null
           priority: string
           rich_content: Json | null
@@ -6459,7 +6462,10 @@ export type Database = {
           id?: string
           interaction_data?: Json | null
           is_read?: boolean
+          is_sticky?: boolean | null
+          last_updated?: string | null
           message: string
+          notification_key?: string | null
           personalization_score?: number | null
           priority?: string
           rich_content?: Json | null
@@ -6478,7 +6484,10 @@ export type Database = {
           id?: string
           interaction_data?: Json | null
           is_read?: boolean
+          is_sticky?: boolean | null
+          last_updated?: string | null
           message?: string
+          notification_key?: string | null
           personalization_score?: number | null
           priority?: string
           rich_content?: Json | null

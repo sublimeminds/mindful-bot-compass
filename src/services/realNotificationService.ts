@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 export interface Notification {
   id: string;
   userId: string;
-  type: 'session_reminder' | 'milestone_achieved' | 'crisis_alert' | 'progress_update';
+  type: 'session_reminder' | 'milestone_achieved' | 'crisis_alert' | 'progress_update' | 'setup_reminder' | 'therapy_plan_reminder';
   title: string;
   message: string;
   data?: Record<string, any>;
@@ -12,15 +12,87 @@ export interface Notification {
   createdAt: Date;
   scheduledFor?: Date;
   sentAt?: Date;
+  notificationKey?: string;
+  isSticky?: boolean;
+  lastUpdated?: Date;
 }
 
 export class RealNotificationService {
-  // Create immediate notification
-  static async createNotification(
+  // Check if notification already exists
+  static async checkExistingNotification(
     userId: string,
-    notification: Omit<Notification, 'id' | 'userId' | 'isRead' | 'createdAt'>
+    notificationKey: string
+  ): Promise<Notification | null> {
+    try {
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('notification_key', notificationKey)
+        .eq('is_read', false)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error checking existing notification:', error);
+        return null;
+      }
+
+      if (!data) return null;
+
+      return {
+        id: data.id,
+        userId: data.user_id,
+        type: data.type as Notification['type'],
+        title: data.title,
+        message: data.message,
+        data: (data.data as Record<string, any>) || {},
+        isRead: data.is_read,
+        priority: data.priority as Notification['priority'],
+        createdAt: new Date(data.created_at),
+        scheduledFor: data.scheduled_for ? new Date(data.scheduled_for) : undefined,
+        notificationKey: data.notification_key,
+        isSticky: data.is_sticky,
+        lastUpdated: data.last_updated ? new Date(data.last_updated) : undefined
+      };
+    } catch (error) {
+      console.error('Error in checkExistingNotification:', error);
+      return null;
+    }
+  }
+
+  // Create or update notification with deduplication
+  static async createOrUpdateNotification(
+    userId: string,
+    notification: Omit<Notification, 'id' | 'userId' | 'isRead' | 'createdAt' | 'lastUpdated'>
   ): Promise<boolean> {
     try {
+      // Check for existing notification if key is provided
+      if (notification.notificationKey) {
+        const existing = await this.checkExistingNotification(userId, notification.notificationKey);
+        
+        if (existing) {
+          // Update existing notification instead of creating duplicate
+          const { error } = await supabase
+            .from('notifications')
+            .update({
+              title: notification.title,
+              message: notification.message,
+              data: notification.data || {},
+              priority: notification.priority,
+              last_updated: new Date().toISOString(),
+              scheduled_for: notification.scheduledFor?.toISOString()
+            })
+            .eq('id', existing.id);
+
+          if (error) {
+            console.error('Error updating notification:', error);
+            return false;
+          }
+          return true;
+        }
+      }
+
+      // Create new notification
       const { error } = await supabase
         .from('notifications')
         .insert({
@@ -30,7 +102,9 @@ export class RealNotificationService {
           message: notification.message,
           data: notification.data || {},
           priority: notification.priority,
-          scheduled_for: notification.scheduledFor?.toISOString()
+          scheduled_for: notification.scheduledFor?.toISOString(),
+          notification_key: notification.notificationKey,
+          is_sticky: notification.isSticky || false
         });
 
       if (error) {
@@ -40,9 +114,17 @@ export class RealNotificationService {
 
       return true;
     } catch (error) {
-      console.error('Error in createNotification:', error);
+      console.error('Error in createOrUpdateNotification:', error);
       return false;
     }
+  }
+
+  // Create immediate notification (legacy method - now uses deduplication)
+  static async createNotification(
+    userId: string,
+    notification: Omit<Notification, 'id' | 'userId' | 'isRead' | 'createdAt'>
+  ): Promise<boolean> {
+    return this.createOrUpdateNotification(userId, notification);
   }
 
   // Get user notifications
@@ -249,6 +331,37 @@ export class RealNotificationService {
       console.error('Error in getUnreadCount:', error);
       return 0;
     }
+  }
+
+  // Generate setup reminder (sticky notification)
+  static async generateSetupReminder(
+    userId: string,
+    setupStep: string
+  ): Promise<void> {
+    await this.createOrUpdateNotification(userId, {
+      type: 'setup_reminder',
+      title: 'Complete Your Setup',
+      message: `Please complete your ${setupStep} to get the most out of your therapy experience.`,
+      priority: 'medium',
+      notificationKey: `setup_reminder_${userId}`,
+      isSticky: true,
+      data: { setupStep }
+    });
+  }
+
+  // Generate therapy plan reminder (sticky notification)
+  static async generateTherapyPlanReminder(
+    userId: string
+  ): Promise<void> {
+    await this.createOrUpdateNotification(userId, {
+      type: 'therapy_plan_reminder',
+      title: 'Create Your Therapy Plan',
+      message: 'Set up your personalized therapy plan to begin your journey to better mental health.',
+      priority: 'medium',
+      notificationKey: `therapy_plan_reminder_${userId}`,
+      isSticky: true,
+      data: { action: 'create_therapy_plan' }
+    });
   }
 
   // Delete old notifications (cleanup)

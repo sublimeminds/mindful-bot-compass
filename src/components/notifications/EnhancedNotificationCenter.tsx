@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,13 +16,16 @@ import {
   Calendar,
   TrendingUp,
   Award,
-  AlertTriangle
+  AlertTriangle,
+  ExternalLink,
+  Settings
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNotifications } from '@/hooks/useNotifications';
 
 const EnhancedNotificationCenter = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
   const { 
     notifications, 
     unreadCount, 
@@ -53,6 +57,8 @@ const EnhancedNotificationCenter = () => {
       case 'milestone_achieved': return <Award className="h-4 w-4 text-balance-600" />;
       case 'progress_update': return <TrendingUp className="h-4 w-4 text-flow-600" />;
       case 'crisis_alert': return <AlertTriangle className="h-4 w-4 text-red-600" />;
+      case 'setup_reminder': return <Settings className="h-4 w-4 text-therapy-600" />;
+      case 'therapy_plan_reminder': return <Calendar className="h-4 w-4 text-calm-600" />;
       default: return <Bell className="h-4 w-4 text-gray-600" />;
     }
   };
@@ -182,6 +188,22 @@ const EnhancedNotificationCenter = () => {
                 </div>
               )}
             </ScrollArea>
+            
+            {/* Footer with inbox link */}
+            <div className="border-t border-therapy-100 p-3 bg-therapy-25">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  navigate('/notifications');
+                  setIsOpen(false);
+                }}
+                className="w-full text-therapy-600 hover:text-therapy-700 hover:bg-therapy-100 justify-center"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                View All Notifications
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </PopoverContent>
