@@ -56,17 +56,14 @@ export default defineConfig(({ mode }) => {
       dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
-      // NUCLEAR exclusion - completely disable and exclude everything
-      exclude: ['*', '**/*', 'src/**', '@/**', './src/**', 'contexts/**', 'ThemeContext', 'react', 'react-dom', 'node_modules/**'],
+      // Exclude only problematic modules, keep React working
+      exclude: ['src/**', '@/**', './src/**', 'contexts/**', 'ThemeContext'],
+      include: ['react', 'react-dom'], // Explicitly include React
       force: true,
-      disabled: true,
-      include: [], // Force empty include
       entries: [],
       esbuildOptions: {
-        target: 'es2023', // Changed again to force recompilation
-        jsx: 'automatic',
-        keepNames: false,
-        minify: false
+        target: 'es2023',
+        jsx: 'automatic'
       }
     },
     define: {
