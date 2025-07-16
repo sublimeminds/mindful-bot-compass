@@ -10,8 +10,9 @@ export default defineConfig(({ mode }) => {
   
   return {
     base: isElectron ? './' : '/',
-    // Force cache invalidation due to module dependency issues
+    // Force complete cache invalidation and dependency rebuild
     cacheDir: '.vite-cache-' + Date.now(),
+    clearScreen: false,
     server: {
       host: "::",
       port: 8080,
@@ -49,6 +50,10 @@ export default defineConfig(({ mode }) => {
         '@supabase/supabase-js',
         '@tanstack/react-query',
         'lucide-react'
+      ],
+      exclude: [
+        'src/hooks/use-mobile.tsx',
+        'src/hooks/useResponsive.tsx'
       ],
       force: true
     },
