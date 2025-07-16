@@ -78,6 +78,8 @@ export default defineConfig(({ mode }) => {
     define: {
       global: 'globalThis',
       'process.env.NODE_ENV': JSON.stringify(mode === 'development' ? 'development' : 'production'),
+      // Force module rebuilding with timestamp
+      '__VITE_FORCE_REBUILD__': JSON.stringify(`${megaTimestamp}-${nuclearRandom}`)
     },
     build: {
       rollupOptions: {
