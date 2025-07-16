@@ -3,100 +3,199 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Variables for themes and brand colors */
+/* Enhanced Therapy Brand Gradient Scheme */
 :root {
-  /* Shadcn UI theme colors - light mode */
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222.2 84% 4.9%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96%;
-  --accent-foreground: 222.2 84% 4.9%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
-  --radius: 0.5rem;
+  --therapy-gradient: linear-gradient(135deg, #ff6b35 0%, #4ecdc4 50%, #ff6b9d 100%);
+  --therapy-gradient-strong: linear-gradient(135deg, #ff6b35 0%, #4ecdc4 30%, #ff6b9d 60%, #ff6b35 100%);
+  --therapy-gradient-soft: linear-gradient(135deg, #ff6b35 20%, #4ecdc4 80%);
+}
 
-  /* TherapySync brand colors - these override theme colors when needed */
-  --therapy-50: 220 43% 98%;
-  --therapy-100: 220 43% 95%;
-  --therapy-200: 220 43% 89%;
-  --therapy-300: 220 43% 80%;
-  --therapy-400: 220 43% 69%;
-  --therapy-500: 220 43% 56%;
-  --therapy-600: 220 43% 45%;
-  --therapy-700: 220 43% 36%;
-  --therapy-800: 220 43% 27%;
-  --therapy-900: 220 43% 18%;
-  --therapy-950: 220 43% 11%;
+/* Enhanced Brand Classes */
+.therapy-gradient-bg {
+  background: var(--therapy-gradient) !important;
+  background-size: 200% 200% !important;
+  animation: gradient-flow 4s ease-in-out infinite !important;
+}
 
-  /* Calm colors */
-  --calm-50: 195 100% 98%;
-  --calm-100: 195 100% 95%;
-  --calm-200: 195 100% 89%;
-  --calm-300: 195 100% 80%;
-  --calm-400: 195 100% 69%;
-  --calm-500: 195 100% 56%;
-  --calm-600: 195 100% 45%;
-  --calm-700: 195 100% 36%;
-  --calm-800: 195 100% 27%;
-  --calm-900: 195 100% 18%;
-  --calm-950: 195 100% 11%;
+.therapy-gradient-bg-soft {
+  background: var(--therapy-gradient-soft) !important;
+}
 
-  /* Harmony colors */
-  --harmony-50: 280 100% 98%;
-  --harmony-100: 280 100% 95%;
-  --harmony-200: 280 100% 89%;
-  --harmony-300: 280 100% 80%;
-  --harmony-400: 280 100% 69%;
-  --harmony-500: 280 100% 56%;
-  --harmony-600: 280 100% 45%;
-  --harmony-700: 280 100% 36%;
-  --harmony-800: 280 100% 27%;
-  --harmony-900: 280 100% 18%;
-  --harmony-950: 280 100% 11%;
+.therapy-text-gradient {
+  background: var(--therapy-gradient) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
 
-  /* Balance colors */
-  --balance-50: 142 70% 98%;
-  --balance-100: 142 70% 95%;
-  --balance-200: 142 70% 89%;
-  --balance-300: 142 70% 80%;
-  --balance-400: 142 70% 69%;
-  --balance-500: 142 70% 56%;
-  --balance-600: 142 70% 45%;
-  --balance-700: 142 70% 36%;
-  --balance-800: 142 70% 27%;
-  --balance-900: 142 70% 18%;
-  --balance-950: 142 70% 11%;
+.therapy-text-gradient-animated {
+  background: var(--therapy-gradient-strong) !important;
+  background-size: 300% 300% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  animation: gradient-text-flow 3s ease-in-out infinite !important;
+}
 
-  /* Flow colors */
-  --flow-50: 25 100% 98%;
-  --flow-100: 25 100% 95%;
-  --flow-200: 25 100% 89%;
-  --flow-300: 25 100% 80%;
-  --flow-400: 25 100% 69%;
-  --flow-500: 25 100% 56%;
-  --flow-600: 25 100% 45%;
-  --flow-700: 25 100% 36%;
-  --flow-800: 25 100% 27%;
-  --flow-900: 25 100% 18%;
-  --flow-950: 25 100% 11%;
+.therapy-gradient-border {
+  border: 2px solid transparent !important;
+  background: linear-gradient(white, white) padding-box, var(--therapy-gradient) border-box !important;
+  border-radius: 12px !important;
+}
 
-  /* Shadow colors for therapy brand */
-  --shadow-therapy-subtle: 0 4px 6px -1px hsl(var(--therapy-500) / 0.1);
-  --shadow-therapy-glow: 0 0 40px hsl(var(--therapy-500) / 0.4);
-  --shadow-calm-glow: 0 0 40px hsl(var(--calm-500) / 0.4);
-  --shadow-orange-glow: 0 0 40px hsl(var(--flow-500) / 0.4);
+/* Enhanced Animations */
+@keyframes gradient-flow {
+  0%, 100% { 
+    background-position: 0% 50%;
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  25% { 
+    background-position: 50% 0%;
+    filter: hue-rotate(15deg) brightness(1.1);
+  }
+  50% { 
+    background-position: 100% 50%;
+    filter: hue-rotate(30deg) brightness(1.05);
+  }
+  75% { 
+    background-position: 50% 100%;
+    filter: hue-rotate(15deg) brightness(1.1);
+  }
+}
+
+@keyframes gradient-text-flow {
+  0%, 100% { 
+    background-position: 0% 50%;
+  }
+  33% { 
+    background-position: 50% 0%;
+  }
+  66% { 
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes swirl-breathe {
+  0%, 100% { 
+    transform: rotate(0deg) scale(1);
+    filter: hue-rotate(0deg) drop-shadow(0 0 10px rgba(255, 107, 53, 0.3));
+  }
+  25% { 
+    transform: rotate(90deg) scale(1.05);
+    filter: hue-rotate(45deg) drop-shadow(0 0 15px rgba(78, 205, 196, 0.4));
+  }
+  50% { 
+    transform: rotate(180deg) scale(1.1);
+    filter: hue-rotate(90deg) drop-shadow(0 0 20px rgba(255, 107, 157, 0.3));
+  }
+  75% { 
+    transform: rotate(270deg) scale(1.05);
+    filter: hue-rotate(135deg) drop-shadow(0 0 15px rgba(78, 205, 196, 0.4));
+  }
+}
+
+/* Tailwind CSS Variables */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 14 91% 62%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 14 91% 62%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    
+    /* Complete Therapy Color Scale */
+    --therapy-50: 14 100% 97%;
+    --therapy-100: 14 100% 93%;
+    --therapy-200: 14 100% 87%;
+    --therapy-300: 14 100% 80%;
+    --therapy-400: 14 95% 71%;
+    --therapy-500: 14 91% 62%;
+    --therapy-600: 14 87% 53%;
+    --therapy-700: 14 83% 44%;
+    --therapy-800: 14 79% 35%;
+    --therapy-900: 14 75% 26%;
+    --therapy-950: 14 71% 17%;
+    
+    /* Complete Calm Color Scale */
+    --calm-50: 195 100% 97%;
+    --calm-100: 195 100% 93%;
+    --calm-200: 195 95% 87%;
+    --calm-300: 195 90% 80%;
+    --calm-400: 195 85% 71%;
+    --calm-500: 195 80% 62%;
+    --calm-600: 195 75% 53%;
+    --calm-700: 195 70% 44%;
+    --calm-800: 195 65% 35%;
+    --calm-900: 195 60% 26%;
+    --calm-950: 195 55% 17%;
+
+    /* Complete Harmony Color Scale */
+    --harmony-50: 330 100% 97%;
+    --harmony-100: 330 100% 93%;
+    --harmony-200: 330 95% 87%;
+    --harmony-300: 330 90% 80%;
+    --harmony-400: 330 85% 71%;
+    --harmony-500: 330 80% 62%;
+    --harmony-600: 330 75% 53%;
+    --harmony-700: 330 70% 44%;
+    --harmony-800: 330 65% 35%;
+    --harmony-900: 330 60% 26%;
+    --harmony-950: 330 55% 17%;
+    
+    /* Complete Balance Color Scale */
+    --balance-50: 45 100% 97%;
+    --balance-100: 45 100% 93%;
+    --balance-200: 45 95% 87%;
+    --balance-300: 45 90% 80%;
+    --balance-400: 45 85% 71%;
+    --balance-500: 45 80% 62%;
+    --balance-600: 45 75% 53%;
+    --balance-700: 45 70% 44%;
+    --balance-800: 45 65% 35%;
+    --balance-900: 45 60% 26%;
+    --balance-950: 45 55% 17%;
+    
+    /* Complete Flow Color Scale */
+    --flow-50: 175 100% 97%;
+    --flow-100: 175 100% 93%;
+    --flow-200: 175 95% 87%;
+    --flow-300: 175 90% 80%;
+    --flow-400: 175 85% 71%;
+    --flow-500: 175 80% 62%;
+    --flow-600: 175 75% 53%;
+    --flow-700: 175 70% 44%;
+    --flow-800: 175 65% 35%;
+    --flow-900: 175 60% 26%;
+    --flow-950: 175 55% 17%;
+    
+    /* Therapeutic Shadow & Glow Effects */
+    --shadow-therapy-subtle: 0 2px 8px hsla(var(--therapy-500) / 0.15);
+    --shadow-therapy-glow: 0 4px 16px hsla(var(--therapy-500) / 0.25);
+    --shadow-calm-glow: 0 4px 16px hsla(var(--calm-500) / 0.25);
+    --shadow-orange-glow: 0 4px 16px hsla(25 95% 53% / 0.25);
+  }
 }
 
 
