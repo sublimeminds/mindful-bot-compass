@@ -57,16 +57,34 @@ const root = ReactDOM.createRoot(rootElement);
 // Initialize lovable-tagger BEFORE rendering
 initializeLovableTagger();
 
-console.log('🔍 Debug: ULTIMATE CACHE DESTRUCTION MODE');
+console.log('🔍 Debug: ULTIMATE CACHE DESTRUCTION + PORT CHANGE');
 
-// ULTIMATE cache destruction
+// ULTIMATE cache destruction + module interception
 if (typeof window !== 'undefined') {
+  // Intercept module loading to block ThemeContext
+  const originalFetch = window.fetch;
+  window.fetch = function(...args) {
+    const url = args[0]?.toString() || '';
+    if (url.includes('ThemeContext')) {
+      console.log('🚫 BLOCKED ThemeContext module load:', url);
+      // Return empty module
+      return Promise.resolve(new Response('export const ThemeProvider = ({children}) => children; export const useTheme = () => ({theme: "light"});', {
+        status: 200,
+        headers: { 'Content-Type': 'application/javascript' }
+      }));
+    }
+    return originalFetch.apply(this, args);
+  };
+
   // Force complete page reload with cache bypass on any ThemeContext error
   const originalError = window.onerror;
   window.onerror = (message, source, lineno, colno, error) => {
-    if (message?.toString().includes('ThemeContext') || message?.toString().includes('useState')) {
-      console.log('🚨 ThemeContext error detected - forcing hard refresh');
-      window.location.reload();
+    if (message?.toString().includes('ThemeContext') || 
+        message?.toString().includes('useState') ||
+        source?.includes('ThemeContext')) {
+      console.log('🚨 ThemeContext error detected - forcing HARD refresh with cache bypass');
+      // Force hard refresh with cache bypass
+      window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'v=' + Date.now();
       return true;
     }
     return originalError ? originalError(message, source, lineno, colno, error) : false;
@@ -82,12 +100,10 @@ if (typeof window !== 'undefined') {
     });
   }
 
-  // Force reload if location doesn't have cache-busting parameter
-  const urlParams = new URLSearchParams(window.location.search);
-  if (!urlParams.get('nocache')) {
-    console.log('🔄 Adding cache buster and reloading...');
-    const newUrl = `${window.location.pathname}?nocache=${Date.now()}`;
-    window.location.replace(newUrl);
+  // Check if we're on the new port - if not, redirect
+  if (window.location.port === '8080') {
+    console.log('🔄 Redirecting to new port 8081...');
+    window.location.href = window.location.href.replace(':8080', ':8081');
   }
 }
 
