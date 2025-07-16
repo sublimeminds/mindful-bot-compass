@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
   return {
     base: isElectron ? './' : '/',
     // Force complete rebuild - change cache dir every time
-    cacheDir: `.vite-reset-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+    cacheDir: `.vite-nuclear-reset-${Date.now()}-${Math.random().toString(36).substring(7)}`,
     clearScreen: false,
     server: {
       host: "::",
@@ -46,9 +46,10 @@ export default defineConfig(({ mode }) => {
       dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
-      // Exclude everything to force fresh builds
-      exclude: ['src/**'],
+      // Force complete rebuild and exclude all source files
+      exclude: ['src/**', '@/**', './src/**'],
       force: true,
+      disabled: false,
       esbuildOptions: {
         target: 'es2020',
         jsx: 'automatic'
