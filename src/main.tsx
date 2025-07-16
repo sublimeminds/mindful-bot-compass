@@ -57,7 +57,7 @@ const root = ReactDOM.createRoot(rootElement);
 // Initialize lovable-tagger BEFORE rendering
 initializeLovableTagger();
 
-console.log('🔍 Debug: ULTIMATE CACHE DESTRUCTION + PORT CHANGE');
+console.log('🔍 Debug: NUCLEAR CACHE DESTRUCTION MODE');
 
 // ULTIMATE cache destruction + module interception
 if (typeof window !== 'undefined') {
@@ -100,7 +100,15 @@ if (typeof window !== 'undefined') {
     });
   }
 
-  // Remove port check since we're back to 8080
+  // Force a nuclear cache bypass URL refresh if no cache buster exists
+  const urlParams = new URLSearchParams(window.location.search);
+  if (!urlParams.get('nuclear')) {
+    console.log('🚨 NUCLEAR: Adding ultimate cache buster and reloading...');
+    const randomPart = Math.random().toString(36).substring(2);
+    const timestamp = Date.now();
+    const newUrl = `${window.location.pathname}?nuclear=${timestamp}&random=${randomPart}&force=true&bust=${Date.now()}`;
+    window.location.replace(newUrl);
+  }
 }
 
 // Emergency measure - block any ThemeContext loading and catch crashes

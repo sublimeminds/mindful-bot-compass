@@ -10,11 +10,12 @@ export default defineConfig(({ mode }) => {
   const megaTimestamp = Date.now();
   const ultraRandom = Math.random().toString(36).substring(2, 20);
   const extraRandom = Math.random().toString(36).substring(2, 20);
+  const superRandom = Math.random().toString(36).substring(2, 20);
   
   return {
     base: isElectron ? './' : '/',
-    // ULTIMATE cache destruction
-    cacheDir: `.vite-DESTROY-ALL-CACHE-${megaTimestamp}-${ultraRandom}-${extraRandom}`,
+    // NUCLEAR cache destruction - change everything
+    cacheDir: `.vite-NUCLEAR-DESTROY-${megaTimestamp}-${ultraRandom}-${extraRandom}-${superRandom}`,
     clearScreen: false,
     server: {
       host: "::",
@@ -55,14 +56,17 @@ export default defineConfig(({ mode }) => {
       dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
-      // ULTIMATE exclusion - force everything to rebuild
-      exclude: ['src/**', '@/**', './src/**', 'contexts/**', 'ThemeContext', 'react', 'react-dom'],
+      // NUCLEAR exclusion - completely disable and exclude everything
+      exclude: ['*', '**/*', 'src/**', '@/**', './src/**', 'contexts/**', 'ThemeContext', 'react', 'react-dom', 'node_modules/**'],
       force: true,
-      disabled: true, // Completely disable optimization
+      disabled: true,
+      include: [], // Force empty include
       entries: [],
       esbuildOptions: {
-        target: 'es2022', // Changed to force different compilation
-        jsx: 'automatic'
+        target: 'es2023', // Changed again to force recompilation
+        jsx: 'automatic',
+        keepNames: false,
+        minify: false
       }
     },
     define: {
