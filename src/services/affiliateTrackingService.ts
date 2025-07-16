@@ -27,87 +27,109 @@ export class AffiliateTrackingService {
   
   // Generate device fingerprint for tracking without cookies
   private static generateDeviceFingerprint(): string {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.textBaseline = 'top';
-      ctx.font = '14px Arial';
-      ctx.fillText('Device fingerprint', 2, 2);
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof document === 'undefined' || typeof navigator === 'undefined') {
+      return 'ssr-fallback-' + Math.random().toString(36).substring(2, 15);
     }
     
-    const fingerprint = [
-      navigator.userAgent,
-      navigator.language,
-      screen.width + 'x' + screen.height,
-      new Date().getTimezoneOffset(),
-      navigator.platform,
-      canvas.toDataURL(),
-      (navigator as any).hardwareConcurrency || 0,
-      (navigator as any).deviceMemory || 0
-    ].join('|');
-    
-    return btoa(fingerprint).replace(/[^a-zA-Z0-9]/g, '').substring(0, 32);
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.textBaseline = 'top';
+        ctx.font = '14px Arial';
+        ctx.fillText('Device fingerprint', 2, 2);
+      }
+      
+      const fingerprint = [
+        navigator.userAgent,
+        navigator.language,
+        screen.width + 'x' + screen.height,
+        new Date().getTimezoneOffset(),
+        navigator.platform,
+        canvas.toDataURL(),
+        (navigator as any).hardwareConcurrency || 0,
+        (navigator as any).deviceMemory || 0
+      ].join('|');
+      
+      return btoa(fingerprint).replace(/[^a-zA-Z0-9]/g, '').substring(0, 32);
+    } catch (error) {
+      console.warn('Error generating device fingerprint:', error);
+      return 'error-fallback-' + Math.random().toString(36).substring(2, 15);
+    }
   }
 
   // Set cookie with fallbacks for adblockers
   private static setCookie(name: string, value: string, days: number = this.COOKIE_DURATION): void {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
     
-    // Try setting cookie normally
-    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
-    
-    // Fallback to localStorage for adblockers
     try {
-      localStorage.setItem(name, JSON.stringify({
-        value,
-        expires: expires.getTime()
-      }));
-    } catch (e) {
-      // Fallback to sessionStorage
+      const expires = new Date();
+      expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+      
+      // Try setting cookie normally
+      document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+      
+      // Fallback to localStorage for adblockers
       try {
-        sessionStorage.setItem(name, JSON.stringify({
+        localStorage.setItem(name, JSON.stringify({
           value,
           expires: expires.getTime()
         }));
       } catch (e) {
-        console.warn('Unable to store affiliate tracking data');
+        // Fallback to sessionStorage
+        try {
+          sessionStorage.setItem(name, JSON.stringify({
+            value,
+            expires: expires.getTime()
+          }));
+        } catch (e) {
+          console.warn('Unable to store affiliate tracking data');
+        }
       }
+    } catch (error) {
+      console.warn('Error setting cookie:', error);
     }
   }
 
   // Get cookie with fallbacks
   private static getCookie(name: string): string | null {
-    // Try cookie first
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-      const cookieValue = parts.pop()?.split(';').shift();
-      if (cookieValue) return cookieValue;
-    }
-
-    // Fallback to localStorage
+    if (typeof window === 'undefined' || typeof document === 'undefined') return null;
+    
     try {
-      const stored = localStorage.getItem(name);
-      if (stored) {
-        const data = JSON.parse(stored);
-        if (data.expires > Date.now()) {
-          return data.value;
-        } else {
-          localStorage.removeItem(name);
-        }
+      // Try cookie first
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) {
+        const cookieValue = parts.pop()?.split(';').shift();
+        if (cookieValue) return cookieValue;
       }
-    } catch (e) {
-      // Fallback to sessionStorage
+
+      // Fallback to localStorage
       try {
-        const stored = sessionStorage.getItem(name);
+        const stored = localStorage.getItem(name);
         if (stored) {
           const data = JSON.parse(stored);
-          return data.value;
+          if (data.expires > Date.now()) {
+            return data.value;
+          } else {
+            localStorage.removeItem(name);
+          }
         }
       } catch (e) {
-        // Silent fail
+        // Fallback to sessionStorage
+        try {
+          const stored = sessionStorage.getItem(name);
+          if (stored) {
+            const data = JSON.parse(stored);
+            return data.value;
+          }
+        } catch (e) {
+          // Silent fail
+        }
       }
+    } catch (error) {
+      console.warn('Error getting cookie:', error);
     }
 
     return null;
@@ -115,26 +137,32 @@ export class AffiliateTrackingService {
 
   // Initialize tracking when page loads
   static initializeTracking(): void {
-    // Get URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const affiliateCode = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+    if (typeof window === 'undefined') return;
     
-    if (affiliateCode) {
-      this.trackAffiliateClick({
-        affiliateCode,
-        utm_source: urlParams.get('utm_source') || undefined,
-        utm_medium: urlParams.get('utm_medium') || undefined,
-        utm_campaign: urlParams.get('utm_campaign') || undefined,
-        utm_content: urlParams.get('utm_content') || undefined,
-        utm_term: urlParams.get('utm_term') || undefined,
-        referrer: document.referrer || undefined,
-        landingPage: window.location.href
-      });
-    }
+    try {
+      // Get URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const affiliateCode = urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+      
+      if (affiliateCode) {
+        this.trackAffiliateClick({
+          affiliateCode,
+          utm_source: urlParams.get('utm_source') || undefined,
+          utm_medium: urlParams.get('utm_medium') || undefined,
+          utm_campaign: urlParams.get('utm_campaign') || undefined,
+          utm_content: urlParams.get('utm_content') || undefined,
+          utm_term: urlParams.get('utm_term') || undefined,
+          referrer: document.referrer || undefined,
+          landingPage: window.location.href
+        });
+      }
 
-    // Generate and store device fingerprint
-    const fingerprint = this.generateDeviceFingerprint();
-    this.setCookie(this.FINGERPRINT_COOKIE, fingerprint);
+      // Generate and store device fingerprint
+      const fingerprint = this.generateDeviceFingerprint();
+      this.setCookie(this.FINGERPRINT_COOKIE, fingerprint);
+    } catch (error) {
+      console.warn('Error initializing tracking:', error);
+    }
   }
 
   // Track affiliate click
@@ -219,16 +247,22 @@ export class AffiliateTrackingService {
 
   // Direct database tracking (fallback)
   private static async trackConversionDirect(data: any): Promise<void> {
-    const { data: { user } } = await supabase.auth.getUser();
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') return;
     
-    await supabase.from('analytics_events').insert({
-      event_type: 'affiliate_conversion',
-      event_category: 'affiliate',
-      event_data: data,
-      user_id: user?.id,
-      user_agent: navigator.userAgent,
-      referrer: document.referrer || null
-    });
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      await supabase.from('analytics_events').insert({
+        event_type: 'affiliate_conversion',
+        event_category: 'affiliate',
+        event_data: data,
+        user_id: user?.id,
+        user_agent: navigator.userAgent,
+        referrer: (typeof document !== 'undefined' ? document.referrer : null) || null
+      });
+    } catch (error) {
+      console.warn('Direct conversion tracking failed:', error);
+    }
   }
 
   // Get client IP (for server-side use)
@@ -254,6 +288,8 @@ export class AffiliateTrackingService {
 
   // Store for retry when tracking fails
   private static storeForRetry(type: string, data: any): void {
+    if (typeof window === 'undefined') return;
+    
     try {
       const retryQueue = JSON.parse(localStorage.getItem('affiliate_retry_queue') || '[]');
       retryQueue.push({
@@ -270,6 +306,8 @@ export class AffiliateTrackingService {
 
   // Retry failed tracking attempts
   static async retryFailedTracking(): Promise<void> {
+    if (typeof window === 'undefined') return;
+    
     try {
       const retryQueue = JSON.parse(localStorage.getItem('affiliate_retry_queue') || '[]');
       const maxRetries = 3;
@@ -309,47 +347,58 @@ export class AffiliateTrackingService {
   }
 
   // Server-side tracking pixel (image-based)
-  static createTrackingPixel(affiliateCode: string, event: string = 'pageview'): HTMLImageElement {
-    const img = document.createElement('img');
-    img.style.display = 'none';
-    img.width = 1;
-    img.height = 1;
+  static createTrackingPixel(affiliateCode: string, event: string = 'pageview'): HTMLImageElement | null {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return null;
     
-    const params = new URLSearchParams({
-      aff: affiliateCode,
-      event,
-      t: Date.now().toString(),
-      fp: this.generateDeviceFingerprint()
-    });
-    
-    img.src = `${window.location.origin}/api/track.gif?${params}`;
-    document.body.appendChild(img);
-    
-    return img;
+    try {
+      const img = document.createElement('img');
+      img.style.display = 'none';
+      img.width = 1;
+      img.height = 1;
+      
+      const params = new URLSearchParams({
+        aff: affiliateCode,
+        event,
+        t: Date.now().toString(),
+        fp: this.generateDeviceFingerprint()
+      });
+      
+      img.src = `${window.location.origin}/api/track.gif?${params}`;
+      document.body.appendChild(img);
+      
+      return img;
+    } catch (error) {
+      console.warn('Error creating tracking pixel:', error);
+      return null;
+    }
   }
 
   // Initialize on page load
   static init(): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
-    // Initialize tracking
-    this.initializeTracking();
+    try {
+      // Initialize tracking
+      this.initializeTracking();
 
-    // Retry failed attempts periodically
-    setInterval(() => {
-      this.retryFailedTracking();
-    }, 5 * 60 * 1000); // Every 5 minutes
-
-    // Track page visibility changes
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
+      // Retry failed attempts periodically
+      setInterval(() => {
         this.retryFailedTracking();
-      }
-    });
+      }, 5 * 60 * 1000); // Every 5 minutes
 
-    // Track before page unload
-    window.addEventListener('beforeunload', () => {
-      this.retryFailedTracking();
-    });
+      // Track page visibility changes
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          this.retryFailedTracking();
+        }
+      });
+
+      // Track before page unload
+      window.addEventListener('beforeunload', () => {
+        this.retryFailedTracking();
+      });
+    } catch (error) {
+      console.warn('Error initializing affiliate tracking:', error);
+    }
   }
 }
