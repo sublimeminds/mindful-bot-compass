@@ -53,16 +53,13 @@ import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
 import HeaderDropdownTrigger from './HeaderDropdownTrigger';
 import MobileNavigation from './MobileNavigation';
-import { useIsMobile, useScreenSize } from '@/hooks/use-mobile';
+import { useIsMobile, useScreenSize } from '@/hooks/useResponsive';
 
 const EnhancedHeader = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  
-  // Add runtime safety for useScreenSize import
-  const screenSize = useScreenSize();
-  const { isTablet = false, isLaptop = false, isDesktop = false } = screenSize || {};
+  const { isTablet, isLaptop, isDesktop } = useScreenSize();
 
   // Therapy AI Features - Core AI capabilities and therapy approaches
   const therapyAiFeatures = [

@@ -7,7 +7,7 @@ import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotif
 import EnhancedUserMenu from './EnhancedUserMenu';
 import CompactRegionalSelector from '@/components/regional/CompactRegionalSelector';
 import MobileNavigation from './MobileNavigation';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/useResponsive';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 
 const RegionalNavigationHeader = () => {

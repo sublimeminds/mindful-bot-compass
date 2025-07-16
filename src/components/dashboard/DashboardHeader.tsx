@@ -14,16 +14,13 @@ import {
   Heart
 } from 'lucide-react';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
-import { useScreenSize } from '@/hooks/use-mobile';
+import { useScreenSize } from '@/hooks/useResponsive';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 
 const DashboardHeader = () => {
   const { user } = useAuth();
   const location = useLocation();
-  
-  // Add runtime safety for useScreenSize import
-  const screenSize = useScreenSize();
-  const { isMobile = false, isTablet = false, isLaptop = false, isDesktop = false } = screenSize || {};
+  const { isMobile, isTablet, isLaptop, isDesktop } = useScreenSize();
 
   // Get current page title based on route
   const getPageTitle = () => {
