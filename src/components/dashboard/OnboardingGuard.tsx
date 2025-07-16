@@ -13,6 +13,12 @@ interface OnboardingGuardProps {
 const OnboardingGuard: React.FC<OnboardingGuardProps> = ({ children }) => {
   const navigate = useNavigate();
   const { isComplete, hasActiveTherapyPlan, isLoading, planCreationInProgress } = useOnboardingStatus();
+  
+  // Allow access to notifications without therapy plan requirement
+  const currentPath = window.location.pathname;
+  if (currentPath === '/notifications') {
+    return <>{children}</>;
+  }
 
   // Show loading state
   if (isLoading) {

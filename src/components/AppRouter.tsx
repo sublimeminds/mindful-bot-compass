@@ -415,7 +415,7 @@ const AppRouter = () => {
 
       <Route path="/notifications" element={
         <PageErrorBoundary pageName="Notifications">
-          <DashboardPageWrapper><NotificationsInbox /></DashboardPageWrapper>
+          <NotificationsInbox />
         </PageErrorBoundary>
       } />
 

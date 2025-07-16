@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom';
 import NotificationCenter from '@/components/notifications/NotificationCenter';
 import NotificationTester from '@/components/notifications/NotificationTester';
 import NotificationAdminDashboard from '@/components/admin/NotificationAdminDashboard';
+import BulletproofDashboardLayout from '@/components/dashboard/BulletproofDashboardLayout';
 import { useRealTimeNotificationTriggers } from '@/hooks/useRealTimeNotificationTriggers';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -26,8 +27,8 @@ const NotificationCenterPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-calm-50 p-6">
-      <div className="max-w-7xl mx-auto">
+    <BulletproofDashboardLayout>
+      <div className="space-y-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold therapy-text-gradient mb-2">
             Notification Center
@@ -64,7 +65,7 @@ const NotificationCenterPage = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </BulletproofDashboardLayout>
   );
 };
 
