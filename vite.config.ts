@@ -10,9 +10,14 @@ export default defineConfig(({ mode }) => {
   
   return {
     base: isElectron ? './' : '/',
+    // Force cache invalidation due to module dependency issues
+    cacheDir: '.vite-cache-' + Date.now(),
     server: {
       host: "::",
       port: 8080,
+      fs: {
+        strict: false
+      }
     },
     plugins: [
       react({
