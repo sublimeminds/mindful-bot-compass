@@ -57,7 +57,20 @@ const root = ReactDOM.createRoot(rootElement);
 // Initialize lovable-tagger BEFORE rendering
 initializeLovableTagger();
 
-console.log('🔍 Debug: Emergency cache check and ThemeContext blocker...');
+console.log('🔍 Debug: EMERGENCY MODE - Dummy ThemeContext should prevent crashes...');
+
+// Force cache invalidation in browser
+if (typeof window !== 'undefined') {
+  // Clear all possible caches
+  if ('caches' in window) {
+    caches.keys().then(names => {
+      names.forEach(name => {
+        console.log('🗑️ Clearing cache:', name);
+        caches.delete(name);
+      });
+    });
+  }
+}
 
 // Emergency measure - block any ThemeContext loading and catch crashes
 if (typeof window !== 'undefined') {

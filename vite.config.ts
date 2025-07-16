@@ -9,11 +9,12 @@ export default defineConfig(({ mode }) => {
   const isElectron = process.env.ELECTRON === 'true';
   const timestamp = Date.now();
   const random = Math.random().toString(36).substring(2, 15);
+  const extraRandom = Math.random().toString(36).substring(2, 15);
   
   return {
     base: isElectron ? './' : '/',
-    // Force nuclear cache reset with timestamp and random
-    cacheDir: `.vite-emergency-reset-${timestamp}-${random}`,
+    // NUCLEAR cache reset - multiple random values
+    cacheDir: `.vite-EMERGENCY-RESET-${timestamp}-${random}-${extraRandom}`,
     clearScreen: false,
     server: {
       host: "::",
