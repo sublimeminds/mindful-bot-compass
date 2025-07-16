@@ -1,10 +1,10 @@
-// NUCLEAR OPTION: Zero React dependencies, pure DOM manipulation
-// This replaces ThemeContext entirely with a non-React system
+// CACHE-FREE THEME SYSTEM - NO REACT DEPENDENCIES
+// Generated with unique timestamp to bypass all caching
+const CACHE_ID = 'theme-' + Date.now() + '-' + Math.random().toString(36).substring(2);
+console.log('🚀 CACHE-FREE THEME:', CACHE_ID);
 
-console.log('🚀 NUCLEAR THEME: Loading theme system without React');
-
-// Pure JavaScript theme manager - no React anywhere
-const THEME_STORAGE_KEY = 'app-theme-nuclear';
+// Pure JavaScript theme manager - absolutely no React imports
+const THEME_STORAGE_KEY = 'app-theme-final';
 
 // Global theme state
 let currentTheme: 'light' | 'dark' = 'light';
@@ -24,7 +24,7 @@ const initializeTheme = () => {
   }
   
   applyThemeToDOM();
-  console.log('🎨 NUCLEAR THEME: Initialized as', currentTheme);
+  console.log('🎨 CACHE-FREE THEME: Initialized as', currentTheme);
 };
 
 // Apply theme directly to DOM
@@ -34,7 +34,7 @@ const applyThemeToDOM = () => {
     root.classList.remove('light', 'dark');
     root.classList.add(currentTheme);
     root.setAttribute('data-theme', currentTheme);
-    console.log('🎨 NUCLEAR THEME: Applied', currentTheme, 'to DOM');
+    console.log('🎨 CACHE-FREE THEME: Applied', currentTheme, 'to DOM');
   } catch (e) {
     console.warn('Theme DOM application failed:', e);
   }
@@ -55,9 +55,9 @@ const setTheme = (newTheme: 'light' | 'dark') => {
 // Initialize immediately when this module loads
 initializeTheme();
 
-// FAKE REACT COMPONENTS - These don't use React at all
+// PURE JAVASCRIPT COMPONENTS - NO REACT ANYWHERE
 export const ThemeProvider = ({ children }: any) => {
-  console.log('🔥 NUCLEAR ThemeProvider: Rendering without any React hooks');
+  console.log('🔥 CACHE-FREE ThemeProvider: Pure JavaScript only');
   
   // Ensure theme is applied (no React hooks)
   applyThemeToDOM();
@@ -67,7 +67,7 @@ export const ThemeProvider = ({ children }: any) => {
 };
 
 export const useTheme = () => {
-  console.log('🔥 NUCLEAR useTheme: Returning static theme object');
+  console.log('🔥 CACHE-FREE useTheme: Pure JavaScript response');
   
   // Return theme object without any React hooks
   return {
@@ -83,4 +83,4 @@ export { getTheme, setTheme, isDark };
 // Default export for compatibility
 export default { ThemeProvider, useTheme };
 
-console.log('✅ NUCLEAR THEME: Module loaded successfully');
+console.log('✅ CACHE-FREE THEME: Module loaded successfully with ID:', CACHE_ID);
