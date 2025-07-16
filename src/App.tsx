@@ -76,25 +76,9 @@ function App() {
   );
 }
 
-// Component that initializes tracking after React is ready
+// Simplified app with minimal tracking
 function AppWithTracking() {
-  // Initialize affiliate tracking safely with proper hook usage
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        // Import and initialize tracking services directly to avoid hook issues
-        import('@/services/affiliateTrackingService').then(({ AffiliateTrackingService }) => {
-          AffiliateTrackingService.init();
-          AffiliateTrackingService.retryFailedTracking();
-        }).catch(error => {
-          console.warn('Affiliate tracking initialization failed:', error);
-        });
-      } catch (error) {
-        console.warn('Affiliate tracking initialization failed:', error);
-      }
-    }
-  }, []);
-
+  // Remove complex affiliate tracking initialization that was causing crashes
   return <AppCore />;
 }
 

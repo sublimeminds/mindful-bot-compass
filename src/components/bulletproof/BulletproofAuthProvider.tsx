@@ -23,31 +23,31 @@ interface BulletproofAuthProviderProps {
 }
 
 export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = ({ children }) => {
-  // Simplified React readiness check
-  try {
-    // Just ensure React and useState are available before proceeding
-    if (!React || typeof React.useState !== 'function') {
-      console.error('BulletproofAuthProvider: React or useState not available');
-      return React.createElement('div', { 
-        style: { 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh' 
-        }
-      }, 'Loading authentication...');
-    }
+  // CRITICAL: Direct React availability check before ANY hook usage
+  if (!React || typeof React.useState !== 'function') {
+    console.error('BulletproofAuthProvider: React hooks not available');
+    return React.createElement('div', { 
+      style: { 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        background: '#000',
+        color: '#fff'
+      }
+    }, 'Authentication system loading...');
+  }
 
-    const [user, setUser] = React.useState<User | null>(null);
-    const [loading, setLoading] = React.useState(true);
-    const [error, setError] = React.useState<Error | null>(null);
+  const [user, setUser] = React.useState<User | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<Error | null>(null);
 
-    // Enhanced session management with error recovery
-    React.useEffect(() => {
-      let retryCount = 0;
-      const maxRetries = 3;
+  // Enhanced session management with error recovery
+  React.useEffect(() => {
+    let retryCount = 0;
+    const maxRetries = 3;
 
-      const initializeAuth = async () => {
+    const initializeAuth = async () => {
         try {
           setLoading(true);
           setError(null);
@@ -181,36 +181,7 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
           {children}
         </BulletproofAuthContext.Provider>
       </SafeComponentWrapper>
-    );
-  } catch (error) {
-    console.error('BulletproofAuthProvider: Fatal error:', error);
-    return React.createElement('div', { 
-      style: { 
-        display: 'flex', 
-        flexDirection: 'column',
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        padding: '20px',
-        textAlign: 'center'
-      }
-    }, [
-      React.createElement('h3', { key: 'title', style: { color: 'red', marginBottom: '10px' } }, 'Authentication Error'),
-      React.createElement('p', { key: 'message', style: { marginBottom: '20px' } }, 'Failed to initialize authentication. Please refresh the page.'),
-      React.createElement('button', { 
-        key: 'refresh',
-        onClick: () => window.location.reload(),
-        style: { 
-          padding: '10px 20px',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer'
-        }
-      }, 'Refresh Page')
-    ]);
-  }
+  );
 };
 
 export const useBulletproofAuth = () => {
