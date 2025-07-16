@@ -24,6 +24,7 @@ import AIModelRoutingConfig from './AIModelRoutingConfig';
 import AIUsageMonitoring from './AIUsageMonitoring';
 import AIPerformanceMonitor from './AIPerformanceMonitor';
 import CulturalAIMonitoring from './CulturalAIMonitoring';
+import OnboardingTestingHub from './OnboardingTestingHub';
 import { AITestingService, TestResult } from '@/services/aiTestingService';
 
 const AdminAIOverview = () => {
