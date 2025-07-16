@@ -1,12 +1,14 @@
 
-// Updated: useScreenSize hook now available - cache rebuild trigger
+// FORCE VITE CACHE INVALIDATION - Mobile responsive hooks v2.0
 import { useState, useEffect } from "react"
 
+// Screen size breakpoints for responsive design
 const MOBILE_BREAKPOINT = 768
 const TABLET_BREAKPOINT = 1024
 const LAPTOP_BREAKPOINT = 1280
 const DESKTOP_BREAKPOINT = 1536
 
+// Mobile detection hook
 export function useIsMobile() {
   const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined)
 
@@ -23,6 +25,7 @@ export function useIsMobile() {
   return !!isMobile
 }
 
+// Screen size detection hook with breakpoint information
 export function useScreenSize() {
   const [screenSize, setScreenSize] = useState<{
     isMobile: boolean
@@ -56,4 +59,16 @@ export function useScreenSize() {
   }, [])
 
   return screenSize
+}
+
+// Export safety - Ensure all exports are available
+export default useScreenSize
+
+// Explicit export validation
+if (typeof useScreenSize !== 'function') {
+  console.error('useScreenSize export failed - check build system')
+}
+
+if (typeof useIsMobile !== 'function') {
+  console.error('useIsMobile export failed - check build system')
 }

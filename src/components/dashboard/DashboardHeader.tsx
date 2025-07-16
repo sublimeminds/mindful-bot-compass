@@ -20,7 +20,10 @@ import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
 const DashboardHeader = () => {
   const { user } = useAuth();
   const location = useLocation();
-  const { isMobile, isTablet, isLaptop, isDesktop } = useScreenSize();
+  
+  // Add runtime safety for useScreenSize import
+  const screenSize = useScreenSize();
+  const { isMobile = false, isTablet = false, isLaptop = false, isDesktop = false } = screenSize || {};
 
   // Get current page title based on route
   const getPageTitle = () => {

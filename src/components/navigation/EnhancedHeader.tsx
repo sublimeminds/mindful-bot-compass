@@ -59,7 +59,10 @@ const EnhancedHeader = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const { isTablet, isLaptop, isDesktop } = useScreenSize();
+  
+  // Add runtime safety for useScreenSize import
+  const screenSize = useScreenSize();
+  const { isTablet = false, isLaptop = false, isDesktop = false } = screenSize || {};
 
   // Therapy AI Features - Core AI capabilities and therapy approaches
   const therapyAiFeatures = [
