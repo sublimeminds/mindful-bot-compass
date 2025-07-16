@@ -91,6 +91,11 @@ const AdminSidebarEnhanced = () => {
       title: 'Crisis Management',
       href: '/admin/crisis',
       icon: AlertTriangle
+    },
+    {
+      title: 'Regional Fraud Monitor',
+      href: '/admin/fraud-monitoring',
+      icon: AlertTriangle
     }
   ];
 
