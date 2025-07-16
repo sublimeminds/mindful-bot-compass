@@ -18,7 +18,12 @@ import {
   Star,
   Globe,
   Zap,
-  ChevronDown 
+  ChevronDown,
+  Database,
+  Calculator,
+  Phone,
+  GraduationCap,
+  Lightbulb 
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
@@ -30,7 +35,7 @@ const HeaderDropdowns = () => {
 
   return (
     <div className="flex items-center space-x-1">
-      {/* Therapy AI dropdown - Simple tablet style with same items as desktop */}
+      {/* Therapy AI dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
@@ -57,33 +62,22 @@ const HeaderDropdowns = () => {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/crisis" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                <Shield className="h-4 w-4 text-red-600" />
-                <span className="text-sm font-medium text-gray-900">Crisis Support</span>
-                <Badge variant="outline" className="text-xs text-red-600 border-red-200 ml-auto">
-                  24/7
-                </Badge>
+              <Link to="/adaptive-ai" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
+                <Target className="h-4 w-4 text-therapy-600" />
+                <span className="text-sm font-medium text-gray-900">Adaptive AI</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link to="/cultural-ai" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
                 <Globe className="h-4 w-4 text-therapy-600" />
-                <span className="text-sm font-medium text-gray-900">Cultural AI Features</span>
+                <span className="text-sm font-medium text-gray-900">Cultural AI</span>
               </Link>
             </DropdownMenuItem>
-            {user && (
-              <DropdownMenuItem asChild>
-                <Link to="/chat" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                  <Zap className="h-4 w-4 text-therapy-600" />
-                  <span className="text-sm font-medium text-gray-900">Quick Chat</span>
-                </Link>
-              </DropdownMenuItem>
-            )}
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Features dropdown - Simple tablet style with same items as desktop */}
+      {/* Features dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
@@ -94,100 +88,81 @@ const HeaderDropdowns = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64 bg-white border border-gray-200 shadow-lg">
           <div className="p-2">
-            {user ? (
-              <>
-                <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-3">
-                  Your Tools
-                </div>
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <BarChart3 className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Dashboard</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/mood-tracking" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <Heart className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Mood Tracker</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/analytics" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <BarChart3 className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Progress Analytics</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/goals" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <Target className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Goals & Objectives</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/calendar" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <Calendar className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Calendar</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard/audio-library" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <Music className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Audio Library</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/community" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <Users className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Community</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/family-features" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <Users className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Family Features</span>
-                  </Link>
-                </DropdownMenuItem>
-              </>
-            ) : (
-              <>
-                <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-3">
-                  Platform Features
-                </div>
-                <DropdownMenuItem asChild>
-                  <Link to="/mood-tracking" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <Heart className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Mood Tracking</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/analytics" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <BarChart3 className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Progress Analytics</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/features#meditation" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <Music className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Meditation Library</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/features#family" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                    <Users className="h-4 w-4 text-therapy-600" />
-                    <span className="text-sm font-medium text-gray-900">Family Features</span>
-                  </Link>
-                </DropdownMenuItem>
-              </>
-            )}
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-3">
+              Core Features
+            </div>
+            <DropdownMenuItem asChild>
+              <Link to="/mood-tracking" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
+                <Heart className="h-4 w-4 text-therapy-600" />
+                <span className="text-sm font-medium text-gray-900">Mood Tracking</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/crisis-support" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
+                <Shield className="h-4 w-4 text-red-600" />
+                <span className="text-sm font-medium text-gray-900">Crisis Support</span>
+                <Badge variant="outline" className="text-xs text-red-600 border-red-200 ml-auto">
+                  24/7
+                </Badge>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/family-features" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
+                <Users className="h-4 w-4 text-therapy-600" />
+                <span className="text-sm font-medium text-gray-900">Family Features</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/community" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
+                <Users className="h-4 w-4 text-therapy-600" />
+                <span className="text-sm font-medium text-gray-900">Community</span>
+              </Link>
+            </DropdownMenuItem>
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Solutions dropdown - Simple tablet style with same items as desktop */}
+      {/* Tools & Data dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-            <BookOpen className="h-4 w-4 mr-2" />
+            <Database className="h-4 w-4 mr-2" />
+            Tools & Data
+            <ChevronDown className="h-3 w-3 ml-1" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-64 bg-white border border-gray-200 shadow-lg">
+          <div className="p-2">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-3">
+              Analytics & Tools
+            </div>
+            <DropdownMenuItem asChild>
+              <Link to="/analytics" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
+                <BarChart3 className="h-4 w-4 text-therapy-600" />
+                <span className="text-sm font-medium text-gray-900">Analytics Dashboard</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/api-docs" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
+                <BookOpen className="h-4 w-4 text-therapy-600" />
+                <span className="text-sm font-medium text-gray-900">API Access</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/data-export" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
+                <Database className="h-4 w-4 text-therapy-600" />
+                <span className="text-sm font-medium text-gray-900">Data Export</span>
+              </Link>
+            </DropdownMenuItem>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* Solutions dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
+            <Target className="h-4 w-4 mr-2" />
             Solutions
             <ChevronDown className="h-3 w-3 ml-1" />
           </Button>
@@ -217,13 +192,25 @@ const HeaderDropdowns = () => {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link to="/pricing" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                <Star className="h-4 w-4 text-therapy-600" />
+                <Calculator className="h-4 w-4 text-therapy-600" />
                 <span className="text-sm font-medium text-gray-900">Pricing</span>
               </Link>
             </DropdownMenuItem>
-            
-            <DropdownMenuSeparator />
-            
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* Resources dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
+            <BookOpen className="h-4 w-4 mr-2" />
+            Resources
+            <ChevronDown className="h-3 w-3 ml-1" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-64 bg-white border border-gray-200 shadow-lg">
+          <div className="p-2">
             <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-3">
               Resources
             </div>
@@ -233,14 +220,6 @@ const HeaderDropdowns = () => {
                 <span className="text-sm font-medium text-gray-900">Help Center</span>
               </Link>
             </DropdownMenuItem>
-            {user && (
-              <DropdownMenuItem asChild>
-                <Link to="/community" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
-                  <Users className="h-4 w-4 text-therapy-600" />
-                  <span className="text-sm font-medium text-gray-900">Community</span>
-                </Link>
-              </DropdownMenuItem>
-            )}
             <DropdownMenuItem asChild>
               <Link to="/getting-started" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
                 <BookOpen className="h-4 w-4 text-therapy-600" />
@@ -251,6 +230,12 @@ const HeaderDropdowns = () => {
               <Link to="/compliance" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
                 <Shield className="h-4 w-4 text-therapy-600" />
                 <span className="text-sm font-medium text-gray-900">Security & Compliance</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/learning" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-therapy-50 transition-colors">
+                <GraduationCap className="h-4 w-4 text-therapy-600" />
+                <span className="text-sm font-medium text-gray-900">Learning Hub</span>
               </Link>
             </DropdownMenuItem>
           </div>

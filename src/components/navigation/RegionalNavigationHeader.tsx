@@ -34,11 +34,12 @@ const useIsMobile = () => {
 
 const useScreenSize = () => {
   const [screenSize, setScreenSize] = useState(() => {
-    if (typeof window === 'undefined') return { isTablet: false, isDesktop: false };
+    if (typeof window === 'undefined') return { isTablet: false, isLaptop: false, isDesktop: false };
     const width = window.innerWidth;
     return {
-      isTablet: width >= 768 && width < 1200,
-      isDesktop: width >= 1200,
+      isTablet: width >= 768 && width < 1024,
+      isLaptop: width >= 1024 && width < 1280,
+      isDesktop: width >= 1280,
     };
   });
 
@@ -47,8 +48,9 @@ const useScreenSize = () => {
     const updateScreenSize = () => {
       const width = window.innerWidth;
       setScreenSize({
-        isTablet: width >= 768 && width < 1200,
-        isDesktop: width >= 1200,
+        isTablet: width >= 768 && width < 1024,
+        isLaptop: width >= 1024 && width < 1280,
+        isDesktop: width >= 1280,
       });
     };
     updateScreenSize();
@@ -63,7 +65,7 @@ const RegionalNavigationHeader = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const { isTablet, isDesktop } = useScreenSize();
+  const { isTablet, isLaptop, isDesktop } = useScreenSize();
 
   const handleGetStarted = () => {
     if (user) {
@@ -119,14 +121,21 @@ const RegionalNavigationHeader = () => {
 
             {/* Center Section - Navigation Dropdowns and Search */}
             <div className="flex items-center space-x-3 flex-1 justify-center">
-              {/* Medium screens: Compact dropdowns */}
+              {/* Tablet screens: Simple dropdowns */}
               {isTablet && (
                 <div className="flex items-center space-x-1">
                   <HeaderDropdowns />
                 </div>
               )}
               
-              {/* Large screens: Full dropdowns with icons and descriptions */}
+              {/* Laptop screens: Medium dropdowns */}
+              {isLaptop && (
+                <div className="flex items-center space-x-2">
+                  <HeaderDropdowns />
+                </div>
+              )}
+              
+              {/* Desktop screens: Full dropdowns with rich content */}
               {isDesktop && (
                 <div className="flex items-center space-x-2">
                   {/* Therapy AI Dropdown */}
@@ -162,22 +171,19 @@ const RegionalNavigationHeader = () => {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link to="/crisis" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Shield className="h-5 w-5 text-red-600" />
+                          <Link to="/adaptive-ai" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
+                            <Target className="h-5 w-5 text-therapy-600" />
                             <div>
-                              <p className="text-sm font-medium text-gray-900">Crisis Support</p>
-                              <p className="text-xs text-gray-500">24/7 crisis intervention</p>
+                              <p className="text-sm font-medium text-gray-900">Adaptive AI</p>
+                              <p className="text-xs text-gray-500">AI that learns and adapts</p>
                             </div>
-                            <Badge variant="outline" className="text-xs text-red-600 border-red-200">
-                              24/7
-                            </Badge>
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <Link to="/cultural-ai" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
                             <Globe className="h-5 w-5 text-therapy-600" />
                             <div>
-                              <p className="text-sm font-medium text-gray-900">Cultural AI Features</p>
+                              <p className="text-sm font-medium text-gray-900">Cultural AI</p>
                               <p className="text-xs text-gray-500">Culturally sensitive support</p>
                             </div>
                           </Link>
@@ -210,11 +216,23 @@ const RegionalNavigationHeader = () => {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link to="/analytics" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Database className="h-5 w-5 text-therapy-600" />
+                          <Link to="/crisis-support" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
+                            <Shield className="h-5 w-5 text-red-600" />
                             <div>
-                              <p className="text-sm font-medium text-gray-900">Progress Analytics</p>
-                              <p className="text-xs text-gray-500">Insights and trends</p>
+                              <p className="text-sm font-medium text-gray-900">Crisis Support</p>
+                              <p className="text-xs text-gray-500">24/7 crisis intervention</p>
+                            </div>
+                            <Badge variant="outline" className="text-xs text-red-600 border-red-200">
+                              24/7
+                            </Badge>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/family-features" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
+                            <Users className="h-5 w-5 text-therapy-600" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">Family Features</p>
+                              <p className="text-xs text-gray-500">Family therapy support</p>
                             </div>
                           </Link>
                         </DropdownMenuItem>
@@ -227,12 +245,48 @@ const RegionalNavigationHeader = () => {
                             </div>
                           </Link>
                         </DropdownMenuItem>
+                      </div>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  {/* Tools & Data Dropdown */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
+                        <Database className="h-4 w-4 mr-2" />
+                        Tools & Data
+                        <ChevronDown className="h-3 w-3 ml-1" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-80 bg-white border border-gray-200 shadow-lg">
+                      <div className="p-4 space-y-4">
+                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                          Analytics & Tools
+                        </div>
                         <DropdownMenuItem asChild>
-                          <Link to="/family-features" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Users className="h-5 w-5 text-therapy-600" />
+                          <Link to="/analytics" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
+                            <Database className="h-5 w-5 text-therapy-600" />
                             <div>
-                              <p className="text-sm font-medium text-gray-900">Family Features</p>
-                              <p className="text-xs text-gray-500">Family therapy support</p>
+                              <p className="text-sm font-medium text-gray-900">Analytics Dashboard</p>
+                              <p className="text-xs text-gray-500">Progress insights and reports</p>
+                            </div>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/api-docs" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
+                            <BookOpen className="h-5 w-5 text-therapy-600" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">API Access</p>
+                              <p className="text-xs text-gray-500">Integration tools</p>
+                            </div>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/data-export" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
+                            <Database className="h-5 w-5 text-therapy-600" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">Data Export</p>
+                              <p className="text-xs text-gray-500">Export your data</p>
                             </div>
                           </Link>
                         </DropdownMenuItem>
@@ -244,7 +298,7 @@ const RegionalNavigationHeader = () => {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-                        <BookOpen className="h-4 w-4 mr-2" />
+                        <Target className="h-4 w-4 mr-2" />
                         Solutions
                         <ChevronDown className="h-3 w-3 ml-1" />
                       </Button>
@@ -281,7 +335,33 @@ const RegionalNavigationHeader = () => {
                             </div>
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link to="/pricing" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
+                            <Calculator className="h-5 w-5 text-therapy-600" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">Pricing</p>
+                              <p className="text-xs text-gray-500">Plans and pricing</p>
+                            </div>
+                          </Link>
+                        </DropdownMenuItem>
+                      </div>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  {/* Resources Dropdown */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
+                        <BookOpen className="h-4 w-4 mr-2" />
+                        Resources
+                        <ChevronDown className="h-3 w-3 ml-1" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-80 bg-white border border-gray-200 shadow-lg">
+                      <div className="p-4 space-y-4">
+                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                          Resources
+                        </div>
                         <DropdownMenuItem asChild>
                           <Link to="/help" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
                             <HelpCircle className="h-5 w-5 text-therapy-600" />
@@ -291,23 +371,41 @@ const RegionalNavigationHeader = () => {
                             </div>
                           </Link>
                         </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/getting-started" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
+                            <BookOpen className="h-5 w-5 text-therapy-600" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">Getting Started</p>
+                              <p className="text-xs text-gray-500">Learn TherapySync</p>
+                            </div>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/compliance" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
+                            <Shield className="h-5 w-5 text-therapy-600" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">Security & Compliance</p>
+                              <p className="text-xs text-gray-500">Privacy and security</p>
+                            </div>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/learning" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
+                            <GraduationCap className="h-5 w-5 text-therapy-600" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">Learning Hub</p>
+                              <p className="text-xs text-gray-500">Educational resources</p>
+                            </div>
+                          </Link>
+                        </DropdownMenuItem>
                       </div>
                     </DropdownMenuContent>
                   </DropdownMenu>
-
-                  {/* Pricing Link */}
-                  <Link 
-                    to="/pricing" 
-                    className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-therapy-50 hover:text-therapy-700 transition-all duration-200"
-                  >
-                    <Star className="h-4 w-4" />
-                    <span>Pricing</span>
-                  </Link>
                 </div>
               )}
               
               {/* Search Bar - responsive sizing */}
-              <div className={`${isTablet ? 'max-w-sm' : isDesktop ? 'max-w-md' : 'hidden'} flex-1`}>
+              <div className={`${isTablet ? 'max-w-xs' : isLaptop ? 'max-w-sm' : isDesktop ? 'max-w-md' : 'hidden'} flex-1`}>
                 <UnifiedSearch 
                   placeholder={user ? "Search sessions, goals, community..." : "Search features, help, pricing..."} 
                   variant="header"
