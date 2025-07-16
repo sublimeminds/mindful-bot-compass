@@ -261,19 +261,6 @@ const Index = () => {
                 Try Demo
               </Button>
             </div>
-            
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto mb-12 animate-fade-in">
-              <div className="text-center mb-4">
-                <p className="text-sm text-slate-600">
-                  🔍 Search for therapy topics, features, or get help
-                </p>
-              </div>
-              <UnifiedSearch 
-                placeholder="Search for therapy types, features, pricing, help..."
-                variant="overlay"
-              />
-            </div>
           </div>
         </div>
       </section>

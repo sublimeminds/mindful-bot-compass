@@ -88,12 +88,12 @@ const RegionalNavigationHeader = () => {
             </div>
 
             {/* Center Section - Navigation Dropdowns and Search */}
-            <div className="flex items-center space-x-4 flex-1 justify-center max-w-2xl">
+            <div className="flex items-center space-x-2 flex-1 justify-center max-w-3xl">
               {/* Header Dropdowns for medium screens */}
               <HeaderDropdowns />
               
-              {/* Search Bar for larger screens */}
-              <div className="hidden lg:block flex-1 max-w-md">
+              {/* Search Bar - More prominent and visible on medium+ screens */}
+              <div className="hidden md:block flex-1 max-w-lg">
                 <UnifiedSearch 
                   placeholder={user ? "Search sessions, goals, community..." : "Search features, help, pricing..."} 
                   variant="header"
