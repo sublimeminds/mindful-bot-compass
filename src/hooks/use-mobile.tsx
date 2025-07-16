@@ -1,5 +1,5 @@
 
-// Updated: useScreenSize hook now available - final cache fix
+// Updated: useScreenSize hook now available - cache rebuild trigger
 import { useState, useEffect } from "react"
 
 const MOBILE_BREAKPOINT = 768
