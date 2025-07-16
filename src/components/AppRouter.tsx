@@ -98,6 +98,18 @@ import CookiePolicy from '../pages/CookiePolicy';
 import AdaptiveSystems from "../pages/AdaptiveSystems";
 import SessionAnalytics from "../pages/SessionAnalytics";
 import AIPersonalization from "../pages/AIPersonalization";
+
+// New Pages for Navigation
+import TherapyAICore from "../pages/TherapyAICore";
+import AITherapyChat from "../pages/AITherapyChat";
+import VoiceAITechnology from "../pages/VoiceAITechnology";
+import CulturalAI from "../pages/CulturalAI";
+import AITherapistTeam from "../pages/AITherapistTeam";
+import MoodProgressTracking from "../pages/MoodProgressTracking";
+import CBTTherapy from "../pages/CBTTherapy";
+import DBTTherapy from "../pages/DBTTherapy";
+import MindfulnessTherapy from "../pages/MindfulnessTherapy";
+import TraumaTherapy from "../pages/TraumaTherapy";
 import AIHub from "../pages/AIHub";
 
 // Component to wrap public pages
@@ -686,6 +698,58 @@ const AppRouter = () => {
       <Route path="/content-library" element={
         <PageErrorBoundary pageName="Content Library">
           <DashboardPageWrapper><ContentLibrary /></DashboardPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      {/* NEW NAVIGATION ROUTES */}
+      <Route path="/therapy-ai-core" element={
+        <PageErrorBoundary pageName="TherapySync AI Core">
+          <PublicPageWrapper><TherapyAICore /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      <Route path="/ai-therapy-chat" element={
+        <PageErrorBoundary pageName="AI Therapy Chat">
+          <PublicPageWrapper><AITherapyChat /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      <Route path="/voice-ai-technology" element={
+        <PageErrorBoundary pageName="Voice AI Technology">
+          <PublicPageWrapper><VoiceAITechnology /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      <Route path="/cultural-ai" element={
+        <PageErrorBoundary pageName="Cultural AI">
+          <PublicPageWrapper><CulturalAI /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      <Route path="/ai-therapist-team" element={
+        <PageErrorBoundary pageName="AI Therapist Team">
+          <PublicPageWrapper><AITherapistTeam /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      <Route path="/mood-progress-tracking" element={
+        <PageErrorBoundary pageName="Mood & Progress Tracking">
+          <PublicPageWrapper><MoodProgressTracking /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      <Route path="/cbt-therapy" element={
+        <PageErrorBoundary pageName="CBT Therapy">
+          <PublicPageWrapper><CBTTherapy /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      <Route path="/dbt-therapy" element={
+        <PageErrorBoundary pageName="DBT Therapy">
+          <PublicPageWrapper><DBTTherapy /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      <Route path="/mindfulness-therapy" element={
+        <PageErrorBoundary pageName="Mindfulness Therapy">
+          <PublicPageWrapper><MindfulnessTherapy /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+      <Route path="/trauma-therapy" element={
+        <PageErrorBoundary pageName="Trauma Therapy">
+          <PublicPageWrapper><TraumaTherapy /></PublicPageWrapper>
         </PageErrorBoundary>
       } />
 
