@@ -23,10 +23,11 @@ const OnboardingGuard: React.FC<OnboardingGuardProps> = ({ children }) => {
     '/profile',
     '/account-billing',
     '/billing',
-    '/subscription'
+    '/subscription',
+    '/integrations'
   ];
   
-  if (allowedPaths.includes(currentPath)) {
+  if (allowedPaths.some(path => currentPath.startsWith(path))) {
     return <>{children}</>;
   }
 

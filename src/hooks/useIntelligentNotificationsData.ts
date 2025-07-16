@@ -12,7 +12,15 @@ export const useIntelligentNotificationsData = () => {
     error
   } = useQuery({
     queryKey: ['notifications', user?.id],
-    queryFn: () => user ? NotificationService.getUserNotifications(user.id) : [],
+    queryFn: async () => {
+      if (!user) return [];
+      try {
+        return await NotificationService.getUserNotifications(user.id);
+      } catch (error) {
+        console.error('Failed to fetch notifications:', error);
+        return [];
+      }
+    },
     enabled: !!user,
     refetchInterval: 30000 // Refetch every 30 seconds for real-time updates
   });

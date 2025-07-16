@@ -112,11 +112,11 @@ const NotificationsInbox = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/dashboard')}
               className="text-therapy-600 hover:text-therapy-700 hover:bg-therapy-100"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
+              Back to Dashboard
             </Button>
             <div>
               <h1 className="text-3xl font-bold text-therapy-800">Notifications</h1>
