@@ -59,8 +59,26 @@ initializeLovableTagger();
 
 console.log('🔍 Debug: Emergency cache check and ThemeContext blocker...');
 
-// Emergency measure - block any ThemeContext loading
+// Emergency measure - block any ThemeContext loading and catch crashes
 if (typeof window !== 'undefined') {
+  // Catch all unhandled errors that might cause blank page
+  window.addEventListener('error', (event) => {
+    console.error('🚨 Global error caught:', event.error);
+    if (event.error?.message?.includes('ThemeContext') || 
+        event.error?.message?.includes('useState') ||
+        event.error?.message?.includes('ThemeProvider')) {
+      console.log('🚫 Blocked ThemeContext-related error');
+      event.preventDefault();
+      return false;
+    }
+  });
+
+  // Catch promise rejections
+  window.addEventListener('unhandledrejection', (event) => {
+    console.error('🚨 Unhandled promise rejection:', event.reason);
+    event.preventDefault();
+  });
+
   const originalError = console.error;
   console.error = (...args) => {
     const errorStr = args.join(' ');
@@ -92,6 +110,16 @@ if (!React || typeof React.createElement !== 'function' || typeof React.useState
   window.location.reload();
 } else {
   console.log('✅ React is ready for render');
+  
+  // Add monitoring for when the app goes blank
+  setTimeout(() => {
+    const appElement = document.getElementById('root');
+    if (appElement && appElement.innerHTML.trim() === '') {
+      console.error('🚨 App went blank after initial render!');
+      console.log('🔍 Checking for errors...');
+    }
+  }, 2000);
+  
   root.render(
     <React.StrictMode>
       <AppSelector />
