@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
@@ -53,7 +53,53 @@ import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
 import HeaderDropdownTrigger from './HeaderDropdownTrigger';
 import MobileNavigation from './MobileNavigation';
-import { useIsMobile, useScreenSize } from '@/hooks/useResponsive';
+// Inline responsive logic to bypass Vite caching issues
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mql = window.matchMedia('(max-width: 767px)');
+    const onChange = () => setIsMobile(window.innerWidth < 768);
+    mql.addEventListener("change", onChange);
+    setIsMobile(window.innerWidth < 768);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return isMobile;
+};
+
+const useScreenSize = () => {
+  const [screenSize, setScreenSize] = useState(() => {
+    if (typeof window === 'undefined') return { isTablet: false, isLaptop: false, isDesktop: false };
+    const width = window.innerWidth;
+    return {
+      isTablet: width >= 768 && width < 1024,
+      isLaptop: width >= 1024 && width < 1280,
+      isDesktop: width >= 1280,
+    };
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const updateScreenSize = () => {
+      const width = window.innerWidth;
+      setScreenSize({
+        isTablet: width >= 768 && width < 1024,
+        isLaptop: width >= 1024 && width < 1280,
+        isDesktop: width >= 1280,
+      });
+    };
+    updateScreenSize();
+    window.addEventListener("resize", updateScreenSize);
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
+
+  return screenSize;
+};
 
 const EnhancedHeader = () => {
   const { user } = useAuth();

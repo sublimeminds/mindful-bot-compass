@@ -4,7 +4,24 @@ import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
 
-import { useIsMobile } from "@/hooks/useResponsive"
+// Inline mobile detection to bypass Vite caching issues
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mql = window.matchMedia('(max-width: 767px)');
+    const onChange = () => setIsMobile(window.innerWidth < 768);
+    mql.addEventListener("change", onChange);
+    setIsMobile(window.innerWidth < 768);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return isMobile;
+};
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

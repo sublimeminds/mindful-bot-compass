@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLocation, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -14,8 +14,41 @@ import {
   Heart
 } from 'lucide-react';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
-import { useScreenSize } from '@/hooks/useResponsive';
 import EnhancedLanguageSelector from '@/components/ui/EnhancedLanguageSelector';
+
+// Inline responsive logic to bypass Vite caching issues
+const useScreenSize = () => {
+  const [screenSize, setScreenSize] = useState(() => {
+    if (typeof window === 'undefined') return { isMobile: false, isTablet: false, isLaptop: false, isDesktop: false, width: 0 };
+    const width = window.innerWidth;
+    return {
+      isMobile: width < 768,
+      isTablet: width >= 768 && width < 1024,
+      isLaptop: width >= 1024 && width < 1280,
+      isDesktop: width >= 1280,
+      width
+    };
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const updateScreenSize = () => {
+      const width = window.innerWidth;
+      setScreenSize({
+        isMobile: width < 768,
+        isTablet: width >= 768 && width < 1024,
+        isLaptop: width >= 1024 && width < 1280,
+        isDesktop: width >= 1280,
+        width
+      });
+    };
+    updateScreenSize();
+    window.addEventListener("resize", updateScreenSize);
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
+
+  return screenSize;
+};
 
 const DashboardHeader = () => {
   const { user } = useAuth();

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
@@ -7,8 +7,25 @@ import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotif
 import EnhancedUserMenu from './EnhancedUserMenu';
 import CompactRegionalSelector from '@/components/regional/CompactRegionalSelector';
 import MobileNavigation from './MobileNavigation';
-import { useIsMobile } from '@/hooks/useResponsive';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
+// Inline responsive logic to bypass Vite caching issues
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mql = window.matchMedia('(max-width: 767px)');
+    const onChange = () => setIsMobile(window.innerWidth < 768);
+    mql.addEventListener("change", onChange);
+    setIsMobile(window.innerWidth < 768);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return isMobile;
+};
 
 const RegionalNavigationHeader = () => {
   const { user } = useAuth();
