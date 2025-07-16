@@ -555,70 +555,78 @@ const TherapistDiscovery = () => {
               </div>
             )}
 
-            {/* Onboarding Status */}
+            {/* Smart Onboarding Flow */}
             {profile && !profile.onboarding_complete && (
-              <Alert className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-                <Compass className="h-4 w-4" />
-                <AlertDescription className="flex items-center justify-between">
-                  <div>
-                    <strong>Complete your assessment to find your perfect therapist match</strong>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Get personalized recommendations based on your goals and preferences
-                    </p>
+              <Card className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 bg-blue-100 rounded-full">
+                        <Compass className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-blue-900">Get Your Perfect Therapist Match</h3>
+                        <p className="text-sm text-blue-700 mt-1">
+                          Complete your personalized assessment to unlock AI-powered therapist recommendations
+                        </p>
+                      </div>
+                    </div>
+                    <Button onClick={() => navigate('/onboarding')} size="lg" className="bg-blue-600 hover:bg-blue-700">
+                      Start Assessment
+                      <ChevronRight className="h-4 w-4 ml-2" />
+                    </Button>
                   </div>
-                  <Button onClick={() => navigate('/onboarding')} className="ml-4">
-                    Continue Assessment
-                    <ChevronRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </AlertDescription>
-              </Alert>
+                </CardContent>
+              </Card>
             )}
 
-            {/* Take Assessment CTA (for users with complete onboarding but no assessment) */}
+            {/* Find Your Match CTA (for users with complete onboarding but no assessment) */}
             {profile?.onboarding_complete && !assessment && onboardingData && (
-              <Alert className="mb-8 bg-gradient-to-r from-therapy-50 to-calm-50 border-therapy-200">
-                <Target className="h-4 w-4" />
-                <AlertDescription className="flex items-center justify-between">
-                  <div>
-                    <strong>Ready to find your ideal therapist?</strong>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Based on your goals: {onboardingData.goals?.join(', ')} - Take our matching assessment
-                    </p>
+              <Card className="mb-8 bg-gradient-to-r from-therapy-50 to-calm-50 border-therapy-200">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 bg-therapy-100 rounded-full">
+                        <Target className="h-6 w-6 text-therapy-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-therapy-900">Find Your Perfect Match</h3>
+                        <p className="text-sm text-therapy-700 mt-1">
+                          Based on your goals: {onboardingData.goals?.join(', ')} - Get personalized recommendations
+                        </p>
+                      </div>
+                    </div>
+                    <Button onClick={() => navigate('/therapist-assessment')} size="lg" className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 shadow-lg">
+                      Get Matched
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
                   </div>
-                  <Button onClick={() => navigate('/therapist-assessment')} className="ml-4 bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 shadow-lg">
-                    Take Matching Assessment
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </AlertDescription>
-              </Alert>
+                </CardContent>
+              </Card>
             )}
           </div>
         </section>
       )}
 
-      {/* Therapist Filter Bar - Simplified */}
-      <section className="py-8 bg-card/30">
+      {/* Compact Search Bar */}
+      <section className="py-4 bg-card/30">
         <div className="container mx-auto px-4">
-          <Card className="max-w-4xl mx-auto">
-            <CardContent className="p-4">
-              <div className="flex flex-col md:flex-row gap-4 items-center">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search therapists or specialties..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {filteredTherapists.length} therapists available
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="max-w-lg mx-auto">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search therapists or specialties..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 py-2"
+              />
+            </div>
+            <div className="text-center mt-2">
+              <span className="text-sm text-muted-foreground">
+                {filteredTherapists.length} therapists available
+              </span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -652,9 +660,14 @@ const TherapistDiscovery = () => {
                       <div className="flex items-center space-x-2 mb-3">
                         <div className="flex items-center space-x-1">
                           <Star className="h-4 w-4 text-yellow-500" />
-                          <span className="text-sm font-medium">{compatibilityScores[therapist.id]}% Match</span>
+                          <span className="text-sm font-medium">
+                            {compatibilityScores[therapist.id] || Math.round((therapist.successRate * 0.6 + (therapist.userSatisfaction / 5) * 0.4) * 100)}% Match
+                          </span>
                         </div>
                         <Badge variant="secondary" className="text-xs">
+                          {assessment ? 'Personal Match' : 'Community Rating'}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
                           {therapist.experienceLevel}
                         </Badge>
                       </div>
