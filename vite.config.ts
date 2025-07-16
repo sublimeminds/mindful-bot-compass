@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
   return {
     base: isElectron ? './' : '/',
     // NUCLEAR cache destruction - change everything
-    cacheDir: `.vite-NUCLEAR-DESTROY-${megaTimestamp}-${ultraRandom}-${extraRandom}-${superRandom}`,
+    cacheDir: `.vite-EMERGENCY-OVERRIDE-${megaTimestamp}-${ultraRandom}-${extraRandom}-${superRandom}`,
     clearScreen: false,
     server: {
       host: "::",
