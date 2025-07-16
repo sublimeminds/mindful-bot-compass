@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
   return {
     base: isElectron ? './' : '/',
     // Force complete cache invalidation and dependency rebuild
-    cacheDir: '.vite-cache-' + Date.now(),
+    cacheDir: '.vite-cache-' + Math.random().toString(36).substring(7),
     clearScreen: false,
     server: {
       host: "::",
@@ -53,9 +53,14 @@ export default defineConfig(({ mode }) => {
       ],
       exclude: [
         'src/hooks/use-mobile.tsx',
-        'src/hooks/useResponsive.tsx'
+        'src/hooks/useResponsive.tsx',
+        'src/hooks/index.ts'
       ],
-      force: true
+      force: true,
+      esbuildOptions: {
+        // Force fresh builds
+        target: 'es2020'
+      }
     },
     define: {
       global: 'globalThis',
