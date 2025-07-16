@@ -106,7 +106,7 @@ export const useOptimizedCurrency = () => {
   // Optimized price conversion with caching
   const convertPrice = useCallback((amount: number, fromCurrency: string = 'USD'): number => {
     try {
-      const cacheKey = `convert-${amount}-${fromCurrency}-${currency.code}`;
+      const cacheKey = `convert-${amount}-${fromCurrency}-${currency.code}-v2`;
       const cached = cacheService.get<number>(cacheKey);
       if (cached !== null) {
         return cached;
@@ -114,7 +114,17 @@ export const useOptimizedCurrency = () => {
 
       const fromRate = getCurrencyByCode(fromCurrency).exchangeRate;
       const toRate = currency.exchangeRate;
-      const converted = (amount / fromRate) * toRate;
+      
+      // Convert from source currency to USD first, then to target currency
+      let usdAmount: number;
+      if (fromCurrency === 'USD') {
+        usdAmount = amount;
+      } else {
+        usdAmount = amount / fromRate; // Convert to USD by dividing by the rate
+      }
+
+      // Convert from USD to target currency
+      const converted = currency.code === 'USD' ? usdAmount : usdAmount * toRate;
       
       // Cache conversion for 30 minutes
       cacheService.set(cacheKey, converted, 1800000);
