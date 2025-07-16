@@ -56,8 +56,8 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
-        // Emergency alias to bypass old ThemeContext
-        "@/contexts/ThemeContext": path.resolve(__dirname, "./src/utils/BulletproofTheme.tsx"),
+        // ULTIMATE bypass - point to completely new file
+        "@/contexts/ThemeContext": path.resolve(__dirname, "./src/contexts/UltimateThemeBypass.tsx"),
       },
       // Force fresh module resolution
       dedupe: ['react', 'react-dom'],
