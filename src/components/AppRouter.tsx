@@ -403,7 +403,7 @@ const AppRouter = () => {
 
       <Route path="/account-billing" element={
         <PageErrorBoundary pageName="Account & Billing">
-          <DashboardPageWrapper><AccountBilling /></DashboardPageWrapper>
+          <AccountBilling />
         </PageErrorBoundary>
       } />
 
@@ -458,7 +458,7 @@ const AppRouter = () => {
 
       <Route path="/subscription" element={
         <PageErrorBoundary pageName="Subscription (Legacy)">
-          <DashboardPageWrapper><AccountBilling /></DashboardPageWrapper>
+          <AccountBilling />
         </PageErrorBoundary>
       } />
 

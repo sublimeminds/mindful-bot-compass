@@ -14,9 +14,19 @@ const OnboardingGuard: React.FC<OnboardingGuardProps> = ({ children }) => {
   const navigate = useNavigate();
   const { isComplete, hasActiveTherapyPlan, isLoading, planCreationInProgress } = useOnboardingStatus();
   
-  // Allow access to notifications without therapy plan requirement
+  // Allow access to essential pages without therapy plan requirement
   const currentPath = window.location.pathname;
-  if (currentPath === '/notifications') {
+  const allowedPaths = [
+    '/notifications',
+    '/settings', 
+    '/voice-settings',
+    '/profile',
+    '/account-billing',
+    '/billing',
+    '/subscription'
+  ];
+  
+  if (allowedPaths.includes(currentPath)) {
     return <>{children}</>;
   }
 
