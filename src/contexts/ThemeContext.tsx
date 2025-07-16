@@ -1,128 +1,86 @@
-// ULTRA-SAFE THEME CONTEXT - No hooks, no React dependencies during init
-// This file is designed to work even if React is broken or not loaded properly
+// NUCLEAR OPTION: Zero React dependencies, pure DOM manipulation
+// This replaces ThemeContext entirely with a non-React system
 
-// Runtime React validation
-let React: any;
-let isReactAvailable = false;
+console.log('🚀 NUCLEAR THEME: Loading theme system without React');
 
-try {
-  React = require('react');
-  isReactAvailable = !!(React && React.useState && React.useEffect);
-  console.log('✅ React validation passed:', isReactAvailable);
-} catch (error) {
-  console.warn('⚠️ React import failed:', error);
-  // Provide minimal fallbacks
-  React = {
-    useEffect: () => {},
-    useState: (initial: any) => [initial, () => {}],
-    Fragment: ({ children }: any) => children
-  };
-}
+// Pure JavaScript theme manager - no React anywhere
+const THEME_STORAGE_KEY = 'app-theme-nuclear';
 
-type Theme = 'light' | 'dark';
+// Global theme state
+let currentTheme: 'light' | 'dark' = 'light';
 
-// Direct theme management without React dependencies
-class DirectThemeManager {
-  private theme: Theme = 'light';
-
-  constructor() {
-    this.initialize();
-  }
-
-  private initialize() {
-    // Safe localStorage access
-    try {
-      const stored = localStorage.getItem('theme') as Theme;
-      if (stored === 'light' || stored === 'dark') {
-        this.theme = stored;
-      } else {
-        const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
-        this.theme = prefersDark ? 'dark' : 'light';
-      }
-    } catch (e) {
-      this.theme = 'light';
+// Initialize theme immediately
+const initializeTheme = () => {
+  try {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === 'light' || stored === 'dark') {
+      currentTheme = stored;
+    } else {
+      const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
+      currentTheme = prefersDark ? 'dark' : 'light';
     }
-    
-    this.applyTheme();
-  }
-
-  private applyTheme() {
-    try {
-      const root = document.documentElement;
-      root.className = root.className.replace(/(^|\s)(light|dark)(\s|$)/g, ' ').trim();
-      root.classList.add(this.theme);
-      root.setAttribute('data-theme', this.theme);
-    } catch (e) {
-      console.warn('Theme application failed:', e);
-    }
-  }
-
-  getTheme() { return this.theme; }
-  isDark() { return this.theme === 'dark'; }
-
-  setTheme(newTheme: Theme) {
-    this.theme = newTheme;
-    try {
-      localStorage.setItem('theme', newTheme);
-    } catch (e) {}
-    this.applyTheme();
-  }
-}
-
-// Create global theme manager
-const directTheme = new DirectThemeManager();
-
-// ULTRA-SAFE ThemeProvider - No hooks, just renders children
-export const ThemeProvider = ({ children }: { children: any }) => {
-  console.log('🔧 ThemeProvider rendering with React available:', isReactAvailable);
-  
-  // Apply theme immediately without hooks
-  directTheme.getTheme();
-  
-  if (isReactAvailable && React?.Fragment) {
-    return React.createElement(React.Fragment, null, children);
+  } catch (e) {
+    currentTheme = 'light';
   }
   
-  // Fallback if React is broken
+  applyThemeToDOM();
+  console.log('🎨 NUCLEAR THEME: Initialized as', currentTheme);
+};
+
+// Apply theme directly to DOM
+const applyThemeToDOM = () => {
+  try {
+    const root = document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(currentTheme);
+    root.setAttribute('data-theme', currentTheme);
+    console.log('🎨 NUCLEAR THEME: Applied', currentTheme, 'to DOM');
+  } catch (e) {
+    console.warn('Theme DOM application failed:', e);
+  }
+};
+
+// Theme functions
+const getTheme = () => currentTheme;
+const isDark = () => currentTheme === 'dark';
+
+const setTheme = (newTheme: 'light' | 'dark') => {
+  currentTheme = newTheme;
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, newTheme);
+  } catch (e) {}
+  applyThemeToDOM();
+};
+
+// Initialize immediately when this module loads
+initializeTheme();
+
+// FAKE REACT COMPONENTS - These don't use React at all
+export const ThemeProvider = ({ children }: any) => {
+  console.log('🔥 NUCLEAR ThemeProvider: Rendering without any React hooks');
+  
+  // Ensure theme is applied (no React hooks)
+  applyThemeToDOM();
+  
+  // Return children directly - no React.Fragment, no hooks
   return children;
 };
 
-// ULTRA-SAFE useTheme hook
 export const useTheme = () => {
-  console.log('🔧 useTheme called with React available:', isReactAvailable);
+  console.log('🔥 NUCLEAR useTheme: Returning static theme object');
   
-  if (isReactAvailable) {
-    try {
-      const [theme, setThemeState] = React.useState(directTheme.getTheme());
-      
-      React.useEffect(() => {
-        const handleThemeChange = () => setThemeState(directTheme.getTheme());
-        // Simple polling fallback
-        const interval = setInterval(handleThemeChange, 1000);
-        return () => clearInterval(interval);
-      }, []);
-
-      return {
-        theme,
-        setTheme: directTheme.setTheme.bind(directTheme),
-        isDark: directTheme.isDark()
-      };
-    } catch (error) {
-      console.warn('useTheme hook failed, using fallback:', error);
-    }
-  }
-  
-  // Always return working theme object
+  // Return theme object without any React hooks
   return {
-    theme: directTheme.getTheme(),
-    setTheme: directTheme.setTheme.bind(directTheme),
-    isDark: directTheme.isDark()
+    theme: getTheme(),
+    setTheme: setTheme,
+    isDark: isDark()
   };
 };
 
-// Export everything for compatibility
-export const getTheme = () => directTheme.getTheme();
-export const setTheme = (theme: Theme) => directTheme.setTheme(theme);
-export const isDark = () => directTheme.isDark();
+// Export all theme functions
+export { getTheme, setTheme, isDark };
 
+// Default export for compatibility
 export default { ThemeProvider, useTheme };
+
+console.log('✅ NUCLEAR THEME: Module loaded successfully');

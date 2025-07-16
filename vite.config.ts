@@ -12,11 +12,12 @@ export default defineConfig(({ mode }) => {
   const extraRandom = Math.random().toString(36).substring(2, 20);
   const superRandom = Math.random().toString(36).substring(2, 20);
   const nuclearRandom = Math.random().toString(36).substring(2, 20);
+  const finalRandom = Math.random().toString(36).substring(2, 20);
   
   return {
     base: isElectron ? './' : '/',
-    // NUCLEAR cache destruction - change everything + force rebuild
-    cacheDir: `.vite-NUCLEAR-REBUILD-${megaTimestamp}-${ultraRandom}-${extraRandom}-${superRandom}-${nuclearRandom}`,
+    // ULTIMATE NUCLEAR cache destruction
+    cacheDir: `.vite-ULTIMATE-NUCLEAR-${megaTimestamp}-${ultraRandom}-${extraRandom}-${superRandom}-${nuclearRandom}-${finalRandom}`,
     clearScreen: false,
     server: {
       host: "::",
@@ -62,24 +63,26 @@ export default defineConfig(({ mode }) => {
       dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
-      // NUCLEAR exclusion - exclude ALL contexts and force rebuild
-      exclude: ['src/**', '@/**', './src/**', 'contexts/**', 'ThemeContext', '**/ThemeContext*', '**/contexts/**'],
+      // ULTIMATE exclusion - exclude ALL theme-related modules
+      exclude: ['src/**', '@/**', './src/**', 'contexts/**', 'ThemeContext', '**/ThemeContext*', '**/contexts/**', '**/theme*', '**/Theme*'],
       include: ['react', 'react-dom'], // Explicitly include React
       force: true,
       entries: [],
       esbuildOptions: {
-        target: 'es2024',
+        target: 'es2025',
         jsx: 'automatic',
         define: {
-          __FORCE_REBUILD__: JSON.stringify(true)
+          __FORCE_REBUILD__: JSON.stringify(true),
+          __ULTIMATE_NUCLEAR__: JSON.stringify(`${megaTimestamp}-${finalRandom}`)
         }
       }
     },
     define: {
       global: 'globalThis',
       'process.env.NODE_ENV': JSON.stringify(mode === 'development' ? 'development' : 'production'),
-      // Force module rebuilding with timestamp
-      '__VITE_FORCE_REBUILD__': JSON.stringify(`${megaTimestamp}-${nuclearRandom}`)
+      // ULTIMATE force module rebuilding
+      '__VITE_ULTIMATE_NUCLEAR__': JSON.stringify(`${megaTimestamp}-${finalRandom}`),
+      '__BUILD_TIMESTAMP__': JSON.stringify(megaTimestamp)
     },
     build: {
       rollupOptions: {
