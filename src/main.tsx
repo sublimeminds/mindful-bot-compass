@@ -57,11 +57,23 @@ const root = ReactDOM.createRoot(rootElement);
 // Initialize lovable-tagger BEFORE rendering
 initializeLovableTagger();
 
+console.log('🔍 React state before render:', {
+  React: !!React,
+  createElement: !!React?.createElement,
+  useState: !!React?.useState,
+  version: React?.version
+});
+
 // Final React safety check before render
-if (!React || typeof React.createElement !== 'function') {
-  console.error('CRITICAL: React became null before render');
+if (!React || typeof React.createElement !== 'function' || typeof React.useState !== 'function') {
+  console.error('CRITICAL: React is incomplete before render', {
+    React: !!React,
+    createElement: !!React?.createElement,
+    useState: !!React?.useState
+  });
   window.location.reload();
 } else {
+  console.log('✅ React is ready for render');
   root.render(
     <React.StrictMode>
       <AppSelector />

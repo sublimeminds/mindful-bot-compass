@@ -10,8 +10,8 @@ export default defineConfig(({ mode }) => {
   
   return {
     base: isElectron ? './' : '/',
-    // Force complete cache invalidation
-    cacheDir: '.vite-fresh-' + Date.now(),
+    // Force complete rebuild - change cache dir every time
+    cacheDir: `.vite-reset-${Date.now()}-${Math.random().toString(36).substring(7)}`,
     clearScreen: false,
     server: {
       host: "::",
@@ -20,7 +20,8 @@ export default defineConfig(({ mode }) => {
         strict: false
       },
       hmr: {
-        overlay: false
+        overlay: false,
+        clientPort: 8080
       }
     },
     plugins: [
@@ -40,23 +41,17 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
-        "react": path.resolve(__dirname, "./node_modules/react"),
-        "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
       },
+      // Force fresh module resolution
       dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
-      include: [
-        'react',
-        'react-dom',
-        'zustand'
-      ],
-      exclude: [
-        'src/contexts/ThemeContext.tsx'
-      ],
+      // Exclude everything to force fresh builds
+      exclude: ['src/**'],
       force: true,
       esbuildOptions: {
-        target: 'es2020'
+        target: 'es2020',
+        jsx: 'automatic'
       }
     },
     define: {
