@@ -10,8 +10,8 @@ export default defineConfig(({ mode }) => {
   
   return {
     base: isElectron ? './' : '/',
-    // Force complete rebuild - change cache dir every time
-    cacheDir: `.vite-nuclear-reset-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+    // Force nuclear cache reset - different every time
+    cacheDir: `.vite-destroy-cache-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`,
     clearScreen: false,
     server: {
       host: "::",

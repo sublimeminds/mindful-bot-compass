@@ -57,6 +57,14 @@ const root = ReactDOM.createRoot(rootElement);
 // Initialize lovable-tagger BEFORE rendering
 initializeLovableTagger();
 
+console.log('🔍 Debug: Checking for ThemeContext references before render...');
+
+// Add explicit cache busting by manipulating the cache URL
+if (typeof window !== 'undefined') {
+  console.log('🔍 Debug: Current location:', window.location.href);
+  console.log('🔍 Debug: All cached modules:', Object.keys((window as any).__vitePreload || {}));
+}
+
 console.log('🔍 React state before render:', {
   React: !!React,
   createElement: !!React?.createElement,
