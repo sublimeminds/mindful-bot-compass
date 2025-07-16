@@ -11,17 +11,11 @@ import './i18n';
 import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAuthProvider';
 import { SafeRouter } from '@/components/bulletproof/SafeRouter';
 import { AppErrorBoundary } from '@/components/bulletproof/MultiLevelErrorBoundary';
-import { SimpleAppProvider } from '@/hooks/useSimpleApp';
 import ReactSafeWrapper from '@/components/ReactSafeWrapper';
 
 // App Router
 import { LanguageAwareRouter } from '@/components/seo/LanguageAwareRouter';
-import LiveChatAgent from '@/components/LiveChatAgent';
-import { AvatarManagerProvider } from '@/components/avatar/OptimizedAvatarManager';
-import { TherapistProvider } from '@/contexts/TherapistContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import { useAffiliateTracking } from '@/hooks/useAffiliateTracking';
-import { SuperAdminProvider } from '@/contexts/SuperAdminContext';
 
 import './App.css';
 
@@ -45,68 +39,63 @@ const queryClient = new QueryClient({
   },
 });
 
-// Enhanced context readiness component with simplified React initialization
+// Simplified ready wrapper without hooks to prevent React crashes
 function ContextReadyWrapper({ children }: { children: React.ReactNode }) {
-  const [isReady, setIsReady] = React.useState(false);
-
-  React.useEffect(() => {
-    // Simple readiness check
-    const timer = setTimeout(() => {
-      setIsReady(true);
-    }, 50); // Short delay to ensure React is fully initialized
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!isReady) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Initializing application...</p>
-        </div>
-      </div>
-    );
-  }
-
   return <>{children}</>;
 }
 
-// Bulletproof App with enhanced authentication
-function App() {
-  // Initialize affiliate tracking globally
-  useAffiliateTracking();
-  
+// Core app component with minimal tracking
+function AppCore() {
   return (
     <ReactSafeWrapper>
       <QueryClientProvider client={queryClient}>
         <AppErrorBoundary>
           <BulletproofAuthProvider>
-            <SimpleAppProvider>
-              <ThemeProvider>
-                <TherapistProvider>
-                  <SuperAdminProvider>
-                    <AvatarManagerProvider maxActiveAvatars={3}>
-                      <ContextReadyWrapper>
-                        <SafeRouter>
-                        <div className="min-h-screen bg-background">
-                          <LanguageAwareRouter />
-                          <LiveChatAgent />
-                          <Toaster />
-                          <Sonner />
-                        </div>
-                        </SafeRouter>
-                      </ContextReadyWrapper>
-                    </AvatarManagerProvider>
-                  </SuperAdminProvider>
-                </TherapistProvider>
-              </ThemeProvider>
-            </SimpleAppProvider>
+            <ThemeProvider>
+              <SafeRouter>
+                <div className="min-h-screen bg-background">
+                  <LanguageAwareRouter />
+                  <Toaster />
+                  <Sonner />
+                </div>
+              </SafeRouter>
+            </ThemeProvider>
           </BulletproofAuthProvider>
         </AppErrorBoundary>
       </QueryClientProvider>
     </ReactSafeWrapper>
   );
+}
+
+// App wrapper with additional providers that use hooks
+function App() {
+  return (
+    <ContextReadyWrapper>
+      <AppWithTracking />
+    </ContextReadyWrapper>
+  );
+}
+
+// Component that initializes tracking after React is ready
+function AppWithTracking() {
+  // Initialize affiliate tracking safely with proper hook usage
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        // Import and initialize tracking services directly to avoid hook issues
+        import('@/services/affiliateTrackingService').then(({ AffiliateTrackingService }) => {
+          AffiliateTrackingService.init();
+          AffiliateTrackingService.retryFailedTracking();
+        }).catch(error => {
+          console.warn('Affiliate tracking initialization failed:', error);
+        });
+      } catch (error) {
+        console.warn('Affiliate tracking initialization failed:', error);
+      }
+    }
+  }, []);
+
+  return <AppCore />;
 }
 
 export default App;

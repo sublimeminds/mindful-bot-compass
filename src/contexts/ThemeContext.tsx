@@ -10,12 +10,7 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  // Safety check for React availability
-  if (!React || typeof React.createElement !== 'function') {
-    console.warn('ThemeProvider: React not available, rendering children directly');
-    return children as any;
-  }
-  
+  // Simple theme provider without hooks to avoid React hook errors
   return (
     <ThemeContext.Provider value={{ theme: 'light', setTheme: () => {}, isDark: false }}>
       {children}

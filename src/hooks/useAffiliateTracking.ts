@@ -35,8 +35,14 @@ export const useAffiliateTracking = () => {
   };
 
   const getAffiliateCode = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+    if (typeof window === 'undefined') return null;
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('ref') || urlParams.get('aff') || urlParams.get('affiliate');
+    } catch (error) {
+      console.warn('Error getting affiliate code:', error);
+      return null;
+    }
   };
 
   return {
