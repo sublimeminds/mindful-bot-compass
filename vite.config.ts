@@ -11,11 +11,12 @@ export default defineConfig(({ mode }) => {
   const ultraRandom = Math.random().toString(36).substring(2, 20);
   const extraRandom = Math.random().toString(36).substring(2, 20);
   const superRandom = Math.random().toString(36).substring(2, 20);
+  const nuclearRandom = Math.random().toString(36).substring(2, 20);
   
   return {
     base: isElectron ? './' : '/',
-    // NUCLEAR cache destruction - change everything
-    cacheDir: `.vite-EMERGENCY-OVERRIDE-${megaTimestamp}-${ultraRandom}-${extraRandom}-${superRandom}`,
+    // NUCLEAR cache destruction - change everything + force rebuild
+    cacheDir: `.vite-NUCLEAR-REBUILD-${megaTimestamp}-${ultraRandom}-${extraRandom}-${superRandom}-${nuclearRandom}`,
     clearScreen: false,
     server: {
       host: "::",
@@ -30,9 +31,12 @@ export default defineConfig(({ mode }) => {
       }
     },
     esbuild: {
-      // Force fresh compilation with different target
+      // Force fresh compilation with different target and build ID
       drop: mode === 'production' ? ['console', 'debugger'] : [],
-      target: 'es2022', // Changed target to force recompilation
+      target: 'es2023', // Changed target again to force recompilation
+      define: {
+        __NUCLEAR_REBUILD_ID__: JSON.stringify(`${megaTimestamp}-${nuclearRandom}`)
+      }
     },
     plugins: [
       react({
@@ -51,19 +55,24 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
+        // Emergency alias to bypass old ThemeContext
+        "@/contexts/ThemeContext": path.resolve(__dirname, "./src/utils/BulletproofTheme.tsx"),
       },
       // Force fresh module resolution
       dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
-      // Exclude only problematic modules, keep React working
-      exclude: ['src/**', '@/**', './src/**', 'contexts/**', 'ThemeContext'],
+      // NUCLEAR exclusion - exclude ALL contexts and force rebuild
+      exclude: ['src/**', '@/**', './src/**', 'contexts/**', 'ThemeContext', '**/ThemeContext*', '**/contexts/**'],
       include: ['react', 'react-dom'], // Explicitly include React
       force: true,
       entries: [],
       esbuildOptions: {
-        target: 'es2023',
-        jsx: 'automatic'
+        target: 'es2024',
+        jsx: 'automatic',
+        define: {
+          __FORCE_REBUILD__: JSON.stringify(true)
+        }
       }
     },
     define: {

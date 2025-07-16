@@ -1,23 +1,69 @@
-// EMERGENCY REPLACEMENT - No React hooks to prevent useState errors
-// This file replaces any cached ThemeContext to prevent crashes
+// EMERGENCY THEME CONTEXT REPLACEMENT
+// This file completely replaces the old ThemeContext with a bulletproof version
 
-// Simple theme context without hooks
-const themeValue = {
-  theme: 'light' as const,
+import React from 'react';
+import { getTheme, setTheme, isDark } from '@/utils/BulletproofTheme';
+
+type Theme = 'light' | 'dark';
+
+// Simple theme context that uses the bulletproof theme manager
+const themeValue: {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+  isDark: boolean;
+} = {
+  theme: 'light',
   setTheme: () => {},
   isDark: false
 };
 
-// ThemeProvider that doesn't use React hooks
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  console.log('🟢 EMERGENCY ThemeProvider: Rendering without hooks');
-  return children;
+// Update theme value from bulletproof manager
+const updateThemeValue = () => {
+  themeValue.theme = getTheme();
+  themeValue.setTheme = setTheme;
+  themeValue.isDark = isDark();
 };
 
-// useTheme hook replacement that doesn't use React hooks
+// Initialize immediately
+updateThemeValue();
+
+// Listen for theme changes and update
+if (typeof window !== 'undefined') {
+  window.addEventListener('theme-changed', updateThemeValue);
+}
+
+// ThemeProvider that uses bulletproof theme system
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  // Use the bulletproof theme manager directly
+  React.useEffect(() => {
+    updateThemeValue();
+  }, []);
+
+  return <>{children}</>;
+};
+
+// useTheme hook that returns current theme state
 export const useTheme = () => {
-  console.log('🟢 EMERGENCY useTheme: Returning static theme');
-  return themeValue;
+  const [theme, setThemeState] = React.useState(getTheme());
+  const [darkMode, setDarkMode] = React.useState(isDark());
+
+  React.useEffect(() => {
+    const updateState = () => {
+      setThemeState(getTheme());
+      setDarkMode(isDark());
+    };
+
+    updateState();
+    window.addEventListener('theme-changed', updateState);
+    
+    return () => window.removeEventListener('theme-changed', updateState);
+  }, []);
+
+  return {
+    theme,
+    setTheme,
+    isDark: darkMode
+  };
 };
 
 export default { ThemeProvider, useTheme };
