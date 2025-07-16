@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Brain, Settings, Database, Star, BookOpen } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import GradientLogo from '@/components/ui/GradientLogo';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
@@ -50,11 +51,26 @@ const RegionalNavigationHeader = () => {
             <div className="flex items-center space-x-4">
               <div className="md:hidden">
                 <MobileNavigation
-                  therapyAiFeatures={[]}
-                  platformFeatures={[]}
-                  toolsDataFeatures={[]}
-                  solutionsFeatures={[]}
-                  resourcesFeatures={[]}
+                  therapyAiFeatures={[
+                    { title: 'AI Therapy Sessions', href: '/therapy', icon: Brain, description: 'Personalized AI therapy sessions' },
+                    { title: 'Crisis Support', href: '/crisis', icon: Brain, description: '24/7 crisis intervention' }
+                  ]}
+                  platformFeatures={[
+                    { title: 'Dashboard', href: '/dashboard', icon: Settings, description: 'Your therapy dashboard' },
+                    { title: 'Analytics', href: '/analytics', icon: Settings, description: 'Mental health insights' }
+                  ]}
+                  toolsDataFeatures={[
+                    { title: 'Mood Tracking', href: '/mood', icon: Database, description: 'Track your mood patterns' },
+                    { title: 'Progress Reports', href: '/reports', icon: Database, description: 'View your progress' }
+                  ]}
+                  solutionsFeatures={[
+                    { title: 'Quick Links', href: '/quick-links', icon: Star, description: 'Fast access to resources' },
+                    { title: 'Pricing', href: '/pricing', icon: Star, description: 'View our pricing plans' }
+                  ]}
+                  resourcesFeatures={[
+                    { title: 'Help Center', href: '/help', icon: BookOpen, description: 'Get help and support' },
+                    { title: 'Documentation', href: '/docs', icon: BookOpen, description: 'API documentation' }
+                  ]}
                 />
               </div>
               

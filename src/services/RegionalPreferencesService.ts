@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { countryDetectionService } from './countryDetectionService';
+import { enhancedCurrencyService } from './enhancedCurrencyService';
 import type { CountryDetectionData } from '@/types/countryDetection';
 
 export interface RegionalPreferences {
@@ -203,13 +204,26 @@ class RegionalPreferencesService {
       const pppMultiplier = enablePPP ? (this.PPP_MULTIPLIERS[countryCode] || 1.0) : 1.0;
       const adjustedPrice = basePrice * pppMultiplier;
 
+      // Convert currency using enhanced currency service
+      const targetCurrency = countries?.currency_code || 'USD';
+      let convertedPrice = adjustedPrice;
+      
+      if (targetCurrency !== 'USD') {
+        try {
+          convertedPrice = await enhancedCurrencyService.convertAmount(adjustedPrice, 'USD', targetCurrency);
+        } catch (error) {
+          console.warn('Currency conversion failed, using PPP-adjusted USD price:', error);
+          convertedPrice = adjustedPrice;
+        }
+      }
+
       // Calculate tax
-      const taxInfo = await this.calculateTax(adjustedPrice, countryCode, isBusinessCustomer, customerVATNumber);
+      const taxInfo = await this.calculateTax(convertedPrice, countryCode, isBusinessCustomer, customerVATNumber);
 
       return {
         basePrice,
-        convertedPrice: adjustedPrice,
-        currency: countries?.currency_code || 'USD',
+        convertedPrice,
+        currency: targetCurrency,
         currencySymbol: countries?.currency_symbol || '$',
         purchasingPowerMultiplier: pppMultiplier,
         taxInfo
