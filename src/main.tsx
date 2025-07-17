@@ -88,6 +88,7 @@ import './index.css';
 
 // Import module cleanup utility
 import { clearDevelopmentCache } from '@/utils/moduleCleanup';
+import { forceApplicationReload } from '@/utils/forceReload';
 
 // Import the safeguard AFTER React is confirmed to be working
 import '@/utils/lovableTaggerSafeGuard';
@@ -176,13 +177,23 @@ if (typeof window !== 'undefined') {
 
   clearBrowserCache();
 
-  // Simple error boundary for unhandled errors
+  // Enhanced error handling with force reload for ThemeContext errors
   window.addEventListener('error', (event) => {
     console.error('🚨 Global error caught:', event.error);
+    if (event.error?.message?.includes('ThemeContext') || 
+        event.error?.message?.includes('useState') ||
+        event.filename?.includes('ThemeContext')) {
+      console.error('🚨 Detected stale module reference - forcing reload');
+      forceApplicationReload();
+    }
   });
 
   window.addEventListener('unhandledrejection', (event) => {
     console.error('🚨 Unhandled promise rejection:', event.reason);
+    if (event.reason?.message?.includes('ThemeContext')) {
+      console.error('🚨 Detected stale module in promise - forcing reload');
+      forceApplicationReload();
+    }
   });
 }
 
