@@ -78,7 +78,7 @@ export const TherapyMonitoringDashboard: React.FC = () => {
         engagementLevel: session.engagement_level || 0,
         therapeuticAlliance: session.therapeutic_alliance_score || 0,
         crisisLevel: session.crisis_level || 'none',
-        breakthroughProbability: session.breakthrough_probability || 0,
+        breakthroughProbability: session.risk_assessment_score || 0,
         lastUpdate: session.last_update
       })) || [];
 

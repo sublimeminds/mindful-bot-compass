@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Cpu, Zap, Settings } from 'lucide-react';
+import { TherapyMonitoringDashboard } from '@/components/admin/therapy/TherapyMonitoringDashboard';
 
 const SuperAdminAI = () => {
   return (
@@ -53,17 +54,31 @@ const SuperAdminAI = () => {
           </Card>
         </div>
 
-        <Card className="bg-slate-800/50 border-slate-700">
-          <CardHeader>
-            <CardTitle className="text-slate-100">AI Model Configuration</CardTitle>
-            <CardDescription className="text-slate-400">
-              Advanced AI system management and optimization
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-slate-400">AI management interface will be implemented here.</p>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader>
+              <CardTitle className="text-slate-100">AI Model Configuration</CardTitle>
+              <CardDescription className="text-slate-400">
+                Advanced AI system management and optimization
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-slate-400">AI management interface will be implemented here.</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader>
+              <CardTitle className="text-slate-100">Therapy Session Monitoring</CardTitle>
+              <CardDescription className="text-slate-400">
+                Real-time therapy session monitoring and quality metrics
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <TherapyMonitoringDashboard />
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
