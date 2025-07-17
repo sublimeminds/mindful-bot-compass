@@ -32,55 +32,117 @@ const TherapyAICore = () => {
       <div className="min-h-screen bg-gradient-to-br from-background via-therapy-50/30 to-calm-50/30">
         
         {/* Hero Section */}
-        <section className="relative py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
-          {/* Animated Background Elements */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-20 left-10 w-72 h-72 therapy-gradient-bg rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-calm-400 to-harmony-400 rounded-full blur-3xl animate-pulse animation-delay-400"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-balance-400 to-flow-400 rounded-full blur-3xl animate-pulse animation-delay-200"></div>
+        <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 text-white overflow-hidden">
+          {/* Grid Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
+              backgroundSize: '50px 50px'
+            }}></div>
+          </div>
+          
+          {/* Floating Tech Elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-20 left-20 w-32 h-32 border border-white/20 rounded-lg rotate-12 animate-float"></div>
+            <div className="absolute top-40 right-32 w-24 h-24 border border-blue-400/30 rounded-full animate-float animation-delay-200"></div>
+            <div className="absolute bottom-32 left-32 w-20 h-20 border border-purple-400/30 rounded-lg rotate-45 animate-float animation-delay-400"></div>
+            <div className="absolute bottom-20 right-20 w-28 h-28 border border-cyan-400/30 rounded-full animate-float animation-delay-600"></div>
           </div>
           
           <div className="max-w-7xl mx-auto relative z-10">
-            <div className="text-center">
-              <div className="relative w-24 h-24 mx-auto mb-8">
-                <div className="absolute inset-0 therapy-gradient-bg rounded-2xl shadow-therapy-glow animate-swirl-breathe"></div>
-                <div className="absolute inset-2 bg-white rounded-xl flex items-center justify-center">
-                  <Brain className="h-12 w-12 therapy-text-gradient-animated" />
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left Side - Content */}
+              <div>
+                <Badge variant="secondary" className="mb-6 bg-white/10 text-white border-white/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
+                  <Cpu className="w-4 h-4 mr-2" />
+                  Platform Overview
+                </Badge>
+                
+                <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                  <span className="text-white">TherapySync</span>
+                  <br />
+                  <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">AI Core Platform</span>
+                </h1>
+                
+                <p className="text-xl text-gray-200 mb-8 leading-relaxed">
+                  The complete mental health technology stack powered by nine interconnected AI systems, 
+                  delivering personalized therapy experiences at scale.
+                </p>
+                
+                <div className="grid grid-cols-3 gap-4 mb-8">
+                  <div className="text-center p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                    <div className="text-2xl font-bold text-blue-400">9</div>
+                    <div className="text-sm text-gray-300">AI Systems</div>
+                  </div>
+                  <div className="text-center p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                    <div className="text-2xl font-bold text-purple-400">50+</div>
+                    <div className="text-sm text-gray-300">Approaches</div>
+                  </div>
+                  <div className="text-center p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                    <div className="text-2xl font-bold text-cyan-400">24/7</div>
+                    <div className="text-sm text-gray-300">Monitoring</div>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg font-medium group transition-all duration-300"
+                  >
+                    Explore Platform 
+                    <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
+                  </Button>
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg font-medium transition-all duration-300"
+                  >
+                    View Architecture
+                  </Button>
                 </div>
               </div>
               
-              <Badge variant="secondary" className="mb-6 bg-gradient-to-r from-therapy-100 to-calm-100 text-therapy-800 border-therapy-300 px-4 py-2 text-sm font-medium">
-                <Sparkles className="w-4 h-4 mr-2" />
-                Complete AI Therapy Platform
-              </Badge>
-              
-              <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-                <span className="therapy-text-gradient-animated">TherapySync</span>
-                <br />
-                <span className="bg-gradient-to-r from-calm-600 via-harmony-600 to-balance-600 bg-clip-text text-transparent">AI Core</span>
-              </h1>
-              
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mb-12 leading-relaxed">
-                The most advanced AI therapy platform combining <span className="font-semibold text-therapy-600">adaptive intelligence</span>, 
-                <span className="font-semibold text-calm-600"> cultural awareness</span>, and 
-                <span className="font-semibold text-harmony-600"> comprehensive care</span> in one unified system.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                <Button 
-                  size="lg" 
-                  className="therapy-gradient-bg hover:opacity-90 text-white shadow-therapy-glow px-8 py-4 text-lg font-medium group transition-all duration-300"
-                >
-                  Start Your Journey 
-                  <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="therapy-gradient-border px-8 py-4 text-lg font-medium hover:bg-therapy-50 transition-all duration-300"
-                >
-                  Explore Features
-                </Button>
+              {/* Right Side - Visual */}
+              <div className="relative">
+                {/* Central Hub */}
+                <div className="relative w-80 h-80 mx-auto">
+                  {/* Core Circle */}
+                  <div className="absolute inset-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-2xl">
+                    <Brain className="h-20 w-20 text-white" />
+                  </div>
+                  
+                  {/* Orbiting Systems */}
+                  <div className="absolute inset-0 animate-spin-slow">
+                    {/* System Icons */}
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+                      <MessageSquare className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="absolute top-1/4 right-0 transform translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
+                      <Globe className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="absolute bottom-1/4 right-0 transform translate-x-1/2 translate-y-1/2 w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
+                      <AlertTriangle className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center shadow-lg">
+                      <Users className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="absolute bottom-1/4 left-0 transform -translate-x-1/2 translate-y-1/2 w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                      <TrendingUp className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="absolute top-1/4 left-0 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+                      <Layers className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                  
+                  {/* Connection Lines */}
+                  <div className="absolute inset-0 opacity-30">
+                    <svg className="w-full h-full" viewBox="0 0 320 320">
+                      <circle cx="160" cy="160" r="120" fill="none" stroke="white" strokeWidth="1" strokeDasharray="4,4">
+                        <animateTransform attributeName="transform" type="rotate" values="0 160 160;360 160 160" dur="20s" repeatCount="indefinite"/>
+                      </circle>
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
