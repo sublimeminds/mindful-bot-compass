@@ -113,7 +113,7 @@ const TherapyAICore = () => {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg font-medium transition-all duration-300"
+                  className="border-white/30 text-white hover:bg-white/10 hover:text-white px-8 py-4 text-lg font-medium transition-all duration-300"
                 >
                   View Architecture
                 </Button>
@@ -570,7 +570,7 @@ const TherapyAICore = () => {
                 <Lock className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-lg font-semibold mb-2">Privacy First</h3>
-              <p className="text-sm text-muted-foreground">End-to-end encryption with blockchain health records</p>
+              <p className="text-sm text-muted-foreground">End-to-end encryption with secure health data storage</p>
             </Card>
           </div>
         </div>
@@ -700,7 +700,7 @@ const TherapyAICore = () => {
               <ul className="text-left space-y-2 text-muted-foreground">
                 <li>• End-to-end encryption</li>
                 <li>• HIPAA compliance</li>
-                <li>• Blockchain health records</li>
+                <li>• Secure data storage</li>
                 <li>• Zero-knowledge architecture</li>
               </ul>
             </Card>
