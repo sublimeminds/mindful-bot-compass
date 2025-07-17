@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import TherapistTeamCarousel from '@/components/ai/TherapistTeamCarousel';
+import WorkingVoiceChat from '@/components/voice/WorkingVoiceChat';
 import { 
   MessageSquare, 
   Heart, 
@@ -229,12 +230,12 @@ const AITherapyChat = () => {
   ];
 
   const integrationChannels = [
-    { name: "Web Chat", icon: Monitor, status: "Active", users: "2.1M+" },
-    { name: "Mobile App", icon: Smartphone, status: "Active", users: "1.8M+" },
-    { name: "Voice Calls", icon: PhoneCall, status: "Beta", users: "450K+" },
-    { name: "SMS/Text", icon: MessageCircle, status: "Active", users: "890K+" },
-    { name: "WhatsApp", icon: MessageSquare, status: "Coming Soon", users: "TBA" },
-    { name: "Smart Speakers", icon: Radio, status: "Beta", users: "120K+" }
+    { name: "Web Chat", icon: Monitor, status: "Active", users: "Primary" },
+    { name: "Mobile App", icon: Smartphone, status: "Active", users: "iOS & Android" },
+    { name: "Voice Calls", icon: PhoneCall, status: "Beta", users: "Voice-First" },
+    { name: "SMS/Text", icon: MessageCircle, status: "Active", users: "Text Support" },
+    { name: "WhatsApp", icon: MessageSquare, status: "Coming Soon", users: "Planned" },
+    { name: "Smart Speakers", icon: Radio, status: "Beta", users: "Hands-Free" }
   ];
 
   const handleStartChat = () => {
@@ -260,9 +261,9 @@ const AITherapyChat = () => {
       {/* Hero Section */}
       <section className="relative py-24 overflow-hidden">
         {/* Animated Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/15 to-accent/20">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-secondary/25 to-accent/30">
           <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23${encodeURIComponent('8B5CF6')}' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23${encodeURIComponent('000000')}' fill-opacity='0.08'%3E%3Ccircle cx='30' cy='30' r='3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }} />
         </div>
 
@@ -273,12 +274,12 @@ const AITherapyChat = () => {
               <span className="text-sm font-medium text-primary">AI-Powered Therapy Chat</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-foreground drop-shadow-sm">
               Intelligent Therapy
               <span className="block">Conversations</span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-foreground/80 max-w-4xl mx-auto mb-8 leading-relaxed font-medium">
+            <p className="text-xl md:text-2xl text-foreground/90 max-w-4xl mx-auto mb-8 leading-relaxed font-medium drop-shadow-sm">
               Experience the future of mental health support with AI-powered therapy chats that understand, 
               adapt, and respond with professional-grade therapeutic techniques.
             </p>
@@ -298,20 +299,20 @@ const AITherapyChat = () => {
             {/* Live Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-1">4.2M+</div>
-                <div className="text-sm text-muted-foreground">Conversations</div>
+                <div className="text-2xl font-bold text-primary mb-1">14+</div>
+                <div className="text-sm text-foreground/70">AI Therapists</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary mb-1">98.5%</div>
-                <div className="text-sm text-muted-foreground">Satisfaction</div>
+                <div className="text-sm text-foreground/70">Satisfaction</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary mb-1">24/7</div>
-                <div className="text-sm text-muted-foreground">Available</div>
+                <div className="text-sm text-foreground/70">Available</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary mb-1">&lt;2s</div>
-                <div className="text-sm text-muted-foreground">Response</div>
+                <div className="text-sm text-foreground/70">Response</div>
               </div>
             </div>
           </div>
@@ -494,58 +495,25 @@ const AITherapyChat = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Mic2 className="h-5 w-5 text-primary" />
-                    Voice-Enabled Therapy Sessions
+                    Working Voice-Enabled Therapy Sessions
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="bg-muted/30 rounded-lg p-6">
-                    <div className="text-center mb-6">
-                      <div className="w-32 h-32 mx-auto bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center mb-4">
-                        <div className={`w-20 h-20 rounded-full flex items-center justify-center ${voiceEnabled ? 'bg-primary animate-pulse' : 'bg-muted'}`}>
-                          {voiceEnabled ? <Mic className="h-8 w-8 text-primary-foreground" /> : <MicOff className="h-8 w-8 text-muted-foreground" />}
-                        </div>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Natural conversation with emotional intelligence and real-time voice processing
-                      </p>
-                    </div>
-                    
-                    <div className="flex items-center justify-center space-x-6 mb-6">
-                      <Button
-                        variant={voiceEnabled ? "default" : "outline"}
-                        size="lg"
-                        onClick={() => setVoiceEnabled(!voiceEnabled)}
-                        className="flex items-center gap-2"
-                      >
-                        {voiceEnabled ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
-                        {voiceEnabled ? "Listening..." : "Start Voice Chat"}
-                      </Button>
-                      
-                      <Button
-                        variant={isPlaying ? "default" : "outline"}
-                        size="lg"
-                        onClick={() => setIsPlaying(!isPlaying)}
-                        className="flex items-center gap-2"
-                        disabled={!voiceEnabled}
-                      >
-                        {isPlaying ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
-                        {isPlaying ? "AI Speaking" : "Voice Response"}
-                      </Button>
-                    </div>
-                    
-                    {voiceEnabled && (
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground justify-center">
-                          <Waves className="h-4 w-4" />
-                          <span>Processing natural language with emotional tone detection</span>
-                        </div>
-                        <div className="grid grid-cols-3 gap-2 text-xs text-center">
-                          <Badge variant="outline" className="bg-green-50 text-green-700">Real-time STT</Badge>
-                          <Badge variant="outline" className="bg-blue-50 text-blue-700">Emotion Analysis</Badge>
-                          <Badge variant="outline" className="bg-purple-50 text-purple-700">Natural TTS</Badge>
-                        </div>
-                      </div>
-                    )}
+                    <WorkingVoiceChat 
+                      onSpeakingChange={(speaking) => {
+                        setIsPlaying(speaking);
+                        if (speaking) {
+                          toast({
+                            title: "AI Therapist Speaking",
+                            description: "Dr. Sarah Chen is responding to your message",
+                          });
+                        }
+                      }}
+                      onTranscriptChange={(transcript) => {
+                        console.log('User said:', transcript);
+                      }}
+                    />
                   </div>
                 </CardContent>
               </Card>

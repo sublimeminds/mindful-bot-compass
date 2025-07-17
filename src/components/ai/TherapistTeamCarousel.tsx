@@ -228,7 +228,7 @@ const TherapistTeamCarousel = () => {
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 text-center">
           <div>
-            <div className="text-2xl font-bold text-primary mb-1">5+</div>
+            <div className="text-2xl font-bold text-primary mb-1">14+</div>
             <div className="text-sm text-muted-foreground">AI Therapists</div>
           </div>
           <div>
@@ -241,7 +241,7 @@ const TherapistTeamCarousel = () => {
           </div>
           <div>
             <div className="text-2xl font-bold text-primary mb-1">4.9★</div>
-            <div className="text-sm text-muted-foreground">Avg Rating</div>
+            <div className="text-sm text-muted-foreground">User Rating</div>
           </div>
         </div>
       </div>
