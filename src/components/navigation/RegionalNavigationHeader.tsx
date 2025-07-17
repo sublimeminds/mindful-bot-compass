@@ -405,7 +405,7 @@ const RegionalNavigationHeader = () => {
               )}
               
               {/* Search Bar - responsive sizing */}
-              <div className={`${isTablet ? 'max-w-xs' : isLaptop ? 'max-w-sm' : isDesktop ? 'max-w-md' : 'hidden'} flex-1`}>
+              <div className={`${isTablet ? 'max-w-sm' : isLaptop ? 'max-w-lg' : isDesktop ? 'max-w-xl' : 'hidden'} flex-1`}>
                 <UnifiedSearch 
                   placeholder={user ? "Search sessions, goals, community..." : "Search features, help, pricing..."} 
                   variant="header"
