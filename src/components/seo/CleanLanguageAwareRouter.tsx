@@ -25,19 +25,18 @@ export const CleanLanguageAwareRouter: React.FC = () => {
     const cleanPath = LanguageRouter.getCleanPath();
     const pageName = cleanPath.slice(1) || 'home';
     
-    // Update SEO meta tags for current language and page with translation support
-    setTimeout(async () => {
-      // Small delay to ensure page is rendered
-      const { SEOService } = await import('@/services/seoService');
-      
+    // Use static SEO config to avoid circular imports
+    const fallbackConfig = LanguageRouter.getCurrentPageSEO();
+    
+    // Small delay to ensure page is rendered
+    setTimeout(() => {
       try {
-        // Try to get translated SEO config
-        const seoConfig = await SEOService.getMultilingualPageSEOConfigAsync(pageName, language);
-        SEOService.updateMetaTags(seoConfig);
+        // Use static import to avoid circular dependency
+        import('@/services/seoService').then(({ SEOService }) => {
+          SEOService.updateMetaTags(fallbackConfig);
+        });
       } catch (error) {
-        // Fallback to static config
-        const fallbackConfig = LanguageRouter.getCurrentPageSEO();
-        SEOService.updateMetaTags(fallbackConfig);
+        console.warn('Failed to update SEO:', error);
       }
     }, 100);
   }, [location.pathname]);

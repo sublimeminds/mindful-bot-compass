@@ -44,6 +44,10 @@ import {
   Network
 } from 'lucide-react';
 
+// Cache-buster for force refresh - Updated Component
+const COMPONENT_VERSION = Date.now();
+console.log(`Cultural AI Component Loaded - Version: ${COMPONENT_VERSION}`);
+
 const CulturalAI = () => {
   return (
     <div className="min-h-screen">

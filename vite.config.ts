@@ -7,17 +7,9 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const isElectron = process.env.ELECTRON === 'true';
-  const megaTimestamp = Date.now();
-  const ultraRandom = Math.random().toString(36).substring(2, 20);
-  const extraRandom = Math.random().toString(36).substring(2, 20);
-  const superRandom = Math.random().toString(36).substring(2, 20);
-  const nuclearRandom = Math.random().toString(36).substring(2, 20);
-  const finalRandom = Math.random().toString(36).substring(2, 20);
   
   return {
     base: isElectron ? './' : '/',
-    // ULTIMATE NUCLEAR cache destruction
-    cacheDir: `.vite-ULTIMATE-NUCLEAR-${megaTimestamp}-${ultraRandom}-${extraRandom}-${superRandom}-${nuclearRandom}-${finalRandom}`,
     clearScreen: false,
     server: {
       host: "::",
@@ -29,21 +21,22 @@ export default defineConfig(({ mode }) => {
         overlay: false,
         clientPort: 8080,
         port: 8080
-      }
+      },
+      // Disable caching in development
+      headers: mode === 'development' ? {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      } : {}
     },
     esbuild: {
-      // Force fresh compilation with different target and build ID
       drop: mode === 'production' ? ['console', 'debugger'] : [],
-      target: 'es2023', // Changed target again to force recompilation
-      define: {
-        __NUCLEAR_REBUILD_ID__: JSON.stringify(`${megaTimestamp}-${nuclearRandom}`)
-      }
+      target: 'es2022'
     },
     plugins: [
       react({
         jsxImportSource: 'react',
       }),
-      // Wrap componentTagger with safety checks
       mode === 'development' && !isElectron && (() => {
         try {
           return componentTagger();
@@ -56,37 +49,19 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
-        // ULTIMATE bypass - point to completely new file
-        "@/contexts/ThemeContext": path.resolve(__dirname, "./src/contexts/UltimateThemeBypass.tsx"),
       },
-      // Force fresh module resolution
       dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
-      // ULTIMATE exclusion - exclude ALL theme-related modules
-      exclude: ['src/**', '@/**', './src/**', 'contexts/**', 'ThemeContext', '**/ThemeContext*', '**/contexts/**', '**/theme*', '**/Theme*'],
-      include: ['react', 'react-dom'], // Explicitly include React
-      force: true,
-      entries: [],
-      esbuildOptions: {
-        target: 'es2025',
-        jsx: 'automatic',
-        define: {
-          __FORCE_REBUILD__: JSON.stringify(true),
-          __ULTIMATE_NUCLEAR__: JSON.stringify(`${megaTimestamp}-${finalRandom}`)
-        }
-      }
+      include: ['react', 'react-dom'],
+      force: false
     },
     define: {
       global: 'globalThis',
-      'process.env.NODE_ENV': JSON.stringify(mode === 'development' ? 'development' : 'production'),
-      // ULTIMATE force module rebuilding
-      '__VITE_ULTIMATE_NUCLEAR__': JSON.stringify(`${megaTimestamp}-${finalRandom}`),
-      '__BUILD_TIMESTAMP__': JSON.stringify(megaTimestamp)
+      'process.env.NODE_ENV': JSON.stringify(mode),
     },
     build: {
       rollupOptions: {
-        external: isElectron ? [] : [],
         output: {
           manualChunks: isElectron ? undefined : {
             vendor: ['react', 'react-dom'],
