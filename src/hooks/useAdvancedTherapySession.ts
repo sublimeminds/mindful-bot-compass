@@ -279,8 +279,9 @@ export const useAdvancedTherapySession = ({
           p_breakthrough_probability: sessionState.breakthroughProbability
         });
 
-      if (timingData?.recommended_extension > 0) {
-        const extensionMinutes = Math.floor(timingData.recommended_extension / 60);
+      const timingResult = timingData as any;
+      if (timingResult?.recommended_extension && timingResult.recommended_extension > 0) {
+        const extensionMinutes = Math.floor(timingResult.recommended_extension / 60);
         
         toast({
           title: "Session Extension Recommended",

@@ -124,8 +124,7 @@ export const useRealTimeSession = (): RealTimeSessionHook => {
         id: `msg_${Date.now() + 1}`,
         content: aiResponseText,
         sender: 'ai',
-        timestamp: new Date(),
-        metadata: response.data?.metadata
+        timestamp: new Date()
       };
       
       setMessages(prev => [...prev, aiMessage]);
