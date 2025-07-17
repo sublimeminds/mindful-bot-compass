@@ -86,20 +86,8 @@ if (!ensureReactSafety()) {
 import AppSelector from './AppSelector.tsx';
 import './index.css';
 
-// EMERGENCY: Import immediate cache clearing
-import '@/utils/emergencyRefresh';
-
-// Import module cleanup utility
-import { clearDevelopmentCache } from '@/utils/moduleCleanup';
-import { forceApplicationReload } from '@/utils/forceReload';
-
 // Import the safeguard AFTER React is confirmed to be working
 import '@/utils/lovableTaggerSafeGuard';
-
-// Clear development cache to prevent stale modules
-if (import.meta.env.DEV) {
-  clearDevelopmentCache();
-}
 
 // Minimal lovable-tagger initialization
 const initializeLovableTagger = () => {
@@ -180,23 +168,13 @@ if (typeof window !== 'undefined') {
 
   clearBrowserCache();
 
-  // Enhanced error handling with force reload for ThemeContext errors
+  // Simple error boundary for unhandled errors
   window.addEventListener('error', (event) => {
     console.error('🚨 Global error caught:', event.error);
-    if (event.error?.message?.includes('ThemeContext') || 
-        event.error?.message?.includes('useState') ||
-        event.filename?.includes('ThemeContext')) {
-      console.error('🚨 Detected stale module reference - forcing reload');
-      forceApplicationReload();
-    }
   });
 
   window.addEventListener('unhandledrejection', (event) => {
     console.error('🚨 Unhandled promise rejection:', event.reason);
-    if (event.reason?.message?.includes('ThemeContext')) {
-      console.error('🚨 Detected stale module in promise - forcing reload');
-      forceApplicationReload();
-    }
   });
 }
 
