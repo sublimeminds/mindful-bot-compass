@@ -111,6 +111,23 @@ import DBTTherapy from "../pages/DBTTherapy";
 import MindfulnessTherapy from "../pages/MindfulnessTherapy";
 import TraumaTherapy from "../pages/TraumaTherapy";
 import AIHub from "../pages/AIHub";
+import IntegrationsHub from "../pages/IntegrationsHub";
+import CrisisSupportSystem from "../pages/CrisisSupportSystem";
+import FamilyAccountSharing from "../pages/FamilyAccountSharing";
+import CommunityGroups from "../pages/CommunityGroups";
+import AnalyticsDashboard from "../pages/AnalyticsDashboard";
+import APIAccess from "../pages/APIAccess";
+import ProgressReports from "../pages/ProgressReports";
+import ForIndividuals from "../pages/ForIndividuals";
+import ForFamilies from "../pages/ForFamilies";
+import ForHealthcareProviders from "../pages/ForHealthcareProviders";
+import ForOrganizations from "../pages/ForOrganizations";
+import PricingPlans from "../pages/PricingPlans";
+import HelpCenter from "../pages/HelpCenter";
+import GettingStarted from "../pages/GettingStarted";
+import SecurityCompliance from "../pages/SecurityCompliance";
+import LearningHub from "../pages/LearningHub";
+import Blog from "../pages/Blog";
 
 // Component to wrap public pages
 const PublicPageWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -750,6 +767,108 @@ const AppRouter = () => {
       <Route path="/trauma-therapy" element={
         <PageErrorBoundary pageName="Trauma Therapy">
           <PublicPageWrapper><TraumaTherapy /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/integrations-hub" element={
+        <PageErrorBoundary pageName="Integrations Hub">
+          <PublicPageWrapper><IntegrationsHub /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/crisis-support-system" element={
+        <PageErrorBoundary pageName="Crisis Support System">
+          <PublicPageWrapper><CrisisSupportSystem /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/family-account-sharing" element={
+        <PageErrorBoundary pageName="Family Account Sharing">
+          <PublicPageWrapper><FamilyAccountSharing /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/community-groups" element={
+        <PageErrorBoundary pageName="Community Groups">
+          <PublicPageWrapper><CommunityGroups /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/analytics-dashboard" element={
+        <PageErrorBoundary pageName="Analytics Dashboard">
+          <PublicPageWrapper><AnalyticsDashboard /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/api-access" element={
+        <PageErrorBoundary pageName="API Access">
+          <PublicPageWrapper><APIAccess /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/progress-reports" element={
+        <PageErrorBoundary pageName="Progress Reports">
+          <PublicPageWrapper><ProgressReports /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/for-individuals" element={
+        <PageErrorBoundary pageName="For Individuals">
+          <PublicPageWrapper><ForIndividuals /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/for-families" element={
+        <PageErrorBoundary pageName="For Families">
+          <PublicPageWrapper><ForFamilies /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/for-healthcare-providers" element={
+        <PageErrorBoundary pageName="For Healthcare Providers">
+          <PublicPageWrapper><ForHealthcareProviders /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/for-organizations" element={
+        <PageErrorBoundary pageName="For Organizations">
+          <PublicPageWrapper><ForOrganizations /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/pricing-plans" element={
+        <PageErrorBoundary pageName="Pricing Plans">
+          <PublicPageWrapper><PricingPlans /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/help-center" element={
+        <PageErrorBoundary pageName="Help Center">
+          <PublicPageWrapper><HelpCenter /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/getting-started" element={
+        <PageErrorBoundary pageName="Getting Started">
+          <PublicPageWrapper><GettingStarted /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/security-compliance" element={
+        <PageErrorBoundary pageName="Security & Compliance">
+          <PublicPageWrapper><SecurityCompliance /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/learning-hub" element={
+        <PageErrorBoundary pageName="Learning Hub">
+          <PublicPageWrapper><LearningHub /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
+
+      <Route path="/blog" element={
+        <PageErrorBoundary pageName="Blog">
+          <PublicPageWrapper><Blog /></PublicPageWrapper>
         </PageErrorBoundary>
       } />
 
