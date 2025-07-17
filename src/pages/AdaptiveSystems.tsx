@@ -109,10 +109,10 @@ const AdaptiveSystemsPage = () => {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                <span className="therapy-text-gradient">Intelligent Model Selection</span>
+                <span className="therapy-text-gradient">Automated Therapy Plan Creation</span>
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Watch our AI choose the optimal model in real-time based on your subscription, needs, and usage patterns.
+                After onboarding, our AI instantly creates personalized therapy plans and continuously adapts them based on your progress.
               </p>
             </div>
 
@@ -242,29 +242,24 @@ const AdaptiveSystemsPage = () => {
 
                 <div className="bg-white rounded-xl p-6 border border-therapy-200">
                   <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <Gauge className="h-5 w-5 text-therapy-600" />
-                    AI Selection Criteria
+                    <Brain className="h-5 w-5 text-therapy-600" />
+                    Post-Onboarding AI Actions
                   </h3>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div className="text-center p-4 bg-therapy-50 rounded-lg">
-                      <Users className="h-8 w-8 text-therapy-600 mx-auto mb-2" />
-                      <p className="font-medium">Subscription Tier</p>
-                      <p className="text-sm text-muted-foreground">Premium → Claude 4 Opus</p>
+                      <Target className="h-8 w-8 text-therapy-600 mx-auto mb-2" />
+                      <p className="font-medium">Instant Plan Creation</p>
+                      <p className="text-sm text-muted-foreground">Therapy plan generated within seconds</p>
                     </div>
                     <div className="text-center p-4 bg-calm-50 rounded-lg">
                       <Activity className="h-8 w-8 text-calm-600 mx-auto mb-2" />
-                      <p className="font-medium">Task Urgency</p>
-                      <p className="text-sm text-muted-foreground">Crisis → Best Available</p>
+                      <p className="font-medium">Live Adjustments</p>
+                      <p className="text-sm text-muted-foreground">Plans update after every session</p>
                     </div>
                     <div className="text-center p-4 bg-harmony-50 rounded-lg">
-                      <BarChart3 className="h-8 w-8 text-harmony-600 mx-auto mb-2" />
-                      <p className="font-medium">Usage Limits</p>
-                      <p className="text-sm text-muted-foreground">Budget-aware routing</p>
-                    </div>
-                    <div className="text-center p-4 bg-balance-50 rounded-lg">
-                      <Target className="h-8 w-8 text-balance-600 mx-auto mb-2" />
-                      <p className="font-medium">Complexity</p>
-                      <p className="text-sm text-muted-foreground">Match capability to need</p>
+                      <LineChart className="h-8 w-8 text-harmony-600 mx-auto mb-2" />
+                      <p className="font-medium">Session Logs</p>
+                      <p className="text-sm text-muted-foreground">Detailed progress tracking</p>
                     </div>
                   </div>
                 </div>
@@ -506,28 +501,28 @@ const AdaptiveSystemsPage = () => {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-harmony-600" />
-                      <span className="text-sm">Enterprise features</span>
+                      <span className="text-sm">Advanced features</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-harmony-600" />
-                      <span className="text-sm">Team analytics</span>
+                      <span className="text-sm">Enhanced analytics</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-harmony-600" />
-                      <span className="text-sm">Advanced reporting</span>
+                      <span className="text-sm">Progress insights</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-harmony-600" />
-                      <span className="text-sm">Priority routing</span>
+                      <span className="text-sm">Priority support</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-harmony-600" />
-                      <span className="text-sm">Custom models</span>
+                      <span className="text-sm">Specialized tools</span>
                     </div>
                   </div>
                   <div className="bg-harmony-100 p-3 rounded-lg">
                     <p className="text-xs text-harmony-700 text-center font-medium">
-                      Built for organizations and teams
+                      Enhanced experience for professionals
                     </p>
                   </div>
                 </CardContent>
@@ -604,60 +599,60 @@ const AdaptiveSystemsPage = () => {
                 </CardContent>
               </Card>
 
-              {/* Cost Optimization */}
+              {/* Session Progress Tracking */}
               <Card className="bg-white border border-flow-200 shadow-lg">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3">
                     <PieChart className="h-6 w-6 text-flow-600" />
-                    Cost-Aware Intelligence
+                    Live Plan Adjustments & Session Logs
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-4 bg-therapy-50 rounded-lg">
                       <div>
-                        <h4 className="font-medium text-therapy-700">Budget Tracking</h4>
-                        <p className="text-sm text-muted-foreground">Monitor usage costs in real-time</p>
+                        <h4 className="font-medium text-therapy-700">Plan Updates</h4>
+                        <p className="text-sm text-muted-foreground">Real-time therapy plan adjustments</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-lg font-bold text-therapy-600">$12.40</p>
-                        <p className="text-xs text-muted-foreground">This month</p>
+                        <p className="text-lg font-bold text-therapy-600">Live</p>
+                        <p className="text-xs text-muted-foreground">After each session</p>
                       </div>
                     </div>
                     
                     <div className="flex items-center justify-between p-4 bg-calm-50 rounded-lg">
                       <div>
-                        <h4 className="font-medium text-calm-700">Smart Routing</h4>
-                        <p className="text-sm text-muted-foreground">Automatic cost optimization</p>
+                        <h4 className="font-medium text-calm-700">Session Logs</h4>
+                        <p className="text-sm text-muted-foreground">Detailed progress tracking</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-lg font-bold text-calm-600">34%</p>
-                        <p className="text-xs text-muted-foreground">Savings</p>
+                        <p className="text-lg font-bold text-calm-600">Auto</p>
+                        <p className="text-xs text-muted-foreground">Generated</p>
                       </div>
                     </div>
                     
                     <div className="flex items-center justify-between p-4 bg-harmony-50 rounded-lg">
                       <div>
-                        <h4 className="font-medium text-harmony-700">Quality Maintained</h4>
-                        <p className="text-sm text-muted-foreground">No compromise on outcomes</p>
+                        <h4 className="font-medium text-harmony-700">Progress Insights</h4>
+                        <p className="text-sm text-muted-foreground">AI-driven improvement analysis</p>
                       </div>
                       <div className="text-right">
                         <p className="text-lg font-bold text-harmony-600">97.8%</p>
-                        <p className="text-xs text-muted-foreground">Effectiveness</p>
+                        <p className="text-xs text-muted-foreground">Accuracy</p>
                       </div>
                     </div>
                   </div>
                   
                   <div className="bg-gradient-to-r from-flow-50 to-balance-50 p-4 rounded-lg border border-flow-200">
-                    <h4 className="font-medium text-flow-700 mb-2">This Month's Impact</h4>
+                    <h4 className="font-medium text-flow-700 mb-2">This Month's Progress</h4>
                     <div className="grid grid-cols-2 gap-4 text-center">
                       <div>
-                        <p className="text-xl font-bold text-flow-600">$47.20</p>
-                        <p className="text-xs text-muted-foreground">Saved</p>
+                        <p className="text-xl font-bold text-flow-600">18</p>
+                        <p className="text-xs text-muted-foreground">Plan Adjustments</p>
                       </div>
                       <div>
-                        <p className="text-xl font-bold text-balance-600">1,247</p>
-                        <p className="text-xs text-muted-foreground">Sessions</p>
+                        <p className="text-xl font-bold text-balance-600">24</p>
+                        <p className="text-xs text-muted-foreground">Session Logs</p>
                       </div>
                     </div>
                   </div>
