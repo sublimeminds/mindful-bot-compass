@@ -416,7 +416,7 @@ const AITherapyChat = () => {
           </div>
 
           <Tabs value={activeDemo} onValueChange={handleDemoSwitch} className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsList className="grid w-full grid-cols-3 mb-8">
               <TabsTrigger value="text" className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4" />
                 Text Chat
@@ -424,10 +424,6 @@ const AITherapyChat = () => {
               <TabsTrigger value="voice" className="flex items-center gap-2">
                 <Mic2 className="h-4 w-4" />
                 Voice Chat
-              </TabsTrigger>
-              <TabsTrigger value="video" className="flex items-center gap-2">
-                <Video className="h-4 w-4" />
-                Video Session
               </TabsTrigger>
               <TabsTrigger value="crisis" className="flex items-center gap-2">
                 <Shield className="h-4 w-4" />
@@ -440,25 +436,53 @@ const AITherapyChat = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <MessageSquare className="h-5 w-5 text-primary" />
-                    Text-Based Therapy Chat
+                    Advanced Text-Based Therapy Chat
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="bg-muted/30 rounded-lg p-6 space-y-4">
+                  <div className="bg-muted/30 rounded-lg p-6 space-y-4 max-h-96 overflow-y-auto">
+                    {/* User message */}
                     <div className="flex justify-start">
-                      <div className="bg-primary/10 rounded-lg p-3 max-w-xs">
-                        <p className="text-sm">I've been feeling really anxious about work lately...</p>
+                      <div className="bg-secondary/20 rounded-lg p-3 max-w-sm">
+                        <p className="text-sm">I've been feeling really anxious about work lately. I can't sleep and keep overthinking everything...</p>
                       </div>
                     </div>
+                    
+                    {/* AI thinking indicator */}
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground px-3">
+                      <Brain className="h-4 w-4 animate-pulse" />
+                      <span>AI analyzing emotional context, stress levels, and therapeutic approach...</span>
+                    </div>
+                    
+                    {/* AI response */}
                     <div className="flex justify-end">
-                      <div className="bg-primary rounded-lg p-3 max-w-xs text-white">
-                        <p className="text-sm">I hear that work anxiety can be overwhelming. Can you tell me more about what specifically is causing these feelings? Understanding the triggers can help us work through this together.</p>
+                      <div className="bg-primary rounded-lg p-3 max-w-sm text-primary-foreground">
+                        <p className="text-sm">I hear that work anxiety is really impacting your sleep and thoughts. That overthinking cycle can be exhausting. Let's explore this together - what specific aspects of work are triggering these anxious thoughts?</p>
                       </div>
                     </div>
+                    
+                    {/* Follow-up user message */}
+                    <div className="flex justify-start">
+                      <div className="bg-secondary/20 rounded-lg p-3 max-w-sm">
+                        <p className="text-sm">It's mostly my presentation next week. I keep imagining worst-case scenarios...</p>
+                      </div>
+                    </div>
+                    
+                    {/* Advanced AI response with technique suggestion */}
+                    <div className="flex justify-end">
+                      <div className="bg-primary rounded-lg p-3 max-w-sm text-primary-foreground">
+                        <p className="text-sm">Those "what-if" thoughts can really spiral. This sounds like catastrophic thinking - a common pattern we can work with. Let's try a grounding technique: Can you name 3 things that have gone well in previous presentations?</p>
+                        <div className="mt-2 p-2 bg-primary-foreground/10 rounded text-xs">
+                          <strong>CBT Technique Applied:</strong> Cognitive Restructuring
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Progress indicator */}
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Activity className="h-4 w-4" />
-                      AI analyzing emotional tone and context...
-                      <Progress value={chatProgress} className="w-24 h-2" />
+                      Session progress: Building coping strategies
+                      <Progress value={65} className="w-24 h-2" />
                     </div>
                   </div>
                 </CardContent>
@@ -475,7 +499,18 @@ const AITherapyChat = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="bg-muted/30 rounded-lg p-6">
-                    <div className="flex items-center justify-center space-x-8 mb-6">
+                    <div className="text-center mb-6">
+                      <div className="w-32 h-32 mx-auto bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center mb-4">
+                        <div className={`w-20 h-20 rounded-full flex items-center justify-center ${voiceEnabled ? 'bg-primary animate-pulse' : 'bg-muted'}`}>
+                          {voiceEnabled ? <Mic className="h-8 w-8 text-primary-foreground" /> : <MicOff className="h-8 w-8 text-muted-foreground" />}
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Natural conversation with emotional intelligence and real-time voice processing
+                      </p>
+                    </div>
+                    
+                    <div className="flex items-center justify-center space-x-6 mb-6">
                       <Button
                         variant={voiceEnabled ? "default" : "outline"}
                         size="lg"
@@ -485,60 +520,37 @@ const AITherapyChat = () => {
                         {voiceEnabled ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
                         {voiceEnabled ? "Listening..." : "Start Voice Chat"}
                       </Button>
+                      
                       <Button
                         variant={isPlaying ? "default" : "outline"}
                         size="lg"
                         onClick={() => setIsPlaying(!isPlaying)}
                         className="flex items-center gap-2"
+                        disabled={!voiceEnabled}
                       >
                         {isPlaying ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
                         {isPlaying ? "AI Speaking" : "Voice Response"}
                       </Button>
                     </div>
-                    <div className="text-center">
-                      <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-                        <Waves className="h-4 w-4" />
-                        Natural language processing with emotional intelligence
+                    
+                    {voiceEnabled && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground justify-center">
+                          <Waves className="h-4 w-4" />
+                          <span>Processing natural language with emotional tone detection</span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2 text-xs text-center">
+                          <Badge variant="outline" className="bg-green-50 text-green-700">Real-time STT</Badge>
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700">Emotion Analysis</Badge>
+                          <Badge variant="outline" className="bg-purple-50 text-purple-700">Natural TTS</Badge>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="video" className="space-y-4">
-              <Card className="border-0 shadow-xl">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Video className="h-5 w-5 text-primary" />
-                    AI Avatar Therapy Sessions
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-muted/30 rounded-lg p-6">
-                    <div className="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center mb-4">
-                      <div className="text-center">
-                        <Bot className="h-16 w-16 text-primary mx-auto mb-4" />
-                        <p className="text-muted-foreground">3D AI Therapist Avatar</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-center space-x-4">
-                      <Button
-                        variant={videoEnabled ? "default" : "outline"}
-                        onClick={() => setVideoEnabled(!videoEnabled)}
-                        className="flex items-center gap-2"
-                      >
-                        {videoEnabled ? <Video className="h-4 w-4" /> : <VideoOff className="h-4 w-4" />}
-                        {videoEnabled ? "Video On" : "Start Video"}
-                      </Button>
-                      <Badge variant="outline" className="bg-green-50 text-green-700">
-                        Real-time facial expressions
-                      </Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
 
             <TabsContent value="crisis" className="space-y-4">
               <Card className="border-0 shadow-xl border-red-200">

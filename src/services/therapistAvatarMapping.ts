@@ -16,6 +16,13 @@ export const therapistAvatarMapping = {
   'b2c3d4e5-6f78-9012-bcde-f23456789012': 'dr-riley-chen',     // LGBTQ+ Affirming
   'c3d4e5f6-7890-1234-cdef-345678901234': 'dr-sam-morgan',     // Couples Specialist
   
+  // Carousel therapist IDs
+  'cbt-specialist': 'dr-sarah-chen',        // Dr. Sarah Chen - CBT Specialist
+  'mindfulness-coach': 'dr-maya-patel',     // Dr. Maya Patel - Mindfulness Coach
+  'solution-focused': 'dr-alex-rodriguez',  // Dr. Alex Rodriguez - Solution-Focused
+  'trauma-informed': 'dr-jordan-kim',       // Dr. Jordan Kim - Trauma-Informed
+  'relationship-counselor': 'dr-taylor-morgan', // Dr. Taylor Morgan - Relationship Counselor
+  
   // Legacy numeric IDs for backward compatibility
   '1': 'dr-sarah-chen',
   '2': 'dr-alex-rodriguez', 
@@ -56,6 +63,13 @@ export const getVoiceIdForTherapist = (therapistId: string): string => {
     'a1b2c3d4-5e6f-7890-abcd-ef1234567890': 'TX3LPaxmHKxFdv7VOQHJ', // Dr. Jordan Taylor - energetic ADHD specialist
     'b2c3d4e5-6f78-9012-bcde-f23456789012': 'cgSgspJ2msm6clMCkdW9', // Dr. Riley Chen - affirming LGBTQ+ voice
     'c3d4e5f6-7890-1234-cdef-345678901234': 'EXAVITQu4vr4xnSDxMaL', // Dr. Sam Morgan - balanced couples voice
+    
+    // Carousel therapist IDs
+    'cbt-specialist': 'EXAVITQu4vr4xnSDxMaL',        // Dr. Sarah Chen - CBT Specialist
+    'mindfulness-coach': 'cgSgspJ2msm6clMCkdW9',     // Dr. Maya Patel - Mindfulness Coach
+    'solution-focused': 'TX3LPaxmHKxFdv7VOQHJ',      // Dr. Alex Rodriguez - Solution-Focused
+    'trauma-informed': 'onwK4e9ZLuTAKqWW03F9',       // Dr. Jordan Kim - Trauma-Informed
+    'relationship-counselor': 'XB0fDUnXU5powFXDhCwa', // Dr. Taylor Morgan - Relationship Counselor
     
     // Legacy numeric IDs
     '1': 'EXAVITQu4vr4xnSDxMaL',
