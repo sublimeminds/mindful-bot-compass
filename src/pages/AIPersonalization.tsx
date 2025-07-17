@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
+import TherapistTeamCarousel from '@/components/ai/TherapistTeamCarousel';
 import { 
   Brain, 
   Target, 
@@ -302,48 +303,8 @@ const AIPersonalization = () => {
         </div>
       </section>
 
-      {/* AI Personalities Section */}
-      <section className="py-24 sm:py-32 bg-gradient-to-r from-therapy-50 to-harmony-50">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center mb-16">
-            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Meet Your AI Therapy Team
-            </h2>
-            <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              Each AI personality is specially designed for different therapeutic needs and communication styles.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {aiPersonalities.map((ai, index) => (
-              <Card key={index} className="text-center hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur border-0">
-                <CardHeader>
-                  <div className="text-6xl mb-4">{ai.avatar}</div>
-                  <CardTitle className="text-xl">{ai.name}</CardTitle>
-                  <Badge variant="secondary" className="w-fit mx-auto">
-                    {ai.type}
-                  </Badge>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4 text-sm">
-                    {ai.description}
-                  </p>
-                  <div className="space-y-2 text-xs">
-                    <div>
-                      <strong className="text-therapy-600">Personality:</strong>
-                      <p className="text-muted-foreground">{ai.personality}</p>
-                    </div>
-                    <div>
-                      <strong className="text-therapy-600">Best For:</strong>
-                      <p className="text-muted-foreground">{ai.bestFor}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Therapist Team Carousel */}
+      <TherapistTeamCarousel />
 
       {/* Advanced Capabilities */}
       <section className="py-24 sm:py-32">
