@@ -719,18 +719,38 @@ const AdaptiveSystemsPage = () => {
                
                <Card className="text-center p-8 bg-gradient-to-br from-harmony-50 to-white border-harmony-200 shadow-lg">
                 <div className="w-16 h-16 bg-gradient-to-br from-harmony-500 to-harmony-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <Brain className="h-8 w-8 text-white" />
+                  <Headphones className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold mb-4 text-harmony-700">Adaptive Privacy Controls</h3>
+                <h3 className="text-xl font-bold mb-4 text-harmony-700">Ethical AI Practices</h3>
                 <p className="text-muted-foreground mb-6">
-                  Intelligent privacy settings that adapt to your comfort level, with granular controls over what information is used for AI learning.
+                  Our adaptive systems follow strict ethical guidelines to ensure fair, unbiased, and beneficial therapeutic outcomes for all users.
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center justify-center gap-2 text-sm text-harmony-600">
                     <CheckCircle className="h-4 w-4" />
-                    <span>Personalized privacy levels</span>
+                    <span>Bias detection & mitigation</span>
                   </div>
                   <div className="flex items-center justify-center gap-2 text-sm text-harmony-600">
+                    <CheckCircle className="h-4 w-4" />
+                    <span>Transparent algorithms</span>
+                  </div>
+                </div>
+               </Card>
+               
+               <Card className="text-center p-8 bg-gradient-to-br from-balance-50 to-white border-balance-200 shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-balance-500 to-balance-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Brain className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-4 text-balance-700">Adaptive Privacy Controls</h3>
+                <p className="text-muted-foreground mb-6">
+                  Intelligent privacy settings that adapt to your comfort level, with granular controls over what information is used for AI learning.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-center gap-2 text-sm text-balance-600">
+                    <CheckCircle className="h-4 w-4" />
+                    <span>Personalized privacy levels</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-2 text-sm text-balance-600">
                     <CheckCircle className="h-4 w-4" />
                     <span>Selective data sharing</span>
                   </div>
@@ -831,25 +851,6 @@ const AdaptiveSystemsPage = () => {
                 </div>
                </Card>
                
-               <Card className="text-center p-8 bg-gradient-to-br from-harmony-50 to-white border-harmony-200 shadow-lg">
-                <div className="w-16 h-16 bg-gradient-to-br from-harmony-500 to-harmony-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <Headphones className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold mb-4 text-harmony-700">Ethical AI Practices</h3>
-                <p className="text-muted-foreground mb-6">
-                  Our adaptive systems follow strict ethical guidelines to ensure fair, unbiased, and beneficial therapeutic outcomes for all users.
-                </p>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-center gap-2 text-sm text-harmony-600">
-                    <CheckCircle className="h-4 w-4" />
-                    <span>Bias detection & mitigation</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2 text-sm text-harmony-600">
-                    <CheckCircle className="h-4 w-4" />
-                    <span>Transparent algorithms</span>
-                  </div>
-                </div>
-              </Card>
             </div>
           </div>
         </section>
