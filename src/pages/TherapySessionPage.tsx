@@ -3,6 +3,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
 import FullTherapySession from '@/components/therapy/FullTherapySession';
+import AdvancedTherapyInterface from '@/components/therapy/AdvancedTherapyInterface';
 import AuthRequiredPage from '@/components/auth/AuthRequiredPage';
 
 const TherapySessionPage = () => {
@@ -30,7 +31,19 @@ const TherapySessionPage = () => {
 
   return (
     <DashboardLayoutWithSidebar>
-      <FullTherapySession />
+      <div className="space-y-6">
+        <AdvancedTherapyInterface
+          therapistId="dr-sarah-chen"
+          therapyApproach="Cognitive Behavioral Therapy"
+          initialMood={7}
+          culturalContext={{
+            primaryLanguage: 'en',
+            culturalBackground: 'western',
+            communicationStyle: 'direct'
+          }}
+        />
+        <FullTherapySession />
+      </div>
     </DashboardLayoutWithSidebar>
   );
 };

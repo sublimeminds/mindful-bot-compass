@@ -1428,6 +1428,60 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_session_decisions: {
+        Row: {
+          actual_outcome: Json | null
+          context_analysis: Json | null
+          created_at: string | null
+          cultural_adaptations: Json | null
+          decision_effectiveness: number | null
+          decision_point: string
+          decision_rationale: string | null
+          id: string
+          model_used: string
+          predicted_outcome: Json | null
+          response_generation_strategy: string | null
+          session_id: string
+          technique_selected: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          actual_outcome?: Json | null
+          context_analysis?: Json | null
+          created_at?: string | null
+          cultural_adaptations?: Json | null
+          decision_effectiveness?: number | null
+          decision_point: string
+          decision_rationale?: string | null
+          id?: string
+          model_used: string
+          predicted_outcome?: Json | null
+          response_generation_strategy?: string | null
+          session_id: string
+          technique_selected?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          actual_outcome?: Json | null
+          context_analysis?: Json | null
+          created_at?: string | null
+          cultural_adaptations?: Json | null
+          decision_effectiveness?: number | null
+          decision_point?: string
+          decision_rationale?: string | null
+          id?: string
+          model_used?: string
+          predicted_outcome?: Json | null
+          response_generation_strategy?: string | null
+          session_id?: string
+          technique_selected?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_therapy_analysis: {
         Row: {
           analysis_version: string
@@ -8155,6 +8209,108 @@ export type Database = {
         }
         Relationships: []
       }
+      session_crisis_monitoring: {
+        Row: {
+          created_at: string | null
+          crisis_indicators: Json | null
+          crisis_level: string | null
+          escalation_actions: Json | null
+          escalation_triggered: boolean | null
+          id: string
+          intervention_protocols: Json | null
+          monitoring_frequency: number | null
+          risk_assessment_score: number | null
+          safety_plan_activated: boolean | null
+          safety_plan_details: Json | null
+          session_id: string
+          updated_at: string | null
+          user_id: string
+          validation_layers: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          crisis_indicators?: Json | null
+          crisis_level?: string | null
+          escalation_actions?: Json | null
+          escalation_triggered?: boolean | null
+          id?: string
+          intervention_protocols?: Json | null
+          monitoring_frequency?: number | null
+          risk_assessment_score?: number | null
+          safety_plan_activated?: boolean | null
+          safety_plan_details?: Json | null
+          session_id: string
+          updated_at?: string | null
+          user_id: string
+          validation_layers?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          crisis_indicators?: Json | null
+          crisis_level?: string | null
+          escalation_actions?: Json | null
+          escalation_triggered?: boolean | null
+          id?: string
+          intervention_protocols?: Json | null
+          monitoring_frequency?: number | null
+          risk_assessment_score?: number | null
+          safety_plan_activated?: boolean | null
+          safety_plan_details?: Json | null
+          session_id?: string
+          updated_at?: string | null
+          user_id?: string
+          validation_layers?: Json | null
+        }
+        Relationships: []
+      }
+      session_cultural_adaptations: {
+        Row: {
+          adaptation_effectiveness: number | null
+          communication_style_adaptations: Json | null
+          created_at: string | null
+          cultural_profile: Json | null
+          family_system_considerations: Json | null
+          id: string
+          language_cultural_considerations: Json | null
+          religious_spiritual_integration: Json | null
+          session_id: string
+          technique_cultural_modifications: Json | null
+          trauma_informed_adaptations: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          adaptation_effectiveness?: number | null
+          communication_style_adaptations?: Json | null
+          created_at?: string | null
+          cultural_profile?: Json | null
+          family_system_considerations?: Json | null
+          id?: string
+          language_cultural_considerations?: Json | null
+          religious_spiritual_integration?: Json | null
+          session_id: string
+          technique_cultural_modifications?: Json | null
+          trauma_informed_adaptations?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          adaptation_effectiveness?: number | null
+          communication_style_adaptations?: Json | null
+          created_at?: string | null
+          cultural_profile?: Json | null
+          family_system_considerations?: Json | null
+          id?: string
+          language_cultural_considerations?: Json | null
+          religious_spiritual_integration?: Json | null
+          session_id?: string
+          technique_cultural_modifications?: Json | null
+          trauma_informed_adaptations?: Json | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       session_feedback: {
         Row: {
           comfort_rating: number
@@ -8333,6 +8489,60 @@ export type Database = {
           },
         ]
       }
+      session_orchestration: {
+        Row: {
+          actual_phase_duration: number | null
+          breakthrough_moments: Json | null
+          conversation_flow_score: number | null
+          created_at: string | null
+          current_phase: string
+          emotional_state_tracking: Json | null
+          expected_phase_duration: number
+          id: string
+          intervention_effectiveness: number | null
+          intervention_history: Json | null
+          phase_start_time: string
+          session_extensions: Json | null
+          session_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          actual_phase_duration?: number | null
+          breakthrough_moments?: Json | null
+          conversation_flow_score?: number | null
+          created_at?: string | null
+          current_phase: string
+          emotional_state_tracking?: Json | null
+          expected_phase_duration?: number
+          id?: string
+          intervention_effectiveness?: number | null
+          intervention_history?: Json | null
+          phase_start_time?: string
+          session_extensions?: Json | null
+          session_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          actual_phase_duration?: number | null
+          breakthrough_moments?: Json | null
+          conversation_flow_score?: number | null
+          created_at?: string | null
+          current_phase?: string
+          emotional_state_tracking?: Json | null
+          expected_phase_duration?: number
+          id?: string
+          intervention_effectiveness?: number | null
+          intervention_history?: Json | null
+          phase_start_time?: string
+          session_extensions?: Json | null
+          session_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       session_preparations: {
         Row: {
           ai_config: Json
@@ -8399,6 +8609,60 @@ export type Database = {
           preparation_steps?: Json | null
           session_structure?: Json | null
           therapy_type?: string
+        }
+        Relationships: []
+      }
+      session_quality_metrics: {
+        Row: {
+          breakthrough_probability: number | null
+          created_at: string | null
+          emotional_regulation_progress: number | null
+          engagement_level: number | null
+          id: string
+          intervention_success_rates: Json | null
+          intervention_triggers: Json | null
+          progress_toward_goals: Json | null
+          quality_alerts: Json | null
+          session_id: string
+          session_satisfaction_predicted: number | null
+          technique_effectiveness_scores: Json | null
+          therapeutic_alliance_score: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          breakthrough_probability?: number | null
+          created_at?: string | null
+          emotional_regulation_progress?: number | null
+          engagement_level?: number | null
+          id?: string
+          intervention_success_rates?: Json | null
+          intervention_triggers?: Json | null
+          progress_toward_goals?: Json | null
+          quality_alerts?: Json | null
+          session_id: string
+          session_satisfaction_predicted?: number | null
+          technique_effectiveness_scores?: Json | null
+          therapeutic_alliance_score?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          breakthrough_probability?: number | null
+          created_at?: string | null
+          emotional_regulation_progress?: number | null
+          engagement_level?: number | null
+          id?: string
+          intervention_success_rates?: Json | null
+          intervention_triggers?: Json | null
+          progress_toward_goals?: Json | null
+          quality_alerts?: Json | null
+          session_id?: string
+          session_satisfaction_predicted?: number | null
+          technique_effectiveness_scores?: Json | null
+          therapeutic_alliance_score?: number | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -9758,6 +10022,57 @@ export type Database = {
           recommendations?: Json
           severity_level?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      therapy_plan_execution: {
+        Row: {
+          adaptation_triggers: Json | null
+          completed_goals: string[] | null
+          continuity_tracking: Json | null
+          created_at: string | null
+          current_goals: string[] | null
+          goal_progress: Json | null
+          id: string
+          personalized_homework: Json | null
+          session_id: string
+          technique_effectiveness: Json | null
+          technique_sequence: Json | null
+          therapy_plan_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          adaptation_triggers?: Json | null
+          completed_goals?: string[] | null
+          continuity_tracking?: Json | null
+          created_at?: string | null
+          current_goals?: string[] | null
+          goal_progress?: Json | null
+          id?: string
+          personalized_homework?: Json | null
+          session_id: string
+          technique_effectiveness?: Json | null
+          technique_sequence?: Json | null
+          therapy_plan_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          adaptation_triggers?: Json | null
+          completed_goals?: string[] | null
+          continuity_tracking?: Json | null
+          created_at?: string | null
+          current_goals?: string[] | null
+          goal_progress?: Json | null
+          id?: string
+          personalized_homework?: Json | null
+          session_id?: string
+          technique_effectiveness?: Json | null
+          technique_sequence?: Json | null
+          therapy_plan_id?: string | null
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []
@@ -12298,7 +12613,22 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      session_real_time_status: {
+        Row: {
+          adaptation_effectiveness: number | null
+          conversation_flow_score: number | null
+          crisis_level: string | null
+          current_phase: string | null
+          engagement_level: number | null
+          goal_progress: Json | null
+          last_update: string | null
+          risk_assessment_score: number | null
+          session_id: string | null
+          therapeutic_alliance_score: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       aggregate_daily_analytics: {
@@ -12323,6 +12653,15 @@ export type Database = {
           avg_response_time: number
           model_breakdown: Json
         }[]
+      }
+      calculate_optimal_session_timing: {
+        Args: {
+          p_session_id: string
+          p_current_phase: string
+          p_engagement_level?: number
+          p_breakthrough_probability?: number
+        }
+        Returns: Json
       }
       can_access_member_data: {
         Args: {
@@ -12520,6 +12859,16 @@ export type Database = {
       request_data_export: {
         Args: { user_id_param: string; export_type?: string }
         Returns: string
+      }
+      select_optimal_technique: {
+        Args: {
+          p_user_id: string
+          p_session_id: string
+          p_current_phase: string
+          p_emotional_state?: Json
+          p_cultural_context?: Json
+        }
+        Returns: Json
       }
       store_translation: {
         Args: {

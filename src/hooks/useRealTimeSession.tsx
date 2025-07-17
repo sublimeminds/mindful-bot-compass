@@ -3,6 +3,8 @@ import { useState, useCallback } from 'react';
 import { chatService } from '@/services/chatService';
 import { OpenAIService } from '@/services/openAiService';
 import { useSimpleApp } from './useSimpleApp';
+import { enhancedSessionOrchestrator } from '@/services/enhancedSessionOrchestrator';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
   id: string;
@@ -90,24 +92,46 @@ export const useRealTimeSession = (): RealTimeSessionHook => {
       // Save user message
       await chatService.sendMessage(currentSessionId, content, 'user');
       
-      // Get AI response
-      const response = await OpenAIService.sendTherapyMessage(
-        content,
-        messages.map(msg => ({ role: msg.sender === 'user' ? 'user' : 'assistant', content: msg.content }))
-      );
+      // Use enhanced AI orchestrator for better responses
+      const response = await supabase.functions.invoke('advanced-ai-therapy-orchestrator', {
+        body: {
+          message: content,
+          userId: user.id,
+          sessionId: currentSessionId,
+          currentPhase: 'intervention',
+          sessionHistory: messages,
+          culturalContext: {},
+          emotionalState: { primary: 'neutral', intensity: 5 },
+          therapistId: 'dr-sarah-chen'
+        }
+      });
+      
+      let aiResponseText = '';
+      
+      if (response.data?.response) {
+        aiResponseText = response.data.response;
+      } else {
+        // Fallback to original OpenAI service
+        const fallbackResponse = await OpenAIService.sendTherapyMessage(
+          content,
+          messages.map(msg => ({ role: msg.sender === 'user' ? 'user' : 'assistant', content: msg.content }))
+        );
+        aiResponseText = fallbackResponse.message;
+      }
       
       // Add AI message
       const aiMessage: Message = {
         id: `msg_${Date.now() + 1}`,
-        content: response.message,
+        content: aiResponseText,
         sender: 'ai',
-        timestamp: new Date()
+        timestamp: new Date(),
+        metadata: response.data?.metadata
       };
       
       setMessages(prev => [...prev, aiMessage]);
       
       // Save AI message
-      await chatService.sendMessage(currentSessionId, response.message, 'ai');
+      await chatService.sendMessage(currentSessionId, aiResponseText, 'ai');
       
     } catch (err) {
       setError('Failed to send message');
