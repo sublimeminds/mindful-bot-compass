@@ -6,7 +6,7 @@ import { MessageCircle, Mic, Brain, Users, Award, Shield } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useNavigate } from 'react-router-dom';
-import { TherapistTeamCarousel } from '@/components/ai/TherapistTeamCarousel';
+import TherapistTeamCarousel from '@/components/ai/TherapistTeamCarousel';
 import WorkingVoiceChat from '@/components/voice/WorkingVoiceChat';
 
 const AITherapyChat = () => {
