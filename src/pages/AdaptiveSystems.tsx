@@ -142,13 +142,13 @@ const AdaptiveSystemsPage = () => {
                           </div>
                           <Progress value={modelMetrics.claude4.usage} className="h-2" />
                         </div>
-                        <div>
-                          <div className="flex justify-between text-sm mb-2">
-                            <span>Cost Efficiency</span>
-                            <span>${modelMetrics.claude4.cost}/session</span>
-                          </div>
-                          <Progress value={75} className="h-2" />
-                        </div>
+                         <div>
+                           <div className="flex justify-between text-sm mb-2">
+                             <span>Response Quality</span>
+                             <span>Exceptional</span>
+                           </div>
+                           <Progress value={98} className="h-2" />
+                         </div>
                         <div>
                           <div className="flex justify-between text-sm mb-2">
                             <span>Effectiveness</span>
@@ -180,13 +180,13 @@ const AdaptiveSystemsPage = () => {
                           </div>
                           <Progress value={modelMetrics.claudeSonnet.usage} className="h-2" />
                         </div>
-                        <div>
-                          <div className="flex justify-between text-sm mb-2">
-                            <span>Cost Efficiency</span>
-                            <span>${modelMetrics.claudeSonnet.cost}/session</span>
-                          </div>
-                          <Progress value={85} className="h-2" />
-                        </div>
+                         <div>
+                           <div className="flex justify-between text-sm mb-2">
+                             <span>Response Quality</span>
+                             <span>High</span>
+                           </div>
+                           <Progress value={95} className="h-2" />
+                         </div>
                         <div>
                           <div className="flex justify-between text-sm mb-2">
                             <span>Effectiveness</span>
@@ -218,13 +218,13 @@ const AdaptiveSystemsPage = () => {
                           </div>
                           <Progress value={modelMetrics.gpt4.usage} className="h-2" />
                         </div>
-                        <div>
-                          <div className="flex justify-between text-sm mb-2">
-                            <span>Cost Efficiency</span>
-                            <span>${modelMetrics.gpt4.cost}/session</span>
-                          </div>
-                          <Progress value={90} className="h-2" />
-                        </div>
+                         <div>
+                           <div className="flex justify-between text-sm mb-2">
+                             <span>Response Quality</span>
+                             <span>Good</span>
+                           </div>
+                           <Progress value={92} className="h-2" />
+                         </div>
                         <div>
                           <div className="flex justify-between text-sm mb-2">
                             <span>Effectiveness</span>
@@ -232,9 +232,9 @@ const AdaptiveSystemsPage = () => {
                           </div>
                           <Progress value={modelMetrics.gpt4.effectiveness} className="h-2" />
                         </div>
-                        <p className="text-sm text-muted-foreground">
-                          Reliable backup for high availability and cost optimization.
-                        </p>
+                         <p className="text-sm text-muted-foreground">
+                           Reliable backup for high availability and system redundancy.
+                         </p>
                       </div>
                     </CardContent>
                   </Card>
@@ -715,9 +715,29 @@ const AdaptiveSystemsPage = () => {
                     <span>No data sharing</span>
                   </div>
                 </div>
-              </Card>
-              
-               {/* Crisis Features & Interconnected Systems */}
+               </Card>
+               
+               <Card className="text-center p-8 bg-gradient-to-br from-harmony-50 to-white border-harmony-200 shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-harmony-500 to-harmony-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Brain className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-4 text-harmony-700">Adaptive Privacy Controls</h3>
+                <p className="text-muted-foreground mb-6">
+                  Intelligent privacy settings that adapt to your comfort level, with granular controls over what information is used for AI learning.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-center gap-2 text-sm text-harmony-600">
+                    <CheckCircle className="h-4 w-4" />
+                    <span>Personalized privacy levels</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-2 text-sm text-harmony-600">
+                    <CheckCircle className="h-4 w-4" />
+                    <span>Selective data sharing</span>
+                  </div>
+                </div>
+               </Card>
+               
+                {/* Crisis Features & Interconnected Systems */}
                <Card className="col-span-full bg-gradient-to-br from-red-50 to-orange-50 border-red-200 shadow-lg">
                 <div className="p-8">
                   <div className="text-center mb-8">
