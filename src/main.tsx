@@ -86,6 +86,9 @@ if (!ensureReactSafety()) {
 import AppSelector from './AppSelector.tsx';
 import './index.css';
 
+// EMERGENCY: Import immediate cache clearing
+import '@/utils/emergencyRefresh';
+
 // Import module cleanup utility
 import { clearDevelopmentCache } from '@/utils/moduleCleanup';
 import { forceApplicationReload } from '@/utils/forceReload';
