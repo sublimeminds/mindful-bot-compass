@@ -22,13 +22,9 @@ export default defineConfig(({ mode }) => {
         clientPort: 8080,
         port: 8080
       },
-      // Aggressive no-cache headers to prevent stale imports
+      // Simple development cache disabling
       headers: mode === 'development' ? {
-        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        'ETag': '"' + Date.now() + '"',
-        'Last-Modified': new Date().toUTCString()
+        'Cache-Control': 'no-cache'
       } : {}
     },
     esbuild: {
@@ -51,8 +47,6 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
-        // Force redirect any ThemeContext imports to BulletproofTheme
-        "@/contexts/ThemeContext": path.resolve(__dirname, "./src/utils/BulletproofTheme.tsx"),
       },
       dedupe: ['react', 'react-dom'],
     },

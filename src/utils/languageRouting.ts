@@ -1,5 +1,4 @@
 import React from 'react';
-import { SEOService } from '@/services/seoService';
 // Temporarily inline language detection to fix module resolution conflict
 
 // Language routing configuration
@@ -121,13 +120,11 @@ export class LanguageRouter {
       // Update HTML lang attribute
       document.documentElement.lang = language;
       
-      // Update SEO meta tags for language
+      // Basic document title update only
       const currentPath = window.location.pathname;
       const { cleanPath } = this.extractLanguageFromPath(currentPath);
       const pageName = cleanPath.slice(1) || 'home';
-      
-      const seoConfig = SEOService.getMultilingualPageSEOConfig(pageName, language);
-      SEOService.updateMetaTags(seoConfig);
+      document.title = `${pageName.charAt(0).toUpperCase() + pageName.slice(1)} - MentalQ AI`;
     }
   }
 
@@ -184,13 +181,17 @@ export class LanguageRouter {
     };
   }
 
-  // Get SEO data for current language and page
+  // Get basic SEO data for current language and page
   static getCurrentPageSEO(): any {
     const language = this.getCurrentLanguage();
     const cleanPath = this.getCleanPath();
     const pageName = cleanPath.slice(1) || 'home';
     
-    return SEOService.getMultilingualPageSEOConfig(pageName, language);
+    return {
+      title: `${pageName.charAt(0).toUpperCase() + pageName.slice(1)} - MentalQ AI`,
+      description: `MentalQ AI - Advanced AI-powered mental health support in ${language}`,
+      language
+    };
   }
 }
 
@@ -202,8 +203,8 @@ export function createLanguageAwareRoute(
   return function LanguageAwareComponent(props: any) {
     React.useEffect(() => {
       const language = LanguageRouter.getCurrentLanguage();
-      const seoConfig = SEOService.getMultilingualPageSEOConfig(pageName, language);
-      SEOService.updateMetaTags(seoConfig);
+      document.title = `${pageName.charAt(0).toUpperCase() + pageName.slice(1)} - MentalQ AI`;
+      document.documentElement.lang = language;
     }, []);
 
     return React.createElement(component, props);

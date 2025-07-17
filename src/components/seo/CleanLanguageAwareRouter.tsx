@@ -20,25 +20,14 @@ export const CleanLanguageAwareRouter: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Update SEO for each route change
+    // Minimal SEO update without heavy imports
     const language = LanguageRouter.getCurrentLanguage();
     const cleanPath = LanguageRouter.getCleanPath();
     const pageName = cleanPath.slice(1) || 'home';
     
-    // Use static SEO config to avoid circular imports
-    const fallbackConfig = LanguageRouter.getCurrentPageSEO();
-    
-    // Small delay to ensure page is rendered
-    setTimeout(() => {
-      try {
-        // Use static import to avoid circular dependency
-        import('@/services/seoService').then(({ SEOService }) => {
-          SEOService.updateMetaTags(fallbackConfig);
-        });
-      } catch (error) {
-        console.warn('Failed to update SEO:', error);
-      }
-    }, 100);
+    // Basic document title only - no heavy SEO service
+    document.title = `${pageName.charAt(0).toUpperCase() + pageName.slice(1)} - MentalQ AI`;
+    document.documentElement.lang = language;
   }, [location.pathname]);
 
   return (

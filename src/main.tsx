@@ -2,85 +2,21 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 
-// === ENHANCED React Module Safety Check ===
+// === SIMPLIFIED React Safety Check ===
 const verifyReactModules = () => {
-  console.log('🔍 SAFETY: Verifying React modules...');
-  
-  // Check React object existence and structure
-  if (typeof React === 'undefined' || !React || typeof React !== 'object') {
-    console.error('CRITICAL: React object is not available');
-    return false;
-  }
-
-  // Check essential React methods
-  const requiredMethods = ['createElement', 'Fragment', 'Component'];
-  for (const method of requiredMethods) {
-    if (!React[method] || typeof React[method] !== 'function') {
-      console.error(`CRITICAL: React.${method} is not available`);
-      return false;
-    }
-  }
-
-  // Check React hooks with detailed verification
-  const requiredHooks = ['useState', 'useEffect', 'useContext', 'useRef', 'useMemo'];
-  for (const hook of requiredHooks) {
-    if (!React[hook] || typeof React[hook] !== 'function') {
-      console.error(`CRITICAL: React.${hook} is not available or not a function`);
-      return false;
-    }
-  }
-
-  console.log('✅ SAFETY: React modules verified successfully');
-  return true;
+  // Basic React availability check only
+  return (
+    typeof React !== 'undefined' && 
+    React && 
+    typeof React.createElement === 'function' && 
+    typeof React.useState === 'function'
+  );
 };
 
-// Clear any potentially cached modules that could cause conflicts
-const clearStaleModules = () => {
-  try {
-    // Clear module cache keys that might interfere
-    const moduleKeys = Object.keys(window).filter(key => 
-      key.includes('theme') || key.includes('Theme') || key.includes('context')
-    );
-    moduleKeys.forEach(key => {
-      try {
-        delete (window as any)[key];
-      } catch (e) {
-        // Ignore deletion errors
-      }
-    });
-  } catch (error) {
-    console.warn('Module cleanup warning:', error);
-  }
-};
-
-// Enhanced safety check with retry mechanism
-let reactVerificationAttempts = 0;
-const maxVerificationAttempts = 3;
-
-const ensureReactSafety = () => {
-  reactVerificationAttempts++;
-  
-  if (!verifyReactModules()) {
-    if (reactVerificationAttempts < maxVerificationAttempts) {
-      console.warn(`React verification failed, attempt ${reactVerificationAttempts}/${maxVerificationAttempts}. Clearing cache and retrying...`);
-      clearStaleModules();
-      setTimeout(ensureReactSafety, 100);
-      return false;
-    } else {
-      console.error('CRITICAL: React verification failed after multiple attempts. Forcing page reload...');
-      clearStaleModules();
-      window.location.reload();
-      throw new Error('React not available after multiple verification attempts');
-    }
-  }
-  
-  return true;
-};
-
-// Initial safety check with module clearing
-clearStaleModules();
-if (!ensureReactSafety()) {
-  throw new Error('React safety check failed');
+// Single-pass React verification
+if (!verifyReactModules()) {
+  console.error('React not available, reloading page...');
+  window.location.reload();
 }
 
 import AppSelector from './AppSelector.tsx';
@@ -196,7 +132,6 @@ const finalReactCheck = () => {
   
   if (issues.length > 0) {
     console.error('CRITICAL: React incomplete before render:', issues);
-    clearStaleModules();
     window.location.reload();
     return false;
   }
@@ -217,7 +152,6 @@ if (finalReactCheck()) {
     console.log('✅ Application rendered successfully');
   } catch (renderError) {
     console.error('🚨 Render error:', renderError);
-    clearStaleModules();
     setTimeout(() => window.location.reload(), 100);
   }
 } else {

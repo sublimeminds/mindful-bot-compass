@@ -15,42 +15,21 @@ interface SEOMetaData {
 export const useSEO = (meta?: SEOMetaData) => {
   const location = useLocation();
 
-  // Don't attempt to use React hooks if React isn't ready
-  if (!isReactReady()) {
-    console.warn('useSEO: React not ready, skipping SEO hook entirely');
-    return;
-  }
-
-  try {
-    React.useEffect(() => {
-      // Safety check to ensure React and router context are available
-      if (!location || !location.pathname) {
-        console.log('useSEO: Router context not ready, skipping SEO update');
-        return;
+  // Simplified SEO hook - disabled to prevent memory issues
+  React.useEffect(() => {
+    if (!location?.pathname) return;
+    
+    // Basic document title only
+    const pageName = location.pathname.slice(1) || 'home';
+    const title = meta?.title || `${pageName.charAt(0).toUpperCase() + pageName.slice(1)} - MentalQ AI`;
+    document.title = title;
+    
+    // Basic meta description
+    if (meta?.description) {
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', meta.description);
       }
-
-      try {
-        // Get page name from pathname
-        const pageName = location.pathname.slice(1) || 'home';
-        
-        // Get default config for this page
-        const pageConfig = SEOService.getPageSEOConfig(pageName);
-        
-        // Merge with provided meta
-        const finalMeta = { ...pageConfig, ...meta };
-        
-        // Update meta tags
-        SEOService.updateMetaTags(finalMeta);
-        
-        // Add organization structured data
-        SEOService.addStructuredData(SEOService.generateOrganizationStructuredData());
-        
-        console.log('useSEO: Successfully updated SEO for page:', pageName);
-      } catch (error) {
-        console.error('useSEO: Error updating SEO:', error);
-      }
-    }, [location.pathname, meta]);
-  } catch (error) {
-    console.error('useSEO: React.useEffect not available:', error);
-  }
+    }
+  }, [location?.pathname, meta?.title, meta?.description]);
 };

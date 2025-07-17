@@ -44,19 +44,7 @@ import {
   Network
 } from 'lucide-react';
 
-// Cache-buster for force refresh - Updated Component
-const COMPONENT_VERSION = Date.now();
-console.log(`🚀 Cultural AI Component Loaded - Version: ${COMPONENT_VERSION} - Cache Cleared`);
-
 const CulturalAI = () => {
-  // Add cache-busting effect
-  React.useEffect(() => {
-    console.log(`🎨 Cultural AI Page Mounted - ${new Date().toISOString()}`);
-    
-    // Force DOM update with timestamp
-    const timestamp = Date.now();
-    document.documentElement.setAttribute('data-cultural-ai-version', timestamp.toString());
-  }, []);
 
   return (
     <div className="min-h-screen">
