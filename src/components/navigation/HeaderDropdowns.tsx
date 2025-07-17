@@ -72,7 +72,7 @@ const HeaderDropdowns = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-            <Brain className={`h-4 w-4 mr-2 ${isMedium ? 'text-therapy-600' : ''}`} />
+            <Brain className="h-4 w-4 mr-2" />
             Therapy AI
             <ChevronDown className="h-3 w-3 ml-1" />
           </Button>
@@ -189,7 +189,7 @@ const HeaderDropdowns = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-            <Settings className={`h-4 w-4 mr-2 ${isMedium ? 'text-green-600' : ''}`} />
+            <Settings className="h-4 w-4 mr-2" />
             Features
             <ChevronDown className="h-3 w-3 ml-1" />
           </Button>
@@ -261,7 +261,7 @@ const HeaderDropdowns = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-            <Database className={`h-4 w-4 mr-2 ${isMedium ? 'text-purple-600' : ''}`} />
+            <Database className="h-4 w-4 mr-2" />
             Tools & Data
             <ChevronDown className="h-3 w-3 ml-1" />
           </Button>
@@ -345,7 +345,7 @@ const HeaderDropdowns = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-            <Target className={`h-4 w-4 mr-2 ${isMedium ? 'text-emerald-600' : ''}`} />
+            <Target className="h-4 w-4 mr-2" />
             Solutions
             <ChevronDown className="h-3 w-3 ml-1" />
           </Button>
@@ -405,7 +405,7 @@ const HeaderDropdowns = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-            <BookOpen className={`h-4 w-4 mr-2 ${isMedium ? 'text-cyan-600' : ''}`} />
+            <BookOpen className="h-4 w-4 mr-2" />
             Resources
             <ChevronDown className="h-3 w-3 ml-1" />
           </Button>
