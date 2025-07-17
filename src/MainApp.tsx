@@ -15,6 +15,9 @@ import ReactSafeWrapper from '@/components/ReactSafeWrapper';
 // Main App Router
 import { CleanLanguageAwareRouter } from '@/components/seo/CleanLanguageAwareRouter';
 
+// Use the bulletproof theme that doesn't use React hooks
+import { ThemeProvider } from '@/utils/BulletproofTheme';
+
 import './App.css';
 
 // Configure React Query with bulletproof settings
@@ -39,19 +42,21 @@ const queryClient = new QueryClient({
 const MainApp: React.FC = () => {
   return (
     <ReactSafeWrapper>
-      <QueryClientProvider client={queryClient}>
-        <AppErrorBoundary>
-          <BulletproofAuthProvider>
-            <div className="min-h-screen bg-background text-foreground">
-              <SafeRouter>
-                <CleanLanguageAwareRouter />
-                <Toaster />
-                <Sonner />
-              </SafeRouter>
-            </div>
-          </BulletproofAuthProvider>
-        </AppErrorBoundary>
-      </QueryClientProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <AppErrorBoundary>
+            <BulletproofAuthProvider>
+              <div className="min-h-screen bg-background text-foreground">
+                <SafeRouter>
+                  <CleanLanguageAwareRouter />
+                  <Toaster />
+                  <Sonner />
+                </SafeRouter>
+              </div>
+            </BulletproofAuthProvider>
+          </AppErrorBoundary>
+        </QueryClientProvider>
+      </ThemeProvider>
     </ReactSafeWrapper>
   );
 };
