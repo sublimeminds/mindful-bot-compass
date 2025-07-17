@@ -104,12 +104,40 @@ export class LanguageRouter {
   static shouldRedirectForLanguage(currentPath: string, preferredLanguage: string): string | null {
     const { language: currentLang, cleanPath } = this.extractLanguageFromPath(currentPath);
     
-    // If languages are different, suggest redirect
-    if (currentLang !== preferredLanguage) {
-      return this.generateLanguageUrl(cleanPath, preferredLanguage);
+    // Don't redirect if already on preferred language, if it's the default, or if user dismissed
+    if (currentLang === preferredLanguage || 
+        preferredLanguage === 'en' || 
+        sessionStorage.getItem('language-redirect-dismissed')) {
+      return null;
     }
     
-    return null;
+    // Generate the redirect URL
+    return this.generateLanguageUrl(cleanPath, preferredLanguage);
+  }
+
+  // Method to dismiss language suggestions
+  static dismissLanguageSuggestion() {
+    sessionStorage.setItem('language-redirect-dismissed', 'true');
+    sessionStorage.removeItem('language-suggestion');
+  }
+
+  // Method to get current language suggestion
+  static getLanguageSuggestion() {
+    const suggestion = sessionStorage.getItem('language-suggestion');
+    if (!suggestion) return null;
+    
+    try {
+      const parsed = JSON.parse(suggestion);
+      // Expire suggestions after 24 hours
+      if (Date.now() - parsed.timestamp > 24 * 60 * 60 * 1000) {
+        sessionStorage.removeItem('language-suggestion');
+        return null;
+      }
+      return parsed;
+    } catch {
+      sessionStorage.removeItem('language-suggestion');
+      return null;
+    }
   }
 
   // Save language preference
@@ -161,17 +189,14 @@ export class LanguageRouter {
     // Update HTML lang attribute
     document.documentElement.lang = preferredLang;
     
-    // Auto-redirect if needed (only for first visit)
-    if (suggestedRedirect && !sessionStorage.getItem('language-redirect-shown')) {
-      const userWantsRedirect = window.confirm(
-        `Would you like to view this page in ${SUPPORTED_LANGUAGES.find(l => l.code === preferredLang)?.name}?`
-      );
-      
-      if (userWantsRedirect) {
-        window.location.href = suggestedRedirect;
-      }
-      
-      sessionStorage.setItem('language-redirect-shown', 'true');
+    // Store language suggestion for banner display (non-intrusive)
+    if (suggestedRedirect && !sessionStorage.getItem('language-redirect-dismissed')) {
+      // Don't show automatic prompts, let components handle the UI
+      sessionStorage.setItem('language-suggestion', JSON.stringify({
+        suggestedLanguage: preferredLang,
+        suggestedRedirect,
+        timestamp: Date.now()
+      }));
     }
     
     return {

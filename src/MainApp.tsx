@@ -15,6 +15,10 @@ import ReactSafeWrapper from '@/components/ReactSafeWrapper';
 // Main App Router
 import { CleanLanguageAwareRouter } from '@/components/seo/CleanLanguageAwareRouter';
 
+// Language Banner
+import LanguageBanner from '@/components/ui/LanguageBanner';
+import { useLanguageBanner } from '@/hooks/useLanguageBanner';
+
 // Use the bulletproof theme that doesn't use React hooks
 import { ThemeProvider } from '@/utils/BulletproofTheme';
 
@@ -40,6 +44,8 @@ const queryClient = new QueryClient({
 });
 
 const MainApp: React.FC = () => {
+  const { showBanner, suggestedLanguage, dismissBanner, switchLanguage } = useLanguageBanner();
+
   return (
     <ReactSafeWrapper>
       <ThemeProvider>
@@ -47,6 +53,12 @@ const MainApp: React.FC = () => {
           <AppErrorBoundary>
             <BulletproofAuthProvider>
               <div className="min-h-screen bg-background text-foreground">
+                <LanguageBanner
+                  isVisible={showBanner}
+                  onDismiss={dismissBanner}
+                  onSwitch={switchLanguage}
+                  suggestedLanguage={suggestedLanguage}
+                />
                 <SafeRouter>
                   <CleanLanguageAwareRouter />
                   <Toaster />
