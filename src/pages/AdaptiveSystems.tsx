@@ -522,7 +522,7 @@ const AdaptiveSystemsPage = () => {
                   </div>
                   <div className="bg-harmony-100 p-3 rounded-lg">
                     <p className="text-xs text-harmony-700 text-center font-medium">
-                      Enhanced experience for professionals
+                      Maximum AI intelligence for comprehensive care
                     </p>
                   </div>
                 </CardContent>
@@ -717,7 +717,101 @@ const AdaptiveSystemsPage = () => {
                 </div>
               </Card>
               
-              <Card className="text-center p-8 bg-gradient-to-br from-harmony-50 to-white border-harmony-200 shadow-lg">
+               {/* Crisis Features & Interconnected Systems */}
+               <Card className="col-span-full bg-gradient-to-br from-red-50 to-orange-50 border-red-200 shadow-lg">
+                <div className="p-8">
+                  <div className="text-center mb-8">
+                    <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <Shield className="h-10 w-10 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-red-800 mb-4">Crisis Detection & Comprehensive Care</h3>
+                    <p className="text-red-700 max-w-3xl mx-auto">
+                      Our adaptive AI continuously monitors for crisis indicators while seamlessly integrating 50+ mental health approaches, cultural adaptations, and therapeutic techniques.
+                    </p>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div className="text-center bg-white p-6 rounded-lg border border-red-200">
+                      <div className="text-3xl font-bold text-red-600 mb-2">50+</div>
+                      <div className="text-sm text-red-700">Therapy Approaches</div>
+                      <div className="text-xs text-red-600 mt-1">CBT, DBT, EMDR, & more</div>
+                    </div>
+                    <div className="text-center bg-white p-6 rounded-lg border border-orange-200">
+                      <div className="text-3xl font-bold text-orange-600 mb-2">100+</div>
+                      <div className="text-sm text-orange-700">Cultural Adaptations</div>
+                      <div className="text-xs text-orange-600 mt-1">Global perspectives</div>
+                    </div>
+                    <div className="text-center bg-white p-6 rounded-lg border border-red-200">
+                      <div className="text-3xl font-bold text-red-600 mb-2">24/7</div>
+                      <div className="text-sm text-red-700">Crisis Monitoring</div>
+                      <div className="text-xs text-red-600 mt-1">Real-time detection</div>
+                    </div>
+                    <div className="text-center bg-white p-6 rounded-lg border border-orange-200">
+                      <div className="text-3xl font-bold text-orange-600 mb-2">200+</div>
+                      <div className="text-sm text-orange-700">Techniques</div>
+                      <div className="text-xs text-orange-600 mt-1">Interconnected systems</div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-red-800">Crisis Detection Features</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                          <div>
+                            <div className="font-medium text-red-800">Language Pattern Analysis</div>
+                            <div className="text-sm text-red-700">Real-time monitoring of conversation for crisis indicators</div>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                          <div>
+                            <div className="font-medium text-red-800">Automatic Escalation</div>
+                            <div className="text-sm text-red-700">Instant connection to crisis counselors and emergency resources</div>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                          <div>
+                            <div className="font-medium text-red-800">Safety Protocols</div>
+                            <div className="text-sm text-red-700">Immediate safety measures and intervention strategies</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-orange-800">Interconnected Systems</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="h-5 w-5 text-orange-600 mt-0.5" />
+                          <div>
+                            <div className="font-medium text-orange-800">Cultural AI Integration</div>
+                            <div className="text-sm text-orange-700">Adapts approaches based on cultural background and values</div>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="h-5 w-5 text-orange-600 mt-0.5" />
+                          <div>
+                            <div className="font-medium text-orange-800">Multi-Modal Therapy</div>
+                            <div className="text-sm text-orange-700">Seamlessly combines multiple therapeutic approaches</div>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="h-5 w-5 text-orange-600 mt-0.5" />
+                          <div>
+                            <div className="font-medium text-orange-800">Holistic Care</div>
+                            <div className="text-sm text-orange-700">All systems work together for comprehensive support</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               </Card>
+               
+               <Card className="text-center p-8 bg-gradient-to-br from-harmony-50 to-white border-harmony-200 shadow-lg">
                 <div className="w-16 h-16 bg-gradient-to-br from-harmony-500 to-harmony-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                   <Headphones className="h-8 w-8 text-white" />
                 </div>
