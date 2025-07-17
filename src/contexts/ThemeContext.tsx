@@ -23,14 +23,9 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  // Add React validation
-  if (!React || typeof React.useState !== 'function') {
-    console.error('React is not properly initialized');
-    return <>{children}</>;
-  }
-
-  const [theme, setThemeState] = React.useState<Theme>(() => {
+  const [theme, setThemeState] = useState<Theme>(() => {
     try {
+      if (typeof window === 'undefined') return 'light';
       const stored = localStorage.getItem('app-theme');
       if (stored === 'light' || stored === 'dark') {
         return stored;
@@ -51,7 +46,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
     const root = document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
