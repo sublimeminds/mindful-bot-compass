@@ -21,11 +21,7 @@ export default defineConfig(({ mode }) => {
         overlay: false,
         clientPort: 8080,
         port: 8080
-      },
-      // Simple development cache disabling
-      headers: mode === 'development' ? {
-        'Cache-Control': 'no-cache'
-      } : {}
+      }
     },
     esbuild: {
       drop: mode === 'production' ? ['console', 'debugger'] : [],
@@ -52,7 +48,7 @@ export default defineConfig(({ mode }) => {
     },
     optimizeDeps: {
       include: ['react', 'react-dom'],
-      force: false
+      force: true
     },
     define: {
       global: 'globalThis',
@@ -63,14 +59,15 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: isElectron ? undefined : {
             vendor: ['react', 'react-dom'],
-            router: ['react-router-dom'],
             ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
           }
         }
       },
       outDir: 'dist',
       assetsDir: 'assets',
-      sourcemap: mode === 'development',
+      sourcemap: false,
+      minify: 'esbuild',
+      chunkSizeWarningLimit: 1000
     }
   };
 });
