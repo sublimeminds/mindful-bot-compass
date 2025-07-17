@@ -2,17 +2,100 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 
-// Essential bulletproof React check BEFORE anything else
-if (!React || typeof React.createElement !== 'function') {
-  console.error('CRITICAL: React is not properly loaded');
-  window.location.reload();
+// === ENHANCED React Module Safety Check ===
+const verifyReactModules = () => {
+  console.log('🔍 SAFETY: Verifying React modules...');
+  
+  // Check React object existence and structure
+  if (typeof React === 'undefined' || !React || typeof React !== 'object') {
+    console.error('CRITICAL: React object is not available');
+    return false;
+  }
+
+  // Check essential React methods
+  const requiredMethods = ['createElement', 'Fragment', 'Component'];
+  for (const method of requiredMethods) {
+    if (!React[method] || typeof React[method] !== 'function') {
+      console.error(`CRITICAL: React.${method} is not available`);
+      return false;
+    }
+  }
+
+  // Check React hooks with detailed verification
+  const requiredHooks = ['useState', 'useEffect', 'useContext', 'useRef', 'useMemo'];
+  for (const hook of requiredHooks) {
+    if (!React[hook] || typeof React[hook] !== 'function') {
+      console.error(`CRITICAL: React.${hook} is not available or not a function`);
+      return false;
+    }
+  }
+
+  console.log('✅ SAFETY: React modules verified successfully');
+  return true;
+};
+
+// Clear any potentially cached modules that could cause conflicts
+const clearStaleModules = () => {
+  try {
+    // Clear module cache keys that might interfere
+    const moduleKeys = Object.keys(window).filter(key => 
+      key.includes('theme') || key.includes('Theme') || key.includes('context')
+    );
+    moduleKeys.forEach(key => {
+      try {
+        delete (window as any)[key];
+      } catch (e) {
+        // Ignore deletion errors
+      }
+    });
+  } catch (error) {
+    console.warn('Module cleanup warning:', error);
+  }
+};
+
+// Enhanced safety check with retry mechanism
+let reactVerificationAttempts = 0;
+const maxVerificationAttempts = 3;
+
+const ensureReactSafety = () => {
+  reactVerificationAttempts++;
+  
+  if (!verifyReactModules()) {
+    if (reactVerificationAttempts < maxVerificationAttempts) {
+      console.warn(`React verification failed, attempt ${reactVerificationAttempts}/${maxVerificationAttempts}. Clearing cache and retrying...`);
+      clearStaleModules();
+      setTimeout(ensureReactSafety, 100);
+      return false;
+    } else {
+      console.error('CRITICAL: React verification failed after multiple attempts. Forcing page reload...');
+      clearStaleModules();
+      window.location.reload();
+      throw new Error('React not available after multiple verification attempts');
+    }
+  }
+  
+  return true;
+};
+
+// Initial safety check with module clearing
+clearStaleModules();
+if (!ensureReactSafety()) {
+  throw new Error('React safety check failed');
 }
 
 import AppSelector from './AppSelector.tsx';
 import './index.css';
 
+// Import module cleanup utility
+import { clearDevelopmentCache } from '@/utils/moduleCleanup';
+
 // Import the safeguard AFTER React is confirmed to be working
 import '@/utils/lovableTaggerSafeGuard';
+
+// Clear development cache to prevent stale modules
+if (import.meta.env.DEV) {
+  clearDevelopmentCache();
+}
 
 // Minimal lovable-tagger initialization
 const initializeLovableTagger = () => {
@@ -61,27 +144,37 @@ console.log('🔍 Debug: Main loading with clean React state');
 
 // Clean error handling without theme-specific interception
 if (typeof window !== 'undefined') {
-  // Enhanced React module verification
-  const verifyReactModule = () => {
-    if (!React || typeof React.createElement !== 'function' || typeof React.useState !== 'function') {
-      console.error('CRITICAL: React module verification failed');
-      return false;
+  // Force browser cache clearing for stale modules
+  const clearBrowserCache = () => {
+    try {
+      // Clear service worker cache if present
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          registrations.forEach(registration => registration.unregister());
+        });
+      }
+      
+      // Clear any cached theme data
+      try {
+        localStorage.removeItem('bulletproof-theme');
+        sessionStorage.clear();
+      } catch (e) {
+        // Ignore storage errors
+      }
+      
+      // Add cache-busting to module loading
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'script';
+      link.href = `/src/utils/BulletproofTheme.tsx?v=${Date.now()}`;
+      document.head.appendChild(link);
+      
+    } catch (error) {
+      console.warn('Cache clearing warning:', error);
     }
-    return true;
   };
 
-  // Delayed rendering to ensure React is fully loaded
-  if (!verifyReactModule()) {
-    console.log('⏳ Waiting for React to fully load...');
-    setTimeout(() => {
-      if (verifyReactModule()) {
-        console.log('✅ React module loaded successfully');
-      } else {
-        console.error('❌ React module failed to load properly - reloading');
-        window.location.reload();
-      }
-    }, 100);
-  }
+  clearBrowserCache();
 
   // Simple error boundary for unhandled errors
   window.addEventListener('error', (event) => {
@@ -100,16 +193,41 @@ console.log('🔍 React state before render:', {
   version: React?.version
 });
 
-// Final React safety check before render
-if (!React || typeof React.createElement !== 'function' || typeof React.useState !== 'function') {
-  console.error('CRITICAL: React is incomplete before render');
-  window.location.reload();
-} else {
-  console.log('✅ React is ready for render');
+// Final comprehensive React safety check before render
+const finalReactCheck = () => {
+  const issues = [];
   
-  root.render(
-    <React.StrictMode>
-      <AppSelector />
-    </React.StrictMode>
-  );
+  if (!React) issues.push('React object missing');
+  if (typeof React.createElement !== 'function') issues.push('createElement missing');
+  if (typeof React.useState !== 'function') issues.push('useState missing');
+  if (typeof React.useEffect !== 'function') issues.push('useEffect missing');
+  
+  if (issues.length > 0) {
+    console.error('CRITICAL: React incomplete before render:', issues);
+    clearStaleModules();
+    window.location.reload();
+    return false;
+  }
+  
+  return true;
+};
+
+if (finalReactCheck()) {
+  console.log('✅ React is ready for render - all checks passed');
+  
+  // Render with additional error boundary protection
+  try {
+    root.render(
+      <React.StrictMode>
+        <AppSelector />
+      </React.StrictMode>
+    );
+    console.log('✅ Application rendered successfully');
+  } catch (renderError) {
+    console.error('🚨 Render error:', renderError);
+    clearStaleModules();
+    setTimeout(() => window.location.reload(), 100);
+  }
+} else {
+  console.error('❌ Final React check failed');
 }

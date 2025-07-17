@@ -1,7 +1,8 @@
-// BULLETPROOF THEME SYSTEM - PURE JAVASCRIPT VERSION
-// No React dependencies - prevents useState errors during initialization
+// BULLETPROOF THEME SYSTEM - ZERO REACT DEPENDENCIES
+// Absolutely no React imports or hooks to prevent useState errors
+// Pure JavaScript implementation with immediate DOM manipulation
 
-console.log('🛡️ BULLETPROOF: Loading pure JavaScript theme system');
+console.log('🛡️ BULLETPROOF: Loading zero-dependency theme system...');
 
 const THEME_KEY = 'bulletproof-theme';
 type Theme = 'light' | 'dark';
@@ -47,10 +48,19 @@ export const toggleTheme = () => {
   setTheme(globalTheme === 'light' ? 'dark' : 'light');
 };
 
-// ZERO React components - just return children
+// ZERO React dependencies - pure passthrough component
 export const ThemeProvider = ({ children }: any) => {
-  console.log('🛡️ BULLETPROOF ThemeProvider: No React hooks, just children');
-  initializeBulletproofTheme(); // Ensure theme is applied
+  console.log('🛡️ BULLETPROOF ThemeProvider: Zero React dependencies, pure passthrough');
+  
+  // Apply theme immediately without any React lifecycle
+  try {
+    initializeBulletproofTheme();
+  } catch (error) {
+    console.warn('Theme initialization warning:', error);
+    // Continue even if theme fails - don't break the app
+  }
+  
+  // Return children directly without any React processing
   return children;
 };
 
