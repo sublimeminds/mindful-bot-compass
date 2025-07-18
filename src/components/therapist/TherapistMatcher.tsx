@@ -69,7 +69,7 @@ const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches, ass
     },
     {
       id: '0772c602-306b-42ad-b610-2dc15ba06714',
-      name: 'Dr. Alex Rodriguez',
+      name: 'Dr. Marcus Bennett',
       specialties: ['Goal Setting', 'Personal Growth', 'Motivation'],
       approach: 'Solution-Focused Therapy',
       matchScore: 84,
@@ -78,7 +78,7 @@ const TherapistMatcher = ({ onTherapistSelected, onClose, assessmentMatches, ass
       totalReviews: 76,
       description: 'Concentrates on finding solutions and building on existing strengths.',
       communicationStyle: 'Encouraging and action-oriented',
-      culturalCompetencies: ['Hispanic/Latino cultures', 'Career and life transitions'],
+      culturalCompetencies: ['African American cultures', 'Career and life transitions'],
       sessionStyle: 'Goal-focused with practical exercises',
       personalityType: 'Motivational and pragmatic'
     },

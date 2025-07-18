@@ -6,42 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Bot, User, Play, Pause, RotateCcw, MessageSquare, Volume2, VolumeX } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-
-const demoConversation = [
-  {
-    role: 'user',
-    message: "I've been feeling really anxious about work lately.",
-    delay: 1000
-  },
-  {
-    role: 'ai',
-    message: "I understand that work anxiety can be overwhelming. It's completely normal to feel this way, and I'm here to help you work through it. Can you tell me what specific aspects of work are causing you the most stress?",
-    delay: 2500,
-    shouldSpeak: true
-  },
-  {
-    role: 'user',
-    message: "I have a big presentation next week and I keep worrying about messing up in front of my colleagues.",
-    delay: 2000
-  },
-  {
-    role: 'ai',
-    message: "Presentation anxiety is very common - you're definitely not alone in feeling this way. Let's work through some techniques to help manage these feelings. First, let's try a quick grounding exercise. Can you name 3 things you can see around you right now?",
-    delay: 3000,
-    shouldSpeak: true
-  },
-  {
-    role: 'user',
-    message: "I can see my laptop, a coffee cup, and a plant on my desk.",
-    delay: 1500
-  },
-  {
-    role: 'ai',
-    message: "Great! Now let's build on that success. Preparation is key to reducing presentation anxiety. Have you started preparing your presentation content yet? We can work together on a preparation strategy that will boost your confidence.",
-    delay: 2800,
-    shouldSpeak: true
-  }
-];
+import { getTherapistDemoConversation } from '@/utils/therapistDemoConversations';
 
 interface InteractiveChatDemoProps {
   autoStart?: boolean;
@@ -54,11 +19,14 @@ const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = ({
 }) => {
   const [currentMessage, setCurrentMessage] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoStart);
-  const [displayedMessages, setDisplayedMessages] = useState<typeof demoConversation>([]);
+  const [displayedMessages, setDisplayedMessages] = useState<any[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
   const { toast } = useToast();
+
+  // Get therapist-specific conversation
+  const demoConversation = getTherapistDemoConversation(therapistId);
 
   const speakMessage = async (text: string) => {
     if (!voiceEnabled) return;

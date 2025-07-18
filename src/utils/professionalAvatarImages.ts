@@ -53,7 +53,7 @@ export const professionalAvatarImages = {
   'dr-emma-thompson': drEmmaThompsonImg,
   '88a93e17-4338-4834-b360-55c9db4cc667': drEmmaThompsonImg,
   
-  'dr-james-rodriguez': drJamesRodriguezImg,
+  'dr-james-martinez': drJamesRodriguezImg,
   '1588e859-69a6-4b88-b2cc-c377441ac08c': drJamesRodriguezImg,
   
   // Additional therapists with unique avatars

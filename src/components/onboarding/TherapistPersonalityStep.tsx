@@ -46,7 +46,7 @@ const therapistPersonalities: TherapistPersonality[] = [
   },
   {
     id: 'solution-focused',
-    name: 'Dr. Alex Rodriguez',
+    name: 'Dr. Marcus Bennett',
     title: 'Solution-Focused Therapist',
     description: 'Concentrates on finding solutions and building on existing strengths.',
     approach: 'Optimistic, strength-based, future-focused',
