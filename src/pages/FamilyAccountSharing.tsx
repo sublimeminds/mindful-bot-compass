@@ -49,49 +49,55 @@ const FamilyAccountSharing = () => {
 
   const plans = [
     {
-      name: "Family Starter",
-      members: "Up to 4 members",
-      price: "$29",
+      name: "Family Essential",
+      members: "Up to 4 family members",
+      price: "$39",
       period: "/month",
       features: [
-        "Basic parental controls",
-        "Shared progress tracking",
-        "Individual therapy sessions",
+        "4 individual therapy profiles",
+        "Basic parental monitoring",
+        "Shared progress dashboard",
         "Family milestone tracking",
-        "Basic analytics dashboard",
-        "Email support"
+        "Standard AI therapist personalities",
+        "Basic mood tracking",
+        "Email support",
+        "Mobile app access"
       ],
       popular: false
     },
     {
-      name: "Family Pro",
-      members: "Up to 6 members",
-      price: "$49",
+      name: "Family Professional",
+      members: "Up to 6 family members",
+      price: "$69",
       period: "/month",
       features: [
+        "6 individual therapy profiles",
         "Advanced parental controls",
         "Real-time family insights",
+        "Crisis intervention alerts",
+        "All AI therapist personalities",
         "Group therapy sessions",
-        "Crisis support integration",
         "Advanced analytics & reports",
         "24/7 priority support",
-        "Family coaching sessions"
+        "Family coaching resources"
       ],
       popular: true
     },
     {
       name: "Family Enterprise",
-      members: "Unlimited members",
-      price: "$89",
+      members: "Unlimited family members",
+      price: "$129",
       period: "/month",
       features: [
-        "Enterprise-grade security",
+        "Unlimited therapy profiles",
+        "Enterprise security controls",
         "Custom family programs",
         "Dedicated family coordinator",
-        "White-label solutions",
-        "API access",
+        "White-label family portal",
+        "Advanced API access",
         "Custom integrations",
-        "On-premise deployment"
+        "On-premise deployment options",
+        "Priority crisis response team"
       ],
       popular: false
     }

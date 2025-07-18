@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -139,8 +138,7 @@ const CrisisSupport = () => {
   ];
 
   return (
-    <PageLayout>
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-therapy-50">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-therapy-50">
         {/* Emergency Banner */}
         <div className="bg-red-600 text-white py-4">
           <div className="container mx-auto px-4">
@@ -315,8 +313,7 @@ const CrisisSupport = () => {
           </div>
         </section>
       </div>
-    </PageLayout>
-  );
+    );
 };
 
 export default CrisisSupport;

@@ -1,99 +1,62 @@
-import React from 'react';
-import { Users, Brain, Heart, Shield, Star, Zap, Palette, Mic, Camera, Video, MessageSquare, Target, Compass, Globe, Award, Sparkles, ArrowRight, Check, Play, ChevronDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Users, Brain, Heart, Shield, Star, Zap, Palette, Mic, Camera, Video, MessageSquare, Target, Compass, Globe, Award, Sparkles, ArrowRight, Check, Play, ChevronDown, Clock, Languages, Headphones } from 'lucide-react';
+import UltraSafeAvatarDisplay from '@/components/avatar/UltraSafeAvatarDisplay';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 const AITherapistTeam = () => {
-  const therapists = [
-    {
-      name: "Dr. Sarah Chen",
-      specialty: "Cognitive Behavioral Therapy",
-      description: "Leading expert in anxiety, depression, and thought pattern restructuring with 15+ years of experience",
-      icon: Brain,
-      gradient: "from-blue-500 to-indigo-600",
-      features: ["Anxiety Management", "Depression Support", "CBT Techniques", "Cognitive Restructuring"],
-      sessions: "2,847",
-      rating: "4.9"
+  const [selectedTherapist, setSelectedTherapist] = useState<any>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // Fetch real therapists from database
+  const { data: therapistData = [], isLoading } = useQuery({
+    queryKey: ['ai-therapist-team'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('therapist_personalities')
+        .select('*')
+        .eq('is_active', true);
+
+      if (error) {
+        console.error('Error fetching therapists:', error);
+        throw error;
+      }
+
+      return data.map(therapist => ({
+        id: therapist.id,
+        name: therapist.name,
+        title: therapist.title,
+        approach: therapist.approach,
+        description: therapist.description,
+        specialties: therapist.specialties || [],
+        communicationStyle: therapist.communication_style,
+        experienceLevel: therapist.experience_level,
+        colorScheme: therapist.color_scheme,
+        avatarId: getAvatarIdForTherapist(therapist.id),
+        personalityTraits: therapist.personality_traits || {},
+        effectivenessAreas: therapist.effectiveness_areas || {},
+        yearsExperience: therapist.years_experience || 5,
+        education: therapist.education || [],
+        therapeuticTechniques: therapist.therapeutic_techniques || [],
+        voiceCharacteristics: therapist.voice_characteristics || "Professional, supportive, clear voice",
+        languages: ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Japanese', 'Chinese', 'Korean'],
+        crisisSupport: therapist.experience_level === 'Expert' ? 'Advanced 24/7 Crisis Support' : 'Standard Crisis Support',
+        availabilityHours: '24/7',
+        aiModel: 'TherapySync AI Enterprise',
+        responseTime: '<2 seconds',
+        memoryRetention: 'Perfect session recall across all conversations',
+        culturalIntelligence: 'Advanced multicultural therapeutic competency'
+      }));
     },
-    {
-      name: "Dr. Marcus Johnson",
-      specialty: "Dialectical Behavior Therapy",
-      description: "Specialist in emotional regulation and interpersonal effectiveness with advanced DBT certification",
-      icon: Heart,
-      gradient: "from-red-500 to-pink-600",
-      features: ["Emotional Regulation", "Crisis Management", "Mindfulness", "Interpersonal Skills"],
-      sessions: "2,394",
-      rating: "4.8"
-    },
-    {
-      name: "Dr. Elena Rodriguez",
-      specialty: "Trauma-Focused Therapy",
-      description: "Expert in PTSD, trauma recovery, and resilience building with specialized trauma training",
-      icon: Shield,
-      gradient: "from-emerald-500 to-teal-600",
-      features: ["PTSD Treatment", "Trauma Recovery", "EMDR Therapy", "Resilience Building"],
-      sessions: "1,956",
-      rating: "4.9"
-    },
-    {
-      name: "Dr. Alex Kim",
-      specialty: "Mindfulness-Based Therapy",
-      description: "Master practitioner of present-moment awareness and acceptance-based therapeutic approaches",
-      icon: Star,
-      gradient: "from-amber-500 to-orange-600",
-      features: ["Mindfulness Training", "Meditation Guidance", "Stress Reduction", "Present Awareness"],
-      sessions: "3,127",
-      rating: "4.8"
-    },
-    {
-      name: "Dr. Priya Patel",
-      specialty: "Family Systems Therapy",
-      description: "Renowned expert in relationship dynamics, family counseling, and systemic therapeutic approaches",
-      icon: Users,
-      gradient: "from-purple-500 to-violet-600",
-      features: ["Family Counseling", "Relationship Therapy", "Communication Skills", "Family Dynamics"],
-      sessions: "1,743",
-      rating: "4.9"
-    },
-    {
-      name: "Dr. James Wright",
-      specialty: "Solution-Focused Therapy",
-      description: "Pioneer in goal-setting and rapid therapeutic interventions with proven success methodologies",
-      icon: Target,
-      gradient: "from-cyan-500 to-blue-600",
-      features: ["Goal Achievement", "Rapid Results", "Solution Building", "Brief Therapy"],
-      sessions: "2,651",
-      rating: "4.8"
-    },
-    {
-      name: "Dr. Maya Singh",
-      specialty: "Multicultural Therapy",
-      description: "Expert in culturally responsive therapy with deep understanding of diverse backgrounds",
-      icon: Globe,
-      gradient: "from-rose-500 to-pink-600",
-      features: ["Cultural Sensitivity", "Diverse Perspectives", "Identity Support", "Cross-Cultural Care"],
-      sessions: "1,892",
-      rating: "4.9"
-    },
-    {
-      name: "Dr. David Lee",
-      specialty: "Art & Creative Therapy",
-      description: "Innovative therapist using creative expression and artistic modalities for healing",
-      icon: Palette,
-      gradient: "from-indigo-500 to-purple-600",
-      features: ["Creative Expression", "Art Therapy", "Music Therapy", "Creative Healing"],
-      sessions: "1,567",
-      rating: "4.7"
-    },
-    {
-      name: "Dr. Lisa Thompson",
-      specialty: "Group & Community Therapy",
-      description: "Specialist in group dynamics and community-based therapeutic interventions",
-      icon: Sparkles,
-      gradient: "from-green-500 to-emerald-600",
-      features: ["Group Sessions", "Peer Support", "Community Building", "Social Connection"],
-      sessions: "2,238",
-      rating: "4.8"
-    }
-  ];
+  });
+
+  const openTherapistModal = (therapist: any) => {
+    setSelectedTherapist(therapist);
+    setModalOpen(true);
+  };
 
   const features = [
     {
@@ -119,7 +82,7 @@ const AITherapistTeam = () => {
   ];
 
   const stats = [
-    { label: "Active Therapists", value: "9", suffix: "" },
+    { label: "Active Therapists", value: therapistData.length.toString(), suffix: "" },
     { label: "Therapy Sessions", value: "18.4K", suffix: "+" },
     { label: "Success Rate", value: "94", suffix: "%" },
     { label: "Patient Satisfaction", value: "4.8", suffix: "/5" }
@@ -201,49 +164,81 @@ const AITherapistTeam = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-          {therapists.map((therapist, index) => (
-            <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-border hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
-              <div className="relative mb-6">
-                <div className={`w-16 h-16 bg-gradient-to-r ${therapist.gradient} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <therapist.icon className="h-8 w-8 text-white" />
-                </div>
-                <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  Online
-                </div>
-              </div>
-              
-              <h3 className="text-xl font-bold text-foreground mb-2">{therapist.name}</h3>
-              <p className="text-therapy-600 font-medium text-sm mb-3">{therapist.specialty}</p>
-              <p className="text-muted-foreground text-sm mb-4 leading-relaxed">{therapist.description}</p>
-              
-              <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  <span className="font-medium">{therapist.rating}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Users className="h-4 w-4" />
-                  <span>{therapist.sessions} sessions</span>
-                </div>
-              </div>
-
-              <div className="space-y-2 mb-6">
-                {therapist.features.map((feature, idx) => (
-                  <div key={idx} className="flex items-center gap-2 text-sm">
-                    <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-                    <span className="text-muted-foreground">{feature}</span>
+        {isLoading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading AI therapists...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+            {therapistData.map((therapist) => (
+              <div key={therapist.id} className="bg-white rounded-2xl p-6 shadow-sm border border-border hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
+                <div className="relative mb-6">
+                  {/* 2D Avatar Display */}
+                  <div className="w-24 h-24 mx-auto mb-4 cursor-pointer" onClick={() => openTherapistModal(therapist)}>
+                    <UltraSafeAvatarDisplay
+                      therapist={{
+                        id: therapist.avatarId,
+                        name: therapist.name
+                      }}
+                      className="w-full h-full"
+                      size="lg"
+                      showName={false}
+                    />
                   </div>
-                ))}
-              </div>
+                  <div className="absolute -top-2 -right-8 bg-green-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    Online
+                  </div>
+                </div>
+                
+                <h3 className="text-xl font-bold text-foreground mb-2">{therapist.name}</h3>
+                <p className="text-therapy-600 font-medium text-sm mb-1">{therapist.title}</p>
+                <p className="text-blue-600 font-medium text-sm mb-3">{therapist.approach}</p>
+                <p className="text-muted-foreground text-sm mb-4 leading-relaxed line-clamp-3">{therapist.description}</p>
+                
+                <div className="flex flex-wrap gap-1 mb-4">
+                  {therapist.specialties.slice(0, 3).map((specialty: string, idx: number) => (
+                    <Badge key={idx} variant="outline" className="text-xs">
+                      {specialty}
+                    </Badge>
+                  ))}
+                  {therapist.specialties.length > 3 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{therapist.specialties.length - 3} more
+                    </Badge>
+                  )}
+                </div>
 
-              <button className="w-full bg-gradient-to-r from-therapy-500 to-blue-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 group-hover:scale-105">
-                Start Session
-              </button>
-            </div>
-          ))}
-        </div>
+                <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    <span>24/7</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Languages className="h-4 w-4" />
+                    <span>10+ languages</span>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <button 
+                    onClick={() => openTherapistModal(therapist)}
+                    className="w-full bg-gradient-to-r from-therapy-500 to-blue-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 group-hover:scale-105"
+                  >
+                    Start Session
+                  </button>
+                  <button 
+                    onClick={() => openTherapistModal(therapist)}
+                    className="w-full bg-white border border-therapy-200 text-therapy-600 py-2 rounded-xl font-medium hover:bg-therapy-50 transition-all duration-300"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* CTA Section */}
         <div className="relative bg-gradient-to-r from-therapy-600 via-blue-600 to-indigo-600 rounded-3xl p-12 text-center text-white overflow-hidden">
@@ -266,6 +261,131 @@ const AITherapistTeam = () => {
           </div>
         </div>
       </div>
+
+      {/* Therapist Details Modal */}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedTherapist && (
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold mb-4">
+                {selectedTherapist.name} - {selectedTherapist.title}
+              </DialogTitle>
+            </DialogHeader>
+          )}
+          
+          {selectedTherapist && (
+            <div className="space-y-6">
+              {/* Avatar and Basic Info */}
+              <div className="flex items-start gap-6">
+                <div className="w-32 h-32 flex-shrink-0">
+                  <UltraSafeAvatarDisplay
+                    therapist={{
+                      id: selectedTherapist.avatarId,
+                      name: selectedTherapist.name
+                    }}
+                    className="w-full h-full"
+                    size="xl"
+                    showName={false}
+                  />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold mb-2">{selectedTherapist.approach}</h3>
+                  <p className="text-muted-foreground mb-4">{selectedTherapist.description}</p>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="font-medium">Experience:</span> {selectedTherapist.experienceLevel}
+                    </div>
+                    <div>
+                      <span className="font-medium">Availability:</span> {selectedTherapist.availabilityHours}
+                    </div>
+                    <div>
+                      <span className="font-medium">Response Time:</span> {selectedTherapist.responseTime}
+                    </div>
+                    <div>
+                      <span className="font-medium">Crisis Support:</span> {selectedTherapist.crisisSupport}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Specialties */}
+              <div>
+                <h4 className="font-semibold mb-3">Specialties & Areas of Focus</h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedTherapist.specialties.map((specialty: string, idx: number) => (
+                    <Badge key={idx} variant="outline" className="bg-therapy-50">
+                      {specialty}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Therapeutic Techniques */}
+              <div>
+                <h4 className="font-semibold mb-3">Therapeutic Techniques</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {selectedTherapist.therapeuticTechniques.map((technique: string, idx: number) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-green-500" />
+                      <span className="text-sm">{technique}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* AI Capabilities */}
+              <div>
+                <h4 className="font-semibold mb-3">AI Capabilities</h4>
+                <div className="bg-gradient-to-r from-therapy-50 to-blue-50 p-4 rounded-lg">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="font-medium">AI Model:</span> {selectedTherapist.aiModel}
+                    </div>
+                    <div>
+                      <span className="font-medium">Memory:</span> {selectedTherapist.memoryRetention}
+                    </div>
+                    <div>
+                      <span className="font-medium">Cultural Intelligence:</span> {selectedTherapist.culturalIntelligence}
+                    </div>
+                    <div>
+                      <span className="font-medium">Voice Support:</span> {selectedTherapist.voiceCharacteristics}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Languages */}
+              <div>
+                <h4 className="font-semibold mb-3">Supported Languages</h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedTherapist.languages.slice(0, 8).map((language: string, idx: number) => (
+                    <Badge key={idx} variant="secondary" className="text-xs">
+                      {language}
+                    </Badge>
+                  ))}
+                  {selectedTherapist.languages.length > 8 && (
+                    <Badge variant="secondary" className="text-xs">
+                      +{selectedTherapist.languages.length - 8} more
+                    </Badge>
+                  )}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-4 pt-4 border-t">
+                <button className="flex-1 bg-gradient-to-r from-therapy-600 to-blue-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300">
+                  Start Session with {selectedTherapist.name}
+                </button>
+                <button className="px-6 bg-white border border-therapy-200 text-therapy-600 py-3 rounded-xl font-medium hover:bg-therapy-50 transition-all duration-300 flex items-center gap-2">
+                  <Headphones className="h-4 w-4" />
+                  Voice Preview
+                </button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
