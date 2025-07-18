@@ -26,31 +26,35 @@ const DataExport = () => {
   const exportFormats = [
     {
       icon: FileText,
-      title: "PDF Reports",
-      description: "Comprehensive therapy reports in professional PDF format for healthcare providers",
-      features: ["Clinical summaries", "Progress charts", "Secure sharing", "Print-ready"],
-      badge: "Popular"
+      title: "Clinical PDF Reports",
+      description: "Professional therapy reports in PDF format for healthcare providers and personal records",
+      features: ["Session summaries", "Progress charts", "Clinical notes", "HIPAA compliant"],
+      badge: "Popular",
+      gradient: "from-blue-500 to-indigo-600"
     },
     {
       icon: FileSpreadsheet,
-      title: "Excel/CSV Data",
-      description: "Raw data exports for personal analysis, research, or integration with other tools",
-      features: ["Mood tracking data", "Session logs", "Goal progress", "Custom fields"],
-      badge: "Pro"
+      title: "Data Spreadsheets",
+      description: "Raw therapy data in Excel/CSV format for personal analysis and research purposes",
+      features: ["Mood tracking data", "Session logs", "Goal progress", "Assessment results"],
+      badge: "Pro",
+      gradient: "from-green-500 to-emerald-600"
     },
     {
       icon: Archive,
-      title: "Complete Archive",
-      description: "Full account backup including all therapy data, conversations, and media files",
-      features: ["All conversations", "Media files", "Assessment results", "Account settings"],
-      badge: "Complete"
+      title: "Complete Backup Archive",
+      description: "Full account backup including all conversations, media files, and account settings",
+      features: ["All conversations", "Voice recordings", "Assessment data", "Account settings"],
+      badge: "Complete",
+      gradient: "from-purple-500 to-violet-600"
     },
     {
       icon: Database,
-      title: "API Integration",
-      description: "Real-time data access through our secure API for healthcare system integration",
-      features: ["Real-time sync", "Automated exports", "Custom formats", "Enterprise security"],
-      badge: "Enterprise"
+      title: "API Data Access",
+      description: "Real-time data access through secure APIs for healthcare system integration",
+      features: ["Real-time sync", "Automated exports", "Custom formats", "Developer tools"],
+      badge: "Enterprise",
+      gradient: "from-orange-500 to-amber-600"
     }
   ];
 

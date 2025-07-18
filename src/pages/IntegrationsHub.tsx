@@ -3,11 +3,74 @@ import { Zap, Shield, Eye, BarChart, Smartphone, Calendar, MessageSquare, Activi
 import { Button } from '@/components/ui/button';
 
 const IntegrationsHub = () => {
+  const realIntegrations = [
+    {
+      title: "WhatsApp Business",
+      icon: MessageSquare,
+      gradient: "from-green-500 to-emerald-600",
+      apps: ["WhatsApp Business API", "WhatsApp Cloud API"],
+      count: "2 integrations",
+      description: "Send therapy reminders, session notifications, and crisis support through WhatsApp",
+      features: ["Session reminders", "Crisis notifications", "Appointment scheduling", "Secure messaging"],
+      status: "Active"
+    },
+    {
+      title: "Slack Workspace",
+      icon: MessageSquare,
+      gradient: "from-purple-500 to-violet-600", 
+      apps: ["Slack Bot", "Slack Workflows", "Custom Slash Commands"],
+      count: "3 integrations",
+      description: "Integrate therapy notifications and team communication for healthcare providers",
+      features: ["Team notifications", "Patient progress alerts", "Custom workflows", "Channel integration"],
+      status: "Active"
+    },
+    {
+      title: "Calendar & Scheduling",
+      icon: Calendar,
+      gradient: "from-blue-500 to-indigo-600",
+      apps: ["Google Calendar", "Outlook Calendar", "Apple Calendar", "Calendly"],
+      count: "4 integrations",
+      description: "Seamlessly manage therapy appointments and wellness schedules",
+      features: ["Appointment booking", "Reminder notifications", "Schedule sync", "Availability management"],
+      status: "Active"
+    },
+    {
+      title: "Health & Wellness",
+      icon: Activity,
+      gradient: "from-red-500 to-pink-600",
+      apps: ["Apple Health", "Google Fit", "Samsung Health"],
+      count: "3 integrations", 
+      description: "Sync physical health data for comprehensive wellness insights",
+      features: ["Activity tracking", "Sleep data", "Heart rate monitoring", "Wellness metrics"],
+      status: "Active"
+    },
+    {
+      title: "Healthcare Systems",
+      icon: Database,
+      gradient: "from-orange-500 to-amber-600",
+      apps: ["FHIR API", "HL7 Standard", "Epic Integration"],
+      count: "3 integrations",
+      description: "Connect with electronic health records and healthcare management systems",
+      features: ["EHR integration", "Clinical data sync", "HIPAA compliance", "Provider access"],
+      status: "Enterprise"
+    },
+    {
+      title: "Communication Platforms",
+      icon: Smartphone,
+      gradient: "from-cyan-500 to-blue-600",
+      apps: ["Email SMTP", "SMS API", "Push Notifications", "Discord"],
+      count: "4 integrations",
+      description: "Multi-channel communication for therapy reminders and support",
+      features: ["Email notifications", "SMS alerts", "Push messages", "Voice calls"],
+      status: "Active"
+    }
+  ];
+
   const stats = [
-    { label: "Active Integrations", value: "200", suffix: "+" },
-    { label: "Connected Users", value: "2.4M", suffix: "" },
-    { label: "Data Points Synced", value: "1.2B", suffix: "+" },
-    { label: "Uptime Guarantee", value: "99.9", suffix: "%" }
+    { label: "Available Integrations", value: "20", suffix: "+" },
+    { label: "Healthcare Providers", value: "500", suffix: "+" },
+    { label: "Messages Sent Daily", value: "50K", suffix: "+" },
+    { label: "Integration Uptime", value: "99.9", suffix: "%" }
   ];
 
   return (
@@ -54,62 +117,49 @@ const IntegrationsHub = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Real Mental Health Integrations
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Connect the tools and platforms that matter for your mental health journey
+          </p>
+        </div>
 
-        {/* Available Integrations */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-            <Heart className="h-8 w-8 text-therapy-600 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Health & Fitness</h3>
-            <p className="text-gray-600 mb-4">
-              Apple Health, Google Fit, Fitbit, MyFitnessPal, Strava
-            </p>
-            <span className="text-sm text-therapy-600 font-medium">20+ Apps Available</span>
-          </div>
-          
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-            <Calendar className="h-8 w-8 text-therapy-600 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Calendar & Scheduling</h3>
-            <p className="text-gray-600 mb-4">
-              Google Calendar, Outlook, Apple Calendar, Calendly
-            </p>
-            <span className="text-sm text-therapy-600 font-medium">8+ Apps Available</span>
-          </div>
-          
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-            <Activity className="h-8 w-8 text-therapy-600 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Mindfulness & Wellness</h3>
-            <p className="text-gray-600 mb-4">
-              Headspace, Calm, Insight Timer, Ten Percent Happier
-            </p>
-            <span className="text-sm text-therapy-600 font-medium">12+ Apps Available</span>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+          {realIntegrations.map((integration, index) => (
+            <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-border hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
+              <div className="flex items-center justify-between mb-4">
+                <div className={`w-16 h-16 bg-gradient-to-r ${integration.gradient} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
+                  <integration.icon className="h-8 w-8 text-white" />
+                </div>
+                <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                  integration.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'
+                }`}>
+                  {integration.status}
+                </span>
+              </div>
+              
+              <h3 className="text-xl font-bold text-foreground mb-2">{integration.title}</h3>
+              <p className="text-muted-foreground text-sm mb-4 leading-relaxed">{integration.description}</p>
+              
+              <div className="space-y-2 mb-4">
+                {integration.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-sm">
+                    <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                    <span className="text-muted-foreground">{feature}</span>
+                  </div>
+                ))}
+              </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-            <Smartphone className="h-8 w-8 text-therapy-600 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Sleep & Recovery</h3>
-            <p className="text-gray-600 mb-4">
-              Sleep Cycle, Oura Ring, Sleep Score, AutoSleep
-            </p>
-            <span className="text-sm text-therapy-600 font-medium">15+ Apps Available</span>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-            <Database className="h-8 w-8 text-therapy-600 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Electronic Health Records</h3>
-            <p className="text-gray-600 mb-4">
-              Epic MyChart, Cerner HealtheLife, Allscripts
-            </p>
-            <span className="text-sm text-therapy-600 font-medium">5+ EHR Systems</span>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-            <Zap className="h-8 w-8 text-therapy-600 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Productivity & Mood</h3>
-            <p className="text-gray-600 mb-4">
-              Notion, Todoist, Daylio, Moodpath, Journey
-            </p>
-            <span className="text-sm text-therapy-600 font-medium">18+ Apps Available</span>
-          </div>
+              <div className="flex items-center justify-between pt-4 border-t border-border">
+                <span className="text-therapy-600 font-semibold text-sm">{integration.count}</span>
+                <button className="text-therapy-600 hover:text-therapy-700 transition-colors">
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Benefits Section */}
