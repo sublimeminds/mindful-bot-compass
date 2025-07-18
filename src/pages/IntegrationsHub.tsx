@@ -1,23 +1,59 @@
 import React from 'react';
-import { Settings, Smartphone, Heart, Calendar, Activity, Database, Zap, Shield, Users, BarChart3 } from 'lucide-react';
+import { Zap, Shield, Eye, BarChart, Smartphone, Calendar, MessageSquare, Activity, Brain, Heart, Clock, Globe, ArrowRight, Check, Play, Star, Users, Lock, Wifi, Database, Cloud, Gauge, TrendingUp, Bell, Settings, Link, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const IntegrationsHub = () => {
+  const stats = [
+    { label: "Active Integrations", value: "200", suffix: "+" },
+    { label: "Connected Users", value: "2.4M", suffix: "" },
+    { label: "Data Points Synced", value: "1.2B", suffix: "+" },
+    { label: "Uptime Guarantee", value: "99.9", suffix: "%" }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center mb-6">
-            <Settings className="h-16 w-16 text-therapy-600" />
+    <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-blue-50 to-indigo-50">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-therapy-600/10 to-blue-600/10"></div>
+        <div className="relative max-w-7xl mx-auto px-4 py-20">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-therapy-500 to-blue-500 rounded-2xl mb-8 shadow-lg">
+              <Zap className="h-10 w-10 text-white" />
+            </div>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-therapy-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6">
+              Integrations Hub
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed mb-8">
+              Connect your favorite apps and tools to create a seamless, unified mental health ecosystem with powerful insights
+            </p>
+            
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12">
+              {stats.map((stat, index) => (
+                <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/40 shadow-sm">
+                  <div className="text-2xl md:text-3xl font-bold text-therapy-600 mb-1">
+                    {stat.value}{stat.suffix}
+                  </div>
+                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="bg-gradient-to-r from-therapy-600 to-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center gap-2 group">
+                Browse Integrations
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button className="bg-white/80 backdrop-blur-sm text-therapy-600 border border-therapy-200 px-8 py-4 rounded-xl font-semibold hover:bg-white transition-all duration-300 flex items-center gap-2">
+                <Play className="h-4 w-4" />
+                Watch Demo
+              </button>
+            </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Integrations Hub
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Connect with your favorite health and wellness apps for seamless care coordination
-          </p>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-16">
 
         {/* Available Integrations */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
