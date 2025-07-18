@@ -42,6 +42,7 @@ import TherapyTypes from "../pages/TherapyTypes";
 import TherapySyncAI from "../pages/TherapySyncAI";
 import AIArchitecture from "../pages/AIArchitecture";
 import TherapistDiscovery from "../pages/TherapistDiscovery";
+import TherapistDemo from "../pages/TherapistDemo";
 import Community from "../pages/Community";
 import Features from "../pages/Features";
 import FAQAndBlog from "../pages/FAQAndBlog";

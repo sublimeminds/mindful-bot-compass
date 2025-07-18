@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Users, Brain, Heart, Shield, Star, Zap, Palette, Mic, Camera, Video, MessageSquare, Target, Compass, Globe, Award, Sparkles, ArrowRight, Check, Play, ChevronDown, Clock, Languages, Headphones } from 'lucide-react';
+import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import UltraSafeAvatarDisplay from '@/components/avatar/UltraSafeAvatarDisplay';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
@@ -8,12 +9,16 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { getVoiceIdForTherapist } from '@/services/therapistAvatarMapping';
+import { useToast } from '@/hooks/use-toast';
 
 const AITherapistTeam = () => {
   const [selectedTherapist, setSelectedTherapist] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [playingVoice, setPlayingVoice] = useState<string | null>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   // Fetch real therapists from database
   const { data: therapistData = [], isLoading, error } = useQuery({
@@ -69,7 +74,7 @@ const AITherapistTeam = () => {
         voiceCharacteristics: typeof therapist.voice_characteristics === 'object' 
           ? JSON.stringify(therapist.voice_characteristics) 
           : therapist.voice_characteristics || "Professional, supportive, clear voice",
-        languages: ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Japanese', 'Chinese', 'Korean'],
+        languages: ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Russian', 'Japanese', 'Chinese (Mandarin)', 'Korean', 'Arabic', 'Hindi', 'Swedish', 'Norwegian', 'Danish', 'Finnish', 'Polish', 'Turkish', 'Hebrew', 'Indonesian', 'Thai', 'Vietnamese', 'Czech', 'Hungarian', 'Romanian', 'Bulgarian', 'Croatian', 'Slovak', 'Slovenian', 'Estonian', 'Latvian', 'Lithuanian'],
         crisisSupport: therapist.experience_level === 'Expert' ? 'Advanced 24/7 Crisis Support' : 'Standard Crisis Support',
         availabilityHours: '24/7',
         aiModel: 'TherapySync AI Enterprise',
@@ -90,6 +95,51 @@ const AITherapistTeam = () => {
   const openTherapistModal = (therapist: any) => {
     setSelectedTherapist(therapist);
     setModalOpen(true);
+  };
+
+  const playVoicePreview = async (therapistId: string, therapistName: string) => {
+    setPlayingVoice(therapistId);
+    try {
+      const sampleText = `Hello, I'm ${therapistName}. I'm here to support you on your mental health journey. My approach combines evidence-based therapy with personalized care, creating a safe space where you can explore your thoughts and feelings at your own pace.`;
+      
+      const response = await supabase.functions.invoke('elevenlabs-voice-preview', {
+        body: { therapistId, text: sampleText }
+      });
+      
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+      
+      const audio = new Audio(`data:audio/mpeg;base64,${response.data.audioContent}`);
+      
+      audio.onended = () => setPlayingVoice(null);
+      audio.onerror = () => {
+        setPlayingVoice(null);
+        toast({
+          title: "Voice Preview Unavailable",
+          description: "Voice sample couldn't be loaded at the moment.",
+          variant: "destructive"
+        });
+      };
+      
+      await audio.play();
+    } catch (error) {
+      setPlayingVoice(null);
+      toast({
+        title: "Voice Preview Unavailable", 
+        description: "Voice sample couldn't be loaded at the moment.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const startDemo = (therapistId: string) => {
+    toast({
+      title: "Demo Starting",
+      description: "Launching interactive demo with your selected therapist...",
+    });
+    // TODO: Implement demo functionality
+    navigate(`/demo/${therapistId}`);
   };
 
   const features = [
@@ -230,11 +280,9 @@ const AITherapistTeam = () => {
                 <div className="relative mb-6">
                   {/* 2D Avatar Display */}
                   <div className="w-24 h-24 mx-auto mb-4 cursor-pointer" onClick={() => openTherapistModal(therapist)}>
-                    <UltraSafeAvatarDisplay
-                      therapist={{
-                        id: therapist.avatarId,
-                        name: therapist.name
-                      }}
+                    <Professional2DAvatar
+                      therapistId={therapist.avatarId}
+                      therapistName={therapist.name}
                       className="w-full h-full"
                       size="lg"
                       showName={false}
@@ -267,31 +315,34 @@ const AITherapistTeam = () => {
                   </div>
                   <div className="flex items-center gap-1">
                     <Languages className="h-4 w-4" />
-                    <span>10+ languages</span>
+                    <span>{therapist.languages.length}+ languages</span>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <button 
-                    onClick={() => {
-                      if (!user) {
-                        navigate('/auth');
-                      } else {
-                        // TODO: Check onboarding status and navigate appropriately
-                        navigate('/onboarding');
-                      }
-                    }}
-                    className="w-full bg-gradient-to-r from-therapy-500 to-blue-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 group-hover:scale-105"
-                  >
-                    {!user ? 'Start Onboarding' : 'Continue Journey'}
-                  </button>
-                  <button 
-                    onClick={() => openTherapistModal(therapist)}
-                    className="w-full bg-white border border-therapy-200 text-therapy-600 py-2 rounded-xl font-medium hover:bg-therapy-50 transition-all duration-300"
-                  >
-                    View Details
-                  </button>
-                </div>
+                 <div className="space-y-3">
+                   <button 
+                     onClick={() => startDemo(therapist.id)}
+                     className="w-full bg-gradient-to-r from-therapy-500 to-blue-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 group-hover:scale-105"
+                   >
+                     Try Demo
+                   </button>
+                   <div className="flex gap-2">
+                     <button 
+                       onClick={() => openTherapistModal(therapist)}
+                       className="flex-1 bg-white border border-therapy-200 text-therapy-600 py-2 rounded-xl font-medium hover:bg-therapy-50 transition-all duration-300"
+                     >
+                       View Details
+                     </button>
+                     <button 
+                       onClick={() => playVoicePreview(therapist.id, therapist.name)}
+                       disabled={playingVoice === therapist.id}
+                       className="px-4 bg-white border border-blue-200 text-blue-600 py-2 rounded-xl font-medium hover:bg-blue-50 transition-all duration-300 flex items-center gap-1 disabled:opacity-50"
+                     >
+                       <Headphones className="h-3 w-3" />
+                       {playingVoice === therapist.id ? 'Playing' : 'Voice'}
+                     </button>
+                   </div>
+                 </div>
               </div>
             ))}
           </div>
@@ -335,11 +386,9 @@ const AITherapistTeam = () => {
               {/* Avatar and Basic Info */}
               <div className="flex items-start gap-6">
                 <div className="w-32 h-32 flex-shrink-0">
-                  <UltraSafeAvatarDisplay
-                    therapist={{
-                      id: selectedTherapist.avatarId,
-                      name: selectedTherapist.name
-                    }}
+                  <Professional2DAvatar
+                    therapistId={selectedTherapist.avatarId}
+                    therapistName={selectedTherapist.name}
                     className="w-full h-full"
                     size="xl"
                     showName={false}
@@ -369,7 +418,7 @@ const AITherapistTeam = () => {
               {/* Specialties */}
               <div>
                 <h4 className="font-semibold mb-3">Specialties & Areas of Focus</h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
                   {selectedTherapist.specialties.map((specialty: string, idx: number) => (
                     <Badge key={idx} variant="outline" className="bg-therapy-50">
                       {specialty}
@@ -414,29 +463,68 @@ const AITherapistTeam = () => {
 
               {/* Languages */}
               <div>
-                <h4 className="font-semibold mb-3">Supported Languages</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedTherapist.languages.slice(0, 8).map((language: string, idx: number) => (
-                    <Badge key={idx} variant="secondary" className="text-xs">
-                      {language}
-                    </Badge>
-                  ))}
-                  {selectedTherapist.languages.length > 8 && (
-                    <Badge variant="secondary" className="text-xs">
-                      +{selectedTherapist.languages.length - 8} more
-                    </Badge>
-                  )}
+                <h4 className="font-semibold mb-3">Supported Languages ({selectedTherapist.languages.length})</h4>
+                <div className="max-h-32 overflow-y-auto">
+                  <div className="flex flex-wrap gap-2">
+                    {selectedTherapist.languages.map((language: string, idx: number) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">
+                        {language}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Voice Characteristics */}
+              <div>
+                <h4 className="font-semibold mb-3">Voice & Communication Style</h4>
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="font-medium">Tone:</span> Warm, professional, empathetic
+                    </div>
+                    <div>
+                      <span className="font-medium">Pace:</span> Measured and thoughtful
+                    </div>
+                    <div>
+                      <span className="font-medium">Emotional Range:</span> Calm to encouraging
+                    </div>
+                    <div>
+                      <span className="font-medium">Style:</span> {selectedTherapist.communicationStyle}
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-4 pt-4 border-t">
-                <button className="flex-1 bg-gradient-to-r from-therapy-600 to-blue-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300">
-                  Start Session with {selectedTherapist.name}
-                </button>
-                <button className="px-6 bg-white border border-therapy-200 text-therapy-600 py-3 rounded-xl font-medium hover:bg-therapy-50 transition-all duration-300 flex items-center gap-2">
-                  <Headphones className="h-4 w-4" />
-                  Voice Preview
+              <div className="space-y-3 pt-4 border-t">
+                <div className="flex gap-3">
+                  <button 
+                    onClick={() => startDemo(selectedTherapist.id)}
+                    className="flex-1 bg-gradient-to-r from-therapy-600 to-blue-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+                  >
+                    Start Demo Session
+                  </button>
+                  <button 
+                    onClick={() => playVoicePreview(selectedTherapist.id, selectedTherapist.name)}
+                    disabled={playingVoice === selectedTherapist.id}
+                    className="px-6 bg-white border border-therapy-200 text-therapy-600 py-3 rounded-xl font-medium hover:bg-therapy-50 transition-all duration-300 flex items-center gap-2 disabled:opacity-50"
+                  >
+                    <Headphones className="h-4 w-4" />
+                    {playingVoice === selectedTherapist.id ? 'Playing...' : 'Voice Preview'}
+                  </button>
+                </div>
+                <button 
+                  onClick={() => {
+                    if (!user) {
+                      navigate('/auth');
+                    } else {
+                      navigate('/onboarding');
+                    }
+                  }}
+                  className="w-full bg-white border border-blue-200 text-blue-600 py-2 rounded-xl font-medium hover:bg-blue-50 transition-all duration-300"
+                >
+                  {!user ? 'Get Started' : 'Continue Your Journey'}
                 </button>
               </div>
             </div>

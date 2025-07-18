@@ -304,7 +304,7 @@ const TherapistDiscovery = () => {
           therapeuticTechniques: therapist.therapeutic_techniques || [],
           emotionalResponses: therapist.emotional_responses || {},
           voiceCharacteristics: getVoiceCharacteristics(therapist.voice_characteristics, therapist.communication_style),
-          languages: ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Japanese', 'Chinese', 'Korean'],
+          languages: ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Russian', 'Japanese', 'Chinese (Mandarin)', 'Korean', 'Arabic', 'Hindi', 'Swedish', 'Norwegian', 'Danish', 'Finnish', 'Polish', 'Turkish', 'Hebrew', 'Indonesian', 'Thai', 'Vietnamese', 'Czech', 'Hungarian', 'Romanian', 'Bulgarian', 'Croatian', 'Slovak', 'Slovenian', 'Estonian', 'Latvian', 'Lithuanian'],
           crisisSupport: therapist.experience_level === 'Expert' ? 'Advanced' : 'Intermediate',
           availabilityHours: '24/7',
           aiModel: 'TherapySync AI',
@@ -1147,13 +1147,12 @@ const TherapistDiscovery = () => {
                       </div>
                       <div className="p-3 bg-muted/50 rounded-lg">
                         <div className="font-medium mb-1">Supported Languages ({modalTherapist.languages?.length})</div>
-                        <div className="text-sm text-muted-foreground flex flex-wrap gap-1">
-                          {modalTherapist.languages?.slice(0, 8).map((lang: string) => (
-                            <Badge key={lang} variant="outline" className="text-xs">{lang}</Badge>
-                          ))}
-                          {modalTherapist.languages?.length > 8 && (
-                            <Badge variant="outline" className="text-xs">+{modalTherapist.languages.length - 8} more</Badge>
-                          )}
+                        <div className="text-sm text-muted-foreground max-h-32 overflow-y-auto">
+                          <div className="flex flex-wrap gap-1">
+                            {modalTherapist.languages?.map((lang: string) => (
+                              <Badge key={lang} variant="outline" className="text-xs">{lang}</Badge>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1359,20 +1358,16 @@ const TherapistDiscovery = () => {
                          <div className="text-xs text-gray-600 mb-3">
                            TherapySync AI provides native-level proficiency in all languages with cultural context understanding and therapeutic terminology expertise.
                          </div>
-                         <div className="grid grid-cols-3 gap-2">
-                           {detailsTherapist.languages?.slice(0, 9).map((language: string, index: number) => (
-                             <div key={index} className="flex items-center space-x-1 text-xs">
-                               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                               <span className="text-blue-800 font-medium">{language}</span>
-                             </div>
-                           ))}
-                           {detailsTherapist.languages?.length > 9 && (
-                             <div className="flex items-center space-x-1 text-xs">
-                               <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-                               <span className="text-gray-600">+{detailsTherapist.languages.length - 9} more</span>
-                             </div>
-                           )}
-                         </div>
+                          <div className="max-h-32 overflow-y-auto">
+                            <div className="grid grid-cols-3 gap-2">
+                              {detailsTherapist.languages?.map((language: string, index: number) => (
+                                <div key={index} className="flex items-center space-x-1 text-xs">
+                                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                  <span className="text-blue-800 font-medium">{language}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                        </div>
                        
                        <div className="flex items-center p-2 bg-white rounded-lg">
