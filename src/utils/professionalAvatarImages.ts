@@ -14,6 +14,17 @@ import drSageWilliamsImg from '@/assets/avatars/professional/dr-sage-williams.jp
 import drPhoenixCarterImg from '@/assets/avatars/professional/dr-phoenix-carter.jpg';
 import drSkyAndersonImg from '@/assets/avatars/professional/dr-sky-anderson.jpg';
 import drWillowGraceImg from '@/assets/avatars/professional/dr-willow-grace.jpg';
+// Additional unique therapist avatars
+import drMichaelRiversImg from '@/assets/avatars/professional/dr-michael-rivers.jpg';
+import drEmmaThompsonImg from '@/assets/avatars/professional/dr-emma-thompson.jpg';
+import drJamesRodriguezImg from '@/assets/avatars/professional/dr-james-rodriguez.jpg';
+import drRileyChenImg from '@/assets/avatars/professional/dr-riley-chen.jpg';
+import drJordanTaylorImg from '@/assets/avatars/professional/dr-jordan-taylor.jpg';
+import drCaseyWilliamsImg from '@/assets/avatars/professional/dr-casey-williams.jpg';
+import drAlexKimImg from '@/assets/avatars/professional/dr-alex-kim.jpg';
+import drSamMorganImg from '@/assets/avatars/professional/dr-sam-morgan.jpg';
+import drPhoenixRiveraImg from '@/assets/avatars/professional/dr-phoenix-rivera.jpg';
+import drSageThompsonImg from '@/assets/avatars/professional/dr-sage-thompson.jpg';
 
 // Professional avatar mappings - using semi-realistic, trustworthy AI-generated portraits
 export const professionalAvatarImages = {
@@ -36,14 +47,23 @@ export const professionalAvatarImages = {
   'dr-river-stone': drRiverStoneImg,
   '79298cfb-6997-4cc6-9b21-ffaacb525c54': drRiverStoneImg, // Dr. River Stone
   
-  'dr-michael-rivers': drJordanKimImg,
-  'e352e13d-99f9-4ffc-95a6-a05c3d935b74': drJordanKimImg,
+  'dr-michael-rivers': drMichaelRiversImg,
+  'e352e13d-99f9-4ffc-95a6-a05c3d935b74': drMichaelRiversImg,
   
-  'dr-emma-thompson': drTaylorMorganImg,
-  '88a93e17-4338-4834-b360-55c9db4cc667': drTaylorMorganImg,
+  'dr-emma-thompson': drEmmaThompsonImg,
+  '88a93e17-4338-4834-b360-55c9db4cc667': drEmmaThompsonImg,
   
-  'dr-james-rodriguez': drAlexRodriguezImg,
-  '1588e859-69a6-4b88-b2cc-c377441ac08c': drAlexRodriguezImg,
+  'dr-james-rodriguez': drJamesRodriguezImg,
+  '1588e859-69a6-4b88-b2cc-c377441ac08c': drJamesRodriguezImg,
+  
+  // Additional therapists with unique avatars
+  'dr-riley-chen': drRileyChenImg,
+  'dr-jordan-taylor': drJordanTaylorImg,
+  'dr-casey-williams': drCaseyWilliamsImg,
+  'dr-alex-kim': drAlexKimImg,
+  'dr-sam-morgan': drSamMorganImg,
+  'dr-phoenix-rivera': drPhoenixRiveraImg,
+  'dr-sage-thompson': drSageThompsonImg,
   
   // New specialized therapists
   'dr-luna-martinez': drLunaMartinezImg,
