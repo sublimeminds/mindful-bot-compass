@@ -132,7 +132,7 @@ const IntegrationsHub = () => {
           
           <div className="text-center">
             <div className="bg-therapy-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <BarChart3 className="h-8 w-8 text-therapy-600" />
+              <BarChart className="h-8 w-8 text-therapy-600" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Better Insights</h3>
             <p className="text-gray-600">AI-powered analysis helps identify patterns and personalize your therapy</p>
