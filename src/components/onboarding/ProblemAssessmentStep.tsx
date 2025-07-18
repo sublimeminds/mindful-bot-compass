@@ -26,7 +26,17 @@ const ProblemAssessmentStep = ({ onNext, onBack, onboardingData }: ProblemAssess
     { id: 'stress', label: 'Stress Management', icon: Brain, color: 'text-blue-600' },
     { id: 'relationships', label: 'Relationship Issues', icon: Users, color: 'text-purple-600' },
     { id: 'work', label: 'Work/Career Stress', icon: Briefcase, color: 'text-green-600' },
-    { id: 'family', label: 'Family Dynamics', icon: Home, color: 'text-orange-600' }
+    { id: 'family', label: 'Family Dynamics', icon: Home, color: 'text-orange-600' },
+    
+    // New specialized areas
+    { id: 'eating-disorders', label: 'Eating & Body Image', icon: Heart, color: 'text-rose-600' },
+    { id: 'ocd', label: 'OCD & Compulsions', icon: AlertTriangle, color: 'text-blue-700' },
+    { id: 'bipolar', label: 'Bipolar & Mood Disorders', icon: Brain, color: 'text-purple-700' },
+    { id: 'sleep', label: 'Sleep Issues', icon: Brain, color: 'text-indigo-600' },
+    { id: 'grief', label: 'Loss & Grief', icon: Heart, color: 'text-amber-600' },
+    { id: 'career', label: 'Career & Life Goals', icon: Briefcase, color: 'text-emerald-600' },
+    { id: 'child-teen', label: 'Child & Teen Issues', icon: Users, color: 'text-cyan-600' },
+    { id: 'aging', label: 'Aging & Elder Care', icon: Users, color: 'text-slate-600' }
   ];
 
   const commonTriggers = [

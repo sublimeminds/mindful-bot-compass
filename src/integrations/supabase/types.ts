@@ -1875,6 +1875,47 @@ export type Database = {
         }
         Relationships: []
       }
+      avatar_assets: {
+        Row: {
+          asset_type: string
+          created_at: string
+          emotion_type: string | null
+          file_metadata: Json | null
+          file_url: string
+          id: string
+          is_primary: boolean | null
+          therapist_id: string
+        }
+        Insert: {
+          asset_type: string
+          created_at?: string
+          emotion_type?: string | null
+          file_metadata?: Json | null
+          file_url: string
+          id?: string
+          is_primary?: boolean | null
+          therapist_id: string
+        }
+        Update: {
+          asset_type?: string
+          created_at?: string
+          emotion_type?: string | null
+          file_metadata?: Json | null
+          file_url?: string
+          id?: string
+          is_primary?: boolean | null
+          therapist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "avatar_assets_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapist_personalities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       avatar_customization_items: {
         Row: {
           category: string
@@ -6552,6 +6593,33 @@ export type Database = {
         }
         Relationships: []
       }
+      onboarding_problem_categories: {
+        Row: {
+          category_name: string
+          created_at: string
+          id: string
+          is_active: boolean | null
+          related_therapists: string[] | null
+          subcategories: string[]
+        }
+        Insert: {
+          category_name: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          related_therapists?: string[] | null
+          subcategories: string[]
+        }
+        Update: {
+          category_name?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          related_therapists?: string[] | null
+          subcategories?: string[]
+        }
+        Relationships: []
+      }
       payment_methods: {
         Row: {
           bank_account_last4: string | null
@@ -9531,6 +9599,10 @@ export type Database = {
       therapist_personalities: {
         Row: {
           approach: string
+          avatar_characteristics: Json | null
+          avatar_emotions: Json | null
+          avatar_image_url: string | null
+          avatar_style: string | null
           certifications: string[] | null
           color_scheme: string
           communication_style: string
@@ -9558,6 +9630,10 @@ export type Database = {
         }
         Insert: {
           approach: string
+          avatar_characteristics?: Json | null
+          avatar_emotions?: Json | null
+          avatar_image_url?: string | null
+          avatar_style?: string | null
           certifications?: string[] | null
           color_scheme?: string
           communication_style: string
@@ -9585,6 +9661,10 @@ export type Database = {
         }
         Update: {
           approach?: string
+          avatar_characteristics?: Json | null
+          avatar_emotions?: Json | null
+          avatar_image_url?: string | null
+          avatar_style?: string | null
           certifications?: string[] | null
           color_scheme?: string
           communication_style?: string
