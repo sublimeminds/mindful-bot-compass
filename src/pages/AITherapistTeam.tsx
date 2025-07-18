@@ -62,7 +62,9 @@ const AITherapistTeam = () => {
         yearsExperience: therapist.years_experience || 5,
         education: therapist.education || [],
         therapeuticTechniques: therapist.therapeutic_techniques || [],
-        voiceCharacteristics: therapist.voice_characteristics || "Professional, supportive, clear voice",
+        voiceCharacteristics: typeof therapist.voice_characteristics === 'object' 
+          ? JSON.stringify(therapist.voice_characteristics) 
+          : therapist.voice_characteristics || "Professional, supportive, clear voice",
         languages: ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Japanese', 'Chinese', 'Korean'],
         crisisSupport: therapist.experience_level === 'Expert' ? 'Advanced 24/7 Crisis Support' : 'Standard Crisis Support',
         availabilityHours: '24/7',
@@ -397,7 +399,7 @@ const AITherapistTeam = () => {
                       <span className="font-medium">Cultural Intelligence:</span> {selectedTherapist.culturalIntelligence}
                     </div>
                     <div>
-                      <span className="font-medium">Voice Support:</span> {selectedTherapist.voiceCharacteristics}
+                      <span className="font-medium">Voice Support:</span> Advanced AI Voice & Audio Processing
                     </div>
                   </div>
                 </div>
