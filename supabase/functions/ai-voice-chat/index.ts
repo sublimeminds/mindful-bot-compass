@@ -12,7 +12,8 @@ serve(async (req) => {
   }
 
   try {
-    const { audio, action } = await req.json();
+    const requestBody = await req.json();
+    const { audio, action, message, text, voiceId } = requestBody;
 
     if (action === 'transcribe') {
       // Convert speech to text using OpenAI Whisper
@@ -48,7 +49,9 @@ serve(async (req) => {
 
     } else if (action === 'chat') {
       // Get AI response using OpenAI
-      const { message } = await req.json();
+      if (!message) {
+        throw new Error('Message is required for chat');
+      }
       
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -82,13 +85,13 @@ serve(async (req) => {
 
     } else if (action === 'synthesize') {
       // Convert text to speech using ElevenLabs
-      const { text, voiceId = 'EXAVITQu4vr4xnSDxMaL' } = await req.json();
+      const finalVoiceId = voiceId || 'EXAVITQu4vr4xnSDxMaL';
 
       if (!text) {
         throw new Error('Text is required for synthesis');
       }
 
-      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${finalVoiceId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${Deno.env.get('ELEVENLABS_API_KEY')}`,
