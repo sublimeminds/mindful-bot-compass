@@ -388,6 +388,12 @@ const AppRouter = () => {
           <PublicPageWrapper><TherapistDiscovery /></PublicPageWrapper>
         </PageErrorBoundary>
       } />
+      
+      <Route path="/demo/:therapistId" element={
+        <PageErrorBoundary pageName="Therapist Demo">
+          <PublicPageWrapper><TherapistDemo /></PublicPageWrapper>
+        </PageErrorBoundary>
+      } />
 
       <Route path="/community" element={
         <PageErrorBoundary pageName="Community">

@@ -1,4 +1,4 @@
-// Virtual Therapist Character Portraits - 3D-style virtual characters
+// Professional AI Therapist Avatar Images - High-quality professional portraits
 import drSarahChenImg from '@/assets/avatars/dr-sarah-chen.jpg';
 import drMayaPatelImg from '@/assets/avatars/dr-maya-patel.jpg';
 import drAlexRodriguezImg from '@/assets/avatars/dr-alex-rodriguez.jpg';
@@ -16,9 +16,9 @@ import drAlexKimImg from '@/assets/avatars/dr-alex-kim.jpg';
 import drPhoenixRiveraImg from '@/assets/avatars/dr-phoenix-rivera.jpg';
 import drSageThompsonImg from '@/assets/avatars/dr-sage-thompson.jpg';
 
-// Virtual character avatars mapped to therapist IDs
+// Professional AI therapist avatars mapped to therapist IDs
 export const professionalAvatarImages = {
-  // Primary virtual character avatars
+  // Primary professional avatar images
   'dr-sarah-chen': drSarahChenImg,
   'dr-maya-patel': drMayaPatelImg,
   'dr-alex-rodriguez': drAlexRodriguezImg,
