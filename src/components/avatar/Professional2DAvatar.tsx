@@ -11,6 +11,10 @@ interface Professional2DAvatarProps {
   className?: string;
   showName?: boolean;
   size?: 'sm' | 'md' | 'lg' | 'xl';
+  therapeuticMode?: boolean;
+  showVoiceIndicator?: boolean;
+  onLoad?: () => void;
+  onError?: () => void;
 }
 
 const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
@@ -21,7 +25,11 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
   isSpeaking = false,
   className = "w-full h-full",
   showName = true,
-  size = 'lg'
+  size = 'lg',
+  therapeuticMode = false,
+  showVoiceIndicator = false,
+  onLoad,
+  onError
 }) => {
   const avatarImage = getProfessionalAvatarImage(therapistId);
 
@@ -79,6 +87,8 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
               filter: getEmotionFilter(),
               transform: isListening || isSpeaking ? 'scale(1.05)' : 'scale(1)'
             }}
+            onLoad={onLoad}
+            onError={onError}
           />
         ) : (
           <div className={`${sizeClasses[size]} rounded-full bg-gradient-to-br from-therapy-400 to-calm-500 flex items-center justify-center text-white font-bold text-xl shadow-lg`}>

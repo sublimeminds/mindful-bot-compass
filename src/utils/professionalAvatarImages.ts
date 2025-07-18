@@ -2,6 +2,18 @@
 // Professional AI Therapist Avatar Images - Semi-realistic, trustworthy style
 import drSarahChenImg from '@/assets/avatars/professional/dr-sarah-chen.jpg';
 import drJordanKimImg from '@/assets/avatars/professional/dr-jordan-kim.jpg';
+import drMayaPatelImg from '@/assets/avatars/professional/dr-maya-patel.jpg';
+import drAlexRodriguezImg from '@/assets/avatars/professional/dr-alex-rodriguez.jpg';
+import drTaylorMorganImg from '@/assets/avatars/professional/dr-taylor-morgan.jpg';
+import drRiverStoneImg from '@/assets/avatars/professional/dr-river-stone.jpg';
+import drLunaMartinezImg from '@/assets/avatars/professional/dr-luna-martinez.jpg';
+import drFelixChenImg from '@/assets/avatars/professional/dr-felix-chen.jpg';
+import drRiverThompsonImg from '@/assets/avatars/professional/dr-river-thompson.jpg';
+import drNovaSleepImg from '@/assets/avatars/professional/dr-nova-sleep.jpg';
+import drSageWilliamsImg from '@/assets/avatars/professional/dr-sage-williams.jpg';
+import drPhoenixCarterImg from '@/assets/avatars/professional/dr-phoenix-carter.jpg';
+import drSkyAndersonImg from '@/assets/avatars/professional/dr-sky-anderson.jpg';
+import drWillowGraceImg from '@/assets/avatars/professional/dr-willow-grace.jpg';
 
 // Professional avatar mappings - using semi-realistic, trustworthy AI-generated portraits
 export const professionalAvatarImages = {
@@ -12,37 +24,36 @@ export const professionalAvatarImages = {
   'dr-jordan-kim': drJordanKimImg,
   '2fee5506-ee6d-4504-bab7-2ba922bdc99a': drJordanKimImg, // Dr. Jordan Kim
   
-  // Temporary placeholders for other therapists until we generate their professional portraits
-  'dr-maya-patel': drSarahChenImg,
-  '9492ab1a-eab2-4c5f-a8e3-40870b2ca857': drSarahChenImg,
+  'dr-maya-patel': drMayaPatelImg,
+  '9492ab1a-eab2-4c5f-a8e3-40870b2ca857': drMayaPatelImg, // Dr. Maya Patel
   
-  'dr-alex-rodriguez': drJordanKimImg,
-  '0772c602-306b-42ad-b610-2dc15ba06714': drJordanKimImg,
+  'dr-alex-rodriguez': drAlexRodriguezImg,
+  '0772c602-306b-42ad-b610-2dc15ba06714': drAlexRodriguezImg, // Dr. Alex Rodriguez
   
-  'dr-taylor-morgan': drSarahChenImg,
-  '84148de7-b04d-4547-9d9b-80665efbd4af': drSarahChenImg,
+  'dr-taylor-morgan': drTaylorMorganImg,
+  '84148de7-b04d-4547-9d9b-80665efbd4af': drTaylorMorganImg, // Dr. Taylor Morgan
   
-  'dr-river-stone': drJordanKimImg,
-  '79298cfb-6997-4cc6-9b21-ffaacb525c54': drJordanKimImg,
+  'dr-river-stone': drRiverStoneImg,
+  '79298cfb-6997-4cc6-9b21-ffaacb525c54': drRiverStoneImg, // Dr. River Stone
   
   'dr-michael-rivers': drJordanKimImg,
   'e352e13d-99f9-4ffc-95a6-a05c3d935b74': drJordanKimImg,
   
-  'dr-emma-thompson': drSarahChenImg,
-  '88a93e17-4338-4834-b360-55c9db4cc667': drSarahChenImg,
+  'dr-emma-thompson': drTaylorMorganImg,
+  '88a93e17-4338-4834-b360-55c9db4cc667': drTaylorMorganImg,
   
-  'dr-james-rodriguez': drJordanKimImg,
-  '1588e859-69a6-4b88-b2cc-c377441ac08c': drJordanKimImg,
+  'dr-james-rodriguez': drAlexRodriguezImg,
+  '1588e859-69a6-4b88-b2cc-c377441ac08c': drAlexRodriguezImg,
   
   // New specialized therapists
-  'dr-luna-martinez': drSarahChenImg,
-  'dr-felix-chen': drJordanKimImg,
-  'dr-river-thompson': drSarahChenImg,
-  'dr-nova-sleep': drSarahChenImg,
-  'dr-sage-williams': drSarahChenImg,
-  'dr-phoenix-carter': drJordanKimImg,
-  'dr-sky-anderson': drSarahChenImg,
-  'dr-willow-grace': drSarahChenImg,
+  'dr-luna-martinez': drLunaMartinezImg,
+  'dr-felix-chen': drFelixChenImg,
+  'dr-river-thompson': drRiverThompsonImg,
+  'dr-nova-sleep': drNovaSleepImg,
+  'dr-sage-williams': drSageWilliamsImg,
+  'dr-phoenix-carter': drPhoenixCarterImg,
+  'dr-sky-anderson': drSkyAndersonImg,
+  'dr-willow-grace': drWillowGraceImg,
 } as const;
 
 // Get professional avatar image with fallback
