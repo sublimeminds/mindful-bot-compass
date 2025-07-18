@@ -232,9 +232,10 @@ const TherapistDiscovery = () => {
   });
 
   // Fetch therapists and real analytics data
-  const { data: therapistData = [], isLoading } = useQuery({
+  const { data: therapistData = [], isLoading, error } = useQuery({
     queryKey: ['therapist-personalities-discovery'],
     queryFn: async () => {
+      console.log('Fetching therapists for discovery...');
       const { data, error } = await supabase
         .from('therapist_personalities')
         .select('*')
@@ -245,11 +246,13 @@ const TherapistDiscovery = () => {
         throw error;
       }
 
+      console.log('Fetched therapists for discovery:', data?.length || 0, 'therapists');
+
       // Get real analytics for all therapists
       const allMetrics = await TherapistAnalyticsService.getAllTherapistMetrics();
 
       // Transform database data with real analytics
-      return data.map(therapist => {
+      return data?.map(therapist => {
         const metrics = allMetrics[therapist.id] || {
           total_sessions: Math.floor(Math.random() * 200) + 50,
           average_rating: 4.2 + Math.random() * 0.6,
@@ -293,8 +296,10 @@ const TherapistDiscovery = () => {
           emotionRecognition: '99.2% accuracy',
           privacyProtection: 'Enterprise-grade encryption'
         };
-      });
+      }) || [];
     },
+    retry: 3,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   // Generate compatibility scores based on assessment or default community data
@@ -389,12 +394,53 @@ const TherapistDiscovery = () => {
     }
   };
 
-  if (isLoading) {
+  // Log error if any
+  if (error) {
+    console.error('Therapist discovery query error:', error);
+  }
+
+  if (isLoading || onboardingLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading AI therapists...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Error loading therapists: {error.message}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-therapy-600 text-white px-4 py-2 rounded-lg hover:bg-therapy-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // If no therapists found, show a helpful message
+  if (therapistData.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-therapy-50/20 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <h2 className="text-2xl font-bold mb-4">No Therapists Available</h2>
+          <p className="text-muted-foreground mb-4">
+            We're currently loading our therapy team. Please check back in a moment.
+          </p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-therapy-600 text-white px-6 py-3 rounded-lg hover:bg-therapy-700"
+          >
+            Refresh Page
+          </button>
         </div>
       </div>
     );
@@ -465,7 +511,7 @@ const TherapistDiscovery = () => {
                   const matchedTherapist = therapistData.find(t => t.id === assessment.selected_therapist_id);
                   if (!matchedTherapist) return null;
                   
-                  return (
+  return (
                     <Card className="bg-gradient-to-r from-green-50 to-therapy-50 border-green-200">
                       <CardContent className="p-6">
                         <div className="flex items-center space-x-4">

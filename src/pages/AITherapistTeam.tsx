@@ -12,9 +12,10 @@ const AITherapistTeam = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   // Fetch real therapists from database
-  const { data: therapistData = [], isLoading } = useQuery({
+  const { data: therapistData = [], isLoading, error } = useQuery({
     queryKey: ['ai-therapist-team'],
     queryFn: async () => {
+      console.log('Fetching therapists for AI team...');
       const { data, error } = await supabase
         .from('therapist_personalities')
         .select('*')
@@ -25,7 +26,9 @@ const AITherapistTeam = () => {
         throw error;
       }
 
-      return data.map(therapist => ({
+      console.log('Fetched therapists:', data?.length || 0, 'therapists');
+
+      return data?.map(therapist => ({
         id: therapist.id,
         name: therapist.name,
         title: therapist.title,
@@ -49,9 +52,16 @@ const AITherapistTeam = () => {
         responseTime: '<2 seconds',
         memoryRetention: 'Perfect session recall across all conversations',
         culturalIntelligence: 'Advanced multicultural therapeutic competency'
-      }));
+      })) || [];
     },
+    retry: 3,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
+
+  // Log error if any
+  if (error) {
+    console.error('Query error:', error);
+  }
 
   const openTherapistModal = (therapist: any) => {
     setSelectedTherapist(therapist);
@@ -82,7 +92,7 @@ const AITherapistTeam = () => {
   ];
 
   const stats = [
-    { label: "Active Therapists", value: therapistData.length.toString(), suffix: "" },
+    { label: "Active Therapists", value: isLoading ? "..." : therapistData.length.toString(), suffix: "" },
     { label: "Therapy Sessions", value: "18.4K", suffix: "+" },
     { label: "Success Rate", value: "94", suffix: "%" },
     { label: "Patient Satisfaction", value: "4.8", suffix: "/5" }
@@ -169,6 +179,26 @@ const AITherapistTeam = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
             <p className="text-muted-foreground">Loading AI therapists...</p>
           </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-red-600 mb-4">Error loading therapists: {error.message}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-therapy-600 text-white px-4 py-2 rounded-lg hover:bg-therapy-700"
+            >
+              Retry
+            </button>
+          </div>
+        ) : therapistData.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground mb-4">No therapists found</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-therapy-600 text-white px-4 py-2 rounded-lg hover:bg-therapy-700"
+            >
+              Refresh
+            </button>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
             {therapistData.map((therapist) => (
@@ -206,11 +236,11 @@ const AITherapistTeam = () => {
                   {therapist.specialties.length > 3 && (
                     <Badge variant="outline" className="text-xs">
                       +{therapist.specialties.length - 3} more
-                    </Badge>
-                  )}
-                </div>
+                     </Badge>
+                   )}
+                 </div>
 
-                <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
+                 <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
                     <span>24/7</span>
