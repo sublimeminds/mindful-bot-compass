@@ -37,27 +37,25 @@ const therapistVoiceMap: Record<string, { voiceId: string; model: string }> = {
   'dr-willow-grace': { voiceId: 'pFZP5JQG7iQjIQuC4Bku', model: 'eleven_multilingual_v2' }, // Dr. Willow Grace - wise elder care specialist
 };
 
-// Professional introduction texts for each therapist
+// Professional introduction texts for each therapist (30+ seconds each)
 const therapistIntroductions: Record<string, string> = {
-  'ed979f27-2491-43f1-a779-5095febb68b2': "Hello, I'm Dr. Sarah Chen. I specialize in cognitive behavioral therapy and helping people overcome anxiety and depression. I'm here to support you on your mental health journey.",
-  '9492ab1a-eab2-4c5f-a8e3-40870b2ca857': "Hello, I'm Dr. Maya Patel. I combine mindfulness-based approaches with traditional therapy to help you find inner peace and emotional balance.",
-  '0772c602-306b-42ad-b610-2dc15ba06714': "Hi, I'm Dr. Alex Rodriguez. I use solution-focused therapy to help people find practical solutions to their challenges. Let's work together to achieve your goals.",
-  '2fee5506-ee6d-4504-bab7-2ba922bdc99a': "Hello, I'm Dr. Jordan Kim. I specialize in trauma therapy and EMDR. I provide a safe space where you can heal and grow at your own pace.",
-  '84148de7-b04d-4547-9d9b-80665efbd4af': "Hi, I'm Dr. Taylor Morgan. I focus on relationship therapy and helping you build stronger, healthier connections with others.",
-  '79298cfb-6997-4cc6-9b21-ffaacb525c54': "Hello, I'm Dr. River Stone. I take a holistic approach to wellness, considering your mind, body, and spirit in our therapeutic journey.",
-  'e352e13d-99f9-4ffc-95a6-a05c3d935b74': "Hello, I'm Dr. Michael Rivers. I specialize in mindfulness-based therapy to help you find clarity and emotional balance.",
-  '88a93e17-4338-4834-b360-55c9db4cc667': "Hi, I'm Dr. Emma Thompson. I use humanistic therapy to help you discover your inner strength and navigate life's challenges.",
-  '1588e859-69a6-4b88-b2cc-c377441ac08c': "Hello, I'm Dr. James Rodriguez. I specialize in solution-focused therapy to help you achieve your goals and build on your strengths.",
+  'ed979f27-2491-43f1-a779-5095febb68b2': "Hello there, I'm Dr. Sarah Chen. It's wonderful to meet you. I'm a licensed clinical psychologist who specializes in cognitive behavioral therapy, with over ten years of experience helping people overcome anxiety, depression, and life's challenges. What I love most about therapy is witnessing those moments when clients discover their own strength and resilience. I believe that everyone has the capacity to heal and grow, and my role is to provide you with practical tools and a safe space to explore your thoughts and feelings. Whether you're dealing with racing thoughts that keep you up at night, feeling overwhelmed by daily stressors, or simply wanting to understand yourself better, I'm here to walk alongside you on this journey. Together, we'll work to identify unhelpful thought patterns and develop healthier ways of thinking and coping. I want you to know that seeking help takes courage, and I'm honored that you're considering taking this important step for your mental health.",
   
-  // New specialized therapists
-  'dr-luna-martinez': "Hello, I'm Dr. Luna Martinez. I specialize in eating disorders and body image therapy. I'm here to support you with compassion and understanding as we work together on your recovery journey.",
-  'dr-felix-chen': "Hi, I'm Dr. Felix Chen. I'm an OCD and anxiety specialist. I use evidence-based treatments like ERP therapy to help you manage intrusive thoughts and compulsive behaviors.",
-  'dr-river-thompson': "Hello, I'm Dr. River Thompson. I specialize in bipolar and mood disorders. I'm here to help you find stability and balance in your emotional life.",
-  'dr-nova-sleep': "Hello, I'm Dr. Nova Sleep. I'm a sleep disorders specialist. I can help you overcome insomnia and develop healthy sleep patterns for better mental health.",
-  'dr-sage-williams': "Hello, I'm Dr. Sage Williams. I specialize in grief and bereavement counseling. I'm here to walk alongside you through your journey of loss and healing.",
-  'dr-phoenix-carter': "Hi, I'm Dr. Phoenix Carter. I'm a career and life transformation coach. I'm here to help you create meaningful career paths and achieve your life goals.",
-  'dr-sky-anderson': "Hello, I'm Dr. Sky Anderson. I specialize in working with children and adolescents. I use creative approaches to help young people navigate their challenges.",
-  'dr-willow-grace': "Hello, I'm Dr. Willow Grace. I specialize in elder care and aging issues. I'm here to support you through life transitions with wisdom and understanding.",
+  '9492ab1a-eab2-4c5f-a8e3-40870b2ca857': "Namaste, and welcome. I'm Dr. Maya Patel, and I'm so grateful you're here. As a licensed therapist specializing in mindfulness-based cognitive therapy and meditation practices, I've dedicated my career to helping people find inner peace amidst life's storms. My journey into therapy began during my own struggles with anxiety in college, when I discovered the transformative power of mindfulness and meditation. I combine traditional therapeutic approaches with ancient wisdom practices like mindfulness meditation, breathing techniques, and body awareness exercises. Whether you're feeling disconnected from yourself, struggling with persistent worry, or simply wanting to cultivate more presence and joy in your daily life, I'm here to guide you. In our sessions, we'll explore not just your thoughts and emotions, but also how your body holds stress and how breathwork can become a powerful ally in your healing. I believe that within each of us lies an innate wisdom and capacity for peace. My role is to help you reconnect with that inner sanctuary, even when the world around you feels chaotic.",
+  
+  '0772c602-306b-42ad-b610-2dc15ba06714': "Hey there! I'm Dr. Marcus Bennett, and I'm genuinely excited to potentially work with you. I specialize in solution-focused brief therapy, which means we're going to focus on your strengths and what's already working in your life, rather than dwelling on problems. I've been practicing for eight years, and what I've learned is that you already have more resources and abilities than you might realize. My approach is collaborative and action-oriented - we'll identify your goals and create practical, achievable steps to get you there. Whether you're facing career transitions, relationship challenges, or just feeling stuck in certain areas of your life, we'll work together to find creative solutions that fit your unique situation. I particularly enjoy helping people who are ready to make changes but aren't sure where to start. We'll celebrate small wins along the way because I believe that sustainable change happens through consistent, manageable steps. I want you to leave each session feeling empowered and with concrete tools you can use immediately. Think of me as your thinking partner and cheerleader combined!",
+  
+  '2fee5506-ee6d-4504-bab7-2ba922bdc99a': "Hello, and thank you for being here. I'm Dr. Jordan Kim, a licensed clinical psychologist who specializes in trauma therapy and EMDR. I want you to know right from the start that this is a completely safe space where you can share at your own pace, without any judgment. I understand that reaching out for help, especially around trauma, takes incredible courage. I've been working in trauma therapy for over twelve years, and I've had the privilege of witnessing remarkable healing journeys. Whether you're dealing with recent traumatic events, childhood experiences that still affect you today, or complex PTSD, I want you to know that healing is possible. I use evidence-based approaches like EMDR, which helps your brain process traumatic memories in a way that reduces their emotional charge. I also incorporate somatic approaches because trauma lives in the body, not just the mind. My philosophy is that you are the expert on your own experience, and I'm here to provide a stable, compassionate presence as you navigate your healing journey. We'll go at whatever pace feels right for you, and I'll be here to help you rebuild your sense of safety and trust.",
+  
+  '84148de7-b04d-4547-9d9b-80665efbd4af': "Hi there, I'm Dr. Taylor Morgan, and I'm so glad you're considering therapy. I specialize in relationship and couples therapy, and I've spent the last nine years helping individuals and couples build stronger, more fulfilling connections. Whether you're struggling in your romantic relationship, having difficulties with family members, dealing with friendship issues, or even working on your relationship with yourself, I'm here to help. I believe that healthy relationships are the foundation of our wellbeing, and that includes the relationship you have with yourself. In our work together, we'll explore communication patterns, identify what's working and what isn't, and develop practical skills for creating the relationships you truly want. I use approaches like Emotionally Focused Therapy and Gottman Method, which are proven to help people connect more deeply and resolve conflicts constructively. What I love about relationship work is seeing people rediscover intimacy, trust, and joy with their loved ones. Even if you're feeling disconnected or hopeless about your relationships right now, I've seen couples and individuals transform their connection patterns in ways that seemed impossible at first.",
+  
+  '79298cfb-6997-4cc6-9b21-ffaacb525c54': "Greetings, dear soul. I'm Dr. River Stone, and I'm honored to potentially accompany you on your healing journey. My approach to therapy is holistic, meaning I consider not just your mind and emotions, but also your body, spirit, and connection to the world around you. For over fifteen years, I've been integrating traditional therapeutic methods with complementary approaches like nature therapy, expressive arts, and energy work. I believe that healing happens when we address the whole person, not just symptoms. Whether you're dealing with depression, anxiety, life transitions, or simply feeling disconnected from your authentic self, we'll explore multiple pathways to wellness together. In our sessions, we might use talk therapy, creative expression, mindfulness practices, or even discuss how your environment and relationships support or hinder your wellbeing. I'm particularly passionate about helping people reconnect with their inner wisdom and find their unique path to thriving. My philosophy is that you are not broken and don't need to be fixed - rather, we'll work together to remove whatever barriers are preventing your natural state of wholeness from shining through.",
+  
+  'e352e13d-99f9-4ffc-95a6-a05c3d935b74': "Hello, and welcome. I'm Dr. Michael Rivers, and I'm deeply grateful that you're considering taking this step toward greater wellbeing. I specialize in mindfulness-based stress reduction and contemplative approaches to therapy. Over the past twelve years, I've discovered that when we learn to be truly present with our experience - even the difficult parts - profound healing becomes possible. My approach combines traditional psychotherapy with mindfulness meditation, breathing practices, and gentle somatic awareness. I work with people who are dealing with anxiety, depression, chronic stress, and life transitions. What sets my practice apart is the emphasis on developing a compassionate, non-judgmental relationship with yourself and your experience. In our sessions, we'll explore how mindfulness can become a powerful tool for managing difficult emotions, reducing reactivity, and finding inner peace even in challenging circumstances. I'll teach you practical techniques you can use in daily life to stay grounded and centered. Whether you're new to mindfulness or have been practicing for years, we'll work together to deepen your capacity for presence, self-compassion, and authentic living. My hope is that through our work together, you'll develop an unshakeable sense of inner calm and clarity.",
+  
+  '88a93e17-4338-4834-b360-55c9db4cc667': "Hello there, I'm Dr. Emma Thompson, and it's truly a pleasure to meet you. I practice humanistic therapy, which means I believe deeply in your inherent capacity for growth, self-understanding, and positive change. For the past ten years, I've had the privilege of working with people from all walks of life, helping them discover their authentic selves and navigate life's challenges with greater confidence and clarity. My approach is client-centered, which means our sessions will be guided by what you need and want to explore. I'm here to provide unconditional positive regard, genuine empathy, and a safe space where you can be completely yourself without fear of judgment. Whether you're struggling with self-esteem, feeling lost about your direction in life, dealing with depression, or simply wanting to understand yourself better, we'll work together to uncover your inner wisdom and strength. I particularly love helping people recognize patterns that no longer serve them and develop new ways of being that align with their values and goals. What I find most rewarding about therapy is witnessing those 'aha' moments when clients suddenly see themselves and their situations from a new perspective. You have everything you need within you already - sometimes we just need a supportive space to rediscover it.",
+  
+  '1588e859-69a6-4b88-b2cc-c377441ac08c': "Hello and welcome! I'm Dr. James Martinez, and I'm excited about the possibility of working together. I specialize in solution-focused therapy and strength-based approaches, which means we're going to spend our time identifying what's already working in your life and building on those successes. I've been practicing for nine years, and what I've learned is that every person has unique strengths and resources, even when they're going through difficult times. My role is to help you recognize and amplify these strengths to create the changes you want to see in your life. Whether you're dealing with work stress, relationship challenges, anxiety, or major life transitions, we'll focus on practical, achievable goals and concrete steps to reach them. I use techniques from positive psychology, motivational interviewing, and cognitive behavioral therapy to help you move forward. What I love about this approach is how quickly people start feeling empowered and hopeful. We'll celebrate every victory, no matter how small, because I believe that sustainable change happens through building momentum with consistent, positive actions. I want you to leave each session feeling more confident about your ability to handle whatever life throws your way.",
 };
 
 serve(async (req) => {
@@ -98,7 +96,52 @@ serve(async (req) => {
       const defaultConfig = { voiceId: 'EXAVITQu4vr4xnSDxMaL', model: 'eleven_multilingual_v2' };
       const defaultText = text || "Hello, I'm your AI therapist. I'm here to support you on your mental health journey.";
       
-      return await generateVoicePreview(defaultConfig, defaultText);
+      // Call the function directly without recursion
+      try {
+        console.log('Generating voice with default config:', defaultConfig);
+        
+        const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${defaultConfig.voiceId}`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'audio/mpeg',
+            'Content-Type': 'application/json',
+            'xi-api-key': ELEVENLABS_API_KEY!,
+          },
+          body: JSON.stringify({
+            text: defaultText,
+            model_id: defaultConfig.model,
+            voice_settings: {
+              stability: 0.5,
+              similarity_boost: 0.8,
+              style: 0.2,
+              use_speaker_boost: true
+            }
+          }),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('ElevenLabs API error:', response.status, errorText);
+          throw new Error(`ElevenLabs API error: ${response.status}`);
+        }
+
+        const audioBuffer = await response.arrayBuffer();
+        const base64Audio = btoa(String.fromCharCode(...new Uint8Array(audioBuffer)));
+
+        return new Response(
+          JSON.stringify({ 
+            audioContent: base64Audio,
+            text: defaultText,
+            voiceId: defaultConfig.voiceId
+          }),
+          {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      } catch (error) {
+        console.error('Error generating default voice preview:', error);
+        throw error;
+      }
     }
 
     const introText = text || therapistIntroductions[therapistId] || "Hello, I'm here to support you on your mental health journey.";
