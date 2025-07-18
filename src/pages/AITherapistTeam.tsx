@@ -18,7 +18,25 @@ const AITherapistTeam = () => {
       console.log('Fetching therapists for AI team...');
       const { data, error } = await supabase
         .from('therapist_personalities')
-        .select('*')
+        .select(`
+          id,
+          name,
+          title,
+          approach,
+          description,
+          specialties,
+          communication_style,
+          experience_level,
+          color_scheme,
+          icon,
+          personality_traits,
+          effectiveness_areas,
+          years_experience,
+          education,
+          therapeutic_techniques,
+          voice_characteristics,
+          is_active
+        `)
         .eq('is_active', true);
 
       if (error) {
@@ -71,8 +89,8 @@ const AITherapistTeam = () => {
   const features = [
     {
       icon: Video,
-      title: "3D Avatar Interaction",
-      description: "Lifelike 3D avatars with realistic expressions and gestures"
+      title: "2D Avatar Interaction",
+      description: "Professional 2D avatars with expressive personalities and unique styles"
     },
     {
       icon: Mic,
@@ -112,7 +130,7 @@ const AITherapistTeam = () => {
               AI Therapist Team
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed mb-8">
-              Meet our specialized AI therapists with unique approaches, 3D avatars, and proven therapeutic methodologies
+              Meet our specialized AI therapists with unique approaches, 2D avatars, and proven therapeutic methodologies
             </p>
             
             {/* Stats Grid */}

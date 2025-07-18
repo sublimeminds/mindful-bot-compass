@@ -238,7 +238,26 @@ const TherapistDiscovery = () => {
       console.log('Fetching therapists for discovery...');
       const { data, error } = await supabase
         .from('therapist_personalities')
-        .select('*')
+        .select(`
+          id,
+          name,
+          title,
+          approach,
+          description,
+          specialties,
+          communication_style,
+          experience_level,
+          color_scheme,
+          icon,
+          personality_traits,
+          effectiveness_areas,
+          years_experience,
+          education,
+          therapeutic_techniques,
+          voice_characteristics,
+          emotional_responses,
+          is_active
+        `)
         .eq('is_active', true);
 
       if (error) {
