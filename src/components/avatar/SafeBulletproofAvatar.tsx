@@ -54,10 +54,6 @@ const SafeBulletproofAvatar: React.FC<SafeBulletproofAvatarProps> = ({
           </AvatarFallback>
         </Avatar>
         
-        {/* Status indicator */}
-        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white">
-          <div className="absolute inset-0 bg-green-300 rounded-full animate-pulse"></div>
-        </div>
       </div>
       
       {showName && (

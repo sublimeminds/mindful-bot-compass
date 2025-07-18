@@ -6,10 +6,14 @@ import { Badge } from '@/components/ui/badge';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const AITherapistTeam = () => {
   const [selectedTherapist, setSelectedTherapist] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Fetch real therapists from database
   const { data: therapistData = [], isLoading, error } = useQuery({
@@ -236,10 +240,6 @@ const AITherapistTeam = () => {
                       showName={false}
                     />
                   </div>
-                  <div className="absolute -top-2 -right-8 bg-green-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                    Online
-                  </div>
                 </div>
                 
                 <h3 className="text-xl font-bold text-foreground mb-2">{therapist.name}</h3>
@@ -273,10 +273,17 @@ const AITherapistTeam = () => {
 
                 <div className="space-y-3">
                   <button 
-                    onClick={() => openTherapistModal(therapist)}
+                    onClick={() => {
+                      if (!user) {
+                        navigate('/auth');
+                      } else {
+                        // TODO: Check onboarding status and navigate appropriately
+                        navigate('/onboarding');
+                      }
+                    }}
                     className="w-full bg-gradient-to-r from-therapy-500 to-blue-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 group-hover:scale-105"
                   >
-                    Start Session
+                    {!user ? 'Start Onboarding' : 'Continue Journey'}
                   </button>
                   <button 
                     onClick={() => openTherapistModal(therapist)}
