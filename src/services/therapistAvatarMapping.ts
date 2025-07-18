@@ -11,6 +11,12 @@ export const therapistAvatarMapping = {
   '88a93e17-4338-4834-b360-55c9db4cc667': 'dr-emma-thompson',  // Dr. Emma Thompson - Humanistic
   '1588e859-69a6-4b88-b2cc-c377441ac08c': 'dr-james-rodriguez', // Dr. James Rodriguez - Solution-Focused
   
+  // New therapists from console logs
+  '67e46397-8bc1-42c8-a075-ec4bf0a4dc6a': 'dr-sarah-chen',     // Map missing therapist
+  'b62465f0-6872-4f2c-9931-28d35adf8613': 'dr-maya-patel',     // Map missing therapist
+  'adbc185d-9567-4d89-9d4e-9cf3460ec91f': 'dr-alex-rodriguez', // Map missing therapist
+  'dd76b28e-d632-4e67-9519-a06fdcf01c8b': 'dr-jordan-kim',     // Map missing therapist
+  
   // New specialized therapists
   'a1b2c3d4-5e6f-7890-abcd-ef1234567890': 'dr-jordan-taylor',  // ADHD Specialist
   'b2c3d4e5-6f78-9012-bcde-f23456789012': 'dr-riley-chen',     // LGBTQ+ Affirming

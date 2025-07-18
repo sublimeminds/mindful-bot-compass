@@ -186,16 +186,6 @@ const Professional2DAvatar: React.FC<Professional2DAvatarProps> = ({
         
         {/* Voice Visualization */}
         <VoiceVisualization />
-        
-        {/* Status indicator */}
-        <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${getStatusColor()} rounded-full border-2 border-white shadow-sm`}>
-          {isListening && (
-            <div className="absolute inset-0 bg-blue-300 rounded-full animate-pulse"></div>
-          )}
-          {isSpeaking && (
-            <div className="absolute inset-0 bg-green-300 rounded-full animate-bounce"></div>
-          )}
-        </div>
       </div>
       
       {showName && (
