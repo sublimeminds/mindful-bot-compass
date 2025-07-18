@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Bot, User, Play, Pause, RotateCcw, MessageSquare } from 'lucide-react';
+import { Bot, User, Play, Pause, RotateCcw, MessageSquare, Volume2, VolumeX } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const demoConversation = [
   {
@@ -14,7 +16,8 @@ const demoConversation = [
   {
     role: 'ai',
     message: "I understand that work anxiety can be overwhelming. It's completely normal to feel this way, and I'm here to help you work through it. Can you tell me what specific aspects of work are causing you the most stress?",
-    delay: 2500
+    delay: 2500,
+    shouldSpeak: true
   },
   {
     role: 'user',
@@ -24,7 +27,8 @@ const demoConversation = [
   {
     role: 'ai',
     message: "Presentation anxiety is very common - you're definitely not alone in feeling this way. Let's work through some techniques to help manage these feelings. First, let's try a quick grounding exercise. Can you name 3 things you can see around you right now?",
-    delay: 3000
+    delay: 3000,
+    shouldSpeak: true
   },
   {
     role: 'user',
@@ -34,19 +38,74 @@ const demoConversation = [
   {
     role: 'ai',
     message: "Great! Now let's build on that success. Preparation is key to reducing presentation anxiety. Have you started preparing your presentation content yet? We can work together on a preparation strategy that will boost your confidence.",
-    delay: 2800
+    delay: 2800,
+    shouldSpeak: true
   }
 ];
 
 interface InteractiveChatDemoProps {
   autoStart?: boolean;
+  therapistId?: string;
 }
 
-const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = ({ autoStart = false }) => {
+const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = ({ 
+  autoStart = false,
+  therapistId = '2fee5506-ee6d-4504-bab7-2ba922bdc99a'
+}) => {
   const [currentMessage, setCurrentMessage] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoStart);
   const [displayedMessages, setDisplayedMessages] = useState<typeof demoConversation>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+  const { toast } = useToast();
+
+  const speakMessage = async (text: string) => {
+    if (!voiceEnabled) return;
+    
+    try {
+      // Stop any currently playing audio
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+
+      const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
+        body: {
+          therapistId: therapistId,
+          text: text
+        }
+      });
+
+      if (error) {
+        console.warn('Voice synthesis failed:', error);
+        return;
+      }
+
+      if (data?.audioContent) {
+        const binaryString = atob(data.audioContent);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        
+        const blob = new Blob([bytes], { type: 'audio/mpeg' });
+        const url = URL.createObjectURL(blob);
+        
+        const audio = new Audio(url);
+        setCurrentAudio(audio);
+        
+        audio.onended = () => {
+          URL.revokeObjectURL(url);
+          setCurrentAudio(null);
+        };
+        
+        await audio.play();
+      }
+    } catch (error) {
+      console.warn('Voice playback failed:', error);
+    }
+  };
 
   useEffect(() => {
     if (!isPlaying || currentMessage >= demoConversation.length) return;
@@ -59,15 +118,21 @@ const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = ({ autoStart = f
         setIsTyping(true);
         
         setTimeout(() => {
-          setDisplayedMessages(prev => [...prev, demoConversation[currentMessage]]);
+          const newMessage = demoConversation[currentMessage];
+          setDisplayedMessages(prev => [...prev, newMessage]);
           setIsTyping(false);
           setCurrentMessage(prev => prev + 1);
+          
+          // Speak AI messages if voice is enabled
+          if (newMessage.role === 'ai' && newMessage.shouldSpeak && voiceEnabled) {
+            speakMessage(newMessage.message);
+          }
         }, 1000);
       }
     }, currentMessage === 0 ? 500 : demoConversation[currentMessage - 1]?.delay || 2000);
 
     return () => clearTimeout(timer);
-  }, [currentMessage, isPlaying]);
+  }, [currentMessage, isPlaying, therapistId, voiceEnabled]);
 
   useEffect(() => {
     if (currentMessage >= demoConversation.length && isPlaying) {
@@ -76,6 +141,12 @@ const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = ({ autoStart = f
   }, [currentMessage, isPlaying]);
 
   const resetDemo = () => {
+    // Stop any playing audio
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+    
     setCurrentMessage(0);
     setDisplayedMessages([]);
     setIsTyping(false);
@@ -90,6 +161,36 @@ const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = ({ autoStart = f
     }
   };
 
+  const toggleVoice = () => {
+    setVoiceEnabled(!voiceEnabled);
+    if (!voiceEnabled) {
+      toast({
+        title: "Voice Enabled",
+        description: "AI responses will now be spoken aloud"
+      });
+    } else {
+      toast({
+        title: "Voice Disabled",
+        description: "AI responses will be text-only"
+      });
+      // Stop any currently playing audio
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+    }
+  };
+
+  // Cleanup audio when component unmounts
+  useEffect(() => {
+    return () => {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.src = '';
+      }
+    };
+  }, [currentAudio]);
+
   return (
     <div className="w-full max-w-2xl mx-auto">
       <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
@@ -101,7 +202,8 @@ const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = ({ autoStart = f
           <p className="text-sm text-gray-600">
             Experience how our AI provides personalized mental health support
           </p>
-          <div className="flex justify-center mt-4 space-x-2">
+          
+          <div className="flex justify-center items-center mt-4 space-x-2">
             <Button 
               onClick={toggleDemo}
               className="bg-gradient-to-r from-therapy-500 to-calm-500 text-white hover:from-therapy-600 hover:to-calm-600"
@@ -124,12 +226,26 @@ const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = ({ autoStart = f
                 </>
               )}
             </Button>
+            
             {displayedMessages.length > 0 && (
               <Button onClick={resetDemo} variant="outline" size="sm">
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Restart
               </Button>
             )}
+            
+            <Button 
+              onClick={toggleVoice} 
+              variant="outline" 
+              size="sm"
+              className={voiceEnabled ? "bg-green-50 border-green-200" : ""}
+            >
+              {voiceEnabled ? (
+                <Volume2 className="h-4 w-4" />
+              ) : (
+                <VolumeX className="h-4 w-4" />
+              )}
+            </Button>
           </div>
         </CardHeader>
         
