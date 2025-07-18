@@ -10,43 +10,43 @@ const TraumaTherapy = () => {
       icon: Heart,
       title: "Trauma Processing",
       description: "Safe, structured approach to processing traumatic memories and experiences",
-      gradient: "from-red-500/10 to-pink-500/10",
-      iconColor: "text-red-600"
+      gradient: "from-therapy-50 to-harmony-50",
+      iconColor: "text-therapy-600"
     },
     {
       icon: Shield,
       title: "Safety Building",
       description: "Establish emotional safety and stability before processing trauma",
-      gradient: "from-blue-500/10 to-cyan-500/10",
-      iconColor: "text-blue-600"
+      gradient: "from-calm-50 to-flow-50",
+      iconColor: "text-calm-600"
     },
     {
       icon: Target,
       title: "EMDR Integration",
       description: "Eye Movement Desensitization and Reprocessing techniques for trauma healing",
-      gradient: "from-green-500/10 to-emerald-500/10",
-      iconColor: "text-green-600"
+      gradient: "from-flow-50 to-balance-50",
+      iconColor: "text-flow-700"
     },
     {
       icon: Users,
       title: "Somatic Approaches",
       description: "Body-based interventions to address trauma stored in the nervous system",
-      gradient: "from-purple-500/10 to-violet-500/10",
-      iconColor: "text-purple-600"
+      gradient: "from-harmony-50 to-therapy-50",
+      iconColor: "text-harmony-600"
     },
     {
       icon: Star,
       title: "Resilience Building",
       description: "Develop strength and coping skills to thrive beyond trauma",
-      gradient: "from-yellow-500/10 to-orange-500/10",
-      iconColor: "text-yellow-600"
+      gradient: "from-balance-50 to-calm-50",
+      iconColor: "text-balance-600"
     },
     {
       icon: Lightbulb,
       title: "Post-Traumatic Growth",
       description: "Transform trauma into wisdom, strength, and personal growth",
-      gradient: "from-indigo-500/10 to-blue-500/10",
-      iconColor: "text-indigo-600"
+      gradient: "from-therapy-50 to-calm-50",
+      iconColor: "text-therapy-700"
     }
   ];
 
@@ -114,18 +114,18 @@ const TraumaTherapy = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card 
+                <Card 
                 key={feature.title}
-                className={`group hover-scale border-0 bg-gradient-to-br ${feature.gradient} backdrop-blur-sm transition-all duration-300 hover:shadow-lg animate-fade-in`}
+                className={`group hover-scale border border-primary/10 bg-gradient-to-br ${feature.gradient} backdrop-blur-sm transition-all duration-300 hover:shadow-therapy-glow animate-fade-in`}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <CardContent className="p-8">
                   <div className="flex items-start space-x-4">
-                    <div className={`p-3 rounded-xl bg-background/80 ${feature.iconColor}`}>
+                    <div className={`p-3 rounded-xl bg-card shadow-therapy-subtle ${feature.iconColor}`}>
                       <feature.icon className="h-6 w-6" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                      <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-primary transition-colors">
                         {feature.title}
                       </h3>
                       <p className="text-muted-foreground leading-relaxed">
@@ -166,7 +166,7 @@ const TraumaTherapy = () => {
                     className="flex items-center space-x-3 animate-fade-in"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-flow-600 flex-shrink-0" />
                     <span className="text-sm font-medium">{benefit}</span>
                   </div>
                 ))}
