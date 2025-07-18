@@ -91,6 +91,103 @@ const therapistPersonalities: TherapistPersonality[] = [
     color: 'from-teal-500 to-cyan-500',
     matchingGoals: ['find life purpose', 'improve sleep'],
     matchingPreferences: ['positive psychology', 'mindfulness & meditation']
+  },
+  // New specialized therapists
+  {
+    id: 'eating-disorder-specialist',
+    name: 'Dr. Luna Martinez',
+    title: 'Eating Disorder Specialist',
+    description: 'Compassionate care for eating disorder recovery with evidence-based approaches.',
+    approach: 'Gentle, understanding, recovery-focused',
+    icon: Heart,
+    specialties: ['Eating Disorders', 'Body Image', 'Nutrition Psychology'],
+    color: 'from-purple-400 to-pink-500',
+    matchingGoals: ['improve body image', 'develop healthy eating habits', 'overcome eating disorders'],
+    matchingPreferences: ['eating disorder recovery', 'body positivity']
+  },
+  {
+    id: 'ocd-specialist',
+    name: 'Dr. Felix Chen',
+    title: 'OCD Specialist',
+    description: 'Expert in OCD treatment using exposure therapy and specialized cognitive approaches.',
+    approach: 'Methodical, systematic, evidence-based',
+    icon: Target,
+    specialties: ['OCD', 'Anxiety Disorders', 'Compulsive Behaviors'],
+    color: 'from-blue-600 to-indigo-600',
+    matchingGoals: ['manage ocd', 'reduce compulsive behaviors', 'control intrusive thoughts'],
+    matchingPreferences: ['exposure therapy', 'cognitive behavioral therapy (cbt)']
+  },
+  {
+    id: 'bipolar-specialist',
+    name: 'Dr. River Thompson',
+    title: 'Bipolar Disorder Specialist',
+    description: 'Specialized care for bipolar disorder with focus on mood stabilization and balance.',
+    approach: 'Steady, supportive, stability-focused',
+    icon: Brain,
+    specialties: ['Bipolar Disorder', 'Mood Regulation', 'Medication Management'],
+    color: 'from-emerald-500 to-teal-600',
+    matchingGoals: ['manage mood swings', 'stabilize emotions', 'manage bipolar disorder'],
+    matchingPreferences: ['mood stabilization', 'medication support']
+  },
+  {
+    id: 'sleep-specialist',
+    name: 'Dr. Nova Sleep',
+    title: 'Sleep Specialist',
+    description: 'Expert in sleep disorders with cognitive-behavioral approaches to better sleep.',
+    approach: 'Calming, methodical, sleep-focused',
+    icon: Heart,
+    specialties: ['Sleep Disorders', 'Insomnia', 'Sleep Hygiene'],
+    color: 'from-indigo-500 to-purple-600',
+    matchingGoals: ['improve sleep', 'overcome insomnia', 'develop better sleep habits'],
+    matchingPreferences: ['sleep therapy', 'relaxation techniques']
+  },
+  {
+    id: 'grief-counselor',
+    name: 'Dr. Sage Williams',
+    title: 'Grief Counselor',
+    description: 'Compassionate grief counseling helping navigate loss and find healing.',
+    approach: 'Empathetic, supportive, healing-focused',
+    icon: Heart,
+    specialties: ['Grief Counseling', 'Loss', 'Bereavement Support'],
+    color: 'from-rose-500 to-pink-600',
+    matchingGoals: ['process grief', 'cope with loss', 'find healing after loss'],
+    matchingPreferences: ['grief counseling', 'bereavement support']
+  },
+  {
+    id: 'career-coach',
+    name: 'Dr. Phoenix Carter',
+    title: 'Career Coach',
+    description: 'Empowers career growth and life transitions with strategic coaching approaches.',
+    approach: 'Motivational, strategic, goal-oriented',
+    icon: Target,
+    specialties: ['Career Coaching', 'Life Transitions', 'Professional Development'],
+    color: 'from-orange-500 to-red-500',
+    matchingGoals: ['find career direction', 'navigate life transitions', 'build confidence'],
+    matchingPreferences: ['career coaching', 'life coaching']
+  },
+  {
+    id: 'child-adolescent-therapist',
+    name: 'Dr. Sky Anderson',
+    title: 'Child & Adolescent Therapist',
+    description: 'Specializes in child and teen therapy with family-centered approaches.',
+    approach: 'Playful, age-appropriate, family-focused',
+    icon: Users,
+    specialties: ['Child Therapy', 'Adolescent Counseling', 'Family Systems'],
+    color: 'from-cyan-400 to-blue-500',
+    matchingGoals: ['help my child', 'improve family communication', 'teen support'],
+    matchingPreferences: ['family therapy', 'child psychology']
+  },
+  {
+    id: 'elder-care-specialist',
+    name: 'Dr. Willow Grace',
+    title: 'Elder Care Specialist',
+    description: 'Compassionate care for seniors focusing on aging, memory, and life transitions.',
+    approach: 'Patient, respectful, wisdom-focused',
+    icon: Heart,
+    specialties: ['Elder Care', 'Aging', 'Memory Support'],
+    color: 'from-amber-500 to-orange-600',
+    matchingGoals: ['navigate aging', 'memory support', 'senior care'],
+    matchingPreferences: ['elder care', 'aging support']
   }
 ];
 
