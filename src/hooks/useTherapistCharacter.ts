@@ -158,6 +158,8 @@ export const useTherapistPersonality = (therapistId: string, userId?: string) =>
     return phrase;
   };
 
+  const { generatePersonalizedResponse } = useTherapistCharacter(therapistId, userId);
+
   return {
     characterProfile,
     relationship,
@@ -167,7 +169,7 @@ export const useTherapistPersonality = (therapistId: string, userId?: string) =>
     getCurrentSignaturePhrase,
     getCommunicationStyle,
     getPredictedResponse,
-    generatePersonalizedResponse: generateResponseMutation.mutateAsync,
+    generatePersonalizedResponse,
     rapportLevel: relationship?.rapport_level || 0,
     relationshipStage: relationship?.relationship_stage || 'initial',
     totalSessions: relationship?.total_sessions || 0,

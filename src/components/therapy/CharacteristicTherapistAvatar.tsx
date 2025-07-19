@@ -75,7 +75,7 @@ export const CharacteristicTherapistAvatar: React.FC<CharacteristicTherapistAvat
       if (currentEmotion === 'confused') adaptedEmotion = 'thoughtful';
     }
 
-    setDisplayEmotion(adaptedEmotion);
+    setDisplayEmotion(adaptedEmotion as any);
 
     // Update personality state based on character and relationship
     setPersonalityState({
@@ -94,7 +94,7 @@ export const CharacteristicTherapistAvatar: React.FC<CharacteristicTherapistAvat
       <UniversalTherapistAvatar
         therapistId={therapistId}
         therapistName={therapistName}
-        emotion={displayEmotion}
+        emotion={displayEmotion as "neutral"}
         isListening={isListening}
         isSpeaking={isSpeaking}
         lipSyncData={lipSyncData}
