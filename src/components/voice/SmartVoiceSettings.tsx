@@ -46,8 +46,8 @@ const SmartVoiceSettings: React.FC<SmartVoiceSettingsProps> = ({
 
       const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
         body: {
-          therapistId: therapistId,
-          text: "Hello, this is a voice preview. I'm here to support you on your mental health journey with understanding and care."
+          therapistId: therapistId
+          // No custom text - will use the longer introduction from the edge function
         }
       });
 

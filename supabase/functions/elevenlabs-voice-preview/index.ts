@@ -146,7 +146,47 @@ serve(async (req) => {
 
     const introText = text || therapistIntroductions[therapistId] || "Hello, I'm here to support you on your mental health journey.";
     
-    return await generateVoicePreview(voiceConfig, introText);
+    console.log('Generating voice with config:', voiceConfig);
+    
+    // Call ElevenLabs Text-to-Speech API directly without recursion
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceConfig.voiceId}`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'audio/mpeg',
+        'Content-Type': 'application/json',
+        'xi-api-key': ELEVENLABS_API_KEY!,
+      },
+      body: JSON.stringify({
+        text: introText,
+        model_id: voiceConfig.model,
+        voice_settings: {
+          stability: 0.5,
+          similarity_boost: 0.8,
+          style: 0.2,
+          use_speaker_boost: true
+        }
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('ElevenLabs API error:', response.status, errorText);
+      throw new Error(`ElevenLabs API error: ${response.status}`);
+    }
+
+    const audioBuffer = await response.arrayBuffer();
+    const base64Audio = btoa(String.fromCharCode(...new Uint8Array(audioBuffer)));
+
+    return new Response(
+      JSON.stringify({ 
+        audioContent: base64Audio,
+        text: introText,
+        voiceId: voiceConfig.voiceId
+      }),
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
 
   } catch (error) {
     console.error('Error in elevenlabs-voice-preview function:', error);
