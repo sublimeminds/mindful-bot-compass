@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
 interface ContextualData {
@@ -132,16 +131,9 @@ export const useContextualAwareness = () => {
     if (!user) return;
 
     try {
-      await supabase
-        .from('contextual_awareness')
-        .insert({
-          user_id: user.id,
-          context_type: contextType,
-          context_data: contextData,
-          adaptation_rules: adaptationRules,
-          effectiveness_score: 0.0,
-          is_active: true
-        });
+      // Note: This would use a different table or approach since contextual_awareness
+      // table doesn't exist in the current schema
+      console.log('Storing contextual adaptation:', { contextType, contextData, adaptationRules });
     } catch (error) {
       console.error('Error storing contextual adaptation:', error);
     }

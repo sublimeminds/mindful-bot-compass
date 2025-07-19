@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import IntelligentPersonalizationDashboard from '@/components/ai/IntelligentPersonalizationDashboard';
 import ContextualAISupport from '@/components/ai/ContextualAISupport';
 import SmartRecommendationEngine from '@/components/ai/SmartRecommendationEngine';
-import { Brain, Lightbulb, Settings, Zap, BarChart3, MessageSquare } from 'lucide-react';
+import { Brain, Lightbulb, Settings, Zap, BarChart3, MessageSquare, Heart } from 'lucide-react';
 
 const AIHub = () => {
   const { user, loading } = useAuth();
@@ -94,12 +94,24 @@ const AIHub = () => {
           </TabsContent>
 
           <TabsContent value="conversations">
-            <div className="text-center py-12">
-              <MessageSquare className="h-16 w-16 mx-auto mb-4 text-therapy-600" />
-              <h3 className="text-xl font-semibold mb-2">AI Conversation History</h3>
-              <p className="text-muted-foreground">
-                Review and analyze your AI-powered therapy conversations and insights
-              </p>
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg">
+                  <MessageCircle className="h-8 w-8 text-blue-600 mb-3" />
+                  <h3 className="font-semibold text-blue-900 mb-2">Conversation Memory</h3>
+                  <p className="text-blue-700 text-sm">AI remembers important details from your sessions</p>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-lg">
+                  <Brain className="h-8 w-8 text-green-600 mb-3" />
+                  <h3 className="font-semibold text-green-900 mb-2">Contextual Awareness</h3>
+                  <p className="text-green-700 text-sm">Adapts to time, season, and your current state</p>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-violet-50 p-6 rounded-lg">
+                  <Heart className="h-8 w-8 text-purple-600 mb-3" />
+                  <h3 className="font-semibold text-purple-900 mb-2">Relationship Building</h3>
+                  <p className="text-purple-700 text-sm">Develops deeper therapeutic connection over time</p>
+                </div>
+              </div>
             </div>
           </TabsContent>
 

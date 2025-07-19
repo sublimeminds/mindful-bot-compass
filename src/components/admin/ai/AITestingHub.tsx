@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { AITestingService, TestResult, MockUser } from '@/services/aiTestingService';
+import HumanLikeAITestingHub from './HumanLikeAITestingHub';
 
 const AITestingHub = () => {
   const { toast } = useToast();
@@ -213,9 +214,10 @@ const AITestingHub = () => {
       </div>
 
       <Tabs defaultValue="individual" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="individual">Individual Tests</TabsTrigger>
           <TabsTrigger value="flows">User Flow Tests</TabsTrigger>
+          <TabsTrigger value="humanlike">Human-Like AI</TabsTrigger>
         </TabsList>
 
         <TabsContent value="individual" className="space-y-6">
@@ -410,6 +412,10 @@ const AITestingHub = () => {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        <TabsContent value="humanlike" className="space-y-6">
+          <HumanLikeAITestingHub />
         </TabsContent>
       </Tabs>
 

@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { useEliteSystemIntegration } from '@/hooks/useEliteSystemIntegration';
+import { useHumanLikeAIIntegration } from '@/hooks/useHumanLikeAIIntegration';
 import { useTherapist } from '@/contexts/TherapistContext';
 import VoiceEnhancedAvatar from '@/components/avatar/VoiceEnhancedAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
@@ -27,6 +28,8 @@ import {
 const RealTherapyChatInterface = () => {
   const { user } = useSimpleApp();
   const { selectedTherapist, hasSelectedTherapist } = useTherapist();
+  const currentTherapist = selectedTherapist;
+  
   const {
     messages,
     isLoading,
@@ -40,6 +43,9 @@ const RealTherapyChatInterface = () => {
     initiateEliteSession,
     processMessage
   } = useEliteSystemIntegration();
+
+  // Enhanced human-like AI integration
+  const humanLikeAI = useHumanLikeAIIntegration(currentTherapist?.id || '1');
   
   const [input, setInput] = useState('');
   const [showInsights, setShowInsights] = useState(false);
@@ -49,12 +55,15 @@ const RealTherapyChatInterface = () => {
   const [currentMessage, setCurrentMessage] = useState<string>('');
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
-  const currentTherapist = selectedTherapist;
   const avatarId = getAvatarIdForTherapist(currentTherapist?.id || '1');
 
   useEffect(() => {
     loadPreferences();
-  }, [loadPreferences]);
+    // Initialize enhanced session
+    if (currentTherapist?.id) {
+      humanLikeAI.startEnhancedSession();
+    }
+  }, [loadPreferences, currentTherapist?.id]);
 
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -104,7 +113,12 @@ const RealTherapyChatInterface = () => {
 
   const handleSend = async () => {
     if (input.trim()) {
-      await sendMessage(input);
+      // Use enhanced human-like AI if available, fallback to regular
+      if (humanLikeAI.currentSessionId) {
+        await humanLikeAI.sendEnhancedMessage(input);
+      } else {
+        await sendMessage(input);
+      }
       setInput('');
     }
   };

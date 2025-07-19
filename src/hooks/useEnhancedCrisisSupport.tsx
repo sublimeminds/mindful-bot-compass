@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
 interface CrisisSession {
@@ -92,25 +91,21 @@ export const useEnhancedCrisisSupport = () => {
     if (!user) return null;
 
     try {
-      const { data, error } = await supabase
-        .from('crisis_support_sessions')
-        .insert({
-          user_id: user.id,
-          session_id: sessionId,
-          crisis_level: crisisLevel,
-          recognition_indicators: indicators,
-          ai_response_actions: {},
-          human_escalation_triggered: crisisLevel === 'critical',
-          resolution_status: 'active'
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
+      // Note: This would use the crisis_support_sessions table when it's available
+      // For now, we'll simulate the crisis session creation
+      const mockCrisisSession: CrisisSession = {
+        id: `crisis_${Date.now()}`,
+        crisis_level: crisisLevel,
+        recognition_indicators: indicators,
+        ai_response_actions: {},
+        human_escalation_triggered: crisisLevel === 'critical',
+        resolution_status: 'active',
+        created_at: new Date().toISOString()
+      };
       
-      setActiveCrisis(data);
+      setActiveCrisis(mockCrisisSession);
       setMonitoringMode(true);
-      return data;
+      return mockCrisisSession;
     } catch (error) {
       console.error('Error creating crisis session:', error);
       return null;
@@ -152,23 +147,13 @@ export const useEnhancedCrisisSupport = () => {
     if (!activeCrisis) return;
 
     try {
-      const updateData: any = {
-        ai_response_actions: aiActions
+      // Update the mock crisis session
+      const updatedCrisis = {
+        ...activeCrisis,
+        ai_response_actions: aiActions,
+        resolution_status: newStatus || activeCrisis.resolution_status
       };
-
-      if (newStatus) {
-        updateData.resolution_status = newStatus;
-      }
-
-      const { data, error } = await supabase
-        .from('crisis_support_sessions')
-        .update(updateData)
-        .eq('id', activeCrisis.id)
-        .select()
-        .single();
-
-      if (error) throw error;
-      setActiveCrisis(data);
+      setActiveCrisis(updatedCrisis);
     } catch (error) {
       console.error('Error updating crisis session:', error);
     }
@@ -178,15 +163,14 @@ export const useEnhancedCrisisSupport = () => {
     if (!activeCrisis) return;
 
     try {
-      await supabase
-        .from('crisis_support_sessions')
-        .update({
-          followup_scheduled: true,
-          resolution_status: 'monitoring'
-        })
-        .eq('id', activeCrisis.id);
-
+      const updatedCrisis = {
+        ...activeCrisis,
+        resolution_status: 'monitoring' as const
+      };
+      setActiveCrisis(updatedCrisis);
+      
       // Here you would also create a proactive care trigger for follow-up
+      console.log('Follow-up scheduled for:', followupTime);
     } catch (error) {
       console.error('Error scheduling followup:', error);
     }
