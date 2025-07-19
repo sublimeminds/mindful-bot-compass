@@ -9486,6 +9486,102 @@ export type Database = {
           },
         ]
       }
+      therapist_character_profiles: {
+        Row: {
+          created_at: string
+          crisis_response_style: Json | null
+          cultural_stories: Json | null
+          emotional_intelligence_profile: Json | null
+          id: string
+          personal_backstory: Json | null
+          personal_interests: string[] | null
+          professional_background: Json | null
+          session_style_preferences: Json | null
+          signature_phrases: string[] | null
+          speech_patterns: Json | null
+          therapist_id: string
+          therapy_philosophy: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          crisis_response_style?: Json | null
+          cultural_stories?: Json | null
+          emotional_intelligence_profile?: Json | null
+          id?: string
+          personal_backstory?: Json | null
+          personal_interests?: string[] | null
+          professional_background?: Json | null
+          session_style_preferences?: Json | null
+          signature_phrases?: string[] | null
+          speech_patterns?: Json | null
+          therapist_id: string
+          therapy_philosophy?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          crisis_response_style?: Json | null
+          cultural_stories?: Json | null
+          emotional_intelligence_profile?: Json | null
+          id?: string
+          personal_backstory?: Json | null
+          personal_interests?: string[] | null
+          professional_background?: Json | null
+          session_style_preferences?: Json | null
+          signature_phrases?: string[] | null
+          speech_patterns?: Json | null
+          therapist_id?: string
+          therapy_philosophy?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      therapist_client_relationships: {
+        Row: {
+          communication_preferences: Json | null
+          created_at: string
+          id: string
+          last_interaction: string | null
+          rapport_level: number | null
+          relationship_stage: string
+          shared_memories: Json | null
+          therapeutic_progress: Json | null
+          therapist_id: string
+          total_sessions: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          communication_preferences?: Json | null
+          created_at?: string
+          id?: string
+          last_interaction?: string | null
+          rapport_level?: number | null
+          relationship_stage?: string
+          shared_memories?: Json | null
+          therapeutic_progress?: Json | null
+          therapist_id: string
+          total_sessions?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          communication_preferences?: Json | null
+          created_at?: string
+          id?: string
+          last_interaction?: string | null
+          rapport_level?: number | null
+          relationship_stage?: string
+          shared_memories?: Json | null
+          therapeutic_progress?: Json | null
+          therapist_id?: string
+          total_sessions?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       therapist_compatibility: {
         Row: {
           average_rating: number | null
@@ -9563,6 +9659,39 @@ export type Database = {
         }
         Relationships: []
       }
+      therapist_expressions: {
+        Row: {
+          context_type: string
+          created_at: string
+          effectiveness_score: number | null
+          emotional_context: string
+          expression_data: Json
+          id: string
+          therapist_id: string
+          usage_frequency: number | null
+        }
+        Insert: {
+          context_type: string
+          created_at?: string
+          effectiveness_score?: number | null
+          emotional_context: string
+          expression_data: Json
+          id?: string
+          therapist_id: string
+          usage_frequency?: number | null
+        }
+        Update: {
+          context_type?: string
+          created_at?: string
+          effectiveness_score?: number | null
+          emotional_context?: string
+          expression_data?: Json
+          id?: string
+          therapist_id?: string
+          usage_frequency?: number | null
+        }
+        Relationships: []
+      }
       therapist_favorites: {
         Row: {
           created_at: string
@@ -9593,6 +9722,42 @@ export type Database = {
           therapist_name?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      therapist_note_styles: {
+        Row: {
+          created_at: string
+          documentation_format: Json | null
+          focus_areas: string[] | null
+          homework_assignment_style: Json | null
+          id: string
+          note_taking_style: string
+          observation_style: string | null
+          progress_tracking_method: string | null
+          therapist_id: string
+        }
+        Insert: {
+          created_at?: string
+          documentation_format?: Json | null
+          focus_areas?: string[] | null
+          homework_assignment_style?: Json | null
+          id?: string
+          note_taking_style?: string
+          observation_style?: string | null
+          progress_tracking_method?: string | null
+          therapist_id: string
+        }
+        Update: {
+          created_at?: string
+          documentation_format?: Json | null
+          focus_areas?: string[] | null
+          homework_assignment_style?: Json | null
+          id?: string
+          note_taking_style?: string
+          observation_style?: string | null
+          progress_tracking_method?: string | null
+          therapist_id?: string
         }
         Relationships: []
       }
