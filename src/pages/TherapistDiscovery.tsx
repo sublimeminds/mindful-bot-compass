@@ -321,11 +321,11 @@ const TherapistDiscovery = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Generate compatibility scores based on assessment or default community data
+  // Generate compatibility scores only if assessment exists
   useEffect(() => {
     const scores: {[key: string]: number} = {};
     therapistData.forEach(therapist => {
-      // Use assessment data if available, otherwise use community ratings
+      // Only show scores if user has completed assessment
       if (assessment?.recommended_therapists) {
         const recommendation = Array.isArray(assessment.recommended_therapists) 
           ? assessment.recommended_therapists.find((r: any) => r.therapist_id === therapist.id)
@@ -333,11 +333,8 @@ const TherapistDiscovery = () => {
         scores[therapist.id] = recommendation && typeof recommendation === 'object' && 'compatibility_score' in recommendation
           ? Math.round(((recommendation as any).compatibility_score || 0.9) * 100)
           : Math.floor(Math.random() * 15) + 75; // Lower for non-recommended
-      } else {
-        // Use community-based scoring (success rate + user satisfaction)
-        const communityScore = (therapist.successRate * 0.6 + (therapist.userSatisfaction / 5) * 0.4) * 100;
-        scores[therapist.id] = Math.round(communityScore);
       }
+      // Don't set any scores if no assessment exists
     });
     setCompatibilityScores(scores);
   }, [therapistData, assessment]);
@@ -721,20 +718,31 @@ const TherapistDiscovery = () => {
                       <CardTitle className="text-xl mb-1">{therapist.name}</CardTitle>
                       <p className="text-sm text-muted-foreground mb-3">{therapist.title}</p>
                       
-                      {/* Compatibility Score */}
-                      <div className="flex items-center space-x-2 mb-3">
-                        <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 text-yellow-500" />
-                          <span className="text-sm font-medium">
-                            {compatibilityScores[therapist.id] || Math.round((therapist.successRate * 0.6 + (therapist.userSatisfaction / 5) * 0.4) * 100)}% Match
-                          </span>
+                      {/* Compatibility Score - only show if assessment exists */}
+                      {assessment && (
+                        <div className="flex items-center space-x-2 mb-3">
+                          <div className="flex items-center space-x-1">
+                            <Star className="h-4 w-4 text-yellow-500" />
+                            <span className="text-sm font-medium">
+                              {compatibilityScores[therapist.id]}% Match
+                            </span>
+                          </div>
+                          <Badge variant="secondary" className="text-xs">
+                            Personal Match
+                          </Badge>
                         </div>
-                        <Badge variant="secondary" className="text-xs">
-                          {assessment ? 'Personal Match' : 'Community Rating'}
-                        </Badge>
+                      )}
+                      
+                      {/* Experience Level Badge - always show */}
+                      <div className="flex items-center space-x-2 mb-3">
                         <Badge variant="outline" className="text-xs">
                           {therapist.experienceLevel}
                         </Badge>
+                        {!assessment && (
+                          <Badge variant="secondary" className="text-xs">
+                            Complete assessment for personalized matches
+                          </Badge>
+                        )}
                       </div>
                     </div>
 
