@@ -4368,6 +4368,105 @@ export type Database = {
         }
         Relationships: []
       }
+      european_cultural_contexts: {
+        Row: {
+          communication_style: string
+          country_code: string
+          country_name: string
+          created_at: string
+          crisis_support_info: Json
+          cultural_profile: Json
+          family_structure_importance: string
+          id: string
+          language_code: string
+          mental_health_stigma_level: string
+          privacy_expectations: string
+          therapy_preferences: Json
+          updated_at: string
+        }
+        Insert: {
+          communication_style?: string
+          country_code: string
+          country_name: string
+          created_at?: string
+          crisis_support_info?: Json
+          cultural_profile?: Json
+          family_structure_importance?: string
+          id?: string
+          language_code: string
+          mental_health_stigma_level?: string
+          privacy_expectations?: string
+          therapy_preferences?: Json
+          updated_at?: string
+        }
+        Update: {
+          communication_style?: string
+          country_code?: string
+          country_name?: string
+          created_at?: string
+          crisis_support_info?: Json
+          cultural_profile?: Json
+          family_structure_importance?: string
+          id?: string
+          language_code?: string
+          mental_health_stigma_level?: string
+          privacy_expectations?: string
+          therapy_preferences?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      european_translation_memory: {
+        Row: {
+          context_type: string
+          created_at: string
+          cultural_adaptations: Json | null
+          id: string
+          last_used_at: string | null
+          quality_score: number | null
+          source_language: string
+          source_text: string
+          target_language: string
+          therapeutic_category: string | null
+          translated_text: string
+          translation_provider: string
+          updated_at: string
+          usage_count: number | null
+        }
+        Insert: {
+          context_type?: string
+          created_at?: string
+          cultural_adaptations?: Json | null
+          id?: string
+          last_used_at?: string | null
+          quality_score?: number | null
+          source_language: string
+          source_text: string
+          target_language: string
+          therapeutic_category?: string | null
+          translated_text: string
+          translation_provider?: string
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Update: {
+          context_type?: string
+          created_at?: string
+          cultural_adaptations?: Json | null
+          id?: string
+          last_used_at?: string | null
+          quality_score?: number | null
+          source_language?: string
+          source_text?: string
+          target_language?: string
+          therapeutic_category?: string | null
+          translated_text?: string
+          translation_provider?: string
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Relationships: []
+      }
       event_participants: {
         Row: {
           attendance_status: string | null
@@ -7668,6 +7767,51 @@ export type Database = {
           session_quality_score?: number | null
           technique_effectiveness?: Json | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      realtime_translation_sessions: {
+        Row: {
+          avg_response_time_ms: number | null
+          cultural_context: Json | null
+          ended_at: string | null
+          id: string
+          is_active: boolean | null
+          quality_score: number | null
+          session_id: string
+          source_language: string
+          started_at: string
+          target_language: string
+          translation_count: number | null
+          user_id: string | null
+        }
+        Insert: {
+          avg_response_time_ms?: number | null
+          cultural_context?: Json | null
+          ended_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          quality_score?: number | null
+          session_id: string
+          source_language: string
+          started_at?: string
+          target_language: string
+          translation_count?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          avg_response_time_ms?: number | null
+          cultural_context?: Json | null
+          ended_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          quality_score?: number | null
+          session_id?: string
+          source_language?: string
+          started_at?: string
+          target_language?: string
+          translation_count?: number | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -11038,6 +11182,53 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      translation_quality_metrics: {
+        Row: {
+          created_at: string
+          cultural_accuracy_score: number | null
+          id: string
+          language_pair: string
+          provider: string
+          quality_score: number
+          response_time_ms: number
+          therapeutic_accuracy_score: number | null
+          translation_id: string | null
+          user_feedback_score: number | null
+        }
+        Insert: {
+          created_at?: string
+          cultural_accuracy_score?: number | null
+          id?: string
+          language_pair: string
+          provider: string
+          quality_score: number
+          response_time_ms: number
+          therapeutic_accuracy_score?: number | null
+          translation_id?: string | null
+          user_feedback_score?: number | null
+        }
+        Update: {
+          created_at?: string
+          cultural_accuracy_score?: number | null
+          id?: string
+          language_pair?: string
+          provider?: string
+          quality_score?: number
+          response_time_ms?: number
+          therapeutic_accuracy_score?: number | null
+          translation_id?: string | null
+          user_feedback_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "translation_quality_metrics_translation_id_fkey"
+            columns: ["translation_id"]
+            isOneToOne: false
+            referencedRelation: "european_translation_memory"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       translation_review_queue: {
         Row: {
