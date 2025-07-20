@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { BulkTranslationService } from '@/services/bulkTranslationService';
 import { Globe, Zap, Download, CheckCircle, AlertCircle, Play } from 'lucide-react';
 
