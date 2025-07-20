@@ -483,14 +483,13 @@ const RegionalNavigationHeader = () => {
         <div className="hidden md:flex xl:hidden items-center space-x-1">
           {/* Therapy AI Compact */}
           <div className="relative group">
-            <HeaderDropdownTrigger 
-              icon={Brain} 
-              label="Therapy AI" 
-              className="px-2 text-xs"
-            />
-            <HeaderDropdownCard width="md" className="dropdown-left">
+            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2 py-1 h-8">
+              <Brain className="h-3 w-3 text-therapy-500" />
+              <span className="text-xs font-medium">Therapy AI</span>
+            </Button>
+            <HeaderDropdownCard width="sm" className="dropdown-left">
               <div className="space-y-1">
-                {therapyAiFeatures.filter(f => f.category === "AI Technology").slice(0, 4).map((feature) => (
+                {therapyAiFeatures.filter(f => f.category === "AI Technology").slice(0, 3).map((feature) => (
                   <HeaderDropdownItem
                     key={feature.title}
                     icon={feature.icon}
@@ -507,14 +506,13 @@ const RegionalNavigationHeader = () => {
 
           {/* Features Compact */}
           <div className="relative group">
-            <HeaderDropdownTrigger 
-              icon={Settings} 
-              label="Features" 
-              className="px-2 text-xs"
-            />
-            <HeaderDropdownCard width="md">
+            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2 py-1 h-8">
+              <Settings className="h-3 w-3 text-therapy-500" />
+              <span className="text-xs font-medium">Features</span>
+            </Button>
+            <HeaderDropdownCard width="sm">
               <div className="space-y-1">
-                {platformFeatures.slice(0, 4).map((feature) => (
+                {platformFeatures.slice(0, 3).map((feature) => (
                   <HeaderDropdownItem
                     key={feature.title}
                     icon={feature.icon}
@@ -529,16 +527,15 @@ const RegionalNavigationHeader = () => {
             </HeaderDropdownCard>
           </div>
 
-          {/* Tools & Data Compact */}
+          {/* Tools Compact */}
           <div className="relative group">
-            <HeaderDropdownTrigger 
-              icon={Database} 
-              label="Tools" 
-              className="px-2 text-xs"
-            />
-            <HeaderDropdownCard width="md">
+            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2 py-1 h-8">
+              <Database className="h-3 w-3 text-therapy-500" />
+              <span className="text-xs font-medium">Tools</span>
+            </Button>
+            <HeaderDropdownCard width="sm">
               <div className="space-y-1">
-                {toolsDataFeatures.slice(0, 4).map((feature) => (
+                {toolsDataFeatures.slice(0, 3).map((feature) => (
                   <HeaderDropdownItem
                     key={feature.title}
                     icon={feature.icon}
@@ -555,11 +552,10 @@ const RegionalNavigationHeader = () => {
 
           {/* Solutions Compact */}
           <div className="relative group">
-            <HeaderDropdownTrigger 
-              icon={Star} 
-              label="Solutions" 
-              className="px-2 text-xs"
-            />
+            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2 py-1 h-8">
+              <Star className="h-3 w-3 text-therapy-500" />
+              <span className="text-xs font-medium">Solutions</span>
+            </Button>
             <HeaderDropdownCard width="sm">
               <div className="space-y-1">
                 {solutionsFeatures.slice(0, 3).map((feature) => (
@@ -579,11 +575,10 @@ const RegionalNavigationHeader = () => {
 
           {/* Resources Compact */}
           <div className="relative group">
-            <HeaderDropdownTrigger 
-              icon={BookOpen} 
-              label="Resources" 
-              className="px-2 text-xs"
-            />
+            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2 py-1 h-8">
+              <BookOpen className="h-3 w-3 text-therapy-500" />
+              <span className="text-xs font-medium">Resources</span>
+            </Button>
             <HeaderDropdownCard width="sm" className="dropdown-right">
               <div className="space-y-1">
                 {resourcesFeatures.slice(0, 3).map((feature) => (
@@ -601,31 +596,52 @@ const RegionalNavigationHeader = () => {
             </HeaderDropdownCard>
           </div>
 
-          {/* Search */}
+          {/* Search & Combined Selector */}
           <Button variant="ghost" size="sm" className="px-2">
             <Search className="h-4 w-4" />
           </Button>
+          
+          <div className="relative group">
+            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2">
+              <Globe className="h-3 w-3" />
+              <span className="text-xs">EN•US•USD</span>
+            </Button>
+            <HeaderDropdownCard width="sm" className="dropdown-right">
+              <div className="space-y-3">
+                <CleanLanguageSelector />
+                <RegionSelector />
+                <EnhancedCurrencySelector />
+              </div>
+            </HeaderDropdownCard>
+          </div>
         </div>
 
-        {/* Language, Region, Currency & Search - Desktop */}
+        {/* Combined Language/Region/Currency Selector - Desktop */}
         <div className="hidden xl:flex items-center space-x-3">
           <Button variant="ghost" size="sm" className="px-2">
             <Search className="h-4 w-4" />
           </Button>
-          <div className="flex items-center space-x-2 text-sm">
-            <div className="relative group">
-              <Button variant="ghost" size="sm" className="flex items-center space-x-2 px-2">
-                <Globe className="h-4 w-4" />
-                <span className="text-xs">EN • US • USD</span>
-              </Button>
-              <HeaderDropdownCard width="sm" className="dropdown-right">
-                <div className="space-y-3">
+          <div className="relative group">
+            <Button variant="ghost" size="sm" className="flex items-center space-x-2 px-3 py-2 border border-border/30 rounded-lg hover:bg-therapy-50/50">
+              <Globe className="h-4 w-4 text-therapy-500" />
+              <span className="text-sm font-medium">EN • US • USD</span>
+            </Button>
+            <HeaderDropdownCard width="sm" className="dropdown-right">
+              <div className="space-y-3">
+                <div>
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Language</h4>
                   <CleanLanguageSelector />
+                </div>
+                <div>
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Region</h4>
                   <RegionSelector />
+                </div>
+                <div>
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Currency</h4>
                   <EnhancedCurrencySelector />
                 </div>
-              </HeaderDropdownCard>
-            </div>
+              </div>
+            </HeaderDropdownCard>
           </div>
         </div>
 
