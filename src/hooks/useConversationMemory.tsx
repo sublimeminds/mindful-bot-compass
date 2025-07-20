@@ -57,7 +57,7 @@ export const useConversationMemory = () => {
         importance_score: data.importance_score,
         tags: data.tags,
         is_active: data.is_active,
-        last_referenced_at: data.last_referenced_at,
+        last_referenced_at: data.last_referenced_at || undefined,
         created_at: data.created_at
       };
       
@@ -94,7 +94,7 @@ export const useConversationMemory = () => {
         importance_score: item.importance_score,
         tags: item.tags,
         is_active: item.is_active,
-        last_referenced_at: item.last_referenced_at,
+        last_referenced_at: item.last_referenced_at || undefined,
         created_at: item.created_at
       }));
     } catch (error) {

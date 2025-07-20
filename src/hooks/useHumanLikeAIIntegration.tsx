@@ -49,12 +49,13 @@ export const useHumanLikeAIIntegration = (therapistId: string) => {
     const callbacks = conversationMemory.generateCallbacks(previousMemories);
 
     // Store session continuity
-    await supabase.from('session_continuity').insert({
+    await (supabase as any).from('session_continuity').insert({
       user_id: user.id,
-      current_session_id: sessionId,
-      continuity_elements: { callbacks, previousMemories },
-      callback_references: callbacks,
-      emotional_thread: 'initial_connection'
+      session_id: sessionId,
+      transition_context: { callbacks, previousMemories },
+      emotional_state_carry_over: {},
+      unresolved_topics: {},
+      follow_up_needed: callbacks.length > 0
     });
 
     return sessionId;
@@ -159,9 +160,9 @@ export const useHumanLikeAIIntegration = (therapistId: string) => {
         content: '',
         isUser: false,
         timestamp: new Date(),
-        emotion: responseMetadata.emotion || 'supportive',
+        emotion: (responseMetadata as any)?.emotion || 'supportive',
         riskLevel: crisisDetection.crisisLevel,
-        techniques: responseMetadata.techniques || [],
+        techniques: (responseMetadata as any)?.techniques || [],
         continuityElements: callbacks,
         relationshipStage,
         contextualAdaptations: context
@@ -189,10 +190,10 @@ export const useHumanLikeAIIntegration = (therapistId: string) => {
       }
 
       // 13. Store Session Technique Tracking
-      await supabase.from('session_technique_tracking').insert({
+      await (supabase as any).from('session_technique_tracking').insert({
         session_id: currentSessionId,
         user_id: user.id,
-        technique_name: responseMetadata.primaryTechnique || 'active_listening',
+        technique_name: (responseMetadata as any)?.primaryTechnique || 'active_listening',
         approach_type: 'human_like_integration',
         user_response_score: 0.8,
         effectiveness_metrics: responseMetadata,

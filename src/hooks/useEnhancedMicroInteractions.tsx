@@ -22,7 +22,7 @@ export const useEnhancedMicroInteractions = (therapistId: string) => {
 
   const loadPersonalityInteractions = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('personality_interactions')
         .select('*')
         .eq('therapist_id', therapistId);

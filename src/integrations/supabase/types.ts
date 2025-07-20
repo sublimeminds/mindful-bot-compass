@@ -2659,6 +2659,36 @@ export type Database = {
         }
         Relationships: []
       }
+      contextual_awareness: {
+        Row: {
+          awareness_type: string
+          confidence_score: number | null
+          context_data: Json
+          created_at: string | null
+          id: string
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          awareness_type: string
+          confidence_score?: number | null
+          context_data?: Json
+          created_at?: string | null
+          id?: string
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          awareness_type?: string
+          confidence_score?: number | null
+          context_data?: Json
+          created_at?: string | null
+          id?: string
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       conversation_memories: {
         Row: {
           conversation_flow: Json
@@ -4033,6 +4063,51 @@ export type Database = {
           timestamp?: string
           user_id?: string
           valence?: number
+        }
+        Relationships: []
+      }
+      enhanced_crisis_support: {
+        Row: {
+          created_at: string | null
+          emergency_services_contacted: boolean | null
+          follow_up_scheduled: boolean | null
+          id: string
+          intervention_actions: Json | null
+          professional_contacted: boolean | null
+          resolution_status: string | null
+          risk_factors: Json | null
+          risk_level: string
+          session_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          emergency_services_contacted?: boolean | null
+          follow_up_scheduled?: boolean | null
+          id?: string
+          intervention_actions?: Json | null
+          professional_contacted?: boolean | null
+          resolution_status?: string | null
+          risk_factors?: Json | null
+          risk_level: string
+          session_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          emergency_services_contacted?: boolean | null
+          follow_up_scheduled?: boolean | null
+          id?: string
+          intervention_actions?: Json | null
+          professional_contacted?: boolean | null
+          resolution_status?: string | null
+          risk_factors?: Json | null
+          risk_level?: string
+          session_id?: string | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -5805,6 +5880,39 @@ export type Database = {
         }
         Relationships: []
       }
+      mood_pulse_checks: {
+        Row: {
+          check_type: string
+          context_notes: string | null
+          created_at: string | null
+          emotional_state: Json | null
+          id: string
+          mood_score: number | null
+          responded_at: string | null
+          user_id: string
+        }
+        Insert: {
+          check_type: string
+          context_notes?: string | null
+          created_at?: string | null
+          emotional_state?: Json | null
+          id?: string
+          mood_score?: number | null
+          responded_at?: string | null
+          user_id: string
+        }
+        Update: {
+          check_type?: string
+          context_notes?: string | null
+          created_at?: string | null
+          emotional_state?: Json | null
+          id?: string
+          mood_score?: number | null
+          responded_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       neural_interface_sessions: {
         Row: {
           biometric_feedback: Json | null
@@ -6764,6 +6872,33 @@ export type Database = {
         }
         Relationships: []
       }
+      personality_interactions: {
+        Row: {
+          created_at: string | null
+          id: string
+          interaction_data: Json
+          interaction_type: string
+          is_active: boolean | null
+          therapist_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          interaction_data?: Json
+          interaction_type: string
+          is_active?: boolean | null
+          therapist_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          interaction_data?: Json
+          interaction_type?: string
+          is_active?: boolean | null
+          therapist_id?: string
+        }
+        Relationships: []
+      }
       personalization_configs: {
         Row: {
           adaptation_level: string
@@ -7086,6 +7221,45 @@ export type Database = {
           marketing_consent?: boolean | null
           third_party_sharing?: boolean | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      proactive_care_triggers: {
+        Row: {
+          care_action: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          last_triggered_at: string | null
+          message_template: string
+          trigger_condition: Json | null
+          trigger_date: string | null
+          trigger_type: string
+          user_id: string
+        }
+        Insert: {
+          care_action: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_triggered_at?: string | null
+          message_template: string
+          trigger_condition?: Json | null
+          trigger_date?: string | null
+          trigger_type: string
+          user_id: string
+        }
+        Update: {
+          care_action?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_triggered_at?: string | null
+          message_template?: string
+          trigger_condition?: Json | null
+          trigger_date?: string | null
+          trigger_type?: string
           user_id?: string
         }
         Relationships: []
@@ -8273,6 +8447,42 @@ export type Database = {
           priority_level?: number
           requires_attention?: boolean
           session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      session_continuity: {
+        Row: {
+          created_at: string | null
+          emotional_state_carry_over: Json | null
+          follow_up_needed: boolean | null
+          id: string
+          previous_session_id: string | null
+          session_id: string
+          transition_context: Json | null
+          unresolved_topics: Json | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          emotional_state_carry_over?: Json | null
+          follow_up_needed?: boolean | null
+          id?: string
+          previous_session_id?: string | null
+          session_id: string
+          transition_context?: Json | null
+          unresolved_topics?: Json | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          emotional_state_carry_over?: Json | null
+          follow_up_needed?: boolean | null
+          id?: string
+          previous_session_id?: string | null
+          session_id?: string
+          transition_context?: Json | null
+          unresolved_topics?: Json | null
           user_id?: string
         }
         Relationships: []

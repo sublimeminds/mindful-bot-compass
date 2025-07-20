@@ -26,7 +26,7 @@ export const useProactiveCare = () => {
     if (!user) return null;
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('mood_pulse_checks')
         .insert({
           user_id: user.id,
@@ -56,7 +56,7 @@ export const useProactiveCare = () => {
     contextNotes?: string
   ) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('mood_pulse_checks')
         .update({
           mood_score: moodScore,
@@ -120,7 +120,7 @@ export const useProactiveCare = () => {
     if (!user) return null;
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('proactive_care_triggers')
         .insert({
           user_id: user.id,
@@ -147,8 +147,8 @@ export const useProactiveCare = () => {
     if (user) {
       // Load pending mood checks
       const loadPendingChecks = async () => {
-        const { data, error } = await supabase
-          .from('mood_pulse_checks')
+    const { data, error } = await (supabase as any)
+        .from('mood_pulse_checks')
           .select('*')
           .eq('user_id', user.id)
           .is('responded_at', null)
