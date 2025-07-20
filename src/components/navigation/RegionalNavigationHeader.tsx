@@ -11,7 +11,8 @@ import {
   Briefcase, 
   GraduationCap,
   Menu,
-  X
+  X,
+  Heart
 } from 'lucide-react';
 import HeaderDropdownTrigger from './HeaderDropdownTrigger';
 import HeaderDropdownCard from './HeaderDropdownCard';
@@ -23,21 +24,95 @@ const RegionalNavigationHeader = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const solutionsItems = [
+  
+  // Therapy AI Features - Core AI capabilities and therapy approaches
+  const therapyAiFeatures = [
+    {
+      icon: Brain,
+      title: "TherapySync AI Core",
+      description: "Advanced multi-model AI system powered by OpenAI and Anthropic with real-time insights",
+      href: "/therapysync-ai",
+      gradient: "from-purple-500 to-indigo-600",
+      badge: "Core"
+    },
+    {
+      icon: Users,
+      title: "AI Therapy Chat",
+      description: "Personalized therapy conversations with evidence-based treatment approaches",
+      href: "/therapy-sync-ai",
+      gradient: "from-therapy-500 to-calm-500",
+      badge: "Popular"
+    },
+    {
+      icon: Globe,
+      title: "Cultural AI",
+      description: "Culturally sensitive AI trained to understand diverse backgrounds and contexts",
+      href: "/cultural-ai-features",
+      gradient: "from-balance-500 to-flow-500"
+    },
+    {
+      icon: Brain,
+      title: "Cognitive Behavioral Therapy (CBT)",
+      description: "Evidence-based approach focusing on thought patterns and behavioral changes",
+      href: "/therapy-approaches/cbt",
+      gradient: "from-blue-500 to-cyan-500"
+    }
+  ];
+
+  // Platform Features - Core therapy features and capabilities
+  const platformFeatures = [
+    {
+      icon: Users,
+      title: "AI Therapist Team",
+      description: "Meet our 9 specialized AI therapists with unique approaches and 3D avatars",
+      href: "/therapist-discovery", 
+      gradient: "from-therapy-500 to-calm-500"
+    },
+    {
+      icon: Heart,
+      title: "Mood & Progress Tracking",
+      description: "Track your emotional journey with AI-powered insights and comprehensive analytics",
+      href: "/mood-tracking",
+      gradient: "from-calm-500 to-therapy-500"
+    },
+    {
+      icon: Shield,
+      title: "Crisis Support System",
+      description: "24/7 crisis intervention with automated detection and emergency resources",
+      href: "/crisis-support",
+      gradient: "from-therapy-600 to-harmony-600"
+    },
+    {
+      icon: Users,
+      title: "Family Account Sharing",
+      description: "Comprehensive family mental health support with shared accounts and parental controls",
+      href: "/family-features",
+      gradient: "from-harmony-500 to-balance-500"
+    }
+  ];
+
+  // Solutions - Different use cases and approaches
+  const solutionsFeatures = [
     {
       icon: Users,
       title: "For Individuals",
-      description: "Personal therapy and mental wellness support",
+      description: "Personal therapy journey with AI-powered insights and personalized treatment plans",
       href: "/for-individuals",
-      gradient: "from-therapy-500 to-therapy-600",
-      badge: "Popular"
+      gradient: "from-therapy-500 to-calm-500"
+    },
+    {
+      icon: Heart,
+      title: "For Families",
+      description: "Family mental health support with shared accounts, parental controls, and family therapy",
+      href: "/family-features",
+      gradient: "from-harmony-500 to-balance-500"
     },
     {
       icon: Briefcase,
       title: "For Organizations",
-      description: "Employee mental health and wellness programs",
+      description: "Employee mental health programs with analytics, compliance, and enterprise features",
       href: "/for-organizations",
-      gradient: "from-harmony-500 to-harmony-600"
+      gradient: "from-purple-500 to-indigo-500"
     },
     {
       icon: GraduationCap,
@@ -45,31 +120,38 @@ const RegionalNavigationHeader = () => {
       description: "Student mental health support and resources",
       href: "/for-schools",
       gradient: "from-flow-500 to-flow-600"
-    },
-    {
-      icon: Shield,
-      title: "Crisis Management",
-      description: "24/7 emergency mental health support",
-      href: "/crisis-management",
-      gradient: "from-red-500 to-red-600",
-      badge: "24/7"
     }
   ];
 
-  const resourcesItems = [
+  // Resources - Help, support, and learning materials
+  const resourcesFeatures = [
     {
       icon: Brain,
       title: "Mental Health Guide",
-      description: "Comprehensive guide to mental wellness",
+      description: "Comprehensive guide to mental wellness and therapy approaches",
       href: "/resources/mental-health-guide",
       gradient: "from-therapy-500 to-calm-500"
     },
     {
       icon: Users,
       title: "Community Support",
-      description: "Connect with others on similar journeys",
+      description: "Connect with others on similar healing journeys",
       href: "/community",
       gradient: "from-harmony-500 to-balance-500"
+    },
+    {
+      icon: Shield,
+      title: "Security & Compliance",
+      description: "HIPAA, GDPR compliance and enterprise-grade security standards",
+      href: "/security",
+      gradient: "from-therapy-600 to-harmony-600"
+    },
+    {
+      icon: GraduationCap,
+      title: "Learning Hub",
+      description: "Educational resources, therapy guides, and mental health best practices",
+      href: "/learning",
+      gradient: "from-flow-500 to-balance-500"
     }
   ];
 
@@ -83,6 +165,53 @@ const RegionalNavigationHeader = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center space-x-1 xl:space-x-2">
+          {/* Therapy AI Dropdown */}
+          <div className="relative group">
+            <HeaderDropdownTrigger 
+              icon={Brain} 
+              label="Therapy AI" 
+              className="px-2 xl:px-3"
+            />
+            <HeaderDropdownCard width="xl" className="dropdown-left">
+              <div className="grid grid-cols-2 gap-4">
+                {therapyAiFeatures.map((feature) => (
+                  <HeaderDropdownItem
+                    key={feature.title}
+                    icon={feature.icon}
+                    title={feature.title}
+                    description={feature.description}
+                    href={feature.href}
+                    gradient={feature.gradient}
+                    badge={feature.badge}
+                  />
+                ))}
+              </div>
+            </HeaderDropdownCard>
+          </div>
+
+          {/* Features Dropdown */}
+          <div className="relative group">
+            <HeaderDropdownTrigger 
+              icon={Heart} 
+              label="Features" 
+              className="px-2 xl:px-3"
+            />
+            <HeaderDropdownCard width="xl">
+              <div className="grid grid-cols-2 gap-4">
+                {platformFeatures.map((feature) => (
+                  <HeaderDropdownItem
+                    key={feature.title}
+                    icon={feature.icon}
+                    title={feature.title}
+                    description={feature.description}
+                    href={feature.href}
+                    gradient={feature.gradient}
+                  />
+                ))}
+              </div>
+            </HeaderDropdownCard>
+          </div>
+
           {/* Solutions Dropdown */}
           <div className="relative group">
             <HeaderDropdownTrigger 
@@ -90,17 +219,16 @@ const RegionalNavigationHeader = () => {
               label="Solutions" 
               className="px-2 xl:px-3"
             />
-            <HeaderDropdownCard width="lg" className="dropdown-left">
+            <HeaderDropdownCard width="lg">
               <div className="grid grid-cols-2 gap-3">
-                {solutionsItems.map((item) => (
+                {solutionsFeatures.map((feature) => (
                   <HeaderDropdownItem
-                    key={item.title}
-                    icon={item.icon}
-                    title={item.title}
-                    description={item.description}
-                    href={item.href}
-                    gradient={item.gradient}
-                    badge={item.badge}
+                    key={feature.title}
+                    icon={feature.icon}
+                    title={feature.title}
+                    description={feature.description}
+                    href={feature.href}
+                    gradient={feature.gradient}
                   />
                 ))}
               </div>
@@ -114,16 +242,16 @@ const RegionalNavigationHeader = () => {
               label="Resources" 
               className="px-2 xl:px-3"
             />
-            <HeaderDropdownCard width="md">
-              <div className="space-y-2">
-                {resourcesItems.map((item) => (
+            <HeaderDropdownCard width="lg">
+              <div className="grid grid-cols-2 gap-3">
+                {resourcesFeatures.map((feature) => (
                   <HeaderDropdownItem
-                    key={item.title}
-                    icon={item.icon}
-                    title={item.title}
-                    description={item.description}
-                    href={item.href}
-                    gradient={item.gradient}
+                    key={feature.title}
+                    icon={feature.icon}
+                    title={feature.title}
+                    description={feature.description}
+                    href={feature.href}
+                    gradient={feature.gradient}
                   />
                 ))}
               </div>
@@ -144,22 +272,6 @@ const RegionalNavigationHeader = () => {
             className="px-2 xl:px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
           >
             Pricing
-          </Link>
-
-          {/* Contact Link */}
-          <Link 
-            to="/contact" 
-            className="px-2 xl:px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
-          >
-            Contact
-          </Link>
-
-          {/* Support Link */}
-          <Link 
-            to="/support" 
-            className="px-2 xl:px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
-          >
-            Support
           </Link>
         </div>
 
@@ -215,18 +327,50 @@ const RegionalNavigationHeader = () => {
       {isMobileMenuOpen && (
         <div className="lg:hidden border-t border-border/40 bg-background/95 backdrop-blur">
           <div className="container mx-auto px-4 py-4 space-y-3">
-            {/* Mobile Solutions */}
+            {/* Mobile Therapy AI */}
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-foreground/80">Solutions</h3>
-              {solutionsItems.map((item) => (
+              <h3 className="text-sm font-semibold text-foreground/80">Therapy AI</h3>
+              {therapyAiFeatures.map((feature) => (
                 <Link
-                  key={item.title}
-                  to={item.href}
+                  key={feature.title}
+                  to={feature.href}
                   className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-therapy-50/80 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <item.icon className="h-4 w-4 text-therapy-500" />
-                  <span className="text-sm font-medium">{item.title}</span>
+                  <feature.icon className="h-4 w-4 text-therapy-500" />
+                  <span className="text-sm font-medium">{feature.title}</span>
+                </Link>
+              ))}
+            </div>
+
+            {/* Mobile Features */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold text-foreground/80">Features</h3>
+              {platformFeatures.map((feature) => (
+                <Link
+                  key={feature.title}
+                  to={feature.href}
+                  className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-therapy-50/80 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <feature.icon className="h-4 w-4 text-therapy-500" />
+                  <span className="text-sm font-medium">{feature.title}</span>
+                </Link>
+              ))}
+            </div>
+
+            {/* Mobile Solutions */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold text-foreground/80">Solutions</h3>
+              {solutionsFeatures.map((feature) => (
+                <Link
+                  key={feature.title}
+                  to={feature.href}
+                  className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-therapy-50/80 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <feature.icon className="h-4 w-4 text-therapy-500" />
+                  <span className="text-sm font-medium">{feature.title}</span>
                 </Link>
               ))}
             </div>
@@ -234,15 +378,15 @@ const RegionalNavigationHeader = () => {
             {/* Mobile Resources */}
             <div className="space-y-2">
               <h3 className="text-sm font-semibold text-foreground/80">Resources</h3>
-              {resourcesItems.map((item) => (
+              {resourcesFeatures.map((feature) => (
                 <Link
-                  key={item.title}
-                  to={item.href}
+                  key={feature.title}
+                  to={feature.href}
                   className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-therapy-50/80 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <item.icon className="h-4 w-4 text-therapy-500" />
-                  <span className="text-sm font-medium">{item.title}</span>
+                  <feature.icon className="h-4 w-4 text-therapy-500" />
+                  <span className="text-sm font-medium">{feature.title}</span>
                 </Link>
               ))}
             </div>
