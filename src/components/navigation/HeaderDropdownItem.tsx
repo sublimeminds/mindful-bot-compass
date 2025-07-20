@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LucideIcon } from 'lucide-react';
@@ -33,17 +34,17 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
         flex items-start rounded-xl 
         hover:bg-therapy-50/80 transition-all duration-200 ease-out
         group/item hover:shadow-sm hover:scale-[1.02] transform-gpu
-        ${compact ? 'space-x-3 p-3' : 'space-x-4 p-4'}
+        ${compact ? 'space-x-2 p-2' : 'space-x-4 p-4'}
         ${className}
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className={`
-        rounded-xl flex items-center justify-center 
+        rounded-lg flex items-center justify-center 
         transition-all duration-300 ease-out transform
         bg-gradient-to-r ${gradient}
-        ${compact ? 'w-9 h-9' : 'w-11 h-11'}
+        ${compact ? 'w-8 h-8' : 'w-11 h-11'}
         ${isHovered 
           ? 'shadow-lg scale-105 ring-2 ring-white/50' 
           : 'shadow-md hover:shadow-lg'
@@ -51,7 +52,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
       `}>
         <Icon className={`
           text-white transition-all duration-300
-          ${compact ? 'h-4 w-4' : 'h-5 w-5'}
+          ${compact ? 'h-3.5 w-3.5' : 'h-5 w-5'}
           ${isHovered ? 'scale-110' : ''}
         `} />
       </div>

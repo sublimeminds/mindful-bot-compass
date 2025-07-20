@@ -1,927 +1,296 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/useAuth';
-import { 
-  Globe, 
-  Users, 
-  Brain, 
-  Shield, 
-  Briefcase, 
-  GraduationCap,
-  Menu,
-  X,
-  Heart,
-  Settings,
-  Database,
-  Star,
-  BookOpen,
-  Mic,
-  Target,
-  Lightbulb,
-  UserPlus,
-  Stethoscope,
-  Building,
-  Calculator,
-  BarChart3,
-  Code,
-  Smartphone,
-  TrendingUp,
-  FileSpreadsheet,
-  LinkIcon,
-  Phone,
-  Sparkles,
-  Search,
-  MoreHorizontal
-} from 'lucide-react';
+import { Menu, X, Search, Globe, MessageSquare, Users, Target, Calendar, BarChart3, Settings, HelpCircle, FileText, Shield } from 'lucide-react';
+import { useEnhancedScreenSize } from '@/hooks/useEnhancedScreenSize';
 import HeaderDropdownTrigger from './HeaderDropdownTrigger';
 import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
-import Logo from './Logo';
 import CleanLanguageSelector from '@/components/ui/CleanLanguageSelector';
-import RegionSelector from '@/components/regional/RegionSelector';
-import EnhancedCurrencySelector from '@/components/ui/EnhancedCurrencySelector';
 
 const RegionalNavigationHeader = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isMobile, isTablet, isDesktop } = useEnhancedScreenSize();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  
-  // Therapy AI Features - Core AI capabilities and therapy approaches
-  const therapyAiFeatures = [
-    // AI Technology
+  // Check if we should show compact dropdowns (medium screens like MacBook Air)
+  const isCompactScreen = isTablet || (!isMobile && window.innerWidth <= 1440);
+
+  const therapyItems = [
     {
-      icon: Brain,
-      title: "TherapySync AI Core",
-      description: "Advanced multi-model AI system powered by OpenAI and Anthropic with real-time insights",
-      href: "/therapysync-ai",
-      gradient: "from-purple-500 to-indigo-600",
-      badge: "Core",
-      category: "AI Technology"
+      icon: MessageSquare,
+      title: "AI Chat",
+      description: isCompactScreen ? "Quick therapy chat" : "Start a conversation with your AI therapy companion",
+      href: "/chat",
+      gradient: "from-therapy-500 to-therapy-600"
     },
     {
-      icon: Users,
-      title: "AI Therapy Chat",
-      description: "Personalized therapy conversations with evidence-based treatment approaches",
-      href: "/therapy-sync-ai",
-      gradient: "from-therapy-500 to-calm-500",
-      badge: "Popular",
-      category: "AI Technology"
-    },
-    {
-      icon: Mic,
-      title: "Voice AI Technology",
-      description: "Natural voice conversations in 29 languages with emotion detection",
-      href: "/voice-technology",
-      gradient: "from-flow-500 to-balance-500",
-      badge: "New",
-      category: "AI Technology"
-    },
-    {
-      icon: Globe,
-      title: "Cultural AI",
-      description: "Culturally sensitive AI trained to understand diverse backgrounds",
-      href: "/cultural-ai-features",
-      gradient: "from-balance-500 to-flow-500",
-      category: "AI Technology"
+      icon: Calendar,
+      title: "Sessions",
+      description: isCompactScreen ? "Scheduled therapy" : "Book and manage your therapy sessions",
+      href: "/therapy-session",
+      gradient: "from-calm-500 to-calm-600"
     },
     {
       icon: Target,
-      title: "AI Personalization",
-      description: "Adaptive therapy approaches that learn and evolve with your needs",
-      href: "/ai-personalization",
-      gradient: "from-harmony-500 to-therapy-500",
-      category: "AI Technology"
+      title: "Goals",
+      description: isCompactScreen ? "Track progress" : "Set and track your mental health goals",
+      href: "/goals",
+      gradient: "from-harmony-500 to-harmony-600"
     },
-    {
-      icon: Sparkles,
-      title: "Adaptive Systems",
-      description: "AI that automatically updates therapy plans based on your progress",
-      href: "/adaptive-systems",
-      gradient: "from-indigo-500 to-purple-500",
-      badge: "Advanced",
-      category: "AI Technology"
-    },
-    // Therapy Approaches
-    {
-      icon: Brain,
-      title: "Cognitive Behavioral Therapy (CBT)",
-      description: "Evidence-based approach focusing on thought patterns and behavioral changes",
-      href: "/therapy-approaches/cbt",
-      gradient: "from-blue-500 to-cyan-500",
-      category: "Therapy Approaches"
-    },
-    {
-      icon: Heart,
-      title: "Dialectical Behavior Therapy (DBT)",
-      description: "Skills-based therapy for emotional regulation and interpersonal effectiveness",
-      href: "/therapy-approaches/dbt", 
-      gradient: "from-green-500 to-emerald-500",
-      category: "Therapy Approaches"
-    },
-    {
-      icon: Lightbulb,
-      title: "Mindfulness-Based Therapy",
-      description: "Present-moment awareness and acceptance-based therapeutic interventions",
-      href: "/therapy-approaches/mindfulness",
-      gradient: "from-purple-500 to-pink-500",
-      category: "Therapy Approaches"
-    },
-    {
-      icon: Shield,
-      title: "Trauma-Focused Therapy",
-      description: "Specialized approaches for processing and healing from traumatic experiences",
-      href: "/therapy-approaches/trauma",
-      gradient: "from-orange-500 to-red-500",
-      category: "Therapy Approaches"
-    }
-  ];
-
-  // Platform Features - Core therapy features and capabilities
-  const platformFeatures = [
-    {
-      icon: Users,
-      title: "AI Therapist Team",
-      description: "Meet our 9 specialized AI therapists with unique approaches and 3D avatars",
-      href: "/therapist-discovery", 
-      gradient: "from-therapy-500 to-calm-500"
-    },
-    {
-      icon: Heart,
-      title: "Mood & Progress Tracking",
-      description: "Track your emotional journey with AI-powered insights and comprehensive analytics",
-      href: "/mood-tracking",
-      gradient: "from-calm-500 to-therapy-500"
-    },
-    {
-      icon: Shield,
-      title: "Crisis Support System",
-      description: "24/7 crisis intervention with automated detection and emergency resources",
-      href: "/crisis-support",
-      gradient: "from-therapy-600 to-harmony-600"
-    },
-    {
-      icon: Users,
-      title: "Family Account Sharing",
-      description: "Comprehensive family mental health support with shared accounts and parental controls",
-      href: "/family-features",
-      gradient: "from-harmony-500 to-balance-500"
-    },
-    {
-      icon: UserPlus,
-      title: "Community & Groups",
-      description: "Connect with peers and join supportive communities for shared healing journeys",
-      href: "/community-features",
-      gradient: "from-flow-500 to-balance-500",
-      badge: "Pro"
-    },
-    {
-      icon: LinkIcon,
-      title: "Integrations Hub",
-      description: "Connect with your favorite health and wellness apps for seamless care coordination",
-      href: "/integrations",
-      gradient: "from-harmony-500 to-calm-500"
-    }
-  ];
-
-  // Tools & Data - Analytics, APIs, and data management
-  const toolsDataFeatures = [
     {
       icon: BarChart3,
-      title: "Analytics Dashboard",
-      description: "Advanced analytics with custom reporting, data visualization, and progress insights",
+      title: "Analytics",
+      description: isCompactScreen ? "View insights" : "Analyze your mental health progress",
       href: "/analytics",
-      gradient: "from-orange-500 to-red-500",
-      badge: "Premium"
-    },
-    {
-      icon: Code,
-      title: "API Access",
-      description: "Comprehensive REST API and webhooks for integration with your systems",
-      href: "/api-docs",
-      gradient: "from-blue-500 to-cyan-500",
-      badge: "Pro"
-    },
-    {
-      icon: Smartphone,
-      title: "Mobile Apps",
-      description: "Native iOS and Android apps with full feature parity and offline capabilities",
-      href: "/mobile-apps",
-      gradient: "from-pink-500 to-rose-500"
-    },
-    {
-      icon: TrendingUp,
-      title: "Progress Reports",
-      description: "Detailed progress reports and insights for you, families, and healthcare providers",
-      href: "/reports",
-      gradient: "from-green-500 to-emerald-500",
-      badge: "Premium"
-    },
-    {
-      icon: FileSpreadsheet,
-      title: "Data Export",
-      description: "Export your therapy data in multiple formats for personal records",
-      href: "/data-export",
-      gradient: "from-purple-500 to-indigo-500",
-      badge: "Pro"
-    },
-    {
-      icon: LinkIcon,
-      title: "Custom Integrations",
-      description: "Build custom integrations with our SDK and connect to enterprise health systems",
-      href: "/custom-integrations",
-      gradient: "from-cyan-500 to-blue-500",
-      badge: "Enterprise"
+      gradient: "from-balance-500 to-balance-600"
     }
   ];
 
-  // Solutions - Different use cases and approaches
-  const solutionsFeatures = [
+  const communityItems = [
     {
       icon: Users,
-      title: "For Individuals",
-      description: "Personal therapy journey with AI-powered insights and personalized treatment plans",
-      href: "/for-individuals",
-      gradient: "from-therapy-500 to-calm-500"
-    },
-    {
-      icon: Heart,
-      title: "For Families",
-      description: "Family mental health support with shared accounts, parental controls, and family therapy",
-      href: "/family-features",
-      gradient: "from-harmony-500 to-balance-500"
-    },
-    {
-      icon: Stethoscope,
-      title: "For Healthcare Providers",
-      description: "Professional tools for therapists, clinicians, and healthcare organizations",
-      href: "/solutions/providers",
-      gradient: "from-balance-500 to-therapy-500"
-    },
-    {
-      icon: Building,
-      title: "For Organizations",
-      description: "Employee mental health programs with analytics, compliance, and enterprise features",
-      href: "/for-organizations",
-      gradient: "from-purple-500 to-indigo-500"
-    },
-    {
-      icon: GraduationCap,
-      title: "For Schools",
-      description: "Student mental health support and resources",
-      href: "/for-schools",
+      title: "Community",
+      description: isCompactScreen ? "Connect with others" : "Join our supportive mental health community",
+      href: "/community",
       gradient: "from-flow-500 to-flow-600"
     },
     {
-      icon: Calculator,
-      title: "Pricing Plans",
-      description: "Flexible pricing for individuals, families, providers, and organizations",
-      href: "/pricing",
-      gradient: "from-therapy-500 to-calm-500"
+      icon: MessageSquare,
+      title: "Forums",
+      description: isCompactScreen ? "Discussion boards" : "Participate in mental health discussions",
+      href: "/forums",
+      gradient: "from-therapy-500 to-therapy-600"
+    },
+    {
+      icon: Calendar,
+      title: "Events",
+      description: isCompactScreen ? "Group activities" : "Join group therapy and wellness events",
+      href: "/events",
+      gradient: "from-calm-500 to-calm-600"
     }
   ];
 
-  // Resources - Help, support, and learning materials
-  const resourcesFeatures = [
+  const resourceItems = [
     {
-      icon: BookOpen,
-      title: "Getting Started",
-      description: "Step-by-step guides to help you begin your therapy journey with confidence",
-      href: "/getting-started",
-      gradient: "from-therapy-500 to-calm-500"
+      icon: FileText,
+      title: "Articles",
+      description: isCompactScreen ? "Educational content" : "Read mental health articles and guides",
+      href: "/articles",
+      gradient: "from-harmony-500 to-harmony-600"
     },
     {
-      icon: Lightbulb,
-      title: "How It Works",
-      description: "Learn about our AI therapy technology and how it supports your mental health",
-      href: "/how-it-works",
-      gradient: "from-calm-500 to-therapy-500"
+      icon: HelpCircle,
+      title: "Help Center",
+      description: isCompactScreen ? "Get support" : "Find answers to common questions",
+      href: "/help",
+      gradient: "from-balance-500 to-balance-600"
     },
     {
       icon: Shield,
-      title: "Security & Compliance",
-      description: "HIPAA, GDPR compliance and enterprise-grade security standards",
-      href: "/security",
-      gradient: "from-therapy-600 to-harmony-600"
-    },
-    {
-      icon: Phone,
-      title: "Support Center",
-      description: "24/7 customer support, technical help, and crisis assistance",
-      href: "/support",
-      gradient: "from-harmony-500 to-balance-500"
-    },
-    {
-      icon: GraduationCap,
-      title: "Learning Hub",
-      description: "Educational resources, therapy guides, and mental health best practices",
-      href: "/learning",
-      gradient: "from-flow-500 to-balance-500"
+      title: "Privacy",
+      description: isCompactScreen ? "Data protection" : "Learn about our privacy and security measures",
+      href: "/privacy",
+      gradient: "from-flow-500 to-flow-600"
     }
   ];
 
-  return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="w-full max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <div className="flex items-center">
-          <Logo />
-        </div>
-
-        {/* Desktop Navigation - Large screens with full dropdowns */}
-        <div className="hidden xl:flex items-center space-x-1 2xl:space-x-2">
-          {/* Therapy AI Dropdown */}
-          <div className="relative group">
-            <HeaderDropdownTrigger 
-              icon={Brain} 
-              label="Therapy AI" 
-              className="px-2 2xl:px-3"
-            />
-            <HeaderDropdownCard width="xl" className="dropdown-left">
-              <div className="space-y-6">
-                {/* AI Technology Section */}
-                <div>
-                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
-                    AI Technology
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    {therapyAiFeatures.filter(f => f.category === "AI Technology").map((feature) => (
-                      <HeaderDropdownItem
-                        key={feature.title}
-                        icon={feature.icon}
-                        title={feature.title}
-                        description={feature.description}
-                        href={feature.href}
-                        gradient={feature.gradient}
-                        badge={feature.badge}
-                      />
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Therapy Approaches Section */}
-                <div>
-                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
-                    Therapy Approaches
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    {therapyAiFeatures.filter(f => f.category === "Therapy Approaches").map((feature) => (
-                      <HeaderDropdownItem
-                        key={feature.title}
-                        icon={feature.icon}
-                        title={feature.title}
-                        description={feature.description}
-                        href={feature.href}
-                        gradient={feature.gradient}
-                        badge={feature.badge}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </HeaderDropdownCard>
-          </div>
-
-          {/* Features Dropdown */}
-          <div className="relative group">
-            <HeaderDropdownTrigger 
-              icon={Settings} 
-              label="Features" 
-              className="px-2 2xl:px-3"
-            />
-            <HeaderDropdownCard width="xl">
-              <div className="grid grid-cols-2 gap-4">
-                {platformFeatures.map((feature) => (
-                  <HeaderDropdownItem
-                    key={feature.title}
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                    href={feature.href}
-                    gradient={feature.gradient}
-                    badge={feature.badge}
-                  />
-                ))}
-              </div>
-            </HeaderDropdownCard>
-          </div>
-
-          {/* Tools & Data Dropdown */}
-          <div className="relative group">
-            <HeaderDropdownTrigger 
-              icon={Database} 
-              label="Tools & Data" 
-              className="px-2 2xl:px-3"
-            />
-            <HeaderDropdownCard width="xl">
-              <div className="grid grid-cols-2 gap-4">
-                {toolsDataFeatures.map((feature) => (
-                  <HeaderDropdownItem
-                    key={feature.title}
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                    href={feature.href}
-                    gradient={feature.gradient}
-                    badge={feature.badge}
-                  />
-                ))}
-              </div>
-            </HeaderDropdownCard>
-          </div>
-
-          {/* Solutions Dropdown */}
-          <div className="relative group">
-            <HeaderDropdownTrigger 
-              icon={Star} 
-              label="Solutions" 
-              className="px-2 2xl:px-3"
-            />
-            <HeaderDropdownCard width="lg">
-              <div className="grid grid-cols-2 gap-3">
-                {solutionsFeatures.map((feature) => (
-                  <HeaderDropdownItem
-                    key={feature.title}
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                    href={feature.href}
-                    gradient={feature.gradient}
-                  />
-                ))}
-              </div>
-            </HeaderDropdownCard>
-          </div>
-
-          {/* Resources Dropdown */}
-          <div className="relative group">
-            <HeaderDropdownTrigger 
-              icon={BookOpen} 
-              label="Resources" 
-              className="px-2 2xl:px-3"
-            />
-            <HeaderDropdownCard width="lg" className="dropdown-right">
-              <div className="grid grid-cols-2 gap-3">
-                {resourcesFeatures.map((feature) => (
-                  <HeaderDropdownItem
-                    key={feature.title}
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                    href={feature.href}
-                    gradient={feature.gradient}
-                  />
-                ))}
-              </div>
-            </HeaderDropdownCard>
-          </div>
-        </div>
-
-        {/* Medium Screen Navigation - MacBook Air, tablets with compact dropdowns */}
-        <div className="hidden md:flex xl:hidden items-center space-x-1">
-          {/* Therapy AI Compact */}
-          <div className="relative group">
-            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2 py-1 h-8">
-              <Brain className="h-3 w-3 text-therapy-500" />
-              <span className="text-xs font-medium">Therapy AI</span>
-            </Button>
-            <HeaderDropdownCard width="sm" className="dropdown-left">
-              <div className="space-y-1">
-                {therapyAiFeatures.filter(f => f.category === "AI Technology").slice(0, 3).map((feature) => (
-                  <HeaderDropdownItem
-                    key={feature.title}
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                    href={feature.href}
-                    gradient={feature.gradient}
-                    compact={true}
-                  />
-                ))}
-              </div>
-            </HeaderDropdownCard>
-          </div>
-
-          {/* Features Compact */}
-          <div className="relative group">
-            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2 py-1 h-8">
-              <Settings className="h-3 w-3 text-therapy-500" />
-              <span className="text-xs font-medium">Features</span>
-            </Button>
-            <HeaderDropdownCard width="sm">
-              <div className="space-y-1">
-                {platformFeatures.slice(0, 3).map((feature) => (
-                  <HeaderDropdownItem
-                    key={feature.title}
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                    href={feature.href}
-                    gradient={feature.gradient}
-                    compact={true}
-                  />
-                ))}
-              </div>
-            </HeaderDropdownCard>
-          </div>
-
-          {/* Tools Compact */}
-          <div className="relative group">
-            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2 py-1 h-8">
-              <Database className="h-3 w-3 text-therapy-500" />
-              <span className="text-xs font-medium">Tools</span>
-            </Button>
-            <HeaderDropdownCard width="sm">
-              <div className="space-y-1">
-                {toolsDataFeatures.slice(0, 3).map((feature) => (
-                  <HeaderDropdownItem
-                    key={feature.title}
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                    href={feature.href}
-                    gradient={feature.gradient}
-                    compact={true}
-                  />
-                ))}
-              </div>
-            </HeaderDropdownCard>
-          </div>
-
-          {/* Solutions Compact */}
-          <div className="relative group">
-            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2 py-1 h-8">
-              <Star className="h-3 w-3 text-therapy-500" />
-              <span className="text-xs font-medium">Solutions</span>
-            </Button>
-            <HeaderDropdownCard width="sm">
-              <div className="space-y-1">
-                {solutionsFeatures.slice(0, 3).map((feature) => (
-                  <HeaderDropdownItem
-                    key={feature.title}
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                    href={feature.href}
-                    gradient={feature.gradient}
-                    compact={true}
-                  />
-                ))}
-              </div>
-            </HeaderDropdownCard>
-          </div>
-
-          {/* Resources Compact */}
-          <div className="relative group">
-            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2 py-1 h-8">
-              <BookOpen className="h-3 w-3 text-therapy-500" />
-              <span className="text-xs font-medium">Resources</span>
-            </Button>
-            <HeaderDropdownCard width="sm" className="dropdown-right">
-              <div className="space-y-1">
-                {resourcesFeatures.slice(0, 3).map((feature) => (
-                  <HeaderDropdownItem
-                    key={feature.title}
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                    href={feature.href}
-                    gradient={feature.gradient}
-                    compact={true}
-                  />
-                ))}
-              </div>
-            </HeaderDropdownCard>
-          </div>
-
-          {/* Search & Combined Selector */}
-          <Button variant="ghost" size="sm" className="px-2">
-            <Search className="h-4 w-4" />
-          </Button>
+  if (isMobile) {
+    return (
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+        <div className="flex items-center justify-between px-4 h-16">
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-r from-therapy-500 to-therapy-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">T</span>
+            </div>
+            <span className="font-bold text-gray-900">TherapySync</span>
+          </Link>
           
-          <div className="relative group">
-            <Button variant="ghost" size="sm" className="flex items-center space-x-1 px-2">
-              <Globe className="h-3 w-3" />
-              <span className="text-xs">EN•US•USD</span>
-            </Button>
-            <HeaderDropdownCard width="sm" className="dropdown-right">
-              <div className="space-y-3">
-                <CleanLanguageSelector />
-                <RegionSelector />
-                <EnhancedCurrencySelector />
-              </div>
-            </HeaderDropdownCard>
-          </div>
-        </div>
-
-        {/* Combined Language/Region/Currency Selector - Desktop */}
-        <div className="hidden xl:flex items-center space-x-3">
-          <Button variant="ghost" size="sm" className="px-2">
-            <Search className="h-4 w-4" />
-          </Button>
-          <div className="relative group">
-            <Button variant="ghost" size="sm" className="flex items-center space-x-2 px-3 py-2 border border-border/30 rounded-lg hover:bg-therapy-50/50">
-              <Globe className="h-4 w-4 text-therapy-500" />
-              <span className="text-sm font-medium">EN • US • USD</span>
-            </Button>
-            <HeaderDropdownCard width="sm" className="dropdown-right">
-              <div className="space-y-3">
-                <div>
-                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Language</h4>
-                  <CleanLanguageSelector />
-                </div>
-                <div>
-                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Region</h4>
-                  <RegionSelector />
-                </div>
-                <div>
-                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Currency</h4>
-                  <EnhancedCurrencySelector />
-                </div>
-              </div>
-            </HeaderDropdownCard>
-          </div>
-        </div>
-
-        {/* Auth Buttons */}
-        <div className="hidden md:flex items-center space-x-2 lg:space-x-3">
-          {user ? (
-            <Button 
-              onClick={() => navigate('/dashboard')} 
+          <div className="flex items-center space-x-2">
+            <CleanLanguageSelector />
+            <Button
+              variant="ghost"
               size="sm"
-              className="bg-gradient-to-r from-therapy-500 to-harmony-500 hover:from-therapy-600 hover:to-harmony-600 text-white px-3 lg:px-4"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2"
             >
-              Dashboard
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
-          ) : (
-            <>
-              <Button 
-                variant="ghost" 
-                onClick={() => navigate('/auth')} 
-                size="sm"
-                className="text-sm px-3 lg:px-4"
-              >
-                Sign In
-              </Button>
-              <Button 
-                onClick={() => navigate('/get-started')} 
-                size="sm"
-                className="bg-gradient-to-r from-therapy-500 to-harmony-500 hover:from-therapy-600 hover:to-harmony-600 text-white text-sm px-3 lg:px-4"
-              >
-                Get Started
-              </Button>
-            </>
-          )}
+          </div>
         </div>
-
-        {/* Small Screen Nav - Tablet/Small Laptop */}
-        <div className="hidden sm:flex md:hidden items-center space-x-2">
-          {/* Essential Dropdown */}
-          <div className="relative group">
-            <HeaderDropdownTrigger 
-              icon={MoreHorizontal} 
-              label="Menu" 
-              className="px-2"
-            />
-            <HeaderDropdownCard width="sm" className="dropdown-right">
-              <div className="space-y-1">
-                <HeaderDropdownItem
-                  icon={Brain}
-                  title="Therapy AI"
-                  description="AI-powered therapy"
-                  href="/therapysync-ai"
-                  gradient="from-therapy-500 to-calm-500"
-                  compact={true}
-                />
-                <HeaderDropdownItem
-                  icon={Users}
-                  title="Features"
-                  description="Platform features"
-                  href="/features"
-                  gradient="from-calm-500 to-therapy-500"
-                  compact={true}
-                />
-                <HeaderDropdownItem
-                  icon={Star}
-                  title="Solutions"
-                  description="For individuals & orgs"
-                  href="/for-individuals"
-                  gradient="from-harmony-500 to-balance-500"
-                  compact={true}
-                />
-                <HeaderDropdownItem
-                  icon={Calculator}
-                  title="Pricing"
-                  description="Plans & pricing"
-                  href="/pricing"
-                  gradient="from-therapy-500 to-calm-500"
-                  compact={true}
+        
+        {mobileMenuOpen && (
+          <div className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg">
+            <div className="p-4 space-y-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search therapy resources..."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-therapy-500 focus:border-therapy-500"
                 />
               </div>
-              <div className="border-t border-border/40 mt-3 pt-3">
-                <div className="relative group">
-                  <Button variant="ghost" size="sm" className="w-full flex items-center space-x-2 px-2">
-                    <Globe className="h-4 w-4" />
-                    <span className="text-xs">EN • US • USD</span>
-                  </Button>
-                  <div className="hidden group-hover:block absolute top-full left-0 mt-1 w-48 bg-background border border-border rounded-lg shadow-lg p-3 z-50">
-                    <div className="space-y-2">
-                      <CleanLanguageSelector />
-                      <RegionSelector />
-                      <EnhancedCurrencySelector />
+              
+              <div className="space-y-2">
+                {therapyItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className="block p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${item.gradient} flex items-center justify-center`}>
+                        <item.icon className="h-4 w-4 text-white" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900">{item.title}</div>
+                        <div className="text-sm text-gray-600">{item.description}</div>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
+                ))}
+              </div>
+              
+              <div className="pt-4 border-t border-gray-200">
+                <div className="flex space-x-4">
+                  <Link to="/auth/signin">
+                    <Button variant="outline" size="sm" className="flex-1">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link to="/auth/signup">
+                    <Button size="sm" className="flex-1">
+                      Get Started
+                    </Button>
+                  </Link>
                 </div>
               </div>
-            </HeaderDropdownCard>
+            </div>
           </div>
-          <Button variant="ghost" size="sm" className="px-2">
-            <Search className="h-4 w-4" />
-          </Button>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="flex items-center md:hidden">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2"
-          >
-            {isMobileMenuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
-          </Button>
-        </div>
+        )}
       </nav>
+    );
+  }
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-border/40 bg-background/95 backdrop-blur">
-          <div className="container mx-auto px-4 py-4 space-y-3">
-            
-            {/* Mobile Language/Region/Currency */}
-            <div className="space-y-3 pb-3 border-b border-border/40">
-              <div className="flex items-center space-x-2">
-                <Search className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Search, Language & Region</span>
-              </div>
-              <div className="relative group">
-                <Button variant="outline" size="sm" className="w-full flex items-center justify-between px-3">
-                  <div className="flex items-center space-x-2">
-                    <Globe className="h-4 w-4" />
-                    <span className="text-sm">EN • United States • USD</span>
-                  </div>
-                </Button>
-                <div className="mt-2 space-y-2">
-                  <CleanLanguageSelector />
-                  <RegionSelector />
-                  <EnhancedCurrencySelector />
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-r from-therapy-500 to-therapy-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">T</span>
+            </div>
+            <span className="font-bold text-gray-900">TherapySync</span>
+          </Link>
+
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center space-x-8">
+            {/* Therapy Services Dropdown */}
+            <div className="relative group">
+              <HeaderDropdownTrigger
+                icon={MessageSquare}
+                label="Therapy"
+              />
+              <HeaderDropdownCard compact={isCompactScreen}>
+                <div className="space-y-1">
+                  {therapyItems.map((item) => (
+                    <HeaderDropdownItem
+                      key={item.href}
+                      icon={item.icon}
+                      title={item.title}
+                      description={item.description}
+                      href={item.href}
+                      gradient={item.gradient}
+                      compact={isCompactScreen}
+                    />
+                  ))}
                 </div>
+              </HeaderDropdownCard>
+            </div>
+
+            {/* Community Dropdown */}
+            <div className="relative group">
+              <HeaderDropdownTrigger
+                icon={Users}
+                label="Community"
+              />
+              <HeaderDropdownCard compact={isCompactScreen}>
+                <div className="space-y-1">
+                  {communityItems.map((item) => (
+                    <HeaderDropdownItem
+                      key={item.href}
+                      icon={item.icon}
+                      title={item.title}
+                      description={item.description}
+                      href={item.href}
+                      gradient={item.gradient}
+                      compact={isCompactScreen}
+                    />
+                  ))}
+                </div>
+              </HeaderDropdownCard>
+            </div>
+
+            {/* Resources Dropdown */}
+            <div className="relative group">
+              <HeaderDropdownTrigger
+                icon={FileText}
+                label="Resources"
+              />
+              <HeaderDropdownCard compact={isCompactScreen}>
+                <div className="space-y-1">
+                  {resourceItems.map((item) => (
+                    <HeaderDropdownItem
+                      key={item.href}
+                      icon={item.icon}
+                      title={item.title}
+                      description={item.description}
+                      href={item.href}
+                      gradient={item.gradient}
+                      compact={isCompactScreen}
+                    />
+                  ))}
+                </div>
+              </HeaderDropdownCard>
+            </div>
+          </div>
+
+          {/* Right Side */}
+          <div className="flex items-center space-x-4">
+            {/* Search */}
+            <div className="hidden lg:block">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-therapy-500 focus:border-therapy-500"
+                />
               </div>
             </div>
-            {/* Mobile Therapy AI */}
-            <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-foreground/80">Therapy AI</h3>
-              {therapyAiFeatures.slice(0, 6).map((feature) => (
-                <Link
-                  key={feature.title}
-                  to={feature.href}
-                  className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-therapy-50/80 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <feature.icon className="h-4 w-4 text-therapy-500" />
-                  <span className="text-sm font-medium">{feature.title}</span>
-                </Link>
-              ))}
-            </div>
 
-            {/* Mobile Features */}
-            <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-foreground/80">Features</h3>
-              {platformFeatures.map((feature) => (
-                <Link
-                  key={feature.title}
-                  to={feature.href}
-                  className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-therapy-50/80 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <feature.icon className="h-4 w-4 text-therapy-500" />
-                  <span className="text-sm font-medium">{feature.title}</span>
-                </Link>
-              ))}
-            </div>
+            {/* Language/Region/Currency Selector */}
+            <CleanLanguageSelector />
 
-            {/* Mobile Tools & Data */}
-            <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-foreground/80">Tools & Data</h3>
-              {toolsDataFeatures.slice(0, 4).map((feature) => (
-                <Link
-                  key={feature.title}
-                  to={feature.href}
-                  className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-therapy-50/80 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <feature.icon className="h-4 w-4 text-therapy-500" />
-                  <span className="text-sm font-medium">{feature.title}</span>
-                </Link>
-              ))}
-            </div>
-
-            {/* Mobile Solutions */}
-            <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-foreground/80">Solutions</h3>
-              {solutionsFeatures.map((feature) => (
-                <Link
-                  key={feature.title}
-                  to={feature.href}
-                  className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-therapy-50/80 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <feature.icon className="h-4 w-4 text-therapy-500" />
-                  <span className="text-sm font-medium">{feature.title}</span>
-                </Link>
-              ))}
-            </div>
-
-            {/* Mobile Resources */}
-            <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-foreground/80">Resources</h3>
-              {resourcesFeatures.map((feature) => (
-                <Link
-                  key={feature.title}
-                  to={feature.href}
-                  className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-therapy-50/80 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <feature.icon className="h-4 w-4 text-therapy-500" />
-                  <span className="text-sm font-medium">{feature.title}</span>
-                </Link>
-              ))}
-            </div>
-
-            {/* Mobile Links */}
-            <div className="space-y-1 pt-2 border-t border-border/40">
-              <Link
-                to="/about"
-                className="block py-2 px-3 text-sm font-medium hover:bg-therapy-50/80 rounded-lg transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                About
-              </Link>
-              <Link
-                to="/pricing"
-                className="block py-2 px-3 text-sm font-medium hover:bg-therapy-50/80 rounded-lg transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Pricing
-              </Link>
-            </div>
-
-            {/* Mobile Auth Buttons */}
-            <div className="flex flex-col space-y-2 pt-3 border-t border-border/40">
-              {user ? (
-                <Button 
-                  onClick={() => {
-                    navigate('/dashboard');
-                    setIsMobileMenuOpen(false);
-                  }} 
-                  className="w-full bg-gradient-to-r from-therapy-500 to-harmony-500 hover:from-therapy-600 hover:to-harmony-600 text-white"
-                >
-                  Dashboard
+            {/* Auth Buttons */}
+            <div className="flex items-center space-x-3">
+              <Link to="/auth/signin">
+                <Button variant="outline" size="sm">
+                  Sign In
                 </Button>
-              ) : (
-                <>
-                  <Button 
-                    variant="outline" 
-                    onClick={() => {
-                      navigate('/auth');
-                      setIsMobileMenuOpen(false);
-                    }} 
-                    className="w-full"
-                  >
-                    Sign In
-                  </Button>
-                  <Button 
-                    onClick={() => {
-                      navigate('/get-started');
-                      setIsMobileMenuOpen(false);
-                    }} 
-                    className="w-full bg-gradient-to-r from-therapy-500 to-harmony-500 hover:from-therapy-600 hover:to-harmony-600 text-white"
-                  >
-                    Get Started
-                  </Button>
-                </>
-              )}
+              </Link>
+              <Link to="/auth/signup">
+                <Button size="sm">
+                  Get Started
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
-      )}
-    </header>
+      </div>
+    </nav>
   );
 };
 

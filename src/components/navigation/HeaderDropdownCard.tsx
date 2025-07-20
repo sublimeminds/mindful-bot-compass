@@ -8,6 +8,7 @@ interface HeaderDropdownCardProps {
   titleIcon?: LucideIcon;
   children: React.ReactNode;
   className?: string;
+  compact?: boolean;
 }
 
 const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
@@ -15,7 +16,8 @@ const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
   title,
   titleIcon: TitleIcon,
   children,
-  className = ''
+  className = '',
+  compact = false
 }) => {
   // Dynamic positioning based on width prop or className
   const getPositioning = () => {
@@ -30,6 +32,10 @@ const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
 
   // Responsive width based on screen size and available space
   const getWidth = () => {
+    if (compact) {
+      return 'w-64 sm:w-72 md:w-80';
+    }
+    
     switch (width) {
       case 'sm':
         return 'w-64 sm:w-72';
@@ -59,7 +65,7 @@ const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
   return (
     <div className={`
       absolute top-full ${getPositioning()} ${getWidth()} 
-      p-3 sm:p-4 lg:p-5 
+      ${compact ? 'p-2 sm:p-3' : 'p-3 sm:p-4 lg:p-5'} 
       bg-card shadow-xl border border-border 
       rounded-lg sm:rounded-xl opacity-0 invisible 
       group-hover:opacity-100 group-hover:visible 
