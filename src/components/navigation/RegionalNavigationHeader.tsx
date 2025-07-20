@@ -613,11 +613,19 @@ const RegionalNavigationHeader = () => {
             <Search className="h-4 w-4" />
           </Button>
           <div className="flex items-center space-x-2 text-sm">
-            <CleanLanguageSelector />
-            <div className="w-px h-4 bg-border" />
-            <RegionSelector />
-            <div className="w-px h-4 bg-border" />
-            <EnhancedCurrencySelector />
+            <div className="relative group">
+              <Button variant="ghost" size="sm" className="flex items-center space-x-2 px-2">
+                <Globe className="h-4 w-4" />
+                <span className="text-xs">EN • US • USD</span>
+              </Button>
+              <HeaderDropdownCard width="sm" className="dropdown-right">
+                <div className="space-y-3">
+                  <CleanLanguageSelector />
+                  <RegionSelector />
+                  <EnhancedCurrencySelector />
+                </div>
+              </HeaderDropdownCard>
+            </div>
           </div>
         </div>
 
@@ -697,10 +705,18 @@ const RegionalNavigationHeader = () => {
                 />
               </div>
               <div className="border-t border-border/40 mt-3 pt-3">
-                <div className="flex flex-col space-y-2">
-                  <CleanLanguageSelector />
-                  <RegionSelector />
-                  <EnhancedCurrencySelector />
+                <div className="relative group">
+                  <Button variant="ghost" size="sm" className="w-full flex items-center space-x-2 px-2">
+                    <Globe className="h-4 w-4" />
+                    <span className="text-xs">EN • US • USD</span>
+                  </Button>
+                  <div className="hidden group-hover:block absolute top-full left-0 mt-1 w-48 bg-background border border-border rounded-lg shadow-lg p-3 z-50">
+                    <div className="space-y-2">
+                      <CleanLanguageSelector />
+                      <RegionSelector />
+                      <EnhancedCurrencySelector />
+                    </div>
+                  </div>
                 </div>
               </div>
             </HeaderDropdownCard>
@@ -738,10 +754,18 @@ const RegionalNavigationHeader = () => {
                 <Search className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Search, Language & Region</span>
               </div>
-              <div className="grid grid-cols-1 gap-2">
-                <CleanLanguageSelector />
-                <RegionSelector />
-                <EnhancedCurrencySelector />
+              <div className="relative group">
+                <Button variant="outline" size="sm" className="w-full flex items-center justify-between px-3">
+                  <div className="flex items-center space-x-2">
+                    <Globe className="h-4 w-4" />
+                    <span className="text-sm">EN • United States • USD</span>
+                  </div>
+                </Button>
+                <div className="mt-2 space-y-2">
+                  <CleanLanguageSelector />
+                  <RegionSelector />
+                  <EnhancedCurrencySelector />
+                </div>
               </div>
             </div>
             {/* Mobile Therapy AI */}
