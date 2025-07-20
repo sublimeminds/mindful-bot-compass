@@ -1,132 +1,227 @@
-import React, { useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import DashboardLayoutWithSidebar from '@/components/dashboard/DashboardLayoutWithSidebar';
+
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import IntelligentPersonalizationDashboard from '@/components/ai/IntelligentPersonalizationDashboard';
-import ContextualAISupport from '@/components/ai/ContextualAISupport';
-import SmartRecommendationEngine from '@/components/ai/SmartRecommendationEngine';
-import { Brain, Lightbulb, Settings, Zap, BarChart3, MessageSquare, Heart } from 'lucide-react';
+import { 
+  Brain, 
+  Zap, 
+  MessageCircle, 
+  BarChart3, 
+  Settings, 
+  Sparkles,
+  Cpu,
+  Activity,
+  Shield
+} from 'lucide-react';
 
 const AIHub = () => {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
+  const [activeAI, setActiveAI] = useState('therapist');
 
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate('/');
+  const aiModules = [
+    {
+      id: 'therapist',
+      name: 'AI Therapist',
+      description: 'Your primary therapeutic companion with advanced emotional intelligence',
+      status: 'active',
+      version: '2.1.0',
+      icon: Brain,
+      capabilities: ['Emotional Intelligence', 'CBT Techniques', 'Crisis Support', 'Progress Tracking']
+    },
+    {
+      id: 'wellness',
+      name: 'Wellness Coach',
+      description: 'Proactive wellness monitoring and lifestyle guidance',
+      status: 'active',
+      version: '1.8.3',
+      icon: Activity,
+      capabilities: ['Mood Tracking', 'Habit Formation', 'Wellness Plans', 'Daily Check-ins']
+    },
+    {
+      id: 'crisis',
+      name: 'Crisis Support AI',
+      description: 'Specialized crisis intervention and emergency response',
+      status: 'standby',
+      version: '1.5.2',
+      icon: Shield,
+      capabilities: ['Crisis Detection', 'Emergency Protocols', '24/7 Monitoring', 'Resource Connection']
+    },
+    {
+      id: 'analytics',
+      name: 'Insight Engine',
+      description: 'Advanced analytics and pattern recognition for therapy insights',
+      status: 'active',
+      version: '2.0.1',
+      icon: BarChart3,
+      capabilities: ['Progress Analysis', 'Pattern Recognition', 'Predictive Insights', 'Report Generation']
     }
-  }, [user, loading, navigate]);
+  ];
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 to-calm-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
-          <p className="text-therapy-600 font-medium">Loading AI Hub...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return null;
-  }
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'active':
+        return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+      case 'standby':
+        return <Badge className="bg-yellow-100 text-yellow-800">Standby</Badge>;
+      case 'inactive':
+        return <Badge className="bg-gray-100 text-gray-800">Inactive</Badge>;
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
+  };
 
   return (
-    <DashboardLayoutWithSidebar>
-      <div className="p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">AI Hub</h1>
-          <p className="text-gray-600 mt-2">
-            Manage your AI-powered therapy experience with advanced analytics, personalization controls, and intelligent insights
-          </p>
-        </div>
-
-        <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="dashboard" className="flex items-center space-x-2">
-              <Brain className="h-4 w-4" />
-              <span>AI Dashboard</span>
-            </TabsTrigger>
-            <TabsTrigger value="recommendations" className="flex items-center space-x-2">
-              <Lightbulb className="h-4 w-4" />
-              <span>Recommendations</span>
-            </TabsTrigger>
-            <TabsTrigger value="contextual" className="flex items-center space-x-2">
-              <Zap className="h-4 w-4" />
-              <span>Contextual AI</span>
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center space-x-2">
-              <BarChart3 className="h-4 w-4" />
-              <span>AI Analytics</span>
-            </TabsTrigger>
-            <TabsTrigger value="conversations" className="flex items-center space-x-2">
-              <MessageSquare className="h-4 w-4" />
-              <span>AI Conversations</span>
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center space-x-2">
-              <Settings className="h-4 w-4" />
-              <span>AI Settings</span>
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="dashboard">
-            <IntelligentPersonalizationDashboard />
-          </TabsContent>
-
-          <TabsContent value="recommendations">
-            <SmartRecommendationEngine />
-          </TabsContent>
-
-          <TabsContent value="contextual">
-            <ContextualAISupport />
-          </TabsContent>
-
-          <TabsContent value="analytics">
-            <div className="text-center py-12">
-              <BarChart3 className="h-16 w-16 mx-auto mb-4 text-therapy-600" />
-              <h3 className="text-xl font-semibold mb-2">AI Performance Analytics</h3>
-              <p className="text-muted-foreground">
-                Deep insights into your AI therapy interactions and effectiveness metrics
-              </p>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="conversations">
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg">
-                  <MessageCircle className="h-8 w-8 text-blue-600 mb-3" />
-                  <h3 className="font-semibold text-blue-900 mb-2">Conversation Memory</h3>
-                  <p className="text-blue-700 text-sm">AI remembers important details from your sessions</p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-lg">
-                  <Brain className="h-8 w-8 text-green-600 mb-3" />
-                  <h3 className="font-semibold text-green-900 mb-2">Contextual Awareness</h3>
-                  <p className="text-green-700 text-sm">Adapts to time, season, and your current state</p>
-                </div>
-                <div className="bg-gradient-to-br from-purple-50 to-violet-50 p-6 rounded-lg">
-                  <Heart className="h-8 w-8 text-purple-600 mb-3" />
-                  <h3 className="font-semibold text-purple-900 mb-2">Relationship Building</h3>
-                  <p className="text-purple-700 text-sm">Develops deeper therapeutic connection over time</p>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="settings">
-            <div className="text-center py-12">
-              <Settings className="h-16 w-16 mx-auto mb-4 text-therapy-600" />
-              <h3 className="text-xl font-semibold mb-2">AI Configuration</h3>
-              <p className="text-muted-foreground">
-                Fine-tune your AI experience with advanced personalization settings
-              </p>
-            </div>
-          </TabsContent>
-        </Tabs>
+    <div className="container mx-auto px-4 py-8 space-y-8">
+      <div className="text-center space-y-4">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+          AI Hub
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Manage and interact with your personalized AI therapeutic ecosystem
+        </p>
       </div>
-    </DashboardLayoutWithSidebar>
+
+      <Tabs value={activeAI} onValueChange={setActiveAI} className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          {aiModules.map((module) => (
+            <TabsTrigger key={module.id} value={module.id} className="flex items-center space-x-2">
+              <module.icon className="h-4 w-4" />
+              <span className="hidden sm:inline">{module.name.split(' ')[0]}</span>
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
+        {aiModules.map((module) => (
+          <TabsContent key={module.id} value={module.id} className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="p-3 bg-therapy-100 rounded-lg">
+                      <module.icon className="h-8 w-8 text-therapy-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl">{module.name}</CardTitle>
+                      <p className="text-muted-foreground mt-1">{module.description}</p>
+                    </div>
+                  </div>
+                  <div className="text-right space-y-2">
+                    {getStatusBadge(module.status)}
+                    <p className="text-sm text-muted-foreground">v{module.version}</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <h3 className="font-semibold mb-3">Capabilities</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {module.capabilities.map((capability, index) => (
+                      <Badge key={index} variant="secondary" className="justify-center">
+                        {capability}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <Button className="flex items-center space-x-2">
+                    <MessageCircle className="h-4 w-4" />
+                    <span>Start Session</span>
+                  </Button>
+                  <Button variant="outline" className="flex items-center space-x-2">
+                    <Settings className="h-4 w-4" />
+                    <span>Configure</span>
+                  </Button>
+                  <Button variant="outline" className="flex items-center space-x-2">
+                    <BarChart3 className="h-4 w-4" />
+                    <span>View Analytics</span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* AI Performance Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center space-x-2">
+                    <Cpu className="h-5 w-5" />
+                    <span>Performance</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Response Time</span>
+                      <span className="text-sm font-medium">127ms</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Accuracy</span>
+                      <span className="text-sm font-medium">94.2%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Uptime</span>
+                      <span className="text-sm font-medium">99.8%</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center space-x-2">
+                    <Zap className="h-5 w-5" />
+                    <span>Usage</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Sessions Today</span>
+                      <span className="text-sm font-medium">3</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">This Week</span>
+                      <span className="text-sm font-medium">12</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Total</span>
+                      <span className="text-sm font-medium">247</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center space-x-2">
+                    <Sparkles className="h-5 w-5" />
+                    <span>Insights</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Progress Score</span>
+                      <span className="text-sm font-medium">8.4/10</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Mood Trend</span>
+                      <span className="text-sm font-medium text-green-600">↗ Improving</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Goals Met</span>
+                      <span className="text-sm font-medium">7/10</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
   );
 };
 

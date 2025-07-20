@@ -23,6 +23,7 @@ import { useLanguageBanner } from '@/hooks/useLanguageBanner';
 import { ThemeProvider } from '@/utils/BulletproofTheme';
 
 import './App.css';
+import { mobileOptimizer } from '@/utils/mobileOptimizations';
 
 // Configure React Query with bulletproof settings
 const queryClient = new QueryClient({
@@ -45,6 +46,11 @@ const queryClient = new QueryClient({
 
 const MainApp: React.FC = () => {
   const { showBanner, suggestedLanguage, dismissBanner, switchLanguage } = useLanguageBanner();
+
+  // Initialize mobile optimizations
+  React.useEffect(() => {
+    mobileOptimizer.initialize();
+  }, []);
 
   return (
     <ReactSafeWrapper>

@@ -1,205 +1,168 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
 
-interface TherapeuticRelationship {
-  id: string;
-  therapist_id: string;
-  trust_level: number;
-  relationship_stage: 'initial' | 'building' | 'established' | 'deep' | 'transitioning';
+import { useState, useEffect } from 'react';
+import { useAuth } from './useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { Database } from '@/integrations/supabase/types';
+
+type TherapeuticRelationshipRow = Database['public']['Tables']['therapeutic_relationships']['Row'];
+
+interface TherapeuticRelationship extends Omit<TherapeuticRelationshipRow, 'relationship_stage' | 'communication_style_adaptation' | 'comfort_zones' | 'milestone_unlocks'> {
+  relationship_stage: string;
   communication_style_adaptation: any;
-  boundary_preferences: any;
-  comfort_zones: any;
+  comfort_zones: string[];
   milestone_unlocks: string[];
-  last_interaction_at?: string;
 }
 
-export const useTherapeuticRelationship = (therapistId: string) => {
+export const useTherapeuticRelationship = () => {
   const { user } = useAuth();
   const [relationship, setRelationship] = useState<TherapeuticRelationship | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const initializeRelationship = async () => {
-    if (!user || !therapistId) return null;
-
+  const fetchRelationship = async () => {
+    if (!user) return;
+    
+    setLoading(true);
     try {
-      // Check if relationship already exists
-      const { data: existing } = await supabase
-        .from('therapeutic_relationship')
+      const { data, error } = await supabase
+        .from('therapeutic_relationships')
         .select('*')
         .eq('user_id', user.id)
-        .eq('therapist_id', therapistId)
         .single();
-
-      if (existing) {
-        setRelationship(existing);
-        return existing;
+      
+      if (error && error.code !== 'PGRST116') throw error;
+      
+      if (data) {
+        // Transform the data to match our interface
+        const transformedData: TherapeuticRelationship = {
+          ...data,
+          relationship_stage: 'building_rapport',
+          communication_style_adaptation: data.communication_preferences,
+          comfort_zones: data.effective_techniques || [],
+          milestone_unlocks: []
+        };
+        setRelationship(transformedData);
       }
+    } catch (error) {
+      console.error('Error fetching therapeutic relationship:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      // Create new relationship
+  const initializeRelationship = async () => {
+    if (!user) return null;
+
+    try {
       const { data, error } = await supabase
-        .from('therapeutic_relationship')
+        .from('therapeutic_relationships')
         .insert({
           user_id: user.id,
-          therapist_id: therapistId,
+          therapeutic_style: 'adaptive',
+          communication_preferences: { style: 'supportive', tone: 'warm' },
+          boundary_preferences: { strictness: 'moderate' },
+          effective_techniques: [],
+          ineffective_techniques: [],
           trust_level: 1,
-          relationship_stage: 'initial',
-          communication_style_adaptation: {},
-          boundary_preferences: {},
-          comfort_zones: {},
-          milestone_unlocks: [],
-          last_interaction_at: new Date().toISOString()
+          progress_indicators: { sessions_completed: 0 },
         })
         .select()
         .single();
 
       if (error) throw error;
       
-      setRelationship(data);
-      return data;
+      const transformedData: TherapeuticRelationship = {
+        ...data,
+        relationship_stage: 'building_rapport',
+        communication_style_adaptation: data.communication_preferences,
+        comfort_zones: data.effective_techniques || [],
+        milestone_unlocks: []
+      };
+      setRelationship(transformedData);
+      return transformedData;
     } catch (error) {
-      console.error('Error initializing relationship:', error);
+      console.error('Error initializing therapeutic relationship:', error);
       return null;
     }
   };
 
-  const updateTrustLevel = async (increment: number) => {
-    if (!relationship) return;
-
-    const newTrustLevel = Math.max(1, Math.min(10, relationship.trust_level + increment));
-    let newStage = relationship.relationship_stage;
-
-    // Update relationship stage based on trust level
-    if (newTrustLevel >= 8) newStage = 'deep';
-    else if (newTrustLevel >= 6) newStage = 'established';
-    else if (newTrustLevel >= 3) newStage = 'building';
-    else newStage = 'initial';
+  const updateRelationship = async (updates: Partial<TherapeuticRelationship>) => {
+    if (!user || !relationship) return null;
 
     try {
+      // Transform updates to match database schema
+      const dbUpdates: any = {
+        ...updates,
+        last_interaction: new Date().toISOString(),
+      };
+      
+      // Remove fields that don't exist in database
+      delete dbUpdates.relationship_stage;
+      delete dbUpdates.communication_style_adaptation;
+      delete dbUpdates.comfort_zones;
+      delete dbUpdates.milestone_unlocks;
+
       const { data, error } = await supabase
-        .from('therapeutic_relationship')
-        .update({
-          trust_level: newTrustLevel,
-          relationship_stage: newStage,
-          last_interaction_at: new Date().toISOString()
-        })
+        .from('therapeutic_relationships')
+        .update(dbUpdates)
         .eq('id', relationship.id)
         .select()
         .single();
 
       if (error) throw error;
-      setRelationship(data);
       
-      // Check for milestone unlocks
-      checkMilestoneUnlocks(newTrustLevel, newStage);
+      const transformedData: TherapeuticRelationship = {
+        ...data,
+        relationship_stage: relationship.relationship_stage,
+        communication_style_adaptation: data.communication_preferences,
+        comfort_zones: data.effective_techniques || [],
+        milestone_unlocks: relationship.milestone_unlocks
+      };
+      setRelationship(transformedData);
+      return transformedData;
     } catch (error) {
-      console.error('Error updating trust level:', error);
+      console.error('Error updating therapeutic relationship:', error);
+      return null;
     }
   };
 
-  const checkMilestoneUnlocks = async (trustLevel: number, stage: string) => {
-    const newUnlocks: string[] = [];
-
-    if (trustLevel >= 3 && !relationship?.milestone_unlocks.includes('personal_sharing')) {
-      newUnlocks.push('personal_sharing');
-    }
-    if (trustLevel >= 5 && !relationship?.milestone_unlocks.includes('deeper_techniques')) {
-      newUnlocks.push('deeper_techniques');
-    }
-    if (trustLevel >= 7 && !relationship?.milestone_unlocks.includes('vulnerable_conversations')) {
-      newUnlocks.push('vulnerable_conversations');
-    }
-    if (trustLevel >= 9 && !relationship?.milestone_unlocks.includes('life_changing_work')) {
-      newUnlocks.push('life_changing_work');
-    }
-
-    if (newUnlocks.length > 0 && relationship) {
-      try {
-        const updatedUnlocks = [...relationship.milestone_unlocks, ...newUnlocks];
-        
-        await supabase
-          .from('therapeutic_relationship')
-          .update({ milestone_unlocks: updatedUnlocks })
-          .eq('id', relationship.id);
-
-        setRelationship(prev => prev ? {
-          ...prev,
-          milestone_unlocks: updatedUnlocks
-        } : null);
-      } catch (error) {
-        console.error('Error updating milestone unlocks:', error);
-      }
-    }
-  };
-
-  const getRelationshipBasedResponse = (baseResponse: string) => {
-    if (!relationship) return baseResponse;
-
-    let adaptedResponse = baseResponse;
-
-    switch (relationship.relationship_stage) {
-      case 'initial':
-        adaptedResponse = `${adaptedResponse} I want you to know that this is a safe space for you.`;
-        break;
-      case 'building':
-        adaptedResponse = `${adaptedResponse} I'm glad we're getting to know each other better.`;
-        break;
-      case 'established':
-        adaptedResponse = `${adaptedResponse} I appreciate the trust you've shown in our work together.`;
-        break;
-      case 'deep':
-        adaptedResponse = `${adaptedResponse} Our connection allows us to explore these deeper aspects of your experience.`;
-        break;
-    }
-
-    return adaptedResponse;
-  };
-
-  const canAccessFeature = (feature: string) => {
-    if (!relationship) return false;
-    return relationship.milestone_unlocks.includes(feature);
-  };
-
-  const getTherapistPersonalSharing = () => {
-    if (!canAccessFeature('personal_sharing')) return null;
-
-    const sharings = [
-      "I've found in my own journey that vulnerability often leads to the greatest breakthroughs.",
-      "I remember when I first learned this technique - it was transformative for me too.",
-      "This reminds me of something I struggled with early in my career...",
-      "I've seen this pattern in my own life as well, and here's what helped me..."
-    ];
-
-    return sharings[Math.floor(Math.random() * sharings.length)];
-  };
-
-  const recordInteraction = async () => {
+  const trackProgress = async (milestone: string) => {
     if (!relationship) return;
 
-    try {
-      await supabase
-        .from('therapeutic_relationship')
-        .update({ last_interaction_at: new Date().toISOString() })
-        .eq('id', relationship.id);
-    } catch (error) {
-      console.error('Error recording interaction:', error);
-    }
+    const updatedMilestones = [...relationship.milestone_unlocks, milestone];
+    await updateRelationship({
+      ...relationship,
+      milestone_unlocks: updatedMilestones
+    });
+  };
+
+  const adaptCommunicationStyle = async (feedback: any) => {
+    if (!relationship) return;
+
+    const adaptedStyle = {
+      ...relationship.communication_style_adaptation,
+      ...feedback,
+      last_adapted: new Date().toISOString()
+    };
+
+    await updateRelationship({
+      ...relationship,
+      communication_style_adaptation: adaptedStyle
+    });
   };
 
   useEffect(() => {
-    if (user && therapistId) {
-      initializeRelationship();
+    if (user) {
+      fetchRelationship();
     }
-  }, [user, therapistId]);
+  }, [user]);
 
   return {
     relationship,
     loading,
+    fetchRelationship,
     initializeRelationship,
-    updateTrustLevel,
-    getRelationshipBasedResponse,
-    canAccessFeature,
-    getTherapistPersonalSharing,
-    recordInteraction
+    updateRelationship,
+    trackProgress,
+    adaptCommunicationStyle,
   };
 };

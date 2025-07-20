@@ -1,34 +1,32 @@
+
 import React, { useEffect } from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { performanceMonitor } from '@/utils/performanceMonitor';
+import { useScreenSize } from '@/hooks/use-mobile';
 import OnboardingGuard from './OnboardingGuard';
 import EnhancedDashboardSidebar from './EnhancedDashboardSidebar';
 import DashboardHeader from './DashboardHeader';
 import ModularDashboard from './ModularDashboard';
 import DashboardFooter from './DashboardFooter';
-import TherapistAvatarWidget from './widgets/TherapistAvatarWidget';
-import MoodTrackerWidget from './widgets/MoodTrackerWidget';
-import WelcomeWidget from './widgets/WelcomeWidget';
-import QuickActionsWidget from './widgets/QuickActionsWidget';
-import RecentActivityWidget from './widgets/RecentActivityWidget';
-import ProgressOverviewWidget from './widgets/ProgressOverviewWidget';
-import TranscriptionInsightsWidget from './widgets/TranscriptionInsightsWidget';
+import MobileOptimizedLayout from '@/components/mobile/MobileOptimizedLayout';
 
 interface BulletproofDashboardLayoutProps {
   children?: React.ReactNode;
 }
 
 const BulletproofDashboardLayout = ({ children }: BulletproofDashboardLayoutProps) => {
+  const { isMobile } = useScreenSize();
+  
   // Performance monitoring configuration
   const { metrics, warnings, clearWarnings } = usePerformanceMonitor({
     enableMetrics: true,
     sampleRate: 1,
     thresholds: {
-      renderTime: 100, // 100ms threshold
-      memoryUsage: 0.8, // 80% memory usage threshold
-      fps: 30 // 30 FPS minimum
+      renderTime: 100,
+      memoryUsage: 0.8,
+      fps: 30
     }
   });
 
@@ -46,16 +44,34 @@ const BulletproofDashboardLayout = ({ children }: BulletproofDashboardLayoutProp
     }
   }, [warnings, clearWarnings]);
 
-  // Track dashboard render performance (with cleanup)
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      performanceMonitor.trackMemoryUsage('BulletproofDashboardLayout');
-    }, 60000); // Check every minute instead of every render
-    
-    return () => clearInterval(intervalId);
-  }, []);
+  // Mobile Layout
+  if (isMobile) {
+    return performanceMonitor.measureRenderTime('MobileDashboardLayout', () => (
+      <SafeComponentWrapper name="MobileDashboardLayout">
+        <OnboardingGuard>
+          <MobileOptimizedLayout>
+            <SafeComponentWrapper 
+              name="MobileDashboardContent" 
+              fallback={
+                <div className="p-6 min-h-full flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-4xl mb-4">🔧</div>
+                    <h2 className="text-xl font-semibold mb-2">Dashboard Loading</h2>
+                    <p className="text-muted-foreground">Setting up your personalized experience...</p>
+                  </div>
+                </div>
+              }
+            >
+              {children || <ModularDashboard />}
+            </SafeComponentWrapper>
+          </MobileOptimizedLayout>
+        </OnboardingGuard>
+      </SafeComponentWrapper>
+    ));
+  }
 
-  return performanceMonitor.measureRenderTime('BulletproofDashboardLayout', () => (
+  // Desktop Layout
+  return performanceMonitor.measureRenderTime('DesktopDashboardLayout', () => (
     <SafeComponentWrapper name="BulletproofDashboardLayout">
       <OnboardingGuard>
         <SidebarProvider>
