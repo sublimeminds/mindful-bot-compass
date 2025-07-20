@@ -31,12 +31,17 @@ import {
   FileSpreadsheet,
   LinkIcon,
   Phone,
-  Sparkles
+  Sparkles,
+  Search,
+  MoreHorizontal
 } from 'lucide-react';
 import HeaderDropdownTrigger from './HeaderDropdownTrigger';
 import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
 import Logo from './Logo';
+import CleanLanguageSelector from '@/components/ui/CleanLanguageSelector';
+import RegionSelector from '@/components/regional/RegionSelector';
+import EnhancedCurrencySelector from '@/components/ui/EnhancedCurrencySelector';
 
 const RegionalNavigationHeader = () => {
   const { user } = useAuth();
@@ -319,7 +324,7 @@ const RegionalNavigationHeader = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="w-full max-w-7xl mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+      <nav className="w-full max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <div className="flex items-center">
           <Logo />
@@ -475,17 +480,17 @@ const RegionalNavigationHeader = () => {
         </div>
 
         {/* Medium Screen Navigation - MacBook Air, tablets with compact dropdowns */}
-        <div className="hidden lg:flex xl:hidden items-center space-x-1">
+        <div className="hidden md:flex xl:hidden items-center space-x-1">
           {/* Therapy AI Compact */}
           <div className="relative group">
             <HeaderDropdownTrigger 
               icon={Brain} 
               label="Therapy AI" 
-              className="px-2"
+              className="px-2 text-xs"
             />
             <HeaderDropdownCard width="md" className="dropdown-left">
-              <div className="space-y-2">
-                {therapyAiFeatures.slice(0, 4).map((feature) => (
+              <div className="space-y-1">
+                {therapyAiFeatures.filter(f => f.category === "AI Technology").slice(0, 4).map((feature) => (
                   <HeaderDropdownItem
                     key={feature.title}
                     icon={feature.icon}
@@ -505,11 +510,35 @@ const RegionalNavigationHeader = () => {
             <HeaderDropdownTrigger 
               icon={Settings} 
               label="Features" 
-              className="px-2"
+              className="px-2 text-xs"
             />
             <HeaderDropdownCard width="md">
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {platformFeatures.slice(0, 4).map((feature) => (
+                  <HeaderDropdownItem
+                    key={feature.title}
+                    icon={feature.icon}
+                    title={feature.title}
+                    description={feature.description}
+                    href={feature.href}
+                    gradient={feature.gradient}
+                    compact={true}
+                  />
+                ))}
+              </div>
+            </HeaderDropdownCard>
+          </div>
+
+          {/* Tools & Data Compact */}
+          <div className="relative group">
+            <HeaderDropdownTrigger 
+              icon={Database} 
+              label="Tools" 
+              className="px-2 text-xs"
+            />
+            <HeaderDropdownCard width="md">
+              <div className="space-y-1">
+                {toolsDataFeatures.slice(0, 4).map((feature) => (
                   <HeaderDropdownItem
                     key={feature.title}
                     icon={feature.icon}
@@ -529,10 +558,10 @@ const RegionalNavigationHeader = () => {
             <HeaderDropdownTrigger 
               icon={Star} 
               label="Solutions" 
-              className="px-2"
+              className="px-2 text-xs"
             />
             <HeaderDropdownCard width="sm">
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {solutionsFeatures.slice(0, 3).map((feature) => (
                   <HeaderDropdownItem
                     key={feature.title}
@@ -548,23 +577,52 @@ const RegionalNavigationHeader = () => {
             </HeaderDropdownCard>
           </div>
 
-          {/* About & Pricing Links */}
-          <Link 
-            to="/about" 
-            className="px-2 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
-          >
-            About
-          </Link>
-          <Link 
-            to="/pricing" 
-            className="px-2 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
-          >
-            Pricing
-          </Link>
+          {/* Resources Compact */}
+          <div className="relative group">
+            <HeaderDropdownTrigger 
+              icon={BookOpen} 
+              label="Resources" 
+              className="px-2 text-xs"
+            />
+            <HeaderDropdownCard width="sm" className="dropdown-right">
+              <div className="space-y-1">
+                {resourcesFeatures.slice(0, 3).map((feature) => (
+                  <HeaderDropdownItem
+                    key={feature.title}
+                    icon={feature.icon}
+                    title={feature.title}
+                    description={feature.description}
+                    href={feature.href}
+                    gradient={feature.gradient}
+                    compact={true}
+                  />
+                ))}
+              </div>
+            </HeaderDropdownCard>
+          </div>
+
+          {/* Search */}
+          <Button variant="ghost" size="sm" className="px-2">
+            <Search className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Language, Region, Currency & Search - Desktop */}
+        <div className="hidden xl:flex items-center space-x-3">
+          <Button variant="ghost" size="sm" className="px-2">
+            <Search className="h-4 w-4" />
+          </Button>
+          <div className="flex items-center space-x-2 text-sm">
+            <CleanLanguageSelector />
+            <div className="w-px h-4 bg-border" />
+            <RegionSelector />
+            <div className="w-px h-4 bg-border" />
+            <EnhancedCurrencySelector />
+          </div>
         </div>
 
         {/* Auth Buttons */}
-        <div className="hidden sm:flex items-center space-x-2 lg:space-x-3">
+        <div className="hidden md:flex items-center space-x-2 lg:space-x-3">
           {user ? (
             <Button 
               onClick={() => navigate('/dashboard')} 
@@ -594,8 +652,66 @@ const RegionalNavigationHeader = () => {
           )}
         </div>
 
+        {/* Small Screen Nav - Tablet/Small Laptop */}
+        <div className="hidden sm:flex md:hidden items-center space-x-2">
+          {/* Essential Dropdown */}
+          <div className="relative group">
+            <HeaderDropdownTrigger 
+              icon={MoreHorizontal} 
+              label="Menu" 
+              className="px-2"
+            />
+            <HeaderDropdownCard width="sm" className="dropdown-right">
+              <div className="space-y-1">
+                <HeaderDropdownItem
+                  icon={Brain}
+                  title="Therapy AI"
+                  description="AI-powered therapy"
+                  href="/therapysync-ai"
+                  gradient="from-therapy-500 to-calm-500"
+                  compact={true}
+                />
+                <HeaderDropdownItem
+                  icon={Users}
+                  title="Features"
+                  description="Platform features"
+                  href="/features"
+                  gradient="from-calm-500 to-therapy-500"
+                  compact={true}
+                />
+                <HeaderDropdownItem
+                  icon={Star}
+                  title="Solutions"
+                  description="For individuals & orgs"
+                  href="/for-individuals"
+                  gradient="from-harmony-500 to-balance-500"
+                  compact={true}
+                />
+                <HeaderDropdownItem
+                  icon={Calculator}
+                  title="Pricing"
+                  description="Plans & pricing"
+                  href="/pricing"
+                  gradient="from-therapy-500 to-calm-500"
+                  compact={true}
+                />
+              </div>
+              <div className="border-t border-border/40 mt-3 pt-3">
+                <div className="flex flex-col space-y-2">
+                  <CleanLanguageSelector />
+                  <RegionSelector />
+                  <EnhancedCurrencySelector />
+                </div>
+              </div>
+            </HeaderDropdownCard>
+          </div>
+          <Button variant="ghost" size="sm" className="px-2">
+            <Search className="h-4 w-4" />
+          </Button>
+        </div>
+
         {/* Mobile Menu Button */}
-        <div className="flex items-center lg:hidden">
+        <div className="flex items-center md:hidden">
           <Button
             variant="ghost"
             size="sm"
@@ -613,8 +729,21 @@ const RegionalNavigationHeader = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden border-t border-border/40 bg-background/95 backdrop-blur">
+        <div className="md:hidden border-t border-border/40 bg-background/95 backdrop-blur">
           <div className="container mx-auto px-4 py-4 space-y-3">
+            
+            {/* Mobile Language/Region/Currency */}
+            <div className="space-y-3 pb-3 border-b border-border/40">
+              <div className="flex items-center space-x-2">
+                <Search className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Search, Language & Region</span>
+              </div>
+              <div className="grid grid-cols-1 gap-2">
+                <CleanLanguageSelector />
+                <RegionSelector />
+                <EnhancedCurrencySelector />
+              </div>
+            </div>
             {/* Mobile Therapy AI */}
             <div className="space-y-2">
               <h3 className="text-sm font-semibold text-foreground/80">Therapy AI</h3>
