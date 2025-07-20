@@ -26,7 +26,8 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
     isTablet, 
     isDesktop, 
     isUltraWide, 
-    breakpoint 
+    breakpoint,
+    width 
   } = useEnhancedScreenSize();
 
   // Dashboard variant uses the bulletproof dashboard layout
@@ -66,15 +67,20 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
     );
   }
 
-  // Desktop fallback (1024px - 1600px)
+  // Desktop fallback with MacBook Air optimization
+  const getMaxWidth = () => {
+    if (width <= 1440) return 'max-w-5xl'; // MacBook Air optimization
+    if (breakpoint === 'lg') return 'max-w-6xl';
+    if (breakpoint === 'xl') return 'max-w-7xl';
+    return 'max-w-7xl';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50/30 to-calm-50/30">
       <main className={`
         container mx-auto 
-        px-fluid-md py-fluid-lg
-        ${breakpoint === 'lg' ? 'max-w-4xl' : ''}
-        ${breakpoint === 'xl' ? 'max-w-5xl' : ''}
-        ${breakpoint === '2xl' ? 'max-w-6xl' : ''}
+        px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12
+        ${getMaxWidth()}
       `}>
         {children}
       </main>
