@@ -172,7 +172,6 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-white to-calm-50">
       <RegionalNavigationHeader />
-      <ProgressTracker />
       
       {/* Hero Section */}
       <section id="hero" className="pt-0 pb-16 lg:pb-20 relative overflow-hidden" key={`hero-${Date.now()}`}>
