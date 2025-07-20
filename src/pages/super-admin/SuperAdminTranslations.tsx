@@ -9,10 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GlobalLanguageSelector } from '@/components/ui/GlobalLanguageSelector';
 import { GlobalTranslationIndicator } from '@/components/ui/GlobalTranslationIndicator';
 import { useGlobalTranslation } from '@/hooks/useGlobalTranslation';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 const SuperAdminTranslations = () => {
-  const { toast } = useToast();
   const [selectedSourceLang, setSelectedSourceLang] = useState('en');
   const [selectedTargetLang, setSelectedTargetLang] = useState('es');
   const [testText, setTestText] = useState('Welcome to our therapy platform. How are you feeling today?');
@@ -30,32 +29,18 @@ const SuperAdminTranslations = () => {
   const handleTestTranslation = async () => {
     try {
       const result = await translate(testText, selectedTargetLang, selectedSourceLang);
-      toast({
-        title: "Translation Successful",
-        description: `Translated to ${supportedLanguages[selectedTargetLang as keyof typeof supportedLanguages]?.name}`,
-      });
+      toast.success(`Translation Successful - Translated to ${supportedLanguages[selectedTargetLang as keyof typeof supportedLanguages]?.name}`);
     } catch (error) {
-      toast({
-        title: "Translation Failed",
-        description: error instanceof Error ? error.message : 'Unknown error',
-        variant: "destructive",
-      });
+      toast.error(`Translation Failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
   const handleVoiceTranslation = async () => {
     try {
       const result = await translateWithVoice(testText, selectedTargetLang, selectedSourceLang);
-      toast({
-        title: "Voice Translation Successful",
-        description: "Translation with voice synthesis completed",
-      });
+      toast.success("Voice Translation Successful - Translation with voice synthesis completed");
     } catch (error) {
-      toast({
-        title: "Voice Translation Failed",
-        description: error instanceof Error ? error.message : 'Unknown error',
-        variant: "destructive",
-      });
+      toast.error(`Voice Translation Failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 

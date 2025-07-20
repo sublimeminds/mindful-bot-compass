@@ -1,6 +1,6 @@
 
 import { useState, useCallback, useEffect } from 'react';
-import { globalTranslationService, GlobalTranslationRequest, GlobalTranslationResponse, GlobalCulturalContext } from '@/services/globalTranslationService';
+import { globalTranslationService, GlobalTranslationService, GlobalTranslationRequest, GlobalTranslationResponse, GlobalCulturalContext } from '@/services/globalTranslationService';
 
 export interface UseGlobalTranslationOptions {
   autoDetectLanguage?: boolean;
@@ -25,7 +25,7 @@ export interface UseGlobalTranslationResult {
   startSession: (sourceLanguage: string, targetLanguage: string) => Promise<string>;
   endSession: () => Promise<void>;
   currentSessionId: string | null;
-  supportedLanguages: typeof globalTranslationService.GLOBAL_LANGUAGES;
+  supportedLanguages: typeof GlobalTranslationService.GLOBAL_LANGUAGES;
   languagesByRegion: Record<string, Array<{ code: string; name: string; nativeName: string; family: string }>>;
 }
 
@@ -232,7 +232,7 @@ export function useGlobalTranslation(
     startSession,
     endSession,
     currentSessionId,
-    supportedLanguages: globalTranslationService.GLOBAL_LANGUAGES,
-    languagesByRegion: globalTranslationService.getLanguagesByRegion()
+    supportedLanguages: GlobalTranslationService.GLOBAL_LANGUAGES,
+    languagesByRegion: GlobalTranslationService.getLanguagesByRegion()
   };
 }

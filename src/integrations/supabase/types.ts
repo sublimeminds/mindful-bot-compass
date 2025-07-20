@@ -4833,6 +4833,63 @@ export type Database = {
         }
         Relationships: []
       }
+      global_cultural_contexts: {
+        Row: {
+          communication_style: string
+          country_code: string
+          country_name: string
+          created_at: string
+          crisis_support_info: Json
+          cultural_profile: Json
+          family_structure_importance: string
+          id: string
+          is_active: boolean
+          language_code: string
+          mental_health_stigma_level: string
+          privacy_expectations: string
+          region: string
+          religious_cultural_factors: Json
+          therapy_preferences: Json
+          updated_at: string
+        }
+        Insert: {
+          communication_style?: string
+          country_code: string
+          country_name: string
+          created_at?: string
+          crisis_support_info?: Json
+          cultural_profile?: Json
+          family_structure_importance?: string
+          id?: string
+          is_active?: boolean
+          language_code: string
+          mental_health_stigma_level?: string
+          privacy_expectations?: string
+          region: string
+          religious_cultural_factors?: Json
+          therapy_preferences?: Json
+          updated_at?: string
+        }
+        Update: {
+          communication_style?: string
+          country_code?: string
+          country_name?: string
+          created_at?: string
+          crisis_support_info?: Json
+          cultural_profile?: Json
+          family_structure_importance?: string
+          id?: string
+          is_active?: boolean
+          language_code?: string
+          mental_health_stigma_level?: string
+          privacy_expectations?: string
+          region?: string
+          religious_cultural_factors?: Json
+          therapy_preferences?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       global_infrastructure_metrics: {
         Row: {
           created_at: string
@@ -4860,6 +4917,57 @@ export type Database = {
           metric_value?: number
           recorded_at?: string
           region?: string
+        }
+        Relationships: []
+      }
+      global_translation_memory: {
+        Row: {
+          context_type: string
+          created_at: string
+          cultural_adaptations: Json | null
+          id: string
+          quality_score: number | null
+          session_id: string | null
+          source_language: string
+          source_text: string
+          target_language: string
+          therapeutic_category: string | null
+          translated_text: string
+          updated_at: string
+          usage_count: number | null
+          user_id: string | null
+        }
+        Insert: {
+          context_type?: string
+          created_at?: string
+          cultural_adaptations?: Json | null
+          id?: string
+          quality_score?: number | null
+          session_id?: string | null
+          source_language: string
+          source_text: string
+          target_language: string
+          therapeutic_category?: string | null
+          translated_text: string
+          updated_at?: string
+          usage_count?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          context_type?: string
+          created_at?: string
+          cultural_adaptations?: Json | null
+          id?: string
+          quality_score?: number | null
+          session_id?: string | null
+          source_language?: string
+          source_text?: string
+          target_language?: string
+          therapeutic_category?: string | null
+          translated_text?: string
+          updated_at?: string
+          usage_count?: number | null
+          user_id?: string | null
         }
         Relationships: []
       }

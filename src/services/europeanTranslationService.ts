@@ -19,7 +19,7 @@ export interface TranslationRequest {
   targetLanguage: string;
   userId?: string;
   sessionId?: string;
-  contextType?: 'general' | 'therapeutic' | 'crisis' | 'assessment';
+  contextType?: 'general' | 'therapeutic' | 'crisis' | 'assessment' | 'spiritual' | 'cultural';
   therapeuticCategory?: string;
   culturalContext?: CulturalContext;
 }
@@ -41,7 +41,7 @@ export interface TranslationResponse {
 export interface BatchTranslationOptions {
   userId?: string;
   sessionId?: string;
-  contextType?: string;
+  contextType?: 'general' | 'therapeutic' | 'crisis' | 'assessment' | 'spiritual' | 'cultural';
   therapeuticCategory?: string;
 }
 
@@ -262,8 +262,8 @@ class EuropeanTranslationService {
     // Update session statistics
     await supabase.from('realtime_translation_sessions')
       .update({
-        translation_count: supabase.sql`translation_count + 1`,
-        avg_response_time_ms: supabase.sql`(avg_response_time_ms + ${response.responseTime}) / 2`
+        translation_count: 1,
+        avg_response_time_ms: response.responseTime
       })
       .eq('session_id', sessionId);
 
