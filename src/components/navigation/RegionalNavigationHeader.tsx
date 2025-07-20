@@ -1,454 +1,296 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Brain, Settings, Database, Star, BookOpen, ChevronDown, MessageSquare, Headphones, Shield, Globe, Users, Heart, Target, HelpCircle, Calculator, Phone, GraduationCap, Lightbulb } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
-import GradientLogo from '@/components/ui/GradientLogo';
-import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
-import EnhancedUserMenu from './EnhancedUserMenu';
-import CompactRegionalSelector from '@/components/regional/CompactRegionalSelector';
-import MobileNavigation from './MobileNavigation';
-import HeaderDropdowns from './HeaderDropdowns';
-import UnifiedSearch from '../search/UnifiedSearch';
-import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
-// Inline responsive logic to bypass Vite caching issues
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < 768;
-  });
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const mql = window.matchMedia('(max-width: 767px)');
-    const onChange = () => setIsMobile(window.innerWidth < 768);
-    mql.addEventListener("change", onChange);
-    setIsMobile(window.innerWidth < 768);
-    return () => mql.removeEventListener("change", onChange);
-  }, []);
-
-  return isMobile;
-};
-
-const useScreenSize = () => {
-  const [screenSize, setScreenSize] = useState(() => {
-    if (typeof window === 'undefined') return { isTablet: false, isLaptop: false, isDesktop: false };
-    const width = window.innerWidth;
-    return {
-      isTablet: width >= 768 && width < 1024,
-      isLaptop: width >= 1024 && width < 1280,
-      isDesktop: width >= 1280,
-    };
-  });
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const updateScreenSize = () => {
-      const width = window.innerWidth;
-      setScreenSize({
-        isTablet: width >= 768 && width < 1024,
-        isLaptop: width >= 1024 && width < 1280,
-        isDesktop: width >= 1280,
-      });
-    };
-    updateScreenSize();
-    window.addEventListener("resize", updateScreenSize);
-    return () => window.removeEventListener("resize", updateScreenSize);
-  }, []);
-
-  return screenSize;
-};
+import { 
+  Globe, 
+  Users, 
+  Brain, 
+  Shield, 
+  Briefcase, 
+  GraduationCap,
+  Menu,
+  X
+} from 'lucide-react';
+import HeaderDropdownTrigger from './HeaderDropdownTrigger';
+import HeaderDropdownCard from './HeaderDropdownCard';
+import HeaderDropdownItem from './HeaderDropdownItem';
+import Logo from './Logo';
 
 const RegionalNavigationHeader = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
-  const { isTablet, isLaptop, isDesktop } = useScreenSize();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleGetStarted = () => {
-    if (user) {
-      navigate('/dashboard');
-    } else {
-      navigate('/auth');
+  const solutionsItems = [
+    {
+      icon: Users,
+      title: "For Individuals",
+      description: "Personal therapy and mental wellness support",
+      href: "/for-individuals",
+      gradient: "from-therapy-500 to-therapy-600",
+      badge: "Popular"
+    },
+    {
+      icon: Briefcase,
+      title: "For Organizations",
+      description: "Employee mental health and wellness programs",
+      href: "/for-organizations",
+      gradient: "from-harmony-500 to-harmony-600"
+    },
+    {
+      icon: GraduationCap,
+      title: "For Schools",
+      description: "Student mental health support and resources",
+      href: "/for-schools",
+      gradient: "from-flow-500 to-flow-600"
+    },
+    {
+      icon: Shield,
+      title: "Crisis Management",
+      description: "24/7 emergency mental health support",
+      href: "/crisis-management",
+      gradient: "from-red-500 to-red-600",
+      badge: "24/7"
     }
-  };
+  ];
+
+  const resourcesItems = [
+    {
+      icon: Brain,
+      title: "Mental Health Guide",
+      description: "Comprehensive guide to mental wellness",
+      href: "/resources/mental-health-guide",
+      gradient: "from-therapy-500 to-calm-500"
+    },
+    {
+      icon: Users,
+      title: "Community Support",
+      description: "Connect with others on similar journeys",
+      href: "/community",
+      gradient: "from-harmony-500 to-balance-500"
+    }
+  ];
 
   return (
-    <SafeComponentWrapper name="RegionalNavigationHeader">
-      <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            
-            {/* Left Section - Logo and Mobile Nav */}
-            <div className="flex items-center space-x-4">
-              <div className="md:hidden">
-                <MobileNavigation
-                  therapyAiFeatures={[
-                    { title: 'AI Therapy Sessions', href: '/therapy', icon: Brain, description: 'Personalized AI therapy sessions' },
-                    { title: 'Crisis Support', href: '/crisis', icon: Brain, description: '24/7 crisis intervention' }
-                  ]}
-                  platformFeatures={[
-                    { title: 'Dashboard', href: '/dashboard', icon: Settings, description: 'Your therapy dashboard' },
-                    { title: 'Analytics', href: '/analytics', icon: Settings, description: 'Mental health insights' }
-                  ]}
-                  toolsDataFeatures={[
-                    { title: 'Mood Tracking', href: '/mood', icon: Database, description: 'Track your mood patterns' },
-                    { title: 'Progress Reports', href: '/reports', icon: Database, description: 'View your progress' }
-                  ]}
-                  solutionsFeatures={[
-                    { title: 'Quick Links', href: '/quick-links', icon: Star, description: 'Fast access to resources' },
-                    { title: 'Pricing', href: '/pricing', icon: Star, description: 'View our pricing plans' }
-                  ]}
-                  resourcesFeatures={[
-                    { title: 'Help Center', href: '/help', icon: BookOpen, description: 'Get help and support' },
-                    { title: 'Documentation', href: '/docs', icon: BookOpen, description: 'API documentation' }
-                  ]}
-                />
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <nav className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6">
+        {/* Logo */}
+        <div className="flex items-center">
+          <Logo />
+        </div>
+
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center space-x-1">
+          {/* Solutions Dropdown */}
+          <div className="relative group">
+            <HeaderDropdownTrigger 
+              icon={Users} 
+              label="Solutions" 
+              className="px-2 xl:px-3"
+            />
+            <HeaderDropdownCard width="adaptive" className="dropdown-left">
+              <div className="space-y-1">
+                {solutionsItems.map((item) => (
+                  <HeaderDropdownItem
+                    key={item.title}
+                    icon={item.icon}
+                    title={item.title}
+                    description={item.description}
+                    href={item.href}
+                    gradient={item.gradient}
+                    badge={item.badge}
+                    compact={true}
+                  />
+                ))}
               </div>
-              
-              <Link
-                to="/" 
-                className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+            </HeaderDropdownCard>
+          </div>
+
+          {/* Resources Dropdown */}
+          <div className="relative group">
+            <HeaderDropdownTrigger 
+              icon={Brain} 
+              label="Resources" 
+              className="px-2 xl:px-3"
+            />
+            <HeaderDropdownCard width="sm">
+              <div className="space-y-1">
+                {resourcesItems.map((item) => (
+                  <HeaderDropdownItem
+                    key={item.title}
+                    icon={item.icon}
+                    title={item.title}
+                    description={item.description}
+                    href={item.href}
+                    gradient={item.gradient}
+                    compact={true}
+                  />
+                ))}
+              </div>
+            </HeaderDropdownCard>
+          </div>
+
+          {/* About Link */}
+          <Link 
+            to="/about" 
+            className="px-2 xl:px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
+          >
+            About
+          </Link>
+
+          {/* Pricing Link */}
+          <Link 
+            to="/pricing" 
+            className="px-2 xl:px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
+          >
+            Pricing
+          </Link>
+        </div>
+
+        {/* Auth Buttons */}
+        <div className="hidden sm:flex items-center space-x-2 lg:space-x-3">
+          {user ? (
+            <Button 
+              onClick={() => navigate('/dashboard')} 
+              size="sm"
+              className="bg-gradient-to-r from-therapy-500 to-harmony-500 hover:from-therapy-600 hover:to-harmony-600 text-white px-3 lg:px-4"
+            >
+              Dashboard
+            </Button>
+          ) : (
+            <>
+              <Button 
+                variant="ghost" 
+                onClick={() => navigate('/auth')} 
+                size="sm"
+                className="text-sm px-3 lg:px-4"
               >
-                <GradientLogo size="sm" />
-                <span className="text-lg md:text-xl font-bold therapy-text-gradient">
-                  TherapySync
-                </span>
+                Sign In
+              </Button>
+              <Button 
+                onClick={() => navigate('/get-started')} 
+                size="sm"
+                className="bg-gradient-to-r from-therapy-500 to-harmony-500 hover:from-therapy-600 hover:to-harmony-600 text-white text-sm px-3 lg:px-4"
+              >
+                Get Started
+              </Button>
+            </>
+          )}
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="flex items-center lg:hidden">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2"
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden border-t border-border/40 bg-background/95 backdrop-blur">
+          <div className="container mx-auto px-4 py-4 space-y-3">
+            {/* Mobile Solutions */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold text-foreground/80">Solutions</h3>
+              {solutionsItems.map((item) => (
+                <Link
+                  key={item.title}
+                  to={item.href}
+                  className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-therapy-50/80 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <item.icon className="h-4 w-4 text-therapy-500" />
+                  <span className="text-sm font-medium">{item.title}</span>
+                </Link>
+              ))}
+            </div>
+
+            {/* Mobile Resources */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold text-foreground/80">Resources</h3>
+              {resourcesItems.map((item) => (
+                <Link
+                  key={item.title}
+                  to={item.href}
+                  className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-therapy-50/80 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <item.icon className="h-4 w-4 text-therapy-500" />
+                  <span className="text-sm font-medium">{item.title}</span>
+                </Link>
+              ))}
+            </div>
+
+            {/* Mobile Links */}
+            <div className="space-y-1 pt-2 border-t border-border/40">
+              <Link
+                to="/about"
+                className="block py-2 px-3 text-sm font-medium hover:bg-therapy-50/80 rounded-lg transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                About
+              </Link>
+              <Link
+                to="/pricing"
+                className="block py-2 px-3 text-sm font-medium hover:bg-therapy-50/80 rounded-lg transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Pricing
               </Link>
             </div>
 
-            {/* Center Section - Navigation Dropdowns and Search */}
-            <div className="flex items-center space-x-3 flex-1 justify-center">
-              {/* Tablet screens: Simple dropdowns */}
-              {isTablet && (
-                <div className="flex items-center space-x-1">
-                  <HeaderDropdowns />
-                </div>
-              )}
-              
-              {/* Laptop screens: Medium dropdowns */}
-              {isLaptop && (
-                <div className="flex items-center space-x-2">
-                  <HeaderDropdowns />
-                </div>
-              )}
-              
-              {/* Desktop screens: Full dropdowns with rich content */}
-              {isDesktop && (
-                <div className="flex items-center space-x-2">
-                  {/* Therapy AI Dropdown */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-                        <Brain className="h-4 w-4 mr-2" />
-                        Therapy AI
-                        <ChevronDown className="h-3 w-3 ml-1" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-80 bg-white border border-gray-200 shadow-lg">
-                      <div className="p-4 space-y-4">
-                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                          AI Technology
-                        </div>
-                        <DropdownMenuItem asChild>
-                          <Link to="/therapy" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <MessageSquare className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">AI Therapy Sessions</p>
-                              <p className="text-xs text-gray-500">Personalized therapy with AI</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/voice-therapy" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Headphones className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Voice Technology</p>
-                              <p className="text-xs text-gray-500">Natural voice conversations</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/adaptive-ai" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Target className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Adaptive AI</p>
-                              <p className="text-xs text-gray-500">AI that learns and adapts</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/cultural-ai" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Globe className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Cultural AI</p>
-                              <p className="text-xs text-gray-500">Culturally sensitive support</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                      </div>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  {/* Features Dropdown */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Features
-                        <ChevronDown className="h-3 w-3 ml-1" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-80 bg-white border border-gray-200 shadow-lg">
-                      <div className="p-4 space-y-4">
-                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                          Core Features
-                        </div>
-                        <DropdownMenuItem asChild>
-                          <Link to="/mood-tracking" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Heart className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Mood Tracking</p>
-                              <p className="text-xs text-gray-500">Track your emotional journey</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/crisis-support" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Shield className="h-5 w-5 text-red-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Crisis Support</p>
-                              <p className="text-xs text-gray-500">24/7 crisis intervention</p>
-                            </div>
-                            <Badge variant="outline" className="text-xs text-red-600 border-red-200">
-                              24/7
-                            </Badge>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/family-features" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Users className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Family Features</p>
-                              <p className="text-xs text-gray-500">Family therapy support</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/community" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Users className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Community</p>
-                              <p className="text-xs text-gray-500">Connect with others</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                      </div>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  {/* Tools & Data Dropdown */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-                        <Database className="h-4 w-4 mr-2" />
-                        Tools & Data
-                        <ChevronDown className="h-3 w-3 ml-1" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-80 bg-white border border-gray-200 shadow-lg">
-                      <div className="p-4 space-y-4">
-                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                          Analytics & Tools
-                        </div>
-                        <DropdownMenuItem asChild>
-                          <Link to="/analytics" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Database className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Analytics Dashboard</p>
-                              <p className="text-xs text-gray-500">Progress insights and reports</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/api-docs" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <BookOpen className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">API Access</p>
-                              <p className="text-xs text-gray-500">Integration tools</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/data-export" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Database className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Data Export</p>
-                              <p className="text-xs text-gray-500">Export your data</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                      </div>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  {/* Solutions Dropdown */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-                        <Target className="h-4 w-4 mr-2" />
-                        Solutions
-                        <ChevronDown className="h-3 w-3 ml-1" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-80 bg-white border border-gray-200 shadow-lg">
-                      <div className="p-4 space-y-4">
-                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                          Solutions
-                        </div>
-                        <DropdownMenuItem asChild>
-                          <Link to="/individuals" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Target className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">For Individuals</p>
-                              <p className="text-xs text-gray-500">Personal therapy plans</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/families" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Users className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">For Families</p>
-                              <p className="text-xs text-gray-500">Family therapy support</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/providers" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Shield className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">For Providers</p>
-                              <p className="text-xs text-gray-500">Professional tools</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/pricing" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Calculator className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Pricing</p>
-                              <p className="text-xs text-gray-500">Plans and pricing</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                      </div>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  {/* Resources Dropdown */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="text-gray-700 hover:text-therapy-600 hover:bg-therapy-50">
-                        <BookOpen className="h-4 w-4 mr-2" />
-                        Resources
-                        <ChevronDown className="h-3 w-3 ml-1" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-80 bg-white border border-gray-200 shadow-lg">
-                      <div className="p-4 space-y-4">
-                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                          Resources
-                        </div>
-                        <DropdownMenuItem asChild>
-                          <Link to="/help" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <HelpCircle className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Help Center</p>
-                              <p className="text-xs text-gray-500">Support and guides</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/getting-started" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <BookOpen className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Getting Started</p>
-                              <p className="text-xs text-gray-500">Learn TherapySync</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/compliance" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <Shield className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Security & Compliance</p>
-                              <p className="text-xs text-gray-500">Privacy and security</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link to="/learning" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-therapy-50 transition-colors">
-                            <GraduationCap className="h-5 w-5 text-therapy-600" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">Learning Hub</p>
-                              <p className="text-xs text-gray-500">Educational resources</p>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                      </div>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              )}
-              
-              {/* Search Bar - responsive sizing */}
-              <div className={`${isTablet ? 'max-w-sm' : isLaptop ? 'max-w-lg' : isDesktop ? 'max-w-xl' : 'hidden'} flex-1`}>
-                <UnifiedSearch 
-                  placeholder={user ? "Search sessions, goals, community..." : "Search features, help, pricing..."} 
-                  variant="header"
-                />
-              </div>
-            </div>
-
-            {/* Right Section - Regional Selector, Notifications, User Menu */}
-            <div className="flex items-center space-x-3">
-              
-              {/* Regional Preferences Selector */}
-              <CompactRegionalSelector />
-              
+            {/* Mobile Auth Buttons */}
+            <div className="flex flex-col space-y-2 pt-3 border-t border-border/40">
               {user ? (
-                <>
-                  {/* Notifications */}
-                  <EnhancedNotificationCenter />
-                  
-                  {/* User Menu */}
-                  <EnhancedUserMenu />
-                </>
+                <Button 
+                  onClick={() => {
+                    navigate('/dashboard');
+                    setIsMobileMenuOpen(false);
+                  }} 
+                  className="w-full bg-gradient-to-r from-therapy-500 to-harmony-500 hover:from-therapy-600 hover:to-harmony-600 text-white"
+                >
+                  Dashboard
+                </Button>
               ) : (
-                <div className="flex items-center space-x-2">
+                <>
                   <Button 
-                    variant="ghost" 
-                    onClick={() => navigate('/auth')}
-                    className="text-sm font-medium"
+                    variant="outline" 
+                    onClick={() => {
+                      navigate('/auth');
+                      setIsMobileMenuOpen(false);
+                    }} 
+                    className="w-full"
                   >
                     Sign In
                   </Button>
                   <Button 
-                    onClick={handleGetStarted}
-                    className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white text-sm font-medium px-4 py-2"
+                    onClick={() => {
+                      navigate('/get-started');
+                      setIsMobileMenuOpen(false);
+                    }} 
+                    className="w-full bg-gradient-to-r from-therapy-500 to-harmony-500 hover:from-therapy-600 hover:to-harmony-600 text-white"
                   >
                     Get Started
                   </Button>
-                </div>
+                </>
               )}
             </div>
           </div>
         </div>
-      </header>
-    </SafeComponentWrapper>
+      )}
+    </header>
   );
 };
 
