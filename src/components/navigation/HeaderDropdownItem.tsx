@@ -25,55 +25,64 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
   className = '',
   compact = false
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  // Get solid background color from gradient
+  const getSolidBackground = (gradientClasses: string) => {
+    if (gradientClasses.includes('from-blue')) return 'bg-blue-500';
+    if (gradientClasses.includes('from-green')) return 'bg-green-500';
+    if (gradientClasses.includes('from-purple')) return 'bg-purple-500';
+    if (gradientClasses.includes('from-orange')) return 'bg-orange-500';
+    if (gradientClasses.includes('from-red')) return 'bg-red-500';
+    if (gradientClasses.includes('from-pink')) return 'bg-pink-500';
+    if (gradientClasses.includes('from-indigo')) return 'bg-indigo-500';
+    if (gradientClasses.includes('from-cyan')) return 'bg-cyan-500';
+    if (gradientClasses.includes('from-teal')) return 'bg-teal-500';
+    return 'bg-blue-500'; // fallback
+  };
 
   return (
     <Link
       to={href}
       className={`
-        flex items-start rounded-xl 
-        hover:bg-therapy-50/80 transition-all duration-200 ease-out
-        group/item hover:shadow-sm hover:scale-[1.02] transform-gpu
-        ${compact ? 'space-x-2 p-2' : 'space-x-4 p-4'}
+        flex items-center rounded-lg 
+        hover:bg-gray-50 transition-all duration-150 ease-out
+        ${compact ? 'space-x-3 p-2' : 'space-x-4 p-4'}
         ${className}
       `}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div className={`
-        rounded-lg flex items-center justify-center 
-        transition-all duration-300 ease-out transform
-        bg-gradient-to-r ${gradient}
-        ${compact ? 'w-8 h-8' : 'w-11 h-11'}
-        ${isHovered 
-          ? 'shadow-lg scale-105 ring-2 ring-white/50' 
-          : 'shadow-md hover:shadow-lg'
-        }
+        rounded-full flex items-center justify-center 
+        ${getSolidBackground(gradient)}
+        ${compact ? 'w-10 h-10' : 'w-12 h-12'}
       `}>
         <Icon className={`
-          text-white transition-all duration-300
-          ${compact ? 'h-3.5 w-3.5' : 'h-5 w-5'}
-          ${isHovered ? 'scale-110' : ''}
+          text-white
+          ${compact ? 'h-5 w-5' : 'h-6 w-6'}
         `} />
       </div>
       
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between mb-1">
+        <div className="flex items-center justify-between">
           <h4 className={`
-            font-semibold text-gray-900 group-hover/item:text-therapy-700 transition-colors
-            ${compact ? 'text-xs' : 'text-sm'}
+            font-semibold text-gray-900
+            ${compact ? 'text-sm' : 'text-base'}
           `}>
             {title}
           </h4>
           {badge && (
-            <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-therapy-100 text-therapy-700 border-therapy-200">
+            <Badge variant="secondary" className={`
+              text-xs px-2 py-1 rounded-full
+              ${badge === 'Core' ? 'bg-blue-100 text-blue-700' : ''}
+              ${badge === 'Popular' ? 'bg-green-100 text-green-700' : ''}
+              ${badge === 'New' ? 'bg-purple-100 text-purple-700' : ''}
+              ${badge === 'Advanced' ? 'bg-orange-100 text-orange-700' : ''}
+            `}>
               {badge}
             </Badge>
           )}
         </div>
         <p className={`
-          text-xs text-gray-600 leading-relaxed
-          ${compact ? 'line-clamp-1' : ''}
+          text-gray-600 mt-0.5
+          ${compact ? 'text-xs' : 'text-sm'}
         `}>
           {description}
         </p>
