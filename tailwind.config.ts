@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -13,10 +12,44 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			padding: {
+				DEFAULT: '1rem',
+				xs: '0.5rem',
+				sm: '1rem',
+				md: '1.5rem',
+				lg: '2rem',
+				xl: '2.5rem',
+				'2xl': '3rem',
+				'3xl': '4rem',
+				'4xl': '5rem'
+			},
 			screens: {
-				'2xl': '1400px'
+				xs: '480px',
+				sm: '640px',
+				md: '768px',
+				lg: '1024px',
+				xl: '1280px',
+				'2xl': '1400px',
+				'3xl': '1600px',
+				'4xl': '1920px'
 			}
+		},
+		screens: {
+			'xs': '480px',
+			'sm': '640px',
+			'md': '768px',
+			'lg': '1024px',
+			'xl': '1280px',
+			'2xl': '1400px',
+			'3xl': '1600px',
+			'4xl': '1920px',
+			// Container queries
+			'@xs': '320px',
+			'@sm': '384px',
+			'@md': '448px',
+			'@lg': '512px',
+			'@xl': '576px',
+			'@2xl': '672px',
 		},
 		extend: {
 			colors: {
@@ -53,7 +86,6 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// TherapySync brand colors
 				therapy: {
 					50: 'hsl(var(--therapy-50))',
 					100: 'hsl(var(--therapy-100))',
@@ -119,6 +151,40 @@ export default {
 					900: 'hsl(var(--flow-900))',
 					950: 'hsl(var(--flow-950))',
 				}
+			},
+			fontSize: {
+				// Fluid typography using clamp()
+				'fluid-xs': 'clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)',
+				'fluid-sm': 'clamp(0.875rem, 0.8rem + 0.375vw, 1rem)',
+				'fluid-base': 'clamp(1rem, 0.9rem + 0.5vw, 1.125rem)',
+				'fluid-lg': 'clamp(1.125rem, 1rem + 0.625vw, 1.25rem)',
+				'fluid-xl': 'clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem)',
+				'fluid-2xl': 'clamp(1.5rem, 1.3rem + 1vw, 2rem)',
+				'fluid-3xl': 'clamp(1.875rem, 1.5rem + 1.5vw, 2.5rem)',
+				'fluid-4xl': 'clamp(2.25rem, 1.8rem + 2vw, 3rem)',
+				'fluid-5xl': 'clamp(3rem, 2.2rem + 3vw, 4rem)',
+				'fluid-6xl': 'clamp(3.75rem, 2.5rem + 5vw, 6rem)',
+			},
+			spacing: {
+				// Fluid spacing
+				'fluid-xs': 'clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem)',
+				'fluid-sm': 'clamp(0.5rem, 0.4rem + 0.5vw, 1rem)',
+				'fluid-md': 'clamp(1rem, 0.8rem + 1vw, 2rem)',
+				'fluid-lg': 'clamp(1.5rem, 1rem + 2vw, 3rem)',
+				'fluid-xl': 'clamp(2rem, 1.5rem + 2.5vw, 4rem)',
+				'fluid-2xl': 'clamp(3rem, 2rem + 4vw, 6rem)',
+				'fluid-3xl': 'clamp(4rem, 2.5rem + 6vw, 8rem)',
+			},
+			gridTemplateColumns: {
+				// Responsive grid system
+				'auto-fit-xs': 'repeat(auto-fit, minmax(120px, 1fr))',
+				'auto-fit-sm': 'repeat(auto-fit, minmax(200px, 1fr))',
+				'auto-fit-md': 'repeat(auto-fit, minmax(280px, 1fr))',
+				'auto-fit-lg': 'repeat(auto-fit, minmax(350px, 1fr))',
+				'auto-fill-xs': 'repeat(auto-fill, minmax(120px, 1fr))',
+				'auto-fill-sm': 'repeat(auto-fill, minmax(200px, 1fr))',
+				'auto-fill-md': 'repeat(auto-fill, minmax(280px, 1fr))',
+				'auto-fill-lg': 'repeat(auto-fill, minmax(350px, 1fr))',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -190,5 +256,16 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		// Container query plugin
+		function({ addUtilities }) {
+			const newUtilities = {
+				'.container-query': {
+					'container-type': 'inline-size',
+				},
+			}
+			addUtilities(newUtilities)
+		}
+	],
 } satisfies Config;

@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,13 +19,14 @@ body {
   padding-left: var(--safe-area-inset-left);
 }
 
-/* Mobile Optimizations */
-@media (max-width: 767px) {
-  /* Touch-friendly button sizes */
+/* Enhanced Mobile Optimizations */
+@media (max-width: 479px) {
+  /* Extra small screens */
   .btn-mobile {
-    min-height: 44px;
-    min-width: 44px;
-    padding: 12px 16px;
+    min-height: 48px;
+    min-width: 48px;
+    padding: 14px 18px;
+    font-size: 16px;
   }
   
   /* Prevent text zoom on iOS */
@@ -36,6 +38,56 @@ body {
   body {
     -webkit-text-size-adjust: none;
     text-size-adjust: none;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  /* Small mobile screens */
+  .btn-mobile {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 16px;
+  }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .tablet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .tablet-sidebar {
+    width: 280px;
+    transition: width 0.3s ease;
+  }
+  
+  .tablet-sidebar.collapsed {
+    width: 80px;
+  }
+}
+
+/* Desktop Optimizations */
+@media (min-width: 1024px) and (max-width: 1599px) {
+  .desktop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+}
+
+/* Ultra-wide Optimizations */
+@media (min-width: 1600px) {
+  .ultra-wide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2.5rem;
+  }
+  
+  .ultra-wide-container {
+    max-width: 2400px;
+    margin: 0 auto;
   }
 }
 
@@ -56,29 +108,60 @@ body {
   padding-right: env(safe-area-inset-right);
 }
 
-/* Mobile-specific utilities */
-@media (max-width: 767px) {
-  .mobile-hidden {
-    display: none !important;
-  }
-  
-  .mobile-full-width {
-    width: 100% !important;
-  }
-  
-  .mobile-no-padding {
-    padding: 0 !important;
-  }
-  
-  .mobile-small-text {
-    font-size: 0.875rem !important;
-  }
+/* Enhanced responsive utilities */
+@media (max-width: 479px) {
+  .xs-hidden { display: none !important; }
+  .xs-full-width { width: 100% !important; }
+  .xs-stack { flex-direction: column !important; }
 }
 
-/* Touch-friendly spacing */
+@media (min-width: 480px) and (max-width: 639px) {
+  .sm-hidden { display: none !important; }
+  .sm-grid-2 { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+  .md-hidden { display: none !important; }
+  .md-grid-3 { grid-template-columns: repeat(3, 1fr) !important; }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .lg-hidden { display: none !important; }
+  .lg-grid-4 { grid-template-columns: repeat(4, 1fr) !important; }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .xl-hidden { display: none !important; }
+  .xl-grid-5 { grid-template-columns: repeat(5, 1fr) !important; }
+}
+
+@media (min-width: 1280px) and (max-width: 1399px) {
+  .2xl-hidden { display: none !important; }
+  .2xl-grid-6 { grid-template-columns: repeat(6, 1fr) !important; }
+}
+
+@media (min-width: 1400px) and (max-width: 1599px) {
+  .3xl-hidden { display: none !important; }
+  .3xl-grid-8 { grid-template-columns: repeat(8, 1fr) !important; }
+}
+
+@media (min-width: 1600px) {
+  .4xl-hidden { display: none !important; }
+  .4xl-grid-12 { grid-template-columns: repeat(12, 1fr) !important; }
+}
+
+/* Touch-friendly spacing and interactions */
 .touch-spacing {
-  padding: 12px 16px;
-  margin: 8px 0;
+  padding: clamp(8px, 2vw, 20px) clamp(12px, 3vw, 24px);
+  margin: clamp(4px, 1vw, 12px) 0;
+}
+
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Prevent text selection on touch interfaces */
@@ -96,40 +179,98 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Mobile card optimizations */
-@media (max-width: 767px) {
-  .mobile-card {
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .mobile-card-header {
-    margin-bottom: 12px;
-  }
-  
-  .mobile-button-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .mobile-button-group .btn {
-    width: 100%;
-    justify-content: center;
+/* Container query utilities */
+.container-query {
+  container-type: inline-size;
+}
+
+@container (max-width: 320px) {
+  .cq-xs-hidden { display: none; }
+  .cq-xs-stack { flex-direction: column; }
+  .cq-xs-compact { padding: 0.5rem; font-size: 0.875rem; }
+}
+
+@container (min-width: 320px) and (max-width: 640px) {
+  .cq-sm-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+}
+
+@container (min-width: 640px) {
+  .cq-lg-expand { padding: 2rem; font-size: 1.125rem; }
+  .cq-lg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+}
+
+/* Fluid aspect ratios */
+.aspect-fluid {
+  aspect-ratio: clamp(1, 16/9, 2);
+}
+
+/* Enhanced hover states for different input methods */
+@media (hover: hover) {
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
 }
 
-/* Responsive grid improvements */
-@media (max-width: 767px) {
-  .responsive-grid {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
+@media (hover: none) {
+  .touch-feedback:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
+}
+
+/* High DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .high-dpi-border {
+    border-width: 0.5px;
   }
   
-  .responsive-grid-2 {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
+  .high-dpi-shadow {
+    box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Print styles */
+@media print {
+  .print-hidden { display: none !important; }
+  .print-visible { display: block !important; }
+  
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .high-contrast-border {
+    border: 2px solid;
+  }
+  
+  .high-contrast-focus:focus {
+    outline: 3px solid;
+    outline-offset: 2px;
   }
 }
