@@ -21,7 +21,11 @@ interface NavItem {
   color?: string;
 }
 
-const SmartBottomNavigation = () => {
+interface SmartBottomNavigationProps {
+  className?: string;
+}
+
+const SmartBottomNavigation: React.FC<SmartBottomNavigationProps> = ({ className }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -86,7 +90,7 @@ const SmartBottomNavigation = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden z-40 safe-area-pb">
+    <div className={`fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden z-40 safe-area-pb ${className || ''}`}>
       <div className="grid grid-cols-5 h-16 px-2">
         {navItems.map((item) => (
           <button
