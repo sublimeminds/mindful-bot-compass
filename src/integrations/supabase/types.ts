@@ -3213,6 +3213,56 @@ export type Database = {
         }
         Relationships: []
       }
+      cultural_ai_translations: {
+        Row: {
+          approved_at: string | null
+          content_library_id: string
+          created_at: string
+          cultural_adaptations: Json | null
+          id: string
+          language_code: string
+          quality_score: number | null
+          regional_variations: Json | null
+          reviewed_by: string | null
+          translated_content: Json
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          content_library_id: string
+          created_at?: string
+          cultural_adaptations?: Json | null
+          id?: string
+          language_code?: string
+          quality_score?: number | null
+          regional_variations?: Json | null
+          reviewed_by?: string | null
+          translated_content: Json
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          content_library_id?: string
+          created_at?: string
+          cultural_adaptations?: Json | null
+          id?: string
+          language_code?: string
+          quality_score?: number | null
+          regional_variations?: Json | null
+          reviewed_by?: string | null
+          translated_content?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cultural_ai_translations_content_library_id_fkey"
+            columns: ["content_library_id"]
+            isOneToOne: false
+            referencedRelation: "cultural_content_library"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cultural_bias_detection: {
         Row: {
           bias_indicators: string[] | null
@@ -9652,6 +9702,48 @@ export type Database = {
         }
         Relationships: []
       }
+      therapeutic_terminology: {
+        Row: {
+          category: string
+          created_at: string
+          cultural_context: Json | null
+          definition_de: string | null
+          definition_en: string | null
+          english_term: string
+          german_term: string
+          id: string
+          is_active: boolean
+          updated_at: string
+          usage_examples: Json | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          cultural_context?: Json | null
+          definition_de?: string | null
+          definition_en?: string | null
+          english_term: string
+          german_term: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          usage_examples?: Json | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          cultural_context?: Json | null
+          definition_de?: string | null
+          definition_en?: string | null
+          english_term?: string
+          german_term?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          usage_examples?: Json | null
+        }
+        Relationships: []
+      }
       therapist_assessments: {
         Row: {
           assessment_version: number
@@ -10532,6 +10624,59 @@ export type Database = {
         }
         Relationships: []
       }
+      therapy_plan_translations: {
+        Row: {
+          created_at: string
+          cultural_adaptations: Json | null
+          current_phase: string | null
+          description: string | null
+          focus_areas: string[] | null
+          goals: Json | null
+          id: string
+          language_code: string
+          milestones: Json | null
+          therapy_plan_id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          cultural_adaptations?: Json | null
+          current_phase?: string | null
+          description?: string | null
+          focus_areas?: string[] | null
+          goals?: Json | null
+          id?: string
+          language_code?: string
+          milestones?: Json | null
+          therapy_plan_id: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          cultural_adaptations?: Json | null
+          current_phase?: string | null
+          description?: string | null
+          focus_areas?: string[] | null
+          goals?: Json | null
+          id?: string
+          language_code?: string
+          milestones?: Json | null
+          therapy_plan_id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapy_plan_translations_therapy_plan_id_fkey"
+            columns: ["therapy_plan_id"]
+            isOneToOne: false
+            referencedRelation: "therapy_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       therapy_plans: {
         Row: {
           created_at: string
@@ -10673,6 +10818,42 @@ export type Database = {
           session_context?: Json | null
           session_id?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      therapy_session_translations: {
+        Row: {
+          created_at: string
+          cultural_considerations: Json | null
+          homework_assignments: Json | null
+          id: string
+          language_code: string
+          session_id: string
+          session_notes: string | null
+          techniques_used: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          cultural_considerations?: Json | null
+          homework_assignments?: Json | null
+          id?: string
+          language_code?: string
+          session_id: string
+          session_notes?: string | null
+          techniques_used?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          cultural_considerations?: Json | null
+          homework_assignments?: Json | null
+          id?: string
+          language_code?: string
+          session_id?: string
+          session_notes?: string | null
+          techniques_used?: Json | null
+          updated_at?: string
         }
         Relationships: []
       }

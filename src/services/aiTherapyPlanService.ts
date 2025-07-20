@@ -47,7 +47,8 @@ export class AITherapyPlanService {
   static async generatePersonalizedPlan(
     userId: string,
     therapistId: string,
-    assessmentData: any
+    assessmentData: any,
+    targetLanguage?: string
   ): Promise<AITherapyPlan> {
     try {
       // Get user's comprehensive profile
@@ -61,6 +62,17 @@ export class AITherapyPlanService {
       
       // Generate initial assignments
       await this.generateInitialAssignments(savedPlan.id, aiPlan);
+
+      // If target language is not English, translate the plan
+      if (targetLanguage && targetLanguage !== 'en') {
+        try {
+          const { TherapyTranslationService } = await import('./therapyTranslationService');
+          await TherapyTranslationService.translateTherapyPlan(savedPlan.id, savedPlan, targetLanguage);
+        } catch (translationError) {
+          console.warn('Failed to translate therapy plan:', translationError);
+          // Continue without translation rather than failing
+        }
+      }
       
       return savedPlan;
     } catch (error) {

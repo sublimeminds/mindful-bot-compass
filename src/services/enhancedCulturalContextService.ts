@@ -224,6 +224,130 @@ export class EnhancedCulturalContextService {
     return languageNames[code] || code.toUpperCase();
   }
 
+  async adaptContentForCulture(content: any, culturalBackground: string, targetLanguage?: string): Promise<any> {
+    try {
+      // Import cultural AI translation service
+      const { CulturalAiTranslationService } = await import('./culturalAiTranslationService');
+      
+      // Cultural content adaptation logic
+      const adaptations = this.getCulturalAdaptations(culturalBackground);
+      
+      let adaptedContent = {
+        ...content,
+        cultural_adaptations: adaptations,
+        adapted_examples: this.adaptExamples(content.examples, culturalBackground),
+        cultural_notes: this.generateCulturalNotes(culturalBackground)
+      };
+
+      // If target language is specified and not English, apply cultural translation
+      if (targetLanguage && targetLanguage !== 'en') {
+        try {
+          const culturalContext = {
+            cultural_background: culturalBackground,
+            communication_style: adaptations.communication_style || 'general',
+            family_structure: adaptations.family_structure || 'individual',
+            religious_considerations: adaptations.religious_considerations || false,
+            therapy_approach_preferences: adaptations.therapy_approaches || []
+          };
+
+          // This would normally use content ID, but for demo we'll use a hash
+          const contentId = `temp_${Date.now()}`;
+          const translation = await CulturalAiTranslationService.translateCulturalContent(
+            contentId,
+            adaptedContent,
+            targetLanguage,
+            culturalContext
+          );
+
+          if (translation) {
+            adaptedContent = {
+              ...adaptedContent,
+              ...translation.translated_content,
+              cultural_adaptations: {
+                ...adaptedContent.cultural_adaptations,
+                ...translation.cultural_adaptations
+              },
+              regional_variations: translation.regional_variations
+            };
+          }
+        } catch (translationError) {
+          console.warn('Failed to apply cultural translation:', translationError);
+          // Continue with base adaptation
+        }
+      }
+
+      return adaptedContent;
+    } catch (error) {
+      console.error('Error adapting content for culture:', error);
+      // Fallback to basic adaptation
+      const adaptations = this.getCulturalAdaptations(culturalBackground);
+      return {
+        ...content,
+        cultural_adaptations: adaptations,
+        adapted_examples: this.adaptExamples(content.examples, culturalBackground),
+        cultural_notes: this.generateCulturalNotes(culturalBackground)
+      };
+    }
+  }
+
+  private getCulturalAdaptations(culturalBackground: string) {
+    // Basic cultural adaptations based on background
+    const adaptationMap: Record<string, any> = {
+      'german': {
+        communication_style: 'direct_formal',
+        therapy_approaches: ['CBT', 'psychoanalysis'],
+        family_structure: 'individual_focused',
+        religious_considerations: false
+      },
+      'turkish_german': {
+        communication_style: 'respectful_hierarchy',
+        therapy_approaches: ['family_therapy', 'culturally_adapted_CBT'],
+        family_structure: 'extended_family',
+        religious_considerations: true
+      },
+      'russian_german': {
+        communication_style: 'formal_structured',
+        therapy_approaches: ['structured_therapy', 'trauma_informed'],
+        family_structure: 'intergenerational_aware',
+        religious_considerations: false
+      }
+    };
+
+    return adaptationMap[culturalBackground] || adaptationMap['german'];
+  }
+
+  private adaptExamples(examples: any[], culturalBackground: string): any[] {
+    if (!examples) return [];
+    
+    return examples.map(example => ({
+      ...example,
+      cultural_context: culturalBackground,
+      adapted_for_culture: true
+    }));
+  }
+
+  private generateCulturalNotes(culturalBackground: string): string[] {
+    const notesMap: Record<string, string[]> = {
+      'german': [
+        'German therapy emphasizes structured, evidence-based approaches',
+        'Professional boundaries are highly respected',
+        'Direct communication is preferred and appreciated'
+      ],
+      'turkish_german': [
+        'Consider family and community dynamics in therapy',
+        'Respect for hierarchy and elder opinions is important',
+        'Religious and cultural values should be integrated'
+      ],
+      'russian_german': [
+        'May benefit from structured, goal-oriented approaches',
+        'Historical trauma awareness may be relevant',
+        'Formal therapeutic relationship is preferred'
+      ]
+    };
+
+    return notesMap[culturalBackground] || notesMap['german'];
+  }
+
   static async trackCulturalInteraction(
     userId: string,
     interactionType: string,
