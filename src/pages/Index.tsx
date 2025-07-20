@@ -174,7 +174,7 @@ const Index = () => {
       <RegionalNavigationHeader />
       
       {/* Hero Section */}
-      <section id="hero" className="-mt-16 pt-16 pb-16 lg:pb-20 relative overflow-hidden" key={`hero-${Date.now()}`}>
+      <section id="hero" className="-mt-20 pt-20 pb-16 lg:pb-20 relative overflow-hidden" key={`hero-${Date.now()}`}>
         {/* Dynamic Gradient Background */}
         <div className="absolute inset-0 hero-gradient-bg"></div>
         
