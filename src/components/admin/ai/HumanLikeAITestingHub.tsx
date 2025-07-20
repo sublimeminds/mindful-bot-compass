@@ -39,21 +39,23 @@ const HumanLikeAITestingHub = () => {
       await humanLikeAI.startEnhancedSession();
       
       // Add test memories
-      await humanLikeAI.conversationMemory.addMemory(
-        'concern',
-        'Work stress',
-        'User mentioned feeling overwhelmed at work',
-        { emotion: 'anxious' },
-        0.8
-      );
+      await humanLikeAI.conversationMemory.addMemory({
+        title: 'Work stress',
+        content: 'User mentioned feeling overwhelmed at work',
+        memory_type: 'concern',
+        emotional_context: { emotion: 'anxious' },
+        importance_score: 0.8,
+        tags: ['work', 'stress']
+      });
 
-      await humanLikeAI.conversationMemory.addMemory(
-        'goal',
-        'Better sleep',
-        'User wants to improve sleep quality',
-        { emotion: 'hopeful' },
-        0.7
-      );
+      await humanLikeAI.conversationMemory.addMemory({
+        title: 'Better sleep',
+        content: 'User wants to improve sleep quality',
+        memory_type: 'goal',
+        emotional_context: { emotion: 'hopeful' },
+        importance_score: 0.7,
+        tags: ['sleep', 'goals']
+      });
 
       // Test memory retrieval
       const relevantMemories = await humanLikeAI.conversationMemory.getRelevantMemories('work');

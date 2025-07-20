@@ -138,6 +138,15 @@ export const useConversationMemory = () => {
     }
   }, [user]);
 
+  const generateCallbacks = (memories: ConversationMemory[]) => {
+    return memories.map(memory => ({
+      id: memory.id,
+      title: memory.title,
+      content: memory.content.substring(0, 100),
+      importance: memory.importance_score
+    }));
+  };
+
   return {
     memories,
     loading,
@@ -146,5 +155,6 @@ export const useConversationMemory = () => {
     updateMemoryReference,
     searchMemories,
     getRelevantMemories,
+    generateCallbacks,
   };
 };

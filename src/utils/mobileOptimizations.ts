@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 // Mobile optimization utilities
 export class MobileOptimizer {
   private static instance: MobileOptimizer;
@@ -117,7 +119,7 @@ export class MobileOptimizer {
       
       // Optimize momentum scrolling on iOS
       if (this.isIOS()) {
-        document.body.style.webkitOverflowScrolling = 'touch';
+        (document.body.style as any).webkitOverflowScrolling = 'touch';
       }
     }
   }

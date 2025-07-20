@@ -31,7 +31,7 @@ export const useHumanLikeAIIntegration = (therapistId: string) => {
   const conversationMemory = useConversationMemory();
   const proactiveCare = useProactiveCare();
   const contextualAwareness = useContextualAwareness();
-  const therapeuticRelationship = useTherapeuticRelationship(therapistId);
+  const therapeuticRelationship = useTherapeuticRelationship();
   const microInteractions = useEnhancedMicroInteractions(therapistId);
   const crisisSupport = useEnhancedCrisisSupport();
 
@@ -85,13 +85,14 @@ export const useHumanLikeAIIntegration = (therapistId: string) => {
       }
 
       // 2. Extract Memory Elements
-      await conversationMemory.addMemory(
-        'concern',
-        'User concern detected',
-        content,
-        { userEmotion: 'unknown', crisisLevel: crisisDetection.crisisLevel },
-        crisisDetection.crisisScore / 10
-      );
+      await conversationMemory.addMemory({
+        title: 'User concern detected',
+        content: content,
+        memory_type: 'concern',
+        emotional_context: { userEmotion: 'unknown', crisisLevel: crisisDetection.crisisLevel },
+        importance_score: crisisDetection.crisisScore / 10,
+        tags: ['user_concern', crisisDetection.crisisLevel]
+      });
 
       // 3. Get Contextual Awareness
       const context = contextualAwareness.getCurrentContext();
@@ -163,7 +164,7 @@ export const useHumanLikeAIIntegration = (therapistId: string) => {
         emotion: (responseMetadata as any)?.emotion || 'supportive',
         riskLevel: crisisDetection.crisisLevel,
         techniques: (responseMetadata as any)?.techniques || [],
-        continuityElements: callbacks,
+        continuityElements: callbacks.map(c => c.title),
         relationshipStage,
         contextualAdaptations: context
       };
