@@ -175,7 +175,7 @@ const Index = () => {
       <ProgressTracker />
       
       {/* Hero Section */}
-      <section id="hero" className="py-20 lg:py-32 relative overflow-hidden" key={`hero-${Date.now()}`}>
+      <section id="hero" className="pt-8 pb-16 lg:pt-12 lg:pb-20 relative overflow-hidden" key={`hero-${Date.now()}`}>
         {/* Dynamic Gradient Background */}
         <div className="absolute inset-0 hero-gradient-bg"></div>
         
