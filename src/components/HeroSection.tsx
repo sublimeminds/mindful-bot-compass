@@ -9,7 +9,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative py-4 sm:py-6 md:py-8 lg:py-12 xl:py-16 px-4 bg-gradient-to-br from-harmony-50 via-therapy-50 to-flow-50 overflow-hidden">
+    <section className="relative py-6 sm:py-8 md:py-12 lg:py-16 px-4 bg-gradient-to-br from-harmony-50 via-therapy-50 to-flow-50 overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-10 sm:-top-20 -right-10 sm:-right-20 w-20 sm:w-40 lg:w-60 h-20 sm:h-40 lg:h-60 rounded-full bg-gradient-to-br from-therapy-200/30 to-harmony-200/30 blur-2xl animate-pulse"></div>
