@@ -27,7 +27,9 @@ import {
   Lightbulb,
   Compass,
   Globe,
-  Star
+  Star,
+  Building,
+  GraduationCap
 } from 'lucide-react';
 
 // Safe icon exports with validation
@@ -59,7 +61,9 @@ export const SafeIcons = {
   Lightbulb,
   Compass,
   Globe,
-  Star
+  Star,
+  Building,
+  GraduationCap
 } as const;
 
 // Type-safe icon getter

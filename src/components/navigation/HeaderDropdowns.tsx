@@ -24,7 +24,9 @@ import {
   Archive,
   FileText,
   Compass,
-  ThumbsUp
+  ThumbsUp,
+  Building,
+  GraduationCap
 } from 'lucide-react';
 
 // Comprehensive feature data for all dropdown categories
@@ -265,9 +267,9 @@ const resourcesFeatures = [
 ];
 
 const HeaderDropdowns = () => {
-  const { isDesktop, isLaptop, isTablet } = useEnhancedScreenSize();
+  const { isDesktop, isMd, isTablet } = useEnhancedScreenSize();
   const isLargeScreen = isDesktop; // 1280px+
-  const isMediumScreen = isLaptop; // 1024-1279px
+  const isMediumScreen = isMd; // 1024-1279px
   const isSmallScreen = isTablet; // 768-1023px
 
   // Render grid layout for large screens
