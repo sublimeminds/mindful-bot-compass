@@ -1,3 +1,4 @@
+
 import { useState, useCallback, useEffect } from 'react';
 import { europeanTranslationService, TranslationRequest, TranslationResponse } from '@/services/europeanTranslationService';
 
@@ -52,7 +53,7 @@ export function useEuropeanTranslation(
 
       let response: TranslationResponse;
 
-      if (currentSessionId && options.sessionId !== false) {
+      if (currentSessionId && options.sessionId !== undefined) {
         response = await europeanTranslationService.translateInSession(
           currentSessionId,
           text,

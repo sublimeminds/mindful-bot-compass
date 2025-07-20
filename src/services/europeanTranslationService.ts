@@ -1,25 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
 
-export interface TranslationRequest {
-  text: string;
-  sourceLanguage: string;
-  targetLanguage: string;
-  contextType?: 'general' | 'therapeutic' | 'crisis' | 'assessment' | 'goals' | 'progress';
-  therapeuticCategory?: 'cbt' | 'dbt' | 'trauma' | 'family' | 'mindfulness' | 'adhd';
-  culturalAdaptations?: Record<string, any>;
-  userId?: string;
-  sessionId?: string;
-}
-
-export interface TranslationResponse {
-  translatedText: string;
-  provider: 'claude' | 'openai' | 'cache';
-  qualityScore: number;
-  responseTime: number;
-  culturalAdaptations?: Record<string, any>;
-  cached?: boolean;
-}
-
 export interface CulturalContext {
   countryCode: string;
   countryName: string;
@@ -33,21 +13,80 @@ export interface CulturalContext {
   crisisSupportInfo: Record<string, any>;
 }
 
-export interface TranslationSession {
-  id: string;
-  userId?: string;
+export interface TranslationRequest {
+  text: string;
   sourceLanguage: string;
   targetLanguage: string;
-  culturalContext: Record<string, any>;
-  translationCount: number;
-  avgResponseTime: number;
-  qualityScore: number;
-  isActive: boolean;
+  userId?: string;
+  sessionId?: string;
+  contextType?: 'general' | 'therapeutic' | 'crisis' | 'assessment';
+  therapeuticCategory?: string;
+  culturalContext?: CulturalContext;
 }
 
-export class EuropeanTranslationService {
+export interface TranslationResponse {
+  translatedText: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  contextType: string;
+  therapeuticCategory?: string;
+  culturalAdaptations?: Record<string, any>;
+  qualityScore: number;
+  provider: string;
+  cached: boolean;
+  responseTime: number;
+  sessionId?: string;
+}
+
+export interface BatchTranslationOptions {
+  userId?: string;
+  sessionId?: string;
+  contextType?: string;
+  therapeuticCategory?: string;
+}
+
+class EuropeanTranslationService {
   private static instance: EuropeanTranslationService;
-  private activeSessions = new Map<string, TranslationSession>();
+  private cache = new Map<string, TranslationResponse>();
+
+  public static readonly SUPPORTED_LANGUAGES = {
+    // Germanic Languages
+    'de': { name: 'German', nativeName: 'Deutsch', region: 'Central Europe', countries: ['DE', 'AT', 'CH'] },
+    'nl': { name: 'Dutch', nativeName: 'Nederlands', region: 'Western Europe', countries: ['NL'] },
+    'sv': { name: 'Swedish', nativeName: 'Svenska', region: 'Northern Europe', countries: ['SE'] },
+    'no': { name: 'Norwegian', nativeName: 'Norsk', region: 'Northern Europe', countries: ['NO'] },
+    'da': { name: 'Danish', nativeName: 'Dansk', region: 'Northern Europe', countries: ['DK'] },
+    'is': { name: 'Icelandic', nativeName: 'Íslenska', region: 'Northern Europe', countries: ['IS'] },
+    
+    // Romance Languages
+    'fr': { name: 'French', nativeName: 'Français', region: 'Western Europe', countries: ['FR', 'BE', 'CH'] },
+    'es': { name: 'Spanish', nativeName: 'Español', region: 'Southern Europe', countries: ['ES'] },
+    'it': { name: 'Italian', nativeName: 'Italiano', region: 'Southern Europe', countries: ['IT'] },
+    'pt': { name: 'Portuguese', nativeName: 'Português', region: 'Southern Europe', countries: ['PT'] },
+    'ro': { name: 'Romanian', nativeName: 'Română', region: 'Eastern Europe', countries: ['RO'] },
+    
+    // Slavic Languages
+    'pl': { name: 'Polish', nativeName: 'Polski', region: 'Eastern Europe', countries: ['PL'] },
+    'cs': { name: 'Czech', nativeName: 'Čeština', region: 'Central Europe', countries: ['CZ'] },
+    'sk': { name: 'Slovak', nativeName: 'Slovenčina', region: 'Central Europe', countries: ['SK'] },
+    'hu': { name: 'Hungarian', nativeName: 'Magyar', region: 'Central Europe', countries: ['HU'] },
+    'hr': { name: 'Croatian', nativeName: 'Hrvatski', region: 'Southern Europe', countries: ['HR'] },
+    'sr': { name: 'Serbian', nativeName: 'Српски', region: 'Southern Europe', countries: ['RS'] },
+    'bg': { name: 'Bulgarian', nativeName: 'Български', region: 'Eastern Europe', countries: ['BG'] },
+    'ru': { name: 'Russian', nativeName: 'Русский', region: 'Eastern Europe', countries: ['RU'] },
+    'uk': { name: 'Ukrainian', nativeName: 'Українська', region: 'Eastern Europe', countries: ['UA'] },
+    
+    // Other European Languages
+    'fi': { name: 'Finnish', nativeName: 'Suomi', region: 'Northern Europe', countries: ['FI'] },
+    'et': { name: 'Estonian', nativeName: 'Eesti', region: 'Northern Europe', countries: ['EE'] },
+    'lv': { name: 'Latvian', nativeName: 'Latviešu', region: 'Northern Europe', countries: ['LV'] },
+    'lt': { name: 'Lithuanian', nativeName: 'Lietuvių', region: 'Northern Europe', countries: ['LT'] },
+    'el': { name: 'Greek', nativeName: 'Ελληνικά', region: 'Southern Europe', countries: ['GR'] },
+    'mt': { name: 'Maltese', nativeName: 'Malti', region: 'Southern Europe', countries: ['MT'] },
+    
+    // English for reference
+    'en': { name: 'English', nativeName: 'English', region: 'Western Europe', countries: ['GB', 'IE'] }
+  };
 
   static getInstance(): EuropeanTranslationService {
     if (!EuropeanTranslationService.instance) {
@@ -56,110 +95,181 @@ export class EuropeanTranslationService {
     return EuropeanTranslationService.instance;
   }
 
-  /**
-   * Supported European languages
-   */
-  static readonly SUPPORTED_LANGUAGES = {
-    // Germanic
-    'de': { name: 'German', region: 'Germanic' },
-    'nl': { name: 'Dutch', region: 'Germanic' },
-    'sv': { name: 'Swedish', region: 'Nordic' },
-    'no': { name: 'Norwegian', region: 'Nordic' },
-    'da': { name: 'Danish', region: 'Nordic' },
-    'fi': { name: 'Finnish', region: 'Nordic' },
-    
-    // Romance
-    'fr': { name: 'French', region: 'Romance' },
-    'es': { name: 'Spanish', region: 'Romance' },
-    'it': { name: 'Italian', region: 'Romance' },
-    'pt': { name: 'Portuguese', region: 'Romance' },
-    'ro': { name: 'Romanian', region: 'Romance' },
-    
-    // Slavic
-    'pl': { name: 'Polish', region: 'Slavic' },
-    'cs': { name: 'Czech', region: 'Slavic' },
-    'hu': { name: 'Hungarian', region: 'Slavic' },
-    'hr': { name: 'Croatian', region: 'Slavic' },
-    
-    // Other
-    'el': { name: 'Greek', region: 'Mediterranean' },
-    'et': { name: 'Estonian', region: 'Baltic' },
-    'lv': { name: 'Latvian', region: 'Baltic' },
-    'lt': { name: 'Lithuanian', region: 'Baltic' },
-    
-    // Base
-    'en': { name: 'English', region: 'Base' }
-  };
+  static getLanguageName(code: string): string {
+    return this.SUPPORTED_LANGUAGES[code as keyof typeof this.SUPPORTED_LANGUAGES]?.name || code;
+  }
 
-  /**
-   * Translate text with cultural adaptation
-   */
-  async translate(request: TranslationRequest): Promise<TranslationResponse> {
-    try {
-      const { data, error } = await supabase.functions.invoke('european-translation', {
-        body: request
-      });
-
-      if (error) {
-        throw new Error(`Translation failed: ${error.message}`);
+  static getLanguagesByRegion(): Record<string, Array<{ code: string; name: string; nativeName: string }>> {
+    const regions: Record<string, Array<{ code: string; name: string; nativeName: string }>> = {};
+    
+    Object.entries(this.SUPPORTED_LANGUAGES).forEach(([code, info]) => {
+      if (!regions[info.region]) {
+        regions[info.region] = [];
       }
-
-      return data as TranslationResponse;
-    } catch (error) {
-      console.error('Translation service error:', error);
-      throw error;
-    }
+      regions[info.region].push({
+        code,
+        name: info.name,
+        nativeName: info.nativeName
+      });
+    });
+    
+    return regions;
   }
 
-  /**
-   * Batch translate multiple texts
-   */
-  async batchTranslate(
-    texts: string[],
-    sourceLanguage: string,
-    targetLanguage: string,
-    options?: Partial<TranslationRequest>
-  ): Promise<TranslationResponse[]> {
-    const results = await Promise.all(
-      texts.map(text => 
-        this.translate({
-          text,
-          sourceLanguage,
-          targetLanguage,
-          ...options
-        })
-      )
-    );
-
-    return results;
+  private getCacheKey(request: TranslationRequest): string {
+    return `${request.sourceLanguage}-${request.targetLanguage}-${request.contextType}-${request.text.substring(0, 100)}`;
   }
 
-  /**
-   * Get cultural context for a language
-   */
-  async getCulturalContext(languageCode: string): Promise<CulturalContext | null> {
+  async getCulturalContext(countryCode: string, languageCode: string): Promise<CulturalContext | null> {
     try {
       const { data, error } = await supabase
         .from('european_cultural_contexts')
         .select('*')
+        .eq('country_code', countryCode)
         .eq('language_code', languageCode)
-        .maybeSingle();
+        .single();
 
-      if (error) {
-        console.error('Cultural context error:', error);
+      if (error || !data) {
+        console.warn(`No cultural context found for ${countryCode}-${languageCode}`);
         return null;
       }
 
-      return data;
+      return {
+        countryCode: data.country_code,
+        countryName: data.country_name,
+        languageCode: data.language_code,
+        culturalProfile: data.cultural_profile as Record<string, any>,
+        communicationStyle: data.communication_style,
+        therapyPreferences: data.therapy_preferences as Record<string, any>,
+        mentalHealthStigmaLevel: data.mental_health_stigma_level,
+        familyStructureImportance: data.family_structure_importance,
+        privacyExpectations: data.privacy_expectations,
+        crisisSupportInfo: data.crisis_support_info as Record<string, any>
+      };
     } catch (error) {
-      console.error('Cultural context service error:', error);
+      console.error('Error fetching cultural context:', error);
       return null;
     }
   }
 
-  /**
-   * Start a real-time translation session
-   */
+  async translate(request: TranslationRequest): Promise<TranslationResponse> {
+    const startTime = Date.now();
+    const cacheKey = this.getCacheKey(request);
+
+    // Check cache first
+    if (this.cache.has(cacheKey)) {
+      const cached = this.cache.get(cacheKey)!;
+      return { ...cached, cached: true, responseTime: 0 };
+    }
+
+    // Check database cache
+    const { data: cachedTranslation } = await supabase
+      .from('european_translation_memory')
+      .select('*')
+      .eq('source_text', request.text)
+      .eq('source_language', request.sourceLanguage)
+      .eq('target_language', request.targetLanguage)
+      .eq('context_type', request.contextType || 'general')
+      .single();
+
+    if (cachedTranslation) {
+      const response: TranslationResponse = {
+        translatedText: cachedTranslation.translated_text,
+        sourceLanguage: cachedTranslation.source_language,
+        targetLanguage: cachedTranslation.target_language,
+        contextType: cachedTranslation.context_type,
+        therapeuticCategory: cachedTranslation.therapeutic_category,
+        culturalAdaptations: cachedTranslation.cultural_adaptations as Record<string, any>,
+        qualityScore: Number(cachedTranslation.quality_score),
+        provider: cachedTranslation.translation_provider,
+        cached: true,
+        responseTime: Date.now() - startTime,
+        sessionId: request.sessionId
+      };
+
+      this.cache.set(cacheKey, response);
+      return response;
+    }
+
+    // Get cultural context
+    const culturalContext = await this.getCulturalContext(
+      request.culturalContext?.countryCode || 'DE',
+      request.targetLanguage
+    );
+
+    // Perform translation using edge function
+    const { data, error } = await supabase.functions.invoke('european-translation', {
+      body: {
+        ...request,
+        culturalContext
+      }
+    });
+
+    if (error) {
+      throw new Error(`Translation failed: ${error.message}`);
+    }
+
+    const response: TranslationResponse = {
+      ...data,
+      cached: false,
+      responseTime: Date.now() - startTime
+    };
+
+    // Cache the response
+    this.cache.set(cacheKey, response);
+
+    // Store in database
+    await supabase.from('european_translation_memory').insert({
+      source_text: request.text,
+      source_language: request.sourceLanguage,
+      target_language: request.targetLanguage,
+      translated_text: response.translatedText,
+      context_type: request.contextType || 'general',
+      therapeutic_category: request.therapeuticCategory,
+      cultural_adaptations: response.culturalAdaptations,
+      translation_provider: response.provider,
+      quality_score: response.qualityScore
+    });
+
+    return response;
+  }
+
+  async batchTranslate(
+    texts: string[],
+    sourceLanguage: string,
+    targetLanguage: string,
+    options: BatchTranslationOptions = {}
+  ): Promise<TranslationResponse[]> {
+    const promises = texts.map(text =>
+      this.translate({
+        text,
+        sourceLanguage,
+        targetLanguage,
+        ...options
+      })
+    );
+
+    return Promise.all(promises);
+  }
+
+  async translateInSession(
+    sessionId: string,
+    text: string,
+    request: TranslationRequest
+  ): Promise<TranslationResponse> {
+    const response = await this.translate({ ...request, sessionId });
+    
+    // Update session statistics
+    await supabase.from('realtime_translation_sessions')
+      .update({
+        translation_count: supabase.sql`translation_count + 1`,
+        avg_response_time_ms: supabase.sql`(avg_response_time_ms + ${response.responseTime}) / 2`
+      })
+      .eq('session_id', sessionId);
+
+    return response;
+  }
+
   async startTranslationSession(
     sourceLanguage: string,
     targetLanguage: string,
@@ -167,186 +277,33 @@ export class EuropeanTranslationService {
   ): Promise<string> {
     const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
-    try {
-      const culturalContext = await this.getCulturalContext(targetLanguage);
-      
-      const { data, error } = await supabase
-        .from('realtime_translation_sessions')
-        .insert({
-          user_id: userId,
-          session_id: sessionId,
-          source_language: sourceLanguage,
-          target_language: targetLanguage,
-          cultural_context: culturalContext || {},
-          is_active: true
-        })
-        .select()
-        .single();
+    const { error } = await supabase.from('realtime_translation_sessions').insert({
+      user_id: userId,
+      session_id: sessionId,
+      source_language: sourceLanguage,
+      target_language: targetLanguage
+    });
 
-      if (error) {
-        throw new Error(`Session creation failed: ${error.message}`);
-      }
-
-      // Store in local cache
-      this.activeSessions.set(sessionId, {
-        id: data.id,
-        userId,
-        sourceLanguage,
-        targetLanguage,
-        culturalContext: culturalContext || {},
-        translationCount: 0,
-        avgResponseTime: 0,
-        qualityScore: 0.95,
-        isActive: true
-      });
-
-      return sessionId;
-    } catch (error) {
-      console.error('Session start error:', error);
-      throw error;
+    if (error) {
+      throw new Error(`Failed to start session: ${error.message}`);
     }
+
+    return sessionId;
   }
 
-  /**
-   * End a translation session
-   */
   async endTranslationSession(sessionId: string): Promise<void> {
-    try {
-      await supabase
-        .from('realtime_translation_sessions')
-        .update({
-          is_active: false,
-          ended_at: new Date().toISOString()
-        })
-        .eq('session_id', sessionId);
+    const { error } = await supabase.from('realtime_translation_sessions')
+      .update({
+        is_active: false,
+        ended_at: new Date().toISOString()
+      })
+      .eq('session_id', sessionId);
 
-      this.activeSessions.delete(sessionId);
-    } catch (error) {
-      console.error('Session end error:', error);
+    if (error) {
+      throw new Error(`Failed to end session: ${error.message}`);
     }
-  }
-
-  /**
-   * Translate with session context
-   */
-  async translateInSession(
-    sessionId: string,
-    text: string,
-    options?: Partial<TranslationRequest>
-  ): Promise<TranslationResponse> {
-    const session = this.activeSessions.get(sessionId);
-    if (!session) {
-      throw new Error('Invalid or expired session');
-    }
-
-    const result = await this.translate({
-      text,
-      sourceLanguage: session.sourceLanguage,
-      targetLanguage: session.targetLanguage,
-      sessionId,
-      userId: session.userId,
-      culturalAdaptations: session.culturalContext,
-      ...options
-    });
-
-    // Update session metrics
-    session.translationCount++;
-    session.avgResponseTime = (session.avgResponseTime + result.responseTime) / session.translationCount;
-    session.qualityScore = (session.qualityScore + result.qualityScore) / 2;
-
-    return result;
-  }
-
-  /**
-   * Get translation quality metrics
-   */
-  async getQualityMetrics(
-    languagePair?: string,
-    provider?: string,
-    timeRange?: { start: Date; end: Date }
-  ) {
-    try {
-      let query = supabase
-        .from('translation_quality_metrics')
-        .select('*');
-
-      if (languagePair) {
-        query = query.eq('language_pair', languagePair);
-      }
-
-      if (provider) {
-        query = query.eq('provider', provider);
-      }
-
-      if (timeRange) {
-        query = query
-          .gte('created_at', timeRange.start.toISOString())
-          .lte('created_at', timeRange.end.toISOString());
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        throw new Error(`Metrics query failed: ${error.message}`);
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Quality metrics error:', error);
-      return [];
-    }
-  }
-
-  /**
-   * Get user's preferred language from cultural context
-   */
-  async getUserPreferredLanguage(userId: string): Promise<string> {
-    try {
-      // Try to get from user cultural profiles
-      const { data } = await supabase
-        .from('user_cultural_profiles')
-        .select('primary_language')
-        .eq('user_id', userId)
-        .maybeSingle();
-
-      return data?.primary_language || 'en';
-    } catch (error) {
-      console.error('User language preference error:', error);
-      return 'en';
-    }
-  }
-
-  /**
-   * Check if a language is supported
-   */
-  static isLanguageSupported(languageCode: string): boolean {
-    return languageCode in EuropeanTranslationService.SUPPORTED_LANGUAGES;
-  }
-
-  /**
-   * Get language display name
-   */
-  static getLanguageName(languageCode: string): string {
-    const lang = EuropeanTranslationService.SUPPORTED_LANGUAGES[languageCode as keyof typeof EuropeanTranslationService.SUPPORTED_LANGUAGES];
-    return lang?.name || languageCode;
-  }
-
-  /**
-   * Get all supported languages grouped by region
-   */
-  static getLanguagesByRegion(): Record<string, Array<{ code: string; name: string }>> {
-    const regions: Record<string, Array<{ code: string; name: string }>> = {};
-    
-    Object.entries(EuropeanTranslationService.SUPPORTED_LANGUAGES).forEach(([code, info]) => {
-      if (!regions[info.region]) {
-        regions[info.region] = [];
-      }
-      regions[info.region].push({ code, name: info.name });
-    });
-
-    return regions;
   }
 }
 
-// Export singleton instance
 export const europeanTranslationService = EuropeanTranslationService.getInstance();
+export { EuropeanTranslationService };
