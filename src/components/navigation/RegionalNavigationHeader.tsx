@@ -82,7 +82,7 @@ const RegionalNavigationHeader = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center space-x-2 xl:space-x-4">
+        <div className="hidden lg:flex items-center space-x-1 xl:space-x-2">
           {/* Solutions Dropdown */}
           <div className="relative group">
             <HeaderDropdownTrigger 
@@ -90,8 +90,8 @@ const RegionalNavigationHeader = () => {
               label="Solutions" 
               className="px-2 xl:px-3"
             />
-            <HeaderDropdownCard width="adaptive" className="dropdown-left">
-              <div className="space-y-1">
+            <HeaderDropdownCard width="lg" className="dropdown-left">
+              <div className="grid grid-cols-2 gap-3">
                 {solutionsItems.map((item) => (
                   <HeaderDropdownItem
                     key={item.title}
@@ -101,7 +101,6 @@ const RegionalNavigationHeader = () => {
                     href={item.href}
                     gradient={item.gradient}
                     badge={item.badge}
-                    compact={true}
                   />
                 ))}
               </div>
@@ -115,8 +114,8 @@ const RegionalNavigationHeader = () => {
               label="Resources" 
               className="px-2 xl:px-3"
             />
-            <HeaderDropdownCard width="sm">
-              <div className="space-y-1">
+            <HeaderDropdownCard width="md">
+              <div className="space-y-2">
                 {resourcesItems.map((item) => (
                   <HeaderDropdownItem
                     key={item.title}
@@ -125,7 +124,6 @@ const RegionalNavigationHeader = () => {
                     description={item.description}
                     href={item.href}
                     gradient={item.gradient}
-                    compact={true}
                   />
                 ))}
               </div>
@@ -146,6 +144,22 @@ const RegionalNavigationHeader = () => {
             className="px-2 xl:px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
           >
             Pricing
+          </Link>
+
+          {/* Contact Link */}
+          <Link 
+            to="/contact" 
+            className="px-2 xl:px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
+          >
+            Contact
+          </Link>
+
+          {/* Support Link */}
+          <Link 
+            to="/support" 
+            className="px-2 xl:px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
+          >
+            Support
           </Link>
         </div>
 
