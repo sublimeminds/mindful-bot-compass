@@ -217,7 +217,7 @@ const Index = () => {
         
         <div className="container mx-auto px-4 relative">
           <div className="text-center">
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-center mb-4">
               <div className="relative hero-breathe">
                 <GradientLogo size="xl" className="animate-swirl-breathe animate-glow-pulse" />
                 {/* Logo Aura Effect */}
@@ -225,7 +225,7 @@ const Index = () => {
               </div>
             </div>
             
-            <Badge className="mb-6 therapy-gradient-bg text-white px-8 py-3 text-sm font-semibold shadow-lg border-0 animate-fade-in">
+            <Badge className="mb-4 therapy-gradient-bg text-white px-8 py-3 text-sm font-semibold shadow-lg border-0 animate-fade-in">
               <Sparkles className="h-4 w-4 mr-2" />
               AI-Powered Mental Health
               <Heart className="h-4 w-4 ml-2" />
