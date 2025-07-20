@@ -1,3 +1,4 @@
+
 import React from 'react';
 import AdminTranslationDashboard from '@/components/admin/translations/AdminTranslationDashboard';
 

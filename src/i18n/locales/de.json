@@ -9,19 +9,37 @@
     "cancel": "Abbrechen",
     "loading": "Laden...",
     "error": "Fehler",
-    "success": "Erfolg"
+    "success": "Erfolg",
+    "required": "Erforderlich",
+    "optional": "Optional",
+    "complete": "Vollständig",
+    "incomplete": "Unvollständig",
+    "finish": "Beenden",
+    "skip": "Überspringen"
   },
   "onboarding": {
     "title": "Willkommen bei TherapySync",
     "subtitle": "Lassen Sie uns Ihre Wellness-Erfahrung personalisieren",
+    "progress": "Schritt {{current}} von {{total}}",
     "steps": {
       "welcome": "Willkommen",
+      "auth": "Konto erstellen",
+      "intake": "Grundlegende Informationen",
+      "problems": "Ihre Herausforderungen",
+      "identity": "Identität & Vielfalt",
+      "childhood": "Kindheitsgeschichte",
+      "personal": "Persönliche Geschichte",
+      "relationships": "Beziehungen",
+      "mentalHealth": "Screening der psychischen Gesundheit",
+      "cultural": "Kulturelle Präferenzen",
+      "analysis": "KI-Analyse",
+      "therapistMatch": "Therapeut wählen",
+      "plan": "Plan auswählen",
+      "notifications": "Benachrichtigungen",
       "goals": "Ziele & Herausforderungen",
       "preferences": "Therapie-Präferenzen",
       "mood": "Stimmungs-Baseline",
       "therapist": "Wählen Sie Ihren Therapeuten",
-      "notifications": "Benachrichtigungseinstellungen",
-      "plan": "Wählen Sie Ihren Plan",
       "payment": "Zahlung",
       "profile": "Profil-Setup",
       "complete": "Setup Abschließen"
@@ -37,6 +55,41 @@
       "cultural": "Kulturelle Überlegungen",
       "recommendations": "Empfohlene Interventionen",
       "continueToMatching": "Weiter zum Therapeuten-Matching"
+    },
+    "cultural": {
+      "title": "Kulturelle Präferenzen",
+      "primaryLanguage": "Hauptsprache",
+      "background": "Kultureller Hintergrund",
+      "familyStructure": "Familienstruktur",
+      "communicationStyle": "Kommunikationsstil",
+      "religiousConsiderations": "Religiöse oder spirituelle Überlegungen sind mir wichtig"
+    },
+    "validation": {
+      "pleaseComplete": "Bitte füllen Sie alle erforderlichen Felder aus, um fortzufahren",
+      "fieldRequired": "Dieses Feld ist erforderlich",
+      "selectOption": "Bitte wählen Sie eine Option",
+      "minimumSelection": "Bitte wählen Sie mindestens eine Option"
+    },
+    "completion": {
+      "analysisComplete": "Analyse Abgeschlossen",
+      "choosingTherapist": "Wählen Sie jetzt Ihren bevorzugten Therapeuten",
+      "readyToStart": "Sie sind bereit, Ihre Therapiereise zu beginnen!",
+      "completeSetup": "Setup Abschließen"
+    },
+    "therapistMatch": {
+      "title": "Therapeuten-Match-Ergebnisse",
+      "subtitle": "Basierend auf Ihrer Bewertung haben wir Sie mit kompatiblen Therapeuten zusammengebracht",
+      "compatibilityScore": "Kompatibilitätsbewertung",
+      "selectTherapist": "Diesen Therapeuten auswählen",
+      "viewProfile": "Vollständiges Profil anzeigen",
+      "matchFactors": "Warum dieser Therapeut gut zu Ihnen passt:"
+    },
+    "progress": {
+      "fieldCompletion": "Fortschritts-Tracker",
+      "requiredFields": "Erforderliche Felder",
+      "requiredFieldsCompleted": "erforderliche Felder ausgefüllt",
+      "optionalFields": "Optionale Felder",
+      "nextStepHint": "Füllen Sie alle erforderlichen Felder aus, um zum nächsten Schritt zu gelangen"
     }
   },
   "currency": {
