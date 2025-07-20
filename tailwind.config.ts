@@ -43,11 +43,8 @@ export default {
 			'2xl': '1400px',
 			'3xl': '1600px',
 			'4xl': '1920px',
-			// MacBook Air and laptop specific breakpoints
+			// MacBook Air specific
 			'macbook': '1440px',
-			'laptop-sm': '1366px',
-			'laptop-md': '1440px',
-			'laptop-lg': '1680px',
 			// Container queries
 			'@xs': '320px',
 			'@sm': '384px',
@@ -158,27 +155,27 @@ export default {
 				}
 			},
 			fontSize: {
-				// Enhanced fluid typography with better scaling
-				'fluid-xs': 'clamp(0.7rem, 0.6rem + 0.5vw, 0.8rem)',
-				'fluid-sm': 'clamp(0.8rem, 0.7rem + 0.5vw, 0.9rem)',
-				'fluid-base': 'clamp(0.9rem, 0.8rem + 0.5vw, 1rem)',
-				'fluid-lg': 'clamp(1rem, 0.9rem + 0.5vw, 1.125rem)',
-				'fluid-xl': 'clamp(1.125rem, 1rem + 0.625vw, 1.25rem)',
-				'fluid-2xl': 'clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem)',
-				'fluid-3xl': 'clamp(1.5rem, 1.3rem + 1vw, 1.875rem)',
-				'fluid-4xl': 'clamp(1.875rem, 1.5rem + 1.875vw, 2.25rem)',
-				'fluid-5xl': 'clamp(2.25rem, 1.75rem + 2.5vw, 3rem)',
-				'fluid-6xl': 'clamp(3rem, 2rem + 5vw, 3.75rem)',
+				// Enhanced fluid typography
+				'fluid-xs': 'clamp(0.75rem, 0.65rem + 0.5vw, 0.875rem)',
+				'fluid-sm': 'clamp(0.875rem, 0.75rem + 0.625vw, 1rem)',
+				'fluid-base': 'clamp(1rem, 0.85rem + 0.75vw, 1.125rem)',
+				'fluid-lg': 'clamp(1.125rem, 0.95rem + 0.875vw, 1.25rem)',
+				'fluid-xl': 'clamp(1.25rem, 1rem + 1.25vw, 1.5rem)',
+				'fluid-2xl': 'clamp(1.5rem, 1.2rem + 1.5vw, 2rem)',
+				'fluid-3xl': 'clamp(1.875rem, 1.4rem + 2.375vw, 2.5rem)',
+				'fluid-4xl': 'clamp(2.25rem, 1.6rem + 3.25vw, 3rem)',
+				'fluid-5xl': 'clamp(3rem, 2rem + 5vw, 4rem)',
+				'fluid-6xl': 'clamp(3.75rem, 2.25rem + 7.5vw, 6rem)',
 			},
 			spacing: {
-				// Enhanced fluid spacing optimized for different screen sizes
-				'fluid-xs': 'clamp(0.25rem, 0.2rem + 0.25vw, 0.375rem)',
-				'fluid-sm': 'clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem)',
-				'fluid-md': 'clamp(0.75rem, 0.6rem + 0.75vw, 1.25rem)',
-				'fluid-lg': 'clamp(1rem, 0.8rem + 1vw, 1.5rem)',
-				'fluid-xl': 'clamp(1.5rem, 1.2rem + 1.5vw, 2rem)',
-				'fluid-2xl': 'clamp(2rem, 1.5rem + 2.5vw, 3rem)',
-				'fluid-3xl': 'clamp(3rem, 2rem + 5vw, 4rem)',
+				// Enhanced fluid spacing with better scaling
+				'fluid-xs': 'clamp(0.25rem, 0.125rem + 0.625vw, 0.5rem)',
+				'fluid-sm': 'clamp(0.5rem, 0.25rem + 1.25vw, 1rem)',
+				'fluid-md': 'clamp(1rem, 0.5rem + 2.5vw, 2rem)',
+				'fluid-lg': 'clamp(1.5rem, 0.75rem + 3.75vw, 3rem)',
+				'fluid-xl': 'clamp(2rem, 1rem + 5vw, 4rem)',
+				'fluid-2xl': 'clamp(3rem, 1.5rem + 7.5vw, 6rem)',
+				'fluid-3xl': 'clamp(4rem, 2rem + 10vw, 8rem)',
 			},
 			gridTemplateColumns: {
 				'auto-fit-xs': 'repeat(auto-fit, minmax(120px, 1fr))',

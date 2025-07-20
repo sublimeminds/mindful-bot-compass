@@ -67,25 +67,19 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
     );
   }
 
-  // Desktop fallback with enhanced breakpoint handling
+  // Desktop fallback with MacBook Air optimization
   const getMaxWidth = () => {
-    if (width <= 1440) return 'max-w-4xl'; // MacBook Air optimization
-    if (breakpoint === 'lg') return 'max-w-5xl';
-    if (breakpoint === 'xl') return 'max-w-6xl';
-    if (breakpoint === '2xl') return 'max-w-7xl';
+    if (width <= 1440) return 'max-w-5xl'; // MacBook Air optimization
+    if (breakpoint === 'lg') return 'max-w-6xl';
+    if (breakpoint === 'xl') return 'max-w-7xl';
     return 'max-w-7xl';
-  };
-
-  const getPadding = () => {
-    if (width <= 1440) return 'px-4 sm:px-6 lg:px-8'; // MacBook Air
-    return 'px-4 sm:px-6 lg:px-8 xl:px-12';
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-therapy-50/30 to-calm-50/30">
       <main className={`
         container mx-auto 
-        ${getPadding()} py-4 sm:py-6 lg:py-8
+        px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12
         ${getMaxWidth()}
       `}>
         {children}

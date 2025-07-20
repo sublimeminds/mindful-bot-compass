@@ -8,7 +8,6 @@ interface HeaderDropdownCardProps {
   titleIcon?: LucideIcon;
   children: React.ReactNode;
   className?: string;
-  compact?: boolean;
 }
 
 const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
@@ -16,8 +15,7 @@ const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
   title,
   titleIcon: TitleIcon,
   children,
-  className = '',
-  compact = false
+  className = ''
 }) => {
   // Dynamic positioning based on width prop or className
   const getPositioning = () => {
@@ -30,48 +28,29 @@ const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
     return 'left-1/2 transform -translate-x-1/2';
   };
 
-  // Responsive width based on screen size and available space
+  // Adaptive width based on screen size and content
   const getWidth = () => {
-    if (compact) {
-      return 'w-64 sm:w-72 md:w-80';
-    }
-    
     switch (width) {
       case 'sm':
-        return 'w-64 sm:w-72';
+        return 'w-80';
       case 'md':
-        return 'w-72 sm:w-80 md:w-84';
+        return 'w-96';
       case 'lg':
-        return 'w-80 sm:w-96 md:w-[28rem]';
+        return 'w-[32rem]';
       case 'xl':
-        return 'w-96 sm:w-[28rem] md:w-[32rem]';
+        return 'w-[40rem]';
       case 'adaptive':
       default:
-        // Responsive width that adapts to screen size
-        return `
-          w-[280px] 
-          xs:w-[300px] 
-          sm:w-[320px] 
-          md:w-[360px] 
-          macbook:w-[380px] 
-          lg:w-[400px] 
-          xl:w-[420px] 
-          2xl:w-[440px]
-          max-w-[calc(100vw-2rem)]
-        `.replace(/\s+/g, ' ').trim();
+        return 'w-80 sm:w-96 md:w-[28rem] lg:w-[32rem] xl:w-[36rem] max-w-[calc(100vw-2rem)]';
     }
   };
 
   return (
     <div className={`
-      absolute top-full ${getPositioning()} ${getWidth()} 
-      ${compact ? 'p-2 sm:p-3' : 'p-3 sm:p-4 lg:p-5'} 
-      bg-card shadow-xl border border-border 
-      rounded-lg sm:rounded-xl opacity-0 invisible 
-      group-hover:opacity-100 group-hover:visible 
-      transition-all duration-200 ease-out 
-      translate-y-1 group-hover:translate-y-0 
-      group-hover:scale-[1.01]
+      absolute top-full ${getPositioning()} ${getWidth()} p-4 sm:p-6 
+      bg-card shadow-2xl border border-border 
+      rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible 
+      transition-all duration-200 ease-out translate-y-2 group-hover:translate-y-0 group-hover:scale-[1.02]
       z-50 ${className}
     `}>
       {children}
