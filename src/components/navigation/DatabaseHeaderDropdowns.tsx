@@ -7,13 +7,17 @@ import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
 import { 
   Brain, Globe, Mic, Target, Heart, Users, Shield, BarChart3, 
-  Code, TrendingUp, FileText, User, Building, BookOpen, Settings 
+  Code, TrendingUp, FileText, User, Building, BookOpen, Settings,
+  MessageSquare, Zap, Compass, LayoutDashboard, Smartphone, Download,
+  CreditCard, HelpCircle, LifeBuoy, GraduationCap, Plug
 } from 'lucide-react';
 
-// Icon mapping
+// Icon mapping - expanded to include all needed icons
 const iconMap: Record<string, any> = {
   Brain, Globe, Mic, Target, Heart, Users, Shield, BarChart3,
-  Code, TrendingUp, FileText, User, Building, BookOpen, Settings
+  Code, TrendingUp, FileText, User, Building, BookOpen, Settings,
+  MessageSquare, Zap, Compass, LayoutDashboard, Smartphone, Download,
+  CreditCard, HelpCircle, LifeBuoy, GraduationCap, Plug
 };
 
 // Helper to get icon component from string
@@ -46,11 +50,11 @@ const DatabaseHeaderDropdowns = () => {
     if (categoryName) {
       const category = menuConfig.categories.find(c => c.menu_id === menu.id && c.name === categoryName);
       if (category) {
-        items = items.filter(item => item.category === category.id);
+        items = items.filter(item => item.category_id === category.id);
       }
     } else {
       // Get items without category for this menu
-      items = items.filter(item => !item.category);
+      items = items.filter(item => !item.category_id);
     }
 
     return items.sort((a, b) => a.position - b.position);
@@ -218,7 +222,7 @@ const DatabaseHeaderDropdowns = () => {
               Powerful tools to track and understand your mental health
             </p>
           </div>
-          {renderContent(getMenuItems('tools-data'), 2)}
+          {renderCategorizedContent('tools-data')}
         </HeaderDropdownCard>
       </div>
 
@@ -235,7 +239,7 @@ const DatabaseHeaderDropdowns = () => {
               Tailored mental health solutions for different needs
             </p>
           </div>
-          {renderContent(getMenuItems('solutions'), 2)}
+          {renderCategorizedContent('solutions')}
         </HeaderDropdownCard>
       </div>
 
@@ -252,7 +256,7 @@ const DatabaseHeaderDropdowns = () => {
               Educational content, support, and community resources
             </p>
           </div>
-          {renderContent(getMenuItems('resources'), 2)}
+          {renderCategorizedContent('resources')}
         </HeaderDropdownCard>
       </div>
     </>

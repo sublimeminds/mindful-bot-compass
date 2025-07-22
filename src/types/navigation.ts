@@ -13,13 +13,13 @@ export interface NavigationMenu {
 export interface NavigationMenuItem {
   id: string;
   menu_id: string;
+  category_id?: string;
   title: string;
   description: string;
   href: string;
   icon: string;
   gradient: string;
   badge?: string;
-  category?: string;
   position: number;
   is_active: boolean;
   created_at: string;

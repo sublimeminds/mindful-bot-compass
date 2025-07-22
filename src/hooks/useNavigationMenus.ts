@@ -26,36 +26,39 @@ export const useNavigationMenus = () => {
     setError(null);
     
     try {
-      const { data: menus } = await supabase
-        .from('navigation_menus')
-        .select(`
-          *,
-          navigation_menu_categories(*),
-          navigation_menu_items(*)
-        `)
-        .eq('is_active', true)
-        .order('position');
+      // Fetch all data from the new database structure
+      const [menusResult, categoriesResult, itemsResult] = await Promise.all([
+        supabase
+          .from('navigation_menus')
+          .select('*')
+          .eq('is_active', true)
+          .order('position'),
+        supabase
+          .from('navigation_menu_categories')
+          .select('*')
+          .eq('is_active', true)
+          .order('position'),
+        supabase
+          .from('navigation_menu_items')
+          .select('*')
+          .eq('is_active', true)
+          .order('position')
+      ]);
 
-      const { data: categories } = await supabase
-        .from('navigation_menu_categories')
-        .select('*')
-        .eq('is_active', true)
-        .order('position');
-
-      const { data: items } = await supabase
-        .from('navigation_menu_items')
-        .select('*')
-        .eq('is_active', true)
-        .order('position');
-
-      if (menus && categories && items) {
+      if (menusResult.data && categoriesResult.data && itemsResult.data) {
+        console.log('Fetched database menu data:', {
+          menus: menusResult.data.length,
+          categories: categoriesResult.data.length,
+          items: itemsResult.data.length
+        });
+        
         setMenuConfig({
-          menus: menus || [],
-          categories: categories || [],
-          items: items || []
+          menus: menusResult.data,
+          categories: categoriesResult.data,
+          items: itemsResult.data
         });
       } else {
-        console.warn('Using fallback menu data');
+        console.warn('Using fallback menu data - no database data available');
         setMenuConfig(fallbackMenuData);
       }
     } catch (err) {
