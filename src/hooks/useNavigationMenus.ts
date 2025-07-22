@@ -12,7 +12,13 @@ const fallbackMenuData: MenuConfiguration = {
     { id: '4', name: 'solutions', label: 'Solutions', icon: 'Building', position: 4, is_active: true, created_at: '', updated_at: '' },
     { id: '5', name: 'resources', label: 'Resources', icon: 'BookOpen', position: 5, is_active: true, created_at: '', updated_at: '' }
   ],
-  items: [],
+  items: [
+    // Add some fallback menu items so navigation shows something
+    { id: '1-1', menu_id: '1', title: 'AI Therapy Sessions', description: 'Experience personalized AI-powered therapy', href: '/therapy/ai', icon: 'Brain', gradient: 'from-blue-500 to-purple-600', position: 1, is_active: true, created_at: '', updated_at: '' },
+    { id: '1-2', menu_id: '1', title: 'Mood Analysis', description: 'Track and analyze your emotional patterns', href: '/therapy/mood', icon: 'Heart', gradient: 'from-pink-500 to-red-500', position: 2, is_active: true, created_at: '', updated_at: '' },
+    { id: '2-1', menu_id: '2', title: 'Dashboard', description: 'View your therapy progress and insights', href: '/dashboard', icon: 'BarChart3', gradient: 'from-green-500 to-blue-500', position: 1, is_active: true, created_at: '', updated_at: '' },
+    { id: '3-1', menu_id: '3', title: 'Progress Reports', description: 'Detailed analysis of your therapy journey', href: '/reports', icon: 'TrendingUp', gradient: 'from-orange-500 to-yellow-500', position: 1, is_active: true, created_at: '', updated_at: '' }
+  ],
   categories: []
 };
 
@@ -26,6 +32,8 @@ export const useNavigationMenus = () => {
     setError(null);
     
     try {
+      console.log('Fetching navigation menus from database...');
+      
       // Fetch all data from the new database structure
       const [menusResult, categoriesResult, itemsResult] = await Promise.all([
         supabase
@@ -45,25 +53,30 @@ export const useNavigationMenus = () => {
           .order('position')
       ]);
 
+      console.log('Database results:', {
+        menus: menusResult.data?.length || 0,
+        categories: categoriesResult.data?.length || 0,
+        items: itemsResult.data?.length || 0,
+        menuError: menusResult.error,
+        categoryError: categoriesResult.error,
+        itemError: itemsResult.error
+      });
+
       if (menusResult.data && categoriesResult.data && itemsResult.data) {
-        console.log('Fetched database menu data:', {
-          menus: menusResult.data.length,
-          categories: categoriesResult.data.length,
-          items: itemsResult.data.length
-        });
-        
+        console.log('Using database menu data');
         setMenuConfig({
           menus: menusResult.data,
           categories: categoriesResult.data,
           items: itemsResult.data
         });
       } else {
-        console.warn('Using fallback menu data - no database data available');
+        console.warn('Using fallback menu data - database tables may not exist');
         setMenuConfig(fallbackMenuData);
       }
     } catch (err) {
-      console.warn('Database not available, using fallback menus:', err);
+      console.warn('Database error, using fallback menus:', err);
       setMenuConfig(fallbackMenuData);
+      setError('Database connection issue');
     } finally {
       setLoading(false);
     }
@@ -71,7 +84,6 @@ export const useNavigationMenus = () => {
 
   const updateMenu = async (menu: Partial<NavigationMenu> & { id: string }) => {
     try {
-      // TODO: Implement database update when tables are created
       console.log('Menu update requested:', menu);
       setError('Menu updates not yet implemented - database tables needed');
     } catch (err) {
@@ -81,7 +93,6 @@ export const useNavigationMenus = () => {
 
   const updateMenuItem = async (item: Partial<NavigationMenuItem> & { id: string }) => {
     try {
-      // TODO: Implement database update when tables are created
       console.log('Menu item update requested:', item);
       setError('Menu item updates not yet implemented - database tables needed');
     } catch (err) {

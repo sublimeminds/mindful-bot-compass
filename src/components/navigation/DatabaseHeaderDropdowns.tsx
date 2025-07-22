@@ -10,9 +10,12 @@ import { SafeIcons, getIcon, validateIcon } from '@/utils/iconImports';
 const DatabaseHeaderDropdowns = () => {
   const { menuConfig, loading, error } = useNavigationMenus();
 
-  console.log('DatabaseHeaderDropdowns - menuConfig:', menuConfig);
-  console.log('DatabaseHeaderDropdowns - loading:', loading);
-  console.log('DatabaseHeaderDropdowns - error:', error);
+  console.log('DatabaseHeaderDropdowns - Render state:', {
+    menusCount: menuConfig.menus.length,
+    itemsCount: menuConfig.items.length,
+    loading,
+    error
+  });
 
   if (loading) {
     return (
@@ -26,7 +29,7 @@ const DatabaseHeaderDropdowns = () => {
 
   if (error) {
     console.error('Navigation menu error:', error);
-    return null;
+    // Don't return null - show at least basic navigation
   }
 
   return (
@@ -38,12 +41,9 @@ const DatabaseHeaderDropdowns = () => {
         // Get items for this menu
         const menuItems = menuConfig.items.filter(item => item.menu_id === menu.id);
         
-        console.log(`Menu ${menu.name} has ${menuItems.length} items:`, menuItems);
+        console.log(`Menu ${menu.name} (${menu.label}) has ${menuItems.length} items`);
 
-        if (menuItems.length === 0) {
-          return null;
-        }
-
+        // Show menu even if no items (user can still see the dropdown)
         return (
           <DropdownMenu key={menu.id}>
             <DropdownMenuTrigger asChild>
@@ -55,20 +55,27 @@ const DatabaseHeaderDropdowns = () => {
             <DropdownMenuContent asChild>
               <HeaderDropdownCard width="adaptive">
                 <div className="space-y-2">
-                  {menuItems.map((item) => {
-                    const ItemIcon = validateIcon(item.icon) ? getIcon(item.icon as keyof typeof SafeIcons) : SafeIcons.Target;
-                    return (
-                      <HeaderDropdownItem
-                        key={item.id}
-                        icon={ItemIcon}
-                        title={item.title}
-                        description={item.description}
-                        href={item.href}
-                        gradient={item.gradient}
-                        badge={item.badge}
-                      />
-                    );
-                  })}
+                  {menuItems.length > 0 ? (
+                    menuItems.map((item) => {
+                      const ItemIcon = validateIcon(item.icon) ? getIcon(item.icon as keyof typeof SafeIcons) : SafeIcons.Target;
+                      return (
+                        <HeaderDropdownItem
+                          key={item.id}
+                          icon={ItemIcon}
+                          title={item.title}
+                          description={item.description}
+                          href={item.href}
+                          gradient={item.gradient}
+                          badge={item.badge}
+                        />
+                      );
+                    })
+                  ) : (
+                    <div className="p-4 text-center text-gray-500">
+                      <p className="text-sm">Coming soon...</p>
+                      <p className="text-xs mt-1">New features will appear here</p>
+                    </div>
+                  )}
                 </div>
               </HeaderDropdownCard>
             </DropdownMenuContent>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, LucideIcon } from 'lucide-react';
@@ -8,13 +9,13 @@ interface HeaderDropdownTriggerProps {
   className?: string;
 }
 
-const HeaderDropdownTrigger: React.FC<HeaderDropdownTriggerProps> = ({
-  icon: Icon,
-  label,
-  className = ''
-}) => {
+const HeaderDropdownTrigger = React.forwardRef<
+  HTMLButtonElement,
+  HeaderDropdownTriggerProps
+>(({ icon: Icon, label, className = '' }, ref) => {
   return (
     <Button 
+      ref={ref}
       variant="ghost" 
       className={`
         flex items-center space-x-2 px-3 py-2 h-10
@@ -30,6 +31,8 @@ const HeaderDropdownTrigger: React.FC<HeaderDropdownTriggerProps> = ({
       <ChevronDown className="h-3.5 w-3.5 text-gray-500 group-hover/trigger:text-gray-600 transition-all duration-200 group-hover/trigger:rotate-180" />
     </Button>
   );
-};
+});
+
+HeaderDropdownTrigger.displayName = 'HeaderDropdownTrigger';
 
 export default HeaderDropdownTrigger;
