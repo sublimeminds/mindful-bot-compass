@@ -1,10 +1,10 @@
 
 import React from 'react';
-import RegionalNavigationHeader from '@/components/navigation/RegionalNavigationHeader';
+import UnifiedNavigation from '@/components/navigation/UnifiedNavigation';
 
-// Regional Header component with unified country/currency/language selection
+// Main Header component with full navigation
 const Header = () => {
-  return <RegionalNavigationHeader />;
+  return <UnifiedNavigation />;
 };
 
 export default Header;
