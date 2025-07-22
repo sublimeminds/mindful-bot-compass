@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { Menu, X, Shield, ChevronDown } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Menu, X } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 import UserMenu from './UserMenu';
 import DatabaseHeaderDropdowns from './DatabaseHeaderDropdowns';
+import Logo from './Logo';
 
 const UnifiedNavigation = () => {
   console.log('🔍 UnifiedNavigation: Component rendering');
@@ -22,11 +22,7 @@ const UnifiedNavigation = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center">
-              <span className="text-xl font-bold bg-gradient-to-r from-therapy-600 to-harmony-600 bg-clip-text text-transparent">
-                TherapySync
-              </span>
-            </Link>
+            <Logo />
           </div>
 
           {/* Desktop Navigation */}  
@@ -47,6 +43,8 @@ const UnifiedNavigation = () => {
               )}
             </div>
           </div>
+          
+          {/* Mobile menu button */}
           <div className="-mr-2 flex md:hidden">
             <Button
               onClick={() => setIsMobileMenuOpen(true)}
@@ -59,6 +57,7 @@ const UnifiedNavigation = () => {
           </div>
         </div>
       </div>
+      
       <MobileMenu 
         isOpen={isMobileMenuOpen} 
         onClose={() => setIsMobileMenuOpen(false)} 

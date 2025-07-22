@@ -1,7 +1,5 @@
 
 import React from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import FeaturesSection from '@/components/FeaturesSection';
 import EnhancedPricingSection from '@/components/pricing/EnhancedPricingSection';
@@ -12,48 +10,46 @@ import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrap
 import AlexCompanion from '@/components/ai/AlexCompanion';
 
 const LandingPage = () => {
-  console.log('LandingPage rendering');
+  console.log('🔍 LandingPage: Component rendering');
   const [isAlexMinimized, setIsAlexMinimized] = React.useState(true);
   
   return (
     <SafeComponentWrapper name="LandingPage">
       <div className="min-h-screen">
-        <SafeComponentWrapper name="Header" fallback={<div className="h-16 bg-white border-b"></div>}>
-          <Header />
-        </SafeComponentWrapper>
-        
+        {/* Hero Section */}
         <SafeComponentWrapper name="HeroSection" fallback={<div className="h-96 bg-gradient-to-br from-therapy-50 to-calm-50"></div>}>
           <HeroSection />
         </SafeComponentWrapper>
         
+        {/* Interactive Demo */}
         <SafeComponentWrapper name="InteractiveDemo" fallback={<div className="py-20"></div>}>
           <InteractiveDemo />
         </SafeComponentWrapper>
         
+        {/* How It Works */}
         <SafeComponentWrapper name="HowItWorksSection" fallback={<div className="py-20"></div>}>
           <div id="how-it-works">
             <HowItWorksSection />
           </div>
         </SafeComponentWrapper>
         
+        {/* Features */}
         <SafeComponentWrapper name="FeaturesSection" fallback={<div className="py-20"></div>}>
           <div id="features">
             <FeaturesSection />
           </div>
         </SafeComponentWrapper>
         
+        {/* Pricing */}
         <SafeComponentWrapper name="PricingSection" fallback={<div className="py-20"></div>}>
           <div id="pricing">
             <EnhancedPricingSection />
           </div>
         </SafeComponentWrapper>
         
+        {/* CTA */}
         <SafeComponentWrapper name="CTASection" fallback={<div className="py-20"></div>}>
           <CTASection />
-        </SafeComponentWrapper>
-        
-        <SafeComponentWrapper name="Footer" fallback={<div className="h-32 bg-slate-50"></div>}>
-          <Footer />
         </SafeComponentWrapper>
         
         {/* Alex AI Companion */}

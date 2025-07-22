@@ -2,9 +2,8 @@
 import React from 'react';
 import UnifiedNavigation from '@/components/navigation/UnifiedNavigation';
 
-// Main Header component with full navigation
 const Header = () => {
-  console.log('🔍 Header: Component rendering');
+  console.log('🔍 Header: Component rendering successfully');
   
   return (
     <div className="w-full">
