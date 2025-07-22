@@ -24,15 +24,16 @@ const fallbackMenuData: MenuConfiguration = {
 
 export const useNavigationMenus = () => {
   const [menuConfig, setMenuConfig] = useState<MenuConfiguration>(fallbackMenuData);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchMenus = async () => {
+    console.log('🔍 useNavigationMenus: Starting fetchMenus');
     setLoading(true);
     setError(null);
     
     try {
-      console.log('Fetching navigation menus from database...');
+      console.log('🔍 useNavigationMenus: Fetching navigation menus from database...');
       
       // Fetch all data from the new database structure
       const [menusResult, categoriesResult, itemsResult] = await Promise.all([
@@ -53,7 +54,7 @@ export const useNavigationMenus = () => {
           .order('position')
       ]);
 
-      console.log('Database results:', {
+      console.log('🔍 useNavigationMenus: Database results:', {
         menus: menusResult.data?.length || 0,
         categories: categoriesResult.data?.length || 0,
         items: itemsResult.data?.length || 0,
@@ -63,28 +64,31 @@ export const useNavigationMenus = () => {
       });
 
       if (menusResult.data && categoriesResult.data && itemsResult.data) {
-        console.log('Using database menu data');
-        setMenuConfig({
+        console.log('🔍 useNavigationMenus: Using database menu data');
+        const dbConfig = {
           menus: menusResult.data,
           categories: categoriesResult.data,
           items: itemsResult.data
-        });
+        };
+        console.log('🔍 useNavigationMenus: Setting DB config:', dbConfig);
+        setMenuConfig(dbConfig);
       } else {
-        console.warn('Using fallback menu data - database tables may not exist');
+        console.warn('🔍 useNavigationMenus: Using fallback menu data - database tables may not exist');
         setMenuConfig(fallbackMenuData);
       }
     } catch (err) {
-      console.warn('Database error, using fallback menus:', err);
+      console.warn('🔍 useNavigationMenus: Database error, using fallback menus:', err);
       setMenuConfig(fallbackMenuData);
       setError('Database connection issue');
     } finally {
       setLoading(false);
+      console.log('🔍 useNavigationMenus: fetchMenus completed');
     }
   };
 
   const updateMenu = async (menu: Partial<NavigationMenu> & { id: string }) => {
     try {
-      console.log('Menu update requested:', menu);
+      console.log('🔍 useNavigationMenus: Menu update requested:', menu);
       setError('Menu updates not yet implemented - database tables needed');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update menu');
@@ -93,7 +97,7 @@ export const useNavigationMenus = () => {
 
   const updateMenuItem = async (item: Partial<NavigationMenuItem> & { id: string }) => {
     try {
-      console.log('Menu item update requested:', item);
+      console.log('🔍 useNavigationMenus: Menu item update requested:', item);
       setError('Menu item updates not yet implemented - database tables needed');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update menu item');
@@ -101,6 +105,7 @@ export const useNavigationMenus = () => {
   };
 
   useEffect(() => {
+    console.log('🔍 useNavigationMenus: useEffect triggered');
     fetchMenus();
   }, []);
 

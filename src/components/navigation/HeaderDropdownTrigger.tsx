@@ -12,7 +12,9 @@ interface HeaderDropdownTriggerProps {
 const HeaderDropdownTrigger = React.forwardRef<
   HTMLButtonElement,
   HeaderDropdownTriggerProps
->(({ icon: Icon, label, className = '' }, ref) => {
+>(({ icon: Icon, label, className = '', ...props }, ref) => {
+  console.log('HeaderDropdownTrigger rendering:', { label, hasIcon: !!Icon });
+  
   return (
     <Button 
       ref={ref}
@@ -25,6 +27,7 @@ const HeaderDropdownTrigger = React.forwardRef<
         group/trigger
         ${className}
       `}
+      {...props}
     >
       <Icon className="h-4 w-4 text-therapy-500 group-hover/trigger:text-therapy-600 transition-colors" />
       <span className="font-medium text-sm">{label}</span>

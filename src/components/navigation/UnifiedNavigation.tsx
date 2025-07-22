@@ -10,6 +10,8 @@ import UserMenu from './UserMenu';
 import DatabaseHeaderDropdowns from './DatabaseHeaderDropdowns';
 
 const UnifiedNavigation = () => {
+  console.log('🔍 UnifiedNavigation: Component rendering');
+  
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -27,7 +29,7 @@ const UnifiedNavigation = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation */}  
           <div className="hidden lg:flex lg:items-center lg:space-x-4">
             <DatabaseHeaderDropdowns />
           </div>

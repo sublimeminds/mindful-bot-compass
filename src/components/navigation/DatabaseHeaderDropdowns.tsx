@@ -5,19 +5,49 @@ import HeaderDropdownTrigger from './HeaderDropdownTrigger';
 import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { SafeIcons, getIcon, validateIcon } from '@/utils/iconImports';
+import { Brain, Settings, BarChart3, Building, BookOpen, Target } from 'lucide-react';
+
+// Simplified icon mapping - no complex validation
+const getMenuIcon = (iconName: string) => {
+  const iconMap: Record<string, any> = {
+    'Brain': Brain,
+    'Settings': Settings,
+    'BarChart3': BarChart3,
+    'Building': Building,
+    'BookOpen': BookOpen,
+    'Target': Target
+  };
+  
+  return iconMap[iconName] || Brain;
+};
+
+const getItemIcon = (iconName: string) => {
+  const iconMap: Record<string, any> = {
+    'Brain': Brain,
+    'Heart': Target, // Using Target as fallback for Heart
+    'BarChart3': BarChart3,
+    'TrendingUp': BarChart3,
+    'Target': Target
+  };
+  
+  return iconMap[iconName] || Target;
+};
 
 const DatabaseHeaderDropdowns = () => {
+  console.log('🔍 DatabaseHeaderDropdowns: Component rendering');
+  
   const { menuConfig, loading, error } = useNavigationMenus();
 
-  console.log('DatabaseHeaderDropdowns - Render state:', {
+  console.log('🔍 DatabaseHeaderDropdowns - Render state:', {
     menusCount: menuConfig.menus.length,
     itemsCount: menuConfig.items.length,
     loading,
-    error
+    error,
+    firstMenu: menuConfig.menus[0]?.name
   });
 
   if (loading) {
+    console.log('🔍 DatabaseHeaderDropdowns: Showing loading state');
     return (
       <div className="flex items-center space-x-6">
         <div className="h-6 w-20 bg-gray-200 animate-pulse rounded"></div>
@@ -28,22 +58,20 @@ const DatabaseHeaderDropdowns = () => {
   }
 
   if (error) {
-    console.error('Navigation menu error:', error);
-    // Don't return null - show at least basic navigation
+    console.error('🚨 DatabaseHeaderDropdowns: Navigation menu error:', error);
+    // Still show navigation even with error
   }
+
+  console.log('🔍 DatabaseHeaderDropdowns: Rendering menus');
 
   return (
     <div className="flex items-center space-x-6">
       {menuConfig.menus.map((menu) => {
-        // Safely get the icon component using our validation system
-        const IconComponent = validateIcon(menu.icon) ? getIcon(menu.icon as keyof typeof SafeIcons) : SafeIcons.Brain;
-        
-        // Get items for this menu
+        const IconComponent = getMenuIcon(menu.icon);
         const menuItems = menuConfig.items.filter(item => item.menu_id === menu.id);
         
-        console.log(`Menu ${menu.name} (${menu.label}) has ${menuItems.length} items`);
+        console.log(`🔍 Menu ${menu.name} (${menu.label}) has ${menuItems.length} items`);
 
-        // Show menu even if no items (user can still see the dropdown)
         return (
           <DropdownMenu key={menu.id}>
             <DropdownMenuTrigger asChild>
@@ -57,7 +85,7 @@ const DatabaseHeaderDropdowns = () => {
                 <div className="space-y-2">
                   {menuItems.length > 0 ? (
                     menuItems.map((item) => {
-                      const ItemIcon = validateIcon(item.icon) ? getIcon(item.icon as keyof typeof SafeIcons) : SafeIcons.Target;
+                      const ItemIcon = getItemIcon(item.icon);
                       return (
                         <HeaderDropdownItem
                           key={item.id}
