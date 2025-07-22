@@ -5,7 +5,7 @@ import HeaderDropdownTrigger from './HeaderDropdownTrigger';
 import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import * as LucideIcons from 'lucide-react';
+import { SafeIcons, getIcon, validateIcon } from '@/utils/iconImports';
 
 const DatabaseHeaderDropdowns = () => {
   const { menuConfig, loading, error } = useNavigationMenus();
@@ -32,8 +32,8 @@ const DatabaseHeaderDropdowns = () => {
   return (
     <div className="flex items-center space-x-6">
       {menuConfig.menus.map((menu) => {
-        // Get the icon component
-        const IconComponent = LucideIcons[menu.icon as keyof typeof LucideIcons] as React.ComponentType<any>;
+        // Safely get the icon component using our validation system
+        const IconComponent = validateIcon(menu.icon) ? getIcon(menu.icon as keyof typeof SafeIcons) : SafeIcons.Brain;
         
         // Get items for this menu
         const menuItems = menuConfig.items.filter(item => item.menu_id === menu.id);
@@ -48,7 +48,7 @@ const DatabaseHeaderDropdowns = () => {
           <DropdownMenu key={menu.id}>
             <DropdownMenuTrigger asChild>
               <HeaderDropdownTrigger
-                icon={IconComponent || LucideIcons.Brain}
+                icon={IconComponent}
                 label={menu.label}
               />
             </DropdownMenuTrigger>
@@ -56,11 +56,11 @@ const DatabaseHeaderDropdowns = () => {
               <HeaderDropdownCard width="adaptive">
                 <div className="space-y-2">
                   {menuItems.map((item) => {
-                    const ItemIcon = LucideIcons[item.icon as keyof typeof LucideIcons] as React.ComponentType<any>;
+                    const ItemIcon = validateIcon(item.icon) ? getIcon(item.icon as keyof typeof SafeIcons) : SafeIcons.Target;
                     return (
                       <HeaderDropdownItem
                         key={item.id}
-                        icon={ItemIcon || LucideIcons.Circle}
+                        icon={ItemIcon}
                         title={item.title}
                         description={item.description}
                         href={item.href}

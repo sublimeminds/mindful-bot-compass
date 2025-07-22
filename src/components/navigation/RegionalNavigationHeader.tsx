@@ -1,192 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Brain, Settings, Database, Star, BookOpen, ChevronDown, MessageSquare, Headphones, Shield, Globe, Users, Heart, Target, HelpCircle, Calculator, Phone, GraduationCap, Lightbulb } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/hooks/useAuth';
-import GradientLogo from '@/components/ui/GradientLogo';
-import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
-import EnhancedUserMenu from './EnhancedUserMenu';
-import CompactRegionalSelector from '@/components/regional/CompactRegionalSelector';
-import MobileNavigation from './MobileNavigation';
-import HeaderDropdowns from './HeaderDropdowns';
-import UnifiedSearch from '../search/UnifiedSearch';
-import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
-// Inline responsive logic to bypass Vite caching issues
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < 768;
-  });
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const mql = window.matchMedia('(max-width: 767px)');
-    const onChange = () => setIsMobile(window.innerWidth < 768);
-    mql.addEventListener("change", onChange);
-    setIsMobile(window.innerWidth < 768);
-    return () => mql.removeEventListener("change", onChange);
-  }, []);
-
-  return isMobile;
-};
-
-const useScreenSize = () => {
-  const [screenSize, setScreenSize] = useState(() => {
-    if (typeof window === 'undefined') return { isTablet: false, isLaptop: false, isDesktop: false };
-    const width = window.innerWidth;
-    return {
-      isTablet: width >= 768 && width < 1024,
-      isLaptop: width >= 1024 && width < 1280,
-      isDesktop: width >= 1280,
-    };
-  });
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const updateScreenSize = () => {
-      const width = window.innerWidth;
-      setScreenSize({
-        isTablet: width >= 768 && width < 1024,
-        isLaptop: width >= 1024 && width < 1280,
-        isDesktop: width >= 1280,
-      });
-    };
-    updateScreenSize();
-    window.addEventListener("resize", updateScreenSize);
-    return () => window.removeEventListener("resize", updateScreenSize);
-  }, []);
-
-  return screenSize;
-};
+import { Globe, ChevronDown } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const RegionalNavigationHeader = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const isMobile = useIsMobile();
-  const { isTablet, isLaptop, isDesktop } = useScreenSize();
-
-  const handleGetStarted = () => {
-    if (user) {
-      navigate('/dashboard');
-    } else {
-      navigate('/auth');
-    }
-  };
-
   return (
-    <SafeComponentWrapper name="RegionalNavigationHeader">
-      <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            
-            {/* Left Section - Logo and Mobile Nav */}
-            <div className="flex items-center space-x-4">
-              <div className="md:hidden">
-                <MobileNavigation
-                  therapyAiFeatures={[
-                    { title: 'AI Therapy Sessions', href: '/therapy', icon: Brain, description: 'Personalized AI therapy sessions' },
-                    { title: 'Crisis Support', href: '/crisis', icon: Brain, description: '24/7 crisis intervention' }
-                  ]}
-                  platformFeatures={[
-                    { title: 'Dashboard', href: '/dashboard', icon: Settings, description: 'Your therapy dashboard' },
-                    { title: 'Analytics', href: '/analytics', icon: Settings, description: 'Mental health insights' }
-                  ]}
-                  toolsDataFeatures={[
-                    { title: 'Mood Tracking', href: '/mood', icon: Database, description: 'Track your mood patterns' },
-                    { title: 'Progress Reports', href: '/reports', icon: Database, description: 'View your progress' }
-                  ]}
-                  solutionsFeatures={[
-                    { title: 'Quick Links', href: '/quick-links', icon: Star, description: 'Fast access to resources' },
-                    { title: 'Pricing', href: '/pricing', icon: Star, description: 'View our pricing plans' }
-                  ]}
-                  resourcesFeatures={[
-                    { title: 'Help Center', href: '/help', icon: BookOpen, description: 'Get help and support' },
-                    { title: 'Documentation', href: '/docs', icon: BookOpen, description: 'API documentation' }
-                  ]}
-                />
-              </div>
-              
-              <Link
-                to="/" 
-                className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
-              >
-                <GradientLogo size="sm" />
-                <span className="text-lg md:text-xl font-bold therapy-text-gradient">
-                  TherapySync
-                </span>
-              </Link>
-            </div>
-
-            {/* Center Section - Navigation Dropdowns and Search */}
-            <div className="flex items-center space-x-3 flex-1 justify-center">
-              {/* Tablet screens: Simple dropdowns */}
-              {isTablet && (
-                <div className="flex items-center space-x-1">
-                  <HeaderDropdowns />
-                </div>
-              )}
-              
-              {/* Laptop screens: Medium dropdowns */}
-              {isLaptop && (
-                <div className="flex items-center space-x-2">
-                  <HeaderDropdowns />
-                </div>
-              )}
-              
-              {/* Desktop screens: Rich dropdowns with colorful icons and descriptions */}
-              {isDesktop && (
-                <div className="flex items-center space-x-2">
-                  <HeaderDropdowns />
-                </div>
-              )}
-              
-              {/* Search Bar - responsive sizing */}
-              <div className={`${isTablet ? 'max-w-sm' : isLaptop ? 'max-w-lg' : isDesktop ? 'max-w-xl' : 'hidden'} flex-1`}>
-                <UnifiedSearch 
-                  placeholder={user ? "Search sessions, goals, community..." : "Search features, help, pricing..."} 
-                  variant="header"
-                />
-              </div>
-            </div>
-
-            {/* Right Section - Regional Selector, Notifications, User Menu */}
-            <div className="flex items-center space-x-3">
-              
-              {/* Regional Preferences Selector */}
-              <CompactRegionalSelector />
-              
-              {user ? (
-                <>
-                  {/* Notifications */}
-                  <EnhancedNotificationCenter />
-                  
-                  {/* User Menu */}
-                  <EnhancedUserMenu />
-                </>
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <Button 
-                    variant="ghost" 
-                    onClick={() => navigate('/auth')}
-                    className="text-sm font-medium"
-                  >
-                    Sign In
-                  </Button>
-                  <Button 
-                    onClick={handleGetStarted}
-                    className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white text-sm font-medium px-4 py-2"
-                  >
-                    Get Started
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-    </SafeComponentWrapper>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="flex items-center space-x-2 px-3 py-2 h-10 hover:bg-therapy-50/80 text-gray-900 transition-all duration-200 ease-out hover:scale-105 transform-gpu group/trigger">
+          <Globe className="h-4 w-4 text-therapy-500 group-hover/trigger:text-therapy-600 transition-colors" />
+          <span className="font-medium text-sm">Region</span>
+          <ChevronDown className="h-3.5 w-3.5 text-gray-500 group-hover/trigger:text-gray-600 transition-all duration-200 group-hover/trigger:rotate-180" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuItem>
+          Global
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          United States
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          Canada
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          United Kingdom
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
