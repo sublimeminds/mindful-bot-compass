@@ -45,19 +45,14 @@ function App() {
                         <Routes>
                           {/* Main landing page with header/footer layout */}
                           <Route path="/" element={
-                            (() => {
-                              console.log('🚨 EMERGENCY DEBUG: Index Route element function executing');
-                              return (
-                                <HeaderErrorBoundary componentName="App-IndexRoute">
-                                  <div className="bg-purple-200 p-4">
-                                    <p className="font-bold text-center">🚨 EMERGENCY: Route wrapper executing</p>
-                                    <PageLayout>
-                                      <Index />
-                                    </PageLayout>
-                                  </div>
-                                </HeaderErrorBoundary>
-                              );
-                            })()
+                            <HeaderErrorBoundary componentName="App-IndexRoute">
+                              <div className="bg-purple-200 p-4">
+                                <p className="font-bold text-center">🚨 EMERGENCY: Route wrapper executing</p>
+                              </div>
+                              <PageLayout>
+                                <Index />
+                              </PageLayout>
+                            </HeaderErrorBoundary>
                           } />
                           
                           {/* Simple landing page alternative */}
