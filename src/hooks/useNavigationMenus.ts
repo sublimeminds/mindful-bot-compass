@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { MenuConfiguration, NavigationMenu, NavigationMenuItem, NavigationMenuCategory } from '@/types/navigation';
+import { supabase } from '@/integrations/supabase/client';
 
 // Fallback menu data (current hardcoded structure)
 const fallbackMenuData: MenuConfiguration = {
@@ -25,11 +26,40 @@ export const useNavigationMenus = () => {
     setError(null);
     
     try {
-      // Database tables don't exist yet, using fallback data
-      console.warn('Navigation menu tables not yet created, using fallback data');
-      setMenuConfig(fallbackMenuData);
+      const { data: menus } = await supabase
+        .from('navigation_menus')
+        .select(`
+          *,
+          navigation_menu_categories(*),
+          navigation_menu_items(*)
+        `)
+        .eq('is_active', true)
+        .order('position');
+
+      const { data: categories } = await supabase
+        .from('navigation_menu_categories')
+        .select('*')
+        .eq('is_active', true)
+        .order('position');
+
+      const { data: items } = await supabase
+        .from('navigation_menu_items')
+        .select('*')
+        .eq('is_active', true)
+        .order('position');
+
+      if (menus && categories && items) {
+        setMenuConfig({
+          menus: menus || [],
+          categories: categories || [],
+          items: items || []
+        });
+      } else {
+        console.warn('Using fallback menu data');
+        setMenuConfig(fallbackMenuData);
+      }
     } catch (err) {
-      console.warn('Database not available, using fallback menus');
+      console.warn('Database not available, using fallback menus:', err);
       setMenuConfig(fallbackMenuData);
     } finally {
       setLoading(false);

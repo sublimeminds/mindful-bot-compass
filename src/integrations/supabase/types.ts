@@ -6170,6 +6170,143 @@ export type Database = {
         }
         Relationships: []
       }
+      navigation_menu_categories: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean
+          label: string
+          menu_id: string
+          name: string
+          position: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean
+          label: string
+          menu_id: string
+          name: string
+          position?: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean
+          label?: string
+          menu_id?: string
+          name?: string
+          position?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "navigation_menu_categories_menu_id_fkey"
+            columns: ["menu_id"]
+            isOneToOne: false
+            referencedRelation: "navigation_menus"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      navigation_menu_items: {
+        Row: {
+          badge: string | null
+          category_id: string | null
+          created_at: string | null
+          description: string
+          gradient: string
+          href: string
+          icon: string
+          id: string
+          is_active: boolean
+          menu_id: string
+          position: number
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          badge?: string | null
+          category_id?: string | null
+          created_at?: string | null
+          description: string
+          gradient: string
+          href: string
+          icon: string
+          id?: string
+          is_active?: boolean
+          menu_id: string
+          position?: number
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          badge?: string | null
+          category_id?: string | null
+          created_at?: string | null
+          description?: string
+          gradient?: string
+          href?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          menu_id?: string
+          position?: number
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "navigation_menu_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "navigation_menu_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "navigation_menu_items_menu_id_fkey"
+            columns: ["menu_id"]
+            isOneToOne: false
+            referencedRelation: "navigation_menus"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      navigation_menus: {
+        Row: {
+          created_at: string | null
+          icon: string
+          id: string
+          is_active: boolean
+          label: string
+          name: string
+          position: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          icon: string
+          id?: string
+          is_active?: boolean
+          label: string
+          name: string
+          position?: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          icon?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          name?: string
+          position?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       neural_interface_sessions: {
         Row: {
           biometric_feedback: Json | null

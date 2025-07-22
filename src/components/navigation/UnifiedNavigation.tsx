@@ -6,6 +6,7 @@ import { Menu, X, Shield, ChevronDown } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import MobileMenu from './MobileMenu';
 import UserMenu from './UserMenu';
+import DatabaseHeaderDropdowns from './DatabaseHeaderDropdowns';
 
 const UnifiedNavigation = () => {
   const { user } = useAuth();
@@ -16,41 +17,21 @@ const UnifiedNavigation = () => {
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+          {/* Logo */}
           <div className="flex items-center">
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <Link to="/dashboard" className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Dashboard</Link>
-                <Link to="/crisis-management" className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Crisis</Link>
-                <Link to="/community" className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Community</Link>
-                <Link to="/notebook" className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Journal</Link>
-                <Link to="/dashboard/audio-library" className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Audio</Link>
-                <Link to="/smart-scheduling" className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Schedule</Link>
-                
-                {/* Security & Compliance Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium flex items-center space-x-1">
-                    <Shield className="h-4 w-4" />
-                    <span>Security</span>
-                    <ChevronDown className="h-3 w-3" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem asChild>
-                      <Link to="/compliance" className="w-full">
-                        Security & Compliance
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/privacy" className="w-full">
-                        Privacy Center
-                      </Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                
-                <Link to="/help" className="text-gray-500 hover:bg-gray-100 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Help</Link>
-              </div>
-            </div>
+            <Link to="/" className="flex items-center">
+              <span className="text-xl font-bold bg-gradient-to-r from-therapy-600 to-harmony-600 bg-clip-text text-transparent">
+                TherapySync
+              </span>
+            </Link>
           </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex lg:items-center lg:space-x-4">
+            <DatabaseHeaderDropdowns />
+          </div>
+
+          {/* User Menu / Auth Buttons */}
           <div className="hidden md:block">
             <div className="ml-4 flex items-center md:ml-6">
               {user ? (
