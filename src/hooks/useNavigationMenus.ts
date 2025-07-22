@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { MenuConfiguration, NavigationMenu, NavigationMenuItem, NavigationMenuCategory } from '@/types/navigation';
 
 // Fallback menu data (current hardcoded structure)
@@ -26,35 +25,9 @@ export const useNavigationMenus = () => {
     setError(null);
     
     try {
-      // Try to fetch from database
-      const { data: menus, error: menusError } = await supabase
-        .from('navigation_menus')
-        .select('*')
-        .eq('is_active', true)
-        .order('position');
-
-      const { data: items, error: itemsError } = await supabase
-        .from('navigation_menu_items')
-        .select('*')
-        .eq('is_active', true)
-        .order('position');
-
-      const { data: categories, error: categoriesError } = await supabase
-        .from('navigation_menu_categories')
-        .select('*')
-        .eq('is_active', true)
-        .order('position');
-
-      if (menusError || itemsError || categoriesError) {
-        console.warn('Failed to fetch navigation menus from database, using fallback');
-        setMenuConfig(fallbackMenuData);
-      } else {
-        setMenuConfig({
-          menus: menus || [],
-          items: items || [],
-          categories: categories || []
-        });
-      }
+      // Database tables don't exist yet, using fallback data
+      console.warn('Navigation menu tables not yet created, using fallback data');
+      setMenuConfig(fallbackMenuData);
     } catch (err) {
       console.warn('Database not available, using fallback menus');
       setMenuConfig(fallbackMenuData);
@@ -65,13 +38,9 @@ export const useNavigationMenus = () => {
 
   const updateMenu = async (menu: Partial<NavigationMenu> & { id: string }) => {
     try {
-      const { error } = await supabase
-        .from('navigation_menus')
-        .update(menu)
-        .eq('id', menu.id);
-
-      if (error) throw error;
-      await fetchMenus();
+      // TODO: Implement database update when tables are created
+      console.log('Menu update requested:', menu);
+      setError('Menu updates not yet implemented - database tables needed');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update menu');
     }
@@ -79,13 +48,9 @@ export const useNavigationMenus = () => {
 
   const updateMenuItem = async (item: Partial<NavigationMenuItem> & { id: string }) => {
     try {
-      const { error } = await supabase
-        .from('navigation_menu_items')
-        .update(item)
-        .eq('id', item.id);
-
-      if (error) throw error;
-      await fetchMenus();
+      // TODO: Implement database update when tables are created
+      console.log('Menu item update requested:', item);
+      setError('Menu item updates not yet implemented - database tables needed');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update menu item');
     }
