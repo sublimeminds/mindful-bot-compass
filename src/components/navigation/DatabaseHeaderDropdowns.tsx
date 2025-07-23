@@ -1,140 +1,68 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigationMenus } from '@/hooks/useNavigationMenus';
-import HeaderDropdownTrigger from './HeaderDropdownTrigger';
-import HeaderDropdownCard from './HeaderDropdownCard';
-import HeaderDropdownItem from './HeaderDropdownItem';
-import { 
-  Brain, 
-  Settings, 
-  BarChart3, 
-  Building, 
-  BookOpen, 
-  Target, 
-  Heart,
-  User,
-  Calendar,
-  TrendingUp,
-  Users,
-  Book,
-  Shield,
-  Database,
-  Globe,
-  Smartphone,
-  PieChart
-} from 'lucide-react';
+import { NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuRoot, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
+import { ChevronDown } from 'lucide-react';
+import { HeaderDropdownCard } from './HeaderDropdownCard';
+import { HeaderDropdownItem } from './HeaderDropdownItem';
+import { getItemIcon } from '@/utils/iconUtils';
 
-const getMenuIcon = (iconName: string) => {
-  const iconMap: Record<string, any> = {
-    'Brain': Brain,
-    'Settings': Settings,
-    'BarChart3': BarChart3,
-    'Building': Building,
-    'BookOpen': BookOpen,
-    'Target': Target,
-    'Database': Database,
-    'Globe': Globe,
-    'Smartphone': Smartphone,
-    'PieChart': PieChart
-  };
-  
-  return iconMap[iconName] || Brain;
-};
-
-const getItemIcon = (iconName: string) => {
-  const iconMap: Record<string, any> = {
-    'Brain': Brain,
-    'Heart': Heart,
-    'BarChart3': BarChart3,
-    'TrendingUp': TrendingUp,
-    'Target': Target,
-    'Settings': Settings,
-    'Building': Building,
-    'BookOpen': BookOpen,
-    'User': User,
-    'Calendar': Calendar,
-    'Users': Users,
-    'Book': Book,
-    'Shield': Shield,
-    'Database': Database,
-    'Globe': Globe,
-    'Smartphone': Smartphone,
-    'PieChart': PieChart
-  };
-  
-  return iconMap[iconName] || Target;
-};
-
-const DatabaseHeaderDropdowns = () => {
-  console.log('🔍 DatabaseHeaderDropdowns: Component rendering');
-  
-  const { menuConfig, loading, error } = useNavigationMenus();
-
-  console.log('🔍 DatabaseHeaderDropdowns - Render state:', {
-    menusCount: menuConfig.menus.length,
-    itemsCount: menuConfig.items.length,
-    loading,
-    error,
-    firstMenu: menuConfig.menus[0]?.name
-  });
+const DatabaseHeaderDropdowns: React.FC = () => {
+  const { menuConfig, loading } = useNavigationMenus();
 
   if (loading) {
-    console.log('🔍 DatabaseHeaderDropdowns: Showing loading state');
-    return (
-      <div className="flex items-center space-x-6">
-        <div className="h-6 w-20 bg-gray-200 animate-pulse rounded"></div>
-        <div className="h-6 w-20 bg-gray-200 animate-pulse rounded"></div>
-        <div className="h-6 w-20 bg-gray-200 animate-pulse rounded"></div>
-      </div>
-    );
+    return <div className="flex space-x-8">Loading...</div>;
   }
 
-  if (error) {
-    console.error('🚨 DatabaseHeaderDropdowns: Navigation menu error:', error);
-    // Still show navigation even with error
-  }
-
-  console.log('🔍 DatabaseHeaderDropdowns: Rendering menus');
+  // Filter out active menus and sort by position
+  const activeMenus = menuConfig.menus
+    .filter(menu => menu.is_active)
+    .sort((a, b) => a.position - b.position);
 
   return (
-    <nav className="flex items-center space-x-6">
-      {menuConfig.menus.map((menu) => {
-        const IconComponent = getMenuIcon(menu.icon);
-        const menuItems = menuConfig.items.filter(item => item.menu_id === menu.id);
-        
-        console.log(`🔍 Menu ${menu.name} (${menu.label}) has ${menuItems.length} items`);
+    <NavigationMenuRoot className="relative z-10">
+      <NavigationMenuList className="flex space-x-8">
+        {activeMenus.map((menu) => {
+          // Get items for this menu
+          const menuItems = menuConfig.items
+            .filter(item => item.menu_id === menu.id && item.is_active)
+            .sort((a, b) => a.position - b.position);
 
-        return (
-          <div key={menu.id} className="relative group">
-            <HeaderDropdownTrigger
-              icon={IconComponent}
-              label={menu.label}
-            />
-            
-            {menuItems.length > 0 && (
-              <HeaderDropdownCard width="xl">
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                  {menuItems.map((item) => {
-                    const ItemIcon = getItemIcon(item.icon);
-                    return (
-                      <HeaderDropdownItem
-                        key={item.id}
-                        icon={ItemIcon}
-                        title={item.title}
-                        description={item.description}
-                        href={item.href}
-                        gradient={item.gradient}
-                        badge={item.badge}
-                      />
-                    );
-                  })}
-                </div>
-              </HeaderDropdownCard>
-            )}
-          </div>
-        );
-      })}
-    </nav>
+          if (menuItems.length === 0) return null;
+
+          return (
+            <NavigationMenuItem key={menu.id}>
+              <NavigationMenuTrigger className="group flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-900 hover:text-therapy-700 transition-colors">
+                {menu.label}
+                <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
+              </NavigationMenuTrigger>
+              
+              <NavigationMenuContent>
+                <HeaderDropdownCard>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
+                    {menuItems.map((item) => {
+                      const IconComponent = getItemIcon(item.icon);
+                      return (
+                        <HeaderDropdownItem
+                          key={item.id}
+                          title={item.title}
+                          description={item.description}
+                          href={item.href}
+                          icon={IconComponent}
+                          gradient={item.gradient}
+                          compact={true}
+                        />
+                      );
+                    })}
+                  </div>
+                </HeaderDropdownCard>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          );
+        })}
+      </NavigationMenuList>
+    </NavigationMenuRoot>
   );
 };
 
