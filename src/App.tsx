@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAuthProvider';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from '@/utils/BulletproofTheme';
 import Header from '@/components/Header';
 import DatabaseFooter from '@/components/DatabaseFooter';
 import Index from '@/pages/Index';

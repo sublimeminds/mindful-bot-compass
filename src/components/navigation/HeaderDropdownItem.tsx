@@ -12,6 +12,7 @@ interface HeaderDropdownItemProps {
   gradient?: string;
   badge?: string;
   className?: string;
+  compact?: boolean;
 }
 
 const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
@@ -21,29 +22,32 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
   href,
   gradient = 'from-therapy-500 to-therapy-600',
   badge,
-  className = ''
+  className = '',
+  compact = false
 }) => {
   return (
     <Link
       to={href}
       className={`
-        group/item flex items-start gap-4 p-4 rounded-xl 
+        group/item flex items-start gap-4 rounded-xl 
         hover:bg-gray-50 transition-all duration-200 hover:shadow-md
         border border-transparent hover:border-gray-200
+        ${compact ? 'p-3' : 'p-4'}
         ${className}
       `}
     >
       <div className={`
-        flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br ${gradient} 
+        flex-shrink-0 rounded-lg bg-gradient-to-br ${gradient} 
         flex items-center justify-center shadow-lg
         group-hover/item:scale-105 transition-transform duration-200
+        ${compact ? 'w-10 h-10' : 'w-12 h-12'}
       `}>
-        <Icon className="h-6 w-6 text-white" />
+        <Icon className={`text-white ${compact ? 'h-5 w-5' : 'h-6 w-6'}`} />
       </div>
       
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <h4 className="font-semibold text-gray-900 group-hover/item:text-therapy-700 transition-colors">
+          <h4 className={`font-semibold text-gray-900 group-hover/item:text-therapy-700 transition-colors ${compact ? 'text-sm' : ''}`}>
             {title}
           </h4>
           {badge && (
@@ -52,7 +56,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
             </Badge>
           )}
         </div>
-        <p className="text-sm text-gray-600 leading-relaxed">
+        <p className={`text-gray-600 leading-relaxed ${compact ? 'text-xs' : 'text-sm'}`}>
           {description}
         </p>
       </div>
