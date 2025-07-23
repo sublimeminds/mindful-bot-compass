@@ -8,7 +8,7 @@ import Logo from '@/components/navigation/Logo';
 import UserMenu from './UserMenu';
 import SearchPopup from '@/components/search/SearchPopup';
 import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
-import CompactRegionalSelector from '@/components/ui/CompactRegionalSelector';
+import CompactRegionalSelector from '@/components/regional/CompactRegionalSelector';
 import { Search } from 'lucide-react';
 
 const DesktopHeaderFull = () => {
@@ -25,7 +25,7 @@ const DesktopHeaderFull = () => {
             <DatabaseHeaderDropdowns />
           </div>
 
-          {/* Regional Preferences - Compact All-in-One Selector */}
+          {/* Regional Preferences - Beautiful All-in-One Selector */}
           <div className="flex items-center">
             <CompactRegionalSelector />
           </div>
