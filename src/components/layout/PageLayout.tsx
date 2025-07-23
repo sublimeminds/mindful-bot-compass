@@ -12,7 +12,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, className = "" }) => 
   console.log('🔍 PageLayout: Component rendering');
   
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
       <main className={`flex-1 ${className}`}>
         {children}

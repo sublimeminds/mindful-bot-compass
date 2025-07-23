@@ -6,14 +6,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { Menu, X } from 'lucide-react';
 
 const UnifiedNavigation = () => {
-  console.log('🔍 UnifiedNavigation: Component rendering');
+  console.log('🔍 UnifiedNavigation: Component rendering - SHOULD BE VISIBLE');
   
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <nav className="bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -22,7 +22,7 @@ const UnifiedNavigation = () => {
               className="flex items-center cursor-pointer hover:opacity-80 transition-opacity" 
               onClick={() => navigate('/')}
             >
-              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 TherapySync
               </span>
             </div>
@@ -54,7 +54,7 @@ const UnifiedNavigation = () => {
               ) : (
                 <div className="flex items-center space-x-2">
                   <Button variant="ghost" onClick={() => navigate('/login')}>Sign In</Button>
-                  <Button onClick={() => navigate('/register')} className="bg-gradient-to-r from-harmony-500 to-flow-500 hover:from-harmony-600 hover:to-flow-600">Get Started</Button>
+                  <Button onClick={() => navigate('/register')} className="bg-blue-600 hover:bg-blue-700 text-white">Get Started</Button>
                 </div>
               )}
             </div>
@@ -91,7 +91,7 @@ const UnifiedNavigation = () => {
                 <Button onClick={() => navigate('/login')} variant="ghost" className="w-full mb-2">
                   Sign In
                 </Button>
-                <Button onClick={() => navigate('/register')} className="w-full">
+                <Button onClick={() => navigate('/register')} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                   Get Started
                 </Button>
               </div>
