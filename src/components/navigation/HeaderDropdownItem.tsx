@@ -25,6 +25,8 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
   className = '',
   compact = false
 }) => {
+  console.log(`🔍 HeaderDropdownItem rendering: ${title} with gradient: ${gradient}`);
+  
   return (
     <Link
       to={href}

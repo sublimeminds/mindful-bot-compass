@@ -11,6 +11,8 @@ import { getItemIcon } from '@/utils/iconUtils';
 const DatabaseHeaderDropdowns: React.FC = () => {
   const { menuConfig, loading } = useNavigationMenus();
 
+  console.log('🔍 DatabaseHeaderDropdowns - menuConfig:', menuConfig);
+
   if (loading) {
     return <div className="flex space-x-8">Loading...</div>;
   }
@@ -19,6 +21,8 @@ const DatabaseHeaderDropdowns: React.FC = () => {
   const activeMenus = menuConfig.menus
     .filter(menu => menu.is_active)
     .sort((a, b) => a.position - b.position);
+
+  console.log('🔍 Active menus:', activeMenus);
 
   return (
     <NavigationMenu className="relative z-50">
@@ -29,7 +33,12 @@ const DatabaseHeaderDropdowns: React.FC = () => {
             .filter(item => item.menu_id === menu.id && item.is_active)
             .sort((a, b) => a.position - b.position);
 
-          if (menuItems.length === 0) return null;
+          console.log(`🔍 Menu "${menu.label}" items:`, menuItems);
+
+          if (menuItems.length === 0) {
+            console.log(`⚠️ No items found for menu: ${menu.label}`);
+            return null;
+          }
 
           // Get menu icon
           const MenuIcon = getItemIcon(menu.icon);
@@ -42,11 +51,12 @@ const DatabaseHeaderDropdowns: React.FC = () => {
                 <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
               </NavigationMenuTrigger>
               
-              <NavigationMenuContent className="z-50">
+              <NavigationMenuContent className="z-50 bg-white shadow-lg border border-gray-200 rounded-lg">
                 <HeaderDropdownCard>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
                     {menuItems.map((item) => {
                       const IconComponent = getItemIcon(item.icon);
+                      console.log(`🔍 Rendering item: ${item.title} with icon: ${item.icon}`);
                       return (
                         <HeaderDropdownItem
                           key={item.id}
