@@ -2,6 +2,8 @@
 import React from 'react';
 
 const Footer = () => {
+  console.log('🔍 Footer: Component rendering');
+  
   return (
     <footer className="w-full bg-background border-t">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -16,8 +18,8 @@ const Footer = () => {
           <div>
             <h4 className="font-medium mb-3">Product</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="/features" className="hover:text-foreground">Features</a></li>
-              <li><a href="/pricing" className="hover:text-foreground">Pricing</a></li>
+              <li><a href="/#features" className="hover:text-foreground">Features</a></li>
+              <li><a href="/#pricing" className="hover:text-foreground">Pricing</a></li>
               <li><a href="/security" className="hover:text-foreground">Security</a></li>
             </ul>
           </div>
