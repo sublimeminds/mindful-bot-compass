@@ -5,7 +5,7 @@ const Footer = () => {
   console.log('🔍 Footer: Component rendering - SHOULD BE VISIBLE');
   
   return (
-    <footer className="w-full bg-white border-t border-gray-200 mt-auto">
+    <footer className="w-full bg-white border-t border-gray-200 mt-auto min-h-[200px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">

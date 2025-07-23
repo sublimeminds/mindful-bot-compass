@@ -8,14 +8,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAuthProvider';
 import { SuperAdminProvider } from '@/contexts/SuperAdminContext';
 import SuperAdminRouter from '@/components/SuperAdminRouter';
-import HeaderErrorBoundary from '@/components/HeaderErrorBoundary';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 // Lazy load pages
 const Index = lazy(() => import('./pages/Index'));
 const SimpleLandingPage = lazy(() => import('./components/SimpleLandingPage'));
-
-// Layout wrapper for public pages with header/footer
-import PageLayout from '@/components/layout/PageLayout';
 
 const queryClient = new QueryClient();
 
@@ -23,57 +21,55 @@ function App() {
   console.log('🔍 App: Component rendering');
   
   return (
-    <HeaderErrorBoundary componentName="App-Root">
-      <QueryClientProvider client={queryClient}>
-        <HeaderErrorBoundary componentName="App-Auth">
-          <BulletproofAuthProvider>
-            <HeaderErrorBoundary componentName="App-SuperAdmin">
-              <SuperAdminProvider>
-                <TooltipProvider>
-                  <Toaster />
-                  <Sonner />
-                  <BrowserRouter>
-                    <div className="min-h-screen bg-background font-sans antialiased">
-                      <Suspense fallback={
-                        <div className="min-h-screen flex items-center justify-center">
-                          <div className="text-center">
-                            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-                            <p className="mt-4 text-muted-foreground">Loading...</p>
-                          </div>
-                        </div>
-                      }>
-                        <Routes>
-                          {/* Main landing page with header/footer layout */}
-                          <Route path="/" element={
-                            <HeaderErrorBoundary componentName="App-IndexRoute">
-                              <PageLayout>
-                                <Index />
-                              </PageLayout>
-                            </HeaderErrorBoundary>
-                          } />
-                          
-                          {/* Simple landing page alternative */}
-                          <Route path="/simple" element={
-                            <HeaderErrorBoundary componentName="App-SimpleRoute">
-                              <PageLayout>
-                                <SimpleLandingPage />
-                              </PageLayout>
-                            </HeaderErrorBoundary>
-                          } />
-                          
-                          {/* Super Admin Routes - handled by SuperAdminRouter */}
-                          <Route path="/secure-admin-portal-x9k2/*" element={<SuperAdminRouter />} />
-                        </Routes>
-                      </Suspense>
+    <QueryClientProvider client={queryClient}>
+      <BulletproofAuthProvider>
+        <SuperAdminProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <div className="min-h-screen bg-background font-sans antialiased flex flex-col">
+                <Suspense fallback={
+                  <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+                      <p className="mt-4 text-muted-foreground">Loading...</p>
                     </div>
-                  </BrowserRouter>
-                </TooltipProvider>
-              </SuperAdminProvider>
-            </HeaderErrorBoundary>
-          </BulletproofAuthProvider>
-        </HeaderErrorBoundary>
-      </QueryClientProvider>
-    </HeaderErrorBoundary>
+                  </div>
+                }>
+                  <Routes>
+                    {/* Main routes with header/footer */}
+                    <Route path="/" element={
+                      <>
+                        <Header />
+                        <main className="flex-1">
+                          <Index />
+                        </main>
+                        <Footer />
+                      </>
+                    } />
+                    
+                    {/* Simple landing page with header/footer */}
+                    <Route path="/simple" element={
+                      <>
+                        <Header />
+                        <main className="flex-1">
+                          <SimpleLandingPage />
+                        </main>
+                        <Footer />
+                      </>
+                    } />
+                    
+                    {/* Super Admin Routes - no header/footer */}
+                    <Route path="/secure-admin-portal-x9k2/*" element={<SuperAdminRouter />} />
+                  </Routes>
+                </Suspense>
+              </div>
+            </BrowserRouter>
+          </TooltipProvider>
+        </SuperAdminProvider>
+      </BulletproofAuthProvider>
+    </QueryClientProvider>
   );
 }
 
