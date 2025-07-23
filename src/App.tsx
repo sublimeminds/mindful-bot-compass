@@ -18,7 +18,7 @@ const SimpleLandingPage = lazy(() => import('./components/SimpleLandingPage'));
 const queryClient = new QueryClient();
 
 function App() {
-  console.log('🔍 App: Component rendering');
+  console.log('🔍 App: Component rendering - ROOT LEVEL');
   
   return (
     <QueryClientProvider client={queryClient}>
@@ -28,36 +28,36 @@ function App() {
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              <div className="min-h-screen bg-background font-sans antialiased flex flex-col">
+              <div className="min-h-screen bg-white flex flex-col">
                 <Suspense fallback={
                   <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
-                      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-                      <p className="mt-4 text-muted-foreground">Loading...</p>
+                      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+                      <p className="mt-4 text-gray-600">Loading...</p>
                     </div>
                   </div>
                 }>
                   <Routes>
                     {/* Main routes with header/footer */}
                     <Route path="/" element={
-                      <>
+                      <div className="min-h-screen flex flex-col bg-white">
                         <Header />
-                        <main className="flex-1">
+                        <main className="flex-1 min-h-0">
                           <Index />
                         </main>
                         <Footer />
-                      </>
+                      </div>
                     } />
                     
                     {/* Simple landing page with header/footer */}
                     <Route path="/simple" element={
-                      <>
+                      <div className="min-h-screen flex flex-col bg-white">
                         <Header />
-                        <main className="flex-1">
+                        <main className="flex-1 min-h-0">
                           <SimpleLandingPage />
                         </main>
                         <Footer />
-                      </>
+                      </div>
                     } />
                     
                     {/* Super Admin Routes - no header/footer */}

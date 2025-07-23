@@ -6,14 +6,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { Menu, X } from 'lucide-react';
 
 const UnifiedNavigation = () => {
-  console.log('🔍 UnifiedNavigation: Component rendering - SHOULD BE VISIBLE');
+  console.log('🔍 UnifiedNavigation: Component rendering - NAVIGATION CONTENT');
   
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white">
+    <nav className="bg-white w-full" style={{ display: 'block' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
