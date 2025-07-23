@@ -16,6 +16,8 @@ interface SafeRouterState {
 
 class SafeRouterClass extends Component<SafeRouterProps, SafeRouterState> {
   private mounted = true;
+  private retryCount = 0;
+  private maxRetries = 10;
 
   constructor(props: SafeRouterProps) {
     super(props);
@@ -46,40 +48,52 @@ class SafeRouterClass extends Component<SafeRouterProps, SafeRouterState> {
   }
 
   private checkReactReadiness = () => {
+    if (!this.mounted) return;
+    
     try {
-      // Comprehensive React validation
-      if (
-        typeof React !== 'undefined' &&
-        React !== null &&
-        typeof React.useContext === 'function' &&
-        typeof React.useState === 'function' &&
-        typeof React.useEffect === 'function' &&
+      // More straightforward React validation
+      const reactChecks = [
+        typeof React !== 'undefined',
+        React !== null,
+        typeof React.useContext === 'function',
+        typeof React.useState === 'function',
+        typeof React.useEffect === 'function',
         typeof React.createElement === 'function'
-      ) {
-        // Test React.useContext specifically since that's what's failing
-        const testContext = React.createContext(null);
-        if (testContext && typeof testContext.Provider === 'function') {
-          if (this.mounted) {
-            console.log('SafeRouter: React is ready for routing');
-            this.setState({ isReactReady: true });
-          }
-          return;
-        }
+      ];
+
+      const allChecksPass = reactChecks.every(check => check === true);
+      
+      if (allChecksPass) {
+        console.log('SafeRouter: React is ready for routing');
+        this.setState({ isReactReady: true });
+        return;
       }
 
-      // If React isn't ready, retry after a delay
-      if (this.mounted) {
+      // If React isn't ready and we haven't exceeded max retries
+      if (this.retryCount < this.maxRetries) {
+        this.retryCount++;
+        console.log(`SafeRouter: React not ready, retry ${this.retryCount}/${this.maxRetries}`);
         setTimeout(this.checkReactReadiness, 100);
+      } else {
+        // Force initialization after max retries to prevent infinite loading
+        console.warn('SafeRouter: Max retries exceeded, forcing initialization');
+        this.setState({ isReactReady: true });
       }
     } catch (error) {
       console.error('SafeRouter: React readiness check failed:', error);
-      if (this.mounted) {
-        this.setState({ hasError: true, error: error as Error });
+      if (this.retryCount < this.maxRetries) {
+        this.retryCount++;
+        setTimeout(this.checkReactReadiness, 200);
+      } else {
+        // Force initialization even with errors to prevent infinite loading
+        console.warn('SafeRouter: Forcing initialization after error');
+        this.setState({ isReactReady: true });
       }
     }
   };
 
   private handleRetry = () => {
+    this.retryCount = 0;
     this.setState({ hasError: false, error: undefined, isReactReady: false });
     this.checkReactReadiness();
   };
@@ -124,6 +138,9 @@ class SafeRouterClass extends Component<SafeRouterProps, SafeRouterState> {
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
             <p className="text-muted-foreground">Initializing Router...</p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Attempt {this.retryCount} of {this.maxRetries}
+            </p>
           </div>
         </div>
       );
@@ -144,21 +161,35 @@ export const SafeRouter: React.FC<SafeRouterProps> = (props) => {
 };
 
 export const useSafeNavigation = () => {
-  const navigate = useNavigate();
-
-  const safeNavigate = useCallback((to: string, options?: { replace?: boolean }) => {
-    try {
-      navigate(to, options);
-    } catch (error) {
-      console.error('Navigation error:', error);
-      // Fallback to window.location
-      if (options?.replace) {
-        window.location.replace(to);
-      } else {
-        window.location.href = to;
+  try {
+    const navigate = useNavigate();
+    
+    const safeNavigate = useCallback((to: string, options?: { replace?: boolean }) => {
+      try {
+        navigate(to, options);
+      } catch (error) {
+        console.error('Navigation error:', error);
+        // Fallback to window.location
+        if (options?.replace) {
+          window.location.replace(to);
+        } else {
+          window.location.href = to;
+        }
       }
-    }
-  }, [navigate]);
+    }, [navigate]);
 
-  return { navigate: safeNavigate };
+    return { navigate: safeNavigate };
+  } catch (error) {
+    console.error('useSafeNavigation error:', error);
+    // Return a fallback navigation function
+    return {
+      navigate: (to: string, options?: { replace?: boolean }) => {
+        if (options?.replace) {
+          window.location.replace(to);
+        } else {
+          window.location.href = to;
+        }
+      }
+    };
+  }
 };
