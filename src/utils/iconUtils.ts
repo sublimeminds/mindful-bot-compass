@@ -14,6 +14,14 @@ import {
   BookOpen, 
   Book, 
   FileText,
+  Phone,
+  Video,
+  Mic,
+  Shield,
+  CreditCard,
+  Clock,
+  Globe,
+  Lightbulb,
   LucideIcon
 } from 'lucide-react';
 
@@ -33,6 +41,14 @@ const iconMap: Record<string, LucideIcon> = {
   BookOpen,
   Book,
   FileText,
+  Phone,
+  Video,
+  Mic,
+  Shield,
+  CreditCard,
+  Clock,
+  Globe,
+  Lightbulb,
 };
 
 export const getItemIcon = (iconName: string): LucideIcon => {
