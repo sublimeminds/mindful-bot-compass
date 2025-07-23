@@ -9,10 +9,10 @@ interface PageLayoutProps {
 }
 
 const PageLayout: React.FC<PageLayoutProps> = ({ children, className = "" }) => {
-  console.log('🔍 PageLayout: Component rendering');
+  console.log('🔍 PageLayout: Rendering with Header and Footer');
   
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col">
       <Header />
       <main className={`flex-1 ${className}`}>
         {children}
