@@ -10,6 +10,7 @@ import { SuperAdminProvider } from '@/contexts/SuperAdminContext';
 import SuperAdminRouter from '@/components/SuperAdminRouter';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import VisibilityTest from '@/components/VisibilityTest';
 
 // Lazy load pages
 const Index = lazy(() => import('./pages/Index'));
@@ -28,7 +29,14 @@ function App() {
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'white' }}>
+              <VisibilityTest />
+              <div style={{ 
+                minHeight: '100vh', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                backgroundColor: 'white',
+                paddingTop: '60px' // Account for fixed test header
+              }}>
                 <Suspense fallback={
                   <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
