@@ -21,7 +21,7 @@ const DatabaseHeaderDropdowns: React.FC = () => {
     .sort((a, b) => a.position - b.position);
 
   return (
-    <NavigationMenu className="relative z-10">
+    <NavigationMenu className="relative z-50">
       <NavigationMenuList className="flex space-x-8">
         {activeMenus.map((menu) => {
           // Get items for this menu
@@ -42,7 +42,7 @@ const DatabaseHeaderDropdowns: React.FC = () => {
                 <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
               </NavigationMenuTrigger>
               
-              <NavigationMenuContent>
+              <NavigationMenuContent className="z-50">
                 <HeaderDropdownCard>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
                     {menuItems.map((item) => {

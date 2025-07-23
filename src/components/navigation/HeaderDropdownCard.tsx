@@ -37,8 +37,8 @@ const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
   return (
     <div className={`
       ${getWidth()} p-6 
-      bg-white/98 backdrop-blur-lg shadow-2xl border border-gray-200 
-      rounded-xl
+      bg-white border border-gray-200 
+      rounded-xl shadow-xl
       z-50 ${className}
     `}>
       {title && (
