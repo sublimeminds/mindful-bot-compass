@@ -5,7 +5,9 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import DatabaseHeaderDropdowns from './DatabaseHeaderDropdowns';
 import Logo from '@/components/navigation/Logo';
-import { Bell, User, Search } from 'lucide-react';
+import UserMenu from './UserMenu';
+import SearchPopup from '@/components/search/SearchPopup';
+import { Bell, Search } from 'lucide-react';
 
 const DesktopHeaderFull = () => {
   const { user } = useAuth();
@@ -25,21 +27,26 @@ const DesktopHeaderFull = () => {
           <div className="flex items-center space-x-2">
             {user ? (
               <>
-                <Button variant="ghost" size="sm">
-                  <Search className="h-4 w-4" />
-                </Button>
+                <SearchPopup>
+                  <Button variant="ghost" size="sm">
+                    <Search className="h-4 w-4" />
+                  </Button>
+                </SearchPopup>
                 <Button variant="ghost" size="sm">
                   <Bell className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="sm">
-                  <User className="h-4 w-4" />
-                </Button>
+                <UserMenu />
                 <Button onClick={() => navigate('/dashboard')} variant="outline" size="sm">
                   Dashboard
                 </Button>
               </>
             ) : (
               <>
+                <SearchPopup>
+                  <Button variant="ghost" size="sm">
+                    <Search className="h-4 w-4" />
+                  </Button>
+                </SearchPopup>
                 <Button variant="ghost" onClick={() => navigate('/login')} size="sm">
                   Sign In
                 </Button>

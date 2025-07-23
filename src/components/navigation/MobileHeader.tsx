@@ -5,12 +5,13 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigationMenus } from '@/hooks/useNavigationMenus';
 import Logo from '@/components/navigation/Logo';
+import UserMenu from './UserMenu';
+import SearchPopup from '@/components/search/SearchPopup';
 import { 
   Menu, 
   X, 
   Search, 
   Bell, 
-  User, 
   ChevronRight,
   Home,
   Settings
@@ -51,14 +52,17 @@ const MobileHeader = () => {
 
         {/* Right side actions */}
         <div className="flex items-center space-x-2">
+          <SearchPopup>
+            <Button variant="ghost" size="sm">
+              <Search className="h-5 w-5" />
+            </Button>
+          </SearchPopup>
           {user && (
             <>
               <Button variant="ghost" size="sm">
-                <Search className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="sm">
                 <Bell className="h-5 w-5" />
               </Button>
+              <UserMenu />
             </>
           )}
           <Button variant="ghost" size="sm" onClick={toggleMobileMenu}>
@@ -74,14 +78,14 @@ const MobileHeader = () => {
             {/* User Section */}
             {user ? (
               <div className="px-4 py-3 border-b border-gray-200">
-                <div className="flex items-center space-x-3">
-                  <div className="h-10 w-10 bg-therapy-100 rounded-full flex items-center justify-center">
-                    <User className="h-5 w-5 text-therapy-600" />
-                  </div>
+                <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900">Welcome back!</p>
                     <p className="text-sm text-gray-500">Manage your therapy</p>
                   </div>
+                  <Button onClick={() => navigate('/dashboard')} size="sm">
+                    Dashboard
+                  </Button>
                 </div>
               </div>
             ) : (

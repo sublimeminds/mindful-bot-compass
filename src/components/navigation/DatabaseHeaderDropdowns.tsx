@@ -4,7 +4,20 @@ import { useNavigationMenus } from '@/hooks/useNavigationMenus';
 import HeaderDropdownTrigger from './HeaderDropdownTrigger';
 import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
-import { Brain, Settings, BarChart3, Building, BookOpen, Target } from 'lucide-react';
+import { 
+  Brain, 
+  Settings, 
+  BarChart3, 
+  Building, 
+  BookOpen, 
+  Target, 
+  Heart,
+  User,
+  Calendar,
+  TrendingUp,
+  Users,
+  Book
+} from 'lucide-react';
 
 const getMenuIcon = (iconName: string) => {
   const iconMap: Record<string, any> = {
@@ -22,13 +35,17 @@ const getMenuIcon = (iconName: string) => {
 const getItemIcon = (iconName: string) => {
   const iconMap: Record<string, any> = {
     'Brain': Brain,
-    'Heart': Target,
+    'Heart': Heart,
     'BarChart3': BarChart3,
-    'TrendingUp': BarChart3,
+    'TrendingUp': TrendingUp,
     'Target': Target,
     'Settings': Settings,
     'Building': Building,
-    'BookOpen': BookOpen
+    'BookOpen': BookOpen,
+    'User': User,
+    'Calendar': Calendar,
+    'Users': Users,
+    'Book': Book
   };
   
   return iconMap[iconName] || Target;
