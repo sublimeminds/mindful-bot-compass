@@ -1,14 +1,16 @@
 
 import React from 'react';
-import UnifiedNavigation from '@/components/navigation/UnifiedNavigation';
+import DesktopHeaderFull from '@/components/navigation/DesktopHeaderFull';
+import MobileHeader from '@/components/navigation/MobileHeader';
 
 const Header = () => {
-  console.log('🔍 Header: Component rendering - SHOULD BE VISIBLE AT TOP');
+  console.log('🔍 Header: Rendering responsive header with database-driven navigation');
   
   return (
-    <header className="w-full bg-white border-b border-gray-200 shadow-sm">
-      <UnifiedNavigation />
-    </header>
+    <>
+      <DesktopHeaderFull />
+      <MobileHeader />
+    </>
   );
 };
 

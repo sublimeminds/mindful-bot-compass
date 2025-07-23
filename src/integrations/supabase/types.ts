@@ -4833,6 +4833,116 @@ export type Database = {
         }
         Relationships: []
       }
+      footer_content: {
+        Row: {
+          content_key: string
+          content_type: string
+          content_value: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          language_code: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          content_key: string
+          content_type?: string
+          content_value: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          language_code?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          content_key?: string
+          content_type?: string
+          content_value?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          language_code?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      footer_links: {
+        Row: {
+          created_at: string | null
+          href: string
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          opens_in_new_tab: boolean | null
+          position: number
+          section_id: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          href: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          opens_in_new_tab?: boolean | null
+          position?: number
+          section_id: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          href?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          opens_in_new_tab?: boolean | null
+          position?: number
+          section_id?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "footer_links_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "footer_sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      footer_sections: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          label: string
+          name: string
+          position: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          label: string
+          name: string
+          position?: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          label?: string
+          name?: string
+          position?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       global_cultural_contexts: {
         Row: {
           communication_style: string

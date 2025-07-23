@@ -65,7 +65,7 @@ const DatabaseHeaderDropdowns = () => {
   console.log('🔍 DatabaseHeaderDropdowns: Rendering menus');
 
   return (
-    <div className="flex items-center space-x-6">
+    <nav className="flex items-center space-x-6">
       {menuConfig.menus.map((menu) => {
         const IconComponent = getMenuIcon(menu.icon);
         const menuItems = menuConfig.items.filter(item => item.menu_id === menu.id);
@@ -73,44 +73,36 @@ const DatabaseHeaderDropdowns = () => {
         console.log(`🔍 Menu ${menu.name} (${menu.label}) has ${menuItems.length} items`);
 
         return (
-          <DropdownMenu key={menu.id}>
-            <DropdownMenuTrigger asChild>
-              <HeaderDropdownTrigger
-                icon={IconComponent}
-                label={menu.label}
-              />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent asChild>
+          <div key={menu.id} className="relative group">
+            <button className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-therapy-700 transition-colors">
+              <IconComponent className="h-4 w-4" />
+              <span>{menu.label}</span>
+            </button>
+            
+            {menuItems.length > 0 && (
               <HeaderDropdownCard width="adaptive">
                 <div className="space-y-2">
-                  {menuItems.length > 0 ? (
-                    menuItems.map((item) => {
-                      const ItemIcon = getItemIcon(item.icon);
-                      return (
-                        <HeaderDropdownItem
-                          key={item.id}
-                          icon={ItemIcon}
-                          title={item.title}
-                          description={item.description}
-                          href={item.href}
-                          gradient={item.gradient}
-                          badge={item.badge}
-                        />
-                      );
-                    })
-                  ) : (
-                    <div className="p-4 text-center text-gray-500">
-                      <p className="text-sm">Coming soon...</p>
-                      <p className="text-xs mt-1">New features will appear here</p>
-                    </div>
-                  )}
+                  {menuItems.map((item) => {
+                    const ItemIcon = getItemIcon(item.icon);
+                    return (
+                      <HeaderDropdownItem
+                        key={item.id}
+                        icon={ItemIcon}
+                        title={item.title}
+                        description={item.description}
+                        href={item.href}
+                        gradient={item.gradient}
+                        badge={item.badge}
+                      />
+                    );
+                  })}
                 </div>
               </HeaderDropdownCard>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            )}
+          </div>
         );
       })}
-    </div>
+    </nav>
   );
 };
 
