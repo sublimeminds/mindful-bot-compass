@@ -1,53 +1,51 @@
 
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { SessionContextProvider } from '@supabase/auth-helpers-react';
-import { supabase } from '@/integrations/supabase/client';
+import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAuthProvider';
+import { ThemeProvider } from '@/components/theme-provider';
+import Header from '@/components/Header';
+import DatabaseFooter from '@/components/DatabaseFooter';
 import Index from '@/pages/Index';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
 import SearchResults from '@/pages/SearchResults';
+import './App.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: (failureCount, error) => {
-        if (error && 'status' in error && typeof error.status === 'number') {
-          return error.status >= 500 && failureCount < 3;
-        }
-        return failureCount < 3;
-      },
+      retry: 3,
       staleTime: 5 * 60 * 1000,
-      gcTime: 10 * 60 * 1000,
     },
   },
 });
 
-const App = () => {
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionContextProvider supabaseClient={supabase}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/search" element={<SearchResults />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </SessionContextProvider>
+      <ThemeProvider defaultTheme="light" storageKey="therapysync-theme">
+        <BulletproofAuthProvider>
+          <Router>
+            <div className="min-h-screen bg-background">
+              <Header />
+              <main>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/search" element={<SearchResults />} />
+                </Routes>
+              </main>
+              <DatabaseFooter />
+              <Toaster />
+              <Sonner />
+            </div>
+          </Router>
+        </BulletproofAuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
-};
+}
 
 export default App;

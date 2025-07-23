@@ -16,7 +16,12 @@ import {
   Calendar,
   TrendingUp,
   Users,
-  Book
+  Book,
+  Shield,
+  Database,
+  Globe,
+  Smartphone,
+  PieChart
 } from 'lucide-react';
 
 const getMenuIcon = (iconName: string) => {
@@ -26,7 +31,11 @@ const getMenuIcon = (iconName: string) => {
     'BarChart3': BarChart3,
     'Building': Building,
     'BookOpen': BookOpen,
-    'Target': Target
+    'Target': Target,
+    'Database': Database,
+    'Globe': Globe,
+    'Smartphone': Smartphone,
+    'PieChart': PieChart
   };
   
   return iconMap[iconName] || Brain;
@@ -45,7 +54,12 @@ const getItemIcon = (iconName: string) => {
     'User': User,
     'Calendar': Calendar,
     'Users': Users,
-    'Book': Book
+    'Book': Book,
+    'Shield': Shield,
+    'Database': Database,
+    'Globe': Globe,
+    'Smartphone': Smartphone,
+    'PieChart': PieChart
   };
   
   return iconMap[iconName] || Target;
@@ -98,8 +112,8 @@ const DatabaseHeaderDropdowns = () => {
             />
             
             {menuItems.length > 0 && (
-              <HeaderDropdownCard width="adaptive">
-                <div className="space-y-2">
+              <HeaderDropdownCard width="xl">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   {menuItems.map((item) => {
                     const ItemIcon = getItemIcon(item.icon);
                     return (

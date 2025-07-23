@@ -7,7 +7,8 @@ import DatabaseHeaderDropdowns from './DatabaseHeaderDropdowns';
 import Logo from '@/components/navigation/Logo';
 import UserMenu from './UserMenu';
 import SearchPopup from '@/components/search/SearchPopup';
-import { Bell, Search } from 'lucide-react';
+import EnhancedNotificationCenter from '@/components/notifications/EnhancedNotificationCenter';
+import { Search } from 'lucide-react';
 
 const DesktopHeaderFull = () => {
   const { user } = useAuth();
@@ -32,9 +33,7 @@ const DesktopHeaderFull = () => {
                     <Search className="h-4 w-4" />
                   </Button>
                 </SearchPopup>
-                <Button variant="ghost" size="sm">
-                  <Bell className="h-4 w-4" />
-                </Button>
+                <EnhancedNotificationCenter />
                 <UserMenu />
                 <Button onClick={() => navigate('/dashboard')} variant="outline" size="sm">
                   Dashboard

@@ -1,211 +1,129 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Bell, Check, X, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { 
-  Bell, 
-  BellOff, 
-  Check, 
-  X, 
-  Heart,
-  Target,
-  Calendar,
-  TrendingUp,
-  Award,
-  AlertTriangle,
-  ExternalLink,
-  Settings
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useNotifications } from '@/hooks/useNotifications';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { useIntelligentNotificationsData } from '@/hooks/useIntelligentNotificationsData';
+import { formatDistanceToNow } from 'date-fns';
 
 const EnhancedNotificationCenter = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
   const { 
     notifications, 
     unreadCount, 
     isLoading, 
-    markAsRead, 
-    markAllAsRead 
-  } = useNotifications();
+    markAsRead,
+    isMarkingAsRead 
+  } = useIntelligentNotificationsData();
 
   const handleMarkAsRead = async (notificationId: string) => {
     await markAsRead(notificationId);
   };
 
-  const handleMarkAllAsRead = async () => {
-    await markAllAsRead();
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'border-l-red-500 bg-red-50/80';
-      case 'medium': return 'border-l-therapy-500 bg-therapy-50/80';
-      case 'low': return 'border-l-green-500 bg-green-50/80';
-      default: return 'border-l-gray-500 bg-gray-50/80';
-    }
-  };
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'session_reminder': return <Calendar className="h-4 w-4 text-therapy-600" />;
-      case 'milestone_achieved': return <Award className="h-4 w-4 text-balance-600" />;
-      case 'progress_update': return <TrendingUp className="h-4 w-4 text-flow-600" />;
-      case 'crisis_alert': return <AlertTriangle className="h-4 w-4 text-red-600" />;
-      case 'setup_reminder': return <Settings className="h-4 w-4 text-therapy-600" />;
-      case 'therapy_plan_reminder': return <Calendar className="h-4 w-4 text-calm-600" />;
-      default: return <Bell className="h-4 w-4 text-gray-600" />;
-    }
-  };
-
-  const formatTime = (date: Date) => {
-    const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes}m ago`;
-    } else if (diffInMinutes < 1440) {
-      return `${Math.floor(diffInMinutes / 60)}h ago`;
-    } else {
-      return `${Math.floor(diffInMinutes / 1440)}d ago`;
-    }
-  };
-
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="relative h-10 w-10 rounded-full hover:bg-therapy-50 transition-all duration-200 hover:scale-105"
-        >
-          <Bell className="h-5 w-5 text-therapy-600" />
+        <Button variant="ghost" size="sm" className="relative">
+          <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
             <Badge 
-              className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-gradient-to-r from-therapy-500 to-calm-500 text-white border-0 animate-pulse"
+              variant="destructive" 
+              className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
             >
-              {unreadCount > 9 ? '9+' : unreadCount}
+              {unreadCount > 99 ? '99+' : unreadCount}
             </Badge>
           )}
         </Button>
       </PopoverTrigger>
-      
-      <PopoverContent className="w-96 p-0 bg-white/95 backdrop-blur-md border border-therapy-200 shadow-xl" align="end">
-        <Card className="border-0 shadow-none">
-          <CardHeader className="pb-3 bg-gradient-to-r from-therapy-50 to-calm-50 border-b border-therapy-100">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold text-therapy-800 flex items-center">
-                <Bell className="h-5 w-5 mr-2" />
-                Notifications
-              </CardTitle>
-              {unreadCount > 0 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleMarkAllAsRead}
-                  className="text-sm text-therapy-600 hover:text-therapy-700 hover:bg-therapy-100"
+      <PopoverContent className="w-80 p-0" align="end">
+        <div className="p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-gray-900">Notifications</h3>
+            <Button variant="ghost" size="sm">
+              <Settings className="h-4 w-4" />
+            </Button>
+          </div>
+          {unreadCount > 0 && (
+            <p className="text-sm text-gray-500 mt-1">
+              {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
+            </p>
+          )}
+        </div>
+
+        <ScrollArea className="h-96">
+          {isLoading ? (
+            <div className="p-4 space-y-3">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                </div>
+              ))}
+            </div>
+          ) : notifications.length === 0 ? (
+            <div className="p-8 text-center">
+              <Bell className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+              <p className="text-sm text-gray-500">No notifications yet</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-100">
+              {notifications.map(notification => (
+                <div
+                  key={notification.id}
+                  className={`p-4 hover:bg-gray-50 transition-colors ${
+                    !notification.isRead ? 'bg-blue-50/50' : ''
+                  }`}
                 >
-                  Mark all read
-                </Button>
-              )}
-            </div>
-          </CardHeader>
-          
-          <CardContent className="p-0">
-            <ScrollArea className="h-96">
-              {isLoading ? (
-                <div className="p-6 text-center">
-                  <div className="animate-spin h-8 w-8 border-4 border-therapy-500 border-t-transparent rounded-full mx-auto mb-3"></div>
-                  <p className="text-sm text-slate-600">Loading notifications...</p>
-                </div>
-              ) : notifications.length === 0 ? (
-                <div className="p-6 text-center text-muted-foreground">
-                  <BellOff className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p className="text-lg font-medium mb-1">All caught up!</p>
-                  <p className="text-sm">No notifications at the moment.</p>
-                </div>
-              ) : (
-                <div className="space-y-1 p-2">
-                  {notifications.map((notification) => (
-                    <div
-                      key={notification.id}
-                      className={cn(
-                        "p-3 border-l-4 rounded-r-lg transition-all duration-200 hover:shadow-md",
-                        getPriorityColor(notification.priority),
-                        !notification.isRead && "ring-1 ring-therapy-200 shadow-sm"
-                      )}
-                    >
-                      <div className="flex items-start justify-between space-x-3">
-                        <div className="flex-1 space-y-2">
-                          <div className="flex items-center space-x-2">
-                            {getTypeIcon(notification.type)}
-                            <h4 className="font-semibold text-sm text-gray-900 leading-tight">
-                              {notification.title}
-                            </h4>
-                            {!notification.isRead && (
-                              <div className="w-2 h-2 bg-therapy-500 rounded-full animate-pulse" />
-                            )}
-                          </div>
-                          
-                          <p className="text-sm text-gray-700 leading-relaxed">
-                            {notification.message}
-                          </p>
-                          
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500 font-medium">
-                              {formatTime(notification.createdAt)}
-                            </span>
-                            
-                            <div className="flex items-center space-x-2">
-                              <Badge 
-                                variant="outline" 
-                                className="text-xs capitalize bg-white/80 border-therapy-200"
-                              >
-                                {notification.type.replace('_', ' ')}
-                              </Badge>
-                              
-                              {!notification.isRead && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleMarkAsRead(notification.id)}
-                                  className="h-6 w-6 p-0 hover:bg-therapy-100 rounded-full"
-                                >
-                                  <Check className="h-3 w-3 text-therapy-600" />
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className={`text-sm font-medium ${
+                          !notification.isRead ? 'text-gray-900' : 'text-gray-700'
+                        }`}>
+                          {notification.title}
+                        </h4>
+                        {!notification.isRead && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        )}
                       </div>
+                      <p className="text-sm text-gray-600 mb-2">
+                        {notification.message}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        {formatDistanceToNow(notification.createdAt, { addSuffix: true })}
+                      </p>
                     </div>
-                  ))}
+                    {!notification.isRead && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleMarkAsRead(notification.id)}
+                        disabled={isMarkingAsRead}
+                        className="h-8 w-8 p-0 hover:bg-gray-200"
+                      >
+                        <Check className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              )}
-            </ScrollArea>
-            
-            {/* Footer with inbox link */}
-            <div className="border-t border-therapy-100 p-3 bg-therapy-25">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  navigate('/notifications');
-                  setIsOpen(false);
-                }}
-                className="w-full text-therapy-600 hover:text-therapy-700 hover:bg-therapy-100 justify-center"
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                View All Notifications
-              </Button>
+              ))}
             </div>
-          </CardContent>
-        </Card>
+          )}
+        </ScrollArea>
+
+        {notifications.length > 0 && (
+          <div className="p-3 border-t border-gray-200">
+            <Button variant="ghost" size="sm" className="w-full">
+              View All Notifications
+            </Button>
+          </div>
+        )}
       </PopoverContent>
     </Popover>
   );
