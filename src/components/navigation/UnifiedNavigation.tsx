@@ -13,59 +13,46 @@ const UnifiedNavigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <nav style={{ backgroundColor: '#ffffff', width: '100%', display: 'block' }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>
+    <nav className="w-full bg-white">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="flex items-center">
             <div 
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                cursor: 'pointer',
-                transition: 'opacity 0.2s'
-              }}
+              className="flex items-center cursor-pointer"
               onClick={() => navigate('/')}
             >
-              <span style={{ 
-                marginLeft: '8px', 
-                fontSize: '20px', 
-                fontWeight: 'bold',
-                background: 'linear-gradient(to right, #2563eb, #7c3aed)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }}>
+              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 TherapySync
               </span>
             </div>
           </div>
 
           {/* Desktop Navigation */}  
-          <div style={{ display: 'none' }} className="lg:flex lg:items-center lg:space-x-4">
-            <Link to="/#features" style={{ color: '#6b7280', textDecoration: 'none', padding: '8px 12px', fontSize: '14px', fontWeight: '500' }}>
+          <div className="hidden lg:flex lg:items-center lg:space-x-4">
+            <Link to="/#features" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
               Features
             </Link>
-            <Link to="/#pricing" style={{ color: '#6b7280', textDecoration: 'none', padding: '8px 12px', fontSize: '14px', fontWeight: '500' }}>
+            <Link to="/#pricing" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
               Pricing
             </Link>
-            <Link to="/#how-it-works" style={{ color: '#6b7280', textDecoration: 'none', padding: '8px 12px', fontSize: '14px', fontWeight: '500' }}>
+            <Link to="/#how-it-works" className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">
               How It Works
             </Link>
           </div>
 
           {/* User Menu / Auth Buttons */}
-          <div style={{ display: 'none' }} className="md:block">
-            <div style={{ marginLeft: '16px', display: 'flex', alignItems: 'center' }}>
+          <div className="hidden md:block">
+            <div className="ml-4 flex items-center">
               {user ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <span style={{ fontSize: '14px', color: '#374151' }}>Welcome back!</span>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-gray-700">Welcome back!</span>
                   <Button onClick={() => navigate('/dashboard')} variant="outline">
                     Dashboard
                   </Button>
                 </div>
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div className="flex items-center gap-2">
                   <Button variant="ghost" onClick={() => navigate('/login')}>Sign In</Button>
                   <Button onClick={() => navigate('/register')} className="bg-blue-600 hover:bg-blue-700 text-white">Get Started</Button>
                 </div>
@@ -74,7 +61,7 @@ const UnifiedNavigation = () => {
           </div>
           
           {/* Mobile menu button */}
-          <div className="-mr-2 flex md:hidden">
+          <div className="md:hidden">
             <Button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               variant="ghost"
@@ -89,18 +76,18 @@ const UnifiedNavigation = () => {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden">
-          <div style={{ padding: '8px', paddingTop: '8px', paddingBottom: '12px', backgroundColor: '#ffffff', borderTop: '1px solid #e5e7eb' }}>
-            <Link to="/#features" style={{ display: 'block', padding: '8px 12px', fontSize: '16px', fontWeight: '500', color: '#374151', textDecoration: 'none' }}>
+          <div className="px-2 pt-2 pb-3 bg-white border-t border-gray-200">
+            <Link to="/#features" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900">
               Features
             </Link>
-            <Link to="/#pricing" style={{ display: 'block', padding: '8px 12px', fontSize: '16px', fontWeight: '500', color: '#374151', textDecoration: 'none' }}>
+            <Link to="/#pricing" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900">
               Pricing
             </Link>
-            <Link to="/#how-it-works" style={{ display: 'block', padding: '8px 12px', fontSize: '16px', fontWeight: '500', color: '#374151', textDecoration: 'none' }}>
+            <Link to="/#how-it-works" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900">
               How It Works
             </Link>
             {!user && (
-              <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '12px', marginTop: '12px' }}>
+              <div className="border-t border-gray-200 pt-3 mt-3">
                 <Button onClick={() => navigate('/login')} variant="ghost" className="w-full mb-2">
                   Sign In
                 </Button>

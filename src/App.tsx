@@ -10,7 +10,6 @@ import { SuperAdminProvider } from '@/contexts/SuperAdminContext';
 import SuperAdminRouter from '@/components/SuperAdminRouter';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import VisibilityTest from '@/components/VisibilityTest';
 
 // Lazy load pages
 const Index = lazy(() => import('./pages/Index'));
@@ -29,14 +28,7 @@ function App() {
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              <VisibilityTest />
-              <div style={{ 
-                minHeight: '100vh', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                backgroundColor: 'white',
-                paddingTop: '60px' // Account for fixed test header
-              }}>
+              <div className="min-h-screen bg-white">
                 <Suspense fallback={
                   <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
@@ -48,24 +40,24 @@ function App() {
                   <Routes>
                     {/* Main routes with header/footer */}
                     <Route path="/" element={
-                      <>
+                      <div className="min-h-screen flex flex-col">
                         <Header />
-                        <main style={{ flex: 1, minHeight: 0 }}>
+                        <main className="flex-1">
                           <Index />
                         </main>
                         <Footer />
-                      </>
+                      </div>
                     } />
                     
                     {/* Simple landing page with header/footer */}
                     <Route path="/simple" element={
-                      <>
+                      <div className="min-h-screen flex flex-col">
                         <Header />
-                        <main style={{ flex: 1, minHeight: 0 }}>
+                        <main className="flex-1">
                           <SimpleLandingPage />
                         </main>
                         <Footer />
-                      </>
+                      </div>
                     } />
                     
                     {/* Super Admin Routes - no header/footer */}
