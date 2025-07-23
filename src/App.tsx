@@ -28,7 +28,7 @@ function App() {
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              <div className="min-h-screen bg-white flex flex-col">
+              <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'white' }}>
                 <Suspense fallback={
                   <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
@@ -40,24 +40,24 @@ function App() {
                   <Routes>
                     {/* Main routes with header/footer */}
                     <Route path="/" element={
-                      <div className="min-h-screen flex flex-col bg-white">
+                      <>
                         <Header />
-                        <main className="flex-1 min-h-0">
+                        <main style={{ flex: 1, minHeight: 0 }}>
                           <Index />
                         </main>
                         <Footer />
-                      </div>
+                      </>
                     } />
                     
                     {/* Simple landing page with header/footer */}
                     <Route path="/simple" element={
-                      <div className="min-h-screen flex flex-col bg-white">
+                      <>
                         <Header />
-                        <main className="flex-1 min-h-0">
+                        <main style={{ flex: 1, minHeight: 0 }}>
                           <SimpleLandingPage />
                         </main>
                         <Footer />
-                      </div>
+                      </>
                     } />
                     
                     {/* Super Admin Routes - no header/footer */}
