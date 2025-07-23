@@ -2,6 +2,7 @@
 import React from 'react';
 import { useFooterContent } from '@/hooks/useFooterContent';
 import { Twitter, Linkedin, Instagram, Youtube } from 'lucide-react';
+import GradientLogo from '@/components/ui/GradientLogo';
 
 const DatabaseFooter: React.FC = () => {
   const { footerData, loading } = useFooterContent();
@@ -28,28 +29,54 @@ const DatabaseFooter: React.FC = () => {
     }
   };
 
+  // Get social links
+  const socialLinks = footerData.links.filter(link => 
+    ['twitter', 'linkedin', 'instagram', 'youtube'].includes(link.title.toLowerCase())
+  );
+
   return (
     <footer className="bg-gray-50 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
-          {/* Company Info */}
+          {/* Company Info with Logo */}
           <div className="lg:col-span-2">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              {footerData.content.company_name}
-            </h3>
+            <div className="flex items-center space-x-3 mb-4">
+              <GradientLogo size="sm" />
+              <h3 className="text-xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
+                {footerData.content.company_name}
+              </h3>
+            </div>
             <p className="text-sm text-gray-600 mb-4">
               {footerData.content.company_description}
             </p>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 mb-6">
               {footerData.content.tagline}
             </p>
+            
+            {/* Social Icons */}
+            {socialLinks.length > 0 && (
+              <div className="flex space-x-4">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.id}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-therapy-700 transition-colors p-2 rounded-full hover:bg-therapy-50"
+                  >
+                    {getSocialIcon(link.title)}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Dynamic Footer Sections */}
           {filteredSections.map((section) => {
-            const sectionLinks = footerData.links.filter(link => link.section_id === section.id);
-            const regularLinks = sectionLinks.filter(link => !['twitter', 'linkedin', 'instagram', 'youtube'].includes(link.title.toLowerCase()));
-            const socialLinks = sectionLinks.filter(link => ['twitter', 'linkedin', 'instagram', 'youtube'].includes(link.title.toLowerCase()));
+            const sectionLinks = footerData.links.filter(link => 
+              link.section_id === section.id && 
+              !['twitter', 'linkedin', 'instagram', 'youtube'].includes(link.title.toLowerCase())
+            );
 
             return (
               <div key={section.id}>
@@ -57,7 +84,7 @@ const DatabaseFooter: React.FC = () => {
                   {section.label}
                 </h4>
                 <ul className="space-y-2">
-                  {regularLinks.map((link) => (
+                  {sectionLinks.map((link) => (
                     <li key={link.id}>
                       <a
                         href={link.href}
@@ -70,25 +97,6 @@ const DatabaseFooter: React.FC = () => {
                     </li>
                   ))}
                 </ul>
-                
-                {/* Social Icons for Support Section */}
-                {section.name === 'support' && socialLinks.length > 0 && (
-                  <div className="mt-4">
-                    <div className="flex space-x-3">
-                      {socialLinks.map((link) => (
-                        <a
-                          key={link.id}
-                          href={link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-400 hover:text-therapy-700 transition-colors"
-                        >
-                          {getSocialIcon(link.title)}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             );
           })}

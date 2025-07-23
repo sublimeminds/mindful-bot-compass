@@ -33,7 +33,7 @@ const DatabaseHeaderDropdowns: React.FC = () => {
 
           return (
             <NavigationMenuItem key={menu.id}>
-              <NavigationMenuTrigger className="group flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-900 hover:text-therapy-700 transition-colors">
+              <NavigationMenuTrigger className="group flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-900 hover:text-therapy-700 transition-colors bg-transparent border-none">
                 {menu.label}
                 <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
               </NavigationMenuTrigger>
