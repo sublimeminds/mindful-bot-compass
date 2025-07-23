@@ -4,10 +4,8 @@ import { useNavigationMenus } from '@/hooks/useNavigationMenus';
 import HeaderDropdownTrigger from './HeaderDropdownTrigger';
 import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Brain, Settings, BarChart3, Building, BookOpen, Target } from 'lucide-react';
 
-// Simplified icon mapping - no complex validation
 const getMenuIcon = (iconName: string) => {
   const iconMap: Record<string, any> = {
     'Brain': Brain,
@@ -24,10 +22,13 @@ const getMenuIcon = (iconName: string) => {
 const getItemIcon = (iconName: string) => {
   const iconMap: Record<string, any> = {
     'Brain': Brain,
-    'Heart': Target, // Using Target as fallback for Heart
+    'Heart': Target,
     'BarChart3': BarChart3,
     'TrendingUp': BarChart3,
-    'Target': Target
+    'Target': Target,
+    'Settings': Settings,
+    'Building': Building,
+    'BookOpen': BookOpen
   };
   
   return iconMap[iconName] || Target;
@@ -74,10 +75,10 @@ const DatabaseHeaderDropdowns = () => {
 
         return (
           <div key={menu.id} className="relative group">
-            <button className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-therapy-700 transition-colors">
-              <IconComponent className="h-4 w-4" />
-              <span>{menu.label}</span>
-            </button>
+            <HeaderDropdownTrigger
+              icon={IconComponent}
+              label={menu.label}
+            />
             
             {menuItems.length > 0 && (
               <HeaderDropdownCard width="adaptive">

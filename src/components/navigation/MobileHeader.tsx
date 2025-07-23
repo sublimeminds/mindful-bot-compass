@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigationMenus } from '@/hooks/useNavigationMenus';
+import Logo from '@/components/navigation/Logo';
 import { 
   Menu, 
   X, 
@@ -46,11 +47,7 @@ const MobileHeader = () => {
     <header className="lg:hidden bg-white border-b border-gray-200 shadow-sm">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Logo */}
-        <Link to="/" className="flex items-center">
-          <span className="text-xl font-bold bg-gradient-to-r from-therapy-600 to-therapy-800 bg-clip-text text-transparent">
-            TherapySync
-          </span>
-        </Link>
+        <Logo />
 
         {/* Right side actions */}
         <div className="flex items-center space-x-2">
@@ -123,45 +120,22 @@ const MobileHeader = () => {
                     {isActive && (
                       <div className="bg-gray-50 border-t border-gray-200">
                         {menuItems.map((item) => (
-                          <Link
+                          <button
                             key={item.id}
-                            to={item.href}
-                            className="block px-8 py-3 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setIsMobileMenuOpen(false)}
+                            onClick={() => {
+                              navigate(item.href);
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className="block w-full text-left px-8 py-3 text-sm text-gray-700 hover:bg-gray-100"
                           >
                             {item.title}
-                          </Link>
+                          </button>
                         ))}
                       </div>
                     )}
                   </div>
                 );
               })}
-
-              {/* Static Links */}
-              <div className="border-t border-gray-200 mt-2 pt-2">
-                <Link
-                  to="/#features"
-                  className="block px-4 py-3 text-gray-700 hover:bg-gray-50"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Features
-                </Link>
-                <Link
-                  to="/#pricing"
-                  className="block px-4 py-3 text-gray-700 hover:bg-gray-50"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Pricing
-                </Link>
-                <Link
-                  to="/#how-it-works"
-                  className="block px-4 py-3 text-gray-700 hover:bg-gray-50"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  How It Works
-                </Link>
-              </div>
             </nav>
           </div>
         </div>
