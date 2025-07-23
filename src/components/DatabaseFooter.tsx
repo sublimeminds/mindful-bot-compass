@@ -46,25 +46,27 @@ const DatabaseFooter: React.FC = () => {
                 {footerData.content.company_name}
               </h3>
             </div>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 mb-4 leading-relaxed">
               {footerData.content.company_description}
             </p>
-            <p className="text-sm text-gray-600 mb-6">
+            <p className="text-sm text-gray-600 mb-6 font-medium">
               {footerData.content.tagline}
             </p>
             
             {/* Social Icons */}
             {socialLinks.length > 0 && (
-              <div className="flex space-x-4">
+              <div className="flex space-x-3">
                 {socialLinks.map((link) => (
                   <a
                     key={link.id}
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-therapy-700 transition-colors p-2 rounded-full hover:bg-therapy-50"
+                    className="text-gray-400 hover:text-therapy-700 transition-colors p-2 rounded-full hover:bg-therapy-50 group"
                   >
-                    {getSocialIcon(link.title)}
+                    <div className="transform transition-transform group-hover:scale-110">
+                      {getSocialIcon(link.title)}
+                    </div>
                   </a>
                 ))}
               </div>
@@ -79,18 +81,18 @@ const DatabaseFooter: React.FC = () => {
             );
 
             return (
-              <div key={section.id}>
-                <h4 className="text-sm font-semibold text-gray-900 mb-3">
+              <div key={section.id} className="space-y-4">
+                <h4 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
                   {section.label}
                 </h4>
-                <ul className="space-y-2">
+                <ul className="space-y-3">
                   {sectionLinks.map((link) => (
                     <li key={link.id}>
                       <a
                         href={link.href}
                         target={link.opens_in_new_tab ? '_blank' : '_self'}
                         rel={link.opens_in_new_tab ? 'noopener noreferrer' : undefined}
-                        className="text-sm text-gray-600 hover:text-therapy-700 transition-colors"
+                        className="text-sm text-gray-600 hover:text-therapy-700 transition-colors hover:underline"
                       >
                         {link.title}
                       </a>
@@ -104,19 +106,19 @@ const DatabaseFooter: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-gray-200">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-gray-600">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <p className="text-sm text-gray-600 font-medium">
               {footerData.content.copyright_text}
             </p>
-            <div className="flex items-center space-x-4 mt-4 md:mt-0">
-              <span className="text-sm text-gray-500">
+            <div className="flex items-center space-x-6">
+              <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
                 {footerData.content.version}
               </span>
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-gray-500">Contact:</span>
                 <a
                   href={`mailto:${footerData.content.contact_email}`}
-                  className="text-sm text-therapy-700 hover:text-therapy-800 transition-colors"
+                  className="text-sm text-therapy-700 hover:text-therapy-800 transition-colors font-medium hover:underline"
                 >
                   {footerData.content.contact_email}
                 </a>
