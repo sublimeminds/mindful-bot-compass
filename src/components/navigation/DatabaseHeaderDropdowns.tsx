@@ -2,10 +2,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigationMenus } from '@/hooks/useNavigationMenus';
-import { NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuRoot, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
 import { ChevronDown } from 'lucide-react';
-import { HeaderDropdownCard } from './HeaderDropdownCard';
-import { HeaderDropdownItem } from './HeaderDropdownItem';
+import HeaderDropdownCard from './HeaderDropdownCard';
+import HeaderDropdownItem from './HeaderDropdownItem';
 import { getItemIcon } from '@/utils/iconUtils';
 
 const DatabaseHeaderDropdowns: React.FC = () => {
@@ -21,7 +21,7 @@ const DatabaseHeaderDropdowns: React.FC = () => {
     .sort((a, b) => a.position - b.position);
 
   return (
-    <NavigationMenuRoot className="relative z-10">
+    <NavigationMenu className="relative z-10">
       <NavigationMenuList className="flex space-x-8">
         {activeMenus.map((menu) => {
           // Get items for this menu
@@ -62,7 +62,7 @@ const DatabaseHeaderDropdowns: React.FC = () => {
           );
         })}
       </NavigationMenuList>
-    </NavigationMenuRoot>
+    </NavigationMenu>
   );
 };
 
