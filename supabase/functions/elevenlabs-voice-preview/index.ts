@@ -56,7 +56,8 @@ serve(async (req) => {
       );
     }
 
-    const { therapistId, text }: VoicePreviewRequest = await req.json();
+    const body = await req.json();
+    const { therapistId, text }: VoicePreviewRequest = body;
     
     if (!therapistId) {
       return new Response(

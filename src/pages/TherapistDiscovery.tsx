@@ -52,7 +52,9 @@ import { TherapistMatchingService } from '@/services/therapistMatchingService';
 import SimpleFavoriteButton from '@/components/therapist/SimpleFavoriteButton';
 import { TherapistAnalyticsService } from '@/services/therapistAnalyticsService';
 import { useNavigate } from 'react-router-dom';
-import PersonalizedTherapyDemo from '@/components/therapy/PersonalizedTherapyDemo';
+import AutoProgressTherapyDemo from '@/components/discovery/AutoProgressTherapyDemo';
+import EnhancedEmotionDemo from '@/components/discovery/EnhancedEmotionDemo';
+import VoicePreviewButton from '@/components/discovery/VoicePreviewButton';
 
 
 const therapyApproaches = [
@@ -1028,14 +1030,11 @@ const TherapistDiscovery = () => {
 
                 {/* Interactive Controls */}
                 <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    onClick={handleVoicePreview}
-                    disabled={isVoicePlaying || emotionDemoActive}
-                    variant="outline"
-                  >
-                    <Volume2 className="h-4 w-4 mr-2" />
-                    {isVoicePlaying ? 'Playing...' : 'Voice Preview'}
-                  </Button>
+                  <VoicePreviewButton
+                    therapistId={modalTherapist.id}
+                    therapistName={modalTherapist.name}
+                    size="default"
+                  />
                   <Button
                     onClick={startEmotionDemo}
                     disabled={emotionDemoActive || isVoicePlaying}
@@ -1462,7 +1461,7 @@ const TherapistDiscovery = () => {
           </DialogHeader>
           <div className="mt-4">
             {detailsTherapist && (
-              <PersonalizedTherapyDemo 
+              <AutoProgressTherapyDemo 
                 therapist={detailsTherapist}
                 onComplete={() => {
                   setDemoModalOpen(false);
