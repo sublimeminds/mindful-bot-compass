@@ -29,6 +29,12 @@ const CulturalAI = lazy(() => import('@/pages/CulturalAI'));
 const VoiceAI = lazy(() => import('@/pages/VoiceAITechnology'));
 const API = lazy(() => import('@/pages/API'));
 const Learn = lazy(() => import('@/pages/Learn'));
+const TherapistDiscovery = lazy(() => import('@/pages/TherapistDiscovery'));
+const MoodTracking = lazy(() => import('@/pages/MoodTracking'));
+const CrisisSupport = lazy(() => import('@/pages/CrisisSupport'));
+const FamilyFeatures = lazy(() => import('@/pages/FamilyFeaturesPage'));
+const CommunityFeatures = lazy(() => import('@/pages/CommunityFeatures'));
+const Integrations = lazy(() => import('@/pages/Integrations'));
 
 const AppRouter: React.FC = () => {
   console.log('🔍 AppRouter: Rendering routes');
@@ -221,6 +227,42 @@ const AppRouter: React.FC = () => {
         <Route path="/voice-therapy" element={
           <PublicPageWrapper>
             <VoiceAI />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/therapist-discovery" element={
+          <PublicPageWrapper>
+            <TherapistDiscovery />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/mood-tracking" element={
+          <PublicPageWrapper>
+            <MoodTracking />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/crisis-support" element={
+          <PublicPageWrapper>
+            <CrisisSupport />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/family-features" element={
+          <PublicPageWrapper>
+            <FamilyFeatures />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/community-features" element={
+          <PublicPageWrapper>
+            <CommunityFeatures />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/integrations" element={
+          <PublicPageWrapper>
+            <Integrations />
           </PublicPageWrapper>
         } />
 
