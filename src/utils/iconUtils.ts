@@ -51,7 +51,8 @@ import {
   Plug,
   Code,
   Smartphone,
-  LifeBuoy
+  LifeBuoy,
+  Watch
 } from 'lucide-react';
 
 // Map of icon names to Lucide components
@@ -107,6 +108,7 @@ const iconMap: Record<string, LucideIcon> = {
   Code,
   Smartphone,
   LifeBuoy,
+  Watch,
 };
 
 export const getItemIcon = (iconName: string): LucideIcon => {
