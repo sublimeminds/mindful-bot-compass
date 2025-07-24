@@ -52,6 +52,7 @@ import { TherapistMatchingService } from '@/services/therapistMatchingService';
 import SimpleFavoriteButton from '@/components/therapist/SimpleFavoriteButton';
 import { TherapistAnalyticsService } from '@/services/therapistAnalyticsService';
 import { useNavigate } from 'react-router-dom';
+import InteractiveDemo from '@/components/landing/InteractiveDemo';
 
 
 const therapyApproaches = [
@@ -106,6 +107,8 @@ const TherapistDiscovery = () => {
   const [detailsTherapist, setDetailsTherapist] = useState<any>(null);
   const [emotionDemoActive, setEmotionDemoActive] = useState(false);
   const [currentEmotion, setCurrentEmotion] = useState('neutral');
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
+  const [isVoicePreviewPlaying, setIsVoicePreviewPlaying] = useState(false);
 
   // Helper function to get icon component by name with comprehensive fallbacks
   const getIconByName = (iconName: string) => {
@@ -352,19 +355,37 @@ const TherapistDiscovery = () => {
   });
 
   const playVoicePreview = async (therapistId: string) => {
+    if (isVoicePreviewPlaying) return;
+    
+    setIsVoicePreviewPlaying(true);
     try {
+      console.log('Starting voice preview for therapist:', therapistId);
       const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
         body: { therapistId }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Voice preview error:', error);
+        throw error;
+      }
 
-      // Create and play audio
-      const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-      await audio.play();
+      if (data?.audioContent) {
+        // Create and play audio
+        const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
+        audio.onended = () => setIsVoicePreviewPlaying(false);
+        audio.onerror = () => setIsVoicePreviewPlaying(false);
+        await audio.play();
+      } else {
+        throw new Error('No audio content received');
+      }
     } catch (error) {
       console.error('Voice preview error:', error);
+      setIsVoicePreviewPlaying(false);
     }
+  };
+
+  const openDemoModal = () => {
+    setDemoModalOpen(true);
   };
 
   const openAvatarModal = (therapist: any) => {
@@ -503,7 +524,7 @@ const TherapistDiscovery = () => {
                 <Target className="h-5 w-5 mr-2" />
                 Take Therapist Assessment
               </Button>
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" onClick={openDemoModal}>
                 <Play className="h-5 w-5 mr-2" />
                 Watch 2-Minute Demo
               </Button>
@@ -754,9 +775,14 @@ const TherapistDiscovery = () => {
                         e.stopPropagation();
                         playVoicePreview(therapist.id);
                       }}
+                      disabled={isVoicePreviewPlaying}
                       className="ml-2"
                     >
-                      <Volume2 className="h-4 w-4" />
+                      {isVoicePreviewPlaying ? (
+                        <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+                      ) : (
+                        <Volume2 className="h-4 w-4" />
+                      )}
                     </Button>
                   </div>
                 </CardHeader>
@@ -1041,7 +1067,11 @@ const TherapistDiscovery = () => {
                     <Camera className="h-4 w-4 mr-2" />
                     {emotionDemoActive ? 'Demo Running...' : 'Emotion Demo'}
                   </Button>
-                  <Button variant="outline" className="col-span-2">
+                  <Button 
+                    variant="outline" 
+                    className="col-span-2"
+                    onClick={openDemoModal}
+                  >
                     <Play className="h-4 w-4 mr-2" />
                     Try 2-Minute Demo Conversation
                   </Button>
@@ -1432,6 +1462,21 @@ const TherapistDiscovery = () => {
               </div>
             </Tabs>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Demo Conversation Modal */}
+      <Dialog open={demoModalOpen} onOpenChange={setDemoModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center text-2xl">
+              <Play className="h-6 w-6 mr-2 text-therapy-600" />
+              2-Minute Therapy Demo
+            </DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <InteractiveDemo />
+          </div>
         </DialogContent>
       </Dialog>
     </div>
