@@ -313,21 +313,26 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
     
     if (!isUser) {
       setAvatarEmotion(emotion as any || 'neutral');
-      // Use browser TTS as fallback since ElevenLabs isn't configured
+      // Try ElevenLabs first, fallback to browser TTS
       if (isVoiceEnabled) {
-        setTimeout(() => {
-          const utterance = new SpeechSynthesisUtterance(content);
-          utterance.rate = 0.8;
-          utterance.pitch = 1;
-          utterance.volume = 0.8;
-          speechSynthesis.speak(utterance);
-        }, 500);
+        playTherapistVoice(content).catch(() => {
+          // Fallback if ElevenLabs fails
+          setTimeout(() => {
+            const utterance = new SpeechSynthesisUtterance(content);
+            utterance.rate = 0.8;
+            utterance.pitch = 1;
+            utterance.volume = 0.8;
+            speechSynthesis.speak(utterance);
+          }, 500);
+        });
       }
     }
   };
 
   const playTherapistVoice = async (text: string) => {
     try {
+      console.log('Attempting to play voice for text:', text.substring(0, 50));
+      
       const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
         body: { 
           therapistId: therapist.id,
@@ -341,24 +346,25 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
         }
         
         audioRef.current = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-        audioRef.current.volume = 1.0; // Max volume for better audibility
+        audioRef.current.volume = 1.0;
         
         audioRef.current.onended = () => {
-          // Audio finished playing
+          console.log('Audio playback ended');
         };
         
         audioRef.current.onerror = (e) => {
           console.error('Audio playback error:', e);
+          throw new Error('Audio playback failed');
         };
         
-        try {
-          await audioRef.current.play();
-        } catch (playError) {
-          console.error('Audio play failed:', playError);
-        }
+        await audioRef.current.play();
+        console.log('ElevenLabs audio playing successfully');
+      } else {
+        throw new Error('No audio content received');
       }
     } catch (error) {
       console.error('Voice synthesis error:', error);
+      throw error; // Let the caller handle fallback
     }
   };
 
@@ -367,6 +373,16 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
     setCurrentStep(0);
     setMessages([]);
     setProgress(0);
+    setIsTyping(false);
+    setTypingUser(null);
+    setAvatarEmotion('neutral');
+    
+    // Reset any existing timeouts
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    console.log('Starting demo with', demoSteps.length, 'steps');
   };
 
   const pauseDemo = () => {

@@ -35,6 +35,8 @@ const VoicePreviewButton: React.FC<VoicePreviewButtonProps> = ({
     setIsPlaying(true);
     
     try {
+      console.log('Starting voice preview for therapist:', therapistId);
+      
       const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
         body: { 
           therapistId,
@@ -42,8 +44,10 @@ const VoicePreviewButton: React.FC<VoicePreviewButtonProps> = ({
         }
       });
 
-      if (error || !data) {
-        console.error('Voice preview error:', error);
+      console.log('Voice preview response:', { data, error });
+
+      if (error || !data?.audioContent) {
+        console.log('ElevenLabs not available, using browser TTS fallback');
         // Fallback to browser TTS
         const utterance = new SpeechSynthesisUtterance(text || defaultText);
         utterance.rate = 0.8;
