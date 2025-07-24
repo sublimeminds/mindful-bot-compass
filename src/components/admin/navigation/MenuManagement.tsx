@@ -11,22 +11,18 @@ import { NavigationMenu, NavigationMenuItem } from '@/types/navigation';
 import { Settings, Plus, Edit, Eye, EyeOff } from 'lucide-react';
 
 const MenuManagement = () => {
-  const { menuConfig, loading, error, updateMenu, updateMenuItem } = useNavigationMenus();
+  const { menuConfig, loading } = useNavigationMenus();
   const [editingMenu, setEditingMenu] = useState<NavigationMenu | null>(null);
   const [editingItem, setEditingItem] = useState<NavigationMenuItem | null>(null);
 
   const handleToggleMenu = async (menu: NavigationMenu) => {
-    await updateMenu({
-      id: menu.id,
-      is_active: !menu.is_active
-    });
+    // TODO: Implement menu update functionality
+    console.log('Toggle menu:', menu.id, !menu.is_active);
   };
 
   const handleToggleItem = async (item: NavigationMenuItem) => {
-    await updateMenuItem({
-      id: item.id,
-      is_active: !item.is_active
-    });
+    // TODO: Implement menu item update functionality
+    console.log('Toggle item:', item.id, !item.is_active);
   };
 
   if (loading) {
@@ -53,11 +49,6 @@ const MenuManagement = () => {
         </Button>
       </div>
 
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-600">{error}</p>
-        </div>
-      )}
 
       <div className="grid gap-6">
         {menuConfig.menus.map((menu) => (

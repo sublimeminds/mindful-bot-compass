@@ -44,7 +44,14 @@ import {
   TrendingDown,
   Calendar as CalendarIcon,
   PhoneCall,
-  LucideIcon
+  LucideIcon,
+  Zap,
+  Compass,
+  LayoutDashboard,
+  Plug,
+  Code,
+  Smartphone,
+  LifeBuoy
 } from 'lucide-react';
 
 // Map of icon names to Lucide components
@@ -93,6 +100,13 @@ const iconMap: Record<string, LucideIcon> = {
   TrendingDown,
   CalendarIcon,
   PhoneCall,
+  Zap,
+  Compass,
+  LayoutDashboard,
+  Plug,
+  Code,
+  Smartphone,
+  LifeBuoy,
 };
 
 export const getItemIcon = (iconName: string): LucideIcon => {
