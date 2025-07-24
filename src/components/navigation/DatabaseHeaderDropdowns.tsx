@@ -15,6 +15,7 @@ const DatabaseHeaderDropdowns: React.FC = () => {
     loading, 
     hasMenus: !!menuConfig?.menus?.length,
     hasItems: !!menuConfig?.items?.length,
+    menuConfig,
     error 
   });
 
