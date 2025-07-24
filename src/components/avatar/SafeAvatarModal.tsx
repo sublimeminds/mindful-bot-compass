@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircle, RefreshCw, AlertTriangle } from 'lucide-react';
+import { MessageCircle, RefreshCw, AlertTriangle, ChevronRight } from 'lucide-react';
 import LightweightAvatarSystem from './LightweightAvatarSystem';
 import ThreeDTherapistAvatar from './ThreeDTherapistAvatar';
 import Isolated3DAvatar from './Isolated3DAvatar';
@@ -194,9 +194,13 @@ const SafeAvatarModal: React.FC<SafeAvatarModalProps> = ({
               </Button>
               <Button 
                 className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  window.location.href = '/onboarding';
+                }}
               >
-                Select {therapist.name}
+                <ChevronRight className="h-4 w-4 mr-2" />
+                Start Journey
               </Button>
             </div>
           </div>

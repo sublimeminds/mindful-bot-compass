@@ -52,7 +52,7 @@ import { TherapistMatchingService } from '@/services/therapistMatchingService';
 import SimpleFavoriteButton from '@/components/therapist/SimpleFavoriteButton';
 import { TherapistAnalyticsService } from '@/services/therapistAnalyticsService';
 import { useNavigate } from 'react-router-dom';
-import InteractiveDemo from '@/components/landing/InteractiveDemo';
+import PersonalizedTherapyDemo from '@/components/therapy/PersonalizedTherapyDemo';
 
 
 const therapyApproaches = [
@@ -360,6 +360,13 @@ const TherapistDiscovery = () => {
     setIsVoicePreviewPlaying(true);
     try {
       console.log('Starting voice preview for therapist:', therapistId);
+      
+      // Show loading toast
+      const loadingToast = { 
+        title: "Generating Voice Preview", 
+        description: "Creating personalized voice sample..." 
+      };
+      
       const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
         body: { therapistId }
       });
@@ -373,18 +380,29 @@ const TherapistDiscovery = () => {
         // Create and play audio
         const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
         audio.onended = () => setIsVoicePreviewPlaying(false);
-        audio.onerror = () => setIsVoicePreviewPlaying(false);
+        audio.onerror = () => {
+          setIsVoicePreviewPlaying(false);
+          console.error('Audio playback error');
+        };
         await audio.play();
+        console.log('Voice preview playing successfully');
       } else {
-        throw new Error('No audio content received');
+        throw new Error('No audio content received from server');
       }
     } catch (error) {
       console.error('Voice preview error:', error);
       setIsVoicePreviewPlaying(false);
-      // Show user-friendly error message
-      if (error.message?.includes('API key not configured')) {
-        console.warn('ElevenLabs API key not configured for voice preview');
+      
+      // Show user-friendly error messages
+      let errorMessage = 'Unable to play voice preview';
+      if (error.message?.includes('API key')) {
+        errorMessage = 'Voice preview temporarily unavailable';
+      } else if (error.message?.includes('Network')) {
+        errorMessage = 'Please check your internet connection';
       }
+      
+      // You would show a toast here in a real implementation
+      console.warn('Voice preview failed:', errorMessage);
     }
   };
 
@@ -404,11 +422,18 @@ const TherapistDiscovery = () => {
 
   const startEmotionDemo = async () => {
     setEmotionDemoActive(true);
-    const emotions = ['neutral', 'happy', 'encouraging', 'concerned', 'thoughtful'];
+    const emotionStates = [
+      { emotion: 'neutral', description: 'Calm and attentive listening mode' },
+      { emotion: 'encouraging', description: 'Supportive and motivating response' },
+      { emotion: 'concerned', description: 'Empathetic concern for your wellbeing' },
+      { emotion: 'happy', description: 'Celebrating your progress and insights' },
+      { emotion: 'thoughtful', description: 'Deep reflection and analysis mode' }
+    ];
     
-    for (const emotion of emotions) {
+    for (const { emotion, description } of emotionStates) {
       setCurrentEmotion(emotion);
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log(`Emotion demo: ${emotion} - ${description}`);
+      await new Promise(resolve => setTimeout(resolve, 3000)); // Longer display time
     }
     
     setEmotionDemoActive(false);
@@ -528,7 +553,13 @@ const TherapistDiscovery = () => {
                 <Target className="h-5 w-5 mr-2" />
                 Take Therapist Assessment
               </Button>
-              <Button variant="outline" size="lg" onClick={openDemoModal}>
+              <Button variant="outline" size="lg" onClick={() => {
+                // Use first available therapist for general demo
+                if (therapistData.length > 0) {
+                  setDetailsTherapist(therapistData[0]);
+                }
+                openDemoModal();
+              }}>
                 <Play className="h-5 w-5 mr-2" />
                 Watch 2-Minute Demo
               </Button>
@@ -930,45 +961,6 @@ const TherapistDiscovery = () => {
                     </div>
                   </div>
 
-                   {/* Selected Therapist Actions - Simplified */}
-                   {selectedTherapist === therapist.id && (
-                     <div className="mt-4 p-4 bg-gradient-to-r from-therapy-50 to-calm-50 rounded-lg border border-therapy-200">
-                       <h4 className="font-semibold text-therapy-700 mb-3 flex items-center">
-                         <CheckCircle className="h-4 w-4 mr-2" />
-                         Ready to continue with {therapist.name}?
-                       </h4>
-                       <div className="flex gap-2">
-                         {assessment?.selected_therapist_id === therapist.id ? (
-                           <Button 
-                             size="sm" 
-                             className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg flex-1"
-                             onClick={() => navigate('/dashboard')}
-                           >
-                             <ArrowRight className="h-4 w-4 mr-1" />
-                             Continue Therapy
-                           </Button>
-                         ) : assessment ? (
-                           <Button 
-                             size="sm" 
-                             className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700 text-white shadow-lg flex-1"
-                             onClick={() => navigate('/therapy')}
-                           >
-                             <CheckCircle className="h-4 w-4 mr-1" />
-                             Select This Therapist
-                           </Button>
-                         ) : (
-                            <Button 
-                              size="sm" 
-                              className="bg-gradient-to-r from-harmony-600 to-therapy-600 hover:from-harmony-700 hover:to-therapy-700 text-white shadow-lg flex-1"
-                              onClick={() => navigate('/therapist-assessment')}
-                            >
-                              <Target className="h-4 w-4 mr-1" />
-                              Take Assessment
-                            </Button>
-                         )}
-                       </div>
-                     </div>
-                   )}
                 </CardContent>
               </Card>
             ))}
@@ -1053,7 +1045,10 @@ const TherapistDiscovery = () => {
                   <Button 
                     variant="outline" 
                     className="col-span-2"
-                    onClick={openDemoModal}
+                    onClick={() => {
+                      setDetailsTherapist(modalTherapist);
+                      openDemoModal();
+                    }}
                   >
                     <Play className="h-4 w-4 mr-2" />
                     Try 2-Minute Demo Conversation
@@ -1437,9 +1432,15 @@ const TherapistDiscovery = () => {
                     <Heart className="h-4 w-4 mr-2" />
                     Save Favorite
                   </Button>
-                  <Button className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700">
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Start Therapy Session
+                  <Button 
+                    className="bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700"
+                    onClick={() => {
+                      setDetailsModalOpen(false);
+                      navigate('/onboarding');
+                    }}
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    Start Journey
                   </Button>
                 </div>
               </div>
@@ -1458,7 +1459,15 @@ const TherapistDiscovery = () => {
             </DialogTitle>
           </DialogHeader>
           <div className="mt-4">
-            <InteractiveDemo />
+            {detailsTherapist && (
+              <PersonalizedTherapyDemo 
+                therapist={detailsTherapist}
+                onComplete={() => {
+                  setDemoModalOpen(false);
+                  navigate('/onboarding');
+                }}
+              />
+            )}
           </div>
         </DialogContent>
       </Dialog>
