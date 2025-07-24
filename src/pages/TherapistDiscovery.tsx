@@ -920,33 +920,12 @@ const TherapistDiscovery = () => {
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (assessment?.selected_therapist_id === therapist.id) {
-                            navigate('/dashboard');
-                          } else if (assessment) {
-                            // Save selection and continue
-                            setSelectedTherapist(therapist.id);
-                          } else {
-                            navigate('/therapist-assessment');
-                          }
+                          navigate('/onboarding');
                         }}
                         className="flex-1 bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600"
                       >
-                        {assessment?.selected_therapist_id === therapist.id ? (
-                          <>
-                            <Calendar className="h-4 w-4 mr-1" />
-                            Continue Therapy
-                          </>
-                        ) : assessment ? (
-                          <>
-                            <CheckCircle className="h-4 w-4 mr-1" />
-                            Select Therapist
-                          </>
-                        ) : (
-                          <>
-                            <Target className="h-4 w-4 mr-1" />
-                            Take Assessment
-                          </>
-                        )}
+                        <ChevronRight className="h-4 w-4 mr-1" />
+                        Start Journey
                       </Button>
                     </div>
                   </div>
