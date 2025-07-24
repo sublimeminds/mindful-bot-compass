@@ -381,6 +381,10 @@ const TherapistDiscovery = () => {
     } catch (error) {
       console.error('Voice preview error:', error);
       setIsVoicePreviewPlaying(false);
+      // Show user-friendly error message
+      if (error.message?.includes('API key not configured')) {
+        console.warn('ElevenLabs API key not configured for voice preview');
+      }
     }
   };
 

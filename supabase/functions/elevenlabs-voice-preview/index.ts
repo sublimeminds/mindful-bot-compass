@@ -48,7 +48,7 @@ serve(async (req) => {
     if (!ELEVENLABS_API_KEY) {
       console.error('ElevenLabs API key not configured');
       return new Response(
-        JSON.stringify({ error: 'ElevenLabs API key not configured' }),
+        JSON.stringify({ error: 'ElevenLabs API key not configured. Please add ELEVENLABS_API_KEY to your Supabase secrets.' }),
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
