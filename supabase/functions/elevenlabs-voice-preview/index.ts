@@ -26,17 +26,25 @@ const therapistVoiceMap: Record<string, { voiceId: string; model: string }> = {
   '1588e859-69a6-4b88-b2cc-c377441ac08c': { voiceId: 'bIHbv24MWmeRgasZH58o', model: 'eleven_multilingual_v2' }, // Dr. James Rodriguez
 };
 
-// Short professional introductions for voice preview
+// Detailed professional introductions for voice preview
 const therapistIntroductions: Record<string, string> = {
-  'ed979f27-2491-43f1-a779-5095febb68b2': "Hello, I'm Dr. Sarah Chen. I specialize in cognitive behavioral therapy and I'm here to help you overcome anxiety and life's challenges with practical, evidence-based approaches.",
-  '9492ab1a-eab2-4c5f-a8e3-40870b2ca857': "Namaste, I'm Dr. Maya Patel. I practice mindfulness-based therapy, combining traditional therapeutic approaches with meditation and breathing techniques to help you find inner peace.",
-  '0772c602-306b-42ad-b610-2dc15ba06714': "Hello, I'm Dr. Marcus Bennett. I specialize in solution-focused therapy, helping you identify your strengths and create practical steps toward your goals.",
-  '2fee5506-ee6d-4504-bab7-2ba922bdc99a': "Hello, I'm Dr. Jordan Kim. I specialize in trauma therapy and EMDR, providing a safe space for healing at your own pace with compassionate, evidence-based care.",
-  '84148de7-b04d-4547-9d9b-80665efbd4af': "Hi, I'm Dr. Taylor Morgan. I specialize in relationship and couples therapy, helping you build stronger, more fulfilling connections with others and yourself.",
-  '79298cfb-6997-4cc6-9b21-ffaacb525c54': "Greetings, I'm Dr. River Stone. I practice holistic therapy, integrating traditional methods with nature therapy and expressive arts to support your whole being.",
-  'e352e13d-99f9-4ffc-95a6-a05c3d935b74': "Hello, I'm Dr. Michael Rivers. I specialize in mindfulness-based stress reduction, helping you develop presence and inner calm through contemplative practices.",
-  '88a93e17-4338-4834-b360-55c9db4cc667': "Hello, I'm Dr. Emma Thompson. I practice humanistic therapy, providing a safe space where you can discover your authentic self and inner wisdom.",
-  '1588e859-69a6-4b88-b2cc-c377441ac08c': "Hello, I'm Dr. James Martinez. I specialize in solution-focused therapy, helping you recognize your strengths and create positive changes in your life.",
+  'ed979f27-2491-43f1-a779-5095febb68b2': "Hello, I'm Dr. Sarah Chen, a licensed clinical psychologist specializing in cognitive behavioral therapy. With over 8 years of experience, I help individuals overcome anxiety, depression, and life transitions using evidence-based approaches. My practice focuses on practical tools you can use daily, combined with mindfulness techniques. I believe in creating a collaborative therapeutic relationship where you feel heard, understood, and empowered to create positive change in your life.",
+  
+  '9492ab1a-eab2-4c5f-a8e3-40870b2ca857': "Namaste, I'm Dr. Maya Patel, a mindfulness-based therapist with a PhD in contemplative psychology. I integrate traditional therapeutic methods with meditation, breathwork, and ancient wisdom practices. My 10 years of experience includes training in MBSR, MBCT, and somatic therapies. I work with clients facing stress, anxiety, and spiritual growth challenges, helping you develop inner peace and resilience through mindful awareness and compassionate self-inquiry.",
+  
+  '0772c602-306b-42ad-b610-2dc15ba06714': "Hello, I'm Dr. Alex Rodriguez, a solution-focused therapist and life coach. I specialize in helping people identify their inner strengths and create actionable plans for positive change. With my background in positive psychology and strengths-based interventions, I work with clients on goal-setting, career transitions, and building confidence. My approach is collaborative, forward-thinking, and designed to help you achieve meaningful results in a shorter timeframe.",
+  
+  '2fee5506-ee6d-4504-bab7-2ba922bdc99a': "Hello, I'm Dr. Jordan Kim, a trauma-informed therapist trained in EMDR and somatic therapies. I provide specialized care for individuals healing from trauma, PTSD, and complex emotional wounds. My approach emphasizes safety, choice, and honoring your natural healing capacity. With over 12 years of experience, I create a gentle, non-judgmental space where you can process difficult experiences at your own pace and reclaim your sense of empowerment.",
+  
+  '84148de7-b04d-4547-9d9b-80665efbd4af': "Hi, I'm Dr. Taylor Morgan, a relationship and couples therapist trained in Gottman Method and Emotionally Focused Therapy. I help individuals and couples build stronger, more fulfilling connections through improved communication, conflict resolution, and emotional intimacy. Whether you're working on personal relationships, family dynamics, or preparing for marriage, I provide practical tools and insights to help you create the loving relationships you deserve.",
+  
+  '79298cfb-6997-4cc6-9b21-ffaacb525c54': "Greetings, I'm Dr. River Stone, a holistic therapist integrating traditional counseling with expressive arts, nature therapy, and spiritual practices. My approach honors the whole person - mind, body, and spirit. I work with clients seeking deeper meaning, creative expression, and connection to their authentic selves. Through art, movement, and contemplative practices, we'll explore your inner landscape and discover new pathways to healing and growth.",
+  
+  'e352e13d-99f9-4ffc-95a6-a05c3d935b74': "Hello, I'm Dr. Michael Rivers, a mindfulness-based stress reduction specialist with training in contemplative psychotherapy. I help busy professionals and individuals find calm in the midst of life's challenges through meditation, breathwork, and present-moment awareness. My gentle, patient approach combines ancient wisdom with modern neuroscience to help you develop resilience, reduce anxiety, and cultivate inner peace in your daily life.",
+  
+  '88a93e17-4338-4834-b360-55c9db4cc667': "Hello, I'm Dr. Emma Thompson, a humanistic therapist practicing person-centered and existential approaches. I believe in your innate capacity for growth and healing. In our work together, I provide a warm, non-judgmental space where you can explore your authentic self, clarify your values, and find meaning in your experiences. My approach emphasizes self-acceptance, personal responsibility, and the courage to live authentically.",
+  
+  '1588e859-69a6-4b88-b2cc-c377441ac08c': "Hello, I'm Dr. James Martinez, a solution-focused therapist specializing in positive psychology and personal development. I help clients recognize their existing strengths and build upon them to create positive life changes. My energetic, optimistic approach focuses on what's working in your life and how to expand upon it. Together, we'll develop practical strategies for achieving your goals and building the fulfilling life you envision.",
 };
 
 serve(async (req) => {

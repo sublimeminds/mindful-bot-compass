@@ -316,12 +316,25 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
       setAvatarEmotion(emotion as any || 'neutral');
       
       if (isVoiceEnabled) {
+        // Stop any currently playing audio to prevent overlap
+        speechSynthesis.cancel();
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+        }
+        
         setTimeout(async () => {
           try {
             const audioUrl = await generateSpeech(content, therapist.id);
             if (audioUrl) {
               const audio = new Audio(audioUrl);
               audio.volume = 1.0;
+              audioRef.current = audio;
+              
+              audio.onended = () => {
+                console.log('Audio playback ended');
+              };
+              
               audio.play().catch(() => {
                 // Fallback to browser TTS
                 const utterance = new SpeechSynthesisUtterance(content);
@@ -346,7 +359,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
             utterance.volume = 1.0;
             speechSynthesis.speak(utterance);
           }
-        }, 500);
+        }, 800); // Increased delay to prevent overlap
       }
     }
   };
@@ -374,6 +387,11 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
+    // Stop any playing audio when pausing
+    speechSynthesis.cancel();
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
   };
 
   const resetDemo = () => {
@@ -387,8 +405,11 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
+    // Stop all audio when resetting
+    speechSynthesis.cancel();
     if (audioRef.current) {
       audioRef.current.pause();
+      audioRef.current.currentTime = 0;
     }
   };
 
