@@ -9,15 +9,23 @@ import HeaderDropdownItem from './HeaderDropdownItem';
 import { getItemIcon } from '@/utils/iconUtils';
 
 const DatabaseHeaderDropdowns: React.FC = () => {
-  const { menuConfig, loading } = useNavigationMenus();
+  const { menuConfig, loading, error } = useNavigationMenus();
 
-  console.log('🔍 DatabaseHeaderDropdowns - menuConfig:', menuConfig);
-  console.log('🔍 DatabaseHeaderDropdowns - loading:', loading);
-  console.log('🔍 DatabaseHeaderDropdowns - menus count:', menuConfig.menus?.length || 0);
-  console.log('🔍 DatabaseHeaderDropdowns - items count:', menuConfig.items?.length || 0);
+  console.log('🔍 DatabaseHeaderDropdowns render:', { 
+    loading, 
+    hasMenus: !!menuConfig?.menus?.length,
+    hasItems: !!menuConfig?.items?.length,
+    error 
+  });
 
   if (loading) {
-    return <div className="flex space-x-8">Loading...</div>;
+    console.log('🔄 Navigation still loading...');
+    return <div className="flex space-x-8 text-gray-500">Loading navigation...</div>;
+  }
+
+  if (error) {
+    console.error('❌ Navigation error:', error);
+    return <div className="flex space-x-8 text-red-500">Error loading navigation</div>;
   }
 
   // Filter out active menus and sort by position
