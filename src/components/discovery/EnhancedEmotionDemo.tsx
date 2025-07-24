@@ -12,7 +12,7 @@ import {
   Volume2,
   VolumeX
 } from 'lucide-react';
-import VoiceEnhancedAvatar from '@/components/avatar/VoiceEnhancedAvatar';
+import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -158,15 +158,13 @@ const EnhancedEmotionDemo: React.FC<EnhancedEmotionDemoProps> = ({ therapist }) 
         <div className="flex justify-center">
           <div className="relative">
             <div className="w-32 h-32 bg-gradient-to-br from-therapy-50 to-calm-50 rounded-full overflow-hidden">
-              <VoiceEnhancedAvatar
-                therapistId={therapist.id}
+              <Professional2DAvatar
+                therapistId={avatarId}
                 therapistName={therapist.name}
                 emotion={currentEmotion}
                 isSpeaking={isPlaying}
                 isListening={false}
-                showControls={false}
                 className="w-full h-full"
-                force2D={true}
               />
             </div>
             

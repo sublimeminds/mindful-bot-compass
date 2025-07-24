@@ -56,20 +56,7 @@ serve(async (req) => {
       );
     }
 
-    let body;
-    try {
-      body = await req.json();
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError);
-      return new Response(
-        JSON.stringify({ error: 'Invalid JSON in request body' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
+    const body = await req.json();
     const { therapistId, text }: VoicePreviewRequest = body;
     
     if (!therapistId) {
@@ -90,73 +77,69 @@ serve(async (req) => {
     
     console.log('Generating voice with config:', voiceConfig);
     
-    // Call ElevenLabs Text-to-Speech API
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceConfig.voiceId}`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'audio/mpeg',
-        'Content-Type': 'application/json',
-        'xi-api-key': ELEVENLABS_API_KEY!,
-      },
-      body: JSON.stringify({
-        text: introText,
-        model_id: voiceConfig.model,
-        voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.8,
-          style: 0.2,
-          use_speaker_boost: true
-        }
-      }),
-    });
+    // Call ElevenLabs API with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+    
+    try {
+      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceConfig.voiceId}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'audio/mpeg',
+          'Content-Type': 'application/json',
+          'xi-api-key': ELEVENLABS_API_KEY!,
+        },
+        body: JSON.stringify({
+          text: introText,
+          model_id: voiceConfig.model,
+          voice_settings: {
+            stability: 0.6,
+            similarity_boost: 0.9,
+            style: 0.3,
+            use_speaker_boost: true
+          }
+        }),
+        signal: controller.signal
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('ElevenLabs API error:', response.status, errorText);
-      throw new Error(`ElevenLabs API error: ${response.status} - ${errorText}`);
-    }
+      clearTimeout(timeoutId);
 
-    const audioBuffer = await response.arrayBuffer();
-    const base64Audio = btoa(String.fromCharCode(...new Uint8Array(audioBuffer)));
-
-    console.log('Voice preview generated successfully');
-
-    return new Response(
-      JSON.stringify({ 
-        audioContent: base64Audio,
-        text: introText,
-        voiceId: voiceConfig.voiceId
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('ElevenLabs API error:', response.status, errorText);
+        throw new Error(`ElevenLabs API error: ${response.status}`);
       }
-    );
+
+      const audioBuffer = await response.arrayBuffer();
+      const base64Audio = btoa(String.fromCharCode(...new Uint8Array(audioBuffer)));
+
+      console.log('Voice preview generated successfully, size:', audioBuffer.byteLength);
+
+      return new Response(
+        JSON.stringify({ 
+          audioContent: base64Audio,
+          text: introText,
+          voiceId: voiceConfig.voiceId
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      throw fetchError;
+    }
 
   } catch (error) {
     console.error('Error in elevenlabs-voice-preview function:', error);
     
-    // Prevent infinite recursion by checking error type
-    if (error instanceof RangeError && error.message.includes('Maximum call stack size exceeded')) {
-      console.error('Recursion detected, providing fallback response');
-      return new Response(
-        JSON.stringify({ 
-          error: 'Voice service temporarily unavailable',
-          fallback: 'Please try again later'
-        }),
-        {
-          status: 503,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
-    
     return new Response(
       JSON.stringify({ 
-        error: error?.message || 'Voice generation failed',
-        fallback: 'Voice preview temporarily unavailable'
+        error: 'Voice preview temporarily unavailable',
+        fallback: 'Please try again later'
       }),
       {
-        status: 500,
+        status: 503,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );

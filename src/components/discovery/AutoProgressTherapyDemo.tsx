@@ -14,9 +14,10 @@ import {
   Heart, 
   MessageCircle,
   Clock,
-  Sparkles
+  Sparkles,
+  User
 } from 'lucide-react';
-import VoiceEnhancedAvatar from '@/components/avatar/VoiceEnhancedAvatar';
+import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -74,39 +75,39 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
           type: 'therapist',
           content: `Hi there! I'm ${therapist.name}. Welcome to our session. I want you to know this is a completely safe space where you can share anything that's on your mind. How are you feeling today?`,
           emotion: 'encouraging',
-          delay: 2000,
-          typingDuration: 3500
+          delay: 1500,
+          typingDuration: 4000
         },
         {
           type: 'user',
           content: "I've been feeling really anxious lately. My heart races and I can't seem to calm down, especially before work meetings.",
-          delay: 5000,
-          typingDuration: 4500
+          delay: 3500,
+          typingDuration: 3000
         },
         {
           type: 'therapist',
           content: "Thank you for sharing that with me. Anxiety before important situations is really common, and I want you to know that what you're experiencing is valid. When you notice your heart racing, what thoughts typically go through your mind?",
           emotion: 'empathetic',
-          delay: 4000,
-          typingDuration: 5000
+          delay: 2500,
+          typingDuration: 4500
         },
         {
           type: 'user',
           content: "I keep thinking 'What if I mess up?' or 'Everyone will think I'm incompetent.' It's like my brain just spirals into worst-case scenarios.",
-          delay: 4500,
-          typingDuration: 3500
+          delay: 3000,
+          typingDuration: 2800
         },
         {
           type: 'therapist',
           content: "That spiral of 'what if' thoughts is what we call catastrophic thinking, and it's one of anxiety's favorite tricks. Let me teach you a technique called the '5-4-3-2-1 grounding method' that can help interrupt that spiral. Can you tell me 5 things you can see right now?",
           emotion: 'thoughtful',
-          delay: 2500,
-          typingDuration: 3500
+          delay: 2000,
+          typingDuration: 4000
         },
         {
           type: 'user',
           content: "Um... I can see my laptop, a coffee mug, some books on my shelf, a plant, and... a picture frame.",
-          delay: 3000,
+          delay: 2500,
           typingDuration: 2200
         },
         {
@@ -114,20 +115,20 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
           content: "Perfect! Now 4 things you can touch... Notice how your breathing has already started to slow down? This technique works by bringing your nervous system back to the present moment, away from those anxious future scenarios.",
           emotion: 'encouraging',
           delay: 2000,
-          typingDuration: 3200
+          typingDuration: 3800
         },
         {
           type: 'user',
           content: "Wow, you're right. I do feel a bit calmer. I can touch my keyboard, the armrest of my chair, my phone, and this soft throw blanket.",
-          delay: 3200,
-          typingDuration: 2600
+          delay: 2800,
+          typingDuration: 2400
         },
         {
           type: 'therapist',
           content: "Excellent! You're already learning to work with your anxiety instead of fighting against it. In our sessions, we'll build on this foundation with CBT techniques, breathing exercises, and personalized strategies for your specific triggers. You have more control than anxiety wants you to believe.",
           emotion: 'encouraging',
-          delay: 2500,
-          typingDuration: 4000
+          delay: 2200,
+          typingDuration: 4200
         }
       ];
     } else if (primarySpecialty.includes('relationship')) {
@@ -284,14 +285,23 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
 
   const addMessage = async (content: string, isUser: boolean, emotion?: string) => {
     const newMessage: Message = {
-      id: Date.now().toString(),
+      id: `${Date.now()}-${isUser ? 'user' : 'therapist'}-${Math.random()}`,
       content,
       isUser,
       timestamp: new Date(),
       emotion
     };
     
-    setMessages(prev => [...prev, newMessage]);
+    // Prevent duplicate messages
+    setMessages(prev => {
+      const isDuplicate = prev.some(msg => 
+        msg.content === content && 
+        msg.isUser === isUser && 
+        Date.now() - msg.timestamp.getTime() < 1000
+      );
+      if (isDuplicate) return prev;
+      return [...prev, newMessage];
+    });
     
     if (!isUser) {
       setAvatarEmotion(emotion as any || 'neutral');
@@ -390,15 +400,13 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="aspect-square bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden">
-              <VoiceEnhancedAvatar
-                therapistId={therapist.id}
+              <Professional2DAvatar
+                therapistId={avatarId}
                 therapistName={therapist.name}
                 emotion={avatarEmotion}
                 isSpeaking={typingUser === 'therapist'}
                 isListening={false}
-                showControls={false}
                 className="w-full h-full"
-                force2D={true}
               />
             </div>
             
@@ -483,17 +491,23 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
             <ScrollArea className="flex-1 mb-4">
               <div className="space-y-3">
                 {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex w-full ${message.isUser ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div className={`max-w-[85%] rounded-lg p-3 ${
+                  <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} mb-4`}>
+                    {!message.isUser && (
+                      <div className="w-8 h-8 rounded-full bg-therapy-100 flex items-center justify-center mr-3 flex-shrink-0 mt-1">
+                        <span className="text-xs font-medium text-therapy-700">
+                          {therapist.name.split(' ').map(n => n[0]).join('')}
+                        </span>
+                      </div>
+                    )}
+                    <div className={`max-w-[75%] p-3 rounded-lg ${
                       message.isUser 
                         ? 'bg-therapy-600 text-white' 
                         : 'bg-gray-100 text-gray-900'
                     }`}>
-                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                      
+                      <p className="text-sm leading-relaxed">{message.content}</p>
+                      <span className="text-xs opacity-70 mt-1 block">
+                        {message.timestamp.toLocaleTimeString()}
+                      </span>
                       {!message.isUser && message.emotion && (
                         <div className="mt-2">
                           <Badge variant="outline" className="text-xs">
@@ -506,6 +520,11 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
                         </div>
                       )}
                     </div>
+                    {message.isUser && (
+                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center ml-3 flex-shrink-0 mt-1">
+                        <User className="w-4 h-4 text-blue-600" />
+                      </div>
+                    )}
                   </div>
                 ))}
                 
