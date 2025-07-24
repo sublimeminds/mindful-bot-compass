@@ -26,6 +26,7 @@ const HowItWorks = lazy(() => import('@/pages/HowItWorks'));
 const Personalization = lazy(() => import('@/pages/AIPersonalization'));
 const AdaptiveAI = lazy(() => import('@/pages/features/AdaptiveSystems'));
 const CulturalAI = lazy(() => import('@/pages/CulturalAI'));
+const VoiceAI = lazy(() => import('@/pages/VoiceAITechnology'));
 const API = lazy(() => import('@/pages/API'));
 const Learn = lazy(() => import('@/pages/Learn'));
 
@@ -214,6 +215,12 @@ const AppRouter: React.FC = () => {
         <Route path="/cultural-therapy" element={
           <PublicPageWrapper>
             <CulturalAI />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/voice-therapy" element={
+          <PublicPageWrapper>
+            <VoiceAI />
           </PublicPageWrapper>
         } />
 
