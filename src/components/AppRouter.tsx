@@ -19,12 +19,12 @@ const ForIndividuals = lazy(() => import('@/pages/ForIndividuals'));
 const ForFamilies = lazy(() => import('@/pages/ForFamilies'));
 const ForOrganizations = lazy(() => import('@/pages/ForOrganizations'));
 const ForHealthcareProviders = lazy(() => import('@/pages/ForHealthcareProviders'));
-const TherapyAI = lazy(() => import('@/pages/TherapyAI'));
-const AIChat = lazy(() => import('@/pages/AIChat'));
+const TherapyAI = lazy(() => import('@/pages/TherapyAICore'));
+const AIChat = lazy(() => import('@/pages/AITherapyChat'));
 const Analytics = lazy(() => import('@/pages/Analytics'));
 const HowItWorks = lazy(() => import('@/pages/HowItWorks'));
-const Personalization = lazy(() => import('@/pages/Personalization'));
-const AdaptiveAI = lazy(() => import('@/pages/AdaptiveAI'));
+const Personalization = lazy(() => import('@/pages/AIPersonalization'));
+const AdaptiveAI = lazy(() => import('@/pages/features/AdaptiveSystems'));
 const API = lazy(() => import('@/pages/API'));
 const Learn = lazy(() => import('@/pages/Learn'));
 
