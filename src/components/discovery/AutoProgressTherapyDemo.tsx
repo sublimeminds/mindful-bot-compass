@@ -62,6 +62,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const { generateSpeech, isGenerating } = useElevenLabsVoice();
 
   const avatarId = getAvatarIdForTherapist(therapist.id);
@@ -261,14 +262,33 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
           addMessage(step.content, step.type === 'user', step.emotion);
           setIsTyping(false);
           setTypingUser(null);
-          setCurrentStep(prev => prev + 1);
-          setProgress((currentStep + 1) / demoSteps.length * 100);
+          
+          // Wait for audio to finish before proceeding to next step
+          const waitForAudio = () => {
+            if (step.type === 'therapist' && isVoiceEnabled) {
+              // Wait for audio to finish playing
+              const checkAudio = setInterval(() => {
+                if (!isAudioPlaying) {
+                  clearInterval(checkAudio);
+                  setCurrentStep(prev => prev + 1);
+                  setProgress((currentStep + 1) / demoSteps.length * 100);
+                }
+              }, 100);
+            } else {
+              // No audio for user messages, proceed immediately
+              setTimeout(() => {
+                setCurrentStep(prev => prev + 1);
+                setProgress((currentStep + 1) / demoSteps.length * 100);
+              }, 500);
+            }
+          };
+          
+          waitForAudio();
         }, step.typingDuration || 2000);
       }, step.delay);
     } else if (currentStep >= demoSteps.length && isPlaying) {
       setIsPlaying(false);
       setTimeout(() => {
-        // Redirect to onboarding instead of index
         window.location.href = '/onboarding';
       }, 2000);
     }
@@ -278,7 +298,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [currentStep, isPlaying, demoSteps, onComplete]);
+  }, [currentStep, isPlaying, demoSteps, onComplete, isAudioPlaying, isVoiceEnabled]);
 
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -315,7 +335,9 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
     if (!isUser) {
       setAvatarEmotion(emotion as any || 'neutral');
       
-      if (isVoiceEnabled) {
+      if (isVoiceEnabled && !isAudioPlaying) {
+        setIsAudioPlaying(true);
+        
         // Stop any currently playing audio to prevent overlap
         speechSynthesis.cancel();
         if (audioRef.current) {
@@ -332,23 +354,35 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
               audioRef.current = audio;
               
               audio.onended = () => {
-                console.log('Audio playback ended');
+                console.log('ElevenLabs audio playback ended');
+                setIsAudioPlaying(false);
               };
               
-              audio.play().catch(() => {
+              audio.onerror = () => {
+                console.log('ElevenLabs failed, using browser TTS fallback');
                 // Fallback to browser TTS
                 const utterance = new SpeechSynthesisUtterance(content);
                 utterance.rate = 0.8;
                 utterance.pitch = 1.1;
                 utterance.volume = 1.0;
+                utterance.onend = () => {
+                  setIsAudioPlaying(false);
+                };
                 speechSynthesis.speak(utterance);
-              });
+              };
+              
+              await audio.play();
+              console.log('ElevenLabs audio started playing');
             } else {
               // Fallback to browser TTS
+              console.log('No ElevenLabs audio, using browser TTS');
               const utterance = new SpeechSynthesisUtterance(content);
               utterance.rate = 0.8;
               utterance.pitch = 1.1;
               utterance.volume = 1.0;
+              utterance.onend = () => {
+                setIsAudioPlaying(false);
+              };
               speechSynthesis.speak(utterance);
             }
           } catch (error) {
@@ -357,9 +391,12 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
             utterance.rate = 0.8;
             utterance.pitch = 1.1;
             utterance.volume = 1.0;
+            utterance.onend = () => {
+              setIsAudioPlaying(false);
+            };
             speechSynthesis.speak(utterance);
           }
-        }, 800); // Increased delay to prevent overlap
+        }, 300);
       }
     }
   };
@@ -373,10 +410,18 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
     setIsTyping(false);
     setTypingUser(null);
     setAvatarEmotion('neutral');
+    setIsAudioPlaying(false);
     
     // Reset any existing timeouts
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+    }
+    
+    // Stop all audio
+    speechSynthesis.cancel();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
     }
     
     console.log('Starting demo with', demoSteps.length, 'steps');
@@ -384,6 +429,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
 
   const pauseDemo = () => {
     setIsPlaying(false);
+    setIsAudioPlaying(false);
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -402,6 +448,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
     setIsTyping(false);
     setTypingUser(null);
     setAvatarEmotion('neutral');
+    setIsAudioPlaying(false);
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
