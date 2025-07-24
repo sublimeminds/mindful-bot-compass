@@ -12,6 +12,9 @@ const DatabaseHeaderDropdowns: React.FC = () => {
   const { menuConfig, loading } = useNavigationMenus();
 
   console.log('🔍 DatabaseHeaderDropdowns - menuConfig:', menuConfig);
+  console.log('🔍 DatabaseHeaderDropdowns - loading:', loading);
+  console.log('🔍 DatabaseHeaderDropdowns - menus count:', menuConfig.menus?.length || 0);
+  console.log('🔍 DatabaseHeaderDropdowns - items count:', menuConfig.items?.length || 0);
 
   if (loading) {
     return <div className="flex space-x-8">Loading...</div>;
