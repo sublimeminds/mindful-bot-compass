@@ -19,6 +19,14 @@ const ForIndividuals = lazy(() => import('@/pages/ForIndividuals'));
 const ForFamilies = lazy(() => import('@/pages/ForFamilies'));
 const ForOrganizations = lazy(() => import('@/pages/ForOrganizations'));
 const ForHealthcareProviders = lazy(() => import('@/pages/ForHealthcareProviders'));
+const TherapyAI = lazy(() => import('@/pages/TherapyAI'));
+const AIChat = lazy(() => import('@/pages/AIChat'));
+const Analytics = lazy(() => import('@/pages/Analytics'));
+const HowItWorks = lazy(() => import('@/pages/HowItWorks'));
+const Personalization = lazy(() => import('@/pages/Personalization'));
+const AdaptiveAI = lazy(() => import('@/pages/AdaptiveAI'));
+const API = lazy(() => import('@/pages/API'));
+const Learn = lazy(() => import('@/pages/Learn'));
 
 const AppRouter: React.FC = () => {
   console.log('🔍 AppRouter: Rendering routes');
@@ -78,6 +86,127 @@ const AppRouter: React.FC = () => {
         <Route path="/for-healthcare-providers" element={
           <PublicPageWrapper>
             <ForHealthcareProviders />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/therapy-ai" element={
+          <PublicPageWrapper>
+            <TherapyAI />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/ai-chat" element={
+          <PublicPageWrapper>
+            <AIChat />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/how-it-works" element={
+          <PublicPageWrapper>
+            <HowItWorks />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/individual" element={
+          <PublicPageWrapper>
+            <ForIndividuals />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/families" element={
+          <PublicPageWrapper>
+            <ForFamilies />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/organizations" element={
+          <PublicPageWrapper>
+            <ForOrganizations />
+          </PublicPageWrapper>
+        } />
+
+        {/* Analytics route - requires authentication */}
+        <Route path="/analytics" element={
+          <PrivateRoute>
+            <Analytics />
+          </PrivateRoute>
+        } />
+        
+        <Route path="/personalization" element={
+          <PublicPageWrapper>
+            <Personalization />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/adaptive-ai" element={
+          <PublicPageWrapper>
+            <AdaptiveAI />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/goals" element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        } />
+        
+        <Route path="/mood-tracker" element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        } />
+        
+        <Route path="/reports" element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        } />
+        
+        <Route path="/api" element={
+          <PublicPageWrapper>
+            <API />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/learn" element={
+          <PublicPageWrapper>
+            <Learn />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/support" element={
+          <PublicPageWrapper>
+            <Help />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/pricing" element={
+          <PublicPageWrapper>
+            <Index />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/mobile" element={
+          <PublicPageWrapper>
+            <Index />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/cbt" element={
+          <PublicPageWrapper>
+            <AIChat />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/family" element={
+          <PublicPageWrapper>
+            <ForFamilies />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/blog" element={
+          <PublicPageWrapper>
+            <Learn />
           </PublicPageWrapper>
         } />
 
