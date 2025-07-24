@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { therapist3DAvatars, getTherapist3DAvatar } from '@/utils/therapist3DAvatars';
+import { getTherapistAvatarByName } from '@/utils/therapistAvatarImages';
 
 export interface TherapistAvatar {
   therapistId: string;
@@ -45,8 +46,9 @@ export const useTherapistAvatars = () => {
             .replace(/\s+/g, '-')
             .replace(/[^a-z0-9-]/g, '');
 
-          // Use database avatar_image_url if available, otherwise fallback to local 3D avatars
-          const avatarUrl = therapist.avatar_image_url || getTherapist3DAvatar(therapistId);
+          // Use AI-generated avatar first, then database URL, then fallback to 3D avatars
+          const aiGeneratedAvatar = getTherapistAvatarByName(therapist.name);
+          const avatarUrl = aiGeneratedAvatar || therapist.avatar_image_url || getTherapist3DAvatar(therapistId);
 
           if (avatarUrl) {
             avatarMap[therapistId] = {

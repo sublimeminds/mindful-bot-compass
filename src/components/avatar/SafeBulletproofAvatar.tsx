@@ -1,6 +1,7 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getPlaceholderAvatar, getInitials, getTherapistColor } from '@/utils/safeAvatarSystem';
+import { getTherapistAvatarById } from '@/utils/therapistAvatarImages';
 
 interface SafeBulletproofAvatarProps {
   therapistId: string;
@@ -36,6 +37,7 @@ const SafeBulletproofAvatar: React.FC<SafeBulletproofAvatarProps> = ({
 
   const initials = getInitials(therapistName || 'AI Therapist');
   const colorClass = getTherapistColor(therapistId || 'default');
+  const aiGeneratedAvatar = getTherapistAvatarById(therapistId || 'default');
   const placeholderSrc = getPlaceholderAvatar(therapistId || 'default');
 
   return (
@@ -43,7 +45,7 @@ const SafeBulletproofAvatar: React.FC<SafeBulletproofAvatarProps> = ({
       <div className="relative">
         <Avatar className={`${sizeClasses[size]} border-2 border-white shadow-lg transition-all duration-300 hover:scale-105`}>
           <AvatarImage 
-            src={placeholderSrc}
+            src={aiGeneratedAvatar || placeholderSrc}
             alt={`${therapistName} avatar`}
             className="object-cover"
           />
