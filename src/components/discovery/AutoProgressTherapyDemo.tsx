@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import { getAvatarIdForTherapist } from '@/services/therapistAvatarMapping';
-import { supabase } from '@/integrations/supabase/client';
+import { useElevenLabsVoice } from '@/hooks/useElevenLabsVoice';
 
 interface Message {
   id: string;
@@ -62,6 +62,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { generateSpeech, isGenerating } = useElevenLabsVoice();
 
   const avatarId = getAvatarIdForTherapist(therapist.id);
 
@@ -313,57 +314,43 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
     
     if (!isUser) {
       setAvatarEmotion(emotion as any || 'neutral');
-      // Always use browser TTS for now since ElevenLabs is having issues
+      
       if (isVoiceEnabled) {
-        setTimeout(() => {
-          const utterance = new SpeechSynthesisUtterance(content);
-          utterance.rate = 0.8;
-          utterance.pitch = 1.1;
-          utterance.volume = 1.0;
-          speechSynthesis.speak(utterance);
+        setTimeout(async () => {
+          try {
+            const audioUrl = await generateSpeech(content, therapist.id);
+            if (audioUrl) {
+              const audio = new Audio(audioUrl);
+              audio.volume = 1.0;
+              audio.play().catch(() => {
+                // Fallback to browser TTS
+                const utterance = new SpeechSynthesisUtterance(content);
+                utterance.rate = 0.8;
+                utterance.pitch = 1.1;
+                utterance.volume = 1.0;
+                speechSynthesis.speak(utterance);
+              });
+            } else {
+              // Fallback to browser TTS
+              const utterance = new SpeechSynthesisUtterance(content);
+              utterance.rate = 0.8;
+              utterance.pitch = 1.1;
+              utterance.volume = 1.0;
+              speechSynthesis.speak(utterance);
+            }
+          } catch (error) {
+            console.log('ElevenLabs failed, using browser TTS:', error);
+            const utterance = new SpeechSynthesisUtterance(content);
+            utterance.rate = 0.8;
+            utterance.pitch = 1.1;
+            utterance.volume = 1.0;
+            speechSynthesis.speak(utterance);
+          }
         }, 500);
       }
     }
   };
 
-  const playTherapistVoice = async (text: string) => {
-    try {
-      console.log('Attempting to play voice for text:', text.substring(0, 50));
-      
-      const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
-        body: { 
-          therapistId: therapist.id,
-          text: text.substring(0, 300)
-        }
-      });
-
-      if (data?.audioContent && isVoiceEnabled) {
-        if (audioRef.current) {
-          audioRef.current.pause();
-        }
-        
-        audioRef.current = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-        audioRef.current.volume = 1.0;
-        
-        audioRef.current.onended = () => {
-          console.log('Audio playback ended');
-        };
-        
-        audioRef.current.onerror = (e) => {
-          console.error('Audio playback error:', e);
-          throw new Error('Audio playback failed');
-        };
-        
-        await audioRef.current.play();
-        console.log('ElevenLabs audio playing successfully');
-      } else {
-        throw new Error('No audio content received');
-      }
-    } catch (error) {
-      console.error('Voice synthesis error:', error);
-      throw error; // Let the caller handle fallback
-    }
-  };
 
   const startDemo = () => {
     setIsPlaying(true);

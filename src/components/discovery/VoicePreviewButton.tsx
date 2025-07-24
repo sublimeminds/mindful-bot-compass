@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Volume2, VolumeX, Play, Pause } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { useElevenLabsVoice } from '@/hooks/useElevenLabsVoice';
 import { useToast } from '@/hooks/use-toast';
 
 interface VoicePreviewButtonProps {
@@ -21,6 +21,7 @@ const VoicePreviewButton: React.FC<VoicePreviewButtonProps> = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioRef, setAudioRef] = useState<HTMLAudioElement | null>(null);
+  const { generateSpeech, isGenerating } = useElevenLabsVoice();
   const { toast } = useToast();
 
   const defaultText = `Hello, I'm ${therapistName}. I'm here to support you on your mental health journey with evidence-based therapy approaches tailored to your needs.`;
@@ -38,36 +39,36 @@ const VoicePreviewButton: React.FC<VoicePreviewButtonProps> = ({
       console.log('=== Voice Preview Started ===');
       console.log('Therapist ID:', therapistId);
       
-      const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
-        body: { 
-          therapistId,
-          text: text || defaultText
-        }
-      });
-
-      console.log('Supabase response:', { data: !!data, error });
-
-      if (data?.audioContent) {
-        console.log('Got audio content, playing...');
+      const audioUrl = await generateSpeech(text || defaultText, therapistId);
+      
+      if (audioUrl) {
+        console.log('Got ElevenLabs audio, playing...');
         
         if (audioRef) {
           audioRef.pause();
         }
         
-        const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
+        const audio = new Audio(audioUrl);
         audio.volume = 1.0;
         audio.onended = () => setIsPlaying(false);
         audio.onerror = (e) => {
           console.error('Audio playback error:', e);
           setIsPlaying(false);
+          // Fallback to browser TTS
+          const utterance = new SpeechSynthesisUtterance(text || defaultText);
+          utterance.rate = 0.8;
+          utterance.pitch = 1;
+          utterance.volume = 0.8;
+          utterance.onend = () => setIsPlaying(false);
+          speechSynthesis.speak(utterance);
         };
         
         setAudioRef(audio);
         await audio.play();
-        console.log('Audio playing successfully at volume:', audio.volume);
+        console.log('ElevenLabs audio playing successfully');
         
       } else {
-        console.log('No audio content, using browser TTS fallback');
+        console.log('No ElevenLabs audio, using browser TTS fallback');
         // Fallback to browser TTS
         const utterance = new SpeechSynthesisUtterance(text || defaultText);
         utterance.rate = 0.8;

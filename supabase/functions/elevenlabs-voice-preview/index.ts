@@ -125,7 +125,16 @@ serve(async (req) => {
     }
 
     const audioBuffer = await response.arrayBuffer();
-    const base64Audio = btoa(String.fromCharCode(...new Uint8Array(audioBuffer)));
+    
+    // Convert to base64 safely to avoid stack overflow
+    const uint8Array = new Uint8Array(audioBuffer);
+    let binary = '';
+    const chunkSize = 0x8000; // 32KB chunks
+    for (let i = 0; i < uint8Array.length; i += chunkSize) {
+      const chunk = uint8Array.subarray(i, i + chunkSize);
+      binary += String.fromCharCode(...chunk);
+    }
+    const base64Audio = btoa(binary);
 
     console.log('Voice generation successful, audio size:', audioBuffer.byteLength);
 
