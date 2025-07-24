@@ -59,7 +59,7 @@ const VoicePreviewButton: React.FC<VoicePreviewButtonProps> = ({
         }
         
         const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-        audio.volume = 0.8; // Set default volume
+        audio.volume = 1.0; // Increase volume to maximum
         audio.onended = () => setIsPlaying(false);
         audio.onerror = () => {
           setIsPlaying(false);
@@ -73,6 +73,7 @@ const VoicePreviewButton: React.FC<VoicePreviewButtonProps> = ({
         setAudioRef(audio);
         try {
           await audio.play();
+          console.log('Audio playing successfully at volume:', audio.volume);
         } catch (playError) {
           console.error('Audio play error:', playError);
           setIsPlaying(false);

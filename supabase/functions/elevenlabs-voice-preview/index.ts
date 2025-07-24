@@ -56,7 +56,20 @@ serve(async (req) => {
       );
     }
 
-    const body = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON in request body' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     const { therapistId, text }: VoicePreviewRequest = body;
     
     if (!therapistId) {
@@ -121,9 +134,25 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in elevenlabs-voice-preview function:', error);
+    
+    // Prevent infinite recursion by checking error type
+    if (error instanceof RangeError && error.message.includes('Maximum call stack size exceeded')) {
+      console.error('Recursion detected, providing fallback response');
+      return new Response(
+        JSON.stringify({ 
+          error: 'Voice service temporarily unavailable',
+          fallback: 'Please try again later'
+        }),
+        {
+          status: 503,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+    
     return new Response(
       JSON.stringify({ 
-        error: error.message || 'Voice generation failed',
+        error: error?.message || 'Voice generation failed',
         fallback: 'Voice preview temporarily unavailable'
       }),
       {

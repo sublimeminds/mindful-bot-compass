@@ -80,21 +80,21 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
         {
           type: 'user',
           content: "I've been feeling really anxious lately. My heart races and I can't seem to calm down, especially before work meetings.",
-          delay: 4000,
-          typingDuration: 3500
+          delay: 5000,
+          typingDuration: 4500
         },
         {
           type: 'therapist',
           content: "Thank you for sharing that with me. Anxiety before important situations is really common, and I want you to know that what you're experiencing is valid. When you notice your heart racing, what thoughts typically go through your mind?",
           emotion: 'empathetic',
-          delay: 3000,
-          typingDuration: 4000
+          delay: 4000,
+          typingDuration: 5000
         },
         {
           type: 'user',
           content: "I keep thinking 'What if I mess up?' or 'Everyone will think I'm incompetent.' It's like my brain just spirals into worst-case scenarios.",
-          delay: 3500,
-          typingDuration: 2800
+          delay: 4500,
+          typingDuration: 3500
         },
         {
           type: 'therapist',
@@ -266,7 +266,8 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
     } else if (currentStep >= demoSteps.length && isPlaying) {
       setIsPlaying(false);
       setTimeout(() => {
-        onComplete?.();
+        // Redirect to onboarding instead of index
+        window.location.href = '/onboarding';
       }, 2000);
     }
 
@@ -315,7 +316,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
         }
         
         audioRef.current = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-        audioRef.current.volume = 0.7;
+        audioRef.current.volume = 1.0; // Max volume for better audibility
         
         audioRef.current.onended = () => {
           // Audio finished playing
@@ -390,7 +391,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
           <CardContent className="space-y-3">
             <div className="aspect-square bg-gradient-to-br from-therapy-50 to-calm-50 rounded-lg overflow-hidden">
               <VoiceEnhancedAvatar
-                therapistId={avatarId}
+                therapistId={therapist.id}
                 therapistName={therapist.name}
                 emotion={avatarEmotion}
                 isSpeaking={typingUser === 'therapist'}

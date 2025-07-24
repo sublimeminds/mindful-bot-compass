@@ -100,7 +100,7 @@ const EnhancedEmotionDemo: React.FC<EnhancedEmotionDemoProps> = ({ therapist }) 
           }
           
           const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-          audio.volume = 0.7;
+          audio.volume = 1.0; // Max volume for better audibility
           audio.onended = () => setIsPlaying(false);
           audio.onerror = () => setIsPlaying(false);
           setAudioRef(audio);
@@ -159,7 +159,7 @@ const EnhancedEmotionDemo: React.FC<EnhancedEmotionDemoProps> = ({ therapist }) 
           <div className="relative">
             <div className="w-32 h-32 bg-gradient-to-br from-therapy-50 to-calm-50 rounded-full overflow-hidden">
               <VoiceEnhancedAvatar
-                therapistId={avatarId}
+                therapistId={therapist.id}
                 therapistName={therapist.name}
                 emotion={currentEmotion}
                 isSpeaking={isPlaying}

@@ -1182,9 +1182,12 @@ const TherapistDiscovery = () => {
 
                 {/* Action Buttons */}
                 <div className="flex gap-3">
-                  <Button className="flex-1 bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700">
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Start Therapy Session
+                  <Button 
+                    className="flex-1 bg-gradient-to-r from-therapy-600 to-calm-600 hover:from-therapy-700 hover:to-calm-700"
+                    onClick={() => navigate('/onboarding')}
+                  >
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Start Journey
                   </Button>
                   <Button variant="outline">
                     <Heart className="h-4 w-4 mr-2" />
