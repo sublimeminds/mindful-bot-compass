@@ -90,9 +90,11 @@ const communicationStyles = [
 ];
 
 const TherapistDiscovery = () => {
-  const { user } = useSimpleApp();
-  const { onboardingData, isLoading: onboardingLoading } = useOnboardingData();
-  const navigate = useNavigate();
+  // Add error boundary for React hooks
+  try {
+    const { user } = useSimpleApp();
+    const { onboardingData, isLoading: onboardingLoading } = useOnboardingData();
+    const navigate = useNavigate();
   
   const [selectedTherapist, setSelectedTherapist] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -1473,6 +1475,25 @@ const TherapistDiscovery = () => {
       </Dialog>
     </div>
   );
+  } catch (error) {
+    console.error('TherapistDiscovery component error:', error);
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-2">Loading Error</h2>
+          <p className="text-muted-foreground mb-4">
+            Unable to load the therapist discovery page. Please refresh and try again.
+          </p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Refresh Page
+          </button>
+        </div>
+      </div>
+    );
+  }
 };
 
 export default TherapistDiscovery;

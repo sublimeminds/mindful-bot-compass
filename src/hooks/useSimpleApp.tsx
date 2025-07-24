@@ -32,18 +32,42 @@ export const SimpleAppProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 };
 
 export const useSimpleApp = () => {
-  const context = useContext(SimpleAppContext);
-  if (context === undefined) {
-    // Fallback to direct auth hook usage
-    const auth = useAuth();
+  try {
+    const context = useContext(SimpleAppContext);
+    if (context === undefined) {
+      // Fallback to direct auth hook usage
+      try {
+        const auth = useAuth();
+        return {
+          user: auth.user,
+          loading: auth.loading,
+          signOut: auth.signOut || auth.logout,
+          logout: auth.signOut || auth.logout,
+          register: auth.signUp || auth.register,
+          login: auth.signIn || auth.login,
+        };
+      } catch (authError) {
+        console.error('Auth hook error:', authError);
+        return {
+          user: null,
+          loading: false,
+          signOut: async () => {},
+          logout: async () => {},
+          register: async () => ({ error: new Error('Auth unavailable') }),
+          login: async () => ({ error: new Error('Auth unavailable') }),
+        };
+      }
+    }
+    return context;
+  } catch (error) {
+    console.error('useSimpleApp hook error:', error);
     return {
-      user: auth.user,
-      loading: auth.loading,
-      signOut: auth.signOut || auth.logout,
-      logout: auth.signOut || auth.logout,
-      register: auth.signUp || auth.register,
-      login: auth.signIn || auth.login,
+      user: null,
+      loading: false,
+      signOut: async () => {},
+      logout: async () => {},
+      register: async () => ({ error: new Error('App context unavailable') }),
+      login: async () => ({ error: new Error('App context unavailable') }),
     };
   }
-  return context;
 };

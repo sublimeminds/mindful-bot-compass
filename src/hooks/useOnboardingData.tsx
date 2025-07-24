@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSimpleApp } from '@/hooks/useSimpleApp';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -10,11 +10,13 @@ interface OnboardingData {
 }
 
 export const useOnboardingData = () => {
-  const { user } = useSimpleApp();
-  const [onboardingData, setOnboardingData] = useState<OnboardingData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Add error boundary for React context issues
+  try {
+    const { user } = useSimpleApp();
+    const [onboardingData, setOnboardingData] = React.useState<OnboardingData | null>(null);
+    const [isLoading, setIsLoading] = React.useState(true);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchOnboardingData = async () => {
       if (!user) {
         setIsLoading(false);
@@ -48,4 +50,11 @@ export const useOnboardingData = () => {
   }, [user]);
 
   return { onboardingData, isLoading };
+  } catch (error) {
+    console.error('useOnboardingData hook error:', error);
+    return { 
+      onboardingData: null, 
+      isLoading: false 
+    };
+  }
 };
