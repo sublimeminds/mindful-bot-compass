@@ -74,21 +74,21 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
           type: 'therapist',
           content: `Hi there! I'm ${therapist.name}. Welcome to our session. I want you to know this is a completely safe space where you can share anything that's on your mind. How are you feeling today?`,
           emotion: 'encouraging',
-          delay: 1000,
-          typingDuration: 2000
+          delay: 2000,
+          typingDuration: 3500
         },
         {
           type: 'user',
           content: "I've been feeling really anxious lately. My heart races and I can't seem to calm down, especially before work meetings.",
-          delay: 3000,
-          typingDuration: 2500
+          delay: 4000,
+          typingDuration: 3500
         },
         {
           type: 'therapist',
           content: "Thank you for sharing that with me. Anxiety before important situations is really common, and I want you to know that what you're experiencing is valid. When you notice your heart racing, what thoughts typically go through your mind?",
           emotion: 'empathetic',
-          delay: 2000,
-          typingDuration: 3000
+          delay: 3000,
+          typingDuration: 4000
         },
         {
           type: 'user',
@@ -305,7 +305,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
       const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
         body: { 
           therapistId: therapist.id,
-          text: text.substring(0, 300) // Limit for demo but longer than before
+          text: text.substring(0, 300)
         }
       });
 
@@ -315,9 +315,21 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
         }
         
         audioRef.current = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-        audioRef.current.play().catch(error => {
-          console.error('Audio playback error:', error);
-        });
+        audioRef.current.volume = 0.7;
+        
+        audioRef.current.onended = () => {
+          // Audio finished playing
+        };
+        
+        audioRef.current.onerror = (e) => {
+          console.error('Audio playback error:', e);
+        };
+        
+        try {
+          await audioRef.current.play();
+        } catch (playError) {
+          console.error('Audio play failed:', playError);
+        }
       }
     } catch (error) {
       console.error('Voice synthesis error:', error);

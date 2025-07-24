@@ -100,10 +100,16 @@ const EnhancedEmotionDemo: React.FC<EnhancedEmotionDemoProps> = ({ therapist }) 
           }
           
           const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
+          audio.volume = 0.7;
           audio.onended = () => setIsPlaying(false);
           audio.onerror = () => setIsPlaying(false);
           setAudioRef(audio);
-          await audio.play();
+          try {
+            await audio.play();
+          } catch (error) {
+            console.error('Audio play failed:', error);
+            setIsPlaying(false);
+          }
         }
       } catch (error) {
         console.error('Voice synthesis error:', error);

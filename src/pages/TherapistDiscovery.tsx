@@ -770,7 +770,11 @@ const TherapistDiscovery = () => {
                 className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer ${
                   selectedTherapist === therapist.id ? 'ring-2 ring-therapy-500 shadow-xl' : ''
                 }`}
-                onClick={() => setSelectedTherapist(selectedTherapist === therapist.id ? null : therapist.id)}
+                onClick={() => {
+                  setDetailsTherapist(therapist);
+                  setDetailsModalOpen(true);
+                  setSelectedTherapist(therapist.id);
+                }}
               >
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
