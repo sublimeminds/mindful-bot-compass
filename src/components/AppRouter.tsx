@@ -25,6 +25,7 @@ const Analytics = lazy(() => import('@/pages/Analytics'));
 const HowItWorks = lazy(() => import('@/pages/HowItWorks'));
 const Personalization = lazy(() => import('@/pages/AIPersonalization'));
 const AdaptiveAI = lazy(() => import('@/pages/features/AdaptiveSystems'));
+const CulturalAI = lazy(() => import('@/pages/CulturalAI'));
 const API = lazy(() => import('@/pages/API'));
 const Learn = lazy(() => import('@/pages/Learn'));
 
@@ -207,6 +208,12 @@ const AppRouter: React.FC = () => {
         <Route path="/blog" element={
           <PublicPageWrapper>
             <Learn />
+          </PublicPageWrapper>
+        } />
+        
+        <Route path="/cultural-therapy" element={
+          <PublicPageWrapper>
+            <CulturalAI />
           </PublicPageWrapper>
         } />
 
