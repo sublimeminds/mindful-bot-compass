@@ -44,20 +44,28 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  try {
-    if (!ELEVENLABS_API_KEY) {
-      console.error('ElevenLabs API key not configured');
-      return new Response(
-        JSON.stringify({ error: 'ElevenLabs API key not configured. Please add ELEVENLABS_API_KEY to your Supabase secrets.' }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
+  console.log('=== Starting elevenlabs-voice-preview function ===');
+  console.log('API Key configured:', !!ELEVENLABS_API_KEY);
 
+  if (!ELEVENLABS_API_KEY) {
+    console.error('ELEVENLABS_API_KEY not found in environment');
+    return new Response(
+      JSON.stringify({ 
+        error: 'ElevenLabs API key not configured',
+        fallback: 'Please configure ELEVENLABS_API_KEY in Supabase secrets'
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  try {
     const body = await req.json();
     const { therapistId, text }: VoicePreviewRequest = body;
+    
+    console.log('Request body:', { therapistId, textLength: text?.length });
     
     if (!therapistId) {
       return new Response(
@@ -69,73 +77,76 @@ serve(async (req) => {
       );
     }
 
-    console.log('Voice preview request for therapist:', therapistId);
-
     // Get voice config or use default
     const voiceConfig = therapistVoiceMap[therapistId] || { voiceId: 'EXAVITQu4vr4xnSDxMaL', model: 'eleven_multilingual_v2' };
     const introText = text || therapistIntroductions[therapistId] || "Hello, I'm your AI therapist. I'm here to support you on your mental health journey.";
     
-    console.log('Generating voice with config:', voiceConfig);
+    console.log('Using voice config:', voiceConfig);
+    console.log('Text to synthesize:', introText.substring(0, 100) + '...');
     
-    // Call ElevenLabs API with timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
-    
-    try {
-      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceConfig.voiceId}`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'audio/mpeg',
-          'Content-Type': 'application/json',
-          'xi-api-key': ELEVENLABS_API_KEY!,
-        },
-        body: JSON.stringify({
-          text: introText,
-          model_id: voiceConfig.model,
-          voice_settings: {
-            stability: 0.6,
-            similarity_boost: 0.9,
-            style: 0.3,
-            use_speaker_boost: true
-          }
-        }),
-        signal: controller.signal
-      });
+    // Call ElevenLabs API with proper error handling
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceConfig.voiceId}`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'audio/mpeg',
+        'Content-Type': 'application/json',
+        'xi-api-key': ELEVENLABS_API_KEY,
+      },
+      body: JSON.stringify({
+        text: introText,
+        model_id: voiceConfig.model,
+        voice_settings: {
+          stability: 0.6,
+          similarity_boost: 0.9,
+          style: 0.3,
+          use_speaker_boost: true
+        }
+      }),
+    });
 
-      clearTimeout(timeoutId);
+    console.log('ElevenLabs response status:', response.status);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('ElevenLabs API error:', response.status, errorText);
-        throw new Error(`ElevenLabs API error: ${response.status}`);
-      }
-
-      const audioBuffer = await response.arrayBuffer();
-      const base64Audio = btoa(String.fromCharCode(...new Uint8Array(audioBuffer)));
-
-      console.log('Voice preview generated successfully, size:', audioBuffer.byteLength);
-
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('ElevenLabs API error:', errorText);
+      
+      // Return specific error details
       return new Response(
         JSON.stringify({ 
-          audioContent: base64Audio,
-          text: introText,
-          voiceId: voiceConfig.voiceId
+          error: `ElevenLabs API error: ${response.status}`,
+          details: errorText,
+          fallback: 'Voice generation failed'
         }),
         {
+          status: 503,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
-    } catch (fetchError) {
-      clearTimeout(timeoutId);
-      throw fetchError;
     }
 
+    const audioBuffer = await response.arrayBuffer();
+    const base64Audio = btoa(String.fromCharCode(...new Uint8Array(audioBuffer)));
+
+    console.log('Voice generation successful, audio size:', audioBuffer.byteLength);
+
+    return new Response(
+      JSON.stringify({ 
+        audioContent: base64Audio,
+        text: introText,
+        voiceId: voiceConfig.voiceId
+      }),
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+
   } catch (error) {
-    console.error('Error in elevenlabs-voice-preview function:', error);
+    console.error('Function error:', error);
     
     return new Response(
       JSON.stringify({ 
-        error: 'Voice preview temporarily unavailable',
+        error: 'Voice generation failed',
+        details: error.message,
         fallback: 'Please try again later'
       }),
       {

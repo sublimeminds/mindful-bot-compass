@@ -35,7 +35,8 @@ const VoicePreviewButton: React.FC<VoicePreviewButtonProps> = ({
     setIsPlaying(true);
     
     try {
-      console.log('Starting voice preview for therapist:', therapistId);
+      console.log('=== Voice Preview Started ===');
+      console.log('Therapist ID:', therapistId);
       
       const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
         body: { 
@@ -44,10 +45,29 @@ const VoicePreviewButton: React.FC<VoicePreviewButtonProps> = ({
         }
       });
 
-      console.log('Voice preview response:', { data, error });
+      console.log('Supabase response:', { data: !!data, error });
 
-      if (error || !data?.audioContent) {
-        console.log('ElevenLabs not available, using browser TTS fallback');
+      if (data?.audioContent) {
+        console.log('Got audio content, playing...');
+        
+        if (audioRef) {
+          audioRef.pause();
+        }
+        
+        const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
+        audio.volume = 1.0;
+        audio.onended = () => setIsPlaying(false);
+        audio.onerror = (e) => {
+          console.error('Audio playback error:', e);
+          setIsPlaying(false);
+        };
+        
+        setAudioRef(audio);
+        await audio.play();
+        console.log('Audio playing successfully at volume:', audio.volume);
+        
+      } else {
+        console.log('No audio content, using browser TTS fallback');
         // Fallback to browser TTS
         const utterance = new SpeechSynthesisUtterance(text || defaultText);
         utterance.rate = 0.8;
@@ -55,55 +75,20 @@ const VoicePreviewButton: React.FC<VoicePreviewButtonProps> = ({
         utterance.volume = 0.8;
         utterance.onend = () => setIsPlaying(false);
         speechSynthesis.speak(utterance);
-        return;
       }
-
-      if (data?.audioContent) {
-        if (audioRef) {
-          audioRef.pause();
-        }
-        
-        const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
-        audio.volume = 1.0; // Increase volume to maximum
-        audio.onended = () => setIsPlaying(false);
-        audio.onerror = () => {
-          setIsPlaying(false);
-          toast({
-            title: "Audio Playback Error",
-            description: "Unable to play the voice preview.",
-            variant: "destructive"
-          });
-        };
-        
-        setAudioRef(audio);
-        try {
-          await audio.play();
-          console.log('Audio playing successfully at volume:', audio.volume);
-        } catch (playError) {
-          console.error('Audio play error:', playError);
-          setIsPlaying(false);
-          toast({
-            title: "Audio Playback Error", 
-            description: "Please check your audio settings and try again.",
-            variant: "destructive"
-          });
-        }
-      } else {
-        setIsPlaying(false);
-        toast({
-          title: "Voice Preview Unavailable",
-          description: "No audio content received from the voice service.",
-          variant: "destructive"
-        });
-      }
+      
     } catch (error) {
       console.error('Voice preview failed:', error);
       setIsPlaying(false);
-      toast({
-        title: "Voice Preview Failed",
-        description: "There was an error generating the voice preview. Please try again.",
-        variant: "destructive"
-      });
+      
+      // Fallback to browser TTS
+      console.log('Using browser TTS fallback due to error');
+      const utterance = new SpeechSynthesisUtterance(text || defaultText);
+      utterance.rate = 0.8;
+      utterance.pitch = 1;
+      utterance.volume = 0.8;
+      utterance.onend = () => setIsPlaying(false);
+      speechSynthesis.speak(utterance);
     }
   };
 

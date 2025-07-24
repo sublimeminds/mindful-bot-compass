@@ -313,18 +313,15 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
     
     if (!isUser) {
       setAvatarEmotion(emotion as any || 'neutral');
-      // Try ElevenLabs first, fallback to browser TTS
+      // Always use browser TTS for now since ElevenLabs is having issues
       if (isVoiceEnabled) {
-        playTherapistVoice(content).catch(() => {
-          // Fallback if ElevenLabs fails
-          setTimeout(() => {
-            const utterance = new SpeechSynthesisUtterance(content);
-            utterance.rate = 0.8;
-            utterance.pitch = 1;
-            utterance.volume = 0.8;
-            speechSynthesis.speak(utterance);
-          }, 500);
-        });
+        setTimeout(() => {
+          const utterance = new SpeechSynthesisUtterance(content);
+          utterance.rate = 0.8;
+          utterance.pitch = 1.1;
+          utterance.volume = 1.0;
+          speechSynthesis.speak(utterance);
+        }, 500);
       }
     }
   };
