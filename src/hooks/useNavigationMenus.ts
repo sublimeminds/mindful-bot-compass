@@ -4,8 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { MenuConfiguration } from '@/types/navigation';
 
 export const useNavigationMenus = () => {
-  const { data: menuConfig, isLoading: loading } = useQuery({
-    queryKey: ['navigation-menus'],
+  const { data: menuConfig, isLoading: loading, refetch } = useQuery({
+    queryKey: ['navigation-menus', Date.now()], // Force cache refresh
     queryFn: async (): Promise<MenuConfiguration> => {
       console.log('🔍 Fetching navigation menus from database...');
       
@@ -65,7 +65,7 @@ export const useNavigationMenus = () => {
         throw error;
       }
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 0, // Always fetch fresh data
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
