@@ -284,29 +284,44 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
   }, [messages, isTyping]);
 
   const addMessage = async (content: string, isUser: boolean, emotion?: string) => {
+    const messageId = `${Date.now()}-${Math.random()}-${isUser ? 'user' : 'therapist'}`;
     const newMessage: Message = {
-      id: `${Date.now()}-${isUser ? 'user' : 'therapist'}-${Math.random()}`,
+      id: messageId,
       content,
       isUser,
       timestamp: new Date(),
       emotion
     };
     
-    // Prevent duplicate messages
+    // Use functional update to prevent race conditions
     setMessages(prev => {
-      const isDuplicate = prev.some(msg => 
+      // Check if message already exists (prevent duplicates)
+      const exists = prev.some(msg => 
         msg.content === content && 
-        msg.isUser === isUser && 
-        Date.now() - msg.timestamp.getTime() < 1000
+        msg.isUser === isUser &&
+        Math.abs(Date.now() - msg.timestamp.getTime()) < 2000
       );
-      if (isDuplicate) return prev;
+      
+      if (exists) {
+        console.log('Duplicate message prevented:', content.substring(0, 50));
+        return prev;
+      }
+      
+      console.log('Adding message:', isUser ? 'USER' : 'THERAPIST', content.substring(0, 50));
       return [...prev, newMessage];
     });
     
     if (!isUser) {
       setAvatarEmotion(emotion as any || 'neutral');
+      // Use browser TTS as fallback since ElevenLabs isn't configured
       if (isVoiceEnabled) {
-        await playTherapistVoice(content);
+        setTimeout(() => {
+          const utterance = new SpeechSynthesisUtterance(content);
+          utterance.rate = 0.8;
+          utterance.pitch = 1;
+          utterance.volume = 0.8;
+          speechSynthesis.speak(utterance);
+        }, 500);
       }
     }
   };

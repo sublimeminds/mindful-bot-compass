@@ -42,14 +42,15 @@ const VoicePreviewButton: React.FC<VoicePreviewButtonProps> = ({
         }
       });
 
-      if (error) {
+      if (error || !data) {
         console.error('Voice preview error:', error);
-        toast({
-          title: "Voice Preview Unavailable",
-          description: "Voice preview is temporarily unavailable. Please try again later.",
-          variant: "destructive"
-        });
-        setIsPlaying(false);
+        // Fallback to browser TTS
+        const utterance = new SpeechSynthesisUtterance(text || defaultText);
+        utterance.rate = 0.8;
+        utterance.pitch = 1;
+        utterance.volume = 0.8;
+        utterance.onend = () => setIsPlaying(false);
+        speechSynthesis.speak(utterance);
         return;
       }
 
