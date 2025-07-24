@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import GradientButton from '@/components/ui/GradientButton';
 import { Button } from '@/components/ui/button';
@@ -11,11 +11,25 @@ interface OnboardingGuardProps {
 }
 
 const OnboardingGuard: React.FC<OnboardingGuardProps> = ({ children }) => {
-  const navigate = useNavigate();
+  // Safety check for router context
+  let navigate;
+  let currentPath;
+  
+  try {
+    navigate = useNavigate();
+    const location = useLocation();
+    currentPath = location.pathname;
+  } catch (error) {
+    // Fallback if router context is not available
+    console.warn('Router context not available in OnboardingGuard:', error);
+    return <>{children}</>;
+  }
+  
   const { isComplete, hasActiveTherapyPlan, isLoading, planCreationInProgress } = useOnboardingStatus();
   
   // Allow access to essential pages without therapy plan requirement
-  const currentPath = window.location.pathname;
+  // Use currentPath from useLocation if available, fallback to window.location
+  const pathToCheck = currentPath || window.location.pathname;
   const allowedPaths = [
     '/notifications',
     '/settings', 
@@ -27,7 +41,7 @@ const OnboardingGuard: React.FC<OnboardingGuardProps> = ({ children }) => {
     '/integrations'
   ];
   
-  if (allowedPaths.some(path => currentPath.startsWith(path))) {
+  if (allowedPaths.some(path => pathToCheck.startsWith(path))) {
     return <>{children}</>;
   }
 
