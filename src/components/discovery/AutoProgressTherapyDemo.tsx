@@ -516,7 +516,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
                     )}
                     <div className={`max-w-[75%] p-3 rounded-lg ${
                       message.isUser 
-                        ? 'bg-therapy-600 text-white' 
+                        ? 'bg-blue-500 text-white' 
                         : 'bg-gray-100 text-gray-900'
                     }`}>
                       <p className="text-sm leading-relaxed">{message.content}</p>
@@ -548,7 +548,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
                   <div className={`flex w-full ${typingUser === 'user' ? 'justify-end' : 'justify-start'}`}>
                     <div className={`max-w-[85%] rounded-lg p-3 ${
                       typingUser === 'user' 
-                        ? 'bg-therapy-600 text-white' 
+                        ? 'bg-blue-500 text-white' 
                         : 'bg-gray-100 text-gray-900'
                     }`}>
                       <div className="flex items-center space-x-1">
@@ -558,7 +558,7 @@ const AutoProgressTherapyDemo: React.FC<AutoProgressTherapyDemoProps> = ({
                           <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                         </div>
                         <span className="text-xs ml-2">
-                          {typingUser === 'user' ? 'Client typing...' : `${therapist.name} typing...`}
+                          {typingUser === 'user' ? 'You are typing...' : `${therapist.name} is typing...`}
                         </span>
                       </div>
                     </div>

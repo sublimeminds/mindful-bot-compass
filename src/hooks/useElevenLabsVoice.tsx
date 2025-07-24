@@ -25,19 +25,12 @@ export const useElevenLabsVoice = () => {
     try {
       const voiceId = customVoiceId || getVoiceIdForTherapist(therapistId || '1');
       
-      const { data, error } = await supabase.functions.invoke('text-to-speech', {
-        body: {
-          text: text.trim(),
-          voice_id: voiceId,
-          model_id: 'eleven_multilingual_v2',
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.8,
-            style: 0.2,
-            use_speaker_boost: false
-          }
-        }
-      });
+    const { data, error } = await supabase.functions.invoke('elevenlabs-voice-preview', {
+      body: {
+        therapistId: therapistId || '1',
+        text: text.trim()
+      }
+    });
 
       if (error) {
         console.error('ElevenLabs TTS Error:', error);
