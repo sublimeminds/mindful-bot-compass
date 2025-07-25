@@ -157,3 +157,9 @@ verify_jwt = false
 
 [functions.ai-therapist-matching]
 verify_jwt = false
+
+[functions.secure-ai-chat]
+verify_jwt = true
+
+[functions.enhanced-admin-auth]
+verify_jwt = false
