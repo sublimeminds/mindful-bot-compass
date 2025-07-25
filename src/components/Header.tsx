@@ -1,6 +1,7 @@
 
 import React from 'react';
 import DesktopHeaderFull from '@/components/navigation/DesktopHeaderFull';
+import TabletHeader from '@/components/navigation/TabletHeader';
 import MobileHeader from '@/components/navigation/MobileHeader';
 
 const Header = () => {
@@ -9,6 +10,7 @@ const Header = () => {
   return (
     <div className="relative z-40">
       <DesktopHeaderFull />
+      <TabletHeader />
       <MobileHeader />
     </div>
   );
