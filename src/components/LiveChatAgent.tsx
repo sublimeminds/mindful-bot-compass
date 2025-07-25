@@ -240,7 +240,21 @@ const LiveChatAgent = () => {
             if (action.action.startsWith('/')) {
               navigate(action.action);
             } else {
-              eval(action.action);
+              // Safe action handling - only allow predefined actions
+              const safeActions: Record<string, () => void> = {
+                'navigateToTherapy': () => navigate('/therapy-chat'),
+                'navigateToDashboard': () => navigate('/dashboard'),
+                'navigateToSettings': () => navigate('/settings'),
+                'navigateToProfile': () => navigate('/profile'),
+                'navigateToPricing': () => navigate('/pricing'),
+                'openHelp': () => window.open('/help', '_blank'),
+              };
+              
+              if (safeActions[action.action]) {
+                safeActions[action.action]();
+              } else {
+                console.warn('Unsafe action blocked:', action.action);
+              }
             }
           },
           icon: Play

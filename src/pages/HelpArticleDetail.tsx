@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -151,7 +152,14 @@ const HelpArticleDetail = () => {
             <CardContent className="p-8">
               <div 
                 className="prose prose-therapy max-w-none"
-                dangerouslySetInnerHTML={{ __html: article.content }}
+                dangerouslySetInnerHTML={{ 
+                  __html: DOMPurify.sanitize(article.content, {
+                    ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ul', 'ol', 'li', 'strong', 'em', 'br'],
+                    ALLOWED_ATTR: [],
+                    FORBID_SCRIPT: true,
+                    FORBID_TAGS: ['script', 'object', 'embed', 'link', 'style', 'iframe']
+                  })
+                }}
                 style={{
                   lineHeight: '1.7',
                 }}

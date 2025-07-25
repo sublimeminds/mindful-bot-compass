@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { hash, verify } from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,6 +13,25 @@ interface LoginRequest {
   password: string;
   ipAddress: string;
   userAgent: string;
+}
+
+// Secure password verification
+async function verifyPasswordHash(password: string, hashedPassword: string): Promise<boolean> {
+  try {
+    if (hashedPassword.startsWith('$2')) {
+      // Bcrypt hash
+      return await verify(password, hashedPassword);
+    }
+    // For migration: if still using old dummy hashes, require update
+    if (hashedPassword.includes('dummy')) {
+      console.warn('Admin account using insecure dummy password hash - update required');
+      return false;
+    }
+    return false;
+  } catch (error) {
+    console.error('Password verification failed:', error);
+    return false;
+  }
 }
 
 serve(async (req) => {
@@ -53,9 +73,8 @@ serve(async (req) => {
         );
       }
 
-      // In a real implementation, you would verify the password hash here
-      // For now, we'll use a simple check (REPLACE WITH PROPER BCRYPT IN PRODUCTION)
-      const isValidPassword = password === 'admin123' || adminData.password_hash.includes('dummy');
+      // Verify password hash (remove hardcoded password)
+      const isValidPassword = await verifyPasswordHash(password, adminData.password_hash);
 
       if (!isValidPassword) {
         // Increment failed login attempts
