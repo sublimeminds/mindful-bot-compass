@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { getItemIcon } from '@/utils/iconUtils';
 
 interface HeaderDropdownItemProps {
-  icon: LucideIcon | string;
+  icon: LucideIcon | string | React.FC<{ className?: string; size?: number }>;
   title: string;
   description: string;
   href: string;
@@ -27,9 +27,11 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
   compact = false
 }) => {
   console.log(`🔍 HeaderDropdownItem rendering: ${title} with href: ${href} and gradient: ${gradient}`);
+  console.log(`🔍 Icon input: ${typeof iconName === 'string' ? iconName : 'Component'}, type: ${typeof iconName}`);
   
   // Get the appropriate icon component
   const Icon = typeof iconName === 'string' ? getItemIcon(iconName) : iconName;
+  console.log(`🔍 Icon resolved to:`, Icon);
   
   return (
     <Link

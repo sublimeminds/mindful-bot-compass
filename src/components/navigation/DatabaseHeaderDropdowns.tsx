@@ -70,7 +70,7 @@ const DatabaseHeaderDropdowns: React.FC = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
                       {menuItems.map((item) => {
                         const IconComponent = getItemIcon(item.icon);
-                        console.log(`🔍 Rendering item: ${item.title} with href: ${item.href} and icon: ${item.icon}`);
+                        console.log(`🔍 Rendering item: ${item.title} with href: ${item.href} and icon: ${item.icon}, resolved to:`, IconComponent);
                         return (
                           <HeaderDropdownItem
                             key={item.id}
