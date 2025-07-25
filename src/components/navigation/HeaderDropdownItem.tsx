@@ -51,7 +51,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
         flex-shrink-0 group-hover/item:scale-105 transition-transform duration-200
         ${animation ? `animate-${animation}` : ''}
       `}>
-        <Icon size={compact ? 32 : 48} />
+        <Icon size={compact ? 32 : (window.innerWidth >= 768 ? 56 : 48)} />
       </div>
       
       <div className="flex-1 min-w-0">
@@ -65,7 +65,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
             </Badge>
           )}
         </div>
-        <p className={`text-gray-600 leading-tight line-clamp-2 ${compact ? 'text-xs' : 'text-sm'}`}>
+        <p className={`text-gray-600 leading-tight line-clamp-3 ${compact ? 'text-xs' : 'text-sm'}`}>
           {description}
         </p>
       </div>
