@@ -13970,6 +13970,13 @@ export type Database = {
         }
         Returns: string
       }
+      get_secure_view_data: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          view_name: string
+          view_definition: string
+        }[]
+      }
       get_therapist_review_metrics: {
         Args: { therapist_id: string }
         Returns: {
@@ -14051,6 +14058,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      monitor_security_events: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       recommend_therapist_combinations: {
         Args: { user_id_param: string; needed_specialties: string[] }
         Returns: Json
@@ -14070,6 +14081,10 @@ export type Database = {
       request_data_export: {
         Args: { user_id_param: string; export_type?: string }
         Returns: string
+      }
+      secure_system_check: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
       security_health_check: {
         Args: Record<PropertyKey, never>
@@ -14131,6 +14146,10 @@ export type Database = {
       validate_admin_session: {
         Args: { _session_token: string }
         Returns: string
+      }
+      validate_security_configuration: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
       verify_backup_code: {
         Args: { user_id_param: string; code_param: string }
