@@ -281,29 +281,42 @@ export class SecurityMiddleware {
     }
   }
 
-  // Device fingerprinting for anomaly detection
+  // Device fingerprinting for anomaly detection (secure version)
   generateDeviceFingerprint(): string {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.textBaseline = 'top';
-      ctx.font = '14px Arial';
-      ctx.fillText('Device fingerprint', 2, 2);
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.textBaseline = 'top';
+        ctx.font = '14px Arial';
+        ctx.fillText('Device fingerprint', 2, 2);
+      }
+
+      const fingerprint = {
+        userAgent: navigator.userAgent.substring(0, 500), // Limit length
+        language: navigator.language,
+        platform: navigator.platform,
+        screenResolution: `${screen.width}x${screen.height}`,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        canvas: canvas.toDataURL().substring(0, 100), // Limit canvas data
+        cookieEnabled: navigator.cookieEnabled,
+        doNotTrack: navigator.doNotTrack || 'unspecified'
+      };
+
+      // Create a more secure hash
+      const fingerprintString = JSON.stringify(fingerprint);
+      let hash = 0;
+      for (let i = 0; i < fingerprintString.length; i++) {
+        const char = fingerprintString.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32-bit integer
+      }
+      
+      return Math.abs(hash).toString(36).substring(0, 16);
+    } catch (error) {
+      console.error('Fingerprint generation failed:', error);
+      return 'fallback_' + Date.now().toString(36);
     }
-
-    const fingerprint = {
-      userAgent: navigator.userAgent,
-      language: navigator.language,
-      platform: navigator.platform,
-      screenResolution: `${screen.width}x${screen.height}`,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      canvas: canvas.toDataURL(),
-      plugins: Array.from(navigator.plugins).map(p => p.name).sort(),
-      cookieEnabled: navigator.cookieEnabled,
-      doNotTrack: navigator.doNotTrack
-    };
-
-    return btoa(JSON.stringify(fingerprint)).slice(0, 32);
   }
 
   // Get security metrics

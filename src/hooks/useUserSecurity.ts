@@ -1,47 +1,85 @@
 
 import { useCallback } from 'react';
-import { encryptionService } from '@/services/encryptionService';
+import { SecureSessionService } from '@/services/secureSessionService';
 import { securityMiddleware } from '@/services/securityMiddleware';
 import type { User } from '@supabase/supabase-js';
 
 export const useUserSecurity = () => {
   const initializeUserSecurity = useCallback(async (user: User) => {
     try {
-      // Check device trust
+      // Generate device fingerprint securely
       const deviceFingerprint = securityMiddleware.generateDeviceFingerprint();
-      const trustedDevices = JSON.parse(localStorage.getItem(`trusted_devices_${user.id}`) || '[]');
-      const isTrusted = trustedDevices.includes(deviceFingerprint);
-
-      // Check MFA status
-      const mfaStatus = localStorage.getItem(`mfa_enabled_${user.id}`) === 'true';
-
-      // Validate session security
-      const sessionId = crypto.randomUUID();
-      sessionStorage.setItem('currentSessionId', sessionId);
       
-      // Store encrypted session data
-      const sessionData = await encryptionService.encryptSensitiveData(
-        JSON.stringify({
-          userId: user.id,
-          sessionId,
-          deviceFingerprint,
-          timestamp: Date.now(),
-          expiresAt: Date.now() + 30 * 60 * 1000 // 30 minutes
-        }),
-        'session_data'
+      // Get client info safely
+      const ipAddress = 'client'; // Will be determined server-side
+      const userAgent = navigator.userAgent.substring(0, 500); // Limit length
+
+      // Check for suspicious activity
+      const isSuspicious = await SecureSessionService.detectSuspiciousActivity(
+        user.id,
+        ipAddress,
+        userAgent
       );
 
-      if (sessionData) {
-        localStorage.setItem(`session:${sessionId}`, sessionData);
+      if (isSuspicious) {
+        console.warn('Suspicious activity detected for user:', user.id);
+        // You could trigger additional security measures here
       }
 
-      console.log('User security initialized');
-      return { isTrusted, mfaStatus };
+      // Create secure session
+      const sessionId = await SecureSessionService.createSession(
+        user.id,
+        deviceFingerprint,
+        ipAddress,
+        userAgent
+      );
+
+      // Validate the created session
+      const validation = await SecureSessionService.validateSession(sessionId);
+      
+      if (!validation.isValid) {
+        throw new Error('Session validation failed: ' + validation.reason);
+      }
+
+      console.log('User security initialized successfully');
+      return { 
+        sessionValid: true, 
+        sessionId,
+        deviceTrusted: !isSuspicious 
+      };
     } catch (error) {
       console.error('Enhanced auth security initialization failed:', error);
       throw error;
     }
   }, []);
 
-  return { initializeUserSecurity };
+  const validateCurrentSession = useCallback(async (sessionId: string) => {
+    try {
+      const result = await SecureSessionService.validateSession(sessionId);
+      if (result.isValid) {
+        // Update activity timestamp
+        await SecureSessionService.updateSessionActivity(sessionId);
+      }
+      return result;
+    } catch (error) {
+      console.error('Session validation failed:', error);
+      return { isValid: false, reason: 'Validation error' };
+    }
+  }, []);
+
+  const revokeSession = useCallback(async (sessionId: string) => {
+    try {
+      await SecureSessionService.revokeSession(sessionId);
+      return true;
+    } catch (error) {
+      console.error('Session revocation failed:', error);
+      return false;
+    }
+  }, []);
+
+  return { 
+    initializeUserSecurity, 
+    validateCurrentSession, 
+    revokeSession 
+  };
 };
