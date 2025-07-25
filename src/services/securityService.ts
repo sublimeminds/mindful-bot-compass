@@ -23,15 +23,20 @@ export class SecurityService {
         event: 'session_started',
         timestamp: new Date(),
         metadata: {
-          userAgent: navigator.userAgent,
-          timestamp: Date.now()
+          userAgent: navigator.userAgent.substring(0, 500), // Limit length for security
+          timestamp: Date.now(),
+          ipAddress: 'client-determined' // Server-side determination preferred
         }
       };
 
       this.events.push(event);
       
-      // In a real app, you'd send this to your backend
-      console.log('Security event tracked:', event);
+      // Enhanced security logging - consider backend integration
+      console.log('Security event tracked:', { 
+        userId: userId.substring(0, 8) + '...', // Partial ID for privacy
+        event: event.event,
+        timestamp: event.timestamp 
+      });
     } catch (error) {
       // Don't throw errors - just log them to prevent blocking auth flow
       console.warn('SecurityService: Error tracking security event (non-critical):', error);

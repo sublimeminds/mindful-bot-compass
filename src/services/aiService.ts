@@ -2,8 +2,7 @@
 import { Message } from "@/types";
 import { SessionRecommendationService } from "./sessionRecommendationService";
 
-const API_URL = import.meta.env.VITE_OPENAI_API_URL || "https://api.openai.com/v1/chat/completions";
-const API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+import { supabase } from '@/integrations/supabase/client';
 
 export const sendMessage = async (
   message: string, 
@@ -68,26 +67,19 @@ Remember: You are a supportive tool, not a replacement for professional therapy.
   ];
 
   try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+    const { data, error } = await supabase.functions.invoke('secure-ai-chat', {
+      body: {
         messages: messages,
-        max_tokens: 200,
+        model: "gpt-4o-mini",
         temperature: 0.7,
-        n: 1,
-      }),
+        max_tokens: 200
+      }
     });
 
-    if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status} - ${response.statusText}`);
+    if (error) {
+      throw new Error(`AI service error: ${error.message}`);
     }
 
-    const data = await response.json();
     const aiMessage = data.choices[0].message.content;
     
     // Clear the recommendation after the first few messages

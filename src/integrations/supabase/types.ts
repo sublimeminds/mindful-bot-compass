@@ -1875,6 +1875,27 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_rate_limits: {
+        Row: {
+          attempted_at: string
+          created_at: string
+          id: string
+          identifier: string
+        }
+        Insert: {
+          attempted_at?: string
+          created_at?: string
+          id?: string
+          identifier: string
+        }
+        Update: {
+          attempted_at?: string
+          created_at?: string
+          id?: string
+          identifier?: string
+        }
+        Relationships: []
+      }
       avatar_assets: {
         Row: {
           asset_type: string
@@ -13858,6 +13879,14 @@ export type Database = {
           user_id_param: string
           action_type: string
           current_usage?: number
+        }
+        Returns: boolean
+      }
+      check_auth_rate_limit: {
+        Args: {
+          _identifier: string
+          _max_attempts?: number
+          _window_minutes?: number
         }
         Returns: boolean
       }

@@ -4,8 +4,7 @@ import { CulturallyAwareAIService, CulturalContext } from "./culturallyAwareAiSe
 import { MultiLanguageAIService } from "./multiLanguageAiService";
 import { crisisDetectionService } from "./crisisDetectionService";
 
-const API_URL = import.meta.env.VITE_OPENAI_API_URL || "https://api.openai.com/v1/chat/completions";
-const API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+import { supabase } from '@/integrations/supabase/client';
 
 interface EmotionAnalysis {
   dominant_emotion: string;
@@ -52,14 +51,8 @@ export const analyzeEmotion = async (text: string, culturalContext?: CulturalCon
     }
 
     // Fallback to basic emotion analysis
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4-turbo-preview",
+    const { data, error } = await supabase.functions.invoke('secure-ai-chat', {
+      body: {
         messages: [
           {
             role: "system",
@@ -73,16 +66,16 @@ export const analyzeEmotion = async (text: string, culturalContext?: CulturalCon
             content: `Analyze the emotions in this text: "${text}"`
           }
         ],
+        model: "gpt-4o-mini",
         max_tokens: 150,
         temperature: 0.3,
-      }),
+      }
     });
 
-    if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+    if (error) {
+      throw new Error(`AI service error: ${error.message}`);
     }
 
-    const data = await response.json();
     const analysis = JSON.parse(data.choices[0].message.content);
     return analysis;
   } catch (error) {
@@ -251,26 +244,19 @@ async function generateStandardResponse(
   ];
 
   try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4-turbo-preview",
+    const { data, error } = await supabase.functions.invoke('secure-ai-chat', {
+      body: {
         messages: messages,
+        model: "gpt-4o-mini",
         max_tokens: 300,
-        temperature: 0.7,
-        n: 1,
-      }),
+        temperature: 0.7
+      }
     });
 
-    if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status} - ${response.statusText}`);
+    if (error) {
+      throw new Error(`AI service error: ${error.message}`);
     }
 
-    const data = await response.json();
     const aiMessage = data.choices[0].message.content;
     
     // Clear recommendation after first few messages
@@ -295,14 +281,8 @@ export const generatePersonalizedInsight = async (
   goals: string[]
 ): Promise<string> => {
   try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4-turbo-preview",
+    const { data, error } = await supabase.functions.invoke('secure-ai-chat', {
+      body: {
         messages: [
           {
             role: "system",
@@ -318,16 +298,16 @@ export const generatePersonalizedInsight = async (
             Provide a brief, actionable insight that helps the user understand their patterns and suggests next steps.`
           }
         ],
+        model: "gpt-4o-mini",
         max_tokens: 200,
         temperature: 0.6,
-      }),
+      }
     });
 
-    if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+    if (error) {
+      throw new Error(`AI service error: ${error.message}`);
     }
 
-    const data = await response.json();
     return data.choices[0].message.content;
   } catch (error) {
     console.error("Error generating insight:", error);
