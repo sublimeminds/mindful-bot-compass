@@ -38,13 +38,19 @@ import {
   BlogInsights,
   ResearchStudies,
   TherapistDirectory,
-  MentalHealthLibrary
+  MentalHealthLibrary,
+  TherapySyncAICore,
+  AnalyticsDashboard,
+  ProgressReports,
+  GettingStarted,
+  SecurityCompliance
 } from '@/components/icons';
 
 // Direct mapping without wrapper - icons are now proper SVG React components
 const customIcons: Record<string, React.FC<{ className?: string; size?: number }>> = {
   // Therapy AI Icons
   'therapy-ai-core': TherapyAICore,
+  'therapy-sync-ai-core': TherapySyncAICore,
   'ai-therapy-chat': AITherapyChat,
   'ai-personalization': AIPersonalization,
   'adaptive-systems': AdaptiveSystems,
@@ -66,8 +72,10 @@ const customIcons: Record<string, React.FC<{ className?: string; size?: number }
   'crisis-support': CrisisSupport,
 
   // Tools & Data Icons
+  'analytics-dashboard': AnalyticsDashboard,
   'api-access': APIAccess,
   'mobile-apps': MobileApps,
+  'progress-reports': ProgressReports,
   'data-export': DataExport,
   'custom-integrations': CustomIntegrations,
   'wearable-integration': WearableIntegration,
@@ -81,7 +89,9 @@ const customIcons: Record<string, React.FC<{ className?: string; size?: number }
   'enterprise-security': EnterpriseSecurity,
 
   // Resources Icons
+  'getting-started': GettingStarted,
   'how-it-works': HowItWorks,
+  'security-compliance': SecurityCompliance,
   'support-center': SupportCenter,
   'learning-hub': LearningHub,
   'blog-insights': BlogInsights,

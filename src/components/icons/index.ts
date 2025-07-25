@@ -1,5 +1,6 @@
 // Therapy AI Icons
 export { default as TherapyAICore } from './TherapyAICore';
+export { default as TherapySyncAICore } from './TherapySyncAICore';
 export { default as AITherapyChat } from './AITherapyChat';
 export { default as AIPersonalization } from './AIPersonalization';
 export { default as AdaptiveSystems } from './AdaptiveSystems';
@@ -21,8 +22,10 @@ export { default as IntegrationsHub } from './IntegrationsHub';
 export { default as CrisisSupport } from './CrisisSupport';
 
 // Tools & Data Icons
+export { default as AnalyticsDashboard } from './AnalyticsDashboard';
 export { default as APIAccess } from './APIAccess';
 export { default as MobileApps } from './MobileApps';
+export { default as ProgressReports } from './ProgressReports';
 export { default as DataExport } from './DataExport';
 export { default as CustomIntegrations } from './CustomIntegrations';
 export { default as WearableIntegration } from './WearableIntegration';
@@ -36,7 +39,9 @@ export { default as HealthcareProviders } from './HealthcareProviders';
 export { default as EnterpriseSecurity } from './EnterpriseSecurity';
 
 // Resources Icons
+export { default as GettingStarted } from './GettingStarted';
 export { default as HowItWorks } from './HowItWorks';
+export { default as SecurityCompliance } from './SecurityCompliance';
 export { default as SupportCenter } from './SupportCenter';
 export { default as LearningHub } from './LearningHub';
 export { default as BlogInsights } from './BlogInsights';

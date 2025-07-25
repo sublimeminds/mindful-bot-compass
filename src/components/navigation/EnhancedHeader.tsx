@@ -110,7 +110,7 @@ const EnhancedHeader = () => {
   // Therapy AI Features - Core AI capabilities and therapy approaches
   const therapyAiFeatures = [
     {
-      icon: Brain,
+      icon: "therapy-sync-ai-core",
       title: "TherapySync AI Core",
       description: "Advanced multi-model AI system powered by OpenAI and Anthropic with real-time insights",
       href: "/therapysync-ai",
@@ -119,7 +119,7 @@ const EnhancedHeader = () => {
       category: "AI Technology"
     },
     {
-      icon: MessageSquare,
+      icon: "ai-therapy-chat",
       title: "AI Therapy Chat",
       description: "Personalized therapy conversations with evidence-based treatment approaches",
       href: "/therapy-sync-ai",
@@ -128,7 +128,7 @@ const EnhancedHeader = () => {
       category: "AI Technology"
     },
     {
-      icon: Mic,
+      icon: "voice-ai-therapy",
       title: "Voice AI Technology",
       description: "Natural voice conversations in 29 languages with emotion detection and analysis",
       href: "/voice-technology",
@@ -137,7 +137,7 @@ const EnhancedHeader = () => {
       category: "AI Technology"
     },
     {
-      icon: Globe,
+      icon: "cultural-ai",
       title: "Cultural AI",
       description: "Culturally sensitive AI trained to understand diverse backgrounds and contexts",
       href: "/cultural-ai-features",
@@ -145,7 +145,7 @@ const EnhancedHeader = () => {
       category: "AI Technology"
     },
     {
-      icon: Target,
+      icon: "ai-personalization",
       title: "AI Personalization",
       description: "Adaptive therapy approaches that learn and evolve with your unique needs",
       href: "/ai-personalization",
@@ -153,7 +153,7 @@ const EnhancedHeader = () => {
       category: "AI Technology"
     },
     {
-      icon: Brain,
+      icon: "cognitive-behavioral-therapy",
       title: "Cognitive Behavioral Therapy (CBT)",
       description: "Evidence-based approach focusing on thought patterns and behavioral changes",
       href: "/therapy-approaches/cbt",
@@ -161,7 +161,7 @@ const EnhancedHeader = () => {
       category: "Therapy Approaches"
     },
     {
-      icon: Heart,
+      icon: "dialectical-behavior-therapy",
       title: "Dialectical Behavior Therapy (DBT)",
       description: "Skills-based therapy for emotional regulation and interpersonal effectiveness",
       href: "/therapy-approaches/dbt", 
@@ -169,7 +169,7 @@ const EnhancedHeader = () => {
       category: "Therapy Approaches"
     },
     {
-      icon: Lightbulb,
+      icon: "mindfulness-based-therapy",
       title: "Mindfulness-Based Therapy",
       description: "Present-moment awareness and acceptance-based therapeutic interventions",
       href: "/therapy-approaches/mindfulness",
@@ -177,7 +177,7 @@ const EnhancedHeader = () => {
       category: "Therapy Approaches"
     },
     {
-      icon: Shield,
+      icon: "trauma-focused-therapy",
       title: "Trauma-Focused Therapy",
       description: "Specialized approaches for processing and healing from traumatic experiences",
       href: "/therapy-approaches/trauma",
@@ -185,7 +185,7 @@ const EnhancedHeader = () => {
       category: "Therapy Approaches"
     },
     {
-      icon: Zap,
+      icon: "adaptive-systems",
       title: "Adaptive Systems",
       description: "AI that automatically updates therapy plans based on your progress and responses",
       href: "/adaptive-systems",
@@ -198,35 +198,35 @@ const EnhancedHeader = () => {
   // Platform Features - Core therapy features and capabilities
   const platformFeatures = [
     {
-      icon: Users,
+      icon: "ai-therapist-team",
       title: "AI Therapist Team",
       description: "Meet our 9 specialized AI therapists with unique approaches and 3D avatars",
       href: "/therapist-discovery", 
       gradient: "from-therapy-500 to-calm-500"
     },
     {
-      icon: Heart,
+      icon: "mood-progress-tracking",
       title: "Mood & Progress Tracking",
       description: "Track your emotional journey with AI-powered insights and comprehensive analytics",
       href: "/mood-tracking",
       gradient: "from-calm-500 to-therapy-500"
     },
     {
-      icon: Shield,
+      icon: "crisis-support-system",
       title: "Crisis Support System",
       description: "24/7 crisis intervention with automated detection and emergency resources",
       href: "/crisis-support",
       gradient: "from-therapy-600 to-harmony-600"
     },
     {
-      icon: Users,
+      icon: "family-account-sharing",
       title: "Family Account Sharing",
       description: "Comprehensive family mental health support with shared accounts and parental controls",
       href: "/family-features",
       gradient: "from-harmony-500 to-balance-500"
     },
     {
-      icon: UserPlus,
+      icon: "community-groups",
       title: "Community & Groups",
       description: "Connect with peers and join supportive communities for shared healing journeys",
       href: "/community-features",
@@ -234,7 +234,7 @@ const EnhancedHeader = () => {
       badge: "Pro"
     },
     {
-      icon: LinkIcon,
+      icon: "integrations-hub",
       title: "Integrations Hub",
       description: "Connect with your favorite health and wellness apps for seamless care coordination",
       href: "/integrations",
@@ -245,7 +245,7 @@ const EnhancedHeader = () => {
   // Tools & Data - Analytics, APIs, and data management
   const toolsDataFeatures = [
     {
-      icon: BarChart3,
+      icon: "analytics-dashboard",
       title: "Analytics Dashboard",
       description: "Advanced analytics with custom reporting, data visualization, and progress insights",
       href: "/analytics",
@@ -253,7 +253,7 @@ const EnhancedHeader = () => {
       badge: "Premium"
     },
     {
-      icon: Code,
+      icon: "api-access",
       title: "API Access",
       description: "Comprehensive REST API and webhooks for integration with your systems and workflows",
       href: "/api-docs",
@@ -261,14 +261,14 @@ const EnhancedHeader = () => {
       badge: "Pro"
     },
     {
-      icon: Smartphone,
+      icon: "mobile-apps",
       title: "Mobile Apps",
       description: "Native iOS and Android apps with full feature parity and offline capabilities",
       href: "/mobile-apps",
       gradient: "from-pink-500 to-rose-500"
     },
     {
-      icon: TrendingUp,
+      icon: "progress-reports",
       title: "Progress Reports",
       description: "Detailed progress reports and insights for you, families, and healthcare providers",
       href: "/reports",
@@ -276,7 +276,7 @@ const EnhancedHeader = () => {
       badge: "Premium"
     },
     {
-      icon: FileSpreadsheet,
+      icon: "data-export",
       title: "Data Export",
       description: "Export your therapy data in multiple formats for personal records or provider sharing",
       href: "/data-export",
@@ -284,7 +284,7 @@ const EnhancedHeader = () => {
       badge: "Pro"
     },
     {
-      icon: LinkIcon,
+      icon: "custom-integrations",
       title: "Custom Integrations",
       description: "Build custom integrations with our SDK and connect to enterprise health systems",
       href: "/custom-integrations",
@@ -296,35 +296,35 @@ const EnhancedHeader = () => {
   // Solutions - Different use cases and approaches
   const solutionsFeatures = [
     {
-      icon: Users,
+      icon: "for-individuals",
       title: "For Individuals",
       description: "Personal therapy journey with AI-powered insights and personalized treatment plans",
       href: "/solutions/individuals",
       gradient: "from-therapy-500 to-calm-500"
     },
     {
-      icon: Heart,
+      icon: "for-families",
       title: "For Families",
       description: "Family mental health support with shared accounts, parental controls, and family therapy",
       href: "/solutions/families",
       gradient: "from-harmony-500 to-balance-500"
     },
     {
-      icon: Stethoscope,
+      icon: "healthcare-providers",
       title: "For Healthcare Providers",
       description: "Professional tools for therapists, clinicians, and healthcare organizations",
       href: "/solutions/providers",
       gradient: "from-balance-500 to-therapy-500"
     },
     {
-      icon: Building,
+      icon: "for-organizations",
       title: "For Organizations",
       description: "Employee mental health programs with analytics, compliance, and enterprise features",
       href: "/solutions/organizations",
       gradient: "from-purple-500 to-indigo-500"
     },
     {
-      icon: Calculator,
+      icon: "pricing-plans",
       title: "Pricing Plans",
       description: "Flexible pricing for individuals, families, providers, and organizations",
       href: "/pricing",
@@ -335,35 +335,35 @@ const EnhancedHeader = () => {
   // Resources - Help, support, and learning materials
   const resourcesFeatures = [
     {
-      icon: BookOpen,
+      icon: "getting-started",
       title: "Getting Started",
       description: "Step-by-step guides to help you begin your therapy journey with confidence",
       href: "/getting-started",
       gradient: "from-therapy-500 to-calm-500"
     },
     {
-      icon: Lightbulb,
+      icon: "how-it-works",
       title: "How It Works",
       description: "Learn about our AI therapy technology and how it supports your mental health",
       href: "/how-it-works",
       gradient: "from-calm-500 to-therapy-500"
     },
     {
-      icon: Shield,
+      icon: "security-compliance",
       title: "Security & Compliance",
       description: "HIPAA, GDPR compliance and enterprise-grade security standards for your peace of mind",
       href: "/security",
       gradient: "from-therapy-600 to-harmony-600"
     },
     {
-      icon: Phone,
+      icon: "support-center",
       title: "Support Center",
       description: "24/7 customer support, technical help, and crisis assistance when you need it",
       href: "/support",
       gradient: "from-harmony-500 to-balance-500"
     },
     {
-      icon: GraduationCap,
+      icon: "learning-hub",
       title: "Learning Hub",
       description: "Educational resources, therapy guides, and mental health best practices",
       href: "/learning",
@@ -441,7 +441,7 @@ const EnhancedHeader = () => {
                     <HeaderDropdownCard className="dropdown-left w-80">
                       <div className="space-y-3">
                         <HeaderDropdownItem
-                          icon={BookOpen}
+                          icon="getting-started"
                           title="Getting Started"
                           description="Step-by-step guides to begin your therapy journey"
                           href="/getting-started"
@@ -449,7 +449,7 @@ const EnhancedHeader = () => {
                           compact={true}
                         />
                         <HeaderDropdownItem
-                          icon={Lightbulb}
+                          icon="how-it-works"
                           title="How It Works"
                           description="Learn about our AI therapy technology"
                           href="/how-it-works"
@@ -457,7 +457,7 @@ const EnhancedHeader = () => {
                           compact={true}
                         />
                         <HeaderDropdownItem
-                          icon={Phone}
+                          icon="support-center"
                           title="Support Center"
                           description="24/7 customer support and crisis assistance"
                           href="/support"
