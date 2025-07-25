@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { encryptionService } from './encryptionService';
+import { SecureStorageService } from './secureStorageService';
 
 interface SecureSession {
   sessionId: string;
@@ -33,24 +33,28 @@ export class SecureSessionService {
     const sessionId = crypto.randomUUID();
     const expiresAt = new Date(Date.now() + this.SESSION_DURATION);
 
-    // Store encrypted session data in localStorage
-    const sessionData = await encryptionService.encryptSensitiveData(
-      JSON.stringify({
-        sessionId,
-        userId,
-        deviceFingerprint,
-        ipAddress,
-        userAgent,
-        expiresAt: expiresAt.getTime(),
-        isActive: true
-      }),
-      'session_data'
-    );
+    // Store session data securely with expiration
+    const sessionData = {
+      sessionId,
+      userId,
+      deviceFingerprint,
+      ipAddress,
+      userAgent,
+      expiresAt: expiresAt.getTime(),
+      isActive: true,
+      createdAt: Date.now()
+    };
 
-    if (sessionData) {
-      localStorage.setItem(`secure_session_${userId}`, sessionData);
-      sessionStorage.setItem('currentSessionId', sessionId);
-    }
+    // Use secure storage service instead of direct localStorage
+    SecureStorageService.setItem(`session_${userId}`, sessionData, {
+      expiration: this.SESSION_DURATION,
+      encrypt: false // Data is already structured securely
+    });
+
+    // Store current session ID separately
+    SecureStorageService.setItem('currentSessionId', sessionId, {
+      expiration: this.SESSION_DURATION
+    });
 
     return sessionId;
   }
@@ -60,51 +64,45 @@ export class SecureSessionService {
    */
   static async validateSession(sessionId: string): Promise<SessionValidationResult> {
     try {
-      // Get session from localStorage first
-      const userId = this.getUserIdFromLocalSession(sessionId);
-      if (!userId) {
-        return { isValid: false, reason: 'Session not found in storage' };
+      // Get current session ID
+      const currentSessionId = SecureStorageService.getItem('currentSessionId');
+      if (currentSessionId !== sessionId) {
+        return { isValid: false, reason: 'Session ID mismatch' };
       }
 
-      const sessionData = localStorage.getItem(`secure_session_${userId}`);
+      // Get user ID from session storage keys
+      const userId = this.getUserIdFromSecureSession(sessionId);
+      if (!userId) {
+        return { isValid: false, reason: 'User ID not found' };
+      }
+
+      const sessionData = SecureStorageService.getItem(`session_${userId}`);
       if (!sessionData) {
         return { isValid: false, reason: 'Session data not found' };
       }
 
-      const decryptedData = await encryptionService.decryptSensitiveData(sessionData, 'session_data');
-      if (!decryptedData) {
-        return { isValid: false, reason: 'Failed to decrypt session' };
-      }
-
-      const session = JSON.parse(decryptedData);
-      
-      // Check if session is expired
-      if (Date.now() > session.expiresAt) {
+      // Check if session is expired (SecureStorageService handles this automatically)
+      if (Date.now() > sessionData.expiresAt) {
         this.revokeSession(sessionId);
         return { isValid: false, reason: 'Session expired' };
       }
 
       // Update last activity timestamp
-      session.lastActivity = Date.now();
-      const updatedSessionData = await encryptionService.encryptSensitiveData(
-        JSON.stringify(session),
-        'session_data'
-      );
-      
-      if (updatedSessionData) {
-        localStorage.setItem(`secure_session_${userId}`, updatedSessionData);
-      }
+      sessionData.lastActivity = Date.now();
+      SecureStorageService.setItem(`session_${userId}`, sessionData, {
+        expiration: this.SESSION_DURATION
+      });
 
       return { 
         isValid: true, 
         session: {
-          sessionId: session.sessionId,
-          userId: session.userId,
-          deviceFingerprint: session.deviceFingerprint,
-          ipAddress: session.ipAddress,
-          userAgent: session.userAgent,
-          expiresAt: new Date(session.expiresAt),
-          isActive: session.isActive
+          sessionId: sessionData.sessionId,
+          userId: sessionData.userId,
+          deviceFingerprint: sessionData.deviceFingerprint,
+          ipAddress: sessionData.ipAddress,
+          userAgent: sessionData.userAgent,
+          expiresAt: new Date(sessionData.expiresAt),
+          isActive: sessionData.isActive
         }
       };
     } catch (error) {
@@ -117,11 +115,11 @@ export class SecureSessionService {
    * Revoke a session
    */
   static async revokeSession(sessionId: string): Promise<void> {
-    const userId = this.getUserIdFromLocalSession(sessionId);
+    const userId = this.getUserIdFromSecureSession(sessionId);
     if (userId) {
-      localStorage.removeItem(`secure_session_${userId}`);
+      SecureStorageService.removeItem(`session_${userId}`);
     }
-    sessionStorage.removeItem('currentSessionId');
+    SecureStorageService.removeItem('currentSessionId');
   }
 
   /**
@@ -129,32 +127,25 @@ export class SecureSessionService {
    */
   static async getActiveSessions(userId: string): Promise<SecureSession[]> {
     try {
-      const sessionData = localStorage.getItem(`secure_session_${userId}`);
+      const sessionData = SecureStorageService.getItem(`session_${userId}`);
       if (!sessionData) {
         return [];
       }
 
-      const decryptedData = await encryptionService.decryptSensitiveData(sessionData, 'session_data');
-      if (!decryptedData) {
-        return [];
-      }
-
-      const session = JSON.parse(decryptedData);
-      
       // Check if session is still valid
-      if (Date.now() > session.expiresAt) {
-        localStorage.removeItem(`secure_session_${userId}`);
+      if (Date.now() > sessionData.expiresAt) {
+        SecureStorageService.removeItem(`session_${userId}`);
         return [];
       }
 
       return [{
-        sessionId: session.sessionId,
-        userId: session.userId,
-        deviceFingerprint: session.deviceFingerprint,
-        ipAddress: session.ipAddress,
-        userAgent: session.userAgent,
-        expiresAt: new Date(session.expiresAt),
-        isActive: session.isActive
+        sessionId: sessionData.sessionId,
+        userId: sessionData.userId,
+        deviceFingerprint: sessionData.deviceFingerprint,
+        ipAddress: sessionData.ipAddress,
+        userAgent: sessionData.userAgent,
+        expiresAt: new Date(sessionData.expiresAt),
+        isActive: sessionData.isActive
       }];
     } catch (error) {
       console.error('Failed to get active sessions:', error);
@@ -167,21 +158,20 @@ export class SecureSessionService {
    */
   static async cleanupExpiredSessions(userId?: string): Promise<void> {
     if (userId) {
-      const sessionData = localStorage.getItem(`secure_session_${userId}`);
+      const sessionData = SecureStorageService.getItem(`session_${userId}`);
       if (sessionData) {
         try {
-          const decryptedData = await encryptionService.decryptSensitiveData(sessionData, 'session_data');
-          if (decryptedData) {
-            const session = JSON.parse(decryptedData);
-            if (Date.now() > session.expiresAt) {
-              localStorage.removeItem(`secure_session_${userId}`);
-            }
+          if (Date.now() > sessionData.expiresAt) {
+            SecureStorageService.removeItem(`session_${userId}`);
           }
         } catch (error) {
           // Remove corrupted session data
-          localStorage.removeItem(`secure_session_${userId}`);
+          SecureStorageService.removeItem(`session_${userId}`);
         }
       }
+    } else {
+      // Cleanup all expired sessions
+      SecureStorageService.cleanup();
     }
   }
 
@@ -189,26 +179,16 @@ export class SecureSessionService {
    * Update session activity
    */
   static async updateSessionActivity(sessionId: string): Promise<void> {
-    const userId = this.getUserIdFromLocalSession(sessionId);
+    const userId = this.getUserIdFromSecureSession(sessionId);
     if (!userId) return;
 
     try {
-      const sessionData = localStorage.getItem(`secure_session_${userId}`);
+      const sessionData = SecureStorageService.getItem(`session_${userId}`);
       if (sessionData) {
-        const decryptedData = await encryptionService.decryptSensitiveData(sessionData, 'session_data');
-        if (decryptedData) {
-          const session = JSON.parse(decryptedData);
-          session.lastActivity = Date.now();
-          
-          const updatedSessionData = await encryptionService.encryptSensitiveData(
-            JSON.stringify(session),
-            'session_data'
-          );
-          
-          if (updatedSessionData) {
-            localStorage.setItem(`secure_session_${userId}`, updatedSessionData);
-          }
-        }
+        sessionData.lastActivity = Date.now();
+        SecureStorageService.setItem(`session_${userId}`, sessionData, {
+          expiration: this.SESSION_DURATION
+        });
       }
     } catch (error) {
       console.error('Failed to update session activity:', error);
@@ -216,20 +196,20 @@ export class SecureSessionService {
   }
 
   /**
-   * Get user ID from session token (from localStorage)
+   * Get user ID from secure session storage
    */
-  private static getUserIdFromLocalSession(sessionId: string): string | null {
-    // Get from sessionStorage first
-    const currentSessionId = sessionStorage.getItem('currentSessionId');
+  private static getUserIdFromSecureSession(sessionId: string): string | null {
+    // Get from secure storage first
+    const currentSessionId = SecureStorageService.getItem('currentSessionId');
     if (currentSessionId !== sessionId) {
       return null;
     }
 
-    // Scan localStorage for matching session
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key?.startsWith('secure_session_')) {
-        const userId = key.replace('secure_session_', '');
+    // Scan secure storage for matching session
+    const keys = SecureStorageService.getKeys();
+    for (const key of keys) {
+      if (key.startsWith('session_')) {
+        const userId = key.replace('session_', '');
         return userId;
       }
     }

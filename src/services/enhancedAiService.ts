@@ -66,7 +66,7 @@ export const analyzeEmotion = async (text: string, culturalContext?: CulturalCon
             content: `Analyze the emotions in this text: "${text}"`
           }
         ],
-        model: "gpt-4o-mini",
+        model: "gpt-4.1-2025-04-14",
         max_tokens: 150,
         temperature: 0.3,
       }
@@ -247,7 +247,7 @@ async function generateStandardResponse(
     const { data, error } = await supabase.functions.invoke('secure-ai-chat', {
       body: {
         messages: messages,
-        model: "gpt-4o-mini",
+        model: "gpt-4.1-2025-04-14",
         max_tokens: 300,
         temperature: 0.7
       }
@@ -298,7 +298,7 @@ export const generatePersonalizedInsight = async (
             Provide a brief, actionable insight that helps the user understand their patterns and suggests next steps.`
           }
         ],
-        model: "gpt-4o-mini",
+        model: "gpt-4.1-2025-04-14",
         max_tokens: 200,
         temperature: 0.6,
       }

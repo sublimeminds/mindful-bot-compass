@@ -50,7 +50,7 @@ serve(async (req) => {
     }
 
     // Parse request body
-    const { messages, model = 'gpt-4o-mini', temperature = 0.7, max_tokens = 1000, stream = false }: ChatRequest = await req.json();
+    const { messages, model = 'gpt-4.1-2025-04-14', temperature = 0.7, max_tokens = 1000, stream = false }: ChatRequest = await req.json();
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return new Response('Invalid messages format', { 

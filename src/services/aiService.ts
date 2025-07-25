@@ -70,7 +70,7 @@ Remember: You are a supportive tool, not a replacement for professional therapy.
     const { data, error } = await supabase.functions.invoke('secure-ai-chat', {
       body: {
         messages: messages,
-        model: "gpt-4o-mini",
+        model: "gpt-4.1-2025-04-14",
         temperature: 0.7,
         max_tokens: 200
       }
