@@ -28,15 +28,57 @@ export class EncryptionService {
 
   private async initializeEncryption(): Promise<void> {
     try {
-      // Generate or retrieve encryption key
-      let key = localStorage.getItem('therapyAppEncryptionKey');
-      if (!key) {
-        key = this.generateSecureKey();
-        localStorage.setItem('therapyAppEncryptionKey', key);
-      }
-      this.encryptionKey = key;
+      // Derive encryption key from user session instead of localStorage
+      this.encryptionKey = await this.deriveSessionKey();
     } catch (error) {
       console.error('Encryption initialization failed:', error);
+    }
+  }
+
+  private async deriveSessionKey(): Promise<string> {
+    // Create a session-based key derivation
+    const sessionData = sessionStorage.getItem('supabase.auth.token');
+    if (!sessionData) {
+      // Generate temporary key for unauthenticated sessions
+      return this.generateSecureKey();
+    }
+
+    try {
+      const session = JSON.parse(sessionData);
+      const userId = session.user?.id;
+      if (!userId) {
+        return this.generateSecureKey();
+      }
+
+      // Derive key from user ID using PBKDF2
+      const encoder = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        encoder.encode(userId),
+        { name: 'PBKDF2' },
+        false,
+        ['deriveKey']
+      );
+
+      const salt = encoder.encode('therapy-app-salt-2025');
+      const derivedKey = await crypto.subtle.deriveKey(
+        {
+          name: 'PBKDF2',
+          salt: salt,
+          iterations: 100000,
+          hash: 'SHA-256'
+        },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        true,
+        ['encrypt', 'decrypt']
+      );
+
+      const exported = await crypto.subtle.exportKey('raw', derivedKey);
+      return Array.from(new Uint8Array(exported), byte => byte.toString(16).padStart(2, '0')).join('');
+    } catch (error) {
+      console.error('Key derivation failed:', error);
+      return this.generateSecureKey();
     }
   }
 
@@ -171,12 +213,10 @@ export class EncryptionService {
   // Rotate encryption key
   async rotateEncryptionKey(): Promise<boolean> {
     try {
-      const newKey = this.generateSecureKey();
-      const oldKey = this.encryptionKey;
-      
-      // Update key
+      // Clear current key and regenerate from session
+      this.encryptionKey = null;
+      const newKey = await this.deriveSessionKey();
       this.encryptionKey = newKey;
-      localStorage.setItem('therapyAppEncryptionKey', newKey);
       
       console.log('Encryption key rotated successfully');
       return true;

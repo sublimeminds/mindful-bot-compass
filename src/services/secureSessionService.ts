@@ -18,8 +18,9 @@ interface SessionValidationResult {
 }
 
 export class SecureSessionService {
-  private static readonly SESSION_DURATION = 30 * 60 * 1000; // 30 minutes
-  private static readonly MAX_SESSIONS_PER_USER = 5;
+  private static readonly SESSION_DURATION = 15 * 60 * 1000; // 15 minutes for security
+  private static readonly SLIDING_EXPIRY = 5 * 60 * 1000; // 5 minutes sliding window
+  private static readonly MAX_SESSIONS_PER_USER = 3; // Reduced for security
 
   /**
    * Create a new secure session (simplified version for existing schema)
@@ -87,8 +88,15 @@ export class SecureSessionService {
         return { isValid: false, reason: 'Session expired' };
       }
 
-      // Update last activity timestamp
-      sessionData.lastActivity = Date.now();
+      // Update last activity timestamp and implement sliding expiration
+      const now = Date.now();
+      sessionData.lastActivity = now;
+      
+      // Sliding session expiration - extend if recent activity
+      if (now - sessionData.lastActivity < this.SLIDING_EXPIRY) {
+        sessionData.expiresAt = now + this.SESSION_DURATION;
+      }
+      
       await SecureStorageService.setItem(`session_${userId}`, sessionData, {
         expiration: this.SESSION_DURATION,
         encrypt: true // Maintain encryption
@@ -186,7 +194,14 @@ export class SecureSessionService {
     try {
       const sessionData = await SecureStorageService.getItem(`session_${userId}`);
       if (sessionData) {
-        sessionData.lastActivity = Date.now();
+        const now = Date.now();
+        sessionData.lastActivity = now;
+        
+        // Implement sliding session expiration
+        if (now - sessionData.lastActivity < this.SLIDING_EXPIRY) {
+          sessionData.expiresAt = now + this.SESSION_DURATION;
+        }
+        
         await SecureStorageService.setItem(`session_${userId}`, sessionData, {
           expiration: this.SESSION_DURATION,
           encrypt: true // Maintain encryption for session updates
