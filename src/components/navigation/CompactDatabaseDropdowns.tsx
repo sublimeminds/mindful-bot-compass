@@ -64,16 +64,6 @@ const CompactDatabaseDropdowns: React.FC = () => {
                         />
                       );
                     })}
-                    {menuConfig.items.filter(item => item.menu_id === menu.id && item.is_active).length > 10 && (
-                      <HeaderDropdownItem
-                        title={`View All ${menu.label}`}
-                        description="See all available options"
-                        href={`/menu/${menu.name}`}
-                        icon={MenuIcon}
-                        gradient="from-gray-500 to-gray-600"
-                        compact={true}
-                      />
-                    )}
                   </div>
                 </div>
               </NavigationMenuContent>

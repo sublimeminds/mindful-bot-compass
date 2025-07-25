@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { LucideIcon, Brain } from 'lucide-react';
 
@@ -42,59 +41,64 @@ import {
   MentalHealthLibrary
 } from '@/components/icons';
 
-// Type for custom icon components
-type CustomIconComponent = React.FC<{ className?: string; size?: number }>;
+// Create a wrapper component that converts custom icons to Lucide-compatible format
+const createIconWrapper = (CustomIcon: React.FC<{ className?: string; size?: number }>) => {
+  const WrappedIcon = (props: { className?: string; size?: number }) => {
+    return React.createElement(CustomIcon, props);
+  };
+  return WrappedIcon as unknown as LucideIcon;
+};
 
-// Map of icon names to custom React components
-const customIcons: Record<string, CustomIconComponent> = {
+// Map of icon names to custom React components wrapped to be Lucide-compatible
+const customIcons: Record<string, LucideIcon> = {
   // Therapy AI Icons
-  'therapy-ai-core': TherapyAICore,
-  'ai-therapy-chat': AITherapyChat,
-  'ai-personalization': AIPersonalization,
-  'adaptive-systems': AdaptiveSystems,
-  'cognitive-behavioral-therapy': CognitiveBehavioralTherapy,
-  'dialectical-behavior-therapy': DialecticalBehaviorTherapy,
-  'mindfulness-based-therapy': MindfulnessBasedTherapy,
-  'trauma-focused-therapy': TraumaFocusedTherapy,
-  'cultural-ai': CulturalAI,
-  'group-therapy-ai': GroupTherapyAI,
-  'voice-ai-therapy': VoiceAITherapy,
+  'therapy-ai-core': createIconWrapper(TherapyAICore),
+  'ai-therapy-chat': createIconWrapper(AITherapyChat),
+  'ai-personalization': createIconWrapper(AIPersonalization),
+  'adaptive-systems': createIconWrapper(AdaptiveSystems),
+  'cognitive-behavioral-therapy': createIconWrapper(CognitiveBehavioralTherapy),
+  'dialectical-behavior-therapy': createIconWrapper(DialecticalBehaviorTherapy),
+  'mindfulness-based-therapy': createIconWrapper(MindfulnessBasedTherapy),
+  'trauma-focused-therapy': createIconWrapper(TraumaFocusedTherapy),
+  'cultural-ai': createIconWrapper(CulturalAI),
+  'group-therapy-ai': createIconWrapper(GroupTherapyAI),
+  'voice-ai-therapy': createIconWrapper(VoiceAITherapy),
 
   // Platform Icons
-  'ai-therapist-team': AITherapistTeam,
-  'mood-progress-tracking': MoodProgressTracking,
-  'crisis-support-system': CrisisSupportSystem,
-  'family-account-sharing': FamilyAccountSharing,
-  'community-groups': CommunityGroups,
-  'integrations-hub': IntegrationsHub,
-  'crisis-support': CrisisSupport,
+  'ai-therapist-team': createIconWrapper(AITherapistTeam),
+  'mood-progress-tracking': createIconWrapper(MoodProgressTracking),
+  'crisis-support-system': createIconWrapper(CrisisSupportSystem),
+  'family-account-sharing': createIconWrapper(FamilyAccountSharing),
+  'community-groups': createIconWrapper(CommunityGroups),
+  'integrations-hub': createIconWrapper(IntegrationsHub),
+  'crisis-support': createIconWrapper(CrisisSupport),
 
   // Tools & Data Icons
-  'api-access': APIAccess,
-  'mobile-apps': MobileApps,
-  'data-export': DataExport,
-  'custom-integrations': CustomIntegrations,
-  'wearable-integration': WearableIntegration,
+  'api-access': createIconWrapper(APIAccess),
+  'mobile-apps': createIconWrapper(MobileApps),
+  'data-export': createIconWrapper(DataExport),
+  'custom-integrations': createIconWrapper(CustomIntegrations),
+  'wearable-integration': createIconWrapper(WearableIntegration),
 
   // Solutions Icons
-  'for-individuals': ForIndividuals,
-  'for-families': ForFamilies,
-  'for-organizations': ForOrganizations,
-  'pricing-plans': PricingPlans,
-  'healthcare-providers': HealthcareProviders,
-  'enterprise-security': EnterpriseSecurity,
+  'for-individuals': createIconWrapper(ForIndividuals),
+  'for-families': createIconWrapper(ForFamilies),
+  'for-organizations': createIconWrapper(ForOrganizations),
+  'pricing-plans': createIconWrapper(PricingPlans),
+  'healthcare-providers': createIconWrapper(HealthcareProviders),
+  'enterprise-security': createIconWrapper(EnterpriseSecurity),
 
   // Resources Icons
-  'how-it-works': HowItWorks,
-  'support-center': SupportCenter,
-  'learning-hub': LearningHub,
-  'blog-insights': BlogInsights,
-  'research-studies': ResearchStudies,
-  'therapist-directory': TherapistDirectory,
-  'mental-health-library': MentalHealthLibrary,
+  'how-it-works': createIconWrapper(HowItWorks),
+  'support-center': createIconWrapper(SupportCenter),
+  'learning-hub': createIconWrapper(LearningHub),
+  'blog-insights': createIconWrapper(BlogInsights),
+  'research-studies': createIconWrapper(ResearchStudies),
+  'therapist-directory': createIconWrapper(TherapistDirectory),
+  'mental-health-library': createIconWrapper(MentalHealthLibrary),
 };
 
 // Function to get either custom icon component or fallback to Lucide
-export const getItemIcon = (iconName: string): CustomIconComponent | LucideIcon => {
+export const getItemIcon = (iconName: string): LucideIcon => {
   return customIcons[iconName] || Brain; // Use custom icons or fallback to Brain
 };
