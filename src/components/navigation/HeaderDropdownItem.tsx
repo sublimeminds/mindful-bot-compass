@@ -38,7 +38,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
       to={href}
       className={`
         group/item flex items-start gap-3 rounded-xl 
-        hover:bg-gray-50 transition-colors duration-200
+        hover:bg-gray-50 transition-all duration-200 hover:shadow-md
         border border-transparent hover:border-gray-200
         ${compact ? 'p-2' : 'p-4'}
         ${className}
@@ -46,7 +46,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
     >
       {/* Icon now self-contained with gradient */}
       <div className={`
-        flex-shrink-0 transition-transform duration-200
+        flex-shrink-0 group-hover/item:scale-105 transition-transform duration-200
       `}>
         <Icon size={compact ? 40 : (window.innerWidth >= 768 ? 72 : 56)} />
       </div>
