@@ -3,9 +3,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { LucideIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { getItemIcon } from '@/utils/iconUtils';
 
 interface HeaderDropdownItemProps {
-  icon: LucideIcon;
+  icon: LucideIcon | string;
   title: string;
   description: string;
   href: string;
@@ -16,7 +17,7 @@ interface HeaderDropdownItemProps {
 }
 
 const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
-  icon: Icon,
+  icon: iconName,
   title,
   description,
   href,
@@ -26,6 +27,9 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
   compact = false
 }) => {
   console.log(`🔍 HeaderDropdownItem rendering: ${title} with href: ${href} and gradient: ${gradient}`);
+  
+  // Get the appropriate icon component
+  const Icon = typeof iconName === 'string' ? getItemIcon(iconName) : iconName;
   
   return (
     <Link

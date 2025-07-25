@@ -55,6 +55,20 @@ import {
   Watch
 } from 'lucide-react';
 
+// Custom icon imports (these would be replaced with actual custom SVG components)
+const customIcons: Record<string, LucideIcon> = {
+  'therapy-ai-core': Brain,
+  'ai-therapy-chat': MessageCircle,
+  'ai-personalization': User,
+  'adaptive-systems': Settings,
+  'cognitive-behavioral-therapy': Brain,
+  'dialectical-behavior-therapy': Heart,
+  'mindfulness-based-therapy': Compass,
+  'trauma-focused-therapy': Shield,
+  'cultural-ai': Globe,
+  'voice-ai-therapy': Mic,
+};
+
 // Map of icon names to Lucide components
 const iconMap: Record<string, LucideIcon> = {
   Brain,
@@ -112,5 +126,5 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 export const getItemIcon = (iconName: string): LucideIcon => {
-  return iconMap[iconName] || Brain; // Default to Brain if icon not found
+  return customIcons[iconName] || iconMap[iconName] || Brain; // Check custom icons first, then fallback
 };
