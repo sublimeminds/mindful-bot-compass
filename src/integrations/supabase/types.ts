@@ -14071,6 +14071,10 @@ export type Database = {
         Args: { user_id_param: string; export_type?: string }
         Returns: string
       }
+      security_health_check: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       select_optimal_technique: {
         Args: {
           p_user_id: string
