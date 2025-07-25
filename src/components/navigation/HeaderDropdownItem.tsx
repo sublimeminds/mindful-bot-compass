@@ -31,10 +31,10 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
     <Link
       to={href}
       className={`
-        group/item flex items-start gap-4 rounded-xl 
+        group/item flex items-start gap-3 rounded-xl 
         hover:bg-gray-50 transition-all duration-200 hover:shadow-md
         border border-transparent hover:border-gray-200
-        ${compact ? 'p-3' : 'p-4'}
+        ${compact ? 'p-2' : 'p-4'}
         ${className}
       `}
     >
@@ -42,9 +42,9 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
         flex-shrink-0 rounded-lg bg-gradient-to-br ${gradient} 
         flex items-center justify-center shadow-lg
         group-hover/item:scale-105 transition-transform duration-200
-        ${compact ? 'w-10 h-10' : 'w-12 h-12'}
+        ${compact ? 'w-8 h-8' : 'w-12 h-12'}
       `}>
-        <Icon className={`text-white ${compact ? 'h-5 w-5' : 'h-6 w-6'}`} />
+        <Icon className={`text-white ${compact ? 'h-4 w-4' : 'h-6 w-6'}`} />
       </div>
       
       <div className="flex-1 min-w-0">
@@ -58,7 +58,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
             </Badge>
           )}
         </div>
-        <p className={`text-gray-600 leading-relaxed ${compact ? 'text-xs' : 'text-sm'}`}>
+        <p className={`text-gray-600 leading-tight line-clamp-2 ${compact ? 'text-xs' : 'text-sm'}`}>
           {description}
         </p>
       </div>

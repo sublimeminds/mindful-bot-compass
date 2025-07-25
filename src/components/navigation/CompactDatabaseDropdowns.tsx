@@ -17,21 +17,20 @@ const CompactDatabaseDropdowns: React.FC = () => {
     return null; // Fail silently on tablet view
   }
 
-  // Filter out active menus and sort by position - show only top 2
+  // Filter out active menus and sort by position - show ALL menus
   const activeMenus = menuConfig.menus
     .filter(menu => menu.is_active)
-    .sort((a, b) => a.position - b.position)
-    .slice(0, 2); // Only show first 2 menus on tablet
+    .sort((a, b) => a.position - b.position);
 
   return (
     <NavigationMenu className="relative z-50">
-      <NavigationMenuList className="flex space-x-4">
+      <NavigationMenuList className="flex space-x-2 lg:space-x-4">
         {activeMenus.map((menu) => {
-          // Get items for this menu - show only top 4
+          // Get items for this menu - show more items (8-10)
           const menuItems = menuConfig.items
             .filter(item => item.menu_id === menu.id && item.is_active)
             .sort((a, b) => a.position - b.position)
-            .slice(0, 4); // Only show first 4 items
+            .slice(0, 10); // Show up to 10 items
 
           if (menuItems.length === 0) {
             return null;
@@ -41,15 +40,15 @@ const CompactDatabaseDropdowns: React.FC = () => {
 
           return (
             <NavigationMenuItem key={menu.id}>
-              <NavigationMenuTrigger className="group flex items-center space-x-1 px-2 py-1.5 text-sm font-medium text-gray-900 hover:text-therapy-700 transition-colors bg-transparent border-none">
-                <MenuIcon className="h-4 w-4" />
-                <span className="hidden lg:inline">{menu.label}</span>
+              <NavigationMenuTrigger className="group flex items-center space-x-1 px-2 py-1.5 text-xs lg:text-sm font-medium text-gray-900 hover:text-therapy-700 transition-colors bg-transparent border-none">
+                <MenuIcon className="h-3 w-3 lg:h-4 lg:w-4" />
+                <span className="truncate max-w-20 lg:max-w-none">{menu.label}</span>
                 <ChevronDown className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180" />
               </NavigationMenuTrigger>
               
               <NavigationMenuContent className="z-50 bg-white shadow-lg border border-gray-200 rounded-lg">
-                <HeaderDropdownCard>
-                  <div className="grid grid-cols-1 gap-1 min-w-[280px]">
+                <div className="w-[480px] p-3 bg-white rounded-lg shadow-lg border border-gray-200">
+                  <div className="grid grid-cols-2 gap-2">
                     {menuItems.map((item) => {
                       const IconComponent = getItemIcon(item.icon);
                       return (
@@ -65,7 +64,7 @@ const CompactDatabaseDropdowns: React.FC = () => {
                         />
                       );
                     })}
-                    {menuConfig.items.filter(item => item.menu_id === menu.id && item.is_active).length > 4 && (
+                    {menuConfig.items.filter(item => item.menu_id === menu.id && item.is_active).length > 10 && (
                       <HeaderDropdownItem
                         title={`View All ${menu.label}`}
                         description="See all available options"
@@ -76,7 +75,7 @@ const CompactDatabaseDropdowns: React.FC = () => {
                       />
                     )}
                   </div>
-                </HeaderDropdownCard>
+                </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
           );

@@ -18,19 +18,19 @@ const TabletHeader = () => {
     <header className="hidden md:block xl:hidden bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-14">
-          {/* Logo and Compact Navigation */}
-          <div className="flex items-center space-x-6">
+          {/* Logo */}
+          <div className="flex items-center">
             <Logo />
+          </div>
+
+          {/* Enhanced Navigation - All Categories */}
+          <div className="flex-1 flex justify-center px-6">
             <CompactDatabaseDropdowns />
           </div>
 
-          {/* Regional Selector */}
-          <div className="flex items-center">
+          {/* Right side - Regional & User Actions */}
+          <div className="flex items-center space-x-3">
             <CompactRegionalSelector />
-          </div>
-
-          {/* Right side - User Actions */}
-          <div className="flex items-center space-x-2">
             {user ? (
               <>
                 <SearchPopup>
@@ -59,10 +59,6 @@ const TabletHeader = () => {
                 </Button>
               </>
             )}
-            {/* Overflow menu for remaining items */}
-            <Button variant="ghost" size="sm" className="lg:hidden">
-              <Menu className="h-4 w-4" />
-            </Button>
           </div>
         </div>
       </div>
