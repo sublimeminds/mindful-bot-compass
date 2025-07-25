@@ -46,14 +46,12 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
         ${className}
       `}
     >
+      {/* Icon now self-contained with gradient */}
       <div className={`
-        flex-shrink-0 rounded-lg bg-gradient-to-br ${gradient} 
-        flex items-center justify-center shadow-lg
-        group-hover/item:scale-105 transition-transform duration-200
+        flex-shrink-0 group-hover/item:scale-105 transition-transform duration-200
         ${animation ? `animate-${animation}` : ''}
-        ${compact ? 'w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12' : 'w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14'}
       `}>
-        <Icon className={`text-white ${compact ? 'h-4 w-4 md:h-5 md:w-5 lg:h-6 lg:w-6' : 'h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8'}`} />
+        <Icon size={compact ? 32 : 48} />
       </div>
       
       <div className="flex-1 min-w-0">
