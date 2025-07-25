@@ -114,7 +114,7 @@ const APIAccess = () => {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-therapy-500 to-blue-500 rounded-2xl mb-8 shadow-lg">
               <BookOpen className="h-10 w-10 text-white" />
             </div>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-therapy-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-flow-600 to-flow-800 bg-clip-text text-transparent mb-6">
               API Access
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed mb-8">
@@ -134,9 +134,9 @@ const APIAccess = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-gradient-to-r from-therapy-600 to-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center gap-2 group">
+              <button className="bg-gradient-to-r from-flow-600 to-flow-800 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center gap-2 group">
                 Get API Access
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <Code className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </button>
               <button className="bg-white/80 backdrop-blur-sm text-therapy-600 border border-therapy-200 px-8 py-4 rounded-xl font-semibold hover:bg-white transition-all duration-300 flex items-center gap-2">
                 <Play className="h-4 w-4" />

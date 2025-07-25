@@ -12,10 +12,10 @@ const VoiceAI = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50 via-therapy-100 to-harmony-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-flow-400 to-therapy-500">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-therapy-600 mx-auto mb-4"></div>
-          <p className="text-therapy-600 font-medium">Loading Voice AI Therapy...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white font-medium">Loading Voice AI Therapy...</p>
         </div>
       </div>
     );
@@ -27,18 +27,18 @@ const VoiceAI = () => {
 
   return (
     <DashboardLayoutWithSidebar>
-      <div className="min-h-screen bg-gradient-to-br from-therapy-50 via-therapy-100 to-harmony-50">
+      <div className="min-h-screen bg-gradient-to-br from-flow-50 via-flow-100 to-therapy-50">
         <div className="p-6">
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-therapy-500 via-therapy-600 to-harmony-500 flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-flow-400 to-therapy-500 flex items-center justify-center shadow-lg">
                 <Mic className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-therapy-700 via-therapy-800 to-harmony-700 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-flow-600 via-therapy-600 to-therapy-700 bg-clip-text text-transparent">
                   Voice AI Therapy
                 </h1>
-                <p className="text-therapy-600 mt-1">
+                <p className="text-flow-700 mt-1">
                   Natural voice conversations with AI therapists using advanced speech technology
                 </p>
               </div>
@@ -46,31 +46,31 @@ const VoiceAI = () => {
           </div>
 
           <Tabs defaultValue="voice" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 bg-white/60 backdrop-blur-sm border border-therapy-200/30">
+            <TabsList className="grid w-full grid-cols-4 bg-white/60 backdrop-blur-sm border border-flow-200/30">
               <TabsTrigger 
                 value="voice" 
-                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-therapy-500 data-[state=active]:to-harmony-500 data-[state=active]:text-white"
+                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-flow-400 data-[state=active]:to-therapy-500 data-[state=active]:text-white"
               >
                 <Mic className="h-4 w-4" />
                 <span>Voice Recognition</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="personalization" 
-                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-therapy-500 data-[state=active]:to-harmony-500 data-[state=active]:text-white"
+                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-flow-400 data-[state=active]:to-therapy-500 data-[state=active]:text-white"
               >
                 <Brain className="h-4 w-4" />
                 <span>AI Personalization</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="assistant" 
-                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-therapy-500 data-[state=active]:to-harmony-500 data-[state=active]:text-white"
+                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-flow-400 data-[state=active]:to-therapy-500 data-[state=active]:text-white"
               >
                 <User className="h-4 w-4" />
                 <span>AI Assistant</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="analytics" 
-                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-therapy-500 data-[state=active]:to-harmony-500 data-[state=active]:text-white"
+                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-flow-400 data-[state=active]:to-therapy-500 data-[state=active]:text-white"
               >
                 <Activity className="h-4 w-4" />
                 <span>Voice Analytics</span>

@@ -67,16 +67,16 @@ const CBTTherapy = () => {
         <div className="relative max-w-7xl mx-auto px-4 py-20 lg:py-32">
           <div className="text-center space-y-8">
             <div className="animate-fade-in">
-              <Badge variant="secondary" className="mb-4 px-4 py-2 text-sm font-medium">
-                <BookOpen className="h-4 w-4 mr-2" />
+              <Badge variant="secondary" className="mb-4 px-4 py-2 text-sm font-medium bg-gradient-to-r from-therapy-600 to-balance-400 text-white border-0">
+                <Brain className="h-4 w-4 mr-2" />
                 Cognitive Behavioral Therapy
               </Badge>
             </div>
             
             <div className="space-y-6 animate-fade-in">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-foreground via-therapy-600 to-foreground bg-clip-text text-transparent leading-tight">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-therapy-600 via-therapy-700 to-balance-400 bg-clip-text text-transparent leading-tight">
                 Transform Your
-                <span className="block bg-gradient-to-r from-therapy-600 to-balance-600 bg-clip-text text-transparent">
+                <span className="block bg-gradient-to-r from-therapy-600 to-balance-400 bg-clip-text text-transparent">
                   Thinking
                 </span>
               </h1>

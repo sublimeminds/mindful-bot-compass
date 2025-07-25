@@ -76,13 +76,13 @@ const MoodTracking = () => {
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <Badge className="mb-6 bg-gradient-to-r from-therapy-500 to-indigo-500 text-white px-8 py-3 text-sm font-semibold shadow-lg border-0">
-              <Heart className="h-4 w-4 mr-2" />
+            <Badge className="mb-6 bg-gradient-to-r from-balance-400 to-flow-500 text-white px-8 py-3 text-sm font-semibold shadow-lg border-0">
+              <BarChart3 className="h-4 w-4 mr-2" />
               Mood Tracking
             </Badge>
             
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-therapy-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-balance-500 to-flow-600 bg-clip-text text-transparent">
                 Track Your Emotional Journey
               </span>
             </h1>
