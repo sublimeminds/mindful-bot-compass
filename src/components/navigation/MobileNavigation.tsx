@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import * as Dialog from '@radix-ui/react-dialog';
 import GradientLogo from '@/components/ui/GradientLogo';
+import { getItemIcon } from '@/utils/iconUtils';
 
 interface MobileNavigationProps {
   therapyAiFeatures: any[];
@@ -165,7 +166,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
                     {isOpenSection && (
                       <div className="space-y-1 mt-2">
                         {section.features.map((feature) => {
-                          const FeatureIcon = feature.icon;
+                          const FeatureIcon = typeof feature.icon === 'string' ? getItemIcon(feature.icon) : feature.icon;
                           return (
                             <Link
                               key={feature.title}
@@ -174,7 +175,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
                               className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
                             >
                               <div className="mt-0.5">
-                                <FeatureIcon className="h-4 w-4 text-therapy-500" />
+                                <FeatureIcon size={20} className="text-therapy-500" />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center space-x-2">

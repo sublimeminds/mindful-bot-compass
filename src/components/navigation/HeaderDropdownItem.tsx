@@ -14,7 +14,6 @@ interface HeaderDropdownItemProps {
   badge?: string;
   className?: string;
   compact?: boolean;
-  animation?: string;
 }
 
 const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
@@ -25,8 +24,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
   gradient = 'from-therapy-500 to-therapy-600',
   badge,
   className = '',
-  compact = false,
-  animation = ''
+  compact = false
 }) => {
   console.log(`🔍 HeaderDropdownItem rendering: ${title} with href: ${href} and gradient: ${gradient}`);
   console.log(`🔍 Icon input: ${typeof iconName === 'string' ? iconName : 'Component'}, type: ${typeof iconName}`);
@@ -40,7 +38,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
       to={href}
       className={`
         group/item flex items-start gap-3 rounded-xl 
-        hover:bg-gray-50 transition-all duration-200 hover:shadow-md
+        hover:bg-gray-50 transition-colors duration-200
         border border-transparent hover:border-gray-200
         ${compact ? 'p-2' : 'p-4'}
         ${className}
@@ -48,10 +46,9 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
     >
       {/* Icon now self-contained with gradient */}
       <div className={`
-        flex-shrink-0 group-hover/item:scale-105 transition-transform duration-200
-        ${animation ? `animate-${animation}` : ''}
+        flex-shrink-0 transition-transform duration-200
       `}>
-        <Icon size={compact ? 32 : (window.innerWidth >= 768 ? 56 : 48)} />
+        <Icon size={compact ? 40 : (window.innerWidth >= 768 ? 72 : 56)} />
       </div>
       
       <div className="flex-1 min-w-0">

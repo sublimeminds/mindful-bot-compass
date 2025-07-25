@@ -82,7 +82,6 @@ const DatabaseHeaderDropdowns: React.FC = () => {
                             gradient={item.gradient}
                             compact={true}
                             badge={item.badge}
-                            animation={getAnimationForItem(item.title, menu.id)}
                           />
                         );
                       })}
