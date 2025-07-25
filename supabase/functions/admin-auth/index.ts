@@ -15,22 +15,45 @@ interface LoginRequest {
   userAgent: string;
 }
 
-// Secure password verification
+// Secure password verification with proper hashing
 async function verifyPasswordHash(password: string, hashedPassword: string): Promise<boolean> {
   try {
     if (hashedPassword.startsWith('$2')) {
       // Bcrypt hash
       return await verify(password, hashedPassword);
     }
-    // For migration: if still using old dummy hashes, require update
-    if (hashedPassword.includes('dummy')) {
-      console.warn('Admin account using insecure dummy password hash - update required');
+    
+    // For SHA-256 hashes (fallback for existing system)
+    if (hashedPassword.length === 64) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashHex === hashedPassword;
+    }
+    
+    // Reject any insecure dummy passwords
+    if (hashedPassword.includes('dummy') || hashedPassword === 'admin123') {
+      console.warn('Admin account using insecure password - update required');
       return false;
     }
+    
     return false;
   } catch (error) {
     console.error('Password verification failed:', error);
     return false;
+  }
+}
+
+// Helper function to hash passwords securely
+async function hashPassword(password: string): Promise<string> {
+  try {
+    // Use bcrypt for new password hashes
+    return await hash(password, 12);
+  } catch (error) {
+    console.error('Password hashing failed:', error);
+    throw error;
   }
 }
 

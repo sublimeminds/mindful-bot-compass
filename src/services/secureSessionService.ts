@@ -45,10 +45,10 @@ export class SecureSessionService {
       createdAt: Date.now()
     };
 
-    // Use secure storage service instead of direct localStorage
+    // Use secure storage service with encryption for sensitive session data
     await SecureStorageService.setItem(`session_${userId}`, sessionData, {
       expiration: this.SESSION_DURATION,
-      encrypt: false // Data is already structured securely
+      encrypt: true // Encrypt session data for security
     });
 
     // Store current session ID separately
@@ -90,7 +90,8 @@ export class SecureSessionService {
       // Update last activity timestamp
       sessionData.lastActivity = Date.now();
       await SecureStorageService.setItem(`session_${userId}`, sessionData, {
-        expiration: this.SESSION_DURATION
+        expiration: this.SESSION_DURATION,
+        encrypt: true // Maintain encryption
       });
 
       return { 
@@ -187,7 +188,8 @@ export class SecureSessionService {
       if (sessionData) {
         sessionData.lastActivity = Date.now();
         await SecureStorageService.setItem(`session_${userId}`, sessionData, {
-          expiration: this.SESSION_DURATION
+          expiration: this.SESSION_DURATION,
+          encrypt: true // Maintain encryption for session updates
         });
       }
     } catch (error) {
