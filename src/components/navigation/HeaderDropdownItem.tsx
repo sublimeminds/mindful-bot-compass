@@ -5,8 +5,10 @@ import { LucideIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { getItemIcon } from '@/utils/iconUtils';
 
+type IconType = LucideIcon | string | React.FC<{ className?: string; size?: number }>;
+
 interface HeaderDropdownItemProps {
-  icon: LucideIcon | string;
+  icon: IconType;
   title: string;
   description: string;
   href: string;
@@ -48,7 +50,10 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
         group-hover/item:scale-105 transition-transform duration-200
         ${compact ? 'w-8 h-8' : 'w-12 h-12'}
       `}>
-        <Icon className={`text-white ${compact ? 'h-4 w-4' : 'h-6 w-6'}`} />
+        <Icon 
+          className={`text-white ${compact ? 'h-4 w-4' : 'h-6 w-6'}`} 
+          size={compact ? 16 : 24}
+        />
       </div>
       
       <div className="flex-1 min-w-0">
