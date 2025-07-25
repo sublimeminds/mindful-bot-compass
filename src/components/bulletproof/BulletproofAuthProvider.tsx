@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface BulletproofAuthContextType {
   user: User | null;
+  session: Session | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -24,20 +25,34 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
   console.log('🔍 BulletproofAuthProvider: Starting initialization');
   
   const [user, setUser] = React.useState<User | null>(null);
+  const [session, setSession] = React.useState<Session | null>(null);
   const [loading, setLoading] = React.useState(true);
 
-  // Simple session management
+  // Enhanced session management following best practices
   React.useEffect(() => {
     console.log('🔍 BulletproofAuthProvider: Setting up auth state listener');
     
+    // Set up auth state listener FIRST to prevent missing events
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log('🔍 BulletproofAuthProvider: Auth state change:', event, session?.user?.id || 'no user');
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
+    );
+
+    // THEN check for existing session
     const initializeAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         console.log('🔍 BulletproofAuthProvider: Initial session:', session?.user?.id || 'no user');
+        setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
       } catch (err) {
         console.error('🔍 BulletproofAuthProvider: Session init error:', err);
+        setSession(null);
         setUser(null);
         setLoading(false);
       }
@@ -45,24 +60,19 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
 
     initializeAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log('🔍 BulletproofAuthProvider: Auth state change:', event, session?.user?.id || 'no user');
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
-
     return () => subscription.unsubscribe();
   }, []);
 
   const signUp = React.useCallback(async (email: string, password: string) => {
     try {
+      // CRITICAL: Always set emailRedirectTo for proper authentication flow
+      const redirectUrl = `${window.location.origin}/`;
+      
       const { error } = await supabase.auth.signUp({ 
         email, 
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`
+          emailRedirectTo: redirectUrl
         }
       });
       return { error };
@@ -98,6 +108,7 @@ export const BulletproofAuthProvider: React.FC<BulletproofAuthProviderProps> = (
 
   const value: BulletproofAuthContextType = {
     user,
+    session,
     loading,
     signUp,
     signIn,
@@ -122,6 +133,7 @@ export const useBulletproofAuth = () => {
     console.warn('useBulletproofAuth used outside provider, returning fallback');
     return {
       user: null,
+      session: null,
       loading: false,
       signIn: async () => ({ error: new Error('Auth not available') }),
       signUp: async () => ({ error: new Error('Auth not available') }),

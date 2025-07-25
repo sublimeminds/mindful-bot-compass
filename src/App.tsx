@@ -10,8 +10,10 @@ import ReactErrorBoundary from '@/components/error/ReactErrorBoundary';
 import Header from '@/components/Header';
 import DatabaseFooter from '@/components/DatabaseFooter';
 import Index from '@/pages/Index';
+import Auth from '@/pages/Auth';
 import Dashboard from '@/pages/Dashboard';
 import SearchResults from '@/pages/SearchResults';
+import PrivateRoute from '@/components/PrivateRoute';
 import './App.css';
 
 const queryClient = new QueryClient({
@@ -35,7 +37,8 @@ function App() {
                 <main>
                   <Routes>
                     <Route path="/" element={<Index />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
                     <Route path="/search" element={<SearchResults />} />
                   </Routes>
                 </main>
