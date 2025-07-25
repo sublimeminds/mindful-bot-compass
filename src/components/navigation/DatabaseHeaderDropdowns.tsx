@@ -7,6 +7,7 @@ import { ChevronDown } from 'lucide-react';
 import HeaderDropdownCard from './HeaderDropdownCard';
 import HeaderDropdownItem from './HeaderDropdownItem';
 import { getItemIcon } from '@/utils/iconUtils';
+import { getAnimationForItem } from '@/utils/animationMapping';
 
 const DatabaseHeaderDropdowns: React.FC = () => {
   console.log('🚀 DatabaseHeaderDropdowns component started rendering...');
@@ -81,6 +82,7 @@ const DatabaseHeaderDropdowns: React.FC = () => {
                             gradient={item.gradient}
                             compact={true}
                             badge={item.badge}
+                            animation={getAnimationForItem(item.title, menu.id)}
                           />
                         );
                       })}

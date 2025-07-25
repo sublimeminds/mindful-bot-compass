@@ -36,11 +36,22 @@ const AIPersonalizationPage = () => {
   return (
     <DashboardLayoutWithSidebar>
       <div className="p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Enhanced AI Personalization</h1>
-          <p className="text-gray-600 mt-2">
-            Advanced AI-powered insights, recommendations, and contextual support tailored specifically for you
-          </p>
+        {/* Hero Section with Navigation-Matched Gradient */}
+        <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-br from-harmony-500 via-balance-600 to-therapy-700 p-8 text-white">
+          <div className="relative z-10">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 rounded-xl bg-white/20 flex items-center justify-center animate-breathe-mindful">
+                <Brain className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold mb-2">Enhanced AI Personalization</h1>
+                <p className="text-white/90 text-lg">
+                  Advanced AI-powered insights, recommendations, and contextual support tailored specifically for you
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
         </div>
 
         <Tabs defaultValue="dashboard" className="space-y-6">
