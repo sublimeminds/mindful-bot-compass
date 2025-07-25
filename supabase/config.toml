@@ -44,6 +44,14 @@ additional_redirect_urls = ["https://localhost:3000"]
 jwt_expiry = 3600
 refresh_token_rotation_enabled = true
 security_update_password_required = true
+password_min_length = 8
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+otp_exp = 600
 
 [auth.external.apple]
 enabled = false
@@ -162,4 +170,13 @@ verify_jwt = false
 verify_jwt = true
 
 [functions.enhanced-admin-auth]
+verify_jwt = false
+
+[functions.security-validator]
+verify_jwt = false
+
+[functions.security-monitor]
+verify_jwt = false
+
+[functions.rate-limit-guard]
 verify_jwt = false

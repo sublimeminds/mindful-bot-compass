@@ -25,9 +25,8 @@ async function verifyPasswordHash(password: string, hashedPassword: string): Pro
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     
-    // For demo: accepting 'admin123' with its hash, replace with actual stored hash
-    const demoHash = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918';
-    return hashHex === hashedPassword || hashHex === demoHash;
+    // Only verify against stored password hash - no hardcoded fallbacks
+    return hashHex === hashedPassword;
   } catch (error) {
     console.error('Password verification failed:', error);
     return false;

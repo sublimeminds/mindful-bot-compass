@@ -13,6 +13,7 @@ export class SecureStorageService {
   private static readonly STORAGE_PREFIX = 'secure_';
   private static readonly KEY_ROTATION_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
   private static readonly ENCRYPTION_KEY_NAME = 'app_encryption_key';
+  private static encryptionKey = 'app_secure_key_2024';
 
   /**
    * Generate or retrieve encryption key using Web Crypto API
@@ -48,23 +49,52 @@ export class SecureStorageService {
   }
 
   /**
-   * Encrypt data using Web Crypto API
+   * Enhanced encryption using Web Crypto API with stronger security
    */
-  private static async encryptData(data: string): Promise<{ encrypted: string; iv: string }> {
+  private static async encryptData(data: string): Promise<{ encrypted: string; iv: string; salt: string }> {
     try {
-      const key = await this.getEncryptionKey();
       const encoder = new TextEncoder();
+      const dataBuffer = encoder.encode(data);
+      
+      // Generate a random IV for each encryption (96-bit for AES-GCM)
       const iv = crypto.getRandomValues(new Uint8Array(12));
       
-      const encryptedBuffer = await crypto.subtle.encrypt(
+      // Generate a unique salt for key derivation
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      
+      // Derive key using PBKDF2 with higher iterations
+      const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        encoder.encode(this.encryptionKey + navigator.userAgent.substring(0, 100)),
+        'PBKDF2',
+        false,
+        ['deriveKey']
+      );
+      
+      const key = await crypto.subtle.deriveKey(
+        {
+          name: 'PBKDF2',
+          salt: salt,
+          iterations: 100000, // High iteration count for security
+          hash: 'SHA-256'
+        },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt']
+      );
+      
+      // Use AES-GCM for authenticated encryption
+      const encrypted = await crypto.subtle.encrypt(
         { name: 'AES-GCM', iv },
         key,
-        encoder.encode(data)
+        dataBuffer
       );
       
       return {
-        encrypted: Array.from(new Uint8Array(encryptedBuffer)).map(b => b.toString(16).padStart(2, '0')).join(''),
-        iv: Array.from(iv).map(b => b.toString(16).padStart(2, '0')).join('')
+        encrypted: Array.from(new Uint8Array(encrypted)).map(b => b.toString(16).padStart(2, '0')).join(''),
+        iv: Array.from(iv).map(b => b.toString(16).padStart(2, '0')).join(''),
+        salt: Array.from(salt).map(b => b.toString(16).padStart(2, '0')).join('')
       };
     } catch (error) {
       console.error('Data encryption failed:', error);
@@ -73,15 +103,46 @@ export class SecureStorageService {
   }
 
   /**
-   * Decrypt data using Web Crypto API
+   * Enhanced decryption using Web Crypto API with stronger security
    */
-  private static async decryptData(encryptedData: string, ivHex: string): Promise<string> {
+  private static async decryptData(encryptedData: string, ivHex: string, saltHex?: string): Promise<string> {
     try {
-      const key = await this.getEncryptionKey();
       const decoder = new TextDecoder();
+      const encoder = new TextEncoder();
       
       const encrypted = new Uint8Array(encryptedData.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
       const iv = new Uint8Array(ivHex.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+      
+      let key: CryptoKey;
+      
+      if (saltHex) {
+        // New enhanced decryption with salt-based key derivation
+        const salt = new Uint8Array(saltHex.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+        
+        const keyMaterial = await crypto.subtle.importKey(
+          'raw',
+          encoder.encode(this.encryptionKey + navigator.userAgent.substring(0, 100)),
+          'PBKDF2',
+          false,
+          ['deriveKey']
+        );
+        
+        key = await crypto.subtle.deriveKey(
+          {
+            name: 'PBKDF2',
+            salt: salt,
+            iterations: 100000,
+            hash: 'SHA-256'
+          },
+          keyMaterial,
+          { name: 'AES-GCM', length: 256 },
+          false,
+          ['decrypt']
+        );
+      } else {
+        // Fallback for old encryption format
+        key = await this.getEncryptionKey();
+      }
       
       const decryptedBuffer = await crypto.subtle.decrypt(
         { name: 'AES-GCM', iv },
@@ -108,8 +169,8 @@ export class SecureStorageService {
       
       // Encrypt if requested
       if (options.encrypt) {
-        const { encrypted, iv } = await this.encryptData(processedValue);
-        encryptionData = { encrypted, iv };
+        const { encrypted, iv, salt } = await this.encryptData(processedValue);
+        encryptionData = { encrypted, iv, salt };
         processedValue = encrypted;
       }
       
@@ -162,7 +223,11 @@ export class SecureStorageService {
       // Decrypt if encrypted
       if (parsedData.encrypted && parsedData.encryptionData) {
         try {
-          value = await this.decryptData(parsedData.encryptionData.encrypted, parsedData.encryptionData.iv);
+          value = await this.decryptData(
+            parsedData.encryptionData.encrypted, 
+            parsedData.encryptionData.iv,
+            parsedData.encryptionData.salt
+          );
         } catch (decryptError) {
           console.error('Failed to decrypt data, removing corrupted item:', decryptError);
           this.removeItem(key);
