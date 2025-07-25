@@ -41,14 +41,19 @@ export class SecureAuditService {
 
       // Report critical events to monitoring service
       if (event.severity === 'critical') {
-        await SecurityMonitoringService.reportSecurityEvent({
-          eventType: 'critical_audit_event',
-          userId: event.userId,
-          ipAddress: 'unknown', // Would need to get from request context
-          userAgent: navigator.userAgent,
-          metadata: event,
-          severity: 'critical'
-        });
+        try {
+          await SecurityMonitoringService.logSecurityEvent({
+            eventType: 'suspicious_activity',
+            userId: event.userId,
+            metadata: {
+              ...event,
+              userAgent: navigator.userAgent
+            },
+            severity: 'critical'
+          });
+        } catch (error) {
+          console.error('Failed to report to security monitoring:', error);
+        }
       }
     } catch (error) {
       console.error('Failed to log audit event:', error);

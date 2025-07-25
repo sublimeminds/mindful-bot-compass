@@ -13971,11 +13971,8 @@ export type Database = {
         Returns: string
       }
       get_secure_view_data: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          view_name: string
-          view_definition: string
-        }[]
+        Args: { requested_data_type: string }
+        Returns: Json
       }
       get_therapist_review_metrics: {
         Args: { therapist_id: string }

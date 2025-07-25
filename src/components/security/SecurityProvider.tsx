@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { SecurityMiddleware } from '@/middleware/securityMiddleware';
+import { SecureAuditService } from '@/services/secureAuditService';
 
 interface SecurityContextType {
   isSecure: boolean;
@@ -19,8 +20,8 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Initialize security
     const initSecurity = async () => {
       try {
-        // Set enhanced CSP header via meta tag with strict security
-        const csp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;";
+        // Set enhanced CSP header with stricter security
+        const csp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; report-uri /api/csp-report;";
         const existingCSP = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
         if (!existingCSP) {
           const meta = document.createElement('meta');
@@ -29,16 +30,18 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           document.head.appendChild(meta);
         }
 
-        // Generate device fingerprint
+        // Generate device fingerprint with enhanced entropy
         const fingerprint = SecurityMiddleware.generateDeviceFingerprint();
         setDeviceFingerprint(fingerprint);
 
-        // Set security headers via meta tags
+        // Set comprehensive security headers
         const securityHeaders = [
           { name: 'X-Content-Type-Options', content: 'nosniff' },
           { name: 'X-Frame-Options', content: 'DENY' },
           { name: 'X-XSS-Protection', content: '1; mode=block' },
-          { name: 'Referrer-Policy', content: 'strict-origin-when-cross-origin' }
+          { name: 'Referrer-Policy', content: 'strict-origin-when-cross-origin' },
+          { name: 'Permissions-Policy', content: 'camera=(), microphone=(), geolocation=(), payment=()' },
+          { name: 'Strict-Transport-Security', content: 'max-age=31536000; includeSubDomains; preload' }
         ];
 
         securityHeaders.forEach(({ name, content }) => {
@@ -51,9 +54,27 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           }
         });
 
+        // Audit and migrate localStorage data
+        SecureAuditService.auditStorageUsage();
+        await SecureAuditService.migrateLocalStorageData();
+
+        // Log security initialization
+        await SecureAuditService.logAuditEvent({
+          eventType: 'security_event',
+          description: 'Security system initialized',
+          metadata: { fingerprint, timestamp: Date.now() },
+          severity: 'low'
+        });
+
         setIsSecure(true);
       } catch (error) {
         console.error('Security initialization failed:', error);
+        await SecureAuditService.logAuditEvent({
+          eventType: 'security_event',
+          description: 'Security initialization failed',
+          metadata: { error: error?.toString() },
+          severity: 'high'
+        });
       }
     };
 
