@@ -46,13 +46,13 @@ export class SecureSessionService {
     };
 
     // Use secure storage service instead of direct localStorage
-    SecureStorageService.setItem(`session_${userId}`, sessionData, {
+    await SecureStorageService.setItem(`session_${userId}`, sessionData, {
       expiration: this.SESSION_DURATION,
       encrypt: false // Data is already structured securely
     });
 
     // Store current session ID separately
-    SecureStorageService.setItem('currentSessionId', sessionId, {
+    await SecureStorageService.setItem('currentSessionId', sessionId, {
       expiration: this.SESSION_DURATION
     });
 
@@ -65,31 +65,31 @@ export class SecureSessionService {
   static async validateSession(sessionId: string): Promise<SessionValidationResult> {
     try {
       // Get current session ID
-      const currentSessionId = SecureStorageService.getItem('currentSessionId');
+      const currentSessionId = await SecureStorageService.getItem('currentSessionId');
       if (currentSessionId !== sessionId) {
         return { isValid: false, reason: 'Session ID mismatch' };
       }
 
       // Get user ID from session storage keys
-      const userId = this.getUserIdFromSecureSession(sessionId);
+      const userId = await this.getUserIdFromSecureSession(sessionId);
       if (!userId) {
         return { isValid: false, reason: 'User ID not found' };
       }
 
-      const sessionData = SecureStorageService.getItem(`session_${userId}`);
+      const sessionData = await SecureStorageService.getItem(`session_${userId}`);
       if (!sessionData) {
         return { isValid: false, reason: 'Session data not found' };
       }
 
       // Check if session is expired (SecureStorageService handles this automatically)
       if (Date.now() > sessionData.expiresAt) {
-        this.revokeSession(sessionId);
+        await this.revokeSession(sessionId);
         return { isValid: false, reason: 'Session expired' };
       }
 
       // Update last activity timestamp
       sessionData.lastActivity = Date.now();
-      SecureStorageService.setItem(`session_${userId}`, sessionData, {
+      await SecureStorageService.setItem(`session_${userId}`, sessionData, {
         expiration: this.SESSION_DURATION
       });
 
@@ -115,7 +115,7 @@ export class SecureSessionService {
    * Revoke a session
    */
   static async revokeSession(sessionId: string): Promise<void> {
-    const userId = this.getUserIdFromSecureSession(sessionId);
+    const userId = await this.getUserIdFromSecureSession(sessionId);
     if (userId) {
       SecureStorageService.removeItem(`session_${userId}`);
     }
@@ -127,7 +127,7 @@ export class SecureSessionService {
    */
   static async getActiveSessions(userId: string): Promise<SecureSession[]> {
     try {
-      const sessionData = SecureStorageService.getItem(`session_${userId}`);
+      const sessionData = await SecureStorageService.getItem(`session_${userId}`);
       if (!sessionData) {
         return [];
       }
@@ -158,7 +158,7 @@ export class SecureSessionService {
    */
   static async cleanupExpiredSessions(userId?: string): Promise<void> {
     if (userId) {
-      const sessionData = SecureStorageService.getItem(`session_${userId}`);
+      const sessionData = await SecureStorageService.getItem(`session_${userId}`);
       if (sessionData) {
         try {
           if (Date.now() > sessionData.expiresAt) {
@@ -179,14 +179,14 @@ export class SecureSessionService {
    * Update session activity
    */
   static async updateSessionActivity(sessionId: string): Promise<void> {
-    const userId = this.getUserIdFromSecureSession(sessionId);
+    const userId = await this.getUserIdFromSecureSession(sessionId);
     if (!userId) return;
 
     try {
-      const sessionData = SecureStorageService.getItem(`session_${userId}`);
+      const sessionData = await SecureStorageService.getItem(`session_${userId}`);
       if (sessionData) {
         sessionData.lastActivity = Date.now();
-        SecureStorageService.setItem(`session_${userId}`, sessionData, {
+        await SecureStorageService.setItem(`session_${userId}`, sessionData, {
           expiration: this.SESSION_DURATION
         });
       }
@@ -198,9 +198,9 @@ export class SecureSessionService {
   /**
    * Get user ID from secure session storage
    */
-  private static getUserIdFromSecureSession(sessionId: string): string | null {
+  private static async getUserIdFromSecureSession(sessionId: string): Promise<string | null> {
     // Get from secure storage first
-    const currentSessionId = SecureStorageService.getItem('currentSessionId');
+    const currentSessionId = await SecureStorageService.getItem('currentSessionId');
     if (currentSessionId !== sessionId) {
       return null;
     }

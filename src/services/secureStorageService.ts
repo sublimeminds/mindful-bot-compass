@@ -12,21 +12,115 @@ export interface SecureStorageOptions {
 export class SecureStorageService {
   private static readonly STORAGE_PREFIX = 'secure_';
   private static readonly KEY_ROTATION_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
+  private static readonly ENCRYPTION_KEY_NAME = 'app_encryption_key';
+
+  /**
+   * Generate or retrieve encryption key using Web Crypto API
+   */
+  private static async getEncryptionKey(): Promise<CryptoKey> {
+    try {
+      const keyData = sessionStorage.getItem(this.ENCRYPTION_KEY_NAME);
+      if (keyData) {
+        const keyBuffer = new Uint8Array(JSON.parse(keyData));
+        return await crypto.subtle.importKey(
+          'raw',
+          keyBuffer,
+          { name: 'AES-GCM' },
+          false,
+          ['encrypt', 'decrypt']
+        );
+      }
+      
+      // Generate new key
+      const key = await crypto.subtle.generateKey(
+        { name: 'AES-GCM', length: 256 },
+        true,
+        ['encrypt', 'decrypt']
+      );
+      
+      const keyBuffer = await crypto.subtle.exportKey('raw', key);
+      sessionStorage.setItem(this.ENCRYPTION_KEY_NAME, JSON.stringify(Array.from(new Uint8Array(keyBuffer))));
+      return key;
+    } catch (error) {
+      console.error('Encryption key generation failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Encrypt data using Web Crypto API
+   */
+  private static async encryptData(data: string): Promise<{ encrypted: string; iv: string }> {
+    try {
+      const key = await this.getEncryptionKey();
+      const encoder = new TextEncoder();
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      
+      const encryptedBuffer = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv },
+        key,
+        encoder.encode(data)
+      );
+      
+      return {
+        encrypted: Array.from(new Uint8Array(encryptedBuffer)).map(b => b.toString(16).padStart(2, '0')).join(''),
+        iv: Array.from(iv).map(b => b.toString(16).padStart(2, '0')).join('')
+      };
+    } catch (error) {
+      console.error('Data encryption failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Decrypt data using Web Crypto API
+   */
+  private static async decryptData(encryptedData: string, ivHex: string): Promise<string> {
+    try {
+      const key = await this.getEncryptionKey();
+      const decoder = new TextDecoder();
+      
+      const encrypted = new Uint8Array(encryptedData.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+      const iv = new Uint8Array(ivHex.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+      
+      const decryptedBuffer = await crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv },
+        key,
+        encrypted
+      );
+      
+      return decoder.decode(decryptedBuffer);
+    } catch (error) {
+      console.error('Data decryption failed:', error);
+      throw error;
+    }
+  }
 
   /**
    * Store data securely with optional encryption and expiration
    */
-  static setItem(key: string, value: any, options: SecureStorageOptions = {}): boolean {
+  static async setItem(key: string, value: any, options: SecureStorageOptions = {}): Promise<boolean> {
     try {
       const secureKey = this.STORAGE_PREFIX + key;
       
+      let processedValue = JSON.stringify(value);
+      let encryptionData = null;
+      
+      // Encrypt if requested
+      if (options.encrypt) {
+        const { encrypted, iv } = await this.encryptData(processedValue);
+        encryptionData = { encrypted, iv };
+        processedValue = encrypted;
+      }
+      
       // Prepare storage object
       const storageData = {
-        value,
+        value: processedValue,
         timestamp: Date.now(),
         expiration: options.expiration ? Date.now() + options.expiration : null,
         encrypted: options.encrypt || false,
-        version: 1
+        encryptionData,
+        version: 2
       };
 
       // Store in sessionStorage by default (more secure than localStorage)
@@ -45,7 +139,7 @@ export class SecureStorageService {
   /**
    * Retrieve and validate stored data
    */
-  static getItem(key: string): any | null {
+  static async getItem(key: string): Promise<any | null> {
     try {
       const secureKey = this.STORAGE_PREFIX + key;
       const storedData = sessionStorage.getItem(secureKey);
@@ -63,7 +157,20 @@ export class SecureStorageService {
         return null;
       }
 
-      return parsedData.value;
+      let value = parsedData.value;
+      
+      // Decrypt if encrypted
+      if (parsedData.encrypted && parsedData.encryptionData) {
+        try {
+          value = await this.decryptData(parsedData.encryptionData.encrypted, parsedData.encryptionData.iv);
+        } catch (decryptError) {
+          console.error('Failed to decrypt data, removing corrupted item:', decryptError);
+          this.removeItem(key);
+          return null;
+        }
+      }
+
+      return parsedData.encrypted ? JSON.parse(value) : value;
     } catch (error) {
       console.error('SecureStorage: Failed to retrieve item:', error);
       this.removeItem(key); // Remove corrupted data
