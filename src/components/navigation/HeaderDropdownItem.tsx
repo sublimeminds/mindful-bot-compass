@@ -45,9 +45,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
       `}
     >
       {/* Icon now self-contained with gradient */}
-      <div className={`
-        flex-shrink-0 group-hover/item:scale-105 transition-transform duration-200
-      `}>
+      <div className="flex-shrink-0">
         <Icon size={compact ? 40 : (window.innerWidth >= 768 ? 72 : 56)} />
       </div>
       
