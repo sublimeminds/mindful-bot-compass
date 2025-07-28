@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { LucideIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { getItemIcon } from '@/utils/iconUtils';
+import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
 
 interface HeaderDropdownItemProps {
   icon: LucideIcon | string | React.FC<{ className?: string; size?: number }>;
@@ -16,6 +17,23 @@ interface HeaderDropdownItemProps {
   compact?: boolean;
 }
 
+// Mapping of hrefs to subscription requirements
+const SUBSCRIPTION_REQUIREMENTS: Record<string, 'premium' | 'professional'> = {
+  '/adaptive-ai': 'professional',
+  '/voice-therapy': 'premium',
+  '/cultural-therapy': 'premium',
+  '/group-sessions': 'premium',
+  '/family-features': 'premium',
+  '/community-features': 'premium',
+  '/integrations': 'premium',
+  '/api': 'professional',
+  '/data-export': 'professional',
+  '/custom-integrations': 'professional',
+  '/wearables': 'premium',
+  '/enterprise': 'professional',
+  '/healthcare': 'professional'
+};
+
 const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
   icon: iconName,
   title,
@@ -26,12 +44,27 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
   className = '',
   compact = false
 }) => {
+  const { isPremium, isProfessional } = useSubscriptionAccess();
+  
   console.log(`🔍 HeaderDropdownItem rendering: ${title} with href: ${href} and gradient: ${gradient}`);
   console.log(`🔍 Icon input: ${typeof iconName === 'string' ? iconName : 'Component'}, type: ${typeof iconName}`);
   
   // Get the appropriate icon component
   const Icon = typeof iconName === 'string' ? getItemIcon(iconName) : iconName;
   console.log(`🔍 Icon resolved to:`, Icon);
+  
+  // Determine subscription badge to show
+  const requiredTier = SUBSCRIPTION_REQUIREMENTS[href];
+  let subscriptionBadge = null;
+  
+  if (requiredTier === 'professional' && !isProfessional) {
+    subscriptionBadge = 'Pro';
+  } else if (requiredTier === 'premium' && !isPremium) {
+    subscriptionBadge = 'Premium';
+  }
+  
+  // Use subscription badge if no existing badge and subscription is required
+  const displayBadge = badge || subscriptionBadge;
   
   return (
     <Link
@@ -54,9 +87,22 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
           <h4 className={`font-semibold text-gray-900 group-hover/item:text-therapy-700 transition-colors ${compact ? 'text-sm' : ''}`}>
             {title}
           </h4>
-          {badge && (
-            <Badge variant="secondary" className="text-xs px-2 py-0.5">
-              {badge}
+          {displayBadge && (
+            <Badge 
+              variant={
+                displayBadge === 'Pro' || displayBadge === 'Professional' ? 'default' :
+                displayBadge === 'Premium' ? 'secondary' :
+                'outline'
+              } 
+              className={`text-xs px-2 py-0.5 ${
+                displayBadge === 'Pro' || displayBadge === 'Professional' 
+                  ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-0' :
+                displayBadge === 'Premium' 
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0' :
+                ''
+              }`}
+            >
+              {displayBadge}
             </Badge>
           )}
         </div>
