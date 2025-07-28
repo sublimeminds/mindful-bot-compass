@@ -5,6 +5,7 @@ import { LucideIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { getItemIcon } from '@/utils/iconUtils';
 import { useSubscriptionAccess } from '@/hooks/useSubscriptionAccess';
+import { cn } from '@/lib/utils';
 
 interface HeaderDropdownItemProps {
   icon: LucideIcon | string | React.FC<{ className?: string; size?: number }>;
@@ -76,9 +77,17 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
         ${className}
       `}
     >
-      {/* Icon now self-contained with gradient */}
-      <div className="flex-shrink-0">
-        <Icon size={compact ? 40 : (window.innerWidth >= 768 ? 72 : 56)} />
+      {/* Icon with responsive sizing and gradient background */}
+      <div className="flex-shrink-0 relative">
+        <div className={cn(
+          "rounded-xl p-2 transition-all duration-200",
+          "bg-gradient-to-br from-gray-50 to-gray-100",
+          "group-hover/item:from-therapy-50 group-hover/item:to-therapy-100",
+          "border border-gray-200/50 group-hover/item:border-therapy-200/50",
+          compact ? "p-1.5" : "p-2"
+        )}>
+          <Icon size={compact ? 24 : 32} className="text-therapy-600 group-hover/item:text-therapy-700 transition-colors" />
+        </div>
       </div>
       
       <div className="flex-1 min-w-0">

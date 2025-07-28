@@ -46,9 +46,9 @@ const CompactDatabaseDropdowns: React.FC = () => {
                 <ChevronDown className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180" />
               </NavigationMenuTrigger>
               
-              <NavigationMenuContent className="z-50 bg-white shadow-lg border border-gray-200 rounded-lg">
-                <div className="w-[480px] p-3 bg-white rounded-lg shadow-lg border border-gray-200">
-                  <div className="grid grid-cols-2 gap-2">
+              <NavigationMenuContent className="z-50">
+                <HeaderDropdownCard compact={true}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                     {menuItems.map((item) => {
                       const IconComponent = getItemIcon(item.icon);
                       return (
@@ -65,7 +65,7 @@ const CompactDatabaseDropdowns: React.FC = () => {
                       );
                     })}
                   </div>
-                </div>
+                </HeaderDropdownCard>
               </NavigationMenuContent>
             </NavigationMenuItem>
           );

@@ -66,9 +66,9 @@ const DatabaseHeaderDropdowns: React.FC = () => {
                   <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
                 </NavigationMenuTrigger>
                 
-                <NavigationMenuContent className="z-50 bg-white shadow-lg border border-gray-200 rounded-lg">
+                <NavigationMenuContent className="z-50">
                   <HeaderDropdownCard>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
+                    <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-2">
                       {menuItems.map((item) => {
                         const IconComponent = getItemIcon(item.icon);
                         console.log(`🔍 Rendering item: ${item.title} with href: ${item.href} and icon: ${item.icon}, resolved to:`, IconComponent);

@@ -19,7 +19,7 @@ const DesktopHeaderFull = () => {
   console.log('🔍 About to render DatabaseHeaderDropdowns');
 
   return (
-    <header className="hidden xl:block bg-white border-b border-gray-200 shadow-sm">
+    <header className="hidden lg:block bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo and Database-driven Navigation */}
