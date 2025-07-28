@@ -66,7 +66,8 @@ export const useNavigationMenus = () => {
       }
     },
     staleTime: 0, // Always fetch fresh data
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 0, // Don't cache for debugging
+    refetchOnMount: true,
   });
 
   if (error) {
