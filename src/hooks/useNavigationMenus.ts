@@ -4,10 +4,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { MenuConfiguration } from '@/types/navigation';
 
 export const useNavigationMenus = () => {
+  console.log('🚀 useNavigationMenus hook called');
+  
   const { data: menuConfig, isLoading: loading, error } = useQuery({
     queryKey: ['navigation-menus'],
     queryFn: async (): Promise<MenuConfiguration> => {
-      console.log('🔍 Fetching navigation menus from database...');
+      console.log('🔍 STARTING navigation fetch from database...');
+      console.log('🔍 Supabase client:', supabase);
       
       try {
         // Fetch menus
