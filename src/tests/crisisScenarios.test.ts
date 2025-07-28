@@ -59,7 +59,8 @@ describe('Crisis Scenarios and Emergency Response Tests', () => {
   beforeEach(() => {
     vi.mocked(supabase.functions.invoke).mockImplementation((functionName, options) => {
       if (functionName === 'analyze-therapy-message') {
-        const message = options?.body?.message || '';
+        const body = options?.body as any;
+        const message = body?.message || '';
         
         // Determine crisis type based on message content
         let crisisType = 'none';
