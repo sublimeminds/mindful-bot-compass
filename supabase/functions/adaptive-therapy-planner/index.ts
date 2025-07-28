@@ -44,6 +44,15 @@ serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Log the attempt
+    await supabase
+      .from('therapy_plan_creation_logs')
+      .insert({
+        user_id: userId,
+        status: 'started',
+        plan_data: { onboardingData }
+      });
+
     // Get comprehensive user data for enhanced analysis
     const { data: userProfile } = await supabase
       .from('profiles')
@@ -217,7 +226,10 @@ serve(async (req) => {
       },
       effectiveness_score: planData.effectivenessScore,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      creation_method: 'edge_function',
+      api_used: anthropicApiKey ? 'anthropic' : 'fallback',
+      fallback_used: !anthropicApiKey
     };
 
     console.log('Saving therapy plan to database:', therapyPlanData);
@@ -236,6 +248,15 @@ serve(async (req) => {
     }
 
     console.log('Therapy plan saved successfully:', savedPlan);
+
+    // Log success
+    await supabase
+      .from('therapy_plan_creation_logs')
+      .insert({
+        user_id: userId,
+        status: 'completed',
+        plan_data: planData
+      });
 
     // Create an AI therapy analysis record
     const analysisData = {
@@ -282,6 +303,23 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in adaptive therapy planner:', error);
+    
+    // Log the error
+    try {
+      const { userId } = await req.json();
+      if (userId) {
+        await supabase
+          .from('therapy_plan_creation_logs')
+          .insert({
+            user_id: userId,
+            status: 'failed',
+            error_message: error.message
+          });
+      }
+    } catch (logError) {
+      console.error('Failed to log error:', logError);
+    }
+    
     return new Response(
       JSON.stringify({ 
         error: 'Therapy plan creation failed', 

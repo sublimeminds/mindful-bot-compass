@@ -218,8 +218,11 @@ export type Database = {
       adaptive_therapy_plans: {
         Row: {
           adaptations: Json
+          api_used: string | null
           created_at: string
+          creation_method: string | null
           effectiveness_score: number
+          fallback_used: boolean | null
           goals: string[]
           id: string
           next_session_recommendations: Json
@@ -231,8 +234,11 @@ export type Database = {
         }
         Insert: {
           adaptations?: Json
+          api_used?: string | null
           created_at?: string
+          creation_method?: string | null
           effectiveness_score?: number
+          fallback_used?: boolean | null
           goals?: string[]
           id?: string
           next_session_recommendations?: Json
@@ -244,8 +250,11 @@ export type Database = {
         }
         Update: {
           adaptations?: Json
+          api_used?: string | null
           created_at?: string
+          creation_method?: string | null
           effectiveness_score?: number
+          fallback_used?: boolean | null
           goals?: string[]
           id?: string
           next_session_recommendations?: Json
@@ -11089,6 +11098,36 @@ export type Database = {
           recommendations?: Json
           severity_level?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      therapy_plan_creation_logs: {
+        Row: {
+          attempt_timestamp: string | null
+          created_at: string | null
+          error_message: string | null
+          id: string
+          plan_data: Json | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          attempt_timestamp?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          plan_data?: Json | null
+          status: string
+          user_id: string
+        }
+        Update: {
+          attempt_timestamp?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          plan_data?: Json | null
+          status?: string
           user_id?: string
         }
         Relationships: []
