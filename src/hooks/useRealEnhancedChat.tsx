@@ -108,6 +108,55 @@ export const useRealEnhancedChat = () => {
         timestamp: new Date().toISOString()
       });
 
+      // Check for real-time adaptations based on current session state
+      const sessionData = {
+        messages: [...messages, userMessage],
+        currentMood: getCurrentMoodFromMessages([...messages, userMessage]),
+        initialMood: getInitialMoodFromSession(messages),
+        avgResponseLength: calculateAverageResponseLength(messages.filter(m => m.isUser)),
+        interactionDepth: messages.length,
+        lastUsedTechnique: getLastUsedTechnique(messages)
+      };
+
+      const currentMetrics = {
+        averageResponseTime: calculateAverageResponseTime(messages),
+        engagementScore: calculateEngagementScore(sessionData)
+      };
+
+      // Invoke real-time adaptation function
+      const { data: adaptationData } = await supabase.functions.invoke('real-time-therapy-adaptation', {
+        body: {
+          user_id: user.id,
+          session_id: sessionId,
+          session_data: sessionData,
+          current_metrics: currentMetrics
+        }
+      });
+
+      // Apply adaptations if needed
+      let adaptiveContext = '';
+      if (adaptationData?.adaptation_needed && adaptationData.adaptations) {
+        const adaptations = adaptationData.adaptations.adaptations;
+        
+        if (adaptations.crisis_protocols?.length > 0) {
+          adaptiveContext += `CRISIS PROTOCOLS: ${adaptations.crisis_protocols.join(', ')}. `;
+        }
+        
+        if (adaptations.technique_changes?.length > 0) {
+          adaptiveContext += `TECHNIQUE CHANGES: ${adaptations.technique_changes.join(', ')}. `;
+        }
+        
+        if (adaptations.approach_adjustments?.length > 0) {
+          adaptiveContext += `APPROACH ADJUSTMENTS: ${adaptations.approach_adjustments.join(', ')}. `;
+        }
+        
+        if (adaptations.intensity_modifications?.length > 0) {
+          adaptiveContext += `INTENSITY: ${adaptations.intensity_modifications.join(', ')}. `;
+        }
+
+        console.log('🔄 Real-time adaptations applied:', adaptations);
+      }
+
       // Get recent goals for context
       const { data: recentGoals } = await supabase
         .from('goals')
@@ -117,7 +166,7 @@ export const useRealEnhancedChat = () => {
         .order('created_at', { ascending: false })
         .limit(3);
 
-      // Build conversation context with therapist information
+      // Build conversation context with therapist information and adaptive context
       const context: ConversationContext = {
         userId: user.id,
         sessionId,
@@ -126,10 +175,11 @@ export const useRealEnhancedChat = () => {
           content: m.content
         })),
         recentGoals: recentGoals || [],
-        therapist: selectedTherapist
+        therapist: selectedTherapist,
+        adaptiveContext: adaptiveContext || undefined
       };
 
-      // Get AI response with selected therapist context
+      // Get AI response with adaptive context
       const aiResponse = await realAIService.generateTherapyResponse(content, context);
 
       // Handle crisis situation
@@ -164,6 +214,16 @@ export const useRealEnhancedChat = () => {
         timestamp: new Date().toISOString()
       });
 
+      // Log adaptation data if available
+      if (adaptationData?.adaptation_needed) {
+        console.log('📊 Session analytics:', {
+          userId: user.id,
+          sessionId,
+          adaptationApplied: true,
+          adaptationTriggers: adaptationData.triggers?.map((t: any) => t.type) || []
+        });
+      }
+
       // Show follow-up questions if available
       if (aiResponse.followUpQuestions && aiResponse.followUpQuestions.length > 0) {
         toast({
@@ -193,7 +253,60 @@ export const useRealEnhancedChat = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [user, messages, currentSessionId, createNewSession, toast]);
+  }, [user, messages, currentSessionId, createNewSession, toast, selectedTherapist]);
+
+  // Helper functions for session analysis
+  const getCurrentMoodFromMessages = (messages: Message[]): number => {
+    const recentUserMessages = messages.filter(m => m.isUser).slice(-3);
+    // Simple sentiment analysis - could be enhanced with AI
+    const totalSentiment = recentUserMessages.reduce((sum, msg) => {
+      const words = msg.content.toLowerCase().split(' ');
+      let sentiment = 5; // neutral
+      
+      // Positive indicators
+      if (words.some(w => ['good', 'better', 'happy', 'grateful', 'hopeful'].includes(w))) sentiment += 2;
+      
+      // Negative indicators  
+      if (words.some(w => ['bad', 'worse', 'sad', 'hopeless', 'terrible'].includes(w))) sentiment -= 2;
+      
+      return sum + sentiment;
+    }, 0);
+    
+    return recentUserMessages.length > 0 ? totalSentiment / recentUserMessages.length : 5;
+  };
+
+  const getInitialMoodFromSession = (messages: Message[]): number => {
+    const firstUserMessage = messages.find(m => m.isUser);
+    if (!firstUserMessage) return 5;
+    return getCurrentMoodFromMessages([firstUserMessage]);
+  };
+
+  const calculateAverageResponseLength = (userMessages: Message[]): number => {
+    if (userMessages.length === 0) return 0;
+    const totalLength = userMessages.reduce((sum, msg) => sum + msg.content.length, 0);
+    return totalLength / userMessages.length;
+  };
+
+  const getLastUsedTechnique = (messages: Message[]): string | undefined => {
+    const aiMessages = messages.filter(m => !m.isUser && m.techniques?.length);
+    const lastAiMessage = aiMessages[aiMessages.length - 1];
+    return lastAiMessage?.techniques?.[0];
+  };
+
+  const calculateAverageResponseTime = (messages: Message[]): number => {
+    // Simplified - would need to track actual response times
+    return 45; // Default 45 seconds
+  };
+
+  const calculateEngagementScore = (sessionData: any): number => {
+    let score = 0.5;
+    
+    if (sessionData.avgResponseLength > 50) score += 0.2;
+    if (sessionData.interactionDepth > 5) score += 0.2;
+    if (sessionData.currentMood > sessionData.initialMood) score += 0.1;
+    
+    return Math.min(score, 1.0);
+  };
 
   const playMessage = useCallback(async (messageContent: string) => {
     if (!userPreferences?.voice_enabled) return;

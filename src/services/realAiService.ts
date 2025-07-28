@@ -11,6 +11,7 @@ export interface ConversationContext {
   currentMood?: any;
   recentGoals?: any[];
   therapist?: any;
+  adaptiveContext?: string;
 }
 
 export interface AIResponse {
