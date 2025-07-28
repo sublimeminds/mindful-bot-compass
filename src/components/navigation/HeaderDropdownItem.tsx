@@ -86,7 +86,7 @@ const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
           "border border-gray-200/50 group-hover/item:border-therapy-200/50",
           compact ? "p-1.5" : "p-2"
         )}>
-          <Icon size={compact ? 24 : 32} className="text-therapy-600 group-hover/item:text-therapy-700 transition-colors" />
+          <Icon size={compact ? 32 : 40} className="text-therapy-600 group-hover/item:text-therapy-700 transition-colors" />
         </div>
       </div>
       

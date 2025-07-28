@@ -68,7 +68,7 @@ const DatabaseHeaderDropdowns: React.FC = () => {
                 
                 <NavigationMenuContent className="z-50">
                   <HeaderDropdownCard>
-                    <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-2">
                       {menuItems.map((item) => {
                         const IconComponent = getItemIcon(item.icon);
                         console.log(`🔍 Rendering item: ${item.title} with href: ${item.href} and icon: ${item.icon}, resolved to:`, IconComponent);

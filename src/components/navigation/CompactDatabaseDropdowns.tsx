@@ -48,7 +48,7 @@ const CompactDatabaseDropdowns: React.FC = () => {
               
               <NavigationMenuContent className="z-50">
                 <HeaderDropdownCard compact={true}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
                     {menuItems.map((item) => {
                       const IconComponent = getItemIcon(item.icon);
                       return (
