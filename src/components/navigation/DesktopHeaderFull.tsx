@@ -12,8 +12,11 @@ import CompactRegionalSelector from '@/components/regional/CompactRegionalSelect
 import { Search } from 'lucide-react';
 
 const DesktopHeaderFull = () => {
+  console.log('🔍 DesktopHeaderFull: Rendering...');
   const { user } = useAuth();
   const navigate = useNavigate();
+  
+  console.log('🔍 About to render DatabaseHeaderDropdowns');
 
   return (
     <header className="hidden xl:block bg-white border-b border-gray-200 shadow-sm">
