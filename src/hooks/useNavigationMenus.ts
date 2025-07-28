@@ -7,7 +7,7 @@ export const useNavigationMenus = () => {
   console.log('🚀 useNavigationMenus hook called');
   
   const { data: menuConfig, isLoading: loading, error } = useQuery({
-    queryKey: ['navigation-menus', Date.now()], // Force refresh
+    queryKey: ['navigation-menus'],
     queryFn: async (): Promise<MenuConfiguration> => {
       console.log('🔍 STARTING navigation fetch from database...');
       console.log('🔍 Supabase client:', supabase);
@@ -68,8 +68,8 @@ export const useNavigationMenus = () => {
         throw error;
       }
     },
-    staleTime: 0, // Always fetch fresh data
-    gcTime: 0, // Don't cache for debugging
+    staleTime: 0,
+    gcTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true, // Refetch when window regains focus
     refetchInterval: false, // Don't poll
