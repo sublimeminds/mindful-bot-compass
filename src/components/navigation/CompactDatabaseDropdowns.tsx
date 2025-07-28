@@ -41,9 +41,9 @@ const CompactDatabaseDropdowns: React.FC = () => {
           return (
             <NavigationMenuItem key={menu.id}>
               <NavigationMenuTrigger className="group flex items-center space-x-1 px-2 py-1.5 text-xs lg:text-sm font-medium text-gray-900 hover:text-therapy-700 transition-colors bg-transparent border-none">
-                <MenuIcon className="h-3 w-3 lg:h-4 lg:w-4" />
+                <MenuIcon className="h-4 w-4 lg:h-5 lg:w-5" />
                 <span className="truncate max-w-20 lg:max-w-none">{menu.label}</span>
-                <ChevronDown className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180" />
+                <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
               </NavigationMenuTrigger>
               
               <NavigationMenuContent className="z-50">
