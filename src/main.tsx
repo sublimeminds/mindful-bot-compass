@@ -21,6 +21,7 @@ if (!verifyReactModules()) {
 
 import AppSelector from './AppSelector.tsx';
 import './index.css';
+import './tests/autoTestRunner'; // Initialize auto test runner
 
 // Import the safeguard AFTER React is confirmed to be working
 import '@/utils/lovableTaggerSafeGuard';
