@@ -30,8 +30,7 @@ const SUBSCRIPTION_REQUIREMENTS: Record<string, 'premium' | 'professional'> = {
   '/data-export': 'professional',
   '/custom-integrations': 'professional',
   '/wearables': 'premium',
-  '/enterprise': 'professional',
-  '/healthcare': 'professional'
+  '/enterprise': 'professional'
 };
 
 const HeaderDropdownItem: React.FC<HeaderDropdownItemProps> = ({
