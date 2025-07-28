@@ -25,6 +25,7 @@ import AIUsageMonitoring from './AIUsageMonitoring';
 import AIPerformanceMonitor from './AIPerformanceMonitor';
 import CulturalAIMonitoring from './CulturalAIMonitoring';
 import OnboardingTestingHub from './OnboardingTestingHub';
+import ComprehensiveAITestDashboard from './ComprehensiveAITestDashboard';
 import { AITestingService, TestResult } from '@/services/aiTestingService';
 
 const AdminAIOverview = () => {
@@ -246,10 +247,14 @@ const AdminAIOverview = () => {
 
       {/* AI Management Tabs */}
       <Tabs defaultValue="testing" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="testing" className="flex items-center gap-2">
             <TestTube className="h-4 w-4" />
             Testing Hub
+          </TabsTrigger>
+          <TabsTrigger value="comprehensive" className="flex items-center gap-2">
+            <Activity className="h-4 w-4" />
+            Comprehensive Tests
           </TabsTrigger>
           <TabsTrigger value="routing" className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
@@ -271,6 +276,10 @@ const AdminAIOverview = () => {
 
         <TabsContent value="testing">
           <AITestingHub />
+        </TabsContent>
+
+        <TabsContent value="comprehensive">
+          <ComprehensiveAITestDashboard />
         </TabsContent>
 
         <TabsContent value="routing">
