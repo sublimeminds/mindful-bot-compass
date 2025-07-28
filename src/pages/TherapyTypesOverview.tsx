@@ -67,6 +67,46 @@ const therapyTypes: TherapyType[] = [
     icon: '🧘',
     gradient: 'from-calm-400 via-mindful-500 to-flow-600'
   },
+  {
+    id: 'psychodynamic',
+    name: 'Psychodynamic Therapy',
+    category: 'Core Approaches',
+    description: 'Explores unconscious thoughts and past experiences affecting current behavior.',
+    benefits: ['Self-awareness', 'Pattern recognition', 'Insight development'],
+    conditions: ['Depression', 'Relationship issues', 'Personality disorders'],
+    icon: '🔍',
+    gradient: 'from-therapy-400 via-balance-500 to-harmony-600'
+  },
+  {
+    id: 'humanistic',
+    name: 'Humanistic Therapy',
+    category: 'Core Approaches',
+    description: 'Person-centered approach emphasizing self-acceptance and personal growth.',
+    benefits: ['Self-acceptance', 'Personal growth', 'Authenticity'],
+    conditions: ['Low self-esteem', 'Identity issues', 'Life transitions'],
+    icon: '🌟',
+    gradient: 'from-harmony-400 via-therapy-500 to-healing-600'
+  },
+  {
+    id: 'gestalt',
+    name: 'Gestalt Therapy',
+    category: 'Core Approaches',
+    description: 'Focus on present-moment awareness and personal responsibility.',
+    benefits: ['Present awareness', 'Emotional expression', 'Self-responsibility'],
+    conditions: ['Anxiety', 'Depression', 'Relationship issues'],
+    icon: '🎭',
+    gradient: 'from-flow-400 via-harmony-500 to-therapy-600'
+  },
+  {
+    id: 'existential',
+    name: 'Existential Therapy',
+    category: 'Core Approaches',
+    description: 'Explores meaning, purpose, and existential concerns in life.',
+    benefits: ['Life meaning', 'Purpose clarity', 'Existential awareness'],
+    conditions: ['Existential crisis', 'Depression', 'Life transitions'],
+    icon: '🌌',
+    gradient: 'from-mindful-400 via-calm-500 to-balance-600'
+  },
 
   // Specialized Therapies
   {
@@ -111,6 +151,48 @@ const therapyTypes: TherapyType[] = [
     icon: '👥',
     gradient: 'from-harmony-400 via-balance-500 to-therapy-600'
   },
+  {
+    id: 'cpt',
+    name: 'Cognitive Processing Therapy',
+    category: 'Specialized Therapies',
+    description: 'Specific treatment for PTSD focusing on trauma-related thoughts.',
+    benefits: ['PTSD symptom reduction', 'Cognitive restructuring', 'Trauma integration'],
+    conditions: ['PTSD', 'Sexual assault', 'Combat trauma'],
+    icon: '⚙️',
+    gradient: 'from-therapy-400 via-healing-500 to-balance-600',
+    isPremium: true
+  },
+  {
+    id: 'pe',
+    name: 'Prolonged Exposure Therapy',
+    category: 'Specialized Therapies',
+    description: 'Gradual exposure to trauma memories to reduce avoidance and fear.',
+    benefits: ['Fear reduction', 'Avoidance elimination', 'Memory processing'],
+    conditions: ['PTSD', 'Phobias', 'Trauma-related avoidance'],
+    icon: '🔓',
+    gradient: 'from-healing-400 via-therapy-500 to-calm-600',
+    isPremium: true
+  },
+  {
+    id: 'brainspotting',
+    name: 'Brainspotting',
+    category: 'Specialized Therapies',
+    description: 'Eye position-based therapy for accessing and processing trauma.',
+    benefits: ['Deep trauma access', 'Nervous system healing', 'Emotional release'],
+    conditions: ['Trauma', 'PTSD', 'Performance anxiety'],
+    icon: '👀',
+    gradient: 'from-mindful-400 via-flow-500 to-healing-600'
+  },
+  {
+    id: 'tf-cbt',
+    name: 'Trauma-Focused CBT',
+    category: 'Specialized Therapies',
+    description: 'CBT specifically adapted for trauma survivors, especially children.',
+    benefits: ['Trauma-specific skills', 'Safety building', 'Coping strategies'],
+    conditions: ['Childhood trauma', 'PTSD in youth', 'Complex trauma'],
+    icon: '🧸',
+    gradient: 'from-therapy-400 via-healing-500 to-harmony-600'
+  },
 
   // Relationship & Family
   {
@@ -144,6 +226,46 @@ const therapyTypes: TherapyType[] = [
     conditions: ['Attachment issues', 'Relationship distress', 'Emotional disconnection'],
     icon: '💖',
     gradient: 'from-healing-400 via-therapy-500 to-harmony-600'
+  },
+  {
+    id: 'gottman',
+    name: 'Gottman Method',
+    category: 'Relationship & Family',
+    description: 'Research-based approach to couple therapy focusing on friendship and conflict resolution.',
+    benefits: ['Relationship stability', 'Conflict management', 'Intimacy enhancement'],
+    conditions: ['Marital problems', 'Communication issues', 'Relationship maintenance'],
+    icon: '🤝',
+    gradient: 'from-harmony-400 via-balance-500 to-therapy-600'
+  },
+  {
+    id: 'structural-family',
+    name: 'Structural Family Therapy',
+    category: 'Relationship & Family',
+    description: 'Focus on family structure, boundaries, and hierarchies.',
+    benefits: ['Healthy boundaries', 'Clear roles', 'Family organization'],
+    conditions: ['Family dysfunction', 'Behavioral problems', 'Authority issues'],
+    icon: '🏗️',
+    gradient: 'from-balance-400 via-therapy-500 to-harmony-600'
+  },
+  {
+    id: 'narrative-family',
+    name: 'Narrative Family Therapy',
+    category: 'Relationship & Family',
+    description: 'Helps families re-author their stories and identities.',
+    benefits: ['Story restructuring', 'Identity clarity', 'Problem externalization'],
+    conditions: ['Family identity issues', 'Negative narratives', 'Life transitions'],
+    icon: '📖',
+    gradient: 'from-therapy-400 via-harmony-500 to-mindful-600'
+  },
+  {
+    id: 'solution-focused-family',
+    name: 'Solution-Focused Family Therapy',
+    category: 'Relationship & Family',
+    description: 'Brief therapy focusing on solutions rather than problems.',
+    benefits: ['Quick solutions', 'Strength focus', 'Goal achievement'],
+    conditions: ['Specific family issues', 'Crisis situations', 'Behavioral changes'],
+    icon: '💡',
+    gradient: 'from-flow-400 via-therapy-500 to-balance-600'
   },
 
   // Population-Specific
@@ -199,6 +321,47 @@ const therapyTypes: TherapyType[] = [
     icon: '🧸',
     gradient: 'from-healing-400 via-flow-500 to-calm-600'
   },
+  {
+    id: 'mens-therapy',
+    name: "Men's Therapy",
+    category: 'Population-Specific',
+    description: 'Gender-specific therapy addressing unique challenges faced by men.',
+    benefits: ['Emotional expression', 'Masculine identity', 'Relationship skills'],
+    conditions: ['Depression in men', 'Anger management', 'Work stress'],
+    icon: '👨',
+    gradient: 'from-therapy-400 via-balance-500 to-healing-600'
+  },
+  {
+    id: 'womens-therapy',
+    name: "Women's Therapy", 
+    category: 'Population-Specific',
+    description: 'Gender-specific therapy for women addressing unique life experiences.',
+    benefits: ['Empowerment', 'Body image', 'Work-life balance'],
+    conditions: ['Postpartum depression', 'Body image issues', 'Career stress'],
+    icon: '👩',
+    gradient: 'from-harmony-400 via-therapy-500 to-flow-600'
+  },
+  {
+    id: 'veteran-therapy',
+    name: 'Veteran Therapy',
+    category: 'Population-Specific',
+    description: 'Specialized therapy for military veterans and service members.',
+    benefits: ['Combat trauma healing', 'Transition support', 'Identity adjustment'],
+    conditions: ['PTSD', 'Military trauma', 'Adjustment disorders'],
+    icon: '🎖️',
+    gradient: 'from-healing-400 via-therapy-500 to-balance-600',
+    isPremium: true
+  },
+  {
+    id: 'first-responder',
+    name: 'First Responder Therapy',
+    category: 'Population-Specific',
+    description: 'Therapy for police, firefighters, EMTs, and other first responders.',
+    benefits: ['Trauma processing', 'Stress management', 'Career resilience'],
+    conditions: ['Secondary trauma', 'Burnout', 'Critical incident stress'],
+    icon: '🚑',
+    gradient: 'from-therapy-400 via-healing-500 to-calm-600'
+  },
 
   // Condition-Specific
   {
@@ -253,6 +416,66 @@ const therapyTypes: TherapyType[] = [
     icon: '🔄',
     gradient: 'from-balance-400 via-therapy-500 to-calm-600'
   },
+  {
+    id: 'bipolar-therapy',
+    name: 'Bipolar Disorder Therapy',
+    category: 'Condition-Specific',
+    description: 'Specialized therapy for managing bipolar disorder and mood swings.',
+    benefits: ['Mood stabilization', 'Episode prevention', 'Medication compliance'],
+    conditions: ['Bipolar disorder', 'Mood swings', 'Manic episodes'],
+    icon: '🌓',
+    gradient: 'from-balance-400 via-therapy-500 to-harmony-600'
+  },
+  {
+    id: 'chronic-pain',
+    name: 'Chronic Pain Therapy',
+    category: 'Condition-Specific',
+    description: 'Psychological support for chronic pain management and adaptation.',
+    benefits: ['Pain coping', 'Quality of life', 'Activity pacing'],
+    conditions: ['Chronic pain', 'Fibromyalgia', 'Pain-related depression'],
+    icon: '⚕️',
+    gradient: 'from-healing-400 via-calm-500 to-therapy-600'
+  },
+  {
+    id: 'chronic-illness',
+    name: 'Chronic Illness Therapy',
+    category: 'Condition-Specific',
+    description: 'Support for adapting to and coping with chronic medical conditions.',
+    benefits: ['Adaptation skills', 'Medical anxiety', 'Life restructuring'],
+    conditions: ['Chronic illness', 'Medical trauma', 'Health anxiety'],
+    icon: '🏥',
+    gradient: 'from-calm-400 via-healing-500 to-balance-600'
+  },
+  {
+    id: 'grief-therapy',
+    name: 'Grief & Loss Therapy',
+    category: 'Condition-Specific',
+    description: 'Specialized support for processing grief and significant losses.',
+    benefits: ['Grief processing', 'Meaning making', 'Adjustment support'],
+    conditions: ['Bereavement', 'Complicated grief', 'Loss trauma'],
+    icon: '🕊️',
+    gradient: 'from-healing-400 via-therapy-500 to-calm-600'
+  },
+  {
+    id: 'sleep-therapy',
+    name: 'Sleep Therapy',
+    category: 'Condition-Specific',
+    description: 'Cognitive behavioral therapy specifically for sleep disorders.',
+    benefits: ['Sleep quality', 'Sleep hygiene', 'Insomnia relief'],
+    conditions: ['Insomnia', 'Sleep anxiety', 'Sleep disorders'],
+    icon: '🌙',
+    gradient: 'from-calm-400 via-mindful-500 to-therapy-600'
+  },
+  {
+    id: 'social-anxiety',
+    name: 'Social Anxiety Therapy',
+    category: 'Condition-Specific',
+    description: 'Specialized treatment for social anxiety and social phobia.',
+    benefits: ['Social confidence', 'Exposure techniques', 'Communication skills'],
+    conditions: ['Social anxiety', 'Social phobia', 'Performance anxiety'],
+    icon: '🎭',
+    gradient: 'from-therapy-400 via-flow-500 to-harmony-600'
+  },
 
   // Modern Approaches
   {
@@ -296,6 +519,213 @@ const therapyTypes: TherapyType[] = [
     conditions: ['Anxiety', 'Chronic pain', 'Hypertension', 'ADHD'],
     icon: '📊',
     gradient: 'from-calm-400 via-therapy-500 to-balance-600'
+  },
+  {
+    id: 'online-therapy',
+    name: 'Online Therapy',
+    category: 'Modern Approaches',
+    description: 'Professional therapy delivered through secure digital platforms.',
+    benefits: ['Accessibility', 'Convenience', 'Comfort'],
+    conditions: ['Any condition', 'Geographic barriers', 'Mobility issues'],
+    icon: '💻',
+    gradient: 'from-flow-400 via-therapy-500 to-harmony-600'
+  },
+  {
+    id: 'ai-assisted',
+    name: 'AI-Assisted Therapy',
+    category: 'Modern Approaches',
+    description: 'Therapy enhanced with artificial intelligence for personalized treatment.',
+    benefits: ['Personalization', 'Data insights', 'Treatment optimization'],
+    conditions: ['Various conditions', 'Data-driven care', 'Personalized treatment'],
+    icon: '🤖',
+    gradient: 'from-therapy-400 via-balance-500 to-mindful-600',
+    isNew: true
+  },
+  {
+    id: 'dance-movement',
+    name: 'Dance/Movement Therapy',
+    category: 'Modern Approaches',
+    description: 'Using body movement as a medium for healing and self-expression.',
+    benefits: ['Body awareness', 'Emotional expression', 'Physical integration'],
+    conditions: ['Trauma', 'Body image issues', 'Depression'],
+    icon: '💃',
+    gradient: 'from-flow-400 via-healing-500 to-harmony-600'
+  },
+  {
+    id: 'drama-therapy',
+    name: 'Drama Therapy',
+    category: 'Modern Approaches',
+    description: 'Therapeutic use of drama and theater techniques for healing.',
+    benefits: ['Role exploration', 'Emotional expression', 'Social skills'],
+    conditions: ['Social anxiety', 'Trauma', 'Identity issues'],
+    icon: '🎪',
+    gradient: 'from-harmony-400 via-therapy-500 to-flow-600'
+  },
+  {
+    id: 'ecotherapy',
+    name: 'Ecotherapy',
+    category: 'Modern Approaches',
+    description: 'Nature-based therapy conducted in outdoor natural environments.',
+    benefits: ['Nature connection', 'Stress reduction', 'Physical activity'],
+    conditions: ['Depression', 'Anxiety', 'ADHD', 'Stress'],
+    icon: '🌲',
+    gradient: 'from-healing-400 via-calm-500 to-mindful-600'
+  },
+  {
+    id: 'pet-assisted',
+    name: 'Pet-Assisted Therapy',
+    category: 'Modern Approaches',
+    description: 'Therapy incorporating trained animals to facilitate healing.',
+    benefits: ['Emotional support', 'Social connection', 'Stress relief'],
+    conditions: ['Depression', 'Anxiety', 'PTSD', 'Autism'],
+    icon: '🐕',
+    gradient: 'from-healing-400 via-harmony-500 to-calm-600'
+  },
+  {
+    id: 'mindful-eating',
+    name: 'Mindful Eating Therapy',
+    category: 'Modern Approaches',
+    description: 'Mindfulness-based approach to healing relationship with food.',
+    benefits: ['Healthy eating habits', 'Body awareness', 'Emotional regulation'],
+    conditions: ['Eating disorders', 'Emotional eating', 'Body image issues'],
+    icon: '🍎',
+    gradient: 'from-mindful-400 via-healing-500 to-balance-600'
+  },
+
+  // Integrative Approaches
+  {
+    id: 'holistic-therapy',
+    name: 'Holistic Therapy',
+    category: 'Integrative Approaches',
+    description: 'Integrating mind, body, and spirit for comprehensive healing.',
+    benefits: ['Whole-person healing', 'Multiple modalities', 'Comprehensive care'],
+    conditions: ['Complex conditions', 'Chronic illness', 'Life transitions'],
+    icon: '🔮',
+    gradient: 'from-mindful-400 via-healing-500 to-harmony-600'
+  },
+  {
+    id: 'transpersonal',
+    name: 'Transpersonal Therapy',
+    category: 'Integrative Approaches',
+    description: 'Therapy that includes spiritual and transcendent aspects of human experience.',
+    benefits: ['Spiritual growth', 'Meaning making', 'Transcendent awareness'],
+    conditions: ['Spiritual crisis', 'Existential issues', 'Life purpose'],
+    icon: '✨',
+    gradient: 'from-harmony-400 via-mindful-500 to-flow-600'
+  },
+  {
+    id: 'positive-psychology',
+    name: 'Positive Psychology',
+    category: 'Integrative Approaches',
+    description: 'Focus on strengths, well-being, and human flourishing.',
+    benefits: ['Strength building', 'Well-being focus', 'Resilience development'],
+    conditions: ['Depression prevention', 'Life enhancement', 'Goal achievement'],
+    icon: '🌈',
+    gradient: 'from-harmony-400 via-therapy-500 to-healing-600'
+  },
+  {
+    id: 'integrative-body-mind',
+    name: 'Integrative Body-Mind Therapy',
+    category: 'Integrative Approaches',
+    description: 'Combining body-based and cognitive approaches for comprehensive healing.',
+    benefits: ['Mind-body integration', 'Holistic healing', 'Comprehensive treatment'],
+    conditions: ['Trauma', 'Chronic stress', 'Psychosomatic issues'],
+    icon: '🧘‍♀️',
+    gradient: 'from-calm-400 via-mindful-500 to-healing-600'
+  },
+  {
+    id: 'energy-therapy',
+    name: 'Energy Therapy',
+    category: 'Integrative Approaches',
+    description: 'Working with energy systems and chakras for emotional healing.',
+    benefits: ['Energy balance', 'Chakra alignment', 'Emotional clearing'],
+    conditions: ['Energy blocks', 'Emotional imbalance', 'Spiritual issues'],
+    icon: '⚡',
+    gradient: 'from-mindful-400 via-flow-500 to-harmony-600'
+  },
+
+  // Brief & Solution-Focused
+  {
+    id: 'solution-focused',
+    name: 'Solution-Focused Brief Therapy',
+    category: 'Brief & Solution-Focused',
+    description: 'Short-term therapy focusing on solutions rather than problems.',
+    benefits: ['Quick results', 'Goal-oriented', 'Strength-based'],
+    conditions: ['Specific problems', 'Goal achievement', 'Life transitions'],
+    icon: '🎯',
+    gradient: 'from-therapy-400 via-flow-500 to-balance-600'
+  },
+  {
+    id: 'strategic-therapy',
+    name: 'Strategic Therapy',
+    category: 'Brief & Solution-Focused',
+    description: 'Problem-solving approach with specific interventions and directives.',
+    benefits: ['Problem solving', 'Strategic interventions', 'Behavioral change'],
+    conditions: ['Specific behaviors', 'Family problems', 'Resistance to change'],
+    icon: '♟️',
+    gradient: 'from-balance-400 via-therapy-500 to-harmony-600'
+  },
+  {
+    id: 'single-session',
+    name: 'Single Session Therapy',
+    category: 'Brief & Solution-Focused',
+    description: 'Comprehensive therapy designed to be effective in just one session.',
+    benefits: ['Immediate help', 'Crisis intervention', 'Focused solutions'],
+    conditions: ['Crisis situations', 'Specific issues', 'One-time consultation'],
+    icon: '⏱️',
+    gradient: 'from-therapy-400 via-healing-500 to-flow-600'
+  },
+  {
+    id: 'motivational-interviewing',
+    name: 'Motivational Interviewing',
+    category: 'Brief & Solution-Focused',
+    description: 'Collaborative approach to strengthen motivation for change.',
+    benefits: ['Motivation enhancement', 'Change readiness', 'Ambivalence resolution'],
+    conditions: ['Addiction', 'Behavioral change', 'Health behaviors'],
+    icon: '🎤',
+    gradient: 'from-flow-400 via-therapy-500 to-balance-600'
+  },
+
+  // Group & Community Approaches
+  {
+    id: 'group-therapy',
+    name: 'Group Therapy',
+    category: 'Group & Community',
+    description: 'Therapy conducted in a group setting with peer support and interaction.',
+    benefits: ['Peer support', 'Social learning', 'Cost-effective'],
+    conditions: ['Social anxiety', 'Addiction', 'Depression', 'Grief'],
+    icon: '👥',
+    gradient: 'from-harmony-400 via-therapy-500 to-healing-600'
+  },
+  {
+    id: 'support-groups',
+    name: 'Support Groups',
+    category: 'Group & Community',
+    description: 'Peer-led groups for mutual support and shared experiences.',
+    benefits: ['Peer connection', 'Shared experiences', 'Mutual support'],
+    conditions: ['Addiction recovery', 'Grief', 'Chronic illness', 'Life transitions'],
+    icon: '🤝',
+    gradient: 'from-healing-400 via-harmony-500 to-therapy-600'
+  },
+  {
+    id: 'therapeutic-community',
+    name: 'Therapeutic Community',
+    category: 'Group & Community',
+    description: 'Residential treatment approach using community as the method of treatment.',
+    benefits: ['Peer influence', 'Social learning', 'Comprehensive support'],
+    conditions: ['Addiction', 'Personality disorders', 'Severe mental illness'],
+    icon: '🏘️',
+    gradient: 'from-therapy-400 via-healing-500 to-harmony-600'
+  },
+  {
+    id: 'psychoeducation',
+    name: 'Psychoeducational Groups',
+    category: 'Group & Community',
+    description: 'Educational groups providing information about mental health conditions.',
+    benefits: ['Knowledge building', 'Skill learning', 'Peer education'],
+    conditions: ['Bipolar disorder', 'Depression', 'Anxiety', 'Family education'],
+    icon: '📚',
+    gradient: 'from-mindful-400 via-therapy-500 to-balance-600'
   }
 ];
 
