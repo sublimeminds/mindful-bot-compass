@@ -16,18 +16,22 @@ const EnhancedOnboardingPage = () => {
 
   const handleOnboardingComplete = async (data: any) => {
     try {
-      console.log('Onboarding completed with data:', data);
+      console.log('🎯 Onboarding completed with data:', data);
       
       if (!user) {
+        console.error('❌ User not authenticated');
         toast.error('User not authenticated');
         return;
       }
 
       // Validate required data before proceeding
       if (!data || Object.keys(data).length === 0) {
+        console.error('❌ Invalid onboarding data:', data);
         toast.error('Invalid onboarding data. Please complete all steps.');
         return;
       }
+
+      console.log('✅ User authenticated, data valid, proceeding with cultural profile save');
 
       // Save the cultural profile first with proper error handling
       if (data.culturalPreferences) {
@@ -43,26 +47,30 @@ const EnhancedOnboardingPage = () => {
           culturalSensitivities: data.culturalPreferences.culturalSensitivities || []
         };
 
+        console.log('💾 Saving cultural profile:', culturalProfile);
         const { success, error: culturalError } = await EnhancedCulturalContextService.saveCulturalProfile(culturalProfile);
         
         if (!success) {
-          console.error('Error saving cultural profile:', culturalError);
+          console.error('❌ Error saving cultural profile:', culturalError);
           toast.error('Failed to save cultural preferences. Please try again.');
           return;
         }
 
-        console.log('Cultural profile saved successfully');
+        console.log('✅ Cultural profile saved successfully');
+      } else {
+        console.log('⚠️ No cultural preferences to save');
       }
 
-      // Do NOT mark onboarding as complete until therapy plan is successfully created
-      // This was the main issue - marking complete too early
-      console.log('Onboarding data processed, proceeding to therapy plan creation');
+      // CRITICAL: Do NOT mark onboarding as complete until therapy plan is successfully created
+      console.log('🚀 Onboarding data processed, proceeding to therapy plan creation');
 
       // Store data and show plan creation step
       setOnboardingData(data);
       setShowPlanCreation(true);
+      
+      console.log('✅ Therapy plan creation step initiated');
     } catch (error) {
-      console.error('Error completing onboarding:', error);
+      console.error('❌ Error completing onboarding:', error);
       toast.error('An error occurred during onboarding completion');
     }
   };

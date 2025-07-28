@@ -213,16 +213,19 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
 
   const createTherapyPlan = async () => {
     try {
-      console.log('Starting therapy plan creation for user:', user?.id);
+      console.log('🚀 Starting therapy plan creation for user:', user?.id);
+      console.log('📋 Onboarding data:', onboardingData);
       toast.loading('Creating your personalized therapy plan...');
 
       // Validate user is authenticated
       if (!user?.id) {
+        console.error('❌ User not authenticated');
         throw new Error('User not authenticated');
       }
 
       // Validate onboarding data is present
       if (!onboardingData || Object.keys(onboardingData).length === 0) {
+        console.error('❌ Missing onboarding data:', onboardingData);
         throw new Error('Missing onboarding data');
       }
 
@@ -243,22 +246,28 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
         }
       };
 
-      console.log('Invoking adaptive-therapy-planner with payload:', planPayload);
+      console.log('📡 Invoking adaptive-therapy-planner with payload:', planPayload);
 
       const { data, error } = await supabase.functions.invoke('adaptive-therapy-planner', {
         body: planPayload
       });
 
-      console.log('Edge function response:', { data, error });
+      console.log('📡 Edge function response:', { data, error });
 
       if (error) {
-        console.error('Edge function error:', error);
-        throw new Error(error.message || 'Edge function failed');
+        console.error('❌ Edge function error:', error);
+        throw new Error(`Edge function failed: ${error.message || JSON.stringify(error)}`);
       }
 
       if (!data) {
+        console.error('❌ No data returned from edge function');
         throw new Error('No data returned from therapy plan creation');
       }
+
+      console.log('✅ Edge function returned data:', data);
+
+      // Wait a moment for database write to complete, then verify
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Verify the plan was actually saved to the database
       const { data: savedPlan, error: verifyError } = await supabase
@@ -267,14 +276,21 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
-      if (verifyError || !savedPlan) {
-        console.error('Plan verification failed:', verifyError);
+      console.log('🔍 Database verification result:', { savedPlan, verifyError });
+
+      if (verifyError) {
+        console.error('❌ Plan verification error:', verifyError);
+        throw new Error(`Database verification failed: ${verifyError.message}`);
+      }
+
+      if (!savedPlan) {
+        console.error('❌ No saved plan found in database');
         throw new Error('Therapy plan was not saved properly. Please try again.');
       }
 
-      console.log('Therapy plan verified in database:', savedPlan);
+      console.log('✅ Therapy plan verified in database:', savedPlan);
 
       setPlanData(data);
       setIsComplete(true);
@@ -287,7 +303,7 @@ const TherapyPlanCreationStep = ({ onboardingData, onComplete }: TherapyPlanCrea
       }, 1000);
 
     } catch (error) {
-      console.error('Error creating therapy plan:', error);
+      console.error('❌ Error creating therapy plan:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to create therapy plan';
       setError(errorMessage);
       toast.dismiss(); // Remove loading toast
