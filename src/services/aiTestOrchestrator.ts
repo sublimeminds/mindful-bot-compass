@@ -712,12 +712,59 @@ class AITestOrchestrator {
 
   private async storeTestResults(execution: TestSuiteResult): Promise<void> {
     try {
-      // Store in performance metrics table
-      await supabase.from('performance_metrics').insert({
+      console.log('📄 Storing test results to database...');
+      
+      // Generate a unique suite ID for all tests in this execution
+      const suiteId = `suite-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      const testRecords = execution.results.map(result => ({
+        test_suite_id: suiteId,
+        test_name: result.testName,
+        test_category: result.category,
+        status: result.status,
+        duration: result.duration || null,
+        error_message: result.error || null,
+        test_payload: {
+          testId: result.id,
+          startTime: result.startTime?.toISOString(),
+          endTime: result.endTime?.toISOString(),
+          metrics: result.metrics,
+          details: result.details
+        } as any,
+        response_data: result.details as any || null,
+        execution_metadata: {
+          suiteId: execution.id,
+          config: {
+            categories: execution.config.categories || [],
+            maxConcurrentTests: execution.config.maxConcurrentTests || 10,
+            timeoutMs: execution.config.timeoutMs || 30000,
+            retryAttempts: execution.config.retryAttempts || 2,
+            detailedLogging: execution.config.detailedLogging || false
+          },
+          retryCount: result.retryCount || 0,
+          totalDuration: execution.totalDuration,
+          stats: execution.stats
+        } as any
+      }));
+
+      // Store individual test results
+      const { error: testError } = await supabase
+        .from('ai_test_results')
+        .insert(testRecords);
+
+      if (testError) {
+        console.error('❌ Failed to store individual test results:', testError);
+      } else {
+        console.log(`✅ Successfully stored ${testRecords.length} individual test results`);
+      }
+
+      // Also store summary in performance metrics for compatibility
+      const { error: perfError } = await supabase.from('performance_metrics').insert({
         metric_type: 'comprehensive_test_suite',
         metric_value: execution.stats.overallSuccessRate,
         metadata: {
           execution_id: execution.id,
+          suite_id: suiteId,
           categories: execution.categories,
           stats: execution.stats,
           duration: execution.totalDuration,
@@ -727,12 +774,26 @@ class AITestOrchestrator {
             timeoutMs: execution.config.timeoutMs || 30000,
             retryAttempts: execution.config.retryAttempts || 2,
             detailedLogging: execution.config.detailedLogging || false
-          }
-        }
+          },
+          test_count: execution.results.length
+        } as any
       });
+
+      if (perfError) {
+        console.error('❌ Failed to store performance summary:', perfError);
+      } else {
+        console.log('✅ Successfully stored performance summary');
+      }
+      
     } catch (error) {
-      console.error('Failed to store test results:', error);
-      // Don't throw here, as this is not critical
+      console.error('❌ Error storing test results:', error);
+      // Log results locally as fallback
+      console.log('💾 Test results (local fallback):', JSON.stringify({
+        suite_id: execution.id,
+        stats: execution.stats,
+        test_count: execution.results.length,
+        duration: execution.totalDuration
+      }, null, 2));
     }
   }
 

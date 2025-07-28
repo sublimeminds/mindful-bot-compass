@@ -1491,6 +1491,51 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_test_results: {
+        Row: {
+          created_at: string
+          duration: number | null
+          error_message: string | null
+          execution_metadata: Json | null
+          id: string
+          response_data: Json | null
+          status: string
+          test_category: string
+          test_name: string
+          test_payload: Json | null
+          test_suite_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          duration?: number | null
+          error_message?: string | null
+          execution_metadata?: Json | null
+          id?: string
+          response_data?: Json | null
+          status: string
+          test_category: string
+          test_name: string
+          test_payload?: Json | null
+          test_suite_id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          duration?: number | null
+          error_message?: string | null
+          execution_metadata?: Json | null
+          id?: string
+          response_data?: Json | null
+          status?: string
+          test_category?: string
+          test_name?: string
+          test_payload?: Json | null
+          test_suite_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ai_therapy_analysis: {
         Row: {
           analysis_version: string
