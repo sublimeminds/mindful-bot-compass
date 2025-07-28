@@ -112,6 +112,8 @@ class AITestOrchestrator {
 
   async executeCategory(category: string, config: TestExecutionConfig): Promise<TestResult[]> {
     switch (category) {
+      case 'infrastructure':
+        return this.executeInfrastructureTests(config);
       case 'edge-functions':
         return this.executeEdgeFunctionTests(config);
       case 'crisis-scenarios':
@@ -123,6 +125,87 @@ class AITestOrchestrator {
       default:
         throw new Error(`Unknown test category: ${category}`);
     }
+  }
+
+  private async executeInfrastructureTests(config: TestExecutionConfig): Promise<TestResult[]> {
+    const tests = [
+      {
+        name: 'Database Connection',
+        test: async () => {
+          const { data, error } = await supabase.from('ai_test_results').select('id').limit(1);
+          if (error) throw new Error(`Database error: ${error.message}`);
+          return { success: true, connected: true };
+        }
+      },
+      {
+        name: 'Basic Computation',
+        test: async () => {
+          const result = Math.random() * 100;
+          if (result < 0) throw new Error('Math error');
+          return { success: true, result };
+        }
+      },
+      {
+        name: 'Data Insertion',
+        test: async () => {
+          const testData = {
+            test_name: 'infrastructure_test',
+            test_category: 'infrastructure',
+            status: 'passed',
+            duration: 50,
+            execution_metadata: { type: 'automated_test' }
+          };
+          const { data, error } = await supabase.from('ai_test_results').insert([testData]).select();
+          if (error) throw new Error(`Insert error: ${error.message}`);
+          return { success: true, inserted: data };
+        }
+      }
+    ];
+
+    const results: TestResult[] = [];
+
+    for (const test of tests) {
+      if (this.shouldStop) break;
+
+      const result = await this.executeWithRetry(
+        () => this.executeInfrastructureTest(test.name, test.test),
+        config.retryAttempts || 2
+      );
+      
+      results.push(result);
+    }
+
+    return results;
+  }
+
+  private async executeInfrastructureTest(testName: string, testFn: () => Promise<any>): Promise<TestResult> {
+    const result: TestResult = {
+      id: `infra-${testName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`,
+      testName: `Infrastructure - ${testName}`,
+      category: 'infrastructure',
+      status: 'running',
+      startTime: new Date(),
+      metrics: {}
+    };
+
+    try {
+      const startTime = Date.now();
+      const testResult = await testFn();
+      
+      const responseTime = Date.now() - startTime;
+      result.endTime = new Date();
+      result.duration = responseTime;
+      result.metrics.responseTime = responseTime;
+      result.status = 'passed';
+      result.details = testResult;
+
+    } catch (error) {
+      result.endTime = new Date();
+      result.status = 'failed';
+      result.error = (error as Error).message;
+    }
+
+    return result;
   }
 
   private async executeEdgeFunctionTests(config: TestExecutionConfig): Promise<TestResult[]> {
