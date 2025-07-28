@@ -35,6 +35,7 @@ const CrisisSupport = lazy(() => import('@/pages/CrisisSupport'));
 const FamilyFeatures = lazy(() => import('@/pages/FamilyFeaturesPage'));
 const CommunityFeatures = lazy(() => import('@/pages/CommunityFeatures'));
 const Integrations = lazy(() => import('@/pages/Integrations'));
+const TherapyTypesOverview = lazy(() => import('@/pages/TherapyTypesOverview'));
 
 const AppRouter: React.FC = () => {
   console.log('🔍 AppRouter: Rendering routes');
@@ -265,8 +266,12 @@ const AppRouter: React.FC = () => {
             <Integrations />
           </PublicPageWrapper>
         } />
-
-        {/* Private routes without Header/Footer (they have their own layout) */}
+        
+        <Route path="/therapy-types-overview" element={
+          <PublicPageWrapper>
+            <TherapyTypesOverview />
+          </PublicPageWrapper>
+        } />
         <Route path="/dashboard" element={
           <PrivateRoute>
             <Dashboard />
