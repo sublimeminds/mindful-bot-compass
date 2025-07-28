@@ -71,6 +71,8 @@ export const useNavigationMenus = () => {
     staleTime: 0, // Always fetch fresh data
     gcTime: 0, // Don't cache for debugging
     refetchOnMount: true,
+    refetchOnWindowFocus: true, // Refetch when window regains focus
+    refetchInterval: false, // Don't poll
   });
 
   if (error) {
