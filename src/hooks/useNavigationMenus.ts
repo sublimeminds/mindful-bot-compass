@@ -7,7 +7,7 @@ export const useNavigationMenus = () => {
   console.log('🚀 useNavigationMenus hook called');
   
   const { data: menuConfig, isLoading: loading, error } = useQuery({
-    queryKey: ['navigation-menus'],
+    queryKey: ['navigation-menus', Date.now()], // Force refresh
     queryFn: async (): Promise<MenuConfiguration> => {
       console.log('🔍 STARTING navigation fetch from database...');
       console.log('🔍 Supabase client:', supabase);
