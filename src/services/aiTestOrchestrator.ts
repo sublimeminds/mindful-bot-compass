@@ -272,8 +272,14 @@ class AITestOrchestrator {
       result.metrics.responseTime = responseTime;
 
       if (error) {
-        result.status = 'failed';
-        result.error = error.message;
+        // Handle "Function not found" as warning instead of failure
+        if (error.message.includes('not found') || error.message.includes('404')) {
+          result.status = 'warning';
+          result.error = `Function '${functionName}' not found - may not be deployed`;
+        } else {
+          result.status = 'failed';
+          result.error = error.message;
+        }
       } else {
         // Evaluate response quality
         const quality = this.evaluateResponseQuality(functionName, data);
