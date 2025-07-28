@@ -14,6 +14,7 @@ import Index from '@/pages/Index';
 import Auth from '@/pages/Auth';
 import Dashboard from '@/pages/Dashboard';
 import SearchResults from '@/pages/SearchResults';
+import TherapyTypesOverview from '@/pages/TherapyTypesOverview';
 import PrivateRoute from '@/components/PrivateRoute';
 import './App.css';
 
@@ -42,6 +43,7 @@ function App() {
                       <Route path="/auth" element={<Auth />} />
                       <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
                       <Route path="/search" element={<SearchResults />} />
+                      <Route path="/therapy-types-overview" element={<TherapyTypesOverview />} />
                     </Routes>
                   </main>
                   <DatabaseFooter />

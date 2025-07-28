@@ -40,6 +40,7 @@ import {
   TherapistDirectory,
   MentalHealthLibrary,
   TherapySyncAICore,
+  TherapyTypesOverview,
   AnalyticsDashboard,
   ProgressReports,
   GettingStarted,
@@ -51,6 +52,7 @@ const customIcons: Record<string, React.FC<{ className?: string; size?: number }
   // Therapy AI Icons
   'therapy-ai-core': TherapyAICore,
   'therapy-sync-ai-core': TherapySyncAICore,
+  'therapy-types-overview': TherapyTypesOverview,
   'ai-therapy-chat': AITherapyChat,
   'ai-personalization': AIPersonalization,
   'adaptive-systems': AdaptiveSystems,

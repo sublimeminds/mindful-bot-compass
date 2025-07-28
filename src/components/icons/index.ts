@@ -1,6 +1,7 @@
 // Therapy AI Icons
 export { default as TherapyAICore } from './TherapyAICore';
 export { default as TherapySyncAICore } from './TherapySyncAICore';
+export { default as TherapyTypesOverview } from './TherapyTypesOverview';
 export { default as AITherapyChat } from './AITherapyChat';
 export { default as AIPersonalization } from './AIPersonalization';
 export { default as AdaptiveSystems } from './AdaptiveSystems';
