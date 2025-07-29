@@ -49,3 +49,10 @@ export { default as BlogInsights } from './BlogInsights';
 export { default as ResearchStudies } from './ResearchStudies';
 export { default as TherapistDirectory } from './TherapistDirectory';
 export { default as MentalHealthLibrary } from './MentalHealthLibrary';
+
+// Navigation Category Icons
+export { default as TherapyAICategory } from './TherapyAICategory';
+export { default as PlatformCategory } from './PlatformCategory';
+export { default as ToolsDataCategory } from './ToolsDataCategory';
+export { default as SolutionsCategory } from './SolutionsCategory';
+export { default as ResourcesCategory } from './ResourcesCategory';

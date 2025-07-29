@@ -44,7 +44,12 @@ import {
   AnalyticsDashboard,
   ProgressReports,
   GettingStarted,
-  SecurityCompliance
+  SecurityCompliance,
+  TherapyAICategory,
+  PlatformCategory,
+  ToolsDataCategory,
+  SolutionsCategory,
+  ResourcesCategory
 } from '@/components/icons';
 
 // Direct mapping without wrapper - icons are now proper SVG React components
@@ -100,6 +105,13 @@ const customIcons: Record<string, React.FC<{ className?: string; size?: number }
   'research-studies': ResearchStudies,
   'therapist-directory': TherapistDirectory,
   'mental-health-library': MentalHealthLibrary,
+
+  // Navigation Category Icons
+  'therapy-ai-category': TherapyAICategory,
+  'platform-category': PlatformCategory,
+  'tools-data-category': ToolsDataCategory,
+  'solutions-category': SolutionsCategory,
+  'resources-category': ResourcesCategory,
 };
 
 // Function to get either custom icon component or fallback to Lucide
