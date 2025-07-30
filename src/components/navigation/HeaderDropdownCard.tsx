@@ -34,18 +34,17 @@ const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
 
   return (
     <div className={cn(
-      "bg-white/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/60 z-50",
+      "bg-white rounded-xl shadow-2xl border border-therapy-200 z-50",
       "relative overflow-hidden",
       "max-h-[85vh] overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300",
       getResponsiveWidth(),
       getResponsivePadding(),
       // Enhanced shadows and effects
       "shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]",
-      "border-t border-white/20",
       className
     )}>
       {/* Subtle gradient overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-transparent to-gray-50/30 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-therapy-25 via-transparent to-calm-25 pointer-events-none" />
       
       {/* Content */}
       <div className="relative z-10">

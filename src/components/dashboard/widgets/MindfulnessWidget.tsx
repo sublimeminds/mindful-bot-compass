@@ -113,7 +113,7 @@ const MindfulnessWidget = () => {
   };
 
   return (
-    <Card className="h-full flex flex-col bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg">
+    <Card className="h-full flex flex-col bg-white border border-therapy-100 shadow-lg">
       <CardHeader className="pb-3 bg-gradient-to-r from-harmony-50 to-balance-50">
         <CardTitle className="text-base font-semibold text-harmony-800 flex items-center">
           <Heart className="h-4 w-4 mr-2" />

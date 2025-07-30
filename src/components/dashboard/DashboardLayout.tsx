@@ -81,7 +81,7 @@ const DashboardLayout = () => {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
+        <Card className="bg-white border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-xl flex items-center justify-center">
@@ -95,7 +95,7 @@ const DashboardLayout = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
+        <Card className="bg-white border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-r from-harmony-500 to-balance-500 rounded-xl flex items-center justify-center">
@@ -109,7 +109,7 @@ const DashboardLayout = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
+        <Card className="bg-white border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
@@ -123,7 +123,7 @@ const DashboardLayout = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
+        <Card className="bg-white border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-gradient-to-r from-flow-500 to-calm-500 rounded-xl flex items-center justify-center">
@@ -177,7 +177,7 @@ const DashboardLayout = () => {
             
             {/* Notifications Widget */}
             <SafeComponentWrapper name="NotificationWidget" fallback={
-              <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100">
+              <Card className="bg-white border border-therapy-100">
                 <CardContent className="p-4 text-center">
                   <p className="text-sm text-muted-foreground">Notifications unavailable</p>
                 </CardContent>

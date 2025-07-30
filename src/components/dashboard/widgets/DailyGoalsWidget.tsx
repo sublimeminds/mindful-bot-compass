@@ -84,7 +84,7 @@ const DailyGoalsWidget = () => {
   };
 
   return (
-    <Card className="h-full flex flex-col bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg">
+    <Card className="h-full flex flex-col bg-white border border-therapy-100 shadow-lg">
       <CardHeader className="pb-3 bg-gradient-to-r from-therapy-50 to-calm-50">
         <CardTitle className="text-base font-semibold text-therapy-800 flex items-center justify-between">
           <div className="flex items-center">

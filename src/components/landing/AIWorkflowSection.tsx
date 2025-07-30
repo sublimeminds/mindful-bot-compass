@@ -245,7 +245,7 @@ const AIWorkflowSection = () => {
                     </p>
                     
                     {/* Simulated Interface Preview - Mobile Responsive */}
-                    <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 sm:p-4 lg:p-6 shadow-inner">
+                    <div className="bg-white rounded-lg p-3 sm:p-4 lg:p-6 shadow-inner border border-therapy-200">
                       <div className="space-y-2 sm:space-y-3">
                         <div className="flex items-center justify-between">
                           <div className="flex space-x-1 sm:space-x-2">
@@ -275,7 +275,7 @@ const AIWorkflowSection = () => {
             </div>
 
             {/* AI Capabilities Dashboard - Mobile Optimized */}
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-therapy-200/50 p-4 sm:p-6 lg:p-8 shadow-xl">
+            <div className="bg-white rounded-2xl border border-therapy-200 p-4 sm:p-6 lg:p-8 shadow-xl">
               <div className="text-center space-y-4 mb-6 lg:mb-8">
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">
                   AI Performance Dashboard

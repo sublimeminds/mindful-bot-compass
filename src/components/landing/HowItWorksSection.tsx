@@ -56,7 +56,7 @@ const HowItWorksSection = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {steps.map((step, index) => (
               <div key={index} className="relative">
-                <Card className="h-full hover:shadow-xl transition-all duration-300 group hover:scale-105 bg-white/90 backdrop-blur-sm">
+                <Card className="h-full hover:shadow-xl transition-all duration-300 group hover:scale-105 bg-white border border-therapy-200">
                   <CardContent className="p-4 sm:p-6">
                     <div className="text-center space-y-3 sm:space-y-4">
                       <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-harmony-500 via-balance-500 to-flow-600 rounded-full flex items-center justify-center mx-auto group-hover:animate-swirl-breathe shadow-lg">
