@@ -8,7 +8,7 @@ import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAut
 import { SecurityProvider } from '@/components/security/SecurityProvider';
 import { ThemeProvider } from '@/utils/BulletproofTheme';
 import ReactErrorBoundary from '@/components/error/ReactErrorBoundary';
-import Header from '@/components/Header';
+// import Header from '@/components/Header';
 import DatabaseFooter from '@/components/DatabaseFooter';
 import Index from '@/pages/Index';
 import Auth from '@/pages/Auth';
@@ -35,8 +35,8 @@ function App() {
     
     return (
       <div className="min-h-screen bg-background">
-        {/* Temporarily completely disable header on landing page */}
-        {location.pathname !== '/' && location.pathname !== '' && <Header />}
+        {/* Header temporarily disabled to debug double header issue */}
+        {/* {location.pathname !== '/' && location.pathname !== '' && <Header />} */}
         <main>
           <Routes>
             <Route path="/" element={<Index />} />
