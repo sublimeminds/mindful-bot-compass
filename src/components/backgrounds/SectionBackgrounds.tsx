@@ -39,10 +39,8 @@ export const CulturalAIBackground = () => (
     <div className="absolute inset-0 opacity-20" style={{
       backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='0.03'%3E%3Cpath d='M50 50m-25 0a25 25 0 1 1 50 0a25 25 0 1 1 -50 0M50 10m-5 0a5 5 0 1 1 10 0a5 5 0 1 1 -10 0M50 90m-5 0a5 5 0 1 1 10 0a5 5 0 1 1 -10 0M10 50m-5 0a5 5 0 1 1 10 0a5 5 0 1 1 -10 0M90 50m-5 0a5 5 0 1 1 10 0a5 5 0 1 1 -10 0'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
     }}></div>
-    <div className="absolute top-20 left-10 text-6xl opacity-10 animate-pulse">🏮</div>
-    <div className="absolute top-32 right-20 text-5xl opacity-10 animate-bounce">🕌</div>
-    <div className="absolute bottom-40 left-20 text-5xl opacity-10 animate-pulse">⛩️</div>
-    <div className="absolute bottom-20 right-32 text-4xl opacity-10 animate-pulse">🏛️</div>
+    <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-r from-harmony-300/12 to-balance-300/12 rounded-full blur-2xl"></div>
+    <div className="absolute bottom-20 right-20 w-72 h-72 bg-gradient-to-r from-balance-300/8 to-flow-300/8 rounded-full blur-3xl"></div>
   </div>
 );
 
@@ -119,10 +117,10 @@ export const SuccessStoriesBackground = () => (
     <div className="absolute inset-0 opacity-25" style={{
       backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='0.02'%3E%3Cpolygon points='50 0 60 40 100 50 60 60 50 100 40 60 0 50 40 40'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
     }}></div>
-    <div className="absolute top-16 left-16 text-4xl opacity-15 animate-pulse">⭐</div>
-    <div className="absolute top-32 right-24 text-3xl opacity-15 animate-bounce">🏆</div>
-    <div className="absolute bottom-24 left-32 text-3xl opacity-15 animate-pulse">💫</div>
-    <div className="absolute bottom-16 right-16 text-4xl opacity-15 animate-pulse">🎯</div>
+    <div className="absolute top-16 left-16 w-32 h-32 bg-gradient-to-r from-flow-400/15 to-harmony-400/15 rounded-full blur-xl"></div>
+    <div className="absolute top-32 right-24 w-24 h-24 bg-gradient-to-r from-harmony-400/20 to-balance-400/20 rounded-lg rotate-12 blur-lg"></div>
+    <div className="absolute bottom-24 left-32 w-28 h-28 bg-gradient-to-r from-balance-400/18 to-flow-400/18 rounded-full blur-xl"></div>
+    <div className="absolute bottom-16 right-16 w-36 h-36 bg-gradient-to-r from-therapy-400/12 to-calm-400/12 rounded-lg rotate-45 blur-2xl"></div>
   </div>
 );
 
@@ -135,8 +133,8 @@ export const SecurityBackground = () => (
     }}></div>
     <div className="absolute top-20 right-1/3 w-60 h-60 bg-gradient-to-r from-calm-300/12 to-therapy-300/12 rounded-full blur-2xl"></div>
     <div className="absolute bottom-20 left-1/3 w-72 h-72 bg-gradient-to-r from-therapy-300/8 to-calm-300/8 rounded-full blur-3xl"></div>
-    <div className="absolute top-1/4 left-10 text-3xl opacity-12 animate-pulse">🔐</div>
-    <div className="absolute bottom-1/4 right-10 text-3xl opacity-12 animate-pulse">🛡️</div>
+    <div className="absolute top-1/4 left-10 w-24 h-24 border-2 border-calm-300/25 rounded-lg rotate-12 animate-float"></div>
+    <div className="absolute bottom-1/4 right-10 w-20 h-20 border-2 border-therapy-300/25 rounded-full animate-float animation-delay-300"></div>
   </div>
 );
 
@@ -146,10 +144,10 @@ export const GlobalReachBackground = () => (
     <div className="absolute inset-0 bg-gradient-to-r from-balance-50/18 to-harmony-50/18"></div>
     <div className="absolute top-10 left-1/4 w-80 h-80 bg-gradient-to-r from-balance-300/10 to-harmony-300/10 rounded-full blur-3xl animate-pulse"></div>
     <div className="absolute bottom-10 right-1/4 w-64 h-64 bg-gradient-to-r from-harmony-300/12 to-flow-300/12 rounded-full blur-2xl animate-pulse animation-delay-400"></div>
-    <div className="absolute top-20 left-20 text-4xl opacity-15 animate-pulse">🌍</div>
-    <div className="absolute top-32 right-32 text-3xl opacity-15 animate-bounce">🌎</div>
-    <div className="absolute bottom-32 left-40 text-3xl opacity-15 animate-pulse">🌏</div>
-    <div className="absolute bottom-20 right-20 text-2xl opacity-15 animate-pulse">🗺️</div>
+    <div className="absolute top-20 left-20 w-32 h-32 border border-balance-300/20 rounded-full animate-float"></div>
+    <div className="absolute top-32 right-32 w-28 h-28 border border-harmony-300/25 rounded-lg rotate-12 animate-float animation-delay-200"></div>
+    <div className="absolute bottom-32 left-40 w-24 h-24 border border-flow-300/20 rounded-full animate-float animation-delay-400"></div>
+    <div className="absolute bottom-20 right-20 w-20 h-20 border border-balance-300/30 rounded-lg rotate-45 animate-float animation-delay-100"></div>
   </div>
 );
 
@@ -162,10 +160,10 @@ export const CommunityBackground = () => (
     }}></div>
     <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-r from-harmony-300/12 to-flow-300/12 rounded-full blur-3xl"></div>
     <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-r from-flow-300/10 to-balance-300/10 rounded-full blur-3xl"></div>
-    <div className="absolute top-16 left-16 text-3xl opacity-12 animate-pulse">👥</div>
-    <div className="absolute top-32 right-24 text-2xl opacity-12 animate-bounce">🤝</div>
-    <div className="absolute bottom-24 left-32 text-3xl opacity-12 animate-pulse">💬</div>
-    <div className="absolute bottom-16 right-16 text-2xl opacity-12 animate-pulse">🌟</div>
+    <div className="absolute top-16 left-16 w-16 h-16 border border-harmony-300/30 rounded-full animate-float"></div>
+    <div className="absolute top-32 right-24 w-12 h-12 border border-flow-300/25 rounded-lg rotate-12 animate-float animation-delay-200"></div>
+    <div className="absolute bottom-24 left-32 w-20 h-20 border border-balance-300/20 rounded-full animate-float animation-delay-400"></div>
+    <div className="absolute bottom-16 right-16 w-14 h-14 border border-harmony-300/35 rounded-lg rotate-45 animate-float animation-delay-100"></div>
   </div>
 );
 
@@ -188,7 +186,7 @@ export const CTABackground = () => (
     <div className="absolute bottom-20 right-20 w-72 h-72 bg-gradient-to-r from-calm-300/12 to-therapy-300/12 rounded-full blur-2xl animate-pulse animation-delay-300"></div>
     <div className="absolute top-1/3 right-10 w-28 h-28 border-2 border-flow-200/25 rounded-full animate-float animation-delay-100"></div>
     <div className="absolute bottom-1/3 left-10 w-24 h-24 border-2 border-calm-200/25 rounded-lg rotate-45 animate-float animation-delay-400"></div>
-    <div className="absolute top-16 left-1/3 text-3xl opacity-15 animate-pulse">🚀</div>
-    <div className="absolute bottom-16 right-1/3 text-3xl opacity-15 animate-bounce">✨</div>
+    <div className="absolute top-16 left-1/3 w-32 h-32 bg-gradient-to-r from-flow-400/20 to-calm-400/20 rounded-full blur-xl"></div>
+    <div className="absolute bottom-16 right-1/3 w-36 h-36 bg-gradient-to-r from-calm-400/15 to-therapy-400/15 rounded-lg rotate-12 blur-2xl"></div>
   </div>
 );
