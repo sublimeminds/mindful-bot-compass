@@ -26,38 +26,38 @@ const EnterpriseHeroSection = () => {
   }, []);
 
   const metrics = [
-    { value: "50,000+", label: "Active Users", icon: Users, trend: "+32%" },
-    { value: "98.7%", label: "Satisfaction Rate", icon: Star, trend: "+5.2%" },
-    { value: "24/7", label: "AI Availability", icon: Clock, trend: "100%" },
-    { value: "HIPAA", label: "Compliant", icon: Shield, trend: "Certified" }
+    { value: "50k+", label: "People Supported", icon: Users, trend: "Growing Daily" },
+    { value: "4.9/5", label: "User Rating", icon: Star, trend: "Highly Rated" },
+    { value: "24/7", label: "Always Available", icon: Clock, trend: "Anytime" },
+    { value: "Private", label: "Secure & Safe", icon: Shield, trend: "HIPAA Protected" }
   ];
 
   const testimonials = [
     {
-      quote: "This platform transformed our mental health approach. The AI insights are incredibly accurate.",
-      author: "Dr. Sarah Chen",
-      role: "Chief Medical Officer",
-      company: "Healthcare Systems Inc."
+      quote: "This AI therapist helped me work through my anxiety in ways I never thought possible. I feel so much calmer.",
+      author: "Sarah M.",
+      role: "Marketing Professional",
+      company: "Individual User"
     },
     {
-      quote: "Implementation was seamless. Our employee wellbeing scores improved by 40% in 3 months.",
-      author: "Michael Rodriguez",
-      role: "VP of Human Resources",
-      company: "TechCorp Global"
+      quote: "Having someone to talk to anytime I need it has been life-changing. The conversations feel so real and helpful.",
+      author: "Michael R.",
+      role: "College Student",
+      company: "Individual User"
     },
     {
-      quote: "The enterprise-grade security and analytics give us complete confidence in the platform.",
-      author: "Dr. Emily Watson",
-      role: "Director of Digital Health",
-      company: "Medical Center Network"
+      quote: "I was skeptical at first, but this AI really understands me. It's like having a therapist in my pocket.",
+      author: "Emily W.",
+      role: "Working Parent",
+      company: "Individual User"
     }
   ];
 
   const features = [
-    { icon: Brain, label: "Advanced AI Analytics" },
-    { icon: Shield, label: "Enterprise Security" },
-    { icon: Zap, label: "Real-time Insights" },
-    { icon: Globe, label: "Global Deployment" }
+    { icon: Brain, label: "8+ AI Personalities" },
+    { icon: Shield, label: "Private & Secure" },
+    { icon: Zap, label: "Instant Support" },
+    { icon: Globe, label: "Works Anywhere" }
   ];
 
   return (
@@ -104,29 +104,29 @@ const EnterpriseHeroSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
               <div className="inline-flex items-center space-x-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 border border-therapy-200/50 shadow-therapy-subtle">
                 <Shield className="h-4 w-4 text-therapy-600" />
-                <span className="text-sm font-semibold text-therapy-700">Enterprise-Grade Security</span>
+                <span className="text-sm font-semibold text-therapy-700">Your Privacy Protected</span>
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               </div>
               
               <div className="inline-flex items-center space-x-2 bg-harmony-50/80 backdrop-blur-sm rounded-full px-3 py-1 border border-harmony-200/50">
                 <Sparkles className="h-3 w-3 text-harmony-600" />
-                <span className="text-xs font-medium text-harmony-700">New: AI 3.0 Released</span>
+                <span className="text-xs font-medium text-harmony-700">New: 8 AI Personalities Available</span>
               </div>
             </div>
 
             {/* Main Headline */}
             <div className="space-y-6">
               <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
-                <span className="block text-foreground">Transform</span>
-                <span className="block therapy-text-gradient-animated">Mental Healthcare</span>
-                <span className="block text-foreground">at Enterprise Scale</span>
+                <span className="block text-foreground">Your Personal</span>
+                <span className="block therapy-text-gradient-animated">AI Therapist</span>
+                <span className="block text-foreground">Is Here for You</span>
               </h1>
               
               <p className="text-xl lg:text-2xl text-muted-foreground leading-relaxed max-w-2xl">
-                Deploy AI-powered mental wellness solutions across your organization. 
-                <span className="font-semibold therapy-text-gradient"> HIPAA-compliant, </span>
-                scalable, and proven to improve employee wellbeing by 
-                <span className="font-bold text-therapy-600"> 40% in 90 days.</span>
+                Get personalized mental health support whenever you need it. 
+                <span className="font-semibold therapy-text-gradient"> Safe, private, </span>
+                and designed to help you feel 
+                <span className="font-bold text-therapy-600"> 40% calmer in just 2 weeks.</span>
               </p>
             </div>
 
@@ -163,7 +163,7 @@ const EnterpriseHeroSection = () => {
                 onClick={() => navigate('/get-started')}
                 className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white font-semibold px-8 py-6 text-lg rounded-xl shadow-therapy-glow hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
-                <span>Start Enterprise Trial</span>
+                <span>Start Your Journey Free</span>
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               
@@ -173,11 +173,11 @@ const EnterpriseHeroSection = () => {
                 className="border-2 border-therapy-200 text-therapy-700 hover:bg-therapy-50 font-semibold px-8 py-6 text-lg rounded-xl transition-all duration-300 hover:scale-105"
               >
                 <Play className="mr-2 h-5 w-5" />
-                <span>Watch Demo</span>
+                <span>See How It Works</span>
               </Button>
             </div>
 
-            {/* Enterprise Features */}
+            {/* Personal Features */}
             <div className="flex flex-wrap gap-4">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-center space-x-2 text-sm text-muted-foreground">
@@ -199,8 +199,8 @@ const EnterpriseHeroSection = () => {
               <div className="bg-gradient-to-r from-therapy-500 to-calm-500 p-6 text-white">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-bold">Enterprise Dashboard</h3>
-                    <p className="text-therapy-100">Real-time Mental Health Analytics</p>
+                    <h3 className="text-xl font-bold">Your Therapy Journey</h3>
+                    <p className="text-therapy-100">Personal Progress & Insights</p>
                   </div>
                   <div className="flex space-x-2">
                     <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
@@ -215,18 +215,18 @@ const EnterpriseHeroSection = () => {
                 
                 {/* Progress Visualization */}
                 <div className="space-y-4">
-                  <h4 className="font-semibold text-foreground">Wellness Metrics</h4>
+                  <h4 className="font-semibold text-foreground">Your Progress</h4>
                   <div className="space-y-3">
-                    {['Employee Engagement', 'Stress Reduction', 'Support Usage'].map((metric, index) => (
+                    {['Mood Improvement', 'Stress Reduction', 'Coping Skills'].map((metric, index) => (
                       <div key={metric} className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">{metric}</span>
-                          <span className="font-semibold text-therapy-600">{85 + index * 5}%</span>
+                          <span className="font-semibold text-therapy-600">{75 + index * 10}%</span>
                         </div>
                         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                           <div 
                             className="h-full bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full transition-all duration-1000 ease-out"
-                            style={{width: `${85 + index * 5}%`, animationDelay: `${index * 200}ms`}}
+                            style={{width: `${75 + index * 10}%`, animationDelay: `${index * 200}ms`}}
                           ></div>
                         </div>
                       </div>
@@ -238,20 +238,20 @@ const EnterpriseHeroSection = () => {
                 <div className="bg-gradient-to-br from-therapy-50 to-calm-50 rounded-xl p-4 border border-therapy-200/50">
                   <div className="flex items-center space-x-2 mb-3">
                     <Brain className="h-5 w-5 text-therapy-600 animate-pulse-neural" />
-                    <span className="font-semibold text-therapy-700">AI Insights</span>
-                    <div className="ml-auto bg-therapy-600 text-white text-xs px-2 py-1 rounded-full">Live</div>
+                    <span className="font-semibold text-therapy-700">Personal Insights</span>
+                    <div className="ml-auto bg-therapy-600 text-white text-xs px-2 py-1 rounded-full">New</div>
                   </div>
                   <p className="text-sm text-therapy-700">
-                    Detected 15% improvement in team collaboration. Recommend increasing mindfulness sessions.
+                    You're showing great progress with anxiety management. Consider exploring new coping techniques.
                   </p>
                 </div>
 
                 {/* Mini Charts */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <div className="text-sm font-medium text-muted-foreground">Weekly Trend</div>
+                    <div className="text-sm font-medium text-muted-foreground">Mood Trend</div>
                     <div className="h-12 bg-gradient-to-r from-therapy-100 to-calm-100 rounded-lg flex items-end justify-center space-x-1 p-2">
-                      {[0.6, 0.8, 0.4, 0.9, 0.7, 1.0, 0.85].map((height, index) => (
+                      {[0.5, 0.7, 0.6, 0.8, 0.9, 0.85, 0.95].map((height, index) => (
                         <div 
                           key={index}
                           className="w-2 bg-therapy-500 rounded-sm transition-all duration-500"
@@ -261,7 +261,7 @@ const EnterpriseHeroSection = () => {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div className="text-sm font-medium text-muted-foreground">Usage Pattern</div>
+                    <div className="text-sm font-medium text-muted-foreground">Support Sessions</div>
                     <div className="h-12 bg-gradient-to-r from-calm-100 to-harmony-100 rounded-lg flex items-center justify-center">
                       <div className="relative w-8 h-8">
                         <div className="absolute inset-0 bg-calm-500 rounded-full animate-ping opacity-30"></div>
@@ -333,27 +333,27 @@ const EnterpriseHeroSection = () => {
             </div>
           </div>
 
-          {/* Enterprise Details */}
+          {/* Personal Benefits */}
           <div className="text-center text-sm text-muted-foreground space-y-2">
             <div className="flex flex-wrap justify-center items-center gap-6">
               <div className="flex items-center space-x-2">
                 <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>SOC 2 Type II Certified</span>
+                <span>100% Private & Secure</span>
               </div>
               <div className="flex items-center space-x-2">
                 <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>HIPAA Compliant</span>
+                <span>HIPAA Protected</span>
               </div>
               <div className="flex items-center space-x-2">
                 <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>99.9% Uptime SLA</span>
+                <span>Always Available</span>
               </div>
               <div className="flex items-center space-x-2">
                 <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>24/7 Enterprise Support</span>
+                <span>No Credit Card Required</span>
               </div>
             </div>
-            <p className="text-xs">Start your 30-day enterprise trial • No setup fees • Custom implementation available</p>
+            <p className="text-xs">Start your free journey today • Your conversations are always private • Cancel anytime</p>
           </div>
         </div>
       </div>
