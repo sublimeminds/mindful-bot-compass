@@ -51,57 +51,57 @@ const SecurityPrivacySection = () => {
   ];
 
   return (
-    <div className="py-20 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-green-100 text-green-800 border-green-200">
+    <div className="min-h-screen flex flex-col justify-center w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto w-full space-y-8 sm:space-y-12 lg:space-y-16">
+        <div className="text-center space-y-4 sm:space-y-6">
+          <Badge className="bg-green-100 text-green-800 border-green-200">
             Security & Privacy
           </Badge>
-          <h2 className="text-4xl font-bold text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             Your Privacy is Our Priority
           </h2>
-          <p className="text-xl text-white/80 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             Enterprise-grade security meets healthcare compliance. Your therapy sessions 
             are protected by the highest standards in the industry.
           </p>
         </div>
 
-        {/* Certifications */}
-        <div className="flex justify-center space-x-6 mb-16">
+        {/* Certifications - Mobile: 2x2 grid, Desktop: horizontal */}
+        <div className="grid grid-cols-2 lg:flex lg:justify-center lg:space-x-6 gap-4 lg:gap-0">
           {certifications.map((cert, index) => (
             <div key={index} className="text-center">
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 mb-2 border border-white/20">
-                <Shield className="h-8 w-8 text-green-400 mx-auto" />
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 sm:p-4 mb-2 border border-white/20">
+                <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-green-400 mx-auto" />
               </div>
-              <div className="text-sm font-semibold text-white">{cert.name}</div>
+              <div className="text-xs sm:text-sm font-semibold text-white">{cert.name}</div>
               <div className="text-xs text-green-400">{cert.status}</div>
             </div>
           ))}
         </div>
 
-        {/* Security Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Security Features Grid - Mobile: Single column, Desktop: 3 columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {securityFeatures.map((feature, index) => (
             <Card key={index} className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="p-3 bg-green-500/20 rounded-xl text-green-400">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center space-x-3 sm:space-x-4 mb-4">
+                  <div className="p-2 sm:p-3 bg-green-500/20 rounded-xl text-green-400 flex-shrink-0">
                     {feature.icon}
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-white text-lg">{feature.title}</h3>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-white text-base sm:text-lg break-words">{feature.title}</h3>
                   </div>
                 </div>
                 
-                <p className="text-white/80 mb-4 leading-relaxed">
+                <p className="text-white/80 mb-4 leading-relaxed text-sm sm:text-base">
                   {feature.description}
                 </p>
                 
                 <ul className="space-y-2">
                   {feature.details.map((detail, idx) => (
                     <li key={idx} className="flex items-center space-x-2">
-                      <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                      <span className="text-sm text-white/70">{detail}</span>
+                      <div className="w-1.5 h-1.5 bg-green-400 rounded-full flex-shrink-0"></div>
+                      <span className="text-xs sm:text-sm text-white/70">{detail}</span>
                     </li>
                   ))}
                 </ul>

@@ -82,33 +82,33 @@ const CommunitySection = () => {
   ];
 
   return (
-    <div className="py-20 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-purple-100 text-purple-800 border-purple-200">
+    <div className="min-h-screen flex flex-col justify-center w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto w-full space-y-8 sm:space-y-12 lg:space-y-16">
+        <div className="text-center space-y-4 sm:space-y-6">
+          <Badge className="bg-purple-100 text-purple-800 border-purple-200">
             Community & Support
           </Badge>
-          <h2 className="text-4xl font-bold text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             You're Not Alone in This Journey
           </h2>
-          <p className="text-xl text-white/80 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             Connect with a supportive community of individuals who understand your experiences. 
             Share, learn, and grow together in a safe and nurturing environment.
           </p>
         </div>
 
-        {/* Community Features */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        {/* Community Features - Mobile: 2x2 grid, Desktop: 4 columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {communityFeatures.map((feature, index) => (
             <Card key={index} className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-all duration-300 text-center">
-              <CardContent className="p-6">
-                <div className="flex justify-center mb-4 text-purple-400">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex justify-center mb-3 sm:mb-4 text-purple-400">
                   {feature.icon}
                 </div>
-                <h3 className="font-semibold text-lg text-white mb-2">{feature.title}</h3>
-                <p className="text-white/80 text-sm mb-3 leading-relaxed">{feature.description}</p>
+                <h3 className="font-semibold text-base sm:text-lg text-white mb-2">{feature.title}</h3>
+                <p className="text-white/80 text-xs sm:text-sm mb-3 leading-relaxed">{feature.description}</p>
                 <div className="space-y-2">
-                  <Badge className="bg-purple-100/20 text-purple-200 border-purple-200/30">
+                  <Badge className="bg-purple-100/20 text-purple-200 border-purple-200/30 text-xs">
                     {feature.highlight}
                   </Badge>
                   <div className="text-xs text-white/70">{feature.participants}</div>

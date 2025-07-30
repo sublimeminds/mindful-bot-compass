@@ -57,50 +57,50 @@ const GlobalReachSection = () => {
   ];
 
   return (
-    <div className="py-20 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-blue-100 text-blue-800 border-blue-200">
+    <div className="min-h-screen flex flex-col justify-center w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto w-full space-y-8 sm:space-y-12 lg:space-y-16">
+        <div className="text-center space-y-4 sm:space-y-6">
+          <Badge className="bg-blue-100 text-blue-800 border-blue-200">
             Global Reach
           </Badge>
-          <h2 className="text-4xl font-bold text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             Mental Health Support Without Borders
           </h2>
-          <p className="text-xl text-white/80 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             Breaking down barriers to mental health care with 24/7 availability, 
             multilingual support, and culturally-sensitive AI therapy worldwide.
           </p>
         </div>
 
-        {/* Global Statistics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+        {/* Global Statistics - Mobile: 2x2 grid, Desktop: 4 columns */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {globalStats.map((stat, index) => (
             <Card key={index} className="bg-white/10 backdrop-blur-md border-white/20 text-center">
-              <CardContent className="p-6">
-                <div className="flex justify-center mb-3 text-blue-400">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex justify-center mb-2 sm:mb-3 text-blue-400">
                   {stat.icon}
                 </div>
-                <div className="text-3xl font-bold text-white mb-2">{stat.value}</div>
-                <div className="text-sm font-semibold text-white/90 mb-1">{stat.label}</div>
-                <div className="text-xs text-white/70">{stat.description}</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 sm:mb-2">{stat.value}</div>
+                <div className="text-xs sm:text-sm font-semibold text-white/90 mb-1">{stat.label}</div>
+                <div className="text-xs text-white/70 leading-relaxed">{stat.description}</div>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Regional Coverage */}
-        <div className="grid md:grid-cols-2 gap-8 mb-16">
+        {/* Regional Coverage - Mobile: Single column, Desktop: 2 columns */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {regions.map((region, index) => (
             <Card key={index} className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-all duration-300">
-              <CardContent className="p-6">
-                <h3 className="font-bold text-xl text-white mb-4">{region.name}</h3>
+              <CardContent className="p-4 sm:p-6">
+                <h3 className="font-bold text-lg sm:text-xl text-white mb-3 sm:mb-4">{region.name}</h3>
                 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <div className="text-sm font-semibold text-white/90 mb-2">Languages Supported</div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="text-xs sm:text-sm font-semibold text-white/90 mb-2">Languages Supported</div>
+                    <div className="flex flex-wrap gap-1 sm:gap-2">
                       {region.languages.map((lang, idx) => (
-                        <Badge key={idx} className="bg-blue-100/20 text-blue-200 border-blue-200/30">
+                        <Badge key={idx} className="bg-blue-100/20 text-blue-200 border-blue-200/30 text-xs">
                           {lang}
                         </Badge>
                       ))}
@@ -108,10 +108,10 @@ const GlobalReachSection = () => {
                   </div>
                   
                   <div>
-                    <div className="text-sm font-semibold text-white/90 mb-2">Compliance</div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="text-xs sm:text-sm font-semibold text-white/90 mb-2">Compliance</div>
+                    <div className="flex flex-wrap gap-1 sm:gap-2">
                       {region.compliance.map((comp, idx) => (
-                        <Badge key={idx} className="bg-green-100/20 text-green-200 border-green-200/30">
+                        <Badge key={idx} className="bg-green-100/20 text-green-200 border-green-200/30 text-xs">
                           {comp}
                         </Badge>
                       ))}
@@ -119,7 +119,9 @@ const GlobalReachSection = () => {
                   </div>
                   
                   <div className="pt-2 border-t border-white/20">
-                    <div className="text-sm text-white/70">Active Users: <span className="font-semibold text-white">{region.users}</span></div>
+                    <div className="text-xs sm:text-sm text-white/70">
+                      Active Users: <span className="font-semibold text-white">{region.users}</span>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -127,16 +129,16 @@ const GlobalReachSection = () => {
           ))}
         </div>
 
-        {/* Accessibility Features */}
-        <div className="grid md:grid-cols-3 gap-8">
+        {/* Accessibility Features - Mobile: Single column, Desktop: 3 columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {accessibilityFeatures.map((feature, index) => (
             <Card key={index} className="bg-white/10 backdrop-blur-md border-white/20 text-center">
-              <CardContent className="p-6">
-                <div className="flex justify-center mb-4 text-purple-400">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex justify-center mb-3 sm:mb-4 text-purple-400">
                   {feature.icon}
                 </div>
-                <h3 className="font-semibold text-lg text-white mb-3">{feature.title}</h3>
-                <p className="text-white/80 leading-relaxed">{feature.description}</p>
+                <h3 className="font-semibold text-base sm:text-lg text-white mb-2 sm:mb-3">{feature.title}</h3>
+                <p className="text-white/80 leading-relaxed text-sm sm:text-base">{feature.description}</p>
               </CardContent>
             </Card>
           ))}
