@@ -6,7 +6,7 @@ const LoadingSpinner: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-therapy-50/60 via-healing-50/40 to-harmony-50/60">
       <div className="text-center space-y-6">
-        <div className="animate-spin">
+        <div className="animate-swirl-breathe">
           <GradientLogo size="lg" />
         </div>
         <div className="space-y-2">

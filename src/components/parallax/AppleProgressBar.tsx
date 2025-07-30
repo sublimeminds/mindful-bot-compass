@@ -53,57 +53,42 @@ const AppleProgressBar = () => {
   const currentSection = sections[activeSection];
 
   if (isMobile || isTablet) {
-    // Mobile/Tablet: Circular progress indicator with section info
+    // Mobile/Tablet: Enhanced horizontal dots with better positioning
     return (
-      <div className="fixed top-4 right-4 z-50">
+      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
         <div className={cn(
-          "relative w-16 h-16 rounded-full backdrop-blur-xl border shadow-2xl",
+          "backdrop-blur-xl border shadow-xl rounded-xl px-3 py-2",
           "transition-all duration-500 ease-out",
           currentTheme.bg,
           currentTheme.border
         )}>
-          {/* Progress Ring */}
-          <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 64 64">
-            <circle
-              cx="32"
-              cy="32"
-              r="28"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="opacity-20"
-            />
-            <circle
-              cx="32"
-              cy="32"
-              r="28"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeDasharray={`${2 * Math.PI * 28}`}
-              strokeDashoffset={`${2 * Math.PI * 28 * (1 - scrollProgress / 100)}`}
-              className={cn("transition-all duration-300", currentTheme.text)}
-            />
-          </svg>
-          
-          {/* Section Number */}
-          <div className={cn(
-            "absolute inset-0 flex items-center justify-center",
-            "text-sm font-bold transition-colors duration-500",
-            currentTheme.text
-          )}>
-            {activeSection + 1}
+          <div className="flex items-center space-x-2">
+            {sections.map((section, index) => {
+              const isActive = index === activeSection;
+              const isCompleted = activeSection > index;
+              
+              return (
+                <button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  className={cn(
+                    "w-2 h-2 rounded-full transition-all duration-300",
+                    isActive 
+                      ? "bg-white scale-125 animate-pulse" 
+                      : isCompleted
+                        ? "bg-white/70"
+                        : "bg-white/30 hover:bg-white/50"
+                  )}
+                  aria-label={`Go to ${section.title} section`}
+                />
+              );
+            })}
           </div>
           
-          {/* Section Icon (on hover) */}
+          {/* Section title below */}
           <div className={cn(
-            "absolute -bottom-8 left-1/2 transform -translate-x-1/2",
-            "px-2 py-1 rounded text-xs font-medium whitespace-nowrap",
-            "opacity-0 hover:opacity-100 transition-all duration-300 pointer-events-none",
-            currentTheme.bg,
-            currentTheme.text,
-            currentTheme.border,
-            "border backdrop-blur-xl shadow-lg"
+            "text-center mt-1 text-xs font-medium transition-colors duration-500",
+            currentTheme.text
           )}>
             {currentSection?.title}
           </div>

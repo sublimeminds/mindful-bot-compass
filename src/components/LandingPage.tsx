@@ -77,17 +77,17 @@ const LandingPage = () => {
           backgroundSpeed={-0.15}
         >
           <div className="space-y-16 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* AI Technology Content */}
-            <div className="text-center">
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
-                  Advanced AI Technology
-                </span>
-              </h2>
-              <p className="text-xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed">
-                Powered by cutting-edge artificial intelligence that truly understands your unique needs and adapts to your therapeutic journey
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* AI Technology Content - Enhanced Mobile */}
+        <div className="text-center px-4 sm:px-0">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            <span className="bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
+              Advanced AI Technology
+            </span>
+          </h2>
+          <p className="text-lg sm:text-xl text-white/90 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed">
+            Powered by cutting-edge artificial intelligence that truly understands your unique needs and adapts to your therapeutic journey
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 group">
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-3xl shadow-lg group-hover:scale-110 transition-transform duration-300">🧠</div>
                   <h3 className="font-bold text-xl mb-3 text-white">Neural Processing</h3>

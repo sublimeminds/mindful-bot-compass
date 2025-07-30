@@ -17,6 +17,7 @@ import SearchResults from '@/pages/SearchResults';
 import TherapyTypesOverview from '@/pages/TherapyTypesOverview';
 import TestDashboardPage from '@/pages/TestDashboardPage';
 import PrivateRoute from '@/components/PrivateRoute';
+import { useLocation } from 'react-router-dom';
 import './App.css';
 
 const queryClient = new QueryClient({
@@ -29,6 +30,30 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const AppContent = () => {
+    const location = useLocation();
+    const isLandingPage = location.pathname === '/';
+
+    return (
+      <div className="min-h-screen bg-background">
+        {!isLandingPage && <Header />}
+        <main>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+            <Route path="/search" element={<SearchResults />} />
+            <Route path="/therapy-types-overview" element={<TherapyTypesOverview />} />
+            <Route path="/test-dashboard" element={<TestDashboardPage />} />
+          </Routes>
+        </main>
+        <DatabaseFooter />
+        <Toaster />
+        <Sonner />
+      </div>
+    );
+  };
+
   return (
     <ReactErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -36,22 +61,7 @@ function App() {
           <SecurityProvider>
             <BulletproofAuthProvider>
               <Router>
-                <div className="min-h-screen bg-background">
-                  <Header />
-                  <main>
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/auth" element={<Auth />} />
-                      <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-                      <Route path="/search" element={<SearchResults />} />
-                      <Route path="/therapy-types-overview" element={<TherapyTypesOverview />} />
-                      <Route path="/test-dashboard" element={<TestDashboardPage />} />
-                    </Routes>
-                  </main>
-                  <DatabaseFooter />
-                  <Toaster />
-                  <Sonner />
-                </div>
+                <AppContent />
               </Router>
             </BulletproofAuthProvider>
           </SecurityProvider>

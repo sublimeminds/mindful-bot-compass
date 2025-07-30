@@ -77,7 +77,7 @@ export default function ParallaxContainer({ children, className }: ParallaxConta
         }
       }
       
-      /* Mobile optimization */
+      /* Enhanced mobile optimization */
       @media (max-width: 768px) {
         .parallax-container {
           scroll-snap-type: y proximity;
@@ -85,7 +85,35 @@ export default function ParallaxContainer({ children, className }: ParallaxConta
         
         .parallax-section {
           scroll-snap-align: start;
-          height: 100vh !important;
+          height: auto !important;
+          min-height: 100vh !important;
+          padding: clamp(0.5rem, 2vw, 1rem);
+        }
+        
+        .parallax-section > * {
+          max-width: 100% !important;
+          overflow-wrap: break-word;
+        }
+      }
+      
+      /* Small mobile screens */
+      @media (max-width: 480px) {
+        .parallax-section {
+          padding: 0.75rem;
+          justify-content: flex-start;
+          padding-top: 2rem;
+        }
+        
+        .parallax-section h1,
+        .parallax-section h2,
+        .parallax-section h3 {
+          font-size: clamp(1.5rem, 6vw, 3rem) !important;
+          line-height: 1.2 !important;
+        }
+        
+        .parallax-section p {
+          font-size: clamp(0.875rem, 4vw, 1.125rem) !important;
+          line-height: 1.5 !important;
         }
       }
       
