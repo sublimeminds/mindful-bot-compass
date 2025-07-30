@@ -7,7 +7,7 @@ import HowItWorksSection from '@/components/landing/HowItWorksSection';
 import CTASection from '@/components/landing/CTASection';
 import AdvancedDemoSection from '@/components/landing/AdvancedDemoSection';
 import RealTherapistTeam from '@/components/therapist/RealTherapistTeam';
-import TherapyApproachesSection from '@/components/landing/TherapyApproachesSection';
+import ComprehensiveTherapyApproaches from '@/components/landing/ComprehensiveTherapyApproaches';
 import AdvancedTherapyBenefits from '@/components/landing/AdvancedTherapyBenefits';
 import AIWorkflowSection from '@/components/landing/AIWorkflowSection';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
@@ -31,13 +31,46 @@ const LandingPage = () => {
           id="hero"
           fullHeight
           background={
-            <div className="absolute inset-0 bg-gradient-to-br from-therapy-50 to-calm-50 opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-br from-therapy-50/60 via-healing-50/40 to-harmony-50/60" />
           }
           backgroundSpeed={-0.2}
         >
           <SafeComponentWrapper name="HeroSection" fallback={<div className="h-96 bg-gradient-to-br from-therapy-50 to-calm-50"></div>}>
             <HeroSection />
           </SafeComponentWrapper>
+        </ParallaxSection>
+
+        {/* AI Technology Section */}
+        <ParallaxSection 
+          id="ai-technology"
+          background={
+            <div className="absolute inset-0 bg-gradient-to-tr from-mindful-50/30 via-flow-50/20 to-therapy-50/30" />
+          }
+          backgroundSpeed={-0.15}
+        >
+          <div className="py-20 px-4 text-center">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">Advanced AI Technology</h2>
+              <p className="text-xl text-gray-600 mb-8">Powered by cutting-edge artificial intelligence that understands you</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-therapy-500 to-healing-500 rounded-xl mx-auto mb-4 flex items-center justify-center text-white text-2xl">🧠</div>
+                  <h3 className="font-semibold text-lg mb-2">Neural Processing</h3>
+                  <p className="text-gray-600">Advanced language models trained on therapeutic data</p>
+                </div>
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-therapy-500 to-healing-500 rounded-xl mx-auto mb-4 flex items-center justify-center text-white text-2xl">🎯</div>
+                  <h3 className="font-semibold text-lg mb-2">Personalized Matching</h3>
+                  <p className="text-gray-600">AI-driven therapist and approach recommendations</p>
+                </div>
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-therapy-500 to-healing-500 rounded-xl mx-auto mb-4 flex items-center justify-center text-white text-2xl">🔒</div>
+                  <h3 className="font-semibold text-lg mb-2">Privacy First</h3>
+                  <p className="text-gray-600">HIPAA-compliant with end-to-end encryption</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </ParallaxSection>
         
         {/* Real Therapist Team */}
@@ -79,16 +112,16 @@ const LandingPage = () => {
           </SafeComponentWrapper>
         </ParallaxSection>
         
-        {/* Therapy Approaches */}
+        {/* Comprehensive Therapy Approaches */}
         <ParallaxSection 
           id="approaches"
           background={
-            <div className="absolute inset-0 bg-gradient-to-tr from-therapy-50/10 to-healing-50/10" />
+            <div className="absolute inset-0 bg-gradient-to-br from-therapy-50/30 via-healing-50/20 to-harmony-50/30" />
           }
           backgroundSpeed={-0.1}
         >
-          <SafeComponentWrapper name="TherapyApproachesSection" fallback={<div className="py-20"></div>}>
-            <TherapyApproachesSection />
+          <SafeComponentWrapper name="ComprehensiveTherapyApproaches" fallback={<div className="py-20"></div>}>
+            <ComprehensiveTherapyApproaches />
           </SafeComponentWrapper>
         </ParallaxSection>
         
