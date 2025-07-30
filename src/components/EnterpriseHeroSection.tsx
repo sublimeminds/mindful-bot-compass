@@ -84,7 +84,7 @@ const EnterpriseHeroSection = () => {
       id: 'ecosystem',
       title: 'Complete Mental Health Ecosystem',
       subtitle: 'Everything you need for comprehensive wellness in one platform',
-      description: 'Track your mood, connect with community, get crisis support, and involve your family. Our platform creates a complete support network around your mental health.',
+      description: 'Experience comprehensive mental health care through our integrated ecosystem. Track your emotional patterns with AI insights, connect with supportive communities, access immediate crisis support, and involve your family in your healing journey. Every feature works together to create a complete support network around your wellbeing.',
       icon: 'community-groups',
       bgGradient: 'from-harmony-500/20 via-balance-400/15 to-flow-300/10',
       accentColor: 'harmony',
@@ -92,32 +92,32 @@ const EnterpriseHeroSection = () => {
         { 
           icon: 'mood-progress-tracking', 
           title: 'Mood & Progress Tracking',
-          description: 'Track your emotional journey with intelligent insights and personalized recommendations for better mental health.'
+          description: 'Monitor your emotional patterns with AI-powered insights that help you understand triggers, celebrate progress, and receive personalized recommendations for maintaining optimal mental health.'
         },
         { 
           icon: 'crisis-support-system', 
           title: '24/7 Crisis Support',
-          description: 'Immediate help when you need it most, with trained professionals and emergency resources available around the clock.'
+          description: 'Get immediate support during mental health crises with our AI-powered emergency response system, direct access to trained professionals, and comprehensive safety resources available 24/7.'
         },
         { 
           icon: 'community-groups', 
           title: 'Peer Support Groups',
-          description: 'Connect with others on similar journeys in safe, moderated communities focused on healing and growth.'
+          description: 'Find belonging and understanding in professionally moderated communities where people with similar experiences share support, encouragement, and practical strategies for healing and growth.'
         },
         { 
           icon: 'family-account-sharing', 
           title: 'Family Account Sharing',
-          description: 'Involve your loved ones in your mental health journey with secure sharing and family therapy options.'
+          description: 'Strengthen family bonds and improve communication through secure progress sharing, family therapy sessions, and tools that help your loved ones understand and support your mental health journey.'
         },
         { 
           icon: 'integrations-hub', 
           title: 'Health App Integration',
-          description: 'Connect with your favorite health and wellness apps for a complete picture of your wellbeing.'
+          description: 'Seamlessly integrate with fitness trackers, meditation apps, and health platforms to create a holistic view of your wellbeing that helps identify patterns and optimize your mental health strategies.'
         },
         { 
           icon: 'mental-health-library', 
           title: 'Resource Library',
-          description: 'Access thousands of evidence-based articles, exercises, and guided meditations tailored to your needs.'
+          description: 'Explore our extensive library of evidence-based therapeutic resources, including guided exercises, mindfulness meditations, educational content, and self-help tools curated specifically for your mental health goals.'
         }
       ],
       highlight: 'Holistic wellness approach',
@@ -251,13 +251,13 @@ const EnterpriseHeroSection = () => {
           {/* Trust Badges */}
           <div className="flex flex-wrap justify-center gap-4 mb-8">
             <div className="inline-flex items-center space-x-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 border border-therapy-200/50 shadow-therapy-subtle">
-              {renderIcon("enterprise-security", { className: "h-4 w-4 text-therapy-600" })}
+              {renderIcon("enterprise-security", { className: "h-6 w-6 text-therapy-600" })}
               <span className="text-sm font-semibold text-therapy-700">HIPAA Protected</span>
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             </div>
             
             <div className="inline-flex items-center space-x-2 bg-harmony-50/80 backdrop-blur-sm rounded-full px-3 py-1 border border-harmony-200/50">
-              {renderIcon("therapy-sync-ai-core", { className: "h-3 w-3 text-harmony-600" })}
+              {renderIcon("therapy-sync-ai-core", { className: "h-5 w-5 text-harmony-600" })}
               <span className="text-xs font-medium text-harmony-700">24+ AI Therapists Available</span>
             </div>
           </div>
@@ -296,8 +296,8 @@ const EnterpriseHeroSection = () => {
               >
                 <div className="flex items-center justify-center mb-3">
                   {typeof metric.icon === 'string' ? 
-                    renderIcon(metric.icon, { className: "h-6 w-6 text-therapy-600" }) :
-                    React.createElement(metric.icon, { className: "h-6 w-6 text-therapy-600" })
+                    renderIcon(metric.icon, { className: "h-8 w-8 text-therapy-600" }) :
+                    React.createElement(metric.icon, { className: "h-8 w-8 text-therapy-600" })
                   }
                 </div>
                 <div className="text-3xl font-bold text-foreground mb-1">{metric.value}</div>
@@ -353,11 +353,11 @@ const EnterpriseHeroSection = () => {
 
               <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 
-                {/* Zone Content */}
+          {/* Zone Content */}
                 <div className="space-y-8">
                   <div>
                     <div className="inline-flex items-center gap-3 mb-4">
-                      {renderIcon(zone.icon, { size: 28, className: `text-${zone.accentColor}-600 animate-pulse-neural` })}
+                      {renderIcon(zone.icon, { size: 48, className: `text-${zone.accentColor}-600 animate-pulse-neural` })}
                       <span className={`text-sm font-bold text-${zone.accentColor}-600 bg-white/50 px-3 py-1 rounded-full`}>
                         {zone.highlight}
                       </span>
@@ -388,6 +388,27 @@ const EnterpriseHeroSection = () => {
 
                   <Button
                     variant="outline"
+                    onClick={() => {
+                      switch(zone.id) {
+                        case 'therapy-ai':
+                          navigate('/therapist-discovery');
+                          break;
+                        case 'ecosystem':
+                          navigate('/mood-tracking');
+                          break;
+                        case 'intelligence':
+                          navigate('/analytics');
+                          break;
+                        case 'solutions':
+                          navigate('/for-individuals');
+                          break;
+                        case 'support':
+                          navigate('/getting-started');
+                          break;
+                        default:
+                          navigate('/');
+                      }
+                    }}
                     className={`border-2 border-${zone.accentColor}-200 text-${zone.accentColor}-700 hover:bg-${zone.accentColor}-50`}
                   >
                     <span>Explore {zone.title}</span>
@@ -404,7 +425,7 @@ const EnterpriseHeroSection = () => {
                     >
                       <div className="flex items-start gap-4">
                         <div className="w-16 h-16 bg-white/80 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                          {renderIcon(feature.icon, { size: 32, className: `text-${zone.accentColor}-600` })}
+                          {renderIcon(feature.icon, { size: 40, className: `text-${zone.accentColor}-600` })}
                         </div>
                         <div>
                           <h4 className="font-semibold text-foreground mb-2">{feature.title}</h4>
@@ -422,6 +443,247 @@ const EnterpriseHeroSection = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Therapist Discovery Showcase */}
+        <div className="mt-32 space-y-12">
+          <div className="text-center space-y-6">
+            <div className="inline-flex items-center gap-3 mb-4">
+              {renderIcon("therapy-sync-ai-core", { size: 48, className: "text-therapy-600 animate-pulse-neural" })}
+              <span className="text-sm font-bold text-therapy-600 bg-white/50 px-3 py-1 rounded-full">
+                Meet Your AI Therapists
+              </span>
+            </div>
+            
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground">
+              Discover Your Perfect
+              <span className="block bg-gradient-to-r from-therapy-600 to-calm-500 bg-clip-text text-transparent">
+                AI Therapy Match
+              </span>
+            </h2>
+            
+            <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              Each AI therapist is trained in specific therapeutic approaches and specializes in different areas. 
+              From anxiety and depression to trauma and relationship issues - find the personality that resonates with you.
+            </p>
+          </div>
+
+          {/* Therapy Styles Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                name: "Dr. Sarah Chen",
+                specialty: "Cognitive Behavioral Therapy",
+                approach: "CBT",
+                description: "Specializes in anxiety, depression, and negative thought patterns. Uses evidence-based techniques to help you rebuild confidence.",
+                icon: "ai-therapy-chat",
+                color: "therapy",
+                availability: "Free Tier"
+              },
+              {
+                name: "Alex Rodriguez",
+                specialty: "Mindfulness-Based Therapy",
+                approach: "MBCT",
+                description: "Combines mindfulness with therapeutic techniques for stress reduction, emotional regulation, and inner peace.",
+                icon: "mindfulness-based-therapy",
+                color: "calm",
+                availability: "Free Tier"
+              },
+              {
+                name: "Dr. Maya Patel",
+                specialty: "Trauma-Focused Therapy",
+                approach: "EMDR",
+                description: "Specialized in trauma recovery, PTSD, and helping you process difficult experiences safely and effectively.",
+                icon: "trauma-focused-therapy",
+                color: "harmony",
+                availability: "Premium"
+              },
+              {
+                name: "Jordan Kim",
+                specialty: "Cultural Therapy",
+                approach: "Multicultural",
+                description: "Understands diverse cultural backgrounds and helps navigate identity, family expectations, and cultural conflicts.",
+                icon: "cultural-ai",
+                color: "balance",
+                availability: "Free Tier"
+              },
+              {
+                name: "Dr. Emma Thompson",
+                specialty: "Family Therapy",
+                approach: "Systemic",
+                description: "Focuses on family dynamics, relationship issues, and improving communication patterns within families.",
+                icon: "for-families",
+                color: "mindful",
+                availability: "Premium"
+              },
+              {
+                name: "Marcus Johnson",
+                specialty: "Crisis Support",
+                approach: "Crisis Intervention",
+                description: "Available 24/7 for immediate support during mental health crises and emotional emergencies.",
+                icon: "crisis-support-system",
+                color: "flow",
+                availability: "All Tiers"
+              }
+            ].map((therapist, index) => (
+              <div 
+                key={index}
+                className={`bg-gradient-to-br from-${therapist.color}-50/50 to-white/80 backdrop-blur-sm rounded-2xl p-6 border border-${therapist.color}-200/50 hover:border-${therapist.color}-300/70 transition-all duration-300 hover:shadow-lg hover:scale-105 group`}
+              >
+                <div className="flex items-start gap-4 mb-4">
+                  <div className={`w-16 h-16 bg-${therapist.color}-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                    {renderIcon(therapist.icon, { size: 32, className: `text-${therapist.color}-600` })}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="font-bold text-foreground">{therapist.name}</h3>
+                      <span className={`text-xs px-2 py-1 rounded-full ${therapist.availability === 'Free Tier' ? 'bg-green-100 text-green-700' : therapist.availability === 'Premium' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
+                        {therapist.availability}
+                      </span>
+                    </div>
+                    <p className={`text-sm font-medium text-${therapist.color}-700 mb-1`}>
+                      {therapist.specialty} ({therapist.approach})
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {therapist.description}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Button
+              onClick={() => navigate('/therapist-discovery')}
+              className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white font-semibold px-8 py-4 text-lg rounded-xl shadow-therapy-glow hover:shadow-xl transition-all duration-300 hover:scale-105"
+            >
+              <Users className="mr-2 h-5 w-5" />
+              Explore All 24+ AI Therapists
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+
+        {/* AI Technology Showcase */}
+        <div className="mt-32 space-y-12">
+          <div className="text-center space-y-6">
+            <div className="inline-flex items-center gap-3 mb-4">
+              {renderIcon("api-access", { size: 48, className: "text-flow-600 animate-pulse-neural" })}
+              <span className="text-sm font-bold text-flow-600 bg-white/50 px-3 py-1 rounded-full">
+                Powered by Advanced AI
+              </span>
+            </div>
+            
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground">
+              How TherapySync
+              <span className="block bg-gradient-to-r from-flow-600 to-therapy-500 bg-clip-text text-transparent">
+                Adaptive AI Works
+              </span>
+            </h2>
+            
+            <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              Our intelligent system learns from every conversation, adapts to your communication style, 
+              and provides increasingly personalized therapeutic support tailored specifically to your needs.
+            </p>
+          </div>
+
+          {/* AI Technology Features */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            {/* Left: Visual Representation */}
+            <div className="relative">
+              <div className="bg-gradient-to-br from-flow-100/50 to-therapy-100/30 rounded-3xl p-8 border border-flow-200/50">
+                
+                {/* Central AI Brain */}
+                <div className="relative mx-auto w-64 h-64 mb-8">
+                  <div className="absolute inset-0 bg-gradient-to-br from-flow-400 to-therapy-500 rounded-full opacity-20 animate-pulse"></div>
+                  <div className="absolute inset-4 bg-gradient-to-br from-flow-500 to-therapy-600 rounded-full opacity-30 animate-pulse" style={{animationDelay: '1s'}}></div>
+                  <div className="absolute inset-8 bg-gradient-to-br from-flow-600 to-therapy-700 rounded-full opacity-40 animate-pulse" style={{animationDelay: '2s'}}></div>
+                  
+                  {/* Central Brain Icon */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Brain className="h-24 w-24 text-flow-600" />
+                  </div>
+                  
+                  {/* Floating Data Points */}
+                  <div className="absolute top-8 right-8 w-12 h-12 bg-white/80 rounded-lg flex items-center justify-center animate-bounce">
+                    {renderIcon("mood-progress-tracking", { size: 24, className: "text-therapy-600" })}
+                  </div>
+                  <div className="absolute bottom-8 left-8 w-12 h-12 bg-white/80 rounded-lg flex items-center justify-center animate-bounce" style={{animationDelay: '1s'}}>
+                    {renderIcon("ai-therapy-chat", { size: 24, className: "text-calm-600" })}
+                  </div>
+                  <div className="absolute top-16 left-4 w-12 h-12 bg-white/80 rounded-lg flex items-center justify-center animate-bounce" style={{animationDelay: '2s'}}>
+                    {renderIcon("voice-ai-therapy", { size: 24, className: "text-harmony-600" })}
+                  </div>
+                  <div className="absolute bottom-16 right-4 w-12 h-12 bg-white/80 rounded-lg flex items-center justify-center animate-bounce" style={{animationDelay: '3s'}}>
+                    {renderIcon("analytics-dashboard", { size: 24, className: "text-balance-600" })}
+                  </div>
+                </div>
+                
+                {/* Neural Network Connections */}
+                <div className="absolute inset-0 opacity-30">
+                  <svg className="w-full h-full">
+                    <line x1="20%" y1="30%" x2="80%" y2="40%" stroke="hsl(var(--flow-500))" strokeWidth="2" className="animate-pulse"/>
+                    <line x1="15%" y1="70%" x2="85%" y2="60%" stroke="hsl(var(--therapy-500))" strokeWidth="2" className="animate-pulse" style={{animationDelay: '1s'}}/>
+                    <line x1="30%" y1="20%" x2="70%" y2="80%" stroke="hsl(var(--calm-500))" strokeWidth="2" className="animate-pulse" style={{animationDelay: '2s'}}/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Technology Features */}
+            <div className="space-y-8">
+              {[
+                {
+                  title: "Adaptive Learning",
+                  description: "Our AI continuously learns from your conversations, preferences, and progress to provide increasingly personalized therapy sessions.",
+                  icon: "analytics-dashboard",
+                  color: "flow"
+                },
+                {
+                  title: "Real-time Emotion Detection",
+                  description: "Advanced natural language processing detects emotional cues in your messages and adjusts responses accordingly.",
+                  icon: "mood-progress-tracking",
+                  color: "therapy"
+                },
+                {
+                  title: "Secure Data Processing",
+                  description: "All your conversations are processed through HIPAA-compliant servers with end-to-end encryption for complete privacy.",
+                  icon: "enterprise-security",
+                  color: "calm"
+                },
+                {
+                  title: "Personalized Therapy Plans",
+                  description: "Dynamic therapy plans that evolve based on your progress, goals, and therapeutic preferences.",
+                  icon: "progress-reports",
+                  color: "harmony"
+                }
+              ].map((feature, index) => (
+                <div key={index} className="flex items-start gap-4 p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-white/30 hover:border-therapy-300/50 transition-all duration-300 hover:shadow-lg group">
+                  <div className={`w-16 h-16 bg-${feature.color}-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                    {renderIcon(feature.icon, { size: 32, className: `text-${feature.color}-600` })}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-foreground mb-2">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-center">
+            <Button
+              onClick={() => navigate('/adaptive-ai')}
+              variant="outline"
+              className="border-2 border-flow-200 text-flow-700 hover:bg-flow-50 font-semibold px-8 py-4 text-lg rounded-xl transition-all duration-300 hover:scale-105"
+            >
+              <Zap className="mr-2 h-5 w-5" />
+              Learn More About Our AI Technology
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </div>
         </div>
 
         {/* Testimonials Section */}
