@@ -66,17 +66,17 @@ const EnterpriseHeroSection = () => {
           
           {/* Trust Badges */}
           <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <div className="inline-flex items-center space-x-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 border border-therapy-200/50 shadow-therapy-subtle">
+            <div className="inline-flex items-center space-x-2 bg-white rounded-full px-4 py-2 border border-therapy-200 shadow-lg">
               <Shield className="h-6 w-6 text-therapy-600" />
               <span className="text-sm font-semibold text-therapy-700">HIPAA Protected</span>
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             </div>
-            <div className="inline-flex items-center space-x-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 border border-therapy-200/50 shadow-therapy-subtle">
+            <div className="inline-flex items-center space-x-2 bg-white rounded-full px-4 py-2 border border-therapy-200 shadow-lg">
               <AlertTriangle className="h-6 w-6 text-calm-600" />
               <span className="text-sm font-semibold text-calm-700">24/7 Crisis Support</span>
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             </div>
-            <div className="inline-flex items-center space-x-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 border border-therapy-200/50 shadow-therapy-subtle">
+            <div className="inline-flex items-center space-x-2 bg-white rounded-full px-4 py-2 border border-therapy-200 shadow-lg">
               <Brain className="h-6 w-6 text-harmony-600" />
               <span className="text-sm font-semibold text-harmony-700">AI-Powered</span>
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -156,7 +156,7 @@ const EnterpriseHeroSection = () => {
 
           {/* Tier Indicators */}
           <div className="flex justify-center mb-8">
-            <div className="flex space-x-6 bg-white/90 backdrop-blur-sm rounded-full px-8 py-4 border border-therapy-200/50 shadow-therapy-subtle">
+            <div className="flex space-x-6 bg-white rounded-full px-8 py-4 border border-therapy-200 shadow-lg">
               <div className="text-center">
                 <div className="w-3 h-3 bg-gray-400 rounded-full mx-auto mb-1"></div>
                 <span className="text-xs font-medium text-gray-600">Free Tier</span>
@@ -186,7 +186,7 @@ const EnterpriseHeroSection = () => {
                 return (
                   <div
                     key={id}
-                    className={`group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow hover:scale-105 ${tier === 'professional' ? 'ring-1 ring-therapy-200' : ''}`}
+                    className={`group relative bg-white rounded-2xl p-4 border border-therapy-200 hover:border-therapy-300 transition-all duration-500 hover:shadow-therapy-glow hover:scale-105 ${tier === 'professional' ? 'ring-1 ring-therapy-200' : ''}`}
                   >
                     <div className="relative">
                       <SafeBulletproofAvatar
@@ -214,7 +214,7 @@ const EnterpriseHeroSection = () => {
                     
                     {/* Cultural Expertise Badge */}
                     <div className="absolute bottom-2 left-2 right-2">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1 border border-therapy-200/30">
+                      <div className="bg-white rounded-lg px-2 py-1 border border-therapy-200">
                         <div className="flex items-center justify-center space-x-1">
                           <Globe className="h-3 w-3 text-harmony-500" />
                           <span className="text-xs font-medium text-harmony-600">Multi-cultural</span>
@@ -227,7 +227,7 @@ const EnterpriseHeroSection = () => {
             </div>
 
             <div className="text-center">
-              <div className="inline-flex items-center space-x-4 bg-white/90 backdrop-blur-sm rounded-full px-6 py-3 border border-therapy-200/50 shadow-therapy-subtle">
+              <div className="inline-flex items-center space-x-4 bg-white rounded-full px-6 py-3 border border-therapy-200 shadow-lg">
                 <div className="flex -space-x-2">
                   {Object.entries(therapistPersonas).slice(12, 17).map(([id], i) => (
                     <SafeBulletproofAvatar
@@ -275,7 +275,7 @@ const EnterpriseHeroSection = () => {
                       : "opacity-0 translate-y-4"
                   )}
                 >
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-therapy-200/30">
+                  <div className="bg-white rounded-2xl p-8 border border-therapy-200">
                     <blockquote className="text-lg lg:text-xl text-muted-foreground italic mb-6">
                       "{testimonial.quote}"
                     </blockquote>

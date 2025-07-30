@@ -102,7 +102,7 @@ const EnhancedHeroSection = () => {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}>
             <div className="relative max-w-4xl mx-auto">
-              <Card className="bg-white/80 backdrop-blur-sm shadow-xl border border-therapy-100/50">
+              <Card className="bg-white shadow-xl border border-therapy-100">
                 <CardContent className="p-4 sm:p-6 lg:p-12">
                   <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center space-x-3">
@@ -203,7 +203,7 @@ const EnhancedHeroSection = () => {
             "grid grid-cols-1 sm:grid-cols-3 gap-6 pt-16 transition-all duration-1000 delay-800",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}>
-            <Card className="bg-white/60 backdrop-blur-sm border-therapy-100/50 hover:shadow-lg transition-all duration-300">
+            <Card className="bg-white border-therapy-100 hover:shadow-lg transition-all duration-300">
               <CardContent className="p-6 text-center">
                 <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Shield className="w-6 h-6 text-white" />
@@ -213,7 +213,7 @@ const EnhancedHeroSection = () => {
               </CardContent>
             </Card>
             
-            <Card className="bg-white/60 backdrop-blur-sm border-therapy-100/50 hover:shadow-lg transition-all duration-300">
+            <Card className="bg-white border-therapy-100 hover:shadow-lg transition-all duration-300">
               <CardContent className="p-6 text-center">
                 <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Clock className="w-6 h-6 text-white" />
@@ -223,7 +223,7 @@ const EnhancedHeroSection = () => {
               </CardContent>
             </Card>
             
-            <Card className="bg-white/60 backdrop-blur-sm border-therapy-100/50 hover:shadow-lg transition-all duration-300">
+            <Card className="bg-white border-therapy-100 hover:shadow-lg transition-all duration-300">
               <CardContent className="p-6 text-center">
                 <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Brain className="w-6 h-6 text-white" />

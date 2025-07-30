@@ -79,7 +79,7 @@ export const AIIntelligenceHub = () => {
         {/* AI Component Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {/* AI Model Router */}
-          <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+          <div className="relative bg-card rounded-2xl p-6 border border-therapy-200 hover:border-therapy-300 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-therapy-100 to-transparent rounded-bl-full opacity-50"></div>
             <div className="relative z-10">
               <div className="flex items-center space-x-3 mb-4">
@@ -121,7 +121,7 @@ export const AIIntelligenceHub = () => {
           </div>
 
           {/* Cultural Intelligence */}
-          <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+          <div className="relative bg-card rounded-2xl p-6 border border-therapy-200 hover:border-therapy-300 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-harmony-100 to-transparent rounded-bl-full opacity-50"></div>
             <div className="relative z-10">
               <div className="flex items-center space-x-3 mb-4">
@@ -159,7 +159,7 @@ export const AIIntelligenceHub = () => {
           </div>
 
           {/* Crisis Detection */}
-          <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+          <div className="relative bg-card rounded-2xl p-6 border border-therapy-200 hover:border-therapy-300 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-red-100 to-transparent rounded-bl-full opacity-50"></div>
             <div className="relative z-10">
               <div className="flex items-center space-x-3 mb-4">
@@ -194,7 +194,7 @@ export const AIIntelligenceHub = () => {
           </div>
 
           {/* Therapy Matcher */}
-          <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+          <div className="relative bg-card rounded-2xl p-6 border border-therapy-200 hover:border-therapy-300 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-balance-100 to-transparent rounded-bl-full opacity-50"></div>
             <div className="relative z-10">
               <div className="flex items-center space-x-3 mb-4">
@@ -236,7 +236,7 @@ export const AIIntelligenceHub = () => {
           </div>
 
           {/* Learning Engine */}
-          <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+          <div className="relative bg-card rounded-2xl p-6 border border-therapy-200 hover:border-therapy-300 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-calm-100 to-transparent rounded-bl-full opacity-50"></div>
             <div className="relative z-10">
               <div className="flex items-center space-x-3 mb-4">
@@ -268,7 +268,7 @@ export const AIIntelligenceHub = () => {
           </div>
 
           {/* Performance Engine */}
-          <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+          <div className="relative bg-card rounded-2xl p-6 border border-therapy-200 hover:border-therapy-300 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-flow-100 to-transparent rounded-bl-full opacity-50"></div>
             <div className="relative z-10">
               <div className="flex items-center space-x-3 mb-4">
