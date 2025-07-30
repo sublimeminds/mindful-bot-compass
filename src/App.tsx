@@ -32,11 +32,11 @@ const queryClient = new QueryClient({
 function App() {
   const AppContent = () => {
     const location = useLocation();
-    const isLandingPage = location.pathname === '/';
-
+    
     return (
       <div className="min-h-screen bg-background">
-        {!isLandingPage && <Header />}
+        {/* Temporarily completely disable header on landing page */}
+        {location.pathname !== '/' && location.pathname !== '' && <Header />}
         <main>
           <Routes>
             <Route path="/" element={<Index />} />
