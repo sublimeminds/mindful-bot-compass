@@ -71,7 +71,7 @@ const EnterpriseHeroSection = () => {
     {
       id: 'therapy-ai',
       title: 'Your AI Therapy Experience',
-      subtitle: 'Meet 6 unique AI personalities designed for your healing journey',
+      subtitle: 'Choose from 24+ specialized AI therapists (7 available in free tier)',
       description: 'Choose from specialized AI therapists trained in different approaches - from CBT to mindfulness, trauma-focused to cultural therapy. Each personality adapts to your unique needs.',
       icon: 'therapy-sync-ai-core',
       bgGradient: 'from-therapy-500/20 via-calm-400/15 to-harmony-300/10',
@@ -258,7 +258,7 @@ const EnterpriseHeroSection = () => {
             
             <div className="inline-flex items-center space-x-2 bg-harmony-50/80 backdrop-blur-sm rounded-full px-3 py-1 border border-harmony-200/50">
               {renderIcon("therapy-sync-ai-core", { className: "h-3 w-3 text-harmony-600" })}
-              <span className="text-xs font-medium text-harmony-700">5+ AI Personalities Available</span>
+              <span className="text-xs font-medium text-harmony-700">24+ AI Therapists Available</span>
             </div>
           </div>
 
