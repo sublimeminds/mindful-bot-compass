@@ -13,8 +13,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, className = "" }) => 
   
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header temporarily disabled to debug double header issue */}
-      {/* <Header /> */}
+      <Header />
       <main className={`flex-1 ${className}`}>
         {children}
       </main>
