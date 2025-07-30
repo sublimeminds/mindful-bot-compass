@@ -255,16 +255,6 @@ const EnterpriseHeroSection = () => {
         {/* TherapySync AI Core */}
         <TherapySyncAICore />
         
-        <div className="text-center mt-12">
-          <Button
-            onClick={() => navigate('/ai-technology')}
-            className="bg-gradient-to-r from-flow-500 to-therapy-500 hover:from-flow-600 hover:to-therapy-600 text-white font-semibold px-8 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-          >
-            <Brain className="mr-2 h-5 w-5" />
-            Experience Our AI Technology
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </div>
 
         {/* Testimonials Section */}
         <div className="mt-32 text-center">

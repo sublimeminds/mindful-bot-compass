@@ -1,9 +1,9 @@
 
-// Import the new enterprise hero section
-import EnterpriseHeroSection from './EnterpriseHeroSection';
+// Import the individual-focused hero section
+import EnhancedHeroSection from './EnhancedHeroSection';
 
 const HeroSection = () => {
-  return <EnterpriseHeroSection />;
+  return <EnhancedHeroSection />;
 };
 
 export default HeroSection;

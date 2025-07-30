@@ -6,6 +6,7 @@ import EnhancedPricingSection from '@/components/pricing/EnhancedPricingSection'
 import HowItWorksSection from '@/components/landing/HowItWorksSection';
 import CTASection from '@/components/landing/CTASection';
 import InteractiveDemo from '@/components/landing/InteractiveDemo';
+import AdvancedTherapyBenefits from '@/components/landing/AdvancedTherapyBenefits';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 import AlexCompanion from '@/components/ai/AlexCompanion';
 
@@ -45,6 +46,11 @@ const LandingPage = () => {
           <div id="pricing">
             <EnhancedPricingSection />
           </div>
+        </SafeComponentWrapper>
+        
+        {/* Advanced Therapy Benefits */}
+        <SafeComponentWrapper name="AdvancedTherapyBenefits" fallback={<div className="py-20"></div>}>
+          <AdvancedTherapyBenefits />
         </SafeComponentWrapper>
         
         {/* CTA */}
