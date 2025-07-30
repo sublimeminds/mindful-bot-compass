@@ -3,9 +3,19 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Filter, Sparkles, Target, ArrowRight } from 'lucide-react';
+import { Search, Sparkles, ArrowRight } from 'lucide-react';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 import { useNavigate } from 'react-router-dom';
+
+// Import therapy approach icons
+import therapyCBTIcon from '@/assets/icons/therapy-cbt.png';
+import therapyDBTIcon from '@/assets/icons/therapy-dbt.png';
+import therapyMindfulnessIcon from '@/assets/icons/therapy-mindfulness.png';
+import therapyTraumaIcon from '@/assets/icons/therapy-trauma.png';
+import therapyCouplesIcon from '@/assets/icons/therapy-couples.png';
+import therapyLGBTQIcon from '@/assets/icons/therapy-lgbtq.png';
+import therapyAddictionIcon from '@/assets/icons/therapy-addiction.png';
+import therapyAdolescentIcon from '@/assets/icons/therapy-adolescent.png';
 
 const TherapyApproachesSection = () => {
   const navigate = useNavigate();
@@ -22,7 +32,7 @@ const TherapyApproachesSection = () => {
       description: 'Evidence-based therapy focusing on changing negative thought patterns and behaviors.',
       benefits: ['Anxiety reduction', 'Depression management', 'Behavioral change'],
       conditions: ['Anxiety', 'Depression', 'PTSD', 'OCD'],
-      icon: '🧠',
+      icon: therapyCBTIcon,
       gradient: 'from-therapy-400 via-therapy-500 to-harmony-600',
       isPremium: true,
       effectiveness: '94%'
@@ -34,7 +44,7 @@ const TherapyApproachesSection = () => {
       description: 'Skills-based therapy for emotional regulation and interpersonal effectiveness.',
       benefits: ['Emotional regulation', 'Distress tolerance', 'Interpersonal skills'],
       conditions: ['BPD', 'Self-harm', 'Emotional dysregulation'],
-      icon: '⚖️',
+      icon: therapyDBTIcon,
       gradient: 'from-balance-400 via-harmony-500 to-therapy-600',
       isPremium: true,
       effectiveness: '89%'
@@ -46,7 +56,7 @@ const TherapyApproachesSection = () => {
       description: 'Present-moment awareness techniques for stress reduction and emotional regulation.',
       benefits: ['Stress reduction', 'Emotional balance', 'Present-moment awareness'],
       conditions: ['Stress', 'Anxiety', 'Depression', 'Chronic pain'],
-      icon: '🧘',
+      icon: therapyMindfulnessIcon,
       gradient: 'from-calm-400 via-mindful-500 to-flow-600',
       effectiveness: '87%'
     },
@@ -57,7 +67,7 @@ const TherapyApproachesSection = () => {
       description: 'Specialized approaches for processing and healing from traumatic experiences.',
       benefits: ['Trauma processing', 'PTSD recovery', 'Emotional healing'],
       conditions: ['PTSD', 'Trauma', 'Abuse survivors'],
-      icon: '🛡️',
+      icon: therapyTraumaIcon,
       gradient: 'from-healing-400 via-therapy-500 to-calm-600',
       isPremium: true,
       effectiveness: '91%'
@@ -69,7 +79,7 @@ const TherapyApproachesSection = () => {
       description: 'Relationship counseling for couples to improve communication and connection.',
       benefits: ['Communication skills', 'Conflict resolution', 'Intimacy building'],
       conditions: ['Relationship issues', 'Communication problems', 'Infidelity'],
-      icon: '💕',
+      icon: therapyCouplesIcon,
       gradient: 'from-therapy-400 via-harmony-500 to-healing-600',
       isPremium: true,
       effectiveness: '86%'
@@ -81,7 +91,7 @@ const TherapyApproachesSection = () => {
       description: 'Culturally competent therapy for LGBTQ+ individuals and relationships.',
       benefits: ['Identity affirmation', 'Coming out support', 'Minority stress'],
       conditions: ['Identity exploration', 'Discrimination stress', 'Coming out'],
-      icon: '🏳️‍🌈',
+      icon: therapyLGBTQIcon,
       gradient: 'from-therapy-400 via-harmony-500 to-flow-600',
       isPremium: true,
       effectiveness: '92%'
@@ -93,7 +103,7 @@ const TherapyApproachesSection = () => {
       description: 'Evidence-based treatment for substance use and behavioral addictions.',
       benefits: ['Recovery support', 'Relapse prevention', 'Coping skills'],
       conditions: ['Substance abuse', 'Behavioral addiction', 'Dual diagnosis'],
-      icon: '🔗',
+      icon: therapyAddictionIcon,
       gradient: 'from-healing-400 via-therapy-500 to-balance-600',
       isPremium: true,
       effectiveness: '83%'
@@ -105,7 +115,7 @@ const TherapyApproachesSection = () => {
       description: 'Age-appropriate therapy for teenagers and young adults.',
       benefits: ['Identity development', 'Peer relationships', 'Academic stress'],
       conditions: ['Teen depression', 'Anxiety', 'Behavioral issues'],
-      icon: '🎨',
+      icon: therapyAdolescentIcon,
       gradient: 'from-flow-400 via-therapy-500 to-harmony-600',
       effectiveness: '88%'
     }
@@ -173,7 +183,17 @@ const TherapyApproachesSection = () => {
                 <div className={`h-2 bg-gradient-to-r ${therapy.gradient}`}></div>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
-                    <div className="text-3xl">{therapy.icon}</div>
+                    <div className="w-12 h-12 flex-shrink-0">
+                      {typeof therapy.icon === 'string' && therapy.icon.startsWith('/') ? (
+                        <img 
+                          src={therapy.icon} 
+                          alt={therapy.name} 
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <div className="text-3xl">{therapy.icon}</div>
+                      )}
+                    </div>
                     <div className="flex flex-col items-end space-y-1">
                       {therapy.isPremium && (
                         <Badge className="bg-gradient-to-r from-therapy-500 to-harmony-500 text-white border-0 text-xs">
@@ -240,31 +260,6 @@ const TherapyApproachesSection = () => {
             ))}
           </div>
 
-          {/* CTA Section */}
-          <div className="text-center bg-white/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Find Your Perfect Therapeutic Match
-            </h3>
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Our AI assessment will recommend the most effective therapeutic approaches based on your unique needs, goals, and preferences.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                onClick={() => navigate('/therapy-types-overview')}
-                className="bg-therapy-600 hover:bg-therapy-700 text-white px-8 py-3"
-              >
-                <Target className="h-4 w-4 mr-2" />
-                Take Therapy Assessment
-              </Button>
-              <Button 
-                variant="outline"
-                onClick={() => navigate('/ai-therapy-chat')}
-                className="border-therapy-200 text-therapy-700 hover:bg-therapy-50 px-8 py-3"
-              >
-                Browse All Approaches
-              </Button>
-            </div>
-          </div>
         </div>
       </div>
     </SafeComponentWrapper>

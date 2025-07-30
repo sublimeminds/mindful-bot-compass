@@ -6,7 +6,7 @@ import { CheckCircle, Circle } from 'lucide-react';
 
 const sections = [
   { id: 'hero', title: 'Welcome', description: 'Introduction to TherapySync', icon: '👋' },
-  { id: 'trust', title: 'Trust & Security', description: 'Safety and privacy first', icon: '🛡️' },
+  { id: 'therapists', title: 'AI Therapists', description: 'Meet your therapy team', icon: '👥' },
   { id: 'demo', title: 'Advanced Demo', description: 'See AI therapy in action', icon: '🎭' },
   { id: 'features', title: 'Features', description: 'Advanced AI capabilities', icon: '⭐' },
   { id: 'therapy-approaches', title: 'Therapy Types', description: 'Comprehensive approaches', icon: '🧠' },

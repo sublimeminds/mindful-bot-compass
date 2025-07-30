@@ -10,6 +10,16 @@ import { useOnboardingStatus } from '@/hooks/useOnboardingStatus';
 import TherapyDetailsModal from '@/components/therapy/TherapyDetailsModal';
 import heroImage from '@/assets/therapy-types-overview-hero.jpg';
 
+// Import therapy approach icons
+import therapyCBTIcon from '@/assets/icons/therapy-cbt.png';
+import therapyDBTIcon from '@/assets/icons/therapy-dbt.png';
+import therapyMindfulnessIcon from '@/assets/icons/therapy-mindfulness.png';
+import therapyTraumaIcon from '@/assets/icons/therapy-trauma.png';
+import therapyCouplesIcon from '@/assets/icons/therapy-couples.png';
+import therapyLGBTQIcon from '@/assets/icons/therapy-lgbtq.png';
+import therapyAddictionIcon from '@/assets/icons/therapy-addiction.png';
+import therapyAdolescentIcon from '@/assets/icons/therapy-adolescent.png';
+
 interface TherapyType {
   id: string;
   name: string;
@@ -32,7 +42,7 @@ const therapyTypes: TherapyType[] = [
     description: 'Evidence-based therapy focusing on changing negative thought patterns and behaviors.',
     benefits: ['Anxiety reduction', 'Depression management', 'Behavioral change'],
     conditions: ['Anxiety', 'Depression', 'PTSD', 'OCD'],
-    icon: '🧠',
+    icon: therapyCBTIcon,
     gradient: 'from-therapy-400 via-therapy-500 to-harmony-600',
     isPremium: true
   },
@@ -43,7 +53,7 @@ const therapyTypes: TherapyType[] = [
     description: 'Skills-based therapy for emotional regulation and interpersonal effectiveness.',
     benefits: ['Emotional regulation', 'Distress tolerance', 'Interpersonal skills'],
     conditions: ['BPD', 'Self-harm', 'Emotional dysregulation'],
-    icon: '⚖️',
+    icon: therapyDBTIcon,
     gradient: 'from-balance-400 via-harmony-500 to-therapy-600',
     isPremium: true
   },
@@ -64,7 +74,7 @@ const therapyTypes: TherapyType[] = [
     description: 'Present-moment awareness techniques for stress reduction and emotional regulation.',
     benefits: ['Stress reduction', 'Emotional balance', 'Present-moment awareness'],
     conditions: ['Stress', 'Anxiety', 'Depression', 'Chronic pain'],
-    icon: '🧘',
+    icon: therapyMindfulnessIcon,
     gradient: 'from-calm-400 via-mindful-500 to-flow-600'
   },
   {
@@ -116,7 +126,7 @@ const therapyTypes: TherapyType[] = [
     description: 'Specialized approaches for processing and healing from traumatic experiences.',
     benefits: ['Trauma processing', 'PTSD recovery', 'Emotional healing'],
     conditions: ['PTSD', 'Trauma', 'Abuse survivors'],
-    icon: '🛡️',
+    icon: therapyTraumaIcon,
     gradient: 'from-healing-400 via-therapy-500 to-calm-600',
     isPremium: true
   },
@@ -202,7 +212,7 @@ const therapyTypes: TherapyType[] = [
     description: 'Relationship counseling for couples to improve communication and connection.',
     benefits: ['Communication skills', 'Conflict resolution', 'Intimacy building'],
     conditions: ['Relationship issues', 'Communication problems', 'Infidelity'],
-    icon: '💕',
+    icon: therapyCouplesIcon,
     gradient: 'from-therapy-400 via-harmony-500 to-healing-600',
     isPremium: true
   },
@@ -276,7 +286,7 @@ const therapyTypes: TherapyType[] = [
     description: 'Culturally competent therapy for LGBTQ+ individuals and relationships.',
     benefits: ['Identity affirmation', 'Coming out support', 'Minority stress'],
     conditions: ['Identity exploration', 'Discrimination stress', 'Coming out'],
-    icon: '🏳️‍🌈',
+    icon: therapyLGBTQIcon,
     gradient: 'from-therapy-400 via-harmony-500 to-flow-600',
     isPremium: true
   },
@@ -308,7 +318,7 @@ const therapyTypes: TherapyType[] = [
     description: 'Age-appropriate therapy for teenagers and young adults.',
     benefits: ['Identity development', 'Peer relationships', 'Academic stress'],
     conditions: ['Teen depression', 'Anxiety', 'Behavioral issues'],
-    icon: '🎨',
+    icon: therapyAdolescentIcon,
     gradient: 'from-flow-400 via-therapy-500 to-harmony-600'
   },
   {
@@ -391,7 +401,7 @@ const therapyTypes: TherapyType[] = [
     description: 'Evidence-based treatment for substance use and behavioral addictions.',
     benefits: ['Recovery support', 'Relapse prevention', 'Coping skills'],
     conditions: ['Substance abuse', 'Behavioral addiction', 'Dual diagnosis'],
-    icon: '🔗',
+    icon: therapyAddictionIcon,
     gradient: 'from-healing-400 via-therapy-500 to-balance-600',
     isPremium: true
   },
@@ -932,10 +942,18 @@ const TherapyTypesOverview: React.FC = () => {
           {filteredTherapyTypes.map((therapy) => (
             <Card key={therapy.id} className="group hover:shadow-lg transition-all duration-300 border-0 bg-white/50 backdrop-blur-sm">
               <CardContent className="p-6">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className={`flex-shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br ${therapy.gradient} flex items-center justify-center text-2xl`}>
-                    {therapy.icon}
-                  </div>
+                 <div className="flex items-start gap-4 mb-4">
+                   <div className={`flex-shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br ${therapy.gradient} flex items-center justify-center text-2xl`}>
+                     {typeof therapy.icon === 'string' && therapy.icon.startsWith('/') ? (
+                       <img 
+                         src={therapy.icon} 
+                         alt={therapy.name} 
+                         className="w-8 h-8 object-contain"
+                       />
+                     ) : (
+                       <span className="text-2xl">{therapy.icon}</span>
+                     )}
+                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <h3 className="font-semibold text-lg text-gray-900 group-hover:text-therapy-700 transition-colors leading-tight">

@@ -5,8 +5,8 @@ import FeaturesSection from '@/components/FeaturesSection';
 import EnhancedPricingSection from '@/components/pricing/EnhancedPricingSection';
 import HowItWorksSection from '@/components/landing/HowItWorksSection';
 import CTASection from '@/components/landing/CTASection';
-import TrustIndicators from '@/components/landing/TrustIndicators';
 import AdvancedDemoSection from '@/components/landing/AdvancedDemoSection';
+import RealTherapistTeam from '@/components/therapist/RealTherapistTeam';
 import TherapyApproachesSection from '@/components/landing/TherapyApproachesSection';
 import AdvancedTherapyBenefits from '@/components/landing/AdvancedTherapyBenefits';
 import AIWorkflowSection from '@/components/landing/AIWorkflowSection';
@@ -31,10 +31,10 @@ const LandingPage = () => {
           </div>
         </SafeComponentWrapper>
         
-        {/* Trust Indicators */}
-        <SafeComponentWrapper name="TrustIndicators" fallback={<div className="py-20"></div>}>
-          <div id="trust">
-            <TrustIndicators />
+        {/* Real Therapist Team */}
+        <SafeComponentWrapper name="RealTherapistTeam" fallback={<div className="py-20"></div>}>
+          <div id="therapists">
+            <RealTherapistTeam />
           </div>
         </SafeComponentWrapper>
         
