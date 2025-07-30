@@ -92,16 +92,22 @@ export const TherapySyncAICore = () => {
     },
     {
       id: 'model-router',
-      title: 'Dynamic Model Router',
-      description: 'Intelligent selection between Claude Opus 4 and Sonnet 4 based on session needs',
+      title: 'Multi-Model AI Router',
+      description: 'Intelligent routing between 5 AI models based on subscription, context, and task complexity',
       icon: <Cpu className="h-6 w-6 text-white" />,
       color: 'from-therapy-500 to-calm-500',
       metrics: [
-        { label: 'Claude Opus 4', value: '78%', color: 'therapy', isActive: true },
-        { label: 'Claude Sonnet 4', value: '22%', color: 'calm', isActive: true },
-        { label: 'Auto-switches', value: `${liveMetrics.modelSwitches}`, color: 'therapy', isActive: true }
+        { label: 'Claude Models', value: '65%', color: 'therapy', isActive: true },
+        { label: 'OpenAI Models', value: '35%', color: 'calm', isActive: true },
+        { label: 'Smart Routes/min', value: `${liveMetrics.modelSwitches}`, color: 'therapy', isActive: true }
       ],
-      features: ['Crisis → Opus 4 routing', 'Daily therapy → Sonnet 4', 'Cultural context → Opus 4', 'Real-time optimization'],
+      features: [
+        'Premium Chat → Claude Opus 4', 
+        'Free Chat → Claude Sonnet 4', 
+        'Cultural/Crisis → GPT-4o',
+        'Enhanced Services → GPT-4.1',
+        'Translations → GPT-4o-mini'
+      ],
       isActive: true
     },
     {
