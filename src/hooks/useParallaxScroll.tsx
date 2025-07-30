@@ -82,8 +82,8 @@ export const useScrollProgress = (sections: string[]) => {
         });
       },
       {
-        threshold: 0.3,
-        rootMargin: '-20% 0px -20% 0px'
+        threshold: 0.6, // Increased threshold for better detection
+        rootMargin: '-10% 0px -10% 0px' // Improved margins
       }
     );
 

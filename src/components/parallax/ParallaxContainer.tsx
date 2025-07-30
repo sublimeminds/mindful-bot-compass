@@ -15,16 +15,31 @@ export default function ParallaxContainer({ children, className }: ParallaxConta
     // Add hardware acceleration hints
     document.documentElement.style.willChange = 'scroll-position';
     
-    // Optimize scroll performance
+    // Optimize scroll performance with enhanced CSS
     const style = document.createElement('style');
     style.textContent = `
       html {
         scroll-snap-type: y mandatory;
         scroll-behavior: smooth;
+        overflow-x: hidden;
       }
       
       body {
         overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+      
+      /* Enhanced scroll snapping */
+      section {
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+      }
+      
+      /* Hardware acceleration for smooth animations */
+      * {
+        -webkit-transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        -webkit-perspective: 1000;
       }
       
       /* Webkit scrollbar styling for desktop */
@@ -44,6 +59,13 @@ export default function ParallaxContainer({ children, className }: ParallaxConta
       
       ::-webkit-scrollbar-thumb:hover {
         background: rgba(255, 255, 255, 0.4);
+      }
+      
+      /* Smooth scroll momentum for Apple-like feel */
+      @media (prefers-reduced-motion: no-preference) {
+        html {
+          scroll-behavior: smooth;
+        }
       }
     `;
     document.head.appendChild(style);

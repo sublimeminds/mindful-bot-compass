@@ -3,132 +3,190 @@ import { cn } from '@/lib/utils';
 import { useScrollProgress } from '@/hooks/useParallaxScroll';
 import { useEnhancedScreenSize } from '@/hooks/useEnhancedScreenSize';
 
+// Complete section definitions with proper names and themes
 const sections = [
-  { id: 'hero', title: 'Welcome', description: 'AI Therapy Platform', icon: '🏠' },
-  { id: 'ai-technology', title: 'AI Technology', description: 'Advanced Intelligence', icon: '🧠' },
-  { id: 'therapists', title: 'Therapists', description: 'Meet Your AI Team', icon: '👥' },
-  { id: 'demo', title: 'Demo', description: 'See It In Action', icon: '💬' },
-  { id: 'features', title: 'Features', description: 'Platform Capabilities', icon: '⚡' },
-  { id: 'approaches', title: '60+ Methods', description: 'Therapy Approaches', icon: '🎯' },
-  { id: 'how-it-works', title: 'Process', description: 'Step-by-Step Guide', icon: '🔄' },
-  { id: 'workflow', title: 'AI Workflow', description: 'Behind the Scenes', icon: '⚙️' },
-  { id: 'success-stories', title: 'Success Stories', description: 'Real Results', icon: '⭐' },
-  { id: 'security', title: 'Security', description: 'HIPAA Compliance', icon: '🔒' },
-  { id: 'global-reach', title: 'Global Reach', description: 'Worldwide Access', icon: '🌍' },
-  { id: 'benefits', title: 'Benefits', description: 'Why Choose Us', icon: '✨' },
-  { id: 'pricing', title: 'Pricing', description: 'Plans & Options', icon: '💎' },
-  { id: 'community', title: 'Community', description: 'Connect & Support', icon: '🤝' },
-  { id: 'cta', title: 'Get Started', description: 'Begin Your Journey', icon: '🚀' }
+  { id: 'hero', title: 'Welcome', description: 'AI-Powered Therapy Platform', icon: '🌟', theme: 'therapy' },
+  { id: 'ai-technology', title: 'AI Technology', description: 'Advanced Intelligence', icon: '🧠', theme: 'blue' },
+  { id: 'therapists', title: 'Therapists', description: 'Real Professional Team', icon: '👥', theme: 'emerald' },
+  { id: 'demo', title: 'Demo', description: 'See It In Action', icon: '🎬', theme: 'slate' },
+  { id: 'features', title: 'Features', description: 'Platform Capabilities', icon: '⚡', theme: 'indigo' },
+  { id: 'approaches', title: 'Approaches', description: 'Therapy Methods', icon: '🎯', theme: 'violet' },
+  { id: 'how-it-works', title: 'How It Works', description: 'Step-by-Step Process', icon: '🔄', theme: 'teal' },
+  { id: 'workflow', title: 'Workflow', description: 'AI-Driven Process', icon: '⚙️', theme: 'gray' },
+  { id: 'benefits', title: 'Benefits', description: 'Life-Changing Results', icon: '✨', theme: 'rose' },
+  { id: 'pricing', title: 'Pricing', description: 'Affordable Plans', icon: '💎', theme: 'dark' },
+  { id: 'success-stories', title: 'Success Stories', description: 'Real Testimonials', icon: '🏆', theme: 'amber' },
+  { id: 'security', title: 'Security', description: 'Privacy & Trust', icon: '🔒', theme: 'green' },
+  { id: 'global-reach', title: 'Global Reach', description: 'Worldwide Access', icon: '🌍', theme: 'blue-purple' },
+  { id: 'community', title: 'Community', description: 'Support Network', icon: '🤝', theme: 'pink' },
+  { id: 'cta', title: 'Get Started', description: 'Begin Your Journey', icon: '🚀', theme: 'therapy' }
 ];
 
-export default function AppleProgressBar() {
-  const { activeSection, scrollProgress, scrollToSection } = useScrollProgress(
-    sections.map(s => s.id)
-  );
+const AppleProgressBar = () => {
+  const { activeSection, scrollProgress, scrollToSection } = useScrollProgress(sections.map(s => s.id));
   const { isMobile, isTablet } = useEnhancedScreenSize();
-  const isMobileOrTablet = isMobile || isTablet;
-  const currentSectionIndex = typeof activeSection === 'string' ? sections.findIndex(s => s.id === activeSection) : 0;
 
-  // Get section-specific colors for adaptive styling
+  // Smart theme detection based on section
   const getSectionTheme = (sectionIndex: number) => {
-    const themes = [
-      { bg: 'bg-black/30', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }, // hero - dark theme
-      { bg: 'bg-white/30', dot: 'bg-black', text: 'text-black', border: 'border-black/30' }, // ai-technology - light theme
-      { bg: 'bg-black/30', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }, // therapists - dark theme
-      { bg: 'bg-white/30', dot: 'bg-black', text: 'text-black', border: 'border-black/30' }, // demo - light theme
-      { bg: 'bg-white/30', dot: 'bg-black', text: 'text-black', border: 'border-black/30' }, // features - light theme
-      { bg: 'bg-black/30', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }, // approaches - dark theme
-      { bg: 'bg-black/30', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }, // how-it-works - dark theme
-      { bg: 'bg-white/30', dot: 'bg-black', text: 'text-black', border: 'border-black/30' }, // workflow - light theme
-      { bg: 'bg-black/30', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }, // success-stories - dark theme
-      { bg: 'bg-black/30', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }, // security - dark theme
-      { bg: 'bg-black/30', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }, // global-reach - dark theme
-      { bg: 'bg-black/30', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }, // benefits - dark theme
-      { bg: 'bg-black/30', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }, // pricing - dark theme
-      { bg: 'bg-black/30', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }, // community - dark theme
-      { bg: 'bg-black/30', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }, // cta - dark theme
-    ];
-    return themes[sectionIndex] || themes[0];
+    const section = sections[sectionIndex];
+    const themes = {
+      therapy: { bg: 'bg-therapy-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
+      blue: { bg: 'bg-slate-900/90', dot: 'bg-blue-400', text: 'text-gray-900', border: 'border-slate-400/30' },
+      emerald: { bg: 'bg-emerald-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
+      slate: { bg: 'bg-white/90', dot: 'bg-slate-600', text: 'text-slate-900', border: 'border-slate-300/30' },
+      indigo: { bg: 'bg-white/90', dot: 'bg-indigo-600', text: 'text-indigo-900', border: 'border-indigo-300/30' },
+      violet: { bg: 'bg-violet-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
+      teal: { bg: 'bg-teal-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
+      gray: { bg: 'bg-white/90', dot: 'bg-gray-600', text: 'text-gray-900', border: 'border-gray-300/30' },
+      rose: { bg: 'bg-rose-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
+      dark: { bg: 'bg-slate-800/90', dot: 'bg-blue-400', text: 'text-white', border: 'border-slate-600/30' },
+      amber: { bg: 'bg-amber-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
+      green: { bg: 'bg-green-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
+      'blue-purple': { bg: 'bg-blue-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
+      pink: { bg: 'bg-pink-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }
+    };
+    return themes[section?.theme as keyof typeof themes] || themes.therapy;
   };
 
-  const currentTheme = getSectionTheme(currentSectionIndex);
+  const currentTheme = getSectionTheme(activeSection);
+  const currentSection = sections[activeSection];
 
+  if (isMobile || isTablet) {
+    // Mobile/Tablet: Circular progress indicator with section info
+    return (
+      <div className="fixed top-4 right-4 z-50">
+        <div className={cn(
+          "relative w-16 h-16 rounded-full backdrop-blur-xl border shadow-2xl",
+          "transition-all duration-500 ease-out",
+          currentTheme.bg,
+          currentTheme.border
+        )}>
+          {/* Progress Ring */}
+          <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 64 64">
+            <circle
+              cx="32"
+              cy="32"
+              r="28"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="opacity-20"
+            />
+            <circle
+              cx="32"
+              cy="32"
+              r="28"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeDasharray={`${2 * Math.PI * 28}`}
+              strokeDashoffset={`${2 * Math.PI * 28 * (1 - scrollProgress / 100)}`}
+              className={cn("transition-all duration-300", currentTheme.text)}
+            />
+          </svg>
+          
+          {/* Section Number */}
+          <div className={cn(
+            "absolute inset-0 flex items-center justify-center",
+            "text-sm font-bold transition-colors duration-500",
+            currentTheme.text
+          )}>
+            {activeSection + 1}
+          </div>
+          
+          {/* Section Icon (on hover) */}
+          <div className={cn(
+            "absolute -bottom-8 left-1/2 transform -translate-x-1/2",
+            "px-2 py-1 rounded text-xs font-medium whitespace-nowrap",
+            "opacity-0 hover:opacity-100 transition-all duration-300 pointer-events-none",
+            currentTheme.bg,
+            currentTheme.text,
+            currentTheme.border,
+            "border backdrop-blur-xl shadow-lg"
+          )}>
+            {currentSection?.title}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop: Vertical dots with enhanced visibility and section names
   return (
-    <div className={cn(
-      "fixed z-50 transition-all duration-300",
-      isMobileOrTablet ? "bottom-4 right-4 w-16 h-16" : "right-4 top-1/2 -translate-y-1/2 w-16"
-    )}>
-      {isMobileOrTablet ? (
-        // Mobile: Compact circular progress indicator with adaptive colors
-        <div className={cn(
-          "backdrop-blur-md rounded-full p-3 shadow-lg border transition-all duration-300",
-          currentTheme.bg,
-          currentTheme.border
-        )}>
-          <div className="relative w-10 h-10">
-            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-              <path
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                fill="none"
-                stroke={currentTheme.text.includes('white') ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)'}
-                strokeWidth="2"
-              />
-              <path
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                fill="none"
-                stroke={currentTheme.text.includes('white') ? 'white' : 'black'}
-                strokeWidth="2"
-                strokeDasharray={`${scrollProgress * 100}, 100`}
-                className="transition-all duration-300 ease-out"
-              />
-            </svg>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className={cn("text-xs font-semibold", currentTheme.text)}>
-                {currentSectionIndex + 1}
-              </span>
-            </div>
-          </div>
-        </div>
-      ) : (
-        // Desktop: Minimal dots navigation with adaptive colors
-        <div className={cn(
-          "backdrop-blur-md rounded-full p-3 shadow-lg border transition-all duration-300",
-          currentTheme.bg,
-          currentTheme.border
-        )}>
-          <div className="space-y-2">
-            {sections.map((section, index) => (
-              <button
-                key={section.id}
-                onClick={() => scrollToSection(section.id)}
-                className={cn(
-                  "w-3 h-3 rounded-full transition-all duration-200 hover:scale-125 relative group",
-                  currentSectionIndex === index
-                    ? cn(
-                        currentTheme.dot,
-                        "shadow-sm scale-125",
-                        currentTheme.text.includes('white') ? 'shadow-white/50' : 'shadow-black/50'
-                      )
-                    : currentTheme.text.includes('white') 
-                      ? "bg-white/40 hover:bg-white/60" 
-                      : "bg-black/40 hover:bg-black/60"
-                )}
-                title={section.title}
-              >
-                {/* Tooltip on hover */}
+    <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-50">
+      <div className={cn(
+        "relative p-4 rounded-2xl backdrop-blur-xl border shadow-2xl",
+        "transition-all duration-500 ease-out",
+        currentTheme.bg,
+        currentTheme.border
+      )}>
+        {/* Section dots */}
+        <div className="flex flex-col space-y-3">
+          {sections.map((section, index) => {
+            const isActive = index === activeSection;
+            const sectionTheme = getSectionTheme(index);
+            
+            return (
+              <div key={section.id} className="relative group">
+                <button
+                  onClick={() => scrollToSection(section.id)}
+                  className={cn(
+                    "relative w-3 h-3 rounded-full border-2 transition-all duration-300 ease-out",
+                    "hover:scale-125 focus:outline-none focus:ring-2 focus:ring-offset-2",
+                    isActive 
+                      ? cn(sectionTheme.dot, "scale-125 shadow-lg") 
+                      : cn("bg-transparent border-current opacity-60 hover:opacity-100"),
+                    isActive ? "border-transparent" : sectionTheme.border.replace('border-', 'border-').replace('/30', '/60')
+                  )}
+                  aria-label={`Go to ${section.title} section`}
+                />
+                
+                {/* Section tooltip */}
                 <div className={cn(
-                  "absolute right-full mr-3 top-1/2 -translate-y-1/2 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none",
-                  currentTheme.text.includes('white') 
-                    ? "bg-white/90 text-black" 
-                    : "bg-black/90 text-white"
+                  "absolute right-6 top-1/2 transform -translate-y-1/2",
+                  "px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap",
+                  "opacity-0 group-hover:opacity-100 transition-all duration-300",
+                  "pointer-events-none border backdrop-blur-xl shadow-xl",
+                  sectionTheme.bg,
+                  sectionTheme.text,
+                  sectionTheme.border
                 )}>
-                  {section.title}
+                  <div className="flex items-center space-x-2">
+                    <span className="text-base">{section.icon}</span>
+                    <div>
+                      <div className="font-semibold">{section.title}</div>
+                      <div className="text-xs opacity-75">{section.description}</div>
+                    </div>
+                  </div>
+                  
+                  {/* Tooltip arrow */}
+                  <div className={cn(
+                    "absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1",
+                    "w-2 h-2 rotate-45 border-l border-b",
+                    sectionTheme.bg,
+                    sectionTheme.border
+                  )} />
                 </div>
-              </button>
-            ))}
-          </div>
+              </div>
+            );
+          })}
         </div>
-      )}
+        
+        {/* Progress bar */}
+        <div className={cn(
+          "absolute left-2 top-4 bottom-4 w-0.5 rounded-full transition-colors duration-500",
+          "bg-current opacity-20"
+        )} />
+        <div 
+          className={cn(
+            "absolute left-2 top-4 w-0.5 rounded-full transition-all duration-300",
+            currentTheme.dot
+          )}
+          style={{ height: `${scrollProgress}%` }}
+        />
+      </div>
     </div>
   );
-}
+};
+
+export default AppleProgressBar;

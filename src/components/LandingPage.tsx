@@ -63,24 +63,24 @@ const LandingPage = () => {
           }
           backgroundSpeed={-0.15}
         >
-          <div className="py-20 px-4 text-center">
+          <div className="text-center">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-4xl font-bold text-gray-900 mb-6">Advanced AI Technology</h2>
               <p className="text-xl text-gray-600 mb-8">Powered by cutting-edge artificial intelligence that understands you</p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
                   <div className="w-12 h-12 bg-gradient-to-br from-therapy-500 to-healing-500 rounded-xl mx-auto mb-4 flex items-center justify-center text-white text-2xl">🧠</div>
-                  <h3 className="font-semibold text-lg mb-2">Neural Processing</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-gray-900">Neural Processing</h3>
                   <p className="text-gray-600">Advanced language models trained on therapeutic data</p>
                 </div>
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
                   <div className="w-12 h-12 bg-gradient-to-br from-therapy-500 to-healing-500 rounded-xl mx-auto mb-4 flex items-center justify-center text-white text-2xl">🎯</div>
-                  <h3 className="font-semibold text-lg mb-2">Personalized Matching</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-gray-900">Personalized Matching</h3>
                   <p className="text-gray-600">AI-driven therapist and approach recommendations</p>
                 </div>
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
                   <div className="w-12 h-12 bg-gradient-to-br from-therapy-500 to-healing-500 rounded-xl mx-auto mb-4 flex items-center justify-center text-white text-2xl">🔒</div>
-                  <h3 className="font-semibold text-lg mb-2">Privacy First</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-gray-900">Privacy First</h3>
                   <p className="text-gray-600">HIPAA-compliant with end-to-end encryption</p>
                 </div>
               </div>

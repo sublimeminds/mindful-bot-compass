@@ -54,13 +54,15 @@ export default function ParallaxSection({
       id={id}
       className={cn(
         "relative overflow-hidden scroll-snap-start",
-        fullHeight ? "h-screen" : "min-h-screen",
-        "flex flex-col justify-center", // Center content vertically
+        "h-screen", // Always enforce 100vh for perfect scroll snapping
+        "flex flex-col justify-center items-center", // Perfect centering
         className
       )}
       style={{
         scrollSnapAlign: 'start',
-        scrollSnapStop: 'always'
+        scrollSnapStop: 'always',
+        height: '100vh', // Enforce exact height
+        minHeight: '100vh'
       }}
     >
       {/* Parallax Background */}
@@ -79,7 +81,7 @@ export default function ParallaxSection({
       {/* Content */}
       <div 
         className={cn(
-          "relative z-10 will-change-transform flex-1 flex items-center justify-center",
+          "relative z-10 will-change-transform flex-1 flex items-center justify-center w-full h-full",
           isParallaxEnabled && contentSpeed !== 0 && "transform-gpu"
         )}
         style={{
@@ -90,7 +92,8 @@ export default function ParallaxSection({
         }}
       >
         <div className={cn(
-          "w-full transition-all duration-700 ease-out",
+          "w-full max-w-7xl mx-auto px-4 transition-all duration-700 ease-out",
+          "flex flex-col justify-center min-h-full py-8", // Ensure content is centered within section
           isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         )}>
           {children}
