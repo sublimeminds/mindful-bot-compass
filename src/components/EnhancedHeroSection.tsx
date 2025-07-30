@@ -56,11 +56,8 @@ const EnhancedHeroSection = () => {
 
   return (
     <section className="relative min-h-screen overflow-hidden">
-      {/* Sophisticated gradient mesh background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-therapy-50/20 to-calm-50/30"></div>
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-therapy-100/10 to-calm-100/20"></div>
-      <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-therapy-200/20 to-calm-200/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-tr from-calm-200/15 to-therapy-200/15 rounded-full blur-3xl"></div>
+      {/* Simplified single background layer */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background to-therapy-50/15"></div>
 
       <div className="container mx-auto px-6 lg:px-8 relative z-10 pt-32 pb-20">
         
