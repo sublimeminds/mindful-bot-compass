@@ -751,266 +751,448 @@ const EnterpriseHeroSection = () => {
                   </p>
                 </div>
 
-                {/* Central AI Brain Hub */}
-                <div className="relative mb-20">
-                  <div className="flex justify-center">
-                    <div className="relative group">
-                      <div className="w-40 h-40 bg-gradient-to-br from-therapy-500 via-calm-500 to-harmony-500 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
-                        <Brain className="h-20 w-20 text-white" />
-                      </div>
+                {/* Dynamic Intelligent Routing Hub Visualization */}
+                <div className="relative overflow-hidden">
+                  {/* Background Neural Network Animation */}
+                  <div className="absolute inset-0 opacity-[0.03]">
+                    <svg className="w-full h-full" viewBox="0 0 1000 800">
+                      <defs>
+                        <radialGradient id="neuralGlow" cx="50%" cy="50%" r="50%">
+                          <stop offset="0%" stopColor="hsl(var(--therapy-500))" stopOpacity="0.4"/>
+                          <stop offset="50%" stopColor="hsl(var(--calm-500))" stopOpacity="0.2"/>
+                          <stop offset="100%" stopColor="hsl(var(--harmony-500))" stopOpacity="0.1"/>
+                        </radialGradient>
+                      </defs>
                       
-                      {/* Floating capability indicators around the brain */}
-                      <div className="absolute -top-8 -left-8 w-16 h-16 bg-gradient-to-br from-flow-500 to-therapy-600 rounded-full flex items-center justify-center shadow-lg animate-float">
-                        <Mic className="h-8 w-8 text-white" />
-                      </div>
-                      <div className="absolute -top-8 -right-8 w-16 h-16 bg-gradient-to-br from-harmony-500 to-calm-600 rounded-full flex items-center justify-center shadow-lg animate-float" style={{animationDelay: '1s'}}>
-                        <Globe className="h-8 w-8 text-white" />
-                      </div>
-                      <div className="absolute -bottom-8 -left-8 w-16 h-16 bg-gradient-to-br from-mindful-500 to-balance-600 rounded-full flex items-center justify-center shadow-lg animate-float" style={{animationDelay: '2s'}}>
-                        <AlertTriangle className="h-8 w-8 text-white" />
-                      </div>
-                      <div className="absolute -bottom-8 -right-8 w-16 h-16 bg-gradient-to-br from-balance-500 to-flow-600 rounded-full flex items-center justify-center shadow-lg animate-float" style={{animationDelay: '3s'}}>
-                        <TrendingUp className="h-8 w-8 text-white" />
-                      </div>
-                      
-                      {/* Pulse rings */}
-                      <div className="absolute inset-0 rounded-full border-4 border-therapy-300/30 animate-ping"></div>
-                      <div className="absolute inset-0 rounded-full border-4 border-calm-300/30 animate-ping" style={{animationDelay: '1s'}}></div>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center mt-8">
-                    <h4 className="text-2xl font-bold text-foreground mb-2">Neural Processing Core</h4>
-                    <p className="text-muted-foreground">Real-time analysis of voice, emotion, behavior, and cultural context</p>
-                  </div>
-                </div>
-
-                {/* Comprehensive AI Capabilities Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-                  
-                  {/* Multi-Modal Intelligence */}
-                  <div className="relative bg-gradient-to-br from-therapy-100/60 to-white/40 rounded-2xl p-8 border border-therapy-200/50 group hover:shadow-xl transition-all duration-500">
-                    <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity">
-                      <Waves className="h-24 w-24 text-therapy-500" />
-                    </div>
-                    
-                    <div className="relative z-10">
-                      <div className="flex items-center mb-6">
-                        <div className="w-12 h-12 bg-therapy-500 rounded-xl flex items-center justify-center mr-4">
-                          <Waves className="h-6 w-6 text-white" />
-                        </div>
-                        <h4 className="text-2xl font-bold text-foreground">Multi-Modal Analysis</h4>
-                      </div>
-                      
-                      <div className="space-y-6">
-                        <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-therapy-200/30">
-                          <div className="flex items-center">
-                            <Mic className="h-5 w-5 text-therapy-600 mr-3" />
-                            <span className="font-medium">Voice Pattern Analysis</span>
-                          </div>
-                          <div className="flex items-center">
-                            <div className="w-16 h-2 bg-therapy-100 rounded-full mr-3">
-                              <div className="w-14 h-2 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full animate-pulse"></div>
-                            </div>
-                            <span className="text-sm text-therapy-600 font-semibold">97%</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-calm-200/30">
-                          <div className="flex items-center">
-                            <Heart className="h-5 w-5 text-calm-600 mr-3" />
-                            <span className="font-medium">Emotion Recognition</span>
-                          </div>
-                          <div className="flex items-center">
-                            <div className="w-16 h-2 bg-calm-100 rounded-full mr-3">
-                              <div className="w-15 h-2 bg-gradient-to-r from-calm-500 to-harmony-500 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
-                            </div>
-                            <span className="text-sm text-calm-600 font-semibold">95%</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-harmony-200/30">
-                          <div className="flex items-center">
-                            <BarChart3 className="h-5 w-5 text-harmony-600 mr-3" />
-                            <span className="font-medium">Behavioral Patterns</span>
-                          </div>
-                          <div className="flex items-center">
-                            <div className="w-16 h-2 bg-harmony-100 rounded-full mr-3">
-                              <div className="w-13 h-2 bg-gradient-to-r from-harmony-500 to-flow-500 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
-                            </div>
-                            <span className="text-sm text-harmony-600 font-semibold">93%</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      {/* Animated Neural Network Connections */}
+                      {Array.from({length: 25}).map((_, i) => (
+                        <g key={i}>
+                          <line 
+                            x1={Math.random() * 1000} 
+                            y1={Math.random() * 800} 
+                            x2={Math.random() * 1000} 
+                            y2={Math.random() * 800} 
+                            stroke="url(#neuralGlow)" 
+                            strokeWidth="1"
+                            className="animate-pulse"
+                            style={{animationDelay: `${i * 0.2}s`, animationDuration: `${3 + Math.random() * 2}s`}}
+                          />
+                          <circle 
+                            cx={Math.random() * 1000} 
+                            cy={Math.random() * 800} 
+                            r="2" 
+                            fill="url(#neuralGlow)"
+                            className="animate-pulse"
+                            style={{animationDelay: `${i * 0.15}s`}}
+                          />
+                        </g>
+                      ))}
+                    </svg>
                   </div>
 
-                  {/* Real-Time Processing Demo */}
-                  <div className="relative bg-gradient-to-br from-calm-100/60 to-white/40 rounded-2xl p-8 border border-calm-200/50 group hover:shadow-xl transition-all duration-500">
-                    <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity">
-                      <Zap className="h-24 w-24 text-calm-500" />
-                    </div>
-                    
-                    <div className="relative z-10">
-                      <div className="flex items-center mb-6">
-                        <div className="w-12 h-12 bg-calm-500 rounded-xl flex items-center justify-center mr-4">
-                          <Zap className="h-6 w-6 text-white" />
-                        </div>
-                        <h4 className="text-2xl font-bold text-foreground">Real-Time Processing</h4>
-                      </div>
-                      
-                      <div className="space-y-4">
-                        <div className="bg-white/80 rounded-xl p-4 border border-calm-200/30">
-                          <div className="flex items-center mb-3">
-                            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse mr-2"></div>
-                            <span className="text-sm font-medium text-calm-700">Live Analysis Active</span>
-                          </div>
-                          
-                          <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Response Time:</span>
-                              <span className="font-semibold text-calm-600">&lt;150ms</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Emotional State:</span>
-                              <span className="font-semibold text-green-600">Stable</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Risk Level:</span>
-                              <span className="font-semibold text-blue-600">Low</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Therapy Approach:</span>
-                              <span className="font-semibold text-purple-600">CBT Active</span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="bg-gradient-to-r from-calm-50 to-therapy-50 rounded-xl p-4 border border-calm-200/30">
-                          <div className="text-xs text-muted-foreground mb-2">AI Thinking Process:</div>
-                          <div className="space-y-1">
-                            <div className="flex items-center text-xs">
-                              <div className="w-2 h-2 bg-therapy-500 rounded-full mr-2 animate-pulse"></div>
-                              <span>Analyzing emotional context...</span>
-                            </div>
-                            <div className="flex items-center text-xs">
-                              <div className="w-2 h-2 bg-calm-500 rounded-full mr-2 animate-pulse" style={{animationDelay: '0.5s'}}></div>
-                              <span>Selecting therapeutic approach...</span>
-                            </div>
-                            <div className="flex items-center text-xs">
-                              <div className="w-2 h-2 bg-harmony-500 rounded-full mr-2 animate-pulse" style={{animationDelay: '1s'}}></div>
-                              <span>Generating personalized response...</span>
-                            </div>
-                          </div>
+                  <div className="relative z-10">
+                    <div className="text-center mb-16">
+                      <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-therapy-500/10 to-calm-500/10 rounded-full px-6 py-3 mb-6">
+                        <Cpu className="h-6 w-6 text-therapy-600 animate-pulse" />
+                        <span className="text-therapy-700 font-semibold">Intelligent Routing Hub</span>
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-therapy-500 rounded-full animate-bounce"></div>
+                          <div className="w-2 h-2 bg-calm-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                          <div className="w-2 h-2 bg-harmony-500 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
                         </div>
                       </div>
+                      <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
+                        AI That <span className="text-therapy-600">Continuously Optimizes</span> Your Care
+                      </h2>
+                      <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                        Our intelligent routing hub doesn't follow steps—it's a living system that constantly analyzes, learns, and adapts to provide the most effective therapy approach for your unique needs in real-time.
+                      </p>
                     </div>
-                  </div>
 
-                  {/* Cultural Intelligence & Adaptation */}
-                  <div className="relative bg-gradient-to-br from-harmony-100/60 to-white/40 rounded-2xl p-8 border border-harmony-200/50 group hover:shadow-xl transition-all duration-500">
-                    <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity">
-                      <Globe className="h-24 w-24 text-harmony-500" />
-                    </div>
-                    
-                    <div className="relative z-10">
-                      <div className="flex items-center mb-6">
-                        <div className="w-12 h-12 bg-harmony-500 rounded-xl flex items-center justify-center mr-4">
-                          <Globe className="h-6 w-6 text-white" />
-                        </div>
-                        <h4 className="text-2xl font-bold text-foreground">Cultural Intelligence</h4>
-                      </div>
-                      
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-3 gap-3">
-                          {['🌍 Global', '🎭 Cultural', '🗣️ Language'].map((badge, index) => (
-                            <div key={index} className="bg-white/80 rounded-lg p-3 text-center border border-harmony-200/30">
-                              <div className="text-lg mb-1">{badge.split(' ')[0]}</div>
-                              <div className="text-xs font-medium text-harmony-700">{badge.split(' ')[1]}</div>
-                            </div>
+                    {/* Central AI Brain Hub */}
+                    <div className="relative mb-16">
+                      <div className="flex justify-center mb-8">
+                        <div className="relative">
+                          {/* Central AI Core */}
+                          <div className="relative w-32 h-32 bg-gradient-to-br from-therapy-500 via-calm-500 to-harmony-500 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
+                            <Brain className="h-16 w-16 text-white" />
+                            
+                            {/* Pulsing Ring Effect */}
+                            <div className="absolute inset-0 rounded-full border-4 border-therapy-300/50 animate-ping"></div>
+                            <div className="absolute inset-0 rounded-full border-2 border-calm-300/30 animate-ping" style={{animationDelay: '0.5s'}}></div>
+                          </div>
+
+                          {/* Data Flow Particles */}
+                          {Array.from({length: 8}).map((_, i) => (
+                            <div
+                              key={i}
+                              className="absolute w-3 h-3 bg-therapy-400 rounded-full"
+                              style={{
+                                top: `${50 + 40 * Math.cos((i * Math.PI * 2) / 8)}%`,
+                                left: `${50 + 40 * Math.sin((i * Math.PI * 2) / 8)}%`,
+                                animation: `float 3s ease-in-out infinite`,
+                                animationDelay: `${i * 0.2}s`
+                              }}
+                            />
                           ))}
                         </div>
-                        
-                        <div className="bg-white/80 rounded-xl p-4 border border-harmony-200/30">
-                          <div className="text-sm font-medium text-harmony-700 mb-3">Active Cultural Adaptations:</div>
-                          <div className="space-y-2 text-xs">
-                            <div className="flex items-center justify-between">
-                              <span className="text-muted-foreground">Communication Style:</span>
-                              <span className="font-semibold text-harmony-600">Direct/Western</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-muted-foreground">Family Dynamics:</span>
-                              <span className="font-semibold text-harmony-600">Individual Focus</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-muted-foreground">Religious Context:</span>
-                              <span className="font-semibold text-harmony-600">Secular Approach</span>
-                            </div>
-                          </div>
-                        </div>
                       </div>
-                    </div>
-                  </div>
 
-                  {/* Advanced Crisis Detection */}
-                  <div className="relative bg-gradient-to-br from-flow-100/60 to-white/40 rounded-2xl p-8 border border-flow-200/50 group hover:shadow-xl transition-all duration-500">
-                    <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity">
-                      <Shield className="h-24 w-24 text-flow-500" />
-                    </div>
-                    
-                    <div className="relative z-10">
-                      <div className="flex items-center mb-6">
-                        <div className="w-12 h-12 bg-flow-500 rounded-xl flex items-center justify-center mr-4">
-                          <Shield className="h-6 w-6 text-white" />
+                      {/* Live Processing Indicators */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-therapy-200/50">
+                          <div className="flex items-center space-x-3 mb-3">
+                            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                            <span className="font-semibold text-foreground">Processing Messages</span>
+                          </div>
+                          <div className="text-2xl font-bold text-therapy-600 mb-1">847</div>
+                          <div className="text-sm text-muted-foreground">Messages analyzed this hour</div>
                         </div>
-                        <h4 className="text-2xl font-bold text-foreground">Crisis Prevention AI</h4>
+
+                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-therapy-200/50">
+                          <div className="flex items-center space-x-3 mb-3">
+                            <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.3s'}}></div>
+                            <span className="font-semibold text-foreground">Model Selection</span>
+                          </div>
+                          <div className="text-2xl font-bold text-calm-600 mb-1">GPT-4o</div>
+                          <div className="text-sm text-muted-foreground">Optimal model selected</div>
+                        </div>
+
+                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-therapy-200/50">
+                          <div className="flex items-center space-x-3 mb-3">
+                            <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse" style={{animationDelay: '0.6s'}}></div>
+                            <span className="font-semibold text-foreground">Response Time</span>
+                          </div>
+                          <div className="text-2xl font-bold text-harmony-600 mb-1">0.8s</div>
+                          <div className="text-sm text-muted-foreground">Average response time</div>
+                        </div>
                       </div>
-                      
-                      <div className="space-y-4">
-                        <div className="bg-white/80 rounded-xl p-4 border border-flow-200/30">
-                          <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm font-medium text-flow-700">Threat Detection</span>
-                            <div className="flex items-center">
-                              <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                              <span className="text-xs text-green-600 font-semibold">All Clear</span>
+                    </div>
+
+                    {/* Dynamic AI Component Ecosystem */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                      {/* AI Model Selection */}
+                      <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-therapy-100 to-transparent rounded-bl-full opacity-50"></div>
+                        <div className="relative z-10">
+                          <div className="flex items-center space-x-3 mb-4">
+                            <div className="w-12 h-12 bg-gradient-to-br from-therapy-500 to-calm-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                              <Cpu className="h-6 w-6 text-white" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-foreground">AI Model Router</h3>
+                              <div className="text-sm text-muted-foreground">Dynamic selection</div>
                             </div>
                           </div>
                           
-                          <div className="grid grid-cols-2 gap-3 text-xs">
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Self-harm risk:</span>
-                              <span className="font-semibold text-green-600">Low</span>
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium">GPT-4o</span>
+                              <div className="flex items-center space-x-2">
+                                <div className="w-16 bg-gray-200 h-2 rounded-full">
+                                  <div className="bg-therapy-500 h-2 rounded-full w-4/5 animate-pulse"></div>
+                                </div>
+                                <span className="text-xs text-therapy-600 font-medium">85%</span>
+                              </div>
                             </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Suicidal ideation:</span>
-                              <span className="font-semibold text-green-600">None</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Substance abuse:</span>
-                              <span className="font-semibold text-yellow-600">Monitor</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Social isolation:</span>
-                              <span className="font-semibold text-blue-600">Improving</span>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium">GPT-4o-mini</span>
+                              <div className="flex items-center space-x-2">
+                                <div className="w-16 bg-gray-200 h-2 rounded-full">
+                                  <div className="bg-calm-500 h-2 rounded-full w-1/5 animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                                </div>
+                                <span className="text-xs text-calm-600 font-medium">15%</span>
+                              </div>
                             </div>
                           </div>
+                          
+                          <div className="mt-4 flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span className="text-xs text-green-600 font-medium">Auto-optimizing selection</span>
+                          </div>
                         </div>
-                        
-                        <div className="bg-gradient-to-r from-flow-50 to-mindful-50 rounded-xl p-4 border border-flow-200/30">
-                          <div className="text-xs text-muted-foreground mb-2">Prevention Strategies Active:</div>
-                          <div className="space-y-1">
-                            <div className="flex items-center text-xs">
-                              <div className="w-2 h-2 bg-flow-500 rounded-full mr-2"></div>
-                              <span>Daily check-ins scheduled</span>
+                      </div>
+
+                      {/* Cultural Intelligence Engine */}
+                      <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-harmony-100 to-transparent rounded-bl-full opacity-50"></div>
+                        <div className="relative z-10">
+                          <div className="flex items-center space-x-3 mb-4">
+                            <div className="w-12 h-12 bg-gradient-to-br from-harmony-500 to-flow-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                              <Globe className="h-6 w-6 text-white" />
                             </div>
-                            <div className="flex items-center text-xs">
-                              <div className="w-2 h-2 bg-mindful-500 rounded-full mr-2"></div>
-                              <span>Emergency contacts notified</span>
+                            <div>
+                              <h3 className="font-bold text-foreground">Cultural AI</h3>
+                              <div className="text-sm text-muted-foreground">Context adaptation</div>
                             </div>
-                            <div className="flex items-center text-xs">
-                              <div className="w-2 h-2 bg-balance-500 rounded-full mr-2"></div>
-                              <span>Coping strategies reinforced</span>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="bg-harmony-50 rounded-lg p-3 text-center">
+                              <div className="text-xs font-medium text-harmony-700 mb-1">Active Context</div>
+                              <div className="text-sm font-bold text-harmony-600">Western</div>
+                              <div className="w-full bg-harmony-200 h-1 rounded-full mt-1">
+                                <div className="bg-harmony-500 h-1 rounded-full w-4/5 animate-pulse"></div>
+                              </div>
                             </div>
+                            <div className="bg-flow-50 rounded-lg p-3 text-center">
+                              <div className="text-xs font-medium text-flow-700 mb-1">Adaptation</div>
+                              <div className="text-sm font-bold text-flow-600">Real-time</div>
+                              <div className="w-full bg-flow-200 h-1 rounded-full mt-1">
+                                <div className="bg-flow-500 h-1 rounded-full w-5/6 animate-pulse" style={{animationDelay: '0.3s'}}></div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-4 flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                            <span className="text-xs text-blue-600 font-medium">15 cultural contexts active</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Crisis Detection & Safety */}
+                      <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-red-100 to-transparent rounded-bl-full opacity-50"></div>
+                        <div className="relative z-10">
+                          <div className="flex items-center space-x-3 mb-4">
+                            <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                              <Shield className="h-6 w-6 text-white" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-foreground">Crisis Monitor</h3>
+                              <div className="text-sm text-muted-foreground">24/7 safety watch</div>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium">Risk Assessment</span>
+                              <span className="text-sm font-bold text-green-600">LOW</span>
+                            </div>
+                            <div className="w-full bg-gray-200 h-3 rounded-full">
+                              <div className="bg-gradient-to-r from-green-400 to-green-500 h-3 rounded-full w-1/4 animate-pulse"></div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                              <div className="text-muted-foreground">Sentiment: <span className="font-medium text-green-600">Positive</span></div>
+                              <div className="text-muted-foreground">Triggers: <span className="font-medium text-green-600">None</span></div>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-4 flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span className="text-xs text-green-600 font-medium">All systems secure</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Therapy Approach Matching */}
+                      <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-balance-100 to-transparent rounded-bl-full opacity-50"></div>
+                        <div className="relative z-10">
+                          <div className="flex items-center space-x-3 mb-4">
+                            <div className="w-12 h-12 bg-gradient-to-br from-balance-500 to-mindful-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                              <Target className="h-6 w-6 text-white" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-foreground">Approach Matcher</h3>
+                              <div className="text-sm text-muted-foreground">Dynamic techniques</div>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium">CBT</span>
+                              <div className="flex items-center space-x-2">
+                                <div className="w-12 bg-gray-200 h-1.5 rounded-full">
+                                  <div className="bg-balance-500 h-1.5 rounded-full w-4/5 animate-pulse"></div>
+                                </div>
+                                <span className="text-xs font-medium text-balance-600">85%</span>
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium">Mindfulness</span>
+                              <div className="flex items-center space-x-2">
+                                <div className="w-12 bg-gray-200 h-1.5 rounded-full">
+                                  <div className="bg-mindful-500 h-1.5 rounded-full w-3/5 animate-pulse" style={{animationDelay: '0.3s'}}></div>
+                                </div>
+                                <span className="text-xs font-medium text-mindful-600">65%</span>
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium">Trauma-Informed</span>
+                              <div className="flex items-center space-x-2">
+                                <div className="w-12 bg-gray-200 h-1.5 rounded-full">
+                                  <div className="bg-therapy-500 h-1.5 rounded-full w-2/5 animate-pulse" style={{animationDelay: '0.6s'}}></div>
+                                </div>
+                                <span className="text-xs font-medium text-therapy-600">45%</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-4 flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                            <span className="text-xs text-purple-600 font-medium">Adapting to user needs</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Adaptive Learning System */}
+                      <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-calm-100 to-transparent rounded-bl-full opacity-50"></div>
+                        <div className="relative z-10">
+                          <div className="flex items-center space-x-3 mb-4">
+                            <div className="w-12 h-12 bg-gradient-to-br from-calm-500 to-therapy-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                              <TrendingUp className="h-6 w-6 text-white" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-foreground">Learning Engine</h3>
+                              <div className="text-sm text-muted-foreground">Continuous improvement</div>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium">Learning Rate</span>
+                              <span className="text-sm font-bold text-calm-600">94%</span>
+                            </div>
+                            <div className="w-full bg-gray-200 h-2 rounded-full">
+                              <div className="bg-gradient-to-r from-calm-400 to-therapy-500 h-2 rounded-full w-[94%] animate-pulse"></div>
+                            </div>
+                            <div className="text-xs text-muted-foreground">From 847 recent interactions</div>
+                          </div>
+                          
+                          <div className="mt-4 flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                            <span className="text-xs text-orange-600 font-medium">Model updated 2 mins ago</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Performance Optimization */}
+                      <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-flow-100 to-transparent rounded-bl-full opacity-50"></div>
+                        <div className="relative z-10">
+                          <div className="flex items-center space-x-3 mb-4">
+                            <div className="w-12 h-12 bg-gradient-to-br from-flow-500 to-harmony-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                              <Zap className="h-6 w-6 text-white" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-foreground">Performance AI</h3>
+                              <div className="text-sm text-muted-foreground">Real-time optimization</div>
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-3 text-center">
+                            <div className="bg-flow-50 rounded-lg p-2">
+                              <div className="text-lg font-bold text-flow-600">0.8s</div>
+                              <div className="text-xs text-muted-foreground">Response time</div>
+                            </div>
+                            <div className="bg-harmony-50 rounded-lg p-2">
+                              <div className="text-lg font-bold text-harmony-600">99.9%</div>
+                              <div className="text-xs text-muted-foreground">Uptime</div>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-4 flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div>
+                            <span className="text-xs text-indigo-600 font-medium">Auto-scaling active</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Real-time Data Stream Visualization */}
+                    <div className="bg-gradient-to-br from-therapy-50/80 to-calm-50/80 backdrop-blur-sm rounded-2xl p-8 border border-therapy-200/30">
+                      <div className="text-center mb-8">
+                        <h3 className="text-2xl font-bold text-foreground mb-4">Live AI Processing Stream</h3>
+                        <p className="text-muted-foreground max-w-2xl mx-auto">
+                          Watch our AI system process real-time data, make routing decisions, and continuously optimize therapy approaches.
+                        </p>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Live Processing Queue */}
+                        <div className="space-y-4">
+                          <h4 className="font-semibold text-foreground mb-4">Processing Queue</h4>
+                          <div className="space-y-3 max-h-64 overflow-hidden">
+                            {[
+                              { id: 1, type: "Message Analysis", status: "processing", time: "0.2s", priority: "high" },
+                              { id: 2, type: "Cultural Adaptation", status: "completed", time: "0.1s", priority: "medium" },
+                              { id: 3, type: "Risk Assessment", status: "processing", time: "0.3s", priority: "critical" },
+                              { id: 4, type: "Therapy Matching", status: "queued", time: "pending", priority: "medium" },
+                              { id: 5, type: "Response Generation", status: "processing", time: "0.4s", priority: "high" },
+                              { id: 6, type: "Quality Check", status: "queued", time: "pending", priority: "low" }
+                            ].map((item, index) => (
+                              <div key={item.id} className="flex items-center justify-between bg-white/70 backdrop-blur-sm rounded-lg p-3 border border-white/50 animate-fade-in" style={{animationDelay: `${index * 0.1}s`}}>
+                                <div className="flex items-center space-x-3">
+                                  <div className={cn(
+                                    "w-3 h-3 rounded-full",
+                                    item.status === "processing" && "bg-blue-500 animate-pulse",
+                                    item.status === "completed" && "bg-green-500",
+                                    item.status === "queued" && "bg-gray-400"
+                                  )}></div>
+                                  <span className="text-sm font-medium">{item.type}</span>
+                                  <span className={cn(
+                                    "text-xs px-2 py-1 rounded-full",
+                                    item.priority === "critical" && "bg-red-100 text-red-700",
+                                    item.priority === "high" && "bg-orange-100 text-orange-700",
+                                    item.priority === "medium" && "bg-blue-100 text-blue-700",
+                                    item.priority === "low" && "bg-gray-100 text-gray-700"
+                                  )}>
+                                    {item.priority}
+                                  </span>
+                                </div>
+                                <span className="text-xs text-muted-foreground">{item.time}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Real-time Metrics Dashboard */}
+                        <div className="space-y-4">
+                          <h4 className="font-semibold text-foreground mb-4">System Metrics</h4>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-white/50">
+                              <div className="text-sm text-muted-foreground mb-1">Messages/Hour</div>
+                              <div className="text-2xl font-bold text-therapy-600 mb-2">847</div>
+                              <div className="w-full bg-therapy-200 h-2 rounded-full">
+                                <div className="bg-therapy-500 h-2 rounded-full w-4/5 animate-pulse"></div>
+                              </div>
+                            </div>
+                            <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-white/50">
+                              <div className="text-sm text-muted-foreground mb-1">Avg Response Time</div>
+                              <div className="text-2xl font-bold text-calm-600 mb-2">0.8s</div>
+                              <div className="w-full bg-calm-200 h-2 rounded-full">
+                                <div className="bg-calm-500 h-2 rounded-full w-5/6 animate-pulse" style={{animationDelay: '0.3s'}}></div>
+                              </div>
+                            </div>
+                            <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-white/50">
+                              <div className="text-sm text-muted-foreground mb-1">Success Rate</div>
+                              <div className="text-2xl font-bold text-harmony-600 mb-2">99.2%</div>
+                              <div className="w-full bg-harmony-200 h-2 rounded-full">
+                                <div className="bg-harmony-500 h-2 rounded-full w-[99%] animate-pulse" style={{animationDelay: '0.6s'}}></div>
+                              </div>
+                            </div>
+                            <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-white/50">
+                              <div className="text-sm text-muted-foreground mb-1">Active Users</div>
+                              <div className="text-2xl font-bold text-flow-600 mb-2">1,247</div>
+                              <div className="w-full bg-flow-200 h-2 rounded-full">
+                                <div className="bg-flow-500 h-2 rounded-full w-3/5 animate-pulse" style={{animationDelay: '0.9s'}}></div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-white/50">
+                            <div className="text-sm text-muted-foreground mb-2">AI Learning Progress</div>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-lg font-bold text-foreground">Model Evolution</span>
+                              <span className="text-sm font-medium text-green-600">+2.3% improvement</span>
+                            </div>
+                            <div className="w-full bg-gray-200 h-3 rounded-full">
+                              <div className="bg-gradient-to-r from-therapy-400 via-calm-400 to-harmony-400 h-3 rounded-full w-[94%] animate-pulse"></div>
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-1">Last updated: 2 minutes ago</div>
                           </div>
                         </div>
                       </div>
