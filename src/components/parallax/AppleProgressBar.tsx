@@ -53,16 +53,16 @@ const AppleProgressBar = () => {
   const currentSection = sections[activeSection];
 
   if (isMobile || isTablet) {
-    // Mobile/Tablet: Enhanced horizontal dots with better positioning
+    // Mobile/Tablet: Move to right side to avoid header conflict
     return (
-      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+      <div className="fixed top-1/2 right-4 transform -translate-y-1/2 z-40">
         <div className={cn(
-          "backdrop-blur-xl border shadow-xl rounded-xl px-3 py-2",
+          "backdrop-blur-xl border shadow-xl rounded-xl p-2",
           "transition-all duration-500 ease-out",
           currentTheme.bg,
           currentTheme.border
         )}>
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-col items-center space-y-2">
             {sections.map((section, index) => {
               const isActive = index === activeSection;
               const isCompleted = activeSection > index;
@@ -83,14 +83,6 @@ const AppleProgressBar = () => {
                 />
               );
             })}
-          </div>
-          
-          {/* Section title below */}
-          <div className={cn(
-            "text-center mt-1 text-xs font-medium transition-colors duration-500",
-            currentTheme.text
-          )}>
-            {currentSection?.title}
           </div>
         </div>
       </div>
