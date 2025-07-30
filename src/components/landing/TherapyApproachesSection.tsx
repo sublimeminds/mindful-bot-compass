@@ -146,7 +146,7 @@ const TherapyApproachesSection = () => {
           </div>
 
           {/* Search and Filter Controls */}
-          <div className="mb-12 bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50">
+          <div className="mb-12 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
             <div className="flex flex-col lg:flex-row gap-4 items-center">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -179,7 +179,7 @@ const TherapyApproachesSection = () => {
           {/* Therapy Types Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
             {filteredTherapies.map((therapy) => (
-              <Card key={therapy.id} className="group bg-white/80 backdrop-blur-sm border-0 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+              <Card key={therapy.id} className="group bg-white border border-therapy-100/20 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
                 <div className={`h-2 bg-gradient-to-r ${therapy.gradient}`}></div>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">

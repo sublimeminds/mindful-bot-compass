@@ -69,7 +69,7 @@ const TrustIndicators = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {indicators.map((indicator, index) => (
-              <Card key={index} className="group bg-white/80 backdrop-blur-sm border-0 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <Card key={index} className="group bg-white border border-therapy-100/20 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
                     <div className={`p-3 rounded-full bg-gradient-to-br from-gray-50 to-gray-100 ${indicator.color} group-hover:scale-110 transition-transform duration-300`}>
@@ -96,7 +96,7 @@ const TrustIndicators = () => {
           </div>
 
           <div className="mt-12 text-center">
-            <div className="inline-flex items-center space-x-6 px-8 py-4 bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-200/50">
+            <div className="inline-flex items-center space-x-6 px-8 py-4 bg-white rounded-2xl border border-gray-200 shadow-sm">
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                 <span className="text-sm font-medium text-gray-700">All Systems Secure</span>

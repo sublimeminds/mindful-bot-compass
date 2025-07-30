@@ -32,45 +32,45 @@ const AppleProgressBar = () => {
     const section = sections[sectionIndex];
     const themes = {
       therapy: { 
-        bg: 'bg-therapy-300/20 backdrop-blur-xl', 
+        bg: 'bg-white/95', 
         dot: 'bg-therapy-400', 
         text: 'text-therapy-900', 
-        border: 'border-therapy-200/40',
+        border: 'border-therapy-200',
         activeDot: 'bg-therapy-500 shadow-therapy-500/50'
       },
       calm: { 
-        bg: 'bg-calm-300/20 backdrop-blur-xl', 
+        bg: 'bg-white/95', 
         dot: 'bg-calm-400', 
         text: 'text-calm-900', 
-        border: 'border-calm-200/40',
+        border: 'border-calm-200',
         activeDot: 'bg-calm-500 shadow-calm-500/50'
       },
       harmony: { 
-        bg: 'bg-harmony-300/20 backdrop-blur-xl', 
+        bg: 'bg-white/95', 
         dot: 'bg-harmony-400', 
         text: 'text-harmony-900', 
-        border: 'border-harmony-200/40',
+        border: 'border-harmony-200',
         activeDot: 'bg-harmony-500 shadow-harmony-500/50'
       },
       flow: { 
-        bg: 'bg-flow-300/20 backdrop-blur-xl', 
+        bg: 'bg-white/95', 
         dot: 'bg-flow-400', 
         text: 'text-flow-900', 
-        border: 'border-flow-200/40',
+        border: 'border-flow-200',
         activeDot: 'bg-flow-500 shadow-flow-500/50'
       },
       balance: { 
-        bg: 'bg-balance-300/20 backdrop-blur-xl', 
+        bg: 'bg-white/95', 
         dot: 'bg-balance-400', 
         text: 'text-balance-900', 
-        border: 'border-balance-200/40',
+        border: 'border-balance-200',
         activeDot: 'bg-balance-500 shadow-balance-500/50'
       },
       blue: { 
-        bg: 'bg-blue-300/20 backdrop-blur-xl', 
+        bg: 'bg-white/95', 
         dot: 'bg-blue-400', 
         text: 'text-blue-900', 
-        border: 'border-blue-200/40',
+        border: 'border-blue-200',
         activeDot: 'bg-blue-500 shadow-blue-500/50'
       }
     };
@@ -85,7 +85,7 @@ const AppleProgressBar = () => {
     return (
       <div className="fixed top-1/2 right-4 transform -translate-y-1/2 z-40">
         <div className={cn(
-          "backdrop-blur-xl border shadow-xl rounded-xl p-2",
+          "border shadow-xl rounded-xl p-2",
           "transition-all duration-500 ease-out",
           currentTheme.bg,
           currentTheme.border
@@ -121,7 +121,7 @@ const AppleProgressBar = () => {
   return (
     <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-50">
       <div className={cn(
-        "relative p-4 rounded-2xl backdrop-blur-xl border shadow-2xl",
+        "relative p-4 rounded-2xl border shadow-2xl",
         "transition-all duration-500 ease-out",
         currentTheme.bg,
         currentTheme.border
@@ -151,7 +151,7 @@ const AppleProgressBar = () => {
                   "absolute right-6 top-1/2 transform -translate-y-1/2",
                   "px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap",
                   "opacity-0 group-hover:opacity-100 transition-all duration-300",
-                  "pointer-events-none border backdrop-blur-xl shadow-xl",
+                  "pointer-events-none border shadow-xl",
                   sectionTheme.bg,
                   sectionTheme.text,
                   sectionTheme.border

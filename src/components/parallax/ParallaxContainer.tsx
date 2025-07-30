@@ -127,9 +127,9 @@ export default function ParallaxContainer({ children, className }: ParallaxConta
       }
       
       .parallax-container::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.3);
         border-radius: 3px;
-        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
       
       .parallax-container::-webkit-scrollbar-thumb:hover {

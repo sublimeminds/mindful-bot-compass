@@ -90,7 +90,7 @@ const StatsCounter = () => {
             return (
               <div key={index} className="text-center text-white">
                 <div className="flex justify-center mb-4">
-                  <div className="p-3 bg-white/20 rounded-full backdrop-blur-sm">
+                  <div className="p-3 bg-white/30 rounded-full border border-white/40 shadow-lg">
                     <IconComponent className="h-6 w-6" />
                   </div>
                 </div>
