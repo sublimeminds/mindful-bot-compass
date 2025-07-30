@@ -402,7 +402,7 @@ const EnhancedHeader = () => {
               {isTablet && (
                 <>
                   <div className="relative group">
-                    <HeaderDropdownTrigger icon={Heart} label="Features" />
+                    <HeaderDropdownTrigger icon={getItemIcon('platform-category')} label="Features" />
                     <HeaderDropdownCard className="dropdown-left w-64">
                       <div className="space-y-3">
                         {platformFeatures.slice(0, 3).map((feature) => (
@@ -432,7 +432,7 @@ const EnhancedHeader = () => {
               {isLaptop && (
                 <>
                   <div className="relative group">
-                    <HeaderDropdownTrigger icon={Sparkles} label="Quick Access" />
+                    <HeaderDropdownTrigger icon={getItemIcon('therapy-ai-category')} label="Quick Access" />
                     <HeaderDropdownCard className="dropdown-left w-80">
                       <div className="space-y-3">
                         <HeaderDropdownItem
