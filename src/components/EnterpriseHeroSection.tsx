@@ -714,74 +714,366 @@ const EnterpriseHeroSection = () => {
               ))}
             </div>
 
-            {/* AI Capabilities Showcase */}
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-therapy-200/50 p-8 shadow-xl">
-              <div className="text-center mb-8">
-                <h3 className="text-3xl font-bold text-foreground mb-4">
-                  AI Performance Dashboard
-                </h3>
-                <p className="text-lg text-muted-foreground">
-                  Real-time metrics showing our AI's capabilities and performance
-                </p>
-              </div>
+            {/* Enhanced Visual AI Hub Showcase */}
+            <div className="relative bg-gradient-to-br from-therapy-50/60 via-white/40 to-calm-50/30 rounded-3xl border border-therapy-200/50 p-12 shadow-2xl overflow-hidden">
               
-              <div className="grid md:grid-cols-3 gap-8">
-                {[
-                  {
-                    category: 'Intelligence',
-                    capabilities: [
-                      { name: 'Natural Language Understanding', level: 98 },
-                      { name: 'Emotional Intelligence', level: 96 },
-                      { name: 'Cultural Awareness', level: 94 },
-                      { name: 'Crisis Detection', level: 99 }
-                    ]
-                  },
-                  {
-                    category: 'Personalization',
-                    capabilities: [
-                      { name: 'Therapy Matching', level: 95 },
-                      { name: 'Technique Adaptation', level: 93 },
-                      { name: 'Progress Optimization', level: 91 },
-                      { name: 'Communication Style', level: 97 }
-                    ]
-                  },
-                  {
-                    category: 'Security & Privacy',
-                    capabilities: [
-                      { name: 'HIPAA Compliance', level: 100 },
-                      { name: 'End-to-End Encryption', level: 100 },
-                      { name: 'Data Protection', level: 99 },
-                      { name: 'Privacy Controls', level: 98 }
-                    ]
-                  }
-                ].map((category, categoryIndex) => (
-                  <div key={category.category} className="space-y-4">
-                    <h3 className="text-xl font-semibold text-foreground flex items-center">
-                      <Cpu className="h-5 w-5 mr-2 text-therapy-500" />
-                      {category.category}
-                    </h3>
-                    
-                    <div className="space-y-3">
-                      {category.capabilities.map((capability, index) => (
-                        <div key={capability.name} className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">{capability.name}</span>
-                            <span className="font-semibold text-therapy-600">{capability.level}%</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-gradient-to-r from-therapy-500 to-calm-500 h-2 rounded-full transition-all duration-1000 ease-out"
-                              style={{ 
-                                width: `${capability.level}%`,
-                                animationDelay: `${(categoryIndex * 4 + index) * 200}ms`
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      ))}
+              {/* Background Neural Network Animation */}
+              <div className="absolute inset-0 opacity-[0.04]">
+                <svg className="w-full h-full" viewBox="0 0 800 600">
+                  <defs>
+                    <linearGradient id="neuralGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="hsl(var(--therapy-500))" />
+                      <stop offset="50%" stopColor="hsl(var(--calm-500))" />
+                      <stop offset="100%" stopColor="hsl(var(--harmony-500))" />
+                    </linearGradient>
+                  </defs>
+                  {/* Animated neural connections */}
+                  <g stroke="url(#neuralGradient)" strokeWidth="2" fill="none">
+                    <circle cx="150" cy="100" r="8" className="animate-pulse" style={{animationDelay: '0s'}} />
+                    <circle cx="350" cy="150" r="6" className="animate-pulse" style={{animationDelay: '1s'}} />
+                    <circle cx="650" cy="120" r="7" className="animate-pulse" style={{animationDelay: '2s'}} />
+                    <circle cx="250" cy="300" r="9" className="animate-pulse" style={{animationDelay: '3s'}} />
+                    <circle cx="550" cy="350" r="6" className="animate-pulse" style={{animationDelay: '4s'}} />
+                    <line x1="150" y1="100" x2="350" y2="150" className="animate-pulse" style={{animationDelay: '0.5s'}} />
+                    <line x1="350" y1="150" x2="650" y2="120" className="animate-pulse" style={{animationDelay: '1.5s'}} />
+                    <line x1="250" y1="300" x2="550" y2="350" className="animate-pulse" style={{animationDelay: '2.5s'}} />
+                  </g>
+                </svg>
+              </div>
+
+              <div className="relative z-10">
+                <div className="text-center mb-16">
+                  <h3 className="text-4xl font-bold text-foreground mb-6">
+                    Complete AI Intelligence Ecosystem
+                  </h3>
+                  <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                    Experience the full spectrum of AI-powered mental health capabilities working in harmony to provide unprecedented therapeutic support.
+                  </p>
+                </div>
+
+                {/* Central AI Brain Hub */}
+                <div className="relative mb-20">
+                  <div className="flex justify-center">
+                    <div className="relative group">
+                      <div className="w-40 h-40 bg-gradient-to-br from-therapy-500 via-calm-500 to-harmony-500 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
+                        <Brain className="h-20 w-20 text-white" />
+                      </div>
+                      
+                      {/* Floating capability indicators around the brain */}
+                      <div className="absolute -top-8 -left-8 w-16 h-16 bg-gradient-to-br from-flow-500 to-therapy-600 rounded-full flex items-center justify-center shadow-lg animate-float">
+                        <Mic className="h-8 w-8 text-white" />
+                      </div>
+                      <div className="absolute -top-8 -right-8 w-16 h-16 bg-gradient-to-br from-harmony-500 to-calm-600 rounded-full flex items-center justify-center shadow-lg animate-float" style={{animationDelay: '1s'}}>
+                        <Globe className="h-8 w-8 text-white" />
+                      </div>
+                      <div className="absolute -bottom-8 -left-8 w-16 h-16 bg-gradient-to-br from-mindful-500 to-balance-600 rounded-full flex items-center justify-center shadow-lg animate-float" style={{animationDelay: '2s'}}>
+                        <AlertTriangle className="h-8 w-8 text-white" />
+                      </div>
+                      <div className="absolute -bottom-8 -right-8 w-16 h-16 bg-gradient-to-br from-balance-500 to-flow-600 rounded-full flex items-center justify-center shadow-lg animate-float" style={{animationDelay: '3s'}}>
+                        <TrendingUp className="h-8 w-8 text-white" />
+                      </div>
+                      
+                      {/* Pulse rings */}
+                      <div className="absolute inset-0 rounded-full border-4 border-therapy-300/30 animate-ping"></div>
+                      <div className="absolute inset-0 rounded-full border-4 border-calm-300/30 animate-ping" style={{animationDelay: '1s'}}></div>
                     </div>
                   </div>
-                ))}
+                  
+                  <div className="text-center mt-8">
+                    <h4 className="text-2xl font-bold text-foreground mb-2">Neural Processing Core</h4>
+                    <p className="text-muted-foreground">Real-time analysis of voice, emotion, behavior, and cultural context</p>
+                  </div>
+                </div>
+
+                {/* Comprehensive AI Capabilities Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                  
+                  {/* Multi-Modal Intelligence */}
+                  <div className="relative bg-gradient-to-br from-therapy-100/60 to-white/40 rounded-2xl p-8 border border-therapy-200/50 group hover:shadow-xl transition-all duration-500">
+                    <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity">
+                      <Waves className="h-24 w-24 text-therapy-500" />
+                    </div>
+                    
+                    <div className="relative z-10">
+                      <div className="flex items-center mb-6">
+                        <div className="w-12 h-12 bg-therapy-500 rounded-xl flex items-center justify-center mr-4">
+                          <Waves className="h-6 w-6 text-white" />
+                        </div>
+                        <h4 className="text-2xl font-bold text-foreground">Multi-Modal Analysis</h4>
+                      </div>
+                      
+                      <div className="space-y-6">
+                        <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-therapy-200/30">
+                          <div className="flex items-center">
+                            <Mic className="h-5 w-5 text-therapy-600 mr-3" />
+                            <span className="font-medium">Voice Pattern Analysis</span>
+                          </div>
+                          <div className="flex items-center">
+                            <div className="w-16 h-2 bg-therapy-100 rounded-full mr-3">
+                              <div className="w-14 h-2 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full animate-pulse"></div>
+                            </div>
+                            <span className="text-sm text-therapy-600 font-semibold">97%</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-calm-200/30">
+                          <div className="flex items-center">
+                            <Heart className="h-5 w-5 text-calm-600 mr-3" />
+                            <span className="font-medium">Emotion Recognition</span>
+                          </div>
+                          <div className="flex items-center">
+                            <div className="w-16 h-2 bg-calm-100 rounded-full mr-3">
+                              <div className="w-15 h-2 bg-gradient-to-r from-calm-500 to-harmony-500 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                            </div>
+                            <span className="text-sm text-calm-600 font-semibold">95%</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-harmony-200/30">
+                          <div className="flex items-center">
+                            <BarChart3 className="h-5 w-5 text-harmony-600 mr-3" />
+                            <span className="font-medium">Behavioral Patterns</span>
+                          </div>
+                          <div className="flex items-center">
+                            <div className="w-16 h-2 bg-harmony-100 rounded-full mr-3">
+                              <div className="w-13 h-2 bg-gradient-to-r from-harmony-500 to-flow-500 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+                            </div>
+                            <span className="text-sm text-harmony-600 font-semibold">93%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Real-Time Processing Demo */}
+                  <div className="relative bg-gradient-to-br from-calm-100/60 to-white/40 rounded-2xl p-8 border border-calm-200/50 group hover:shadow-xl transition-all duration-500">
+                    <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity">
+                      <Zap className="h-24 w-24 text-calm-500" />
+                    </div>
+                    
+                    <div className="relative z-10">
+                      <div className="flex items-center mb-6">
+                        <div className="w-12 h-12 bg-calm-500 rounded-xl flex items-center justify-center mr-4">
+                          <Zap className="h-6 w-6 text-white" />
+                        </div>
+                        <h4 className="text-2xl font-bold text-foreground">Real-Time Processing</h4>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div className="bg-white/80 rounded-xl p-4 border border-calm-200/30">
+                          <div className="flex items-center mb-3">
+                            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse mr-2"></div>
+                            <span className="text-sm font-medium text-calm-700">Live Analysis Active</span>
+                          </div>
+                          
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Response Time:</span>
+                              <span className="font-semibold text-calm-600">&lt;150ms</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Emotional State:</span>
+                              <span className="font-semibold text-green-600">Stable</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Risk Level:</span>
+                              <span className="font-semibold text-blue-600">Low</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Therapy Approach:</span>
+                              <span className="font-semibold text-purple-600">CBT Active</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-gradient-to-r from-calm-50 to-therapy-50 rounded-xl p-4 border border-calm-200/30">
+                          <div className="text-xs text-muted-foreground mb-2">AI Thinking Process:</div>
+                          <div className="space-y-1">
+                            <div className="flex items-center text-xs">
+                              <div className="w-2 h-2 bg-therapy-500 rounded-full mr-2 animate-pulse"></div>
+                              <span>Analyzing emotional context...</span>
+                            </div>
+                            <div className="flex items-center text-xs">
+                              <div className="w-2 h-2 bg-calm-500 rounded-full mr-2 animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                              <span>Selecting therapeutic approach...</span>
+                            </div>
+                            <div className="flex items-center text-xs">
+                              <div className="w-2 h-2 bg-harmony-500 rounded-full mr-2 animate-pulse" style={{animationDelay: '1s'}}></div>
+                              <span>Generating personalized response...</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Cultural Intelligence & Adaptation */}
+                  <div className="relative bg-gradient-to-br from-harmony-100/60 to-white/40 rounded-2xl p-8 border border-harmony-200/50 group hover:shadow-xl transition-all duration-500">
+                    <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity">
+                      <Globe className="h-24 w-24 text-harmony-500" />
+                    </div>
+                    
+                    <div className="relative z-10">
+                      <div className="flex items-center mb-6">
+                        <div className="w-12 h-12 bg-harmony-500 rounded-xl flex items-center justify-center mr-4">
+                          <Globe className="h-6 w-6 text-white" />
+                        </div>
+                        <h4 className="text-2xl font-bold text-foreground">Cultural Intelligence</h4>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-3 gap-3">
+                          {['🌍 Global', '🎭 Cultural', '🗣️ Language'].map((badge, index) => (
+                            <div key={index} className="bg-white/80 rounded-lg p-3 text-center border border-harmony-200/30">
+                              <div className="text-lg mb-1">{badge.split(' ')[0]}</div>
+                              <div className="text-xs font-medium text-harmony-700">{badge.split(' ')[1]}</div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="bg-white/80 rounded-xl p-4 border border-harmony-200/30">
+                          <div className="text-sm font-medium text-harmony-700 mb-3">Active Cultural Adaptations:</div>
+                          <div className="space-y-2 text-xs">
+                            <div className="flex items-center justify-between">
+                              <span className="text-muted-foreground">Communication Style:</span>
+                              <span className="font-semibold text-harmony-600">Direct/Western</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-muted-foreground">Family Dynamics:</span>
+                              <span className="font-semibold text-harmony-600">Individual Focus</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-muted-foreground">Religious Context:</span>
+                              <span className="font-semibold text-harmony-600">Secular Approach</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Advanced Crisis Detection */}
+                  <div className="relative bg-gradient-to-br from-flow-100/60 to-white/40 rounded-2xl p-8 border border-flow-200/50 group hover:shadow-xl transition-all duration-500">
+                    <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity">
+                      <Shield className="h-24 w-24 text-flow-500" />
+                    </div>
+                    
+                    <div className="relative z-10">
+                      <div className="flex items-center mb-6">
+                        <div className="w-12 h-12 bg-flow-500 rounded-xl flex items-center justify-center mr-4">
+                          <Shield className="h-6 w-6 text-white" />
+                        </div>
+                        <h4 className="text-2xl font-bold text-foreground">Crisis Prevention AI</h4>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div className="bg-white/80 rounded-xl p-4 border border-flow-200/30">
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="text-sm font-medium text-flow-700">Threat Detection</span>
+                            <div className="flex items-center">
+                              <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                              <span className="text-xs text-green-600 font-semibold">All Clear</span>
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-3 text-xs">
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Self-harm risk:</span>
+                              <span className="font-semibold text-green-600">Low</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Suicidal ideation:</span>
+                              <span className="font-semibold text-green-600">None</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Substance abuse:</span>
+                              <span className="font-semibold text-yellow-600">Monitor</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Social isolation:</span>
+                              <span className="font-semibold text-blue-600">Improving</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-gradient-to-r from-flow-50 to-mindful-50 rounded-xl p-4 border border-flow-200/30">
+                          <div className="text-xs text-muted-foreground mb-2">Prevention Strategies Active:</div>
+                          <div className="space-y-1">
+                            <div className="flex items-center text-xs">
+                              <div className="w-2 h-2 bg-flow-500 rounded-full mr-2"></div>
+                              <span>Daily check-ins scheduled</span>
+                            </div>
+                            <div className="flex items-center text-xs">
+                              <div className="w-2 h-2 bg-mindful-500 rounded-full mr-2"></div>
+                              <span>Emergency contacts notified</span>
+                            </div>
+                            <div className="flex items-center text-xs">
+                              <div className="w-2 h-2 bg-balance-500 rounded-full mr-2"></div>
+                              <span>Coping strategies reinforced</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Therapy Technique Library Showcase */}
+                <div className="bg-gradient-to-br from-mindful-50/60 to-white/40 rounded-2xl p-8 border border-mindful-200/50">
+                  <div className="text-center mb-8">
+                    <h4 className="text-3xl font-bold text-foreground mb-4">
+                      Dynamic Therapy Technique Library
+                    </h4>
+                    <p className="text-lg text-muted-foreground">
+                      AI intelligently selects and combines therapeutic approaches in real-time
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[
+                      { name: 'CBT', color: 'therapy', techniques: '50+', description: 'Cognitive Behavioral' },
+                      { name: 'DBT', color: 'calm', techniques: '30+', description: 'Dialectical Behavioral' },
+                      { name: 'Mindfulness', color: 'harmony', techniques: '25+', description: 'Present Moment' },
+                      { name: 'Trauma-Informed', color: 'flow', techniques: '20+', description: 'Safe Processing' }
+                    ].map((approach, index) => (
+                      <div key={approach.name} className={`bg-gradient-to-br from-${approach.color}-100 to-white rounded-xl p-6 border border-${approach.color}-200/50 text-center group hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}>
+                        <div className={`w-16 h-16 bg-${approach.color}-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
+                          <Lightbulb className="h-8 w-8 text-white" />
+                        </div>
+                        <h5 className="font-bold text-foreground mb-2">{approach.name}</h5>
+                        <p className="text-sm text-muted-foreground mb-2">{approach.description}</p>
+                        <div className={`text-xs font-semibold text-${approach.color}-600 bg-${approach.color}-50 px-2 py-1 rounded-full inline-block`}>
+                          {approach.techniques} techniques
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Live Performance Metrics */}
+                <div className="mt-12 bg-gradient-to-r from-balance-50/60 to-white/40 rounded-2xl p-8 border border-balance-200/50">
+                  <h4 className="text-2xl font-bold text-center text-foreground mb-8">
+                    Live AI Performance Metrics
+                  </h4>
+                  
+                  <div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
+                    {[
+                      { metric: "<150ms", label: "Response Time", icon: Clock, color: "therapy" },
+                      { metric: "99.9%", label: "System Uptime", icon: Shield, color: "calm" },
+                      { metric: "95%", label: "User Satisfaction", icon: Star, color: "harmony" },
+                      { metric: "89%", label: "Crisis Prevention", icon: AlertTriangle, color: "flow" },
+                      { metric: "24/7", label: "AI Availability", icon: Globe, color: "mindful" }
+                    ].map((stat, index) => (
+                      <div key={index} className="text-center group">
+                        <div className={`w-16 h-16 bg-${stat.color}-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}>
+                          <stat.icon className="h-8 w-8 text-white" />
+                        </div>
+                        <div className={`text-2xl font-bold text-${stat.color}-600 mb-1`}>{stat.metric}</div>
+                        <div className="text-sm text-muted-foreground">{stat.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
