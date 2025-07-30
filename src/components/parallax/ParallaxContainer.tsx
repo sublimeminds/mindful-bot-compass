@@ -21,7 +21,7 @@ export default function ParallaxContainer({ children, className }: ParallaxConta
   }, []);
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative", className)} style={{ scrollSnapType: 'y mandatory' }}>
       {children}
     </div>
   );

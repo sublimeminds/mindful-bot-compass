@@ -37,6 +37,8 @@ const ComprehensiveTherapyApproaches = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   const categories = [
     'All', 
@@ -347,6 +349,18 @@ const ComprehensiveTherapyApproaches = () => {
     return matchesCategory && matchesSearch;
   });
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredApproaches.length / itemsPerPage);
+  const paginatedApproaches = filteredApproaches.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Reset page when category or search changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchTerm]);
+
   return (
     <SafeComponentWrapper name="ComprehensiveTherapyApproaches">
       <div className="py-24 px-4 bg-gradient-to-br from-therapy-50/40 via-healing-50/30 to-harmony-50/40 relative overflow-hidden">
@@ -413,7 +427,7 @@ const ComprehensiveTherapyApproaches = () => {
 
           {/* Enhanced Therapy Approaches Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16">
-            {filteredApproaches.map((approach) => (
+            {paginatedApproaches.map((approach) => (
               <Card 
                 key={approach.id} 
                 className="group bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden rounded-2xl"
@@ -493,6 +507,46 @@ const ComprehensiveTherapyApproaches = () => {
               </Card>
             ))}
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-4 mb-16">
+              <Button
+                variant="outline"
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="border-therapy-200 text-therapy-700 hover:bg-therapy-50 disabled:opacity-50"
+              >
+                Previous
+              </Button>
+              
+              <div className="flex gap-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    onClick={() => setCurrentPage(page)}
+                    className={currentPage === page 
+                      ? "bg-gradient-to-r from-therapy-600 to-healing-600 text-white" 
+                      : "border-therapy-200 text-therapy-700 hover:bg-therapy-50"
+                    }
+                    size="sm"
+                  >
+                    {page}
+                  </Button>
+                ))}
+              </div>
+              
+              <Button
+                variant="outline"
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="border-therapy-200 text-therapy-700 hover:bg-therapy-50 disabled:opacity-50"
+              >
+                Next
+              </Button>
+            </div>
+          )}
 
           {/* Call to Action */}
           <div className="text-center bg-gradient-to-r from-therapy-600 to-healing-600 rounded-3xl p-12 text-white">

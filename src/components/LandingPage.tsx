@@ -22,7 +22,7 @@ const LandingPage = () => {
   
   return (
     <SafeComponentWrapper name="LandingPage">
-      <ParallaxContainer className="min-h-screen relative">
+      <ParallaxContainer className="min-h-screen relative scroll-smooth">
         {/* Apple-Style Progress Bar */}
         <AppleProgressBar />
         

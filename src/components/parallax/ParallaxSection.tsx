@@ -54,7 +54,7 @@ export default function ParallaxSection({
       id={id}
       className={cn(
         "relative overflow-hidden",
-        fullHeight && "min-h-screen",
+        fullHeight && "min-h-screen snap-start snap-always",
         className
       )}
     >

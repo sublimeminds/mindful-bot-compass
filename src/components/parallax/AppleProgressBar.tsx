@@ -27,97 +27,82 @@ export default function AppleProgressBar() {
   );
   const { isMobile, isTablet } = useEnhancedScreenSize();
 
-  if (isMobile) {
-    return (
-      <div className="fixed bottom-safe z-50 left-4 right-4 mb-4">
-        <div className="bg-background/90 backdrop-blur-md border border-border/50 rounded-2xl px-4 py-3 shadow-lg">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">{sections[activeSection]?.icon}</span>
-              <div>
-                <div className="text-sm font-medium text-foreground">{sections[activeSection]?.title}</div>
-                <div className="text-xs text-muted-foreground">{sections[activeSection]?.description}</div>
-              </div>
+  return (
+    <div className="fixed top-1/2 right-6 transform -translate-y-1/2 z-50">
+      {isMobile || isTablet ? (
+        // Mobile Mini Progress Bar  
+        <div className="bg-white/90 backdrop-blur-lg rounded-full p-3 shadow-xl border border-white/50 w-16">
+          <div className="text-center">
+            <div className="text-xs font-bold text-therapy-600 mb-1">
+              {activeSection + 1}
             </div>
-            <div className="text-xs font-medium text-muted-foreground">
-              {activeSection + 1}/{sections.length}
+            <div className="w-8 h-1 bg-gray-200 rounded-full mx-auto">
+              <div 
+                className="bg-gradient-to-r from-therapy-500 to-healing-500 h-1 rounded-full transition-all duration-300"
+                style={{ width: `${(activeSection + 1) / sections.length * 100}%` }}
+              />
             </div>
-          </div>
-          <div className="mt-2 h-1 bg-muted rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-primary transition-all duration-300 ease-out"
-              style={{ width: `${scrollProgress}%` }}
-            />
+            <div className="text-xs text-gray-400 mt-1">
+              {sections.length}
+            </div>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className={cn(
-      "fixed z-50 transition-all duration-300 ease-out",
-      isTablet ? "top-6 left-6 right-6" : "top-8 left-1/2 -translate-x-1/2 max-w-6xl"
-    )}>
-      <div className="bg-background/90 backdrop-blur-md border border-border/50 rounded-2xl px-6 py-4 shadow-xl">
-        <div className="flex items-center gap-4">
-          {/* Current Section Info */}
-          <div className="flex items-center gap-3 min-w-fit">
-            <span className="text-xl">{sections[activeSection]?.icon}</span>
-            <div>
-              <div className="text-sm font-semibold text-foreground">{sections[activeSection]?.title}</div>
-              <div className="text-xs text-muted-foreground">{sections[activeSection]?.description}</div>
+      ) : (
+        // Desktop Right-Side Navigation
+        <div className="bg-white/90 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-white/50 w-80 max-h-[80vh] overflow-y-auto">
+          <div className="text-center mb-4">
+            <h3 className="text-sm font-semibold text-gray-900 mb-1">Page Navigation</h3>
+            <div className="text-xs text-gray-500">
+              Section {activeSection + 1} of {sections.length}
             </div>
           </div>
-
-          {/* Section Dots */}
-          <div className="flex items-center gap-2 flex-1 justify-center">
+          
+          <div className="space-y-2">
             {sections.map((section, index) => (
-              <button
+              <div
                 key={section.id}
                 onClick={() => scrollToSection(section.id)}
-                className={cn(
-                  "group relative transition-all duration-300 ease-out p-1",
-                  "hover:scale-110 focus:outline-none focus:scale-110"
-                )}
-                aria-label={`Go to ${section.title} section`}
+                className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all duration-300 group ${
+                  index === activeSection
+                    ? 'bg-gradient-to-r from-therapy-100 to-healing-100 border border-therapy-200'
+                    : 'hover:bg-gray-50'
+                }`}
               >
-                <div className={cn(
-                  "w-2 h-2 rounded-full transition-all duration-300 ease-out",
-                  activeSection === index 
-                    ? "bg-primary scale-125 shadow-md" 
-                    : "bg-muted-foreground/30 hover:bg-muted-foreground/60"
-                )} />
+                <div className="text-lg">{section.icon}</div>
                 
-                {/* Enhanced Tooltip */}
-                <div className={cn(
-                  "absolute -top-16 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100",
-                  "transition-all duration-200 ease-out pointer-events-none z-10",
-                  "bg-foreground text-background text-xs rounded-xl px-4 py-3 whitespace-nowrap shadow-lg",
-                  "before:content-[''] before:absolute before:top-full before:left-1/2 before:-translate-x-1/2",
-                  "before:border-[6px] before:border-transparent before:border-t-foreground"
-                )}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span>{section.icon}</span>
-                    <span className="font-semibold">{section.title}</span>
+                <div className="flex-1 min-w-0">
+                  <div className={`text-xs font-medium transition-colors duration-300 ${
+                    index === activeSection ? 'text-therapy-800' : 'text-gray-700'
+                  }`}>
+                    {section.title}
                   </div>
-                  <div className="text-background/80 text-[10px]">{section.description}</div>
+                  <div className={`text-xs truncate transition-colors duration-300 ${
+                    index === activeSection ? 'text-therapy-600' : 'text-gray-500'
+                  }`}>
+                    {section.description}
+                  </div>
                 </div>
-              </button>
+                
+                {index === activeSection && (
+                  <div className="w-1.5 h-1.5 bg-therapy-500 rounded-full animate-pulse" />
+                )}
+              </div>
             ))}
           </div>
-
-          {/* Progress & Section Counter */}
-          <div className="text-right min-w-fit">
-            <div className="text-sm font-medium text-foreground">
-              {activeSection + 1}/{sections.length}
+          
+          <div className="mt-4 pt-3 border-t border-gray-200">
+            <div className="text-xs text-gray-600 text-center mb-2">
+              {Math.round(scrollProgress)}% Complete
             </div>
-            <div className="text-xs text-muted-foreground">
-              {Math.round(scrollProgress)}% complete
+            <div className="w-full bg-gray-200 rounded-full h-1.5">
+              <div 
+                className="bg-gradient-to-r from-therapy-500 to-healing-500 h-1.5 rounded-full transition-all duration-500"
+                style={{ width: `${scrollProgress}%` }}
+              />
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

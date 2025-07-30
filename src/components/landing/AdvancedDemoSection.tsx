@@ -91,9 +91,9 @@ const AdvancedDemoSection = () => {
             <TabsContent value="therapists" className="space-y-8">
               <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader className="text-center">
-                  <CardTitle className="text-2xl text-gray-900">Meet Your AI Therapy Team</CardTitle>
+                  <CardTitle className="text-2xl text-gray-900">Interactive Therapy Demo</CardTitle>
                   <p className="text-gray-600">
-                    Each AI therapist specializes in different approaches and techniques
+                    Experience real-time AI therapy sessions with personalized responses
                   </p>
                 </CardHeader>
                 <CardContent>
@@ -103,7 +103,7 @@ const AdvancedDemoSection = () => {
                       onClick={() => navigate('/ai-therapy-chat')}
                       className="bg-therapy-600 hover:bg-therapy-700 text-white px-8 py-3"
                     >
-                      Explore All Therapists
+                      Start Demo Session
                     </Button>
                   </div>
                 </CardContent>
