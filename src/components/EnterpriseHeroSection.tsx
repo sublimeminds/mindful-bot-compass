@@ -742,135 +742,167 @@ const EnterpriseHeroSection = () => {
               </div>
 
               <div className="relative z-10">
-                <div className="text-center mb-16">
-                  <h3 className="text-4xl font-bold text-foreground mb-6">
-                    Complete AI Intelligence Ecosystem
-                  </h3>
-                  <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                    Experience the full spectrum of AI-powered mental health capabilities working in harmony to provide unprecedented therapeutic support.
+                <div className="text-center mb-20">
+                  <div className="inline-flex items-center space-x-3 bg-white/60 backdrop-blur-sm rounded-full px-6 py-3 border border-therapy-200/50 shadow-therapy-subtle mb-6">
+                    <Brain className="h-7 w-7 text-therapy-600 animate-pulse" />
+                    <span className="text-lg font-bold text-therapy-700">Intelligent Routing Hub</span>
+                    <div className="flex items-center space-x-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-sm font-medium text-green-700">Live</span>
+                    </div>
+                  </div>
+                  
+                  <h2 className="text-4xl lg:text-6xl font-bold text-foreground mb-6">
+                    <span className="block">Adaptive AI System</span>
+                    <span className="block bg-gradient-to-r from-therapy-600 via-calm-500 to-harmony-500 bg-clip-text text-transparent">
+                      Continuously Optimizing Your Care
+                    </span>
+                  </h2>
+                  
+                  <p className="text-xl text-muted-foreground max-w-4xl mx-auto mb-8">
+                    No steps, no waiting. Our AI ecosystem operates like a living brain—constantly learning, adapting, 
+                    and optimizing every aspect of your therapy experience in real-time across cultural contexts, 
+                    crisis detection, voice analysis, and personalized treatment approaches.
                   </p>
+
+                  <div className="flex flex-wrap justify-center gap-4">
+                    <div className="inline-flex items-center space-x-2 bg-therapy-50/80 backdrop-blur-sm rounded-full px-4 py-2 border border-therapy-200/50">
+                      <Zap className="h-4 w-4 text-therapy-600" />
+                      <span className="text-sm font-medium text-therapy-700">Real-time Processing</span>
+                    </div>
+                    <div className="inline-flex items-center space-x-2 bg-calm-50/80 backdrop-blur-sm rounded-full px-4 py-2 border border-calm-200/50">
+                      <Globe className="h-4 w-4 text-calm-600" />
+                      <span className="text-sm font-medium text-calm-700">Cultural Intelligence</span>
+                    </div>
+                    <div className="inline-flex items-center space-x-2 bg-harmony-50/80 backdrop-blur-sm rounded-full px-4 py-2 border border-harmony-200/50">
+                      <Shield className="h-4 w-4 text-harmony-600" />
+                      <span className="text-sm font-medium text-harmony-700">Crisis Prevention</span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Dynamic Intelligent Routing Hub Visualization */}
-                <div className="relative overflow-hidden">
-                  {/* Background Neural Network Animation */}
-                  <div className="absolute inset-0 opacity-[0.03]">
-                    <svg className="w-full h-full" viewBox="0 0 1000 800">
-                      <defs>
-                        <radialGradient id="neuralGlow" cx="50%" cy="50%" r="50%">
-                          <stop offset="0%" stopColor="hsl(var(--therapy-500))" stopOpacity="0.4"/>
-                          <stop offset="50%" stopColor="hsl(var(--calm-500))" stopOpacity="0.2"/>
-                          <stop offset="100%" stopColor="hsl(var(--harmony-500))" stopOpacity="0.1"/>
-                        </radialGradient>
-                      </defs>
-                      
-                      {/* Animated Neural Network Connections */}
-                      {Array.from({length: 25}).map((_, i) => (
-                        <g key={i}>
-                          <line 
-                            x1={Math.random() * 1000} 
-                            y1={Math.random() * 800} 
-                            x2={Math.random() * 1000} 
-                            y2={Math.random() * 800} 
-                            stroke="url(#neuralGlow)" 
-                            strokeWidth="1"
-                            className="animate-pulse"
-                            style={{animationDelay: `${i * 0.2}s`, animationDuration: `${3 + Math.random() * 2}s`}}
-                          />
-                          <circle 
-                            cx={Math.random() * 1000} 
-                            cy={Math.random() * 800} 
-                            r="2" 
-                            fill="url(#neuralGlow)"
-                            className="animate-pulse"
-                            style={{animationDelay: `${i * 0.15}s`}}
-                          />
-                        </g>
-                      ))}
-                    </svg>
+                {/* Central AI Neural Network Visualization */}
+                <div className="relative max-w-7xl mx-auto">
+                  
+                  {/* Main Neural Core Hub */}
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30">
+                    <div className="relative">
+                      {/* Core AI Brain */}
+                      <div className="relative w-40 h-40 lg:w-48 lg:h-48">
+                        <div className="absolute inset-0 bg-gradient-to-br from-therapy-500 via-calm-500 to-harmony-500 rounded-full animate-pulse shadow-2xl">
+                          <div className="absolute inset-3 bg-gradient-to-tr from-white/30 to-transparent rounded-full"></div>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <Brain className="h-20 w-20 lg:h-24 lg:w-24 text-white" />
+                          </div>
+                        </div>
+                        
+                        {/* Neural Activity Rings */}
+                        <div className="absolute inset-0 rounded-full border-2 border-therapy-300/40 animate-ping" style={{animationDuration: '2s'}}></div>
+                        <div className="absolute -inset-4 rounded-full border-2 border-calm-300/30 animate-ping" style={{animationDuration: '3s', animationDelay: '0.5s'}}></div>
+                        <div className="absolute -inset-8 rounded-full border-2 border-harmony-300/20 animate-ping" style={{animationDuration: '4s', animationDelay: '1s'}}></div>
+                        <div className="absolute -inset-12 rounded-full border-2 border-therapy-300/10 animate-ping" style={{animationDuration: '5s', animationDelay: '1.5s'}}></div>
+                      </div>
+
+                      {/* Data Processing Indicators */}
+                      <div className="absolute -top-16 left-1/2 transform -translate-x-1/2">
+                        <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1 border border-therapy-200/50 shadow-lg">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span className="text-xs font-medium text-therapy-700">Processing 847 req/sec</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="relative z-10">
-                    <div className="text-center mb-16">
-                      <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-therapy-500/10 to-calm-500/10 rounded-full px-6 py-3 mb-6">
-                        <Cpu className="h-6 w-6 text-therapy-600 animate-pulse" />
-                        <span className="text-therapy-700 font-semibold">Intelligent Routing Hub</span>
-                        <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-therapy-500 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-calm-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                          <div className="w-2 h-2 bg-harmony-500 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
-                        </div>
-                      </div>
-                      <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
-                        AI That <span className="text-therapy-600">Continuously Optimizes</span> Your Care
-                      </h2>
-                      <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                        Our intelligent routing hub doesn't follow steps—it's a living system that constantly analyzes, learns, and adapts to provide the most effective therapy approach for your unique needs in real-time.
-                      </p>
-                    </div>
-
-                    {/* Central AI Brain Hub */}
-                    <div className="relative mb-16">
-                      <div className="flex justify-center mb-8">
-                        <div className="relative">
-                          {/* Central AI Core */}
-                          <div className="relative w-32 h-32 bg-gradient-to-br from-therapy-500 via-calm-500 to-harmony-500 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
-                            <Brain className="h-16 w-16 text-white" />
-                            
-                            {/* Pulsing Ring Effect */}
-                            <div className="absolute inset-0 rounded-full border-4 border-therapy-300/50 animate-ping"></div>
-                            <div className="absolute inset-0 rounded-full border-2 border-calm-300/30 animate-ping" style={{animationDelay: '0.5s'}}></div>
+                    {/* AI Component Constellation */}
+                    <div className="relative grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-12 pt-40 pb-40">
+                      
+                      {/* AI Model Router */}
+                      <div className="relative group order-1 xl:order-1">
+                        <div className="bg-white/85 backdrop-blur-sm rounded-3xl p-8 border border-therapy-200/50 hover:border-therapy-400/70 transition-all duration-700 hover:shadow-2xl hover:shadow-therapy-500/20 hover:scale-105 relative overflow-hidden">
+                          <div className="absolute inset-0 bg-gradient-to-br from-therapy-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+                          
+                          <div className="relative z-10">
+                            <div className="flex items-center space-x-4 mb-6">
+                              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-therapy-500 to-calm-500 flex items-center justify-center shadow-lg">
+                                <Cpu className="h-7 w-7 text-white" />
+                              </div>
+                              <div>
+                                <h3 className="text-xl font-bold text-foreground">AI Model Router</h3>
+                                <div className="text-sm text-therapy-600 font-medium">Dynamic Selection</div>
+                              </div>
+                            </div>
+                            <p className="text-muted-foreground mb-6 leading-relaxed">
+                              Intelligently routes between GPT-4o and GPT-4o-mini based on session complexity.
+                            </p>
                           </div>
-
-                          {/* Data Flow Particles */}
-                          {Array.from({length: 8}).map((_, i) => (
-                            <div
-                              key={i}
-                              className="absolute w-3 h-3 bg-therapy-400 rounded-full"
-                              style={{
-                                top: `${50 + 40 * Math.cos((i * Math.PI * 2) / 8)}%`,
-                                left: `${50 + 40 * Math.sin((i * Math.PI * 2) / 8)}%`,
-                                animation: `float 3s ease-in-out infinite`,
-                                animationDelay: `${i * 0.2}s`
-                              }}
-                            />
-                          ))}
                         </div>
                       </div>
 
-                      {/* Live Processing Indicators */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-therapy-200/50">
-                          <div className="flex items-center space-x-3 mb-3">
-                            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                            <span className="font-semibold text-foreground">Processing Messages</span>
+                      {/* Cultural Intelligence */}
+                      <div className="relative group order-2 xl:order-2">
+                        <div className="bg-white/85 backdrop-blur-sm rounded-3xl p-8 border border-harmony-200/50 hover:border-harmony-400/70 transition-all duration-700 hover:shadow-2xl hover:shadow-harmony-500/20 hover:scale-105 relative overflow-hidden">
+                          <div className="relative z-10">
+                            <div className="flex items-center space-x-4 mb-6">
+                              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-harmony-500 to-flow-500 flex items-center justify-center shadow-lg">
+                                <Globe className="h-7 w-7 text-white" />
+                              </div>
+                              <div>
+                                <h3 className="text-xl font-bold text-foreground">Cultural Intelligence</h3>
+                                <div className="text-sm text-harmony-600 font-medium">Real-time Adaptation</div>
+                              </div>
+                            </div>
+                            <p className="text-muted-foreground mb-6 leading-relaxed">
+                              Dynamically adapts communication styles and therapy approaches.
+                            </p>
                           </div>
-                          <div className="text-2xl font-bold text-therapy-600 mb-1">847</div>
-                          <div className="text-sm text-muted-foreground">Messages analyzed this hour</div>
                         </div>
+                      </div>
 
-                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-therapy-200/50">
-                          <div className="flex items-center space-x-3 mb-3">
-                            <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.3s'}}></div>
-                            <span className="font-semibold text-foreground">Model Selection</span>
+                      {/* Crisis Detection */}
+                      <div className="relative group order-3 xl:order-3">
+                        <div className="bg-white/85 backdrop-blur-sm rounded-3xl p-8 border border-red-200/50 hover:border-red-400/70 transition-all duration-700 hover:shadow-2xl hover:shadow-red-500/20 hover:scale-105 relative overflow-hidden">
+                          <div className="relative z-10">
+                            <div className="flex items-center space-x-4 mb-6">
+                              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center shadow-lg">
+                                <AlertTriangle className="h-7 w-7 text-white" />
+                              </div>
+                              <div>
+                                <h3 className="text-xl font-bold text-foreground">Crisis Detection</h3>
+                                <div className="text-sm text-red-600 font-medium">89% Prevention Rate</div>
+                              </div>
+                            </div>
+                            <p className="text-muted-foreground mb-6 leading-relaxed">
+                              Advanced risk assessment with professional escalation protocols.
+                            </p>
                           </div>
-                          <div className="text-2xl font-bold text-calm-600 mb-1">GPT-4o</div>
-                          <div className="text-sm text-muted-foreground">Optimal model selected</div>
-                        </div>
-
-                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-therapy-200/50">
-                          <div className="flex items-center space-x-3 mb-3">
-                            <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse" style={{animationDelay: '0.6s'}}></div>
-                            <span className="font-semibold text-foreground">Response Time</span>
-                          </div>
-                          <div className="text-2xl font-bold text-harmony-600 mb-1">0.8s</div>
-                          <div className="text-sm text-muted-foreground">Average response time</div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Dynamic AI Component Ecosystem */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                    {/* Live System Metrics Dashboard */}
+                    <div className="mt-24 text-center">
+                      <div className="inline-flex flex-wrap justify-center items-center gap-8 bg-white/80 backdrop-blur-sm rounded-3xl px-12 py-8 border border-therapy-200/50 shadow-2xl">
+                        <div className="text-center">
+                          <div className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-therapy-600 to-calm-500 bg-clip-text text-transparent">50k+</div>
+                          <div className="text-sm text-muted-foreground font-medium">Sessions Optimized</div>
+                        </div>
+                        <div className="w-px h-12 bg-therapy-200"></div>
+                        <div className="text-center">
+                          <div className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-calm-600 to-harmony-500 bg-clip-text text-transparent">< 1sec</div>
+                          <div className="text-sm text-muted-foreground font-medium">AI Response Time</div>
+                        </div>
+                        <div className="w-px h-12 bg-therapy-200"></div>
+                        <div className="text-center">
+                          <div className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-harmony-600 to-flow-500 bg-clip-text text-transparent">89%</div>
+                          <div className="text-sm text-muted-foreground font-medium">Crisis Prevention</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
                       {/* AI Model Selection */}
                       <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden">
                         <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-therapy-100 to-transparent rounded-bl-full opacity-50"></div>
