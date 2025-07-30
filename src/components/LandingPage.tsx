@@ -29,8 +29,8 @@ const LandingPage = () => {
   return (
     <SafeComponentWrapper name="LandingPage">
       <ParallaxContainer className="min-h-screen relative scroll-smooth">
-        {/* Apple-Style Progress Bar */}
-        <AppleProgressBar />
+        {/* Apple-Style Progress Bar - Temporarily disabled to debug double header */}
+        {/* <AppleProgressBar /> */}
         
         {/* Hero Section */}
         <ParallaxSection 
