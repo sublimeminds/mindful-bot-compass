@@ -622,7 +622,7 @@ const EnhancedThreeDAvatar: React.FC<EnhancedAvatarProps> = ({
       
       {/* Status indicators */}
       <div className="absolute bottom-4 left-4 right-4">
-        <div className="bg-black/20 backdrop-blur-sm rounded-lg p-2">
+        <div className="bg-card/90 rounded-lg p-2 shadow-lg border">
           <div className="text-xs font-medium text-white text-center mb-1">
             {persona.name}
           </div>

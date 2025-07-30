@@ -11,7 +11,7 @@ const XPProgressWidget = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
+      <Card className="bg-white border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardContent className="p-4">
           <div className="animate-pulse">
             <div className="h-4 bg-therapy-100 rounded mb-2"></div>
@@ -24,7 +24,7 @@ const XPProgressWidget = () => {
 
   if (!userXP) {
     return (
-      <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
+      <Card className="bg-white border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold text-therapy-700 flex items-center">
             <Star className="h-4 w-4 mr-2" />
@@ -43,7 +43,7 @@ const XPProgressWidget = () => {
   const progress = getXPProgress();
 
   return (
-    <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
+    <Card className="bg-white border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-semibold text-therapy-700 flex items-center justify-between">
           <div className="flex items-center">

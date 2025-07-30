@@ -32,7 +32,7 @@ const ThreeDChatModal: React.FC<ThreeDChatModalProps> = ({
               onClick={onClose}
               variant="outline"
               size="sm"
-              className="bg-white/90 backdrop-blur-sm"
+              className="bg-white shadow-lg border"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Discovery

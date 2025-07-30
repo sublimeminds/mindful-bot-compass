@@ -125,7 +125,7 @@ const CulturalAISection = () => {
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Hero Content */}
       <div className="text-center mb-16">
-        <Badge variant="secondary" className="mb-8 bg-white/90 text-foreground border border-white px-6 py-3 text-base font-medium shadow-lg">
+        <Badge variant="secondary" className="mb-8 bg-white text-foreground border px-6 py-3 text-base font-medium shadow-lg">
           <Globe className="w-5 h-5 mr-2" />
           Cultural Intelligence AI
         </Badge>
@@ -160,21 +160,21 @@ const CulturalAISection = () => {
         
         {/* Cultural Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto mb-16">
-          <div className="text-center p-6 bg-white/90 rounded-2xl border border-white shadow-lg">
+          <div className="text-center p-6 bg-white rounded-2xl border shadow-lg">
             <div className="text-3xl font-bold text-amber-600 mb-2">100+</div>
             <div className="text-foreground">Cultural Contexts</div>
           </div>
-          <div className="text-center p-6 bg-white/90 rounded-2xl border border-white shadow-lg">
+          <div className="text-center p-6 bg-white rounded-2xl border shadow-lg">
             <div className="text-3xl font-bold text-orange-600 mb-2">50+</div>
             <div className="text-foreground">Languages</div>
           </div>
-          <div className="text-center p-6 bg-white/90 rounded-2xl border border-white shadow-lg">
+          <div className="text-center p-6 bg-white rounded-2xl border shadow-lg">
             <div className="text-3xl font-bold text-red-600 mb-2">25+</div>
             <div className="text-foreground">Healing Traditions</div>
           </div>
-          <div className="text-center p-6 bg-white/90 rounded-2xl border border-white shadow-lg">
-            <div className="text-3xl font-bold text-purple-300 mb-2">∞</div>
-            <div className="text-white/80">Unique Stories</div>
+          <div className="text-center p-6 bg-white rounded-2xl border shadow-lg">
+            <div className="text-3xl font-bold text-purple-600 mb-2">∞</div>
+            <div className="text-foreground">Unique Stories</div>
           </div>
         </div>
       </div>
@@ -192,22 +192,22 @@ const CulturalAISection = () => {
 
         <div className="grid lg:grid-cols-3 gap-8">
           {culturalDimensions.map((dimension, index) => (
-            <Card key={index} className="group hover:shadow-2xl transition-all duration-500 bg-white/90 border-white hover:bg-white">
+            <Card key={index} className="group hover:shadow-2xl transition-all duration-500 bg-white border hover:bg-card">
               <CardHeader className="text-center pb-4">
                 <div className={`w-20 h-20 bg-gradient-to-br ${dimension.color} rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
                   <dimension.icon className="h-10 w-10 text-white" />
                 </div>
-                <CardTitle className="text-2xl text-white">{dimension.title}</CardTitle>
+                <CardTitle className="text-2xl text-foreground">{dimension.title}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-white/80 text-center mb-6">
+                <p className="text-muted-foreground text-center mb-6">
                   {dimension.description}
                 </p>
                 <div className="space-y-3">
                   {dimension.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-center gap-3 p-3 bg-white/10 rounded-lg">
-                      <feature.icon className="h-5 w-5 text-white" />
-                      <span className="text-sm font-medium text-white">{feature.text}</span>
+                    <div key={featureIndex} className="flex items-center gap-3 p-3 bg-muted rounded-lg">
+                      <feature.icon className="h-5 w-5 text-primary" />
+                      <span className="text-sm font-medium text-foreground">{feature.text}</span>
                     </div>
                   ))}
                 </div>
@@ -230,7 +230,7 @@ const CulturalAISection = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {healingTraditions.map((tradition, index) => (
-            <Card key={index} className="bg-white/90 border-white text-foreground hover:bg-white transition-all duration-300">
+            <Card key={index} className="bg-white border text-foreground hover:bg-card transition-all duration-300">
               <CardHeader className="text-center">
                 <div className={`w-16 h-16 bg-gradient-to-br ${tradition.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
                   <tradition.icon className="h-8 w-8 text-white" />
@@ -239,7 +239,7 @@ const CulturalAISection = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 {tradition.traditions.map((item, itemIndex) => (
-                  <div key={itemIndex} className="text-sm text-white/80">
+                  <div key={itemIndex} className="text-sm text-muted-foreground">
                     • {item}
                   </div>
                 ))}

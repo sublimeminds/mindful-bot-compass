@@ -503,7 +503,7 @@ const RealisticHuman3DAvatar: React.FC<RealisticHuman3DAvatarProps> = ({
 
       {/* Emotion display */}
       <div className="absolute bottom-3 left-3">
-        <div className="bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1 text-xs shadow-md">
+        <div className="bg-white rounded-lg px-2 py-1 text-xs shadow-md border">
           <div className="font-medium text-therapy-700 capitalize">{emotion.name}</div>
           <div className="text-therapy-600">
             {Math.round(emotion.intensity * 100)}% • {Math.round(emotion.confidence * 100)}%
@@ -514,7 +514,7 @@ const RealisticHuman3DAvatar: React.FC<RealisticHuman3DAvatarProps> = ({
       {/* Personality indicator */}
       {personality && (
         <div className="absolute top-3 left-3">
-          <div className="bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1 text-xs shadow-md">
+          <div className="bg-white rounded-lg px-2 py-1 text-xs shadow-md border">
             <div className="font-medium text-therapy-700">{personality.communicationStyle.tone}</div>
           </div>
         </div>

@@ -145,11 +145,7 @@ if (finalReactCheck()) {
   
   // Render with additional error boundary protection
   try {
-    root.render(
-      <React.StrictMode>
-        <AppSelector />
-      </React.StrictMode>
-    );
+    root.render(<AppSelector />);
     console.log('✅ Application rendered successfully');
   } catch (renderError) {
     console.error('🚨 Render error:', renderError);

@@ -331,7 +331,7 @@ const Advanced3DAvatarSystem: React.FC<Advanced3DAvatarSystemProps> = ({
 
       {/* Emotion indicator */}
       <div className="absolute bottom-4 left-4">
-        <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 text-sm">
+        <div className="bg-white rounded-lg px-3 py-2 text-sm shadow-lg border">
           <div className="font-medium text-therapy-700">Current Emotion</div>
           <div className="text-therapy-600 capitalize">{avatarState.expression}</div>
         </div>

@@ -65,7 +65,7 @@ const ProgressOverviewWidget = () => {
 
   return (
     <SafeComponentWrapper name="ProgressOverviewWidget">
-      <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
+      <Card className="bg-white border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardHeader className="bg-gradient-to-r from-flow-50 to-therapy-50">
           <CardTitle className="flex items-center justify-between text-flow-800">
             <div className="flex items-center">

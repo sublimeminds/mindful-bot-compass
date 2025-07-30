@@ -194,7 +194,7 @@ const TherapistTeamCarousel = () => {
           <Button
             variant="outline"
             size="icon"
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur-sm border-primary/20 hover:bg-primary hover:text-primary-foreground"
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-background border border-primary/20 hover:bg-primary hover:text-primary-foreground shadow-lg"
             onClick={prevTherapist}
           >
             <ChevronLeft className="h-4 w-4" />
@@ -203,7 +203,7 @@ const TherapistTeamCarousel = () => {
           <Button
             variant="outline"
             size="icon"
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur-sm border-primary/20 hover:bg-primary hover:text-primary-foreground"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-background border border-primary/20 hover:bg-primary hover:text-primary-foreground shadow-lg"
             onClick={nextTherapist}
           >
             <ChevronRight className="h-4 w-4" />

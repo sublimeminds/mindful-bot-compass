@@ -491,7 +491,7 @@ const EnhancedDashboardSidebar = () => {
   }, [location.pathname]);
 
   return (
-    <Sidebar className="border-r border-gray-200/50 bg-white/95 backdrop-blur-lg shadow-lg" collapsible="icon">
+    <Sidebar className="border-r border-border bg-white shadow-lg" collapsible="icon">
       <SidebarHeader className="border-b border-gray-200/50 p-4 bg-gradient-to-br from-therapy-50/30 to-calm-50/30">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">

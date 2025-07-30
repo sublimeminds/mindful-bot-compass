@@ -69,7 +69,7 @@ const SafeAvatarModal: React.FC<SafeAvatarModalProps> = ({
                 variant="outline"
                 size="sm"
                 onClick={() => setAvatarMode('2d')}
-                className="text-xs bg-white/90 backdrop-blur-sm"
+                className="text-xs bg-white shadow-lg border"
               >
                 Switch to 2D
               </Button>
@@ -118,7 +118,7 @@ const SafeAvatarModal: React.FC<SafeAvatarModalProps> = ({
                 size="sm"
                 onClick={tryLoadingAvatar}
                 disabled={retryCount >= maxRetries}
-                className="text-xs bg-white/90 backdrop-blur-sm"
+                className="text-xs bg-white shadow-lg border"
               >
                 <RefreshCw className="h-3 w-3 mr-1" />
                 {retryCount < maxRetries ? 'Enhanced Mode' : 'Max Attempts Reached'}

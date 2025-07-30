@@ -10,7 +10,7 @@ const RecentAchievementsWidget = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
+      <Card className="bg-white border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardContent className="p-4">
           <div className="animate-pulse space-y-2">
             <div className="h-4 bg-therapy-100 rounded"></div>
@@ -24,7 +24,7 @@ const RecentAchievementsWidget = () => {
   const recentAchievements = userAchievements?.slice(0, 3) || [];
 
   return (
-    <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
+    <Card className="bg-white border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-semibold text-therapy-700 flex items-center justify-between">
           <div className="flex items-center">

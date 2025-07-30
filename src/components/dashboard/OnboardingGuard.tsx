@@ -68,7 +68,7 @@ const OnboardingGuard: React.FC<OnboardingGuardProps> = ({ children }) => {
         
         {/* Overlay */}
         <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-          <Card className="w-full max-w-lg bg-white/95 backdrop-blur-sm shadow-2xl">
+          <Card className="w-full max-w-lg bg-white shadow-2xl border">
             <CardContent className="p-8 text-center">
               <div className="mb-6">
                 <div className="relative mx-auto w-20 h-20 mb-4">
@@ -124,7 +124,7 @@ const OnboardingGuard: React.FC<OnboardingGuardProps> = ({ children }) => {
         
         {/* Overlay */}
         <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-          <Card className="w-full max-w-lg bg-white/95 backdrop-blur-sm shadow-2xl">
+          <Card className="w-full max-w-lg bg-white shadow-2xl border">
             <CardContent className="p-8 text-center">
               <div className="mb-6">
                 <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-4">

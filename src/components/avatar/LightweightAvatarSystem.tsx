@@ -166,7 +166,7 @@ const LightweightAvatarSystem: React.FC<LightweightAvatarSystemProps> = ({
               size="sm"
               onClick={systemState.isPlaying ? stopVoiceIntroduction : playVoiceIntroduction}
               disabled={systemState.isLoading}
-              className="flex items-center space-x-2 bg-white/90 backdrop-blur-sm"
+              className="flex items-center space-x-2 bg-white shadow-lg border"
             >
               {systemState.isLoading ? (
                 <RefreshCw className="h-4 w-4 animate-spin" />
@@ -184,7 +184,7 @@ const LightweightAvatarSystem: React.FC<LightweightAvatarSystemProps> = ({
               variant={systemState.emotionDetectionEnabled ? "default" : "outline"}
               size="sm"
               onClick={toggleEmotionDetection}
-              className="flex items-center space-x-2 bg-white/90 backdrop-blur-sm"
+              className="flex items-center space-x-2 bg-white shadow-lg border"
             >
               {systemState.emotionDetectionEnabled ? (
                 <Eye className="h-4 w-4" />

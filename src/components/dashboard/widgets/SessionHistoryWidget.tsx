@@ -53,7 +53,7 @@ const SessionHistoryWidget = () => {
 
   return (
     <SafeComponentWrapper name="SessionHistoryWidget">
-      <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
+      <Card className="bg-white border border-therapy-100 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardHeader className="bg-gradient-to-r from-therapy-50 to-calm-50">
           <CardTitle className="flex items-center justify-between text-therapy-800">
             <div className="flex items-center">

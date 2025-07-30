@@ -56,7 +56,7 @@ const EnhancedMoodWidget = lazy(() =>
 // Loading fallback component with performance tracking
 const WidgetSkeleton = ({ name }: { name: string }) => (
   <SafeComponentWrapper name={`${name}Skeleton`}>
-    <Card className="bg-white/90 backdrop-blur-sm border border-therapy-100 shadow-lg">
+    <Card className="bg-white border border-therapy-100 shadow-lg">
       <CardContent className="p-6">
         <Skeleton className="h-6 w-32 mb-4" />
         <Skeleton className="h-4 w-full mb-2" />

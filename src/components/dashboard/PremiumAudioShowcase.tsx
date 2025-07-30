@@ -96,7 +96,7 @@ const PremiumAudioShowcase = () => {
         <div className="space-y-3">
           <h4 className="font-semibold text-white text-sm">Featured Content</h4>
           {featuredContent.slice(0, 2).map((content, index) => (
-            <div key={index} className="bg-white/10 rounded-lg p-3 backdrop-blur-sm">
+            <div key={index} className="bg-card/50 rounded-lg p-3 border">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-1">

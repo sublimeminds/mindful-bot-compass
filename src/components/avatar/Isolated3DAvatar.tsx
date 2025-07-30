@@ -207,7 +207,7 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
         <div className="absolute inset-0 pointer-events-none">
           {/* Top overlay with therapist info */}
           <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-auto">
-            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+            <div className="bg-white rounded-lg p-3 shadow-lg border">
               <h3 className="font-semibold text-therapy-700">{therapistName}</h3>
               <div className="flex items-center gap-2 mt-1">
                 <Badge variant="outline" className="text-xs">
@@ -230,7 +230,7 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
               variant="outline"
               size="sm"
               onClick={release3DMode}
-              className="bg-white/90 backdrop-blur-sm"
+              className="bg-white shadow-lg border"
             >
               <EyeOff className="h-4 w-4 mr-1" />
               Exit 3D
@@ -239,7 +239,7 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
 
           {/* Bottom overlay with status */}
           <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end pointer-events-auto">
-            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
+            <div className="bg-white rounded-lg px-3 py-2 shadow-lg border">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-500"></div>
                 <span className="text-xs text-muted-foreground">
@@ -253,7 +253,7 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
                 variant="outline"
                 size="sm"
                 onClick={onVoicePreview}
-                className="bg-white/90 backdrop-blur-sm"
+                className="bg-white shadow-lg border"
               >
                 🎵 Voice Preview
               </Button>
@@ -283,7 +283,7 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
       <div className="absolute inset-0 pointer-events-none">
         {/* Top overlay with therapist info */}
         <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-auto">
-          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+          <div className="bg-white rounded-lg p-3 shadow-lg border">
             <h3 className="font-semibold text-therapy-700">{therapistName}</h3>
             <div className="flex items-center gap-2 mt-1">
               <Badge variant="outline" className="text-xs">
@@ -307,7 +307,7 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
               variant="outline"
               size="sm"
               onClick={request3DMode}
-              className="bg-white/90 backdrop-blur-sm"
+              className="bg-white shadow-lg border"
             >
               <Eye className="h-4 w-4 mr-1" />
               View 3D
@@ -317,7 +317,7 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
 
         {/* Bottom overlay with status */}
         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end pointer-events-auto">
-          <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
+          <div className="bg-white rounded-lg px-3 py-2 shadow-lg border">
             <div className="flex items-center gap-2">
               <div className={`w-2 h-2 rounded-full ${
                 is3DSupported ? 'bg-blue-500' : 'bg-amber-500'
@@ -336,7 +336,7 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
               variant="outline"
               size="sm"
               onClick={onVoicePreview}
-              className="bg-white/90 backdrop-blur-sm"
+              className="bg-white shadow-lg border"
             >
               🎵 Voice Preview
             </Button>
@@ -354,7 +354,7 @@ const Isolated3DAvatar: React.FC<Isolated3DAvatarProps> = ({
               setWebglDetails('');
               request3DMode();
             }}
-            className="bg-white/90 backdrop-blur-sm shadow-lg"
+            className="bg-white shadow-lg border"
           >
             <RotateCcw className="h-4 w-4 mr-2" />
             Retry 3D
