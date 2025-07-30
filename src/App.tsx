@@ -37,6 +37,8 @@ function App() {
       <div className="min-h-screen bg-background">
         {/* Header temporarily disabled to debug double header issue */}
         {/* {location.pathname !== '/' && location.pathname !== '' && <Header />} */}
+        {/* Routes disabled - AppRouter.tsx handles all routing */}
+        {/* 
         <main>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -47,6 +49,7 @@ function App() {
             <Route path="/test-dashboard" element={<TestDashboardPage />} />
           </Routes>
         </main>
+        */}
         <DatabaseFooter />
         <Toaster />
         <Sonner />
