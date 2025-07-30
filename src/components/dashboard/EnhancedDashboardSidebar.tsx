@@ -126,7 +126,7 @@ const EnhancedUserDropdown = ({
         </DropdownMenuTrigger>
         
         <DropdownMenuContent 
-          className="w-80 p-0 bg-white/95 backdrop-blur-md border border-therapy-200 shadow-xl" 
+          className="w-80 p-0 bg-white border border-therapy-200 shadow-xl" 
           align="end" 
           forceMount
         >
@@ -275,7 +275,7 @@ const EnhancedUserDropdown = ({
       </DropdownMenuTrigger>
       
       <DropdownMenuContent 
-        className="w-80 p-0 bg-white/95 backdrop-blur-md border border-therapy-200 shadow-xl" 
+        className="w-80 p-0 bg-white border border-therapy-200 shadow-xl" 
         align="start" 
         forceMount
       >

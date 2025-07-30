@@ -214,7 +214,7 @@ const CookieConsentPopup = () => {
   return (
     <>
       {/* Cookie Banner */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/95 backdrop-blur-sm border-t shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background border-t shadow-lg">
         <Card className="max-w-7xl mx-auto">
           <CardContent className="p-6">
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">

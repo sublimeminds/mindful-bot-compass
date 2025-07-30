@@ -309,7 +309,7 @@ const LiveChatAgent = () => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      <Card className={`w-96 bg-white/95 backdrop-blur-sm shadow-2xl border-0 transition-all duration-300 ${isMinimized ? 'h-16' : 'h-96'}`}>
+      <Card className={`w-96 bg-white shadow-2xl border border-therapy-200 transition-all duration-300 ${isMinimized ? 'h-16' : 'h-96'}`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-therapy-600 to-calm-600 text-white rounded-t-lg">
           <div className="flex items-center space-x-3">
             <Alex2DAvatar
