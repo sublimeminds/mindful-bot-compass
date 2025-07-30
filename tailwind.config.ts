@@ -336,6 +336,10 @@ export default {
 				'search-discover': {
 					'0%, 100%': { transform: 'rotate(0deg) scale(1)' },
 					'50%': { transform: 'rotate(5deg) scale(1.03)' }
+				},
+				'spin-slow': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' }
 				}
 			},
 			animation: {
@@ -367,7 +371,8 @@ export default {
 				'book-open': 'book-open 3s ease-in-out infinite',
 				'lightbulb-idea': 'lightbulb-idea 2s ease-in-out infinite',
 				'support-lift': 'support-lift 3s ease-in-out infinite',
-				'search-discover': 'search-discover 2.5s ease-in-out infinite'
+				'search-discover': 'search-discover 2.5s ease-in-out infinite',
+				'spin-slow': 'spin-slow 6s linear infinite'
 			}
 		}
 	},
