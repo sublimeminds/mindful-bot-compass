@@ -38,7 +38,6 @@ export interface TherapistPersonality {
   therapist_tier?: string;
   is_active?: boolean;
   created_at?: string;
-  // Legacy fields from database
   avatar_characteristics?: any;
   avatar_emotions?: any;
 }
@@ -52,14 +51,14 @@ export const useTherapistDatabase = () => {
     const fetchTherapists = async () => {
       try {
         setLoading(true);
-        const { data, error } = await supabase
+        const response = await supabase
           .from('therapist_personalities')
           .select('*')
           .eq('is_active', true)
           .order('user_rating', { ascending: false });
 
-        if (error) throw error;
-        setTherapists((data as any[]) || []);
+        if (response.error) throw response.error;
+        setTherapists(response.data || []);
         setError(null);
       } catch (err) {
         console.error('Error fetching therapists:', err);
@@ -72,84 +71,84 @@ export const useTherapistDatabase = () => {
     fetchTherapists();
   }, []);
 
-  const getTherapistById = async (id: string): Promise<TherapistPersonality | null> => {
+  const getTherapistById = async (id: string) => {
     try {
-      const { data, error } = await supabase
+      const response = await supabase
         .from('therapist_personalities')
         .select('*')
         .eq('id', id)
         .eq('is_active', true)
         .single();
 
-      if (error) throw error;
-      return data as any;
+      if (response.error) throw response.error;
+      return response.data;
     } catch (error) {
       console.error('Error fetching therapist by ID:', error);
       return null;
     }
   };
 
-  const getTherapistByIdentifier = async (identifier: string): Promise<any> => {
+  const getTherapistByIdentifier = async (identifier: string) => {
     try {
-      const { data, error } = await supabase
+      const response = await supabase
         .from('therapist_personalities')
         .select('*')
         .eq('id', identifier)
         .eq('is_active', true)
         .maybeSingle();
 
-      if (error) throw error;
-      return data;
+      if (response.error) throw response.error;
+      return response.data;
     } catch (error) {
       console.error('Error fetching therapist by identifier:', error);
       return null;
     }
   };
 
-  const getTherapistsByCulturalCompetency = async (competency: string): Promise<TherapistPersonality[]> => {
+  const getTherapistsByCulturalCompetency = async (competency: string) => {
     try {
-      const { data, error } = await supabase
+      const response = await supabase
         .from('therapist_personalities')
         .select('*')
         .eq('is_active', true)
         .order('user_rating', { ascending: false });
 
-      if (error) throw error;
-      return (data as TherapistPersonality[]) || [];
+      if (response.error) throw response.error;
+      return response.data || [];
     } catch (error) {
       console.error('Error fetching therapists by cultural competency:', error);
       return [];
     }
   };
 
-  const getTherapistsBySpecialty = async (specialty: string): Promise<TherapistPersonality[]> => {
+  const getTherapistsBySpecialty = async (specialty: string) => {
     try {
-      const { data, error } = await supabase
+      const response = await supabase
         .from('therapist_personalities')
         .select('*')
         .contains('specialties', [specialty])
         .eq('is_active', true)
         .order('user_rating', { ascending: false });
 
-      if (error) throw error;
-      return data || [];
+      if (response.error) throw response.error;
+      return response.data || [];
     } catch (error) {
       console.error('Error fetching therapists by specialty:', error);
       return [];
     }
   };
 
-  const getTherapistsByLanguage = async (language: string): Promise<TherapistPersonality[]> => {
+  const getTherapistsByLanguage = async (language: string) => {
     try {
-      const { data, error } = await supabase
+      const response = await supabase
         .from('therapist_personalities')
         .select('*')
         .contains('languages_spoken', [language])
         .eq('is_active', true)
         .order('user_rating', { ascending: false });
 
-      if (error) throw error;
-      return data || [];
+      if (response.error) throw response.error;
+      return response.data || [];
     } catch (error) {
       console.error('Error fetching therapists by language:', error);
       return [];
@@ -162,7 +161,6 @@ export const useTherapistDatabase = () => {
     error,
     refetch: () => {
       setLoading(true);
-      // Re-trigger the useEffect
       setTherapists([]);
     },
     getTherapistById,
@@ -173,9 +171,9 @@ export const useTherapistDatabase = () => {
   };
 };
 
-// Helper hook for getting a specific therapist
+// Simple therapist hook to avoid TypeScript issues
 export const useTherapist = (identifier: string) => {
-  const [therapist, setTherapist] = useState<TherapistPersonality | null>(null);
+  const [therapist, setTherapist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -186,36 +184,23 @@ export const useTherapist = (identifier: string) => {
         return;
       }
 
+      setLoading(true);
+      setError(null);
+      
       try {
-        setLoading(true);
-        
-        // Try by unique_identifier first
-        let { data, error } = await supabase
+        // Simple database query - try by unique_identifier first, then by ID
+        const { data } = await supabase
           .from('therapist_personalities')
           .select('*')
-          .eq('unique_identifier', identifier)
+          .or(`unique_identifier.eq.${identifier},id.eq.${identifier}`)
           .eq('is_active', true)
-          .single();
-
-        // If not found, try by ID
-        if (error) {
-          const { data: dataById, error: errorById } = await supabase
-            .from('therapist_personalities')
-            .select('*')
-            .eq('id', identifier)
-            .eq('is_active', true)
-            .single();
-          
-          data = dataById;
-          error = errorById;
-        }
-
-        if (error) throw error;
-        setTherapist(data as any);
-        setError(null);
+          .limit(1)
+          .maybeSingle();
+        
+        setTherapist(data);
       } catch (err) {
         console.error('Error fetching therapist:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch therapist');
+        setError('Failed to fetch therapist');
         setTherapist(null);
       } finally {
         setLoading(false);

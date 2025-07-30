@@ -66,11 +66,10 @@ const FeaturesSection = () => {
             />
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Platform Features
+            Core Features
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Explore the comprehensive features that make TherapySync the most advanced 
-            AI-powered mental health platform available today.
+            Advanced AI-powered capabilities for comprehensive mental health support.
           </p>
         </div>
         
