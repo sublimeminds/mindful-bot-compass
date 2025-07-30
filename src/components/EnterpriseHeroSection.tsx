@@ -71,7 +71,7 @@ const EnterpriseHeroSection = () => {
     {
       id: 'therapy-ai',
       title: 'Your AI Therapy Experience',
-      subtitle: 'Meet 8 unique AI personalities designed for your healing journey',
+      subtitle: 'Meet 5+ unique AI personalities designed for your healing journey',
       description: 'Choose from specialized AI therapists trained in different approaches - from CBT to mindfulness, trauma-focused to cultural therapy. Each personality adapts to your unique needs.',
       icon: 'therapy-sync-ai-core',
       bgGradient: 'from-therapy-500/20 via-calm-400/15 to-harmony-300/10',
@@ -88,7 +88,38 @@ const EnterpriseHeroSection = () => {
       icon: 'community-groups',
       bgGradient: 'from-harmony-500/20 via-balance-400/15 to-flow-300/10',
       accentColor: 'harmony',
-      features: featuresData['Platform Features']?.items || [],
+      features: [
+        { 
+          icon: 'mood-progress-tracking', 
+          title: 'Mood & Progress Tracking',
+          description: 'Track your emotional journey with intelligent insights and personalized recommendations for better mental health.'
+        },
+        { 
+          icon: 'crisis-support-system', 
+          title: '24/7 Crisis Support',
+          description: 'Immediate help when you need it most, with trained professionals and emergency resources available around the clock.'
+        },
+        { 
+          icon: 'community-groups', 
+          title: 'Peer Support Groups',
+          description: 'Connect with others on similar journeys in safe, moderated communities focused on healing and growth.'
+        },
+        { 
+          icon: 'family-account-sharing', 
+          title: 'Family Account Sharing',
+          description: 'Involve your loved ones in your mental health journey with secure sharing and family therapy options.'
+        },
+        { 
+          icon: 'integrations-hub', 
+          title: 'Health App Integration',
+          description: 'Connect with your favorite health and wellness apps for a complete picture of your wellbeing.'
+        },
+        { 
+          icon: 'mental-health-library', 
+          title: 'Resource Library',
+          description: 'Access thousands of evidence-based articles, exercises, and guided meditations tailored to your needs.'
+        }
+      ],
       highlight: 'Holistic wellness approach',
       stats: { communities: '500+', families: '10k+', sessions: '1M+' }
     },
@@ -227,7 +258,7 @@ const EnterpriseHeroSection = () => {
             
             <div className="inline-flex items-center space-x-2 bg-harmony-50/80 backdrop-blur-sm rounded-full px-3 py-1 border border-harmony-200/50">
               {renderIcon("therapy-sync-ai-core", { className: "h-3 w-3 text-harmony-600" })}
-              <span className="text-xs font-medium text-harmony-700">8 AI Personalities Available</span>
+              <span className="text-xs font-medium text-harmony-700">5+ AI Personalities Available</span>
             </div>
           </div>
 
@@ -372,8 +403,8 @@ const EnterpriseHeroSection = () => {
                       className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-white/30 hover:border-therapy-300/50 transition-all duration-300 hover:shadow-therapy-glow group"
                     >
                       <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-white/80 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                          {renderIcon(feature.icon, { size: 24, className: `text-${zone.accentColor}-600` })}
+                        <div className="w-16 h-16 bg-white/80 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                          {renderIcon(feature.icon, { size: 32, className: `text-${zone.accentColor}-600` })}
                         </div>
                         <div>
                           <h4 className="font-semibold text-foreground mb-2">{feature.title}</h4>
