@@ -20,7 +20,7 @@ export default function ParallaxSection({
   backgroundSpeed = -0.3,
   contentSpeed = 0,
   background,
-  fullHeight = false,
+  fullHeight = true, // Changed default to true for scroll snapping
   disabled = false
 }: ParallaxSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -53,8 +53,9 @@ export default function ParallaxSection({
       ref={sectionRef}
       id={id}
       className={cn(
-        "relative overflow-hidden scroll-snap-align-start",
-        fullHeight && "min-h-screen",
+        "relative overflow-hidden scroll-snap-start",
+        fullHeight ? "h-screen" : "min-h-screen",
+        "flex flex-col justify-center", // Center content vertically
         className
       )}
       style={{
@@ -78,7 +79,7 @@ export default function ParallaxSection({
       {/* Content */}
       <div 
         className={cn(
-          "relative z-10 will-change-transform",
+          "relative z-10 will-change-transform flex-1 flex items-center justify-center",
           isParallaxEnabled && contentSpeed !== 0 && "transform-gpu"
         )}
         style={{
@@ -89,7 +90,7 @@ export default function ParallaxSection({
         }}
       >
         <div className={cn(
-          "transition-all duration-700 ease-out",
+          "w-full transition-all duration-700 ease-out",
           isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         )}>
           {children}
