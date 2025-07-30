@@ -34,6 +34,7 @@ export default function ParallaxContainer({ children, className }: ParallaxConta
         overflow-y: scroll;
         overflow-x: hidden;
         scroll-behavior: smooth;
+        scroll-padding-top: 0;
       }
       
       .parallax-section {
@@ -44,6 +45,11 @@ export default function ParallaxContainer({ children, className }: ParallaxConta
         max-height: 100vh !important;
         position: relative;
         overflow: hidden;
+        isolation: isolate;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
       
       /* Hardware acceleration for all parallax elements */

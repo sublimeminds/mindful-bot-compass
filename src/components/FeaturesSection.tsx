@@ -63,7 +63,7 @@ const FeaturesSection = () => {
             Platform Benefits
           </span>
         </h2>
-        <p className="text-xl text-white/90 max-w-3xl mx-auto">
+        <p className="text-xl text-white/90 max-w-3xl mx-auto drop-shadow-lg">
           Discover the comprehensive features that make our AI therapy platform the most advanced mental health solution.
         </p>
       </div>
@@ -84,10 +84,10 @@ const FeaturesSection = () => {
               </div>
               
               <div className="space-y-3">
-                <h3 className="text-xl font-bold text-white group-hover:text-therapy-200 transition-colors duration-300">
+                <h3 className="text-xl font-bold text-white group-hover:text-therapy-200 transition-colors duration-300 drop-shadow-md">
                   {feature.title}
                 </h3>
-                <p className="text-white/80 text-sm leading-relaxed">
+                <p className="text-white/90 text-sm leading-relaxed drop-shadow-sm">
                   {feature.description}
                 </p>
               </div>

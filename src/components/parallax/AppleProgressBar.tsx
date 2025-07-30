@@ -3,23 +3,23 @@ import { cn } from '@/lib/utils';
 import { useScrollProgress } from '@/hooks/useParallaxScroll';
 import { useEnhancedScreenSize } from '@/hooks/useEnhancedScreenSize';
 
-// Complete section definitions with proper names and themes
+// Updated section definitions to match current LandingPage structure
 const sections = [
   { id: 'hero', title: 'Welcome', description: 'AI-Powered Therapy Platform', icon: '🌟', theme: 'therapy' },
   { id: 'ai-technology', title: 'AI Technology', description: 'Advanced Intelligence', icon: '🧠', theme: 'blue' },
   { id: 'ai-hub', title: 'AI Hub', description: 'Intelligent Ecosystem', icon: '🤖', theme: 'dark' },
-  { id: 'therapists', title: 'Therapists', description: 'Real Professional Team', icon: '👥', theme: 'emerald' },
-  { id: 'demo', title: 'Demo', description: 'See It In Action', icon: '🎬', theme: 'slate' },
+  { id: 'cultural-ai', title: 'Cultural AI', description: 'Global Understanding', icon: '🌏', theme: 'emerald' },
+  { id: 'therapists', title: 'Therapists', description: 'Real Professional Team', icon: '👥', theme: 'slate' },
   { id: 'features', title: 'Features', description: 'Platform Capabilities', icon: '⚡', theme: 'indigo' },
   { id: 'approaches', title: 'Approaches', description: 'Therapy Methods', icon: '🎯', theme: 'violet' },
   { id: 'how-it-works', title: 'How It Works', description: 'Step-by-Step Process', icon: '🔄', theme: 'teal' },
   { id: 'workflow', title: 'Workflow', description: 'AI-Driven Process', icon: '⚙️', theme: 'gray' },
   { id: 'benefits', title: 'Benefits', description: 'Life-Changing Results', icon: '✨', theme: 'rose' },
-  { id: 'pricing', title: 'Pricing', description: 'Affordable Plans', icon: '💎', theme: 'dark' },
   { id: 'success-stories', title: 'Success Stories', description: 'Real Testimonials', icon: '🏆', theme: 'amber' },
   { id: 'security', title: 'Security', description: 'Privacy & Trust', icon: '🔒', theme: 'green' },
   { id: 'global-reach', title: 'Global Reach', description: 'Worldwide Access', icon: '🌍', theme: 'blue-purple' },
   { id: 'community', title: 'Community', description: 'Support Network', icon: '🤝', theme: 'pink' },
+  { id: 'pricing', title: 'Pricing', description: 'Affordable Plans', icon: '💎', theme: 'dark' },
   { id: 'cta', title: 'Get Started', description: 'Begin Your Journey', icon: '🚀', theme: 'therapy' }
 ];
 
