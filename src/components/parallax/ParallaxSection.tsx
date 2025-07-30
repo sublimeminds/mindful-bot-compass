@@ -53,27 +53,35 @@ export default function ParallaxSection({
       ref={sectionRef}
       id={id}
       className={cn(
-        "relative overflow-hidden scroll-snap-start",
-        "h-screen", // Always enforce 100vh for perfect scroll snapping
-        "flex flex-col justify-center items-center", // Perfect centering
+        "parallax-section relative overflow-hidden",
+        "h-screen w-full", 
+        "flex flex-col justify-center items-center",
         className
       )}
       style={{
         scrollSnapAlign: 'start',
         scrollSnapStop: 'always',
-        height: '100vh', // Enforce exact height
-        minHeight: '100vh'
+        height: '100vh',
+        minHeight: '100vh',
+        maxHeight: '100vh'
       }}
     >
       {/* Parallax Background */}
-      {background && isParallaxEnabled && (
+      {background && (
         <div 
-          className="absolute inset-0 will-change-transform"
+          className="parallax-background absolute inset-0 will-change-transform"
           style={{
-            transform: isInView ? getTransform(backgroundSpeed) : 'translate3d(0, 0, 0)',
-            transition: isInView ? 'none' : 'transform 0.3s ease-out'
+            transform: isParallaxEnabled && isInView ? getTransform(backgroundSpeed) : 'translate3d(0, 0, 0)',
+            transition: isInView ? 'none' : 'transform 0.2s ease-out'
           }}
         >
+          {background}
+        </div>
+      )}
+      
+      {/* Fallback background for mobile */}
+      {background && !isParallaxEnabled && (
+        <div className="absolute inset-0">
           {background}
         </div>
       )}
@@ -81,20 +89,21 @@ export default function ParallaxSection({
       {/* Content */}
       <div 
         className={cn(
-          "relative z-10 will-change-transform flex-1 flex items-center justify-center w-full h-full",
+          "parallax-content relative z-10 will-change-transform flex-1 flex items-center justify-center w-full h-full",
           isParallaxEnabled && contentSpeed !== 0 && "transform-gpu"
         )}
         style={{
           transform: isParallaxEnabled && isInView && contentSpeed !== 0 
             ? getTransform(contentSpeed) 
             : 'translate3d(0, 0, 0)',
-          transition: isInView ? 'none' : 'transform 0.3s ease-out'
+          transition: isInView ? 'none' : 'transform 0.2s ease-out'
         }}
       >
         <div className={cn(
-          "w-full max-w-7xl mx-auto px-4 transition-all duration-700 ease-out",
-          "flex flex-col justify-center min-h-full py-8", // Ensure content is centered within section
-          isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          "w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+          "flex flex-col justify-center min-h-full py-8",
+          "transition-all duration-500 ease-out",
+          isInView ? "opacity-100 translate-y-0" : "opacity-60 translate-y-4"
         )}>
           {children}
         </div>

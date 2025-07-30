@@ -14,6 +14,7 @@ import SuccessStoriesSection from '@/components/landing/SuccessStoriesSection';
 import SecurityPrivacySection from '@/components/landing/SecurityPrivacySection';
 import GlobalReachSection from '@/components/landing/GlobalReachSection';
 import CommunitySection from '@/components/landing/CommunitySection';
+import AIHubSection from '@/components/ai/AIHubSection';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 import AlexCompanion from '@/components/ai/AlexCompanion';
 import ParallaxContainer from '@/components/parallax/ParallaxContainer';
@@ -53,39 +54,66 @@ const LandingPage = () => {
           id="ai-technology"
           background={
             <div className="absolute inset-0">
-              <div className="absolute inset-0 bg-gradient-to-tr from-slate-100 via-white to-blue-50" />
-              <div className="absolute inset-0 opacity-30">
-                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(90deg,transparent_49%,rgba(59,130,246,0.1)_50%,transparent_51%)] bg-[length:60px_60px]" />
-                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(0deg,transparent_49%,rgba(59,130,246,0.1)_50%,transparent_51%)] bg-[length:60px_60px]" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-slate-50 via-blue-50/80 to-indigo-50" />
+              <div className="absolute inset-0 opacity-40">
+                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(90deg,transparent_49%,rgba(99,102,241,0.1)_50%,transparent_51%)] bg-[length:80px_80px]" />
+                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(0deg,transparent_49%,rgba(99,102,241,0.1)_50%,transparent_51%)] bg-[length:80px_80px]" />
               </div>
-              <div className="absolute top-1/3 right-1/3 w-64 h-64 bg-gradient-to-br from-blue-300/30 to-transparent rounded-full blur-2xl" />
+              <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-transparent rounded-full blur-3xl animate-pulse" />
+              <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-to-tl from-indigo-300/20 to-transparent rounded-full blur-3xl animate-pulse delay-500" />
             </div>
           }
           backgroundSpeed={-0.15}
         >
           <div className="text-center">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">Advanced AI Technology</h2>
-              <p className="text-xl text-gray-600 mb-8">Powered by cutting-edge artificial intelligence that understands you</p>
+            <div className="max-w-5xl mx-auto">
+              <h2 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">Advanced AI Technology</h2>
+              <p className="text-xl text-gray-700 mb-12 max-w-3xl mx-auto leading-relaxed">
+                Powered by cutting-edge artificial intelligence that truly understands your unique needs and adapts to your therapeutic journey
+              </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
-                  <div className="w-12 h-12 bg-gradient-to-br from-therapy-500 to-healing-500 rounded-xl mx-auto mb-4 flex items-center justify-center text-white text-2xl">🧠</div>
-                  <h3 className="font-semibold text-lg mb-2 text-gray-900">Neural Processing</h3>
-                  <p className="text-gray-600">Advanced language models trained on therapeutic data</p>
+                <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/40 hover:shadow-2xl transition-all duration-300 group">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-3xl shadow-lg group-hover:scale-110 transition-transform duration-300">🧠</div>
+                  <h3 className="font-bold text-xl mb-3 text-gray-900">Neural Processing</h3>
+                  <p className="text-gray-600 leading-relaxed">Advanced transformer models trained specifically on therapeutic conversations and evidence-based practices</p>
                 </div>
-                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
-                  <div className="w-12 h-12 bg-gradient-to-br from-therapy-500 to-healing-500 rounded-xl mx-auto mb-4 flex items-center justify-center text-white text-2xl">🎯</div>
-                  <h3 className="font-semibold text-lg mb-2 text-gray-900">Personalized Matching</h3>
-                  <p className="text-gray-600">AI-driven therapist and approach recommendations</p>
+                <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/40 hover:shadow-2xl transition-all duration-300 group">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-3xl shadow-lg group-hover:scale-110 transition-transform duration-300">🎯</div>
+                  <h3 className="font-bold text-xl mb-3 text-gray-900">Smart Matching</h3>
+                  <p className="text-gray-600 leading-relaxed">AI-driven analysis to match you with the perfect therapist and therapeutic approach for optimal results</p>
                 </div>
-                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
-                  <div className="w-12 h-12 bg-gradient-to-br from-therapy-500 to-healing-500 rounded-xl mx-auto mb-4 flex items-center justify-center text-white text-2xl">🔒</div>
-                  <h3 className="font-semibold text-lg mb-2 text-gray-900">Privacy First</h3>
-                  <p className="text-gray-600">HIPAA-compliant with end-to-end encryption</p>
+                <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/40 hover:shadow-2xl transition-all duration-300 group">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-3xl shadow-lg group-hover:scale-110 transition-transform duration-300">🔒</div>
+                  <h3 className="font-bold text-xl mb-3 text-gray-900">Privacy First</h3>
+                  <p className="text-gray-600 leading-relaxed">Military-grade encryption with HIPAA compliance ensuring your conversations remain completely confidential</p>
                 </div>
               </div>
             </div>
           </div>
+        </ParallaxSection>
+        
+        {/* AI Hub Section */}
+        <ParallaxSection 
+          id="ai-hub"
+          background={
+            <div className="absolute inset-0">
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-blue-900/90 to-indigo-900/95" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 via-transparent to-purple-600/20" />
+              <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-transparent rounded-full blur-3xl animate-pulse" />
+              <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-gradient-to-tl from-purple-400/25 to-transparent rounded-full blur-3xl animate-pulse delay-1000" />
+              <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-400/20 to-transparent rounded-full blur-3xl animate-pulse delay-500" />
+              {/* Animated grid overlay */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(90deg,transparent_98%,rgba(255,255,255,0.5)_100%)] bg-[length:100px_100px]" />
+                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(0deg,transparent_98%,rgba(255,255,255,0.5)_100%)] bg-[length:100px_100px]" />
+              </div>
+            </div>
+          }
+          backgroundSpeed={-0.1}
+        >
+          <SafeComponentWrapper name="AIHubSection" fallback={<div className="py-20"></div>}>
+            <AIHubSection />
+          </SafeComponentWrapper>
         </ParallaxSection>
         
         {/* Real Therapist Team */}
@@ -93,10 +121,11 @@ const LandingPage = () => {
           id="therapists"
           background={
             <div className="absolute inset-0">
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/70 via-teal-600/60 to-cyan-600/70" />
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-emerald-900/20" />
-              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1)_0%,transparent_50%)]" />
-              <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.1)_0%,transparent_50%)]" />
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-700/85 via-teal-600/80 to-cyan-700/85" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/15 via-transparent to-emerald-300/10" />
+              <div className="absolute top-1/4 right-1/5 w-88 h-88 bg-gradient-to-br from-emerald-300/25 to-transparent rounded-full blur-3xl animate-pulse" />
+              <div className="absolute bottom-1/3 left-1/4 w-72 h-72 bg-gradient-to-tl from-teal-300/20 to-transparent rounded-full blur-3xl animate-pulse delay-700" />
+              <div className="absolute top-1/3 left-1/3 w-64 h-64 bg-gradient-to-br from-cyan-300/15 to-transparent rounded-full blur-3xl animate-pulse delay-300" />
             </div>
           }
           backgroundSpeed={-0.1}

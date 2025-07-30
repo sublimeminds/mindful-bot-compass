@@ -7,6 +7,7 @@ import { useEnhancedScreenSize } from '@/hooks/useEnhancedScreenSize';
 const sections = [
   { id: 'hero', title: 'Welcome', description: 'AI-Powered Therapy Platform', icon: '🌟', theme: 'therapy' },
   { id: 'ai-technology', title: 'AI Technology', description: 'Advanced Intelligence', icon: '🧠', theme: 'blue' },
+  { id: 'ai-hub', title: 'AI Hub', description: 'Intelligent Ecosystem', icon: '🤖', theme: 'dark' },
   { id: 'therapists', title: 'Therapists', description: 'Real Professional Team', icon: '👥', theme: 'emerald' },
   { id: 'demo', title: 'Demo', description: 'See It In Action', icon: '🎬', theme: 'slate' },
   { id: 'features', title: 'Features', description: 'Platform Capabilities', icon: '⚡', theme: 'indigo' },
