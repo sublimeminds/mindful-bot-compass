@@ -232,7 +232,7 @@ const EnhancedAudioLibrary: React.FC<EnhancedAudioLibraryProps> = ({ userId }) =
 
       {/* Audio Player */}
       {currentTrack && (
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-sm border-t shadow-lg">
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t shadow-lg">
           <AudioPlayer
             currentTrack={currentTrack}
             playlist={playlist}

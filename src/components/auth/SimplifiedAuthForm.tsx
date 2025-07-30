@@ -89,7 +89,7 @@ const SimplifiedAuthForm = () => {
     <SafeComponentWrapper name="SimplifiedAuthForm">
       <div className="min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          <Card className="bg-card/95 backdrop-blur-sm border shadow-lg">
+          <Card className="bg-card border shadow-lg">
             <CardHeader className="text-center pb-6">
               <div className="w-16 h-16 bg-gradient-to-r from-primary to-primary/80 rounded-3xl flex items-center justify-center mx-auto mb-4">
                 <Heart className="h-8 w-8 text-primary-foreground" />

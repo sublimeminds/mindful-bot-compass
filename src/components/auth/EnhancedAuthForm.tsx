@@ -143,7 +143,7 @@ const EnhancedAuthForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-harmony-50 via-therapy-50 to-flow-50 dark:from-harmony-950 dark:via-therapy-950 dark:to-flow-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
+        <Card className="bg-white border shadow-2xl">
           <CardHeader className="text-center pb-6">
             <div className="w-16 h-16 bg-gradient-to-r from-therapy-500 to-harmony-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
               <Heart className="h-8 w-8 text-white" />

@@ -186,7 +186,7 @@ const Alex2DCompanion: React.FC<Alex2DCompanionProps> = ({
 
   return (
     <div className="fixed bottom-4 right-4 z-50 w-96 max-h-[600px]">
-      <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm">
+      <Card className="border-0 shadow-2xl bg-white">
         <CardHeader className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-t-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">

@@ -65,7 +65,7 @@ const InstantDemoPreview = () => {
         </p>
       </div>
 
-      <Card className="bg-white/10 backdrop-blur-sm border-white/20 shadow-2xl">
+      <Card className="bg-white/90 border-white/50 shadow-2xl">
         <CardContent className="p-6">
           <div className="space-y-4 min-h-[300px]">
             {displayedMessages.map((msg, index) => (
@@ -89,7 +89,7 @@ const InstantDemoPreview = () => {
                 <div className={`flex-1 max-w-xs md:max-w-md p-4 rounded-xl ${
                   msg.role === 'user'
                     ? 'bg-blue-500 text-white ml-auto'
-                    : 'bg-white/20 text-white backdrop-blur-sm'
+                    : 'bg-white/90 text-foreground'
                 }`}>
                   <p className="text-sm leading-relaxed">{msg.message}</p>
                 </div>

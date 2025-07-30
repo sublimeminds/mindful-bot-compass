@@ -334,7 +334,7 @@ export const TherapySyncAICore = () => {
               key={component.id}
               onMouseEnter={() => setActiveComponent(component.id)}
               onMouseLeave={() => setActiveComponent(null)}
-              className={`relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden cursor-pointer ${
+              className={`relative bg-white rounded-2xl p-6 border border-therapy-200 hover:border-therapy-300 transition-all duration-500 hover:shadow-therapy-glow group overflow-hidden cursor-pointer ${
                 activeComponent === component.id ? 'scale-105 shadow-xl' : ''
               }`}
             >
@@ -395,7 +395,7 @@ export const TherapySyncAICore = () => {
         </div>
 
         {/* Enhanced Live Metrics Dashboard */}
-        <div className="bg-gradient-to-r from-flow-100/50 to-therapy-100/30 rounded-3xl p-8 border border-flow-200/50 backdrop-blur-sm">
+        <div className="bg-gradient-to-r from-flow-100 to-therapy-100 rounded-3xl p-8 border border-flow-200">
           <div className="text-center mb-8">
             <h3 className="text-3xl font-bold text-foreground mb-2">Real-Time AI Performance</h3>
             <p className="text-muted-foreground">Live monitoring of TherapySync AI Core operations</p>

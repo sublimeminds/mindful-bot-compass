@@ -31,7 +31,7 @@ const AuthRequiredPage: React.FC<AuthRequiredPageProps> = ({
         <div className="grid md:grid-cols-2 gap-8 items-center">
           {/* Left side - Hero content */}
           <div className="text-center md:text-left space-y-6">
-            <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 mb-4">
+            <div className="inline-flex items-center space-x-2 bg-white rounded-full px-4 py-2 mb-4 shadow-md">
               <Shield className="h-4 w-4 text-therapy-600" />
               <span className="text-sm font-medium text-therapy-700">HIPAA Compliant & Secure</span>
             </div>
@@ -99,7 +99,7 @@ const AuthRequiredPage: React.FC<AuthRequiredPageProps> = ({
 
           {/* Right side - Auth card */}
           <div className="hidden md:block">
-            <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
+            <Card className="border-0 shadow-2xl bg-white">
               <div className="relative">
                 <img 
                   src={heroImage} 

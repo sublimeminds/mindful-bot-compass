@@ -3,11 +3,12 @@ import React from 'react';
 // APPLE-INFLUENCED SECTION BACKGROUNDS
 // Strong, vibrant gradients with proper contrast and no blur effects
 
-// Hero Section Background - Premium Apple-style clean white with accent highlights
+// Hero Section Background - Premium Apple-style clean white with vibrant accent highlights
 export const HeroBackground = () => (
   <div className="absolute inset-0 z-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-white via-therapy-25/60 to-calm-50/50"></div>
-    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-therapy-100/20"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-white via-therapy-50 to-calm-100"></div>
+    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-therapy-200/40 to-therapy-300/60"></div>
+    <div className="absolute inset-0 bg-gradient-to-bl from-calm-200/30 via-transparent to-transparent"></div>
   </div>
 );
 
@@ -22,16 +23,18 @@ export const TrustIndicatorsBackground = () => (
 // AI Hub Background - Bold tech-forward gradient (Apple Silicon style)
 export const AIHubBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-flow-100/60 via-therapy-50/50 to-calm-100/70"></div>
-    <div className="absolute inset-0 bg-gradient-to-tr from-flow-200/30 to-transparent"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-flow-200 via-therapy-100 to-calm-200"></div>
+    <div className="absolute inset-0 bg-gradient-to-tr from-flow-300/60 via-flow-400/40 to-transparent"></div>
+    <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-therapy-200/50 to-calm-300/50"></div>
   </div>
 );
 
-// Cultural AI Background - Rich Apple-inspired dark background
+// Cultural AI Background - Rich Apple-inspired vibrant background
 export const CulturalAIBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-gradient-to-r from-harmony-600/70 via-harmony-700/60 to-therapy-600/65"></div>
-    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-harmony-800/20 to-harmony-900/30"></div>
+    <div className="absolute inset-0 bg-gradient-to-r from-harmony-500 via-harmony-600 to-therapy-500"></div>
+    <div className="absolute inset-0 bg-gradient-to-b from-harmony-600/70 via-harmony-700/50 to-harmony-800/60"></div>
+    <div className="absolute inset-0 bg-gradient-to-tr from-harmony-400/40 via-transparent to-therapy-400/50"></div>
   </div>
 );
 
@@ -46,8 +49,9 @@ export const StatsCounterBackground = () => (
 // Features Background - Bold Apple product showcase style
 export const FeaturesBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-therapy-600/65 via-calm-600/55 to-harmony-600/70"></div>
-    <div className="absolute inset-0 bg-gradient-to-t from-therapy-800/25 to-transparent"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-therapy-500 via-calm-500 to-harmony-500"></div>
+    <div className="absolute inset-0 bg-gradient-to-t from-therapy-600/60 via-therapy-700/40 to-transparent"></div>
+    <div className="absolute inset-0 bg-gradient-to-tr from-calm-400/50 via-transparent to-harmony-400/50"></div>
   </div>
 );
 

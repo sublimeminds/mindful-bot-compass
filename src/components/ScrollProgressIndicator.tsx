@@ -81,7 +81,7 @@ const ScrollProgressIndicator = ({ sections, isAuthenticated }: ScrollProgressIn
       {/* Floating section indicator - enhanced design */}
       {scrollProgress > 3 && (
         <div className="absolute top-3 right-4 animate-fade-in">
-          <div className="bg-background/90 backdrop-blur-xl border border-border/40 rounded-2xl px-4 py-2 shadow-xl shadow-black/10">
+          <div className="bg-background border border-border rounded-2xl px-4 py-2 shadow-xl shadow-black/10">
             <div className="flex items-center space-x-3">
               <div className="relative">
                 <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-therapy-500 to-calm-500 animate-pulse" />

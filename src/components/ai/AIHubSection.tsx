@@ -81,7 +81,7 @@ export default function AIHubSection() {
       {/* AI Modules Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {aiModules.map((module) => (
-          <Card key={module.id} className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-all duration-300 group hover:scale-105">
+          <Card key={module.id} className="bg-white/90 border-white/50 hover:bg-white/95 transition-all duration-300 group hover:scale-105">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between mb-3">
                 <div className={`p-3 rounded-xl bg-gradient-to-br ${module.gradient} shadow-lg`}>
@@ -144,7 +144,7 @@ export default function AIHubSection() {
       </div>
 
       {/* CTA */}
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+      <div className="bg-white/90 rounded-2xl p-8 border border-white/50">
         <h3 className="text-2xl font-bold text-white mb-4">Ready to Experience AI-Powered Therapy?</h3>
         <p className="text-white/80 mb-6 max-w-2xl mx-auto">
           Join thousands of users who have transformed their mental health journey with our advanced AI therapeutic platform.

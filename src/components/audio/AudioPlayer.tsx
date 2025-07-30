@@ -128,7 +128,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }
 
   return (
-    <Card className={`bg-white/95 backdrop-blur-sm border-0 shadow-xl ${className}`}>
+    <Card className={`bg-white border shadow-xl ${className}`}>
       <CardContent className="p-6">
         <audio ref={audioRef} preload="metadata" />
         

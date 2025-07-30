@@ -100,7 +100,7 @@ const DashboardHeader = () => {
   const quickLinks = getQuickLinks();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-gray-200/50 bg-white/95 backdrop-blur-lg shadow-sm supports-[backdrop-filter]:bg-white/60 ml-0">
+    <header className="sticky top-0 z-40 w-full border-b border-gray-200 bg-white shadow-sm ml-0">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Left section with page title and quick links */}
         <div className="flex items-center space-x-4 min-w-0 flex-1">
