@@ -55,71 +55,7 @@ const features = [
 ];
 
 const FeaturesSection = () => {
-  return (
-    <section id="features" className="py-20 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center mb-6">
-            <GradientLogo 
-              size="xl"
-              className="drop-shadow-sm"
-            />
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Core Features
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Advanced AI-powered capabilities for comprehensive mental health support.
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.map((feature, index) => (
-            <Card 
-              key={index} 
-              className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in bg-gradient-to-br from-white to-gray-50/50 group hover:scale-105"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <CardContent className="p-6 text-center">
-                <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-harmony-500 via-balance-500 to-flow-500 rounded-xl mx-auto mb-4 group-hover:animate-swirl-breathe shadow-lg">
-                  {feature.useGradientLogo ? (
-                    <GradientLogo 
-                      size="md"
-                      className="filter brightness-0 invert"
-                    />
-                  ) : (
-                    <feature.icon className="h-8 w-8 text-white" />
-                  )}
-                </div>
-                <h3 className="text-xl font-semibold text-foreground mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {feature.description}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        
-        {/* Enhanced brand reinforcement section */}
-        <div className="mt-16 text-center">
-          <div className="flex items-center justify-center space-x-2 text-sm text-muted-foreground mb-4">
-            <span>Powered by</span>
-            <GradientLogo 
-              size="sm"
-              className="opacity-60"
-            />
-            <span className="font-medium bg-gradient-to-r from-harmony-600 to-flow-600 bg-clip-text text-transparent">TherapySync AI</span>
-          </div>
-          <p className="text-xs text-muted-foreground max-w-2xl mx-auto">
-            Built with enterprise-grade security, cultural awareness, and continuous learning capabilities 
-            to provide the most advanced AI therapy platform available.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
+  return null; // Core Features section removed as requested
 };
 
 export default FeaturesSection;
