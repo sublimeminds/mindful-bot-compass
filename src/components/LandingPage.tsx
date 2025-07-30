@@ -7,12 +7,14 @@ import TrustIndicators from '@/components/landing/TrustIndicators';
 import StatsCounter from '@/components/landing/StatsCounter';
 import TrustSection from '@/components/landing/TrustSection';
 import CTASection from '@/components/landing/CTASection';
+import AppleProgressBar from '@/components/parallax/AppleProgressBar';
 
 const LandingPage = () => {
   console.log('🔍 LandingPage: Component rendering');
   
   return (
     <SafeComponentWrapper name="LandingPage">
+      <AppleProgressBar />
       <ParallaxContainer>
         <ParallaxSection 
           id="hero"
