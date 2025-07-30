@@ -7,6 +7,7 @@ import HowItWorksSection from '@/components/landing/HowItWorksSection';
 import CTASection from '@/components/landing/CTASection';
 import InteractiveDemo from '@/components/landing/InteractiveDemo';
 import AdvancedTherapyBenefits from '@/components/landing/AdvancedTherapyBenefits';
+import AIWorkflowSection from '@/components/landing/AIWorkflowSection';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 import AlexCompanion from '@/components/ai/AlexCompanion';
 
@@ -34,13 +35,6 @@ const LandingPage = () => {
           </div>
         </SafeComponentWrapper>
         
-        {/* Pricing */}
-        <SafeComponentWrapper name="PricingSection" fallback={<div className="py-20"></div>}>
-          <div id="pricing">
-            <EnhancedPricingSection />
-          </div>
-        </SafeComponentWrapper>
-        
         {/* How It Works */}
         <SafeComponentWrapper name="HowItWorksSection" fallback={<div className="py-20"></div>}>
           <div id="how-it-works">
@@ -48,9 +42,21 @@ const LandingPage = () => {
           </div>
         </SafeComponentWrapper>
         
+        {/* AI Workflow - Step by Step */}
+        <SafeComponentWrapper name="AIWorkflowSection" fallback={<div className="py-20"></div>}>
+          <AIWorkflowSection />
+        </SafeComponentWrapper>
+        
         {/* Advanced Therapy Benefits */}
         <SafeComponentWrapper name="AdvancedTherapyBenefits" fallback={<div className="py-20"></div>}>
           <AdvancedTherapyBenefits />
+        </SafeComponentWrapper>
+        
+        {/* Pricing */}
+        <SafeComponentWrapper name="PricingSection" fallback={<div className="py-20"></div>}>
+          <div id="pricing">
+            <EnhancedPricingSection />
+          </div>
         </SafeComponentWrapper>
         
         {/* CTA */}
