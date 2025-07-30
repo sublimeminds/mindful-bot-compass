@@ -27,13 +27,6 @@ const LandingPage = () => {
           <InteractiveDemo />
         </SafeComponentWrapper>
         
-        {/* How It Works */}
-        <SafeComponentWrapper name="HowItWorksSection" fallback={<div className="py-20"></div>}>
-          <div id="how-it-works">
-            <HowItWorksSection />
-          </div>
-        </SafeComponentWrapper>
-        
         {/* Features */}
         <SafeComponentWrapper name="FeaturesSection" fallback={<div className="py-20"></div>}>
           <div id="features">
@@ -45,6 +38,13 @@ const LandingPage = () => {
         <SafeComponentWrapper name="PricingSection" fallback={<div className="py-20"></div>}>
           <div id="pricing">
             <EnhancedPricingSection />
+          </div>
+        </SafeComponentWrapper>
+        
+        {/* How It Works */}
+        <SafeComponentWrapper name="HowItWorksSection" fallback={<div className="py-20"></div>}>
+          <div id="how-it-works">
+            <HowItWorksSection />
           </div>
         </SafeComponentWrapper>
         
