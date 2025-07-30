@@ -1,4 +1,3 @@
-
 import { Bot, Heart, User, Users, Brain, Shield, Clock, Smartphone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import GradientLogo from "@/components/ui/GradientLogo";
@@ -103,40 +102,41 @@ const FeaturesSection = () => {
 
         {/* Additional Benefits Showcase */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-        <div className="lg:col-span-2 p-8 bg-gradient-to-br from-therapy-500/20 to-harmony-500/20 rounded-3xl border border-white/20">
-          <h3 className="text-2xl font-bold text-white mb-6">Advanced AI Capabilities</h3>
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <div className="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center">
-                <Brain className="w-6 h-6 text-white" />
+          <div className="lg:col-span-2 p-6 sm:p-8 bg-gradient-to-br from-therapy-500/20 to-harmony-500/20 rounded-3xl border border-white/20">
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Advanced AI Capabilities</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="space-y-2">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-white/20 flex items-center justify-center">
+                  <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                </div>
+                <h4 className="font-semibold text-white text-sm sm:text-base">Deep Learning Models</h4>
+                <p className="text-white/80 text-xs sm:text-sm leading-relaxed">Advanced neural networks trained on therapeutic conversations</p>
               </div>
-              <h4 className="font-semibold text-white">Deep Learning Models</h4>
-              <p className="text-white/80 text-sm">Advanced neural networks trained on therapeutic conversations</p>
-            </div>
-            <div className="space-y-2">
-              <div className="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center">
-                <Shield className="w-6 h-6 text-white" />
+              <div className="space-y-2">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-white/20 flex items-center justify-center">
+                  <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                </div>
+                <h4 className="font-semibold text-white text-sm sm:text-base">Crisis Detection</h4>
+                <p className="text-white/80 text-xs sm:text-sm leading-relaxed">Real-time monitoring and immediate intervention capabilities</p>
               </div>
-              <h4 className="font-semibold text-white">Crisis Detection</h4>
-              <p className="text-white/80 text-sm">Real-time monitoring and immediate intervention capabilities</p>
             </div>
           </div>
-        </div>
-        
-        <div className="p-8 bg-gradient-to-br from-harmony-500/20 to-calm-500/20 rounded-3xl border border-white/20">
-          <h3 className="text-2xl font-bold text-white mb-6">Global Impact</h3>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-white/80">Active Users</span>
-              <span className="text-2xl font-bold text-white">150K+</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-white/80">Languages</span>
-              <span className="text-2xl font-bold text-white">29</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-white/80">Countries</span>
-              <span className="text-2xl font-bold text-white">85+</span>
+          
+          <div className="p-6 sm:p-8 bg-gradient-to-br from-harmony-500/20 to-calm-500/20 rounded-3xl border border-white/20">
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Global Impact</h3>
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-white/80 text-sm sm:text-base">Active Users</span>
+                <span className="text-xl sm:text-2xl font-bold text-white">150K+</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-white/80 text-sm sm:text-base">Languages</span>
+                <span className="text-xl sm:text-2xl font-bold text-white">29</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-white/80 text-sm sm:text-base">Countries</span>
+                <span className="text-xl sm:text-2xl font-bold text-white">85+</span>
+              </div>
             </div>
           </div>
         </div>
