@@ -143,123 +143,128 @@ const AIWorkflowSection = () => {
 
   return (
     <SafeComponentWrapper name="AIWorkflowSection">
-      <section className="py-20 bg-gradient-to-br from-background via-therapy-50/30 to-calm-50/20">
-        <div className="container mx-auto px-6 lg:px-8">
+      <div className="min-h-screen flex flex-col justify-center w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto w-full space-y-8 sm:space-y-12 lg:space-y-16">
           
           {/* Section Header */}
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+          <div className="text-center space-y-4">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">
               How Our AI Works: Step by Step
             </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               From first assessment to ongoing optimization, experience the complete AI-powered journey
             </p>
           </div>
 
-          {/* Interactive Workflow Steps */}
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
+          {/* Interactive Workflow Steps - Mobile-First */}
+          <div className="space-y-8 lg:space-y-12">
             
-            {/* Workflow Navigation */}
-            <div className="space-y-6">
-              {aiWorkflowSteps.map((step, index) => (
-                <div
-                  key={step.id}
-                  className={cn(
-                    "p-6 rounded-xl border-2 transition-all duration-500 cursor-pointer",
-                    activeStep === index
-                      ? `border-${step.color}-400 bg-${step.color}-50/50 shadow-lg scale-105`
-                      : "border-border bg-background/60 hover:border-therapy-300"
-                  )}
-                  onClick={() => setActiveStep(index)}
-                >
-                  <div className="flex items-start space-x-4">
-                    <div className={cn(
-                      "p-3 rounded-lg transition-all duration-300",
+            {/* Mobile: Stacked, Desktop: Side by side */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+              
+              {/* Workflow Navigation */}
+              <div className="space-y-4 lg:space-y-6">
+                {aiWorkflowSteps.map((step, index) => (
+                  <div
+                    key={step.id}
+                    className={cn(
+                      "p-4 sm:p-6 rounded-xl border-2 transition-all duration-500 cursor-pointer",
                       activeStep === index
-                        ? `bg-${step.color}-500 text-white shadow-lg`
-                        : "bg-muted text-muted-foreground"
+                        ? `border-${step.color}-400 bg-${step.color}-50/50 shadow-lg`
+                        : "border-border bg-background/60 hover:border-therapy-300"
+                    )}
+                    onClick={() => setActiveStep(index)}
+                  >
+                    <div className="flex items-start space-x-3 sm:space-x-4">
+                      <div className={cn(
+                        "p-2 sm:p-3 rounded-lg transition-all duration-300 flex-shrink-0",
+                        activeStep === index
+                          ? `bg-${step.color}-500 text-white shadow-lg`
+                          : "bg-muted text-muted-foreground"
+                      )}>
+                        <step.icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2">
+                          {index + 1}. {step.title}
+                        </h3>
+                        <p className="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed">
+                          {step.description}
+                        </p>
+                        
+                        {activeStep === index && (
+                          <div className="space-y-3 animate-fade-in">
+                            {/* Mobile: Single column, Desktop: Two columns */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {step.features.map((feature, idx) => (
+                                <div key={idx} className="flex items-center space-x-2 text-xs sm:text-sm">
+                                  <CheckCircle2 className={`h-3 w-3 sm:h-4 sm:w-4 text-${step.color}-500 flex-shrink-0`} />
+                                  <span className="text-foreground">{feature}</span>
+                                </div>
+                              ))}
+                            </div>
+                            
+                            <div className="flex flex-wrap gap-2 sm:gap-4 pt-2">
+                              {Object.entries(step.metrics).map(([key, value]) => (
+                                <div key={key} className="text-xs sm:text-sm">
+                                  <span className="text-muted-foreground capitalize">{key}: </span>
+                                  <span className={`font-semibold text-${step.color}-600`}>{value}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Visual Demonstration - Mobile Optimized */}
+              <div className="relative order-first lg:order-last">
+                <div className={cn(
+                  "relative p-4 sm:p-6 lg:p-8 rounded-2xl border transition-all duration-700",
+                  `bg-gradient-to-br from-${currentStep.color}-50/30 to-${currentStep.color}-100/20`,
+                  `border-${currentStep.color}-200`
+                )}>
+                  <div className="text-center space-y-4 lg:space-y-6">
+                    <div className={cn(
+                      "w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full flex items-center justify-center transition-all duration-500",
+                      `bg-${currentStep.color}-500 text-white shadow-xl animate-pulse`
                     )}>
-                      <step.icon className="h-6 w-6" />
+                      <currentStep.icon className="h-8 w-8 sm:h-10 sm:w-10" />
                     </div>
                     
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-foreground mb-2">
-                        {index + 1}. {step.title}
-                      </h3>
-                      <p className="text-muted-foreground mb-4">
-                        {step.description}
-                      </p>
-                      
-                      {activeStep === index && (
-                        <div className="space-y-3 animate-fade-in">
-                          <div className="grid grid-cols-2 gap-2">
-                            {step.features.map((feature, idx) => (
-                              <div key={idx} className="flex items-center space-x-2 text-sm">
-                                <CheckCircle2 className={`h-4 w-4 text-${step.color}-500`} />
-                                <span className="text-foreground">{feature}</span>
-                              </div>
-                            ))}
+                    <h3 className="text-xl sm:text-2xl font-bold text-foreground">
+                      {currentStep.title}
+                    </h3>
+                    
+                    <p className="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed">
+                      {currentStep.visual}
+                    </p>
+                    
+                    {/* Simulated Interface Preview - Mobile Responsive */}
+                    <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 sm:p-4 lg:p-6 shadow-inner">
+                      <div className="space-y-2 sm:space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex space-x-1 sm:space-x-2">
+                            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-400 rounded-full"></div>
+                            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-400 rounded-full"></div>
+                            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full"></div>
                           </div>
-                          
-                          <div className="flex flex-wrap gap-4 pt-2">
-                            {Object.entries(step.metrics).map(([key, value]) => (
-                              <div key={key} className="text-sm">
-                                <span className="text-muted-foreground capitalize">{key}: </span>
-                                <span className={`font-semibold text-${step.color}-600`}>{value}</span>
-                              </div>
-                            ))}
+                          <div className="text-xs text-muted-foreground hidden sm:block">
+                            TherapySync AI - {currentStep.title}
                           </div>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Visual Demonstration */}
-            <div className="relative">
-              <div className={cn(
-                "relative p-8 rounded-2xl border transition-all duration-700",
-                `bg-gradient-to-br from-${currentStep.color}-50/30 to-${currentStep.color}-100/20`,
-                `border-${currentStep.color}-200`
-              )}>
-                <div className="text-center space-y-6">
-                  <div className={cn(
-                    "w-20 h-20 mx-auto rounded-full flex items-center justify-center transition-all duration-500",
-                    `bg-${currentStep.color}-500 text-white shadow-xl animate-pulse`
-                  )}>
-                    <currentStep.icon className="h-10 w-10" />
-                  </div>
-                  
-                  <h3 className="text-2xl font-bold text-foreground">
-                    {currentStep.title}
-                  </h3>
-                  
-                  <p className="text-lg text-muted-foreground">
-                    {currentStep.visual}
-                  </p>
-                  
-                  {/* Simulated Interface Preview */}
-                  <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-inner">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex space-x-2">
-                          <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                          <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                          <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          TherapySync AI - {currentStep.title}
-                        </div>
-                      </div>
-                      <div className="h-32 bg-gradient-to-r from-therapy-100 to-calm-100 rounded-lg flex items-center justify-center">
-                        <div className="text-center">
-                          <div className={`w-8 h-8 mx-auto mb-2 text-${currentStep.color}-500 animate-spin`}>
-                            <Cpu className="h-8 w-8" />
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            AI Processing: {currentStep.title}
+                        <div className="h-24 sm:h-32 bg-gradient-to-r from-therapy-100 to-calm-100 rounded-lg flex items-center justify-center">
+                          <div className="text-center">
+                            <div className={`w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-${currentStep.color}-500 animate-spin`}>
+                              <Cpu className="h-6 w-6 sm:h-8 sm:w-8" />
+                            </div>
+                            <div className="text-xs sm:text-sm text-muted-foreground">
+                              AI Processing: {currentStep.title}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -268,52 +273,53 @@ const AIWorkflowSection = () => {
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* AI Capabilities Dashboard */}
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-therapy-200/50 p-8 shadow-xl">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-foreground mb-4">
-                AI Performance Dashboard
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Real-time metrics showing our AI's capabilities and performance
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {aiCapabilities.map((category, categoryIndex) => (
-                <div key={category.category} className="space-y-4">
-                  <h3 className="text-xl font-semibold text-foreground flex items-center">
-                    <Gauge className="h-5 w-5 mr-2 text-therapy-500" />
-                    {category.category}
-                  </h3>
-                  
-                  <div className="space-y-3">
-                    {category.capabilities.map((capability, index) => (
-                      <div key={capability.name} className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">{capability.name}</span>
-                          <span className="font-semibold text-therapy-600">{capability.level}%</span>
+            {/* AI Capabilities Dashboard - Mobile Optimized */}
+            <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-therapy-200/50 p-4 sm:p-6 lg:p-8 shadow-xl">
+              <div className="text-center space-y-4 mb-6 lg:mb-8">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">
+                  AI Performance Dashboard
+                </h2>
+                <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
+                  Real-time metrics showing our AI's capabilities and performance
+                </p>
+              </div>
+              
+              {/* Mobile: Single column, Desktop: Three columns */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                {aiCapabilities.map((category, categoryIndex) => (
+                  <div key={category.category} className="space-y-3 lg:space-y-4">
+                    <h3 className="text-lg sm:text-xl font-semibold text-foreground flex items-center">
+                      <Gauge className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-therapy-500 flex-shrink-0" />
+                      <span className="break-words">{category.category}</span>
+                    </h3>
+                    
+                    <div className="space-y-3">
+                      {category.capabilities.map((capability, index) => (
+                        <div key={capability.name} className="space-y-2">
+                          <div className="flex justify-between text-xs sm:text-sm">
+                            <span className="text-muted-foreground break-words flex-1 mr-2">{capability.name}</span>
+                            <span className="font-semibold text-therapy-600 flex-shrink-0">{capability.level}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
+                            <div 
+                              className="bg-gradient-to-r from-therapy-500 to-calm-500 h-1.5 sm:h-2 rounded-full transition-all duration-1000 ease-out"
+                              style={{ 
+                                width: `${capability.level}%`,
+                                animationDelay: `${(categoryIndex * 4 + index) * 200}ms`
+                              }}
+                            ></div>
+                          </div>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-gradient-to-r from-therapy-500 to-calm-500 h-2 rounded-full transition-all duration-1000 ease-out"
-                            style={{ 
-                              width: `${capability.level}%`,
-                              animationDelay: `${(categoryIndex * 4 + index) * 200}ms`
-                            }}
-                          ></div>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </SafeComponentWrapper>
   );
 };

@@ -199,8 +199,11 @@ export default {
 				'orange-glow': 'var(--shadow-orange-glow)'
 			},
 			animationDelay: {
+				'100': '100ms',
 				'200': '200ms',
+				'300': '300ms',
 				'400': '400ms',
+				'500': '500ms',
 				'600': '600ms'
 			},
 			keyframes: {
@@ -340,6 +343,10 @@ export default {
 				'spin-slow': {
 					'0%': { transform: 'rotate(0deg)' },
 					'100%': { transform: 'rotate(360deg)' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-10px)' }
 				}
 			},
 			animation: {
@@ -372,7 +379,8 @@ export default {
 				'lightbulb-idea': 'lightbulb-idea 2s ease-in-out infinite',
 				'support-lift': 'support-lift 3s ease-in-out infinite',
 				'search-discover': 'search-discover 2.5s ease-in-out infinite',
-				'spin-slow': 'spin-slow 6s linear infinite'
+				'spin-slow': 'spin-slow 6s linear infinite',
+				'float': 'float 3s ease-in-out infinite'
 			}
 		}
 	},
