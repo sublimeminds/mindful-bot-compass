@@ -25,7 +25,7 @@ const GradientLogo = ({
   return (
     <div className={`${sizeClasses[size]} ${className} relative flex items-center justify-center`}>
       <svg 
-        className="w-full h-full object-contain animate-swirl-breathe drop-shadow-lg"
+        className="w-full h-full object-contain drop-shadow-lg"
         viewBox="0 0 100 100" 
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
