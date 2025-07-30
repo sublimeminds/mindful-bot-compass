@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { getItemIcon } from '@/utils/iconUtils';
 import SafeBulletproofAvatar from '@/components/avatar/SafeBulletproofAvatar';
 import { therapistPersonas } from '@/components/avatar/TherapistAvatarPersonas';
-import { AIIntelligenceHub } from '@/components/ai-hub/AIIntelligenceHub';
+import { TherapySyncAICore } from '@/components/ai-hub/TherapySyncAICore';
 
 const testimonials = [
   {
@@ -143,47 +143,99 @@ const EnterpriseHeroSection = () => {
           </div>
         </div>
 
-        {/* Live Avatar Gallery */}
+        {/* AI Therapy Team Gallery */}
         <div className="mb-32">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
               Meet Your AI Therapy Team
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Choose from 24+ specialized AI therapists, each with unique personalities, cultural expertise, and therapeutic approaches.
+              Choose from 24 specialized AI therapists across 3 tiers, each with unique personalities, cultural expertise, and therapeutic specializations.
             </p>
+          </div>
+
+          {/* Tier Indicators */}
+          <div className="flex justify-center mb-8">
+            <div className="flex space-x-6 bg-white/90 backdrop-blur-sm rounded-full px-8 py-4 border border-therapy-200/50 shadow-therapy-subtle">
+              <div className="text-center">
+                <div className="w-3 h-3 bg-gray-400 rounded-full mx-auto mb-1"></div>
+                <span className="text-xs font-medium text-gray-600">Free Tier</span>
+              </div>
+              <div className="text-center">
+                <div className="w-3 h-3 bg-therapy-500 rounded-full mx-auto mb-1"></div>
+                <span className="text-xs font-medium text-therapy-600">Premium</span>
+              </div>
+              <div className="text-center">
+                <div className="w-3 h-3 bg-gradient-to-r from-therapy-600 to-calm-500 rounded-full mx-auto mb-1"></div>
+                <span className="text-xs font-medium text-therapy-700">Professional</span>
+              </div>
+            </div>
           </div>
 
           <div className="relative">
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-8">
-              {[...Array(12)].map((_, index) => (
-                <div
-                  key={index}
-                  className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow hover:scale-105"
-                >
-                  <div className="relative">
-                    <SafeBulletproofAvatar
-                      therapistId={`therapist-${index}`}
-                      therapistName={`Dr. AI Therapist ${index + 1}`}
-                      className="w-16 h-16 mx-auto mb-3"
-                    />
-                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white animate-pulse"></div>
+              {Object.entries(therapistPersonas).slice(0, 12).map(([id, persona], index) => {
+                const tier = index < 4 ? 'free' : index < 8 ? 'premium' : 'professional';
+                const tierColors = {
+                  free: 'border-gray-300 bg-gray-50/50',
+                  premium: 'border-therapy-300 bg-therapy-50/50',
+                  professional: 'border-gradient-to-r from-therapy-400 to-calm-400 bg-gradient-to-br from-therapy-50 to-calm-50'
+                };
+                const specialties = ['CBT', 'DBT', 'Mindfulness', 'Trauma', 'EMDR', 'Somatic', 'Humanistic', 'Psychodynamic', 'Solution-Focused', 'Family Systems', 'Crisis', 'Cultural'][index] || 'Specialized';
+                
+                return (
+                  <div
+                    key={id}
+                    className={`group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-therapy-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow hover:scale-105 ${tier === 'professional' ? 'ring-1 ring-therapy-200' : ''}`}
+                  >
+                    <div className="relative">
+                      <SafeBulletproofAvatar
+                        therapistId={id}
+                        therapistName={persona.name}
+                        className="w-16 h-16 mx-auto mb-3"
+                      />
+                      <div className="absolute -top-1 -right-1 flex flex-col space-y-1">
+                        <div className="w-4 h-4 bg-green-500 rounded-full border-2 border-white animate-pulse"></div>
+                        {tier === 'professional' && (
+                          <div className="w-4 h-4 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-full border-2 border-white">
+                            <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <h3 className="font-semibold text-sm text-foreground truncate">{persona.name}</h3>
+                      <p className="text-xs text-therapy-600 font-medium">{specialties}</p>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {tier === 'free' ? 'Basic Support' : tier === 'premium' ? 'Advanced Care' : 'Expert Guidance'}
+                      </div>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-therapy-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
+                    
+                    {/* Cultural Expertise Badge */}
+                    <div className="absolute bottom-2 left-2 right-2">
+                      <div className="bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1 border border-therapy-200/30">
+                        <div className="flex items-center justify-center space-x-1">
+                          <Globe className="h-3 w-3 text-harmony-500" />
+                          <span className="text-xs font-medium text-harmony-600">Multi-cultural</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <h3 className="font-semibold text-sm text-foreground">Dr. AI Therapist</h3>
-                    <p className="text-xs text-muted-foreground">Specialized Care</p>
-                    <div className="text-xs text-therapy-600 mt-1 font-medium">Cultural Expert</div>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-therapy-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="text-center">
               <div className="inline-flex items-center space-x-4 bg-white/90 backdrop-blur-sm rounded-full px-6 py-3 border border-therapy-200/50 shadow-therapy-subtle">
                 <div className="flex -space-x-2">
-                  {[...Array(5)].map((_, i) => (
-                    <div key={i} className="w-8 h-8 bg-gradient-to-br from-therapy-400 to-calm-400 rounded-full border-2 border-white"></div>
+                  {Object.entries(therapistPersonas).slice(12, 17).map(([id], i) => (
+                    <SafeBulletproofAvatar
+                      key={id}
+                      therapistId={id}
+                      therapistName={`Dr. ${i + 13}`}
+                      className="w-8 h-8 border-2 border-white"
+                    />
                   ))}
                 </div>
                 <span className="text-sm font-semibold text-therapy-700">+12 More Specialists Available</span>
@@ -200,8 +252,8 @@ const EnterpriseHeroSection = () => {
           </div>
         </div>
 
-        {/* AI Intelligence Hub */}
-        <AIIntelligenceHub />
+        {/* TherapySync AI Core */}
+        <TherapySyncAICore />
         
         <div className="text-center mt-12">
           <Button
