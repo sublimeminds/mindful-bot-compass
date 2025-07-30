@@ -53,10 +53,14 @@ export default function ParallaxSection({
       ref={sectionRef}
       id={id}
       className={cn(
-        "relative overflow-hidden",
-        fullHeight && "min-h-screen snap-start snap-always",
+        "relative overflow-hidden scroll-snap-align-start",
+        fullHeight && "min-h-screen",
         className
       )}
+      style={{
+        scrollSnapAlign: 'start',
+        scrollSnapStop: 'always'
+      }}
     >
       {/* Parallax Background */}
       {background && isParallaxEnabled && (

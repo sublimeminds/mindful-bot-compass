@@ -26,80 +26,63 @@ export default function AppleProgressBar() {
     sections.map(s => s.id)
   );
   const { isMobile, isTablet } = useEnhancedScreenSize();
+  const isMobileOrTablet = isMobile || isTablet;
+  const currentSectionIndex = typeof activeSection === 'string' ? sections.findIndex(s => s.id === activeSection) : 0;
 
   return (
-    <div className="fixed top-1/2 right-6 transform -translate-y-1/2 z-50">
-      {isMobile || isTablet ? (
-        // Mobile Mini Progress Bar  
-        <div className="bg-white/90 backdrop-blur-lg rounded-full p-3 shadow-xl border border-white/50 w-16">
-          <div className="text-center">
-            <div className="text-xs font-bold text-therapy-600 mb-1">
-              {activeSection + 1}
-            </div>
-            <div className="w-8 h-1 bg-gray-200 rounded-full mx-auto">
-              <div 
-                className="bg-gradient-to-r from-therapy-500 to-healing-500 h-1 rounded-full transition-all duration-300"
-                style={{ width: `${(activeSection + 1) / sections.length * 100}%` }}
+    <div className={cn(
+      "fixed z-50 transition-all duration-300",
+      isMobileOrTablet ? "bottom-4 right-4 w-16 h-16" : "right-2 top-1/2 -translate-y-1/2 w-16"
+    )}>
+      {isMobileOrTablet ? (
+        // Mobile: Compact circular progress indicator
+        <div className="bg-white/10 backdrop-blur-md rounded-full p-3 shadow-lg border border-white/20">
+          <div className="relative w-10 h-10">
+            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                fill="none"
+                stroke="hsl(var(--therapy-100))"
+                strokeWidth="2"
               />
-            </div>
-            <div className="text-xs text-gray-400 mt-1">
-              {sections.length}
+              <path
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                fill="none"
+                stroke="hsl(var(--therapy-500))"
+                strokeWidth="2"
+                strokeDasharray={`${scrollProgress * 100}, 100`}
+                className="transition-all duration-300 ease-out"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-xs font-semibold text-white">
+                {currentSectionIndex + 1}
+              </span>
             </div>
           </div>
         </div>
       ) : (
-        // Desktop Right-Side Navigation
-        <div className="bg-white/90 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-white/50 w-80 max-h-[80vh] overflow-y-auto">
-          <div className="text-center mb-4">
-            <h3 className="text-sm font-semibold text-gray-900 mb-1">Page Navigation</h3>
-            <div className="text-xs text-gray-500">
-              Section {activeSection + 1} of {sections.length}
-            </div>
-          </div>
-          
+        // Desktop: Minimal dots navigation
+        <div className="bg-white/10 backdrop-blur-md rounded-full p-3 shadow-lg border border-white/20">
           <div className="space-y-2">
             {sections.map((section, index) => (
-              <div
+              <button
                 key={section.id}
                 onClick={() => scrollToSection(section.id)}
-                className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all duration-300 group ${
-                  index === activeSection
-                    ? 'bg-gradient-to-r from-therapy-100 to-healing-100 border border-therapy-200'
-                    : 'hover:bg-gray-50'
-                }`}
-              >
-                <div className="text-lg">{section.icon}</div>
-                
-                <div className="flex-1 min-w-0">
-                  <div className={`text-xs font-medium transition-colors duration-300 ${
-                    index === activeSection ? 'text-therapy-800' : 'text-gray-700'
-                  }`}>
-                    {section.title}
-                  </div>
-                  <div className={`text-xs truncate transition-colors duration-300 ${
-                    index === activeSection ? 'text-therapy-600' : 'text-gray-500'
-                  }`}>
-                    {section.description}
-                  </div>
-                </div>
-                
-                {index === activeSection && (
-                  <div className="w-1.5 h-1.5 bg-therapy-500 rounded-full animate-pulse" />
+                className={cn(
+                  "w-3 h-3 rounded-full transition-all duration-200 hover:scale-125 relative group",
+                  currentSectionIndex === index
+                    ? "bg-white shadow-sm scale-125"
+                    : "bg-white/40 hover:bg-white/60"
                 )}
-              </div>
+                title={section.title}
+              >
+                {/* Tooltip on hover */}
+                <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                  {section.title}
+                </div>
+              </button>
             ))}
-          </div>
-          
-          <div className="mt-4 pt-3 border-t border-gray-200">
-            <div className="text-xs text-gray-600 text-center mb-2">
-              {Math.round(scrollProgress)}% Complete
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-1.5">
-              <div 
-                className="bg-gradient-to-r from-therapy-500 to-healing-500 h-1.5 rounded-full transition-all duration-500"
-                style={{ width: `${scrollProgress}%` }}
-              />
-            </div>
           </div>
         </div>
       )}

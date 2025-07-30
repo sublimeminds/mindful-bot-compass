@@ -10,6 +10,10 @@ import RealTherapistTeam from '@/components/therapist/RealTherapistTeam';
 import ComprehensiveTherapyApproaches from '@/components/landing/ComprehensiveTherapyApproaches';
 import AdvancedTherapyBenefits from '@/components/landing/AdvancedTherapyBenefits';
 import AIWorkflowSection from '@/components/landing/AIWorkflowSection';
+import SuccessStoriesSection from '@/components/landing/SuccessStoriesSection';
+import SecurityPrivacySection from '@/components/landing/SecurityPrivacySection';
+import GlobalReachSection from '@/components/landing/GlobalReachSection';
+import CommunitySection from '@/components/landing/CommunitySection';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 import AlexCompanion from '@/components/ai/AlexCompanion';
 import ParallaxContainer from '@/components/parallax/ParallaxContainer';
@@ -177,11 +181,67 @@ const LandingPage = () => {
           </SafeComponentWrapper>
         </ParallaxSection>
         
+        {/* Success Stories */}
+        <ParallaxSection 
+          id="success-stories"
+          fullHeight
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-healing-600/40 via-purple-600/30 to-therapy-600/40" />
+          }
+          backgroundSpeed={-0.3}
+        >
+          <SafeComponentWrapper name="SuccessStoriesSection" fallback={<div className="py-20"></div>}>
+            <SuccessStoriesSection />
+          </SafeComponentWrapper>
+        </ParallaxSection>
+
+        {/* Security & Privacy */}
+        <ParallaxSection 
+          id="security"
+          fullHeight
+          background={
+            <div className="absolute inset-0 bg-gradient-to-tr from-green-600/40 via-blue-600/30 to-teal-600/40" />
+          }
+          backgroundSpeed={-0.2}
+        >
+          <SafeComponentWrapper name="SecurityPrivacySection" fallback={<div className="py-20"></div>}>
+            <SecurityPrivacySection />
+          </SafeComponentWrapper>
+        </ParallaxSection>
+
+        {/* Global Reach */}
+        <ParallaxSection 
+          id="global-reach"
+          fullHeight
+          background={
+            <div className="absolute inset-0 bg-gradient-to-bl from-blue-600/40 via-cyan-600/30 to-indigo-600/40" />
+          }
+          backgroundSpeed={-0.25}
+        >
+          <SafeComponentWrapper name="GlobalReachSection" fallback={<div className="py-20"></div>}>
+            <GlobalReachSection />
+          </SafeComponentWrapper>
+        </ParallaxSection>
+
+        {/* Community & Support */}
+        <ParallaxSection 
+          id="community"
+          fullHeight
+          background={
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/40 via-pink-600/30 to-rose-600/40" />
+          }
+          backgroundSpeed={-0.15}
+        >
+          <SafeComponentWrapper name="CommunitySection" fallback={<div className="py-20"></div>}>
+            <CommunitySection />
+          </SafeComponentWrapper>
+        </ParallaxSection>
+
         {/* CTA */}
         <ParallaxSection 
           id="cta"
           background={
-            <div className="absolute inset-0 bg-gradient-to-t from-therapy-50/30 via-harmony-50/20 to-calm-50/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-therapy-600/50 via-harmony-600/40 to-calm-600/50" />
           }
           backgroundSpeed={-0.25}
         >
