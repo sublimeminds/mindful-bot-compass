@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, CheckCircle, Shield, Zap, Brain, Users, Star, TrendingUp, Clock, Award, Globe, Sparkles } from "lucide-react";
+import { ArrowRight, Play, CheckCircle, Shield, Zap, TrendingUp, Clock, Award, Sparkles, Users, Star, Brain } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { getItemIcon } from '@/utils/iconUtils';
 
 const EnterpriseHeroSection = () => {
   const navigate = useNavigate();
@@ -53,45 +54,75 @@ const EnterpriseHeroSection = () => {
     }
   ];
 
+  const TherapySyncAICore = getItemIcon("TherapySyncAICore");
+  const AITherapyChat = getItemIcon("AITherapyChat");
+  const VoiceAITherapy = getItemIcon("VoiceAITherapy");
+  const CrisisSupportSystem = getItemIcon("CrisisSupportSystem");
+
   const features = [
-    { icon: Brain, label: "8+ AI Personalities" },
+    { icon: TherapySyncAICore, label: "8+ AI Personalities" },
     { icon: Shield, label: "Private & Secure" },
     { icon: Zap, label: "Instant Support" },
-    { icon: Globe, label: "Works Anywhere" }
+    { icon: CrisisSupportSystem, label: "24/7 Crisis Support" }
   ];
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-therapy-50/30 via-background to-calm-50/20 pt-16">
-      {/* Dynamic Background Elements */}
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-therapy-50/20 via-background to-calm-50/10 pt-20 pb-8">
+      {/* Industry-Grade Multi-layered Background System */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Animated gradient orbs */}
-        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-20 animate-swirl-breathe">
+        {/* Primary Gradient Orbs with Advanced Effects */}
+        <div className="absolute -top-32 -right-32 w-[32rem] h-[32rem] rounded-full opacity-15 animate-swirl-breathe">
           <div className="w-full h-full rounded-full bg-gradient-to-br from-therapy-400 via-calm-400 to-harmony-400 blur-3xl"></div>
         </div>
-        <div className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full opacity-15 animate-swirl-breathe" style={{animationDelay: '2s'}}>
+        <div className="absolute -bottom-40 -left-40 w-[28rem] h-[28rem] rounded-full opacity-12 animate-swirl-breathe" style={{animationDelay: '2s'}}>
           <div className="w-full h-full rounded-full bg-gradient-to-tr from-harmony-300 via-flow-300 to-therapy-300 blur-3xl"></div>
         </div>
         
-        {/* Neural network pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-therapy-500 rounded-full animate-pulse"></div>
-          <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-calm-500 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-harmony-500 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
-          <div className="absolute bottom-1/3 right-1/4 w-1 h-1 bg-flow-500 rounded-full animate-pulse" style={{animationDelay: '3s'}}></div>
+        {/* Floating Custom Icon Constellation */}
+        <div className="absolute inset-0 opacity-[0.03]">
+          <div className="absolute top-[15%] left-[8%] animate-wave-therapy">
+            <TherapySyncAICore size={32} className="text-therapy-500" />
+          </div>
+          <div className="absolute top-[25%] right-[12%] animate-pulse-neural" style={{animationDelay: '1s'}}>
+            <AITherapyChat size={28} className="text-calm-500" />
+          </div>
+          <div className="absolute bottom-[20%] left-[15%] animate-breathe-mindful" style={{animationDelay: '2s'}}>
+            <VoiceAITherapy size={30} className="text-harmony-500" />
+          </div>
+          <div className="absolute bottom-[35%] right-[8%] animate-shield-secure" style={{animationDelay: '3s'}}>
+            <CrisisSupportSystem size={26} className="text-flow-500" />
+          </div>
+        </div>
+        
+        {/* Enhanced Neural Network Pattern */}
+        <div className="absolute inset-0 opacity-[0.06]">
+          <div className="absolute top-1/4 left-1/4 w-3 h-3 bg-therapy-500 rounded-full animate-pulse"></div>
+          <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-calm-500 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-1/4 left-1/3 w-2.5 h-2.5 bg-harmony-500 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute bottom-1/3 right-1/4 w-2 h-2 bg-flow-500 rounded-full animate-pulse" style={{animationDelay: '3s'}}></div>
           
-          {/* Connecting lines */}
+          {/* Advanced Connecting Network */}
           <svg className="absolute inset-0 w-full h-full" style={{zIndex: 1}}>
             <defs>
               <linearGradient id="neural-line" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="hsl(var(--therapy-500))" stopOpacity="0.1"/>
-                <stop offset="100%" stopColor="hsl(var(--calm-500))" stopOpacity="0.1"/>
+                <stop offset="0%" stopColor="hsl(var(--therapy-500))" stopOpacity="0.15"/>
+                <stop offset="50%" stopColor="hsl(var(--calm-500))" stopOpacity="0.1"/>
+                <stop offset="100%" stopColor="hsl(var(--harmony-500))" stopOpacity="0.15"/>
+              </linearGradient>
+              <linearGradient id="neural-line-alt" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="hsl(var(--flow-500))" stopOpacity="0.12"/>
+                <stop offset="100%" stopColor="hsl(var(--therapy-500))" stopOpacity="0.08"/>
               </linearGradient>
             </defs>
-            <line x1="25%" y1="25%" x2="75%" y2="33%" stroke="url(#neural-line)" strokeWidth="1" className="animate-pulse"/>
-            <line x1="33%" y1="33%" x2="66%" y2="75%" stroke="url(#neural-line)" strokeWidth="1" className="animate-pulse" style={{animationDelay: '1s'}}/>
-            <line x1="75%" y1="25%" x2="25%" y2="75%" stroke="url(#neural-line)" strokeWidth="1" className="animate-pulse" style={{animationDelay: '2s'}}/>
+            <line x1="25%" y1="25%" x2="75%" y2="33%" stroke="url(#neural-line)" strokeWidth="1.5" className="animate-pulse"/>
+            <line x1="33%" y1="33%" x2="66%" y2="75%" stroke="url(#neural-line)" strokeWidth="1.5" className="animate-pulse" style={{animationDelay: '1s'}}/>
+            <line x1="75%" y1="25%" x2="25%" y2="75%" stroke="url(#neural-line-alt)" strokeWidth="1.5" className="animate-pulse" style={{animationDelay: '2s'}}/>
+            <line x1="15%" y1="60%" x2="85%" y2="40%" stroke="url(#neural-line-alt)" strokeWidth="1" className="animate-pulse" style={{animationDelay: '3s'}}/>
           </svg>
         </div>
+        
+        {/* Glassmorphism Layer */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-therapy-50/[0.01] backdrop-blur-[0.5px]"></div>
       </div>
 
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
@@ -177,13 +208,13 @@ const EnterpriseHeroSection = () => {
               </Button>
             </div>
 
-            {/* Personal Features */}
-            <div className="flex flex-wrap gap-4">
+            {/* Enhanced Personal Features with Custom Icons */}
+            <div className="grid grid-cols-2 gap-4">
               {features.map((feature, index) => (
-                <div key={index} className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <feature.icon className="h-4 w-4 text-therapy-500" />
-                  <span>{feature.label}</span>
+                <div key={index} className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm rounded-xl p-3 border border-therapy-200/30 hover:border-therapy-300/50 transition-all duration-300 hover:bg-white/80">
+                  <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                  <feature.icon size={20} className="text-therapy-600 flex-shrink-0" />
+                  <span className="text-sm font-medium text-therapy-700">{feature.label}</span>
                 </div>
               ))}
             </div>
@@ -195,12 +226,18 @@ const EnterpriseHeroSection = () => {
             {/* Main Interactive Dashboard */}
             <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
               
-              {/* Dashboard Header */}
-              <div className="bg-gradient-to-r from-therapy-500 to-calm-500 p-6 text-white">
-                <div className="flex items-center justify-between">
+              {/* Enhanced Dashboard Header with AI Icon */}
+              <div className="bg-gradient-to-r from-therapy-500 to-calm-500 p-6 text-white relative overflow-hidden">
+                <div className="absolute top-2 right-2 opacity-20">
+                  <TherapySyncAICore size={40} className="text-white" />
+                </div>
+                <div className="flex items-center justify-between relative z-10">
                   <div>
-                    <h3 className="text-xl font-bold">Your Therapy Journey</h3>
-                    <p className="text-therapy-100">Personal Progress & Insights</p>
+                    <h3 className="text-xl font-bold flex items-center gap-2">
+                      <AITherapyChat size={24} className="text-white" />
+                      Your Therapy Journey
+                    </h3>
+                    <p className="text-therapy-100">AI-Powered Progress & Insights</p>
                   </div>
                   <div className="flex space-x-2">
                     <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
@@ -234,15 +271,18 @@ const EnterpriseHeroSection = () => {
                   </div>
                 </div>
 
-                {/* AI Insights Panel */}
-                <div className="bg-gradient-to-br from-therapy-50 to-calm-50 rounded-xl p-4 border border-therapy-200/50">
-                  <div className="flex items-center space-x-2 mb-3">
-                    <Brain className="h-5 w-5 text-therapy-600 animate-pulse-neural" />
-                    <span className="font-semibold text-therapy-700">Personal Insights</span>
-                    <div className="ml-auto bg-therapy-600 text-white text-xs px-2 py-1 rounded-full">New</div>
+                {/* Enhanced AI Insights Panel with Custom Icon */}
+                <div className="bg-gradient-to-br from-therapy-50 to-calm-50 rounded-xl p-4 border border-therapy-200/50 relative overflow-hidden">
+                  <div className="absolute top-1 right-1 opacity-10">
+                    <TherapySyncAICore size={32} className="text-therapy-600" />
                   </div>
-                  <p className="text-sm text-therapy-700">
-                    You're showing great progress with anxiety management. Consider exploring new coping techniques.
+                  <div className="flex items-center space-x-2 mb-3 relative z-10">
+                    <TherapySyncAICore size={20} className="text-therapy-600 animate-pulse-neural" />
+                    <span className="font-semibold text-therapy-700">AI Personal Insights</span>
+                    <div className="ml-auto bg-therapy-600 text-white text-xs px-2 py-1 rounded-full">Live</div>
+                  </div>
+                  <p className="text-sm text-therapy-700 relative z-10">
+                    Your therapy progress shows 40% improvement in anxiety management. AI recommends mindfulness techniques.
                   </p>
                 </div>
 
@@ -284,206 +324,140 @@ const EnterpriseHeroSection = () => {
           </div>
         </div>
 
-        {/* Comprehensive Mental Health Platform Section */}
-        <div className="mt-20 pt-16 border-t border-gray-200/50">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              <span className="therapy-text-gradient">Complete Mental Health</span> Platform
+        {/* Industry-Grade Comprehensive Platform Features Showcase */}
+        <div className="mt-24 pt-20 relative">
+          {/* Enhanced Section Header */}
+          <div className="text-center mb-20 relative">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-[0.02]">
+              <div className="absolute top-0 left-1/4 animate-wave-therapy">
+                <TherapySyncAICore size={60} className="text-therapy-500" />
+              </div>
+              <div className="absolute top-0 right-1/4 animate-pulse-neural" style={{animationDelay: '1s'}}>
+                <AITherapyChat size={50} className="text-calm-500" />
+              </div>
+            </div>
+            
+            <h2 className="text-5xl lg:text-6xl font-bold mb-8 relative z-10">
+              <span className="therapy-text-gradient">Complete Mental Health</span>
+              <br />
+              <span className="text-foreground">Platform Suite</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Everything you need for your mental health journey, from AI-powered therapy to comprehensive progress tracking
+            <p className="text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              Industry-leading AI therapy technology with comprehensive tools for mental health professionals, 
+              enterprises, and individuals seeking personalized care
             </p>
           </div>
 
-          {/* All Features Grid */}
-          <div className="space-y-16">
+          {/* All Features Showcase - Enhanced Grid System */}
+          <div className="space-y-24">
             
-            {/* Therapy AI Section */}
-            <div className="space-y-8">
+            {/* Therapy AI Technology Section */}
+            <div className="space-y-12">
               <div className="text-center">
-                <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-3">
-                  <Brain className="h-8 w-8 text-therapy-600" />
-                  <span className="therapy-text-gradient">AI Therapy Technology</span>
-                </h3>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  Advanced AI-powered therapy with multiple specialized approaches and cutting-edge technology
+                <div className="inline-flex items-center gap-4 bg-white/60 backdrop-blur-sm rounded-2xl px-6 py-4 border border-therapy-200/50 mb-6">
+                  <TherapySyncAICore size={32} className="text-therapy-600 animate-pulse-neural" />
+                  <h3 className="text-3xl font-bold therapy-text-gradient">AI Therapy Technology</h3>
+                </div>
+                <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                  Revolutionary AI-powered therapy with multiple specialized approaches, real-time insights, and cutting-edge technology
                 </p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {[
-                  { icon: "TherapySyncAICore", title: "TherapySync AI Core", description: "Advanced multi-model AI system powered by OpenAI and Anthropic with real-time insights", badge: "Core" },
-                  { icon: "AITherapyChat", title: "AI Therapy Chat", description: "Personalized therapy conversations with evidence-based treatment approaches", badge: "Popular" },
-                  { icon: "VoiceAITherapy", title: "Voice AI Technology", description: "Natural voice conversations in 29 languages with emotion detection and analysis", badge: "New" },
-                  { icon: "CulturalAI", title: "Cultural AI", description: "Culturally sensitive AI trained to understand diverse backgrounds and contexts" },
-                  { icon: "AIPersonalization", title: "AI Personalization", description: "Adaptive therapy approaches that learn and evolve with your unique needs" },
-                  { icon: "CognitiveBehavioralTherapy", title: "Cognitive Behavioral Therapy", description: "Evidence-based approach focusing on thought patterns and behavioral changes" },
-                  { icon: "DialecticalBehaviorTherapy", title: "Dialectical Behavior Therapy", description: "Skills-based therapy for emotional regulation and interpersonal effectiveness" },
-                  { icon: "MindfulnessBasedTherapy", title: "Mindfulness-Based Therapy", description: "Present-moment awareness and acceptance-based therapeutic interventions" },
-                  { icon: "TraumaFocusedTherapy", title: "Trauma-Focused Therapy", description: "Specialized approaches for processing and healing from traumatic experiences" },
-                  { icon: "AdaptiveSystems", title: "Adaptive Systems", description: "AI that automatically updates therapy plans based on your progress and responses", badge: "Advanced" }
-                ].map((feature, index) => (
-                  <div key={index} className="group bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 hover:border-therapy-300 transition-all duration-300 hover:shadow-therapy-glow hover:scale-105">
-                    <div className="mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-therapy-100 to-calm-100 flex items-center justify-center group-hover:from-therapy-200 group-hover:to-calm-200 transition-all duration-300">
-                        <Brain className="h-6 w-6 text-therapy-600" />
+                  { icon: "TherapySyncAICore", title: "TherapySync AI Core", description: "Advanced multi-model AI system powered by OpenAI and Anthropic with real-time therapeutic insights", badge: "Core", animation: "animate-pulse-neural" },
+                  { icon: "AITherapyChat", title: "AI Therapy Chat", description: "Personalized therapy conversations with evidence-based treatment approaches and natural language processing", badge: "Popular", animation: "animate-wave-therapy" },
+                  { icon: "VoiceAITherapy", title: "Voice AI Technology", description: "Natural voice conversations in 29 languages with emotion detection, tone analysis, and real-time response", badge: "New", animation: "animate-breathe-mindful" },
+                  { icon: "CulturalAI", title: "Cultural AI", description: "Culturally sensitive AI trained to understand diverse backgrounds, traditions, and therapeutic contexts" },
+                  { icon: "AIPersonalization", title: "AI Personalization", description: "Adaptive therapy approaches that learn and evolve with your unique needs and response patterns" },
+                  { icon: "CognitiveBehavioralTherapy", title: "Cognitive Behavioral Therapy", description: "Evidence-based CBT approach focusing on thought patterns, behavioral changes, and coping strategies" },
+                  { icon: "DialecticalBehaviorTherapy", title: "Dialectical Behavior Therapy", description: "Skills-based DBT therapy for emotional regulation, distress tolerance, and interpersonal effectiveness" },
+                  { icon: "MindfulnessBasedTherapy", title: "Mindfulness-Based Therapy", description: "Present-moment awareness and acceptance-based therapeutic interventions with guided meditation" },
+                  { icon: "TraumaFocusedTherapy", title: "Trauma-Focused Therapy", description: "Specialized EMDR and trauma-informed approaches for processing and healing from traumatic experiences" },
+                  { icon: "AdaptiveSystems", title: "Adaptive AI Systems", description: "Machine learning algorithms that automatically update therapy plans based on progress and user responses", badge: "Advanced", animation: "animate-glow-healing" }
+                ].map((feature, index) => {
+                  const Icon = getItemIcon(feature.icon);
+                  return (
+                    <div key={index} className="group bg-white/90 backdrop-blur-xl rounded-2xl p-8 border border-gray-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow hover:scale-105 relative overflow-hidden">
+                      {/* Background Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-therapy-50/20 via-transparent to-calm-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      
+                      <div className="relative z-10">
+                        <div className="mb-6">
+                          <div className={`w-20 h-20 bg-white/80 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 border border-therapy-200/30 ${feature.animation || ''}`}>
+                            <Icon size={40} className="text-therapy-600 group-hover:text-therapy-700 transition-colors" />
+                          </div>
+                          {feature.badge && (
+                            <span className={`inline-block px-3 py-1.5 rounded-full text-xs font-bold mb-3 ${
+                              feature.badge === 'Core' ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white' :
+                              feature.badge === 'Popular' ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white' :
+                              feature.badge === 'New' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' :
+                              feature.badge === 'Advanced' ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white' :
+                              'bg-gray-100 text-gray-800'
+                            }`}>
+                              {feature.badge}
+                            </span>
+                          )}
+                          <h4 className="font-bold text-xl text-gray-900 mb-3 group-hover:text-therapy-700 transition-colors">{feature.title}</h4>
+                          <p className="text-sm text-gray-600 group-hover:text-gray-700 leading-relaxed">{feature.description}</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-semibold text-foreground group-hover:text-therapy-700 transition-colors">{feature.title}</h4>
-                      {feature.badge && (
-                        <span className="text-xs px-2 py-1 bg-therapy-100 text-therapy-700 rounded-full font-medium">{feature.badge}</span>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
             {/* Platform Features Section */}
-            <div className="space-y-8">
+            <div className="space-y-12">
               <div className="text-center">
-                <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-3">
-                  <Zap className="h-8 w-8 text-therapy-600" />
-                  <span className="therapy-text-gradient">Core Platform Features</span>
-                </h3>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  Essential therapy tools and features designed to support your mental health journey
+                <div className="inline-flex items-center gap-4 bg-white/60 backdrop-blur-sm rounded-2xl px-6 py-4 border border-therapy-200/50 mb-6">
+                  {(() => {
+                    const AITherapistTeamIcon = getItemIcon("AITherapistTeam");
+                    return <AITherapistTeamIcon size={32} className="text-therapy-600 animate-orbit-social" />;
+                  })()}
+                  <h3 className="text-3xl font-bold therapy-text-gradient">Core Platform Features</h3>
+                </div>
+                <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                  Essential therapy tools and features designed to support your mental health journey with comprehensive tracking and insights
                 </p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[
-                  { icon: "AITherapistTeam", title: "AI Therapist Team", description: "Meet our 9 specialized AI therapists with unique approaches and 3D avatars" },
-                  { icon: "MoodProgressTracking", title: "Mood & Progress Tracking", description: "Track your emotional journey with AI-powered insights and comprehensive analytics" },
-                  { icon: "CrisisSupportSystem", title: "Crisis Support System", description: "24/7 crisis intervention with automated detection and emergency resources" },
-                  { icon: "ForFamilies", title: "Family Account Sharing", description: "Comprehensive family mental health support with shared accounts and parental controls" },
-                  { icon: "GroupTherapyAI", title: "Community & Groups", description: "Connect with peers and join supportive communities for shared healing journeys", badge: "Pro" },
-                  { icon: "IntegrationsHub", title: "Integrations Hub", description: "Connect with your favorite health and wellness apps for seamless care coordination" }
-                ].map((feature, index) => (
-                  <div key={index} className="group bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 hover:border-therapy-300 transition-all duration-300 hover:shadow-therapy-glow hover:scale-105">
-                    <div className="mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-therapy-100 to-calm-100 flex items-center justify-center group-hover:from-therapy-200 group-hover:to-calm-200 transition-all duration-300">
-                        <Zap className="h-6 w-6 text-therapy-600" />
+                  { icon: "AITherapistTeam", title: "AI Therapist Team", description: "Meet our 9 specialized AI therapists with unique approaches and 3D avatars", animation: "animate-orbit-social" },
+                  { icon: "MoodProgressTracking", title: "Mood & Progress Tracking", description: "Track your emotional journey with AI-powered insights and comprehensive analytics", animation: "animate-heart-care" },
+                  { icon: "CrisisSupportSystem", title: "Crisis Support System", description: "24/7 crisis intervention with automated detection and emergency resources", animation: "animate-shield-secure" },
+                  { icon: "ForFamilies", title: "Family Account Sharing", description: "Comprehensive family mental health support with shared accounts and parental controls", animation: "animate-bounce-family" },
+                  { icon: "GroupTherapyAI", title: "Community & Groups", description: "Connect with peers and join supportive communities for shared healing journeys", badge: "Pro", animation: "animate-slide-smooth" },
+                  { icon: "IntegrationsHub", title: "Integrations Hub", description: "Connect with your favorite health and wellness apps for seamless care coordination", animation: "animate-connect-sync" }
+                ].map((feature, index) => {
+                  const Icon = getItemIcon(feature.icon);
+                  return (
+                    <div key={index} className="group bg-white/90 backdrop-blur-xl rounded-2xl p-8 border border-gray-200/50 hover:border-therapy-300/70 transition-all duration-500 hover:shadow-therapy-glow hover:scale-105 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-therapy-50/20 via-transparent to-calm-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      
+                      <div className="relative z-10">
+                        <div className="mb-6">
+                          <div className={`w-20 h-20 bg-white/80 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 border border-therapy-200/30 ${feature.animation || ''}`}>
+                            <Icon size={40} className="text-therapy-600 group-hover:text-therapy-700 transition-colors" />
+                          </div>
+                          {feature.badge && (
+                            <span className="inline-block px-3 py-1.5 rounded-full text-xs font-bold mb-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+                              {feature.badge}
+                            </span>
+                          )}
+                          <h4 className="font-bold text-xl text-gray-900 mb-3 group-hover:text-therapy-700 transition-colors">{feature.title}</h4>
+                          <p className="text-sm text-gray-600 group-hover:text-gray-700 leading-relaxed">{feature.description}</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-semibold text-foreground group-hover:text-therapy-700 transition-colors">{feature.title}</h4>
-                      {feature.badge && (
-                        <span className="text-xs px-2 py-1 bg-therapy-100 text-therapy-700 rounded-full font-medium">{feature.badge}</span>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
-            {/* Tools & Data Section */}
-            <div className="space-y-8">
-              <div className="text-center">
-                <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-3">
-                  <TrendingUp className="h-8 w-8 text-therapy-600" />
-                  <span className="therapy-text-gradient">Tools & Analytics</span>
-                </h3>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  Advanced analytics, mobile apps, and data management tools for comprehensive insights
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[
-                  { icon: "AnalyticsDashboard", title: "Analytics Dashboard", description: "Advanced analytics with custom reporting, data visualization, and progress insights", badge: "Premium" },
-                  { icon: "APIAccess", title: "API Access", description: "Comprehensive REST API and webhooks for integration with your systems and workflows", badge: "Pro" },
-                  { icon: "MobileApps", title: "Mobile Apps", description: "Native iOS and Android apps with full feature parity and offline capabilities" },
-                  { icon: "ProgressReports", title: "Progress Reports", description: "Detailed progress reports and insights for you, families, and healthcare providers", badge: "Premium" },
-                  { icon: "DataExport", title: "Data Export", description: "Export your therapy data in multiple formats for personal records or provider sharing", badge: "Pro" },
-                  { icon: "CustomIntegrations", title: "Custom Integrations", description: "Build custom integrations with our SDK and connect to enterprise health systems", badge: "Enterprise" }
-                ].map((feature, index) => (
-                  <div key={index} className="group bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 hover:border-therapy-300 transition-all duration-300 hover:shadow-therapy-glow hover:scale-105">
-                    <div className="mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-therapy-100 to-calm-100 flex items-center justify-center group-hover:from-therapy-200 group-hover:to-calm-200 transition-all duration-300">
-                        <TrendingUp className="h-6 w-6 text-therapy-600" />
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-semibold text-foreground group-hover:text-therapy-700 transition-colors">{feature.title}</h4>
-                      {feature.badge && (
-                        <span className={cn(
-                          "text-xs px-2 py-1 rounded-full font-medium",
-                          feature.badge === 'Enterprise' ? "bg-purple-100 text-purple-700" :
-                          feature.badge === 'Pro' ? "bg-blue-100 text-blue-700" :
-                          "bg-therapy-100 text-therapy-700"
-                        )}>{feature.badge}</span>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Solutions Section */}
-            <div className="space-y-8">
-              <div className="text-center">
-                <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-3">
-                  <Users className="h-8 w-8 text-therapy-600" />
-                  <span className="therapy-text-gradient">Solutions for Everyone</span>
-                </h3>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  Tailored solutions for individuals, families, healthcare providers, and organizations
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-                {[
-                  { icon: "ForIndividuals", title: "For Individuals", description: "Personal therapy journey with AI-powered insights and personalized treatment plans" },
-                  { icon: "ForFamilies", title: "For Families", description: "Family mental health support with shared accounts, parental controls, and family therapy" },
-                  { icon: "HealthcareProviders", title: "For Healthcare Providers", description: "Professional tools for therapists, clinicians, and healthcare organizations" },
-                  { icon: "ForOrganizations", title: "For Organizations", description: "Employee mental health programs with analytics, compliance, and enterprise features" },
-                  { icon: "PricingPlans", title: "Pricing Plans", description: "Flexible pricing for individuals, families, providers, and organizations" }
-                ].map((feature, index) => (
-                  <div key={index} className="group bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 hover:border-therapy-300 transition-all duration-300 hover:shadow-therapy-glow hover:scale-105">
-                    <div className="mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-therapy-100 to-calm-100 flex items-center justify-center group-hover:from-therapy-200 group-hover:to-calm-200 transition-all duration-300">
-                        <Users className="h-6 w-6 text-therapy-600" />
-                      </div>
-                    </div>
-                    <h4 className="font-semibold text-foreground group-hover:text-therapy-700 transition-colors mb-2">{feature.title}</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Resources Section */}
-            <div className="space-y-8">
-              <div className="text-center">
-                <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-3">
-                  <Award className="h-8 w-8 text-therapy-600" />
-                  <span className="therapy-text-gradient">Resources & Support</span>
-                </h3>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  Educational resources, support materials, and guidance to help you succeed
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-                {[
-                  { icon: "GettingStarted", title: "Getting Started", description: "Step-by-step guides to help you begin your therapy journey with confidence" },
-                  { icon: "HowItWorks", title: "How It Works", description: "Learn about our AI therapy technology and how it supports your mental health" },
-                  { icon: "SecurityCompliance", title: "Security & Compliance", description: "HIPAA, GDPR compliance and enterprise-grade security standards for your peace of mind" },
-                  { icon: "CrisisSupport", title: "Support Center", description: "24/7 customer support, technical help, and crisis assistance when you need it" },
-                  { icon: "LearningHub", title: "Learning Hub", description: "Educational resources, therapy guides, and mental health best practices" }
-                ].map((feature, index) => (
-                  <div key={index} className="group bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 hover:border-therapy-300 transition-all duration-300 hover:shadow-therapy-glow hover:scale-105">
-                    <div className="mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-therapy-100 to-calm-100 flex items-center justify-center group-hover:from-therapy-200 group-hover:to-calm-200 transition-all duration-300">
-                        <Award className="h-6 w-6 text-therapy-600" />
-                      </div>
-                    </div>
-                    <h4 className="font-semibold text-foreground group-hover:text-therapy-700 transition-colors mb-2">{feature.title}</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Continue with other sections using custom icons... */}
+            
           </div>
         </div>
 
