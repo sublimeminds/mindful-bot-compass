@@ -5,7 +5,8 @@ import FeaturesSection from '@/components/FeaturesSection';
 import EnhancedPricingSection from '@/components/pricing/EnhancedPricingSection';
 import HowItWorksSection from '@/components/landing/HowItWorksSection';
 import CTASection from '@/components/landing/CTASection';
-import AdvancedDemoSection from '@/components/landing/AdvancedDemoSection';
+import CulturalAISection from '@/components/cultural/CulturalAISection';
+import InstantDemoPreview from '@/components/ai/InstantDemoPreview';
 import RealTherapistTeam from '@/components/therapist/RealTherapistTeam';
 import ComprehensiveTherapyApproaches from '@/components/landing/ComprehensiveTherapyApproaches';
 import AdvancedTherapyBenefits from '@/components/landing/AdvancedTherapyBenefits';
@@ -49,46 +50,64 @@ const LandingPage = () => {
           </SafeComponentWrapper>
         </ParallaxSection>
 
-        {/* AI Technology Section */}
+        {/* AI Technology Section with Demo Preview */}
         <ParallaxSection 
           id="ai-technology"
           background={
-            <div className="absolute inset-0">
-              <div className="absolute inset-0 bg-gradient-to-tr from-slate-50 via-blue-50/80 to-indigo-50" />
-              <div className="absolute inset-0 opacity-40">
-                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(90deg,transparent_49%,rgba(99,102,241,0.1)_50%,transparent_51%)] bg-[length:80px_80px]" />
-                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(0deg,transparent_49%,rgba(99,102,241,0.1)_50%,transparent_51%)] bg-[length:80px_80px]" />
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.3),transparent_50%)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(236,72,153,0.3),transparent_50%)]" />
+              {/* Tech particles */}
+              <div className="absolute inset-0 opacity-20">
+                {[...Array(50)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                      animationDelay: `${Math.random() * 3}s`,
+                      animationDuration: `${2 + Math.random() * 2}s`
+                    }}
+                  />
+                ))}
               </div>
-              <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-transparent rounded-full blur-3xl animate-pulse" />
-              <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-to-tl from-indigo-300/20 to-transparent rounded-full blur-3xl animate-pulse delay-500" />
             </div>
           }
           backgroundSpeed={-0.15}
         >
-          <div className="text-center">
-            <div className="max-w-5xl mx-auto">
-              <h2 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">Advanced AI Technology</h2>
-              <p className="text-xl text-gray-700 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <div className="space-y-16 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* AI Technology Content */}
+            <div className="text-center">
+              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                <span className="bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
+                  Advanced AI Technology
+                </span>
+              </h2>
+              <p className="text-xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed">
                 Powered by cutting-edge artificial intelligence that truly understands your unique needs and adapts to your therapeutic journey
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/40 hover:shadow-2xl transition-all duration-300 group">
+                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 group">
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-3xl shadow-lg group-hover:scale-110 transition-transform duration-300">🧠</div>
-                  <h3 className="font-bold text-xl mb-3 text-gray-900">Neural Processing</h3>
-                  <p className="text-gray-600 leading-relaxed">Advanced transformer models trained specifically on therapeutic conversations and evidence-based practices</p>
+                  <h3 className="font-bold text-xl mb-3 text-white">Neural Processing</h3>
+                  <p className="text-white/80 leading-relaxed">Advanced transformer models trained specifically on therapeutic conversations and evidence-based practices</p>
                 </div>
-                <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/40 hover:shadow-2xl transition-all duration-300 group">
+                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 group">
                   <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-3xl shadow-lg group-hover:scale-110 transition-transform duration-300">🎯</div>
-                  <h3 className="font-bold text-xl mb-3 text-gray-900">Smart Matching</h3>
-                  <p className="text-gray-600 leading-relaxed">AI-driven analysis to match you with the perfect therapist and therapeutic approach for optimal results</p>
+                  <h3 className="font-bold text-xl mb-3 text-white">Smart Matching</h3>
+                  <p className="text-white/80 leading-relaxed">AI-driven analysis to match you with the perfect therapist and therapeutic approach for optimal results</p>
                 </div>
-                <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/40 hover:shadow-2xl transition-all duration-300 group">
+                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 group">
                   <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-3xl shadow-lg group-hover:scale-110 transition-transform duration-300">🔒</div>
-                  <h3 className="font-bold text-xl mb-3 text-gray-900">Privacy First</h3>
-                  <p className="text-gray-600 leading-relaxed">Military-grade encryption with HIPAA compliance ensuring your conversations remain completely confidential</p>
+                  <h3 className="font-bold text-xl mb-3 text-white">Privacy First</h3>
+                  <p className="text-white/80 leading-relaxed">Military-grade encryption with HIPAA compliance ensuring your conversations remain completely confidential</p>
                 </div>
               </div>
             </div>
+            
+            {/* Instant Demo Preview */}
+            <InstantDemoPreview />
           </div>
         </ParallaxSection>
         
@@ -116,6 +135,43 @@ const LandingPage = () => {
           </SafeComponentWrapper>
         </ParallaxSection>
         
+        {/* Cultural AI Section */}
+        <ParallaxSection 
+          id="cultural-ai"
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-900 via-orange-900 to-red-900">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(245,158,11,0.4),transparent_50%)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(239,68,68,0.4),transparent_50%)]" />
+              {/* Cultural pattern background */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: `
+                    radial-gradient(circle at 25% 25%, #f59e0b 2px, transparent 2px),
+                    radial-gradient(circle at 75% 25%, #ef4444 2px, transparent 2px),
+                    radial-gradient(circle at 25% 75%, #8b5cf6 2px, transparent 2px),
+                    radial-gradient(circle at 75% 75%, #10b981 2px, transparent 2px)
+                  `,
+                  backgroundSize: '100px 100px'
+                }}></div>
+              </div>
+              {/* Floating Cultural Elements */}
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute top-20 left-10 text-6xl opacity-10 animate-pulse">🏮</div>
+                <div className="absolute top-32 right-20 text-5xl opacity-10 animate-bounce">🕌</div>
+                <div className="absolute bottom-40 left-20 text-5xl opacity-10 animate-pulse">⛩️</div>
+                <div className="absolute bottom-20 right-10 text-6xl opacity-10 animate-bounce">🏛️</div>
+                <div className="absolute top-1/2 left-1/4 text-4xl opacity-10">🎭</div>
+                <div className="absolute top-1/3 right-1/3 text-4xl opacity-10">🗿</div>
+              </div>
+            </div>
+          }
+          backgroundSpeed={-0.1}
+        >
+          <SafeComponentWrapper name="CulturalAISection" fallback={<div className="py-20"></div>}>
+            <CulturalAISection />
+          </SafeComponentWrapper>
+        </ParallaxSection>
+
         {/* Real Therapist Team */}
         <ParallaxSection 
           id="therapists"
@@ -135,34 +191,27 @@ const LandingPage = () => {
           </SafeComponentWrapper>
         </ParallaxSection>
         
-        {/* Advanced Demo */}
-        <ParallaxSection 
-          id="demo"
-          background={
-            <div className="absolute inset-0">
-              <div className="absolute inset-0 bg-gradient-to-bl from-gray-50 via-slate-50 to-gray-100" />
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.1)_0%,transparent_70%)]" />
-              <div className="absolute top-1/4 left-1/2 w-96 h-96 bg-gradient-to-br from-indigo-200/30 to-transparent rounded-full blur-3xl animate-pulse" />
-              <div className="absolute bottom-1/3 left-1/4 w-72 h-72 bg-gradient-to-tl from-purple-200/20 to-transparent rounded-full blur-3xl animate-pulse delay-500" />
-            </div>
-          }
-          backgroundSpeed={-0.15}
-        >
-          <SafeComponentWrapper name="AdvancedDemoSection" fallback={<div className="py-20"></div>}>
-            <AdvancedDemoSection />
-          </SafeComponentWrapper>
-        </ParallaxSection>
-        
         {/* Features */}
         <ParallaxSection 
           id="features"
           background={
-            <div className="absolute inset-0">
-              <div className="absolute inset-0 bg-gradient-to-r from-white via-blue-50/50 to-indigo-50/30" />
-              <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_25%_25%,rgba(99,102,241,0.3)_0%,transparent_50%)]" />
-                <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_75%_25%,rgba(147,51,234,0.3)_0%,transparent_50%)]" />
-                <div className="absolute bottom-0 left-0 w-full h-full bg-[radial-gradient(circle_at_25%_75%,rgba(59,130,246,0.3)_0%,transparent_50%)]" />
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-900 to-zinc-900">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_50%,rgba(59,130,246,0.3),transparent_50%)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_50%,rgba(168,85,247,0.3),transparent_50%)]" />
+              {/* Feature grid pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="grid grid-cols-8 gap-4 h-full w-full p-8">
+                  {[...Array(64)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="border border-white rounded animate-pulse"
+                      style={{
+                        animationDelay: `${i * 0.1}s`,
+                        animationDuration: `${2 + Math.random() * 2}s`
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           }
@@ -246,24 +295,6 @@ const LandingPage = () => {
           </SafeComponentWrapper>
         </ParallaxSection>
         
-        {/* Pricing */}
-        <ParallaxSection 
-          id="pricing"
-          background={
-            <div className="absolute inset-0">
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-800/90 via-slate-700/85 to-zinc-800/90" />
-              <div className="absolute inset-0 bg-gradient-to-tl from-blue-400/15 via-transparent to-purple-400/15" />
-              <div className="absolute top-1/3 left-1/5 w-76 h-76 bg-gradient-to-br from-blue-300/20 to-transparent rounded-full blur-3xl animate-pulse" />
-              <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-tl from-purple-300/20 to-transparent rounded-full blur-3xl animate-pulse delay-1100" />
-            </div>
-          }
-          backgroundSpeed={-0.1}
-        >
-          <SafeComponentWrapper name="PricingSection" fallback={<div className="py-20"></div>}>
-            <EnhancedPricingSection />
-          </SafeComponentWrapper>
-        </ParallaxSection>
-        
         {/* Success Stories */}
         <ParallaxSection 
           id="success-stories"
@@ -333,6 +364,24 @@ const LandingPage = () => {
         >
           <SafeComponentWrapper name="CommunitySection" fallback={<div className="py-20"></div>}>
             <CommunitySection />
+          </SafeComponentWrapper>
+        </ParallaxSection>
+
+        {/* Pricing */}
+        <ParallaxSection 
+          id="pricing"
+          background={
+            <div className="absolute inset-0">
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-800/90 via-slate-700/85 to-zinc-800/90" />
+              <div className="absolute inset-0 bg-gradient-to-tl from-blue-400/15 via-transparent to-purple-400/15" />
+              <div className="absolute top-1/3 left-1/5 w-76 h-76 bg-gradient-to-br from-blue-300/20 to-transparent rounded-full blur-3xl animate-pulse" />
+              <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-tl from-purple-300/20 to-transparent rounded-full blur-3xl animate-pulse delay-1100" />
+            </div>
+          }
+          backgroundSpeed={-0.1}
+        >
+          <SafeComponentWrapper name="PricingSection" fallback={<div className="py-20"></div>}>
+            <EnhancedPricingSection />
           </SafeComponentWrapper>
         </ParallaxSection>
 
