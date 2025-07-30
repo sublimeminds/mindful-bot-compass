@@ -3,14 +3,11 @@ import { Link } from 'react-router-dom';
 import { 
   Menu, 
   X, 
-  Brain, 
-  Settings, 
-  Database, 
-  Star, 
-  BookOpen,
   ChevronRight,
   ChevronDown,
-  HelpCircle
+  HelpCircle,
+  BookOpen,
+  Star
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -49,31 +46,31 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const sections = [
     {
       id: 'therapy-ai',
-      icon: Brain,
+      icon: getItemIcon('therapy-ai-category'),
       title: 'Therapy AI',
       features: therapyAiFeatures
     },
     {
       id: 'features',
-      icon: Settings,
+      icon: getItemIcon('platform-category'),
       title: 'Features',
       features: platformFeatures
     },
     {
       id: 'tools-data',
-      icon: Database,
+      icon: getItemIcon('tools-data-category'),
       title: 'Tools & Data',
       features: toolsDataFeatures
     },
     {
       id: 'solutions',
-      icon: Star,
+      icon: getItemIcon('solutions-category'),
       title: 'Solutions',
       features: solutionsFeatures
     },
     {
       id: 'resources',
-      icon: BookOpen,
+      icon: getItemIcon('resources-category'),
       title: 'Resources',
       features: resourcesFeatures
     }

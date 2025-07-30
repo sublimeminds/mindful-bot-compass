@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
-  Brain, 
   Heart, 
   Users, 
   MessageSquare, 
   Headphones,
-  BookOpen,
   HelpCircle,
   ChevronDown,
   Sparkles,
@@ -21,7 +19,6 @@ import {
   Mic,
   Target,
   Zap,
-  Settings,
   Lightbulb,
   Star,
   UserPlus,
@@ -35,12 +32,10 @@ import {
   Smartphone,
   Cloud,
   Lock,
-  BarChart3,
   TrendingUp,
-  FileSpreadsheet,
-  Building,
-  GraduationCap
+  FileSpreadsheet
 } from 'lucide-react';
+import { getItemIcon } from '@/utils/iconUtils';
 
 import { useAuth } from '@/hooks/useAuth';
 import GradientLogo from '@/components/ui/GradientLogo';
@@ -481,7 +476,7 @@ const EnhancedHeader = () => {
                 <>
             {/* Therapy AI Dropdown */}
             <div className="relative group">
-              <HeaderDropdownTrigger icon={Brain} label="Therapy AI" />
+              <HeaderDropdownTrigger icon={getItemIcon('therapy-ai-category')} label="Therapy AI" />
               <HeaderDropdownCard className="dropdown-left">
                 <div className="space-y-6">
                   {/* AI Technology Section */}
@@ -529,7 +524,7 @@ const EnhancedHeader = () => {
 
             {/* Features Dropdown */}
             <div className="relative group">
-              <HeaderDropdownTrigger icon={Settings} label="Features" />
+              <HeaderDropdownTrigger icon={getItemIcon('platform-category')} label="Features" />
               <HeaderDropdownCard>
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   {platformFeatures.map((feature) => (
@@ -548,7 +543,7 @@ const EnhancedHeader = () => {
 
             {/* Tools & Data Dropdown */}
             <div className="relative group">
-              <HeaderDropdownTrigger icon={Database} label="Tools & Data" />
+              <HeaderDropdownTrigger icon={getItemIcon('tools-data-category')} label="Tools & Data" />
               <HeaderDropdownCard>
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   {toolsDataFeatures.map((feature) => (
@@ -568,7 +563,7 @@ const EnhancedHeader = () => {
 
             {/* Solutions Dropdown */}
             <div className="relative group">
-              <HeaderDropdownTrigger icon={Star} label="Solutions" />
+              <HeaderDropdownTrigger icon={getItemIcon('solutions-category')} label="Solutions" />
               <HeaderDropdownCard>
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   {solutionsFeatures.map((feature) => (
@@ -587,7 +582,7 @@ const EnhancedHeader = () => {
 
             {/* Resources Dropdown */}
             <div className="relative group">
-              <HeaderDropdownTrigger icon={BookOpen} label="Resources" />
+              <HeaderDropdownTrigger icon={getItemIcon('resources-category')} label="Resources" />
               <HeaderDropdownCard className="dropdown-right">
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   {resourcesFeatures.map((feature) => (

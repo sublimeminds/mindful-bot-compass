@@ -4,7 +4,7 @@ import { ChevronDown } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 
 interface HeaderDropdownTriggerProps {
-  icon: LucideIcon;
+  icon: LucideIcon | React.FC<{ className?: string; size?: number }>;
   label: string;
   className?: string;
 }

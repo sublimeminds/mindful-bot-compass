@@ -16,6 +16,7 @@ import {
   Home,
   Settings
 } from 'lucide-react';
+import { getItemIcon } from '@/utils/iconUtils';
 
 const MobileHeader = () => {
   const { user } = useAuth();
@@ -35,6 +36,11 @@ const MobileHeader = () => {
 
   const getMenuIcon = (iconName: string) => {
     const iconMap: Record<string, any> = {
+      'therapy-ai-category': getItemIcon('therapy-ai-category'),
+      'platform-category': getItemIcon('platform-category'),
+      'tools-data-category': getItemIcon('tools-data-category'),
+      'solutions-category': getItemIcon('solutions-category'),
+      'resources-category': getItemIcon('resources-category'),
       'Brain': Home,
       'Settings': Settings,
       'BarChart3': Settings,
