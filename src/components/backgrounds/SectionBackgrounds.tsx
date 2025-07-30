@@ -2,11 +2,11 @@ import React from 'react';
 
 // Hero Section Background - Sophisticated gradient mesh
 export const HeroBackground = () => (
-  <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-therapy-100/40 via-therapy-50/60 to-calm-50/50"></div>
-    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-therapy-200/30 to-calm-200/40"></div>
-    <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-therapy-300/40 to-calm-300/40 rounded-full blur-3xl"></div>
-    <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-tr from-calm-300/35 to-therapy-300/35 rounded-full blur-3xl"></div>
+  <div className="absolute inset-0 z-0">
+    <div className="absolute inset-0 bg-gradient-to-br from-therapy-100/60 via-therapy-50/70 to-calm-50/65"></div>
+    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-therapy-200/45 to-calm-200/55"></div>
+    <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-therapy-300/55 to-calm-300/55 rounded-full blur-3xl"></div>
+    <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-tr from-calm-300/50 to-therapy-300/50 rounded-full blur-3xl"></div>
   </div>
 );
 
