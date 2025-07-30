@@ -71,7 +71,7 @@ const EnterpriseHeroSection = () => {
     {
       id: 'therapy-ai',
       title: 'Your AI Therapy Experience',
-      subtitle: 'Meet 5+ unique AI personalities designed for your healing journey',
+      subtitle: 'Meet 6 unique AI personalities designed for your healing journey',
       description: 'Choose from specialized AI therapists trained in different approaches - from CBT to mindfulness, trauma-focused to cultural therapy. Each personality adapts to your unique needs.',
       icon: 'therapy-sync-ai-core',
       bgGradient: 'from-therapy-500/20 via-calm-400/15 to-harmony-300/10',
