@@ -3,48 +3,76 @@ import { cn } from '@/lib/utils';
 import { useScrollProgress } from '@/hooks/useParallaxScroll';
 import { useEnhancedScreenSize } from '@/hooks/useEnhancedScreenSize';
 
-// Updated section definitions to match current LandingPage structure
+// Updated section definitions to match current LandingPage structure with proper color themes
 const sections = [
-  { id: 'hero', title: 'Welcome', description: 'AI-Powered Therapy Platform', icon: '🌟', theme: 'therapy' },
-  { id: 'ai-technology', title: 'AI Technology', description: 'Advanced Intelligence', icon: '🧠', theme: 'blue' },
-  { id: 'ai-hub', title: 'AI Hub', description: 'Intelligent Ecosystem', icon: '🤖', theme: 'dark' },
-  { id: 'cultural-ai', title: 'Cultural AI', description: 'Global Understanding', icon: '🌏', theme: 'emerald' },
-  { id: 'therapists', title: 'Therapists', description: 'Real Professional Team', icon: '👥', theme: 'slate' },
-  { id: 'features', title: 'Features', description: 'Platform Capabilities', icon: '⚡', theme: 'indigo' },
-  { id: 'approaches', title: 'Approaches', description: 'Therapy Methods', icon: '🎯', theme: 'violet' },
-  { id: 'how-it-works', title: 'How It Works', description: 'Step-by-Step Process', icon: '🔄', theme: 'teal' },
-  { id: 'workflow', title: 'Workflow', description: 'AI-Driven Process', icon: '⚙️', theme: 'gray' },
-  { id: 'benefits', title: 'Benefits', description: 'Life-Changing Results', icon: '✨', theme: 'rose' },
-  { id: 'success-stories', title: 'Success Stories', description: 'Real Testimonials', icon: '🏆', theme: 'amber' },
-  { id: 'security', title: 'Security', description: 'Privacy & Trust', icon: '🔒', theme: 'green' },
-  { id: 'global-reach', title: 'Global Reach', description: 'Worldwide Access', icon: '🌍', theme: 'blue-purple' },
-  { id: 'community', title: 'Community', description: 'Support Network', icon: '🤝', theme: 'pink' },
-  { id: 'pricing', title: 'Pricing', description: 'Affordable Plans', icon: '💎', theme: 'dark' },
-  { id: 'cta', title: 'Get Started', description: 'Begin Your Journey', icon: '🚀', theme: 'therapy' }
+  { id: 'hero', title: 'Welcome', description: 'AI-Powered Therapy Platform', theme: 'therapy' },
+  { id: 'ai-technology', title: 'AI Technology', description: 'Advanced Intelligence', theme: 'blue' },
+  { id: 'ai-hub', title: 'AI Hub', description: 'Intelligent Ecosystem', theme: 'calm' },
+  { id: 'cultural-ai', title: 'Cultural AI', description: 'Global Understanding', theme: 'harmony' },
+  { id: 'therapists', title: 'Therapists', description: 'Professional Team', theme: 'flow' },
+  { id: 'features', title: 'Features', description: 'Platform Capabilities', theme: 'balance' },
+  { id: 'approaches', title: 'Approaches', description: 'Therapy Methods', theme: 'harmony' },
+  { id: 'how-it-works', title: 'How It Works', description: 'Step-by-Step Process', theme: 'flow' },
+  { id: 'workflow', title: 'Workflow', description: 'AI-Driven Process', theme: 'calm' },
+  { id: 'benefits', title: 'Benefits', description: 'Life-Changing Results', theme: 'harmony' },
+  { id: 'success-stories', title: 'Success Stories', description: 'Real Testimonials', theme: 'flow' },
+  { id: 'security', title: 'Security', description: 'Privacy & Trust', theme: 'calm' },
+  { id: 'global-reach', title: 'Global Reach', description: 'Worldwide Access', theme: 'balance' },
+  { id: 'community', title: 'Community', description: 'Support Network', theme: 'harmony' },
+  { id: 'pricing', title: 'Pricing', description: 'Affordable Plans', theme: 'therapy' },
+  { id: 'cta', title: 'Get Started', description: 'Begin Your Journey', theme: 'flow' }
 ];
 
 const AppleProgressBar = () => {
   const { activeSection, scrollProgress, scrollToSection } = useScrollProgress(sections.map(s => s.id));
   const { isMobile, isTablet } = useEnhancedScreenSize();
 
-  // Smart theme detection based on section
+  // Smart theme detection based on section colors matching the background themes
   const getSectionTheme = (sectionIndex: number) => {
     const section = sections[sectionIndex];
     const themes = {
-      therapy: { bg: 'bg-therapy-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
-      blue: { bg: 'bg-slate-900/90', dot: 'bg-blue-400', text: 'text-gray-900', border: 'border-slate-400/30' },
-      emerald: { bg: 'bg-emerald-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
-      slate: { bg: 'bg-white/90', dot: 'bg-slate-600', text: 'text-slate-900', border: 'border-slate-300/30' },
-      indigo: { bg: 'bg-white/90', dot: 'bg-indigo-600', text: 'text-indigo-900', border: 'border-indigo-300/30' },
-      violet: { bg: 'bg-violet-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
-      teal: { bg: 'bg-teal-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
-      gray: { bg: 'bg-white/90', dot: 'bg-gray-600', text: 'text-gray-900', border: 'border-gray-300/30' },
-      rose: { bg: 'bg-rose-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
-      dark: { bg: 'bg-slate-800/90', dot: 'bg-blue-400', text: 'text-white', border: 'border-slate-600/30' },
-      amber: { bg: 'bg-amber-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
-      green: { bg: 'bg-green-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
-      'blue-purple': { bg: 'bg-blue-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' },
-      pink: { bg: 'bg-pink-900/90', dot: 'bg-white', text: 'text-white', border: 'border-white/30' }
+      therapy: { 
+        bg: 'bg-therapy-300/20 backdrop-blur-xl', 
+        dot: 'bg-therapy-400', 
+        text: 'text-therapy-900', 
+        border: 'border-therapy-200/40',
+        activeDot: 'bg-therapy-500 shadow-therapy-500/50'
+      },
+      calm: { 
+        bg: 'bg-calm-300/20 backdrop-blur-xl', 
+        dot: 'bg-calm-400', 
+        text: 'text-calm-900', 
+        border: 'border-calm-200/40',
+        activeDot: 'bg-calm-500 shadow-calm-500/50'
+      },
+      harmony: { 
+        bg: 'bg-harmony-300/20 backdrop-blur-xl', 
+        dot: 'bg-harmony-400', 
+        text: 'text-harmony-900', 
+        border: 'border-harmony-200/40',
+        activeDot: 'bg-harmony-500 shadow-harmony-500/50'
+      },
+      flow: { 
+        bg: 'bg-flow-300/20 backdrop-blur-xl', 
+        dot: 'bg-flow-400', 
+        text: 'text-flow-900', 
+        border: 'border-flow-200/40',
+        activeDot: 'bg-flow-500 shadow-flow-500/50'
+      },
+      balance: { 
+        bg: 'bg-balance-300/20 backdrop-blur-xl', 
+        dot: 'bg-balance-400', 
+        text: 'text-balance-900', 
+        border: 'border-balance-200/40',
+        activeDot: 'bg-balance-500 shadow-balance-500/50'
+      },
+      blue: { 
+        bg: 'bg-blue-300/20 backdrop-blur-xl', 
+        dot: 'bg-blue-400', 
+        text: 'text-blue-900', 
+        border: 'border-blue-200/40',
+        activeDot: 'bg-blue-500 shadow-blue-500/50'
+      }
     };
     return themes[section?.theme as keyof typeof themes] || themes.therapy;
   };
@@ -109,12 +137,11 @@ const AppleProgressBar = () => {
                 <button
                   onClick={() => scrollToSection(section.id)}
                   className={cn(
-                    "relative w-3 h-3 rounded-full border-2 transition-all duration-300 ease-out",
+                    "relative w-3 h-3 rounded-full transition-all duration-300 ease-out",
                     "hover:scale-125 focus:outline-none focus:ring-2 focus:ring-offset-2",
                     isActive 
-                      ? cn(sectionTheme.dot, "scale-125 shadow-lg") 
-                      : cn("bg-transparent border-current opacity-60 hover:opacity-100"),
-                    isActive ? "border-transparent" : sectionTheme.border.replace('border-', 'border-').replace('/30', '/60')
+                      ? cn(sectionTheme.activeDot, "scale-125 shadow-lg") 
+                      : cn(sectionTheme.dot, "opacity-40 hover:opacity-80 hover:scale-110")
                   )}
                   aria-label={`Go to ${section.title} section`}
                 />
@@ -129,12 +156,9 @@ const AppleProgressBar = () => {
                   sectionTheme.text,
                   sectionTheme.border
                 )}>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-base">{section.icon}</span>
-                    <div>
-                      <div className="font-semibold">{section.title}</div>
-                      <div className="text-xs opacity-75">{section.description}</div>
-                    </div>
+                  <div>
+                    <div className="font-semibold">{section.title}</div>
+                    <div className="text-xs opacity-75">{section.description}</div>
                   </div>
                   
                   {/* Tooltip arrow */}
