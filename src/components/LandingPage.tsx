@@ -17,6 +17,24 @@ import TrustSection from '@/components/landing/TrustSection';
 import CTASection from '@/components/landing/CTASection';
 import PricingSection from '@/components/PricingSection';
 import AppleProgressBar from '@/components/parallax/AppleProgressBar';
+import {
+  HeroBackground,
+  AITechnologyBackground,
+  AIHubBackground,
+  CulturalAIBackground,
+  TherapistsBackground,
+  FeaturesBackground,
+  ApproachesBackground,
+  HowItWorksBackground,
+  WorkflowBackground,
+  BenefitsBackground,
+  SuccessStoriesBackground,
+  SecurityBackground,
+  GlobalReachBackground,
+  CommunityBackground,
+  PricingBackground,
+  CTABackground
+} from '@/components/backgrounds/SectionBackgrounds';
 
 const LandingPage = () => {
   console.log('🔍 LandingPage: Component rendering');
@@ -31,6 +49,7 @@ const LandingPage = () => {
           backgroundSpeed={0.5}
           contentSpeed={0.8}
           fullHeight
+          background={<HeroBackground />}
         >
           <HeroSection />
         </ParallaxSection>
@@ -40,6 +59,7 @@ const LandingPage = () => {
           id="ai-technology"
           backgroundSpeed={0.3}
           contentSpeed={0.6}
+          background={<AITechnologyBackground />}
         >
           <TrustIndicators />
         </ParallaxSection>
@@ -49,6 +69,7 @@ const LandingPage = () => {
           id="ai-hub"
           backgroundSpeed={0.4}
           contentSpeed={0.7}
+          background={<AIHubBackground />}
         >
           <AIHubSection />
         </ParallaxSection>
@@ -58,6 +79,7 @@ const LandingPage = () => {
           id="cultural-ai"
           backgroundSpeed={0.2}
           contentSpeed={0.5}
+          background={<CulturalAIBackground />}
         >
           <CulturalAISection />
         </ParallaxSection>
@@ -67,6 +89,7 @@ const LandingPage = () => {
           id="therapists"
           backgroundSpeed={0.3}
           contentSpeed={0.6}
+          background={<TherapistsBackground />}
         >
           <StatsCounter />
         </ParallaxSection>
@@ -76,6 +99,7 @@ const LandingPage = () => {
           id="features"
           backgroundSpeed={0.4}
           contentSpeed={0.7}
+          background={<FeaturesBackground />}
         >
           <FeaturesSection />
         </ParallaxSection>
@@ -85,6 +109,7 @@ const LandingPage = () => {
           id="approaches"
           backgroundSpeed={0.2}
           contentSpeed={0.5}
+          background={<ApproachesBackground />}
         >
           <TherapyApproachesSection />
         </ParallaxSection>
@@ -94,6 +119,7 @@ const LandingPage = () => {
           id="how-it-works"
           backgroundSpeed={0.3}
           contentSpeed={0.6}
+          background={<HowItWorksBackground />}
         >
           <TrustSection />
         </ParallaxSection>
@@ -103,6 +129,7 @@ const LandingPage = () => {
           id="workflow"
           backgroundSpeed={0.4}
           contentSpeed={0.7}
+          background={<WorkflowBackground />}
         >
           <AIWorkflowSection />
         </ParallaxSection>
@@ -112,6 +139,7 @@ const LandingPage = () => {
           id="benefits"
           backgroundSpeed={0.2}
           contentSpeed={0.5}
+          background={<BenefitsBackground />}
         >
           <TrustIndicators />
         </ParallaxSection>
@@ -121,6 +149,7 @@ const LandingPage = () => {
           id="success-stories"
           backgroundSpeed={0.3}
           contentSpeed={0.6}
+          background={<SuccessStoriesBackground />}
         >
           <SuccessStoriesSection />
         </ParallaxSection>
@@ -130,6 +159,7 @@ const LandingPage = () => {
           id="security"
           backgroundSpeed={0.4}
           contentSpeed={0.7}
+          background={<SecurityBackground />}
         >
           <TrustSection />
         </ParallaxSection>
@@ -139,6 +169,7 @@ const LandingPage = () => {
           id="global-reach"
           backgroundSpeed={0.2}
           contentSpeed={0.5}
+          background={<GlobalReachBackground />}
         >
           <GlobalReachSection />
         </ParallaxSection>
@@ -148,6 +179,7 @@ const LandingPage = () => {
           id="community"
           backgroundSpeed={0.3}
           contentSpeed={0.6}
+          background={<CommunityBackground />}
         >
           <CommunitySection />
         </ParallaxSection>
@@ -157,6 +189,7 @@ const LandingPage = () => {
           id="pricing"
           backgroundSpeed={0.4}
           contentSpeed={0.7}
+          background={<PricingBackground />}
         >
           <PricingSection />
         </ParallaxSection>
@@ -166,6 +199,7 @@ const LandingPage = () => {
           id="cta"
           backgroundSpeed={0.3}
           contentSpeed={0.6}
+          background={<CTABackground />}
         >
           <CTASection />
         </ParallaxSection>
