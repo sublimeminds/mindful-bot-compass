@@ -9,7 +9,6 @@ interface ParallaxOptions {
 export const useParallaxScroll = (options: ParallaxOptions = { speed: 0.5 }) => {
   const [scrollY, setScrollY] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
-  const [isUserScrolling, setIsUserScrolling] = useState(false);
   const { isMobile } = useEnhancedScreenSize();
   const scrollTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -26,38 +25,30 @@ export const useParallaxScroll = (options: ParallaxOptions = { speed: 0.5 }) => 
     // Set new timeout to detect scroll end
     scrollTimeoutRef.current = setTimeout(() => {
       setIsScrolling(false);
-    }, 100);
+    }, 150);
   }, []);
 
   useEffect(() => {
-    if (options.disabled) return;
+    if (options.disabled || isMobile) return;
 
     const handleScroll = () => {
       requestAnimationFrame(updateScrollY);
     };
 
-    const handleWheel = (e: WheelEvent) => {
-      setIsUserScrolling(true);
-      setTimeout(() => setIsUserScrolling(false), 300);
-    };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('wheel', handleWheel, { passive: true });
-    
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('wheel', handleWheel);
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
     };
-  }, [updateScrollY, options.disabled]);
+  }, [updateScrollY, options.disabled, isMobile]);
 
   const getParallaxOffset = useCallback((customSpeed?: number) => {
-    if (options.disabled) return 0;
+    if (options.disabled || isMobile) return 0;
     const speed = customSpeed ?? options.speed;
     return scrollY * speed;
-  }, [scrollY, options.speed, options.disabled]);
+  }, [scrollY, options.speed, options.disabled, isMobile]);
 
   const getTransform = useCallback((customSpeed?: number) => {
     const offset = getParallaxOffset(customSpeed);
@@ -67,7 +58,6 @@ export const useParallaxScroll = (options: ParallaxOptions = { speed: 0.5 }) => 
   return {
     scrollY,
     isScrolling,
-    isUserScrolling,
     getParallaxOffset,
     getTransform,
     isParallaxEnabled: !options.disabled && !isMobile
@@ -81,26 +71,18 @@ export const useScrollProgress = (sections: string[]) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        let maxRatio = 0;
-        let activeIndex = 0;
-        
         entries.forEach((entry) => {
-          if (entry.intersectionRatio > maxRatio) {
-            maxRatio = entry.intersectionRatio;
+          if (entry.isIntersecting) {
             const sectionId = entry.target.id;
             const index = sections.findIndex(section => section === sectionId);
             if (index !== -1) {
-              activeIndex = index;
+              setActiveSection(index);
             }
           }
         });
-        
-        if (maxRatio > 0.3) {
-          setActiveSection(activeIndex);
-        }
       },
       {
-        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+        threshold: 0.3,
         rootMargin: '-20% 0px -20% 0px'
       }
     );
@@ -127,17 +109,15 @@ export const useScrollProgress = (sections: string[]) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = useCallback((sectionId: string, index?: number) => {
+  const scrollToSection = useCallback((sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
+      const offsetTop = element.offsetTop - 80; // Account for any fixed headers
       
-      if (index !== undefined) {
-        setActiveSection(index);
-      }
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth'
+      });
     }
   }, []);
 

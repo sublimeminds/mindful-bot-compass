@@ -54,7 +54,7 @@ const UnifiedMobileHeader: React.FC<UnifiedMobileHeaderProps> = ({ onMenuToggle,
 
   if (showSearch) {
     return (
-      <header className={`md:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50 ${className || ''}`}>
+      <header className={`lg:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50 ${className || ''}`}>
         <form onSubmit={handleSearch} className="flex items-center space-x-2">
           <Button
             variant="ghost"
@@ -81,7 +81,7 @@ const UnifiedMobileHeader: React.FC<UnifiedMobileHeaderProps> = ({ onMenuToggle,
   }
 
   return (
-    <header className={`md:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50 ${className || ''}`}>
+    <header className={`lg:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50 ${className || ''}`}>
       <div className="flex items-center justify-between">
         {/* Left section */}
         <div className="flex items-center space-x-3">

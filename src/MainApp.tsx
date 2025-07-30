@@ -59,13 +59,12 @@ const MainApp: React.FC = () => {
           <AppErrorBoundary>
             <BulletproofAuthProvider>
               <div className="min-h-screen bg-background text-foreground">
-                {/* LanguageBanner temporarily disabled to fix duplicate header issue */}
-                {/* <LanguageBanner
+                <LanguageBanner
                   isVisible={showBanner}
                   onDismiss={dismissBanner}
                   onSwitch={switchLanguage}
                   suggestedLanguage={suggestedLanguage}
-                /> */}
+                />
                 <SafeRouter>
                   <CleanLanguageAwareRouter />
                   <Toaster />

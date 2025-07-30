@@ -72,7 +72,7 @@ const EnhancedHeroSection = () => {
             "flex items-center justify-center space-x-4 transition-all duration-1000",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}>
-            <div className="animate-swirl-breathe">
+            <div className="animate-spin-slow">
               <GradientLogo size="lg" />
             </div>
             <div className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
@@ -80,33 +80,33 @@ const EnhancedHeroSection = () => {
             </div>
           </div>
           
-          {/* Clean Headline - Enhanced Mobile */}
+          {/* Clean Headline */}
           <div className={cn(
-            "space-y-6 md:space-y-8 transition-all duration-1000 delay-200",
+            "space-y-8 transition-all duration-1000 delay-200",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}>
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-light leading-tight tracking-tight text-foreground px-4 sm:px-0">
-              <span className="block sm:inline">Professional AI therapy,</span>
-              <br className="hidden sm:block" />
-              <span className="font-medium bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent block sm:inline">
+            <h1 className="text-4xl lg:text-6xl xl:text-7xl font-light leading-tight tracking-tight text-foreground">
+              Professional AI therapy,
+              <br />
+              <span className="font-medium bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent">
                 available instantly
               </span>
             </h1>
             
-            <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-light px-4 sm:px-0">
+            <p className="text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-light">
               Experience evidence-based mental health support with advanced AI that adapts to your unique needs.
-              <span className="block sm:inline"> Private, secure, and accessible 24/7.</span>
+              Private, secure, and accessible 24/7.
             </p>
           </div>
 
-          {/* Interactive Chat Demo - Enhanced Mobile */}
+          {/* Interactive Chat Demo */}
           <div className={cn(
-            "transition-all duration-1000 delay-400 px-4 sm:px-0",
+            "transition-all duration-1000 delay-400",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}>
             <div className="relative max-w-4xl mx-auto">
               <Card className="bg-white/80 backdrop-blur-sm shadow-xl border border-therapy-100/50">
-                <CardContent className="p-4 sm:p-6 lg:p-12">
+                <CardContent className="p-8 lg:p-12">
                   <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center space-x-3">
                       <div className="w-3 h-3 bg-therapy-500 rounded-full animate-pulse"></div>
