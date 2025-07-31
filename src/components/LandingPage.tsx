@@ -11,7 +11,7 @@ import AIWorkflowSection from '@/components/landing/AIWorkflowSection';
 import SuccessStoriesSection from '@/components/landing/SuccessStoriesSection';
 import GlobalReachSection from '@/components/landing/GlobalReachSection';
 import CommunitySection from '@/components/landing/CommunitySection';
-import TrustIndicators from '@/components/landing/TrustIndicators';
+import AITechnologyShowcase from '@/components/sections/AITechnologyShowcase';
 import AITherapistTeam from '@/pages/AITherapistTeam';
 import TrustSection from '@/components/landing/TrustSection';
 import CTASection from '@/components/landing/CTASection';
@@ -24,12 +24,12 @@ import {
   AITechnologyBackground,
   AIHubBackground,
   CulturalAIBackground,
+  MissionBackground,
   TherapistsBackground,
+  TechnologyBackground,
   FeaturesBackground,
   ApproachesBackground,
-  HowItWorksBackground,
   WorkflowBackground,
-  BenefitsBackground,
   SuccessStoriesBackground,
   SecurityBackground,
   GlobalReachBackground,
@@ -63,7 +63,7 @@ const LandingPage = () => {
           contentSpeed={0.6}
           background={<AITechnologyBackground />}
         >
-          <TrustIndicators />
+          <AITechnologyShowcase />
         </ParallaxSection>
 
         {/* AI Hub Section */}
@@ -91,7 +91,7 @@ const LandingPage = () => {
           id="mission"
           backgroundSpeed={0.3}
           contentSpeed={0.6}
-          background={<ApproachesBackground />}
+          background={<MissionBackground />}
         >
           <MissionSection />
         </ParallaxSection>
@@ -111,7 +111,7 @@ const LandingPage = () => {
           id="technology"
           backgroundSpeed={0.4}
           contentSpeed={0.7}
-          background={<FeaturesBackground />}
+          background={<TechnologyBackground />}
         >
           <TechnologySection />
         </ParallaxSection>
@@ -121,7 +121,7 @@ const LandingPage = () => {
           id="features"
           backgroundSpeed={0.4}
           contentSpeed={0.7}
-          background={<SecurityBackground />}
+          background={<FeaturesBackground />}
         >
           <FeaturesSection />
         </ParallaxSection>
@@ -131,7 +131,7 @@ const LandingPage = () => {
           id="approaches"
           backgroundSpeed={0.2}
           contentSpeed={0.5}
-          background={<HowItWorksBackground />}
+          background={<ApproachesBackground />}
         >
           <TherapyApproachesSection />
         </ParallaxSection>
@@ -146,25 +146,6 @@ const LandingPage = () => {
           <AIWorkflowSection />
         </ParallaxSection>
 
-        {/* Research & Science Section */}
-        <ParallaxSection 
-          id="research"
-          backgroundSpeed={0.4}
-          contentSpeed={0.7}
-          background={<WorkflowBackground />}
-        >
-          <TrustIndicators />
-        </ParallaxSection>
-
-        {/* Benefits Section */}
-        <ParallaxSection 
-          id="benefits"
-          backgroundSpeed={0.2}
-          contentSpeed={0.5}
-          background={<BenefitsBackground />}
-        >
-          <TrustIndicators />
-        </ParallaxSection>
 
         {/* Success Stories Section */}
         <ParallaxSection 
