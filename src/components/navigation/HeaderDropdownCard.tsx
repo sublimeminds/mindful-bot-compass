@@ -43,8 +43,8 @@ const HeaderDropdownCard: React.FC<HeaderDropdownCardProps> = ({
       "shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]",
       className
     )}>
-      {/* Subtle gradient overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-br from-therapy-25 via-transparent to-calm-25 pointer-events-none" />
+      {/* Solid background for depth */}
+      <div className="absolute inset-0 bg-therapy-500 opacity-5 pointer-events-none" />
       
       {/* Content */}
       <div className="relative z-10">

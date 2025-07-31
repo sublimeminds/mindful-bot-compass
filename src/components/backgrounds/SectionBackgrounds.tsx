@@ -3,10 +3,10 @@ import React from 'react';
 // APPLE-STYLE CLEAN BACKGROUNDS - NO TRANSPARENCY
 // Clean, vibrant single-layer backgrounds with perfect contrast
 
-// Hero Section Background - Clean white with subtle brand accent
+// Hero Section Background - Vibrant therapy gradient
 export const HeroBackground = () => (
   <div className="absolute inset-0 z-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-background to-therapy-50"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-therapy-500 to-therapy-600"></div>
   </div>
 );
 
@@ -17,17 +17,17 @@ export const TrustIndicatorsBackground = () => (
   </div>
 );
 
-// AI Hub Background - Clean therapy gradient
+// AI Hub Background - Vibrant therapy gradient
 export const AIHubBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-therapy-50 to-calm-100"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-therapy-500 to-calm-500"></div>
   </div>
 );
 
-// Cultural AI Background - Clean harmony gradient
+// Cultural AI Background - Vibrant harmony gradient
 export const CulturalAIBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-harmony-100 to-therapy-100"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-harmony-500 to-therapy-500"></div>
   </div>
 );
 
@@ -45,10 +45,10 @@ export const FeaturesBackground = () => (
   </div>
 );
 
-// Therapy Approaches Background - Clean light theme
+// Therapy Approaches Background - Vibrant therapy theme
 export const ApproachesBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-therapy-50 to-balance-100"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-therapy-500 to-balance-500"></div>
   </div>
 );
 
@@ -59,10 +59,10 @@ export const TrustSectionBackground = () => (
   </div>
 );
 
-// AI Workflow Background - Light therapy theme
+// AI Workflow Background - Vibrant flow theme
 export const WorkflowBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-flow-50 to-therapy-100"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-flow-500 to-therapy-500"></div>
   </div>
 );
 
@@ -80,10 +80,10 @@ export const SecurityBackground = () => (
   </div>
 );
 
-// Global Reach Background - Light harmony theme
+// Global Reach Background - Vibrant harmony theme
 export const GlobalReachBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-harmony-50 to-flow-100"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-harmony-500 to-flow-500"></div>
   </div>
 );
 

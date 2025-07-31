@@ -430,7 +430,7 @@ const ComprehensiveTherapyApproaches = () => {
             {paginatedApproaches.map((approach) => (
               <Card 
                 key={approach.id} 
-                className="group bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden rounded-2xl"
+                className="group bg-white border-therapy-200 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden rounded-2xl"
               >
                 <div className={`h-3 bg-gradient-to-r ${approach.gradient}`}></div>
                 <CardContent className="p-6">

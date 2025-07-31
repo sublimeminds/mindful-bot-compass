@@ -81,7 +81,7 @@ export default function AIHubSection() {
       {/* AI Modules Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {aiModules.map((module) => (
-          <Card key={module.id} className="bg-white/90 border-white/50 hover:bg-white/95 transition-all duration-300 group hover:scale-105">
+          <Card key={module.id} className="bg-white border-therapy-200 hover:bg-therapy-50 transition-all duration-300 group hover:scale-105">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between mb-3">
                 <div className={`p-3 rounded-xl bg-gradient-to-br ${module.gradient} shadow-lg`}>
@@ -100,7 +100,7 @@ export default function AIHubSection() {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="w-full bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/40"
+                className="w-full bg-therapy-600 border-therapy-500 text-white hover:bg-therapy-700 hover:border-therapy-600"
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Start Session
@@ -144,7 +144,7 @@ export default function AIHubSection() {
       </div>
 
       {/* CTA */}
-      <div className="bg-white/90 rounded-2xl p-8 border border-white/50">
+      <div className="bg-white rounded-2xl p-8 border border-therapy-200">
         <h3 className="text-2xl font-bold text-white mb-4">Ready to Experience AI-Powered Therapy?</h3>
         <p className="text-white/80 mb-6 max-w-2xl mx-auto">
           Join thousands of users who have transformed their mental health journey with our advanced AI therapeutic platform.
@@ -152,7 +152,7 @@ export default function AIHubSection() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
             size="lg" 
-            className="bg-white text-gray-900 hover:bg-white/90 font-semibold px-8"
+            className="bg-therapy-500 text-white hover:bg-therapy-600 font-semibold px-8"
           >
             <Brain className="h-5 w-5 mr-2" />
             Start Your AI Session
@@ -161,7 +161,7 @@ export default function AIHubSection() {
           <Button 
             variant="outline" 
             size="lg" 
-            className="border-white/30 text-white hover:bg-white/10 px-8"
+            className="border-therapy-300 text-therapy-600 hover:bg-therapy-50 px-8"
           >
             <Settings className="h-5 w-5 mr-2" />
             Customize AI Settings

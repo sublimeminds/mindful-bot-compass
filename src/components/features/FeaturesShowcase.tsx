@@ -348,7 +348,7 @@ const FeaturesShowcase = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {elevenLabsShowcase.map((item, index) => (
-                  <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+                  <div key={index} className="bg-therapy-500 rounded-lg p-6">
                     <h3 className="font-semibold text-lg mb-3">{item.title}</h3>
                     <p className="text-blue-100 text-sm mb-4">{item.description}</p>
                     <ul className="space-y-1">

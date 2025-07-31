@@ -170,7 +170,7 @@ const ComprehensivePricingSection = () => {
                 className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl ${
                   plan.popular 
                     ? 'ring-4 ring-therapy-400 shadow-therapy-500/30 scale-105 bg-gradient-to-br from-therapy-50 to-calm-50 border-therapy-200' 
-                    : 'hover:shadow-therapy-500/10 bg-white/80 backdrop-blur-sm border-slate-200'
+                    : 'hover:shadow-therapy-500/10 bg-white border-slate-200'
                 }`}
               >
                 {plan.popular && (
