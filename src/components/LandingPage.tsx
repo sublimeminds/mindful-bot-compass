@@ -2,7 +2,8 @@ import React from 'react';
 import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
 import ParallaxContainer from '@/components/parallax/ParallaxContainer';
 import ParallaxSection from '@/components/parallax/ParallaxSection';
-import HeroSection from '@/components/HeroSection';
+import AppleHeroSection from '@/components/sections/AppleHeroSection';
+import SecurityShowcase from '@/components/sections/SecurityShowcase';
 import AIHubSection from '@/components/ai/AIHubSection';
 import CulturalAISection from '@/components/cultural/CulturalAISection';
 import FeaturesSection from '@/components/FeaturesSection';
@@ -13,8 +14,8 @@ import GlobalReachSection from '@/components/landing/GlobalReachSection';
 import CommunitySection from '@/components/landing/CommunitySection';
 import AITechnologyShowcase from '@/components/sections/AITechnologyShowcase';
 import AITherapistTeam from '@/pages/AITherapistTeam';
-import TrustSection from '@/components/landing/TrustSection';
 import CTASection from '@/components/landing/CTASection';
+import Footer from '@/components/Footer';
 import PricingSection from '@/components/PricingSection';
 import AppleProgressBar from '@/components/parallax/AppleProgressBar';
 import MissionSection from '@/components/sections/MissionSection';
@@ -53,7 +54,7 @@ const LandingPage = () => {
           fullHeight
           background={<HeroBackground />}
         >
-          <HeroSection />
+          <AppleHeroSection />
         </ParallaxSection>
 
         {/* AI Technology Section */}
@@ -164,7 +165,7 @@ const LandingPage = () => {
           contentSpeed={0.7}
           background={<SecurityBackground />}
         >
-          <TrustSection />
+          <SecurityShowcase />
         </ParallaxSection>
 
         {/* Global Reach Section */}
@@ -207,6 +208,9 @@ const LandingPage = () => {
           <CTASection />
         </ParallaxSection>
       </ParallaxContainer>
+      
+      {/* Footer outside parallax container for better performance */}
+      <Footer />
     </SafeComponentWrapper>
   );
 };

@@ -3,10 +3,10 @@ import React from 'react';
 // APPLE-STYLE SECTION BACKGROUNDS
 // Sophisticated Apple-inspired design with brand gradients
 
-// Hero Section - Vibrant therapy gradient (Orange energy)
+// Hero Section - Clean Apple-style background
 export const HeroBackground = () => (
   <div className="absolute inset-0 z-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-therapy-500 via-therapy-600 to-harmony-500"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-slate-100"></div>
   </div>
 );
 
@@ -94,10 +94,10 @@ export const CommunityBackground = () => (
   </div>
 );
 
-// Trust/Security - Clean white (Professional trust)
+// Trust/Security - Clean white with subtle security gradients
 export const SecurityBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-white"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-gray-50 to-white"></div>
   </div>
 );
 

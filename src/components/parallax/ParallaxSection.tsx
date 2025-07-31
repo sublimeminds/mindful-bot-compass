@@ -59,8 +59,6 @@ export default function ParallaxSection({
         className
       )}
       style={{
-        scrollSnapAlign: 'start',
-        scrollSnapStop: 'always',
         minHeight: '100vh'
       }}
     >
