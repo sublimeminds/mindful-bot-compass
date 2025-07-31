@@ -10,10 +10,10 @@ export const HeroBackground = () => (
   </div>
 );
 
-// AI Technology - Clean white with subtle therapy accents
+// AI Technology - Subtle blue gradient matching sidebar
 export const AITechnologyBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-white"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-calm-50 via-white to-therapy-50/50"></div>
   </div>
 );
 

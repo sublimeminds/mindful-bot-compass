@@ -68,10 +68,10 @@ const AppleHeroSection = () => {
           "flex items-center justify-center space-x-4 mb-8 transition-all duration-1000",
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         )}>
-          <div className="p-2 rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg">
+          <div className="p-3 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg border border-slate-200/50">
             <GradientLogo size="lg" />
           </div>
-          <div className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <div className="text-3xl lg:text-4xl font-bold text-slate-900 drop-shadow-sm">
             TherapySync
           </div>
         </div>
@@ -99,28 +99,28 @@ const AppleHeroSection = () => {
           "grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto transition-all duration-1000 delay-400",
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         )}>
-          <div className="group p-6 bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-            <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="group p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+            <div className="w-12 h-12 bg-gradient-to-r from-therapy-600 to-calm-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
               <Shield className="w-6 h-6 text-white" />
             </div>
             <div className="font-semibold text-slate-900 mb-2">100% Private</div>
-            <div className="text-sm text-slate-600">HIPAA-compliant security</div>
+            <div className="text-sm text-slate-700">HIPAA-compliant security</div>
           </div>
           
-          <div className="group p-6 bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-            <div className="w-12 h-12 bg-gradient-to-r from-calm-500 to-harmony-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="group p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+            <div className="w-12 h-12 bg-gradient-to-r from-calm-600 to-harmony-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
               <Clock className="w-6 h-6 text-white" />
             </div>
             <div className="font-semibold text-slate-900 mb-2">Always Available</div>
-            <div className="text-sm text-slate-600">24/7 instant access</div>
+            <div className="text-sm text-slate-700">24/7 instant access</div>
           </div>
           
-          <div className="group p-6 bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-            <div className="w-12 h-12 bg-gradient-to-r from-harmony-500 to-therapy-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="group p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+            <div className="w-12 h-12 bg-gradient-to-r from-harmony-600 to-therapy-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
               <Brain className="w-6 h-6 text-white" />
             </div>
             <div className="font-semibold text-slate-900 mb-2">Evidence-Based</div>
-            <div className="text-sm text-slate-600">Clinical-grade AI</div>
+            <div className="text-sm text-slate-700">Clinical-grade AI</div>
           </div>
         </div>
 

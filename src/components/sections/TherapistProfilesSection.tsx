@@ -151,18 +151,6 @@ const TherapistProfilesSection = () => {
           })}
         </div>
 
-        {/* Call to Action */}
-        <div className="text-center mt-12">
-          <Button 
-            size="lg"
-            className="bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white font-medium px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            Start Your First Session
-          </Button>
-          <p className="text-sm text-muted-foreground mt-3">
-            Choose your therapist and begin your mental health journey today
-          </p>
-        </div>
       </div>
     </div>
   );
