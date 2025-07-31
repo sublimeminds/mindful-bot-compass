@@ -52,6 +52,12 @@ import {
   ResourcesCategory
 } from '@/components/icons';
 
+// Import custom AI-generated icons separately
+import ApproachesShowcaseIcon from '@/components/icons/custom/ApproachesShowcaseIcon';
+import SecurityShieldIcon from '@/components/icons/custom/SecurityShieldIcon';
+import FeaturesIcon from '@/components/icons/custom/FeaturesIcon';
+import GetStartedIcon from '@/components/icons/custom/GetStartedIcon';
+
 // Direct mapping without wrapper - icons are now proper SVG React components
 const customIcons: Record<string, React.FC<{ className?: string; size?: number }>> = {
   // Therapy AI Icons
@@ -112,6 +118,12 @@ const customIcons: Record<string, React.FC<{ className?: string; size?: number }
   'tools-data-category': ToolsDataCategory,
   'solutions-category': SolutionsCategory,
   'resources-category': ResourcesCategory,
+
+  // Custom AI-Generated Icons
+  'approaches-showcase': ApproachesShowcaseIcon,
+  'security-shield': SecurityShieldIcon,
+  'features-icon': FeaturesIcon,
+  'get-started': GetStartedIcon,
 };
 
 // Function to get either custom icon component or fallback to Lucide
