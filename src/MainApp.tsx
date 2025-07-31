@@ -11,6 +11,7 @@ import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAut
 import { SafeRouter } from '@/components/bulletproof/SafeRouter';
 import AppErrorBoundary from '@/components/core/AppErrorBoundary';
 import ReactSafeWrapper from '@/components/ReactSafeWrapper';
+import { TherapistProvider } from '@/contexts/TherapistContext';
 
 // Main App Router
 import { CleanLanguageAwareRouter } from '@/components/seo/CleanLanguageAwareRouter';
@@ -58,20 +59,22 @@ const MainApp: React.FC = () => {
         <QueryClientProvider client={queryClient}>
           <AppErrorBoundary>
             <BulletproofAuthProvider>
-              <div className="min-h-screen bg-background text-foreground">
-                {/* LanguageBanner temporarily disabled to fix duplicate header issue */}
-                {/* <LanguageBanner
-                  isVisible={showBanner}
-                  onDismiss={dismissBanner}
-                  onSwitch={switchLanguage}
-                  suggestedLanguage={suggestedLanguage}
-                /> */}
-                <SafeRouter>
-                  <CleanLanguageAwareRouter />
-                  <Toaster />
-                  <Sonner />
-                </SafeRouter>
-              </div>
+              <TherapistProvider>
+                <div className="min-h-screen bg-background text-foreground">
+                  {/* LanguageBanner temporarily disabled to fix duplicate header issue */}
+                  {/* <LanguageBanner
+                    isVisible={showBanner}
+                    onDismiss={dismissBanner}
+                    onSwitch={switchLanguage}
+                    suggestedLanguage={suggestedLanguage}
+                  /> */}
+                  <SafeRouter>
+                    <CleanLanguageAwareRouter />
+                    <Toaster />
+                    <Sonner />
+                  </SafeRouter>
+                </div>
+              </TherapistProvider>
             </BulletproofAuthProvider>
           </AppErrorBoundary>
         </QueryClientProvider>
