@@ -6,15 +6,10 @@ import AppleHeroSection from '@/components/sections/AppleHeroSection';
 import SecurityShowcase from '@/components/sections/SecurityShowcase';
 import AIHubSection from '@/components/ai/AIHubSection';
 import CulturalAISection from '@/components/cultural/CulturalAISection';
-import FeaturesSection from '@/components/FeaturesSection';
-import TherapyApproachesSection from '@/components/landing/TherapyApproachesSection';
-import AIWorkflowSection from '@/components/landing/AIWorkflowSection';
-import SuccessStoriesSection from '@/components/landing/SuccessStoriesSection';
-import GlobalReachSection from '@/components/landing/GlobalReachSection';
-import CommunitySection from '@/components/landing/CommunitySection';
-import AITechnologyShowcase from '@/components/sections/AITechnologyShowcase';
-import AITherapistTeam from '@/pages/AITherapistTeam';
-import CTASection from '@/components/landing/CTASection';
+import ModernFeaturesSection from '@/components/sections/ModernFeaturesSection';
+import StreamlinedApproachesSection from '@/components/sections/StreamlinedApproachesSection';
+import CompactSecuritySection from '@/components/sections/CompactSecuritySection';
+import GetStartedSection from '@/components/sections/GetStartedSection';
 import Footer from '@/components/Footer';
 import PricingSection from '@/components/PricingSection';
 import AppleProgressBar from '@/components/parallax/AppleProgressBar';
@@ -124,7 +119,7 @@ const LandingPage = () => {
           contentSpeed={0.7}
           background={<FeaturesBackground />}
         >
-          <FeaturesSection />
+          <ModernFeaturesSection />
         </ParallaxSection>
 
         {/* Approaches Section */}
@@ -134,7 +129,7 @@ const LandingPage = () => {
           contentSpeed={0.5}
           background={<ApproachesBackground />}
         >
-          <TherapyApproachesSection />
+          <StreamlinedApproachesSection />
         </ParallaxSection>
 
         {/* How It Works Section */}
@@ -165,7 +160,7 @@ const LandingPage = () => {
           contentSpeed={0.7}
           background={<SecurityBackground />}
         >
-          <SecurityShowcase />
+          <CompactSecuritySection />
         </ParallaxSection>
 
         {/* Global Reach Section */}
@@ -205,7 +200,7 @@ const LandingPage = () => {
           contentSpeed={0.6}
           background={<CTABackground />}
         >
-          <CTASection />
+          <GetStartedSection />
         </ParallaxSection>
       </ParallaxContainer>
       

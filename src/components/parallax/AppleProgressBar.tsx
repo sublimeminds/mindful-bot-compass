@@ -9,12 +9,11 @@ const sections = [
   { id: 'ai-technology', title: 'AI Technology', description: 'Advanced Intelligence', theme: 'blue' },
   { id: 'ai-hub', title: 'AI Hub', description: 'Intelligent Ecosystem', theme: 'calm' },
   { id: 'cultural-ai', title: 'Cultural AI', description: 'Global Understanding', theme: 'harmony' },
+  { id: 'mission', title: 'Mission', description: 'Our Purpose', theme: 'therapy' },
   { id: 'therapists', title: 'Therapists', description: 'Professional Team', theme: 'flow' },
   { id: 'features', title: 'Features', description: 'Platform Capabilities', theme: 'balance' },
   { id: 'approaches', title: 'Approaches', description: 'Therapy Methods', theme: 'harmony' },
   { id: 'how-it-works', title: 'How It Works', description: 'Step-by-Step Process', theme: 'flow' },
-  { id: 'workflow', title: 'Workflow', description: 'AI-Driven Process', theme: 'calm' },
-  { id: 'benefits', title: 'Benefits', description: 'Life-Changing Results', theme: 'harmony' },
   { id: 'success-stories', title: 'Success Stories', description: 'Real Testimonials', theme: 'flow' },
   { id: 'security', title: 'Security', description: 'Privacy & Trust', theme: 'calm' },
   { id: 'global-reach', title: 'Global Reach', description: 'Worldwide Access', theme: 'balance' },
@@ -118,15 +117,14 @@ const AppleProgressBar = () => {
     );
   }
 
-  // Desktop: Vertical dots with enhanced visibility and current section display
+  // Desktop: Fixed position at right edge
   return (
-    <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-50">
-      {/* Fixed Width Current Section Display */}
+    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 z-50">
+      {/* Fixed Width Current Section Display - positioned completely at edge */}
       <div className={cn(
-        "mb-4 px-4 py-3 rounded-xl border shadow-xl text-center w-48",
-        "transition-all duration-500 ease-out",
-        currentTheme.bg,
-        currentTheme.border
+        "mb-4 px-3 py-2 rounded-l-xl border-l border-t border-b shadow-xl text-center",
+        "w-44 bg-white/95 backdrop-blur-sm border-white/30",
+        "transition-all duration-500 ease-out"
       )}>
         <div className="text-sm font-bold text-therapy-700 truncate">
           {currentSection?.title}
@@ -136,12 +134,11 @@ const AppleProgressBar = () => {
         </div>
       </div>
       
-      {/* Fixed Width Dots Container */}
+      {/* Fixed Width Dots Container - completely at edge */}
       <div className={cn(
-        "relative p-4 rounded-2xl border shadow-2xl w-16",
-        "transition-all duration-500 ease-out",
-        currentTheme.bg,
-        currentTheme.border
+        "relative p-3 rounded-l-2xl border-l border-t border-b shadow-2xl",
+        "w-12 bg-white/95 backdrop-blur-sm border-white/30",
+        "transition-all duration-500 ease-out"
       )}>
         {/* Section dots */}
         <div className="flex flex-col items-center space-y-3">
