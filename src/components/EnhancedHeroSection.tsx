@@ -56,12 +56,9 @@ const EnhancedHeroSection = () => {
 
   return (
     <section className="relative min-h-screen overflow-hidden">
-      {/* Simplified single background layer */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background to-therapy-50/15"></div>
-
       <div className="container mx-auto px-6 lg:px-8 relative z-10 pt-32 pb-20">
         
-        {/* Professional Hero Content */}
+        {/* Enhanced Hero Content with Storytelling */}
         <div className="text-center max-w-6xl mx-auto space-y-16">
           
           {/* Logo and Brand Header */}
@@ -77,23 +74,49 @@ const EnhancedHeroSection = () => {
             </div>
           </div>
           
-          {/* Clean Headline - Enhanced Mobile */}
+          {/* Enhanced Storytelling Headline */}
           <div className={cn(
-            "space-y-6 md:space-y-8 transition-all duration-1000 delay-200",
+            "space-y-8 transition-all duration-1000 delay-200",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}>
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-light leading-tight tracking-tight text-foreground px-4 sm:px-0">
-              <span className="block sm:inline">Professional AI therapy,</span>
-              <br className="hidden sm:block" />
-              <span className="font-medium bg-gradient-to-r from-therapy-600 to-calm-600 bg-clip-text text-transparent block sm:inline">
-                available instantly
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl xl:text-8xl font-light leading-tight tracking-tight text-white px-4 sm:px-0">
+              <span className="block">Mental health care</span>
+              <span className="block font-medium bg-gradient-to-r from-therapy-300 via-harmony-300 to-calm-300 bg-clip-text text-transparent">
+                reimagined for everyone
               </span>
             </h1>
             
-            <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-light px-4 sm:px-0">
-              Experience evidence-based mental health support with advanced AI that adapts to your unique needs.
-              <span className="block sm:inline"> Private, secure, and accessible 24/7.</span>
+            <p className="text-xl sm:text-2xl lg:text-3xl text-white/90 max-w-5xl mx-auto leading-relaxed font-light px-4 sm:px-0">
+              Experience the future of therapy: AI that understands your culture, speaks your language,
+              <span className="block sm:inline"> and provides evidence-based care whenever you need it.</span>
             </p>
+            
+            {/* Key Value Propositions */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 max-w-4xl mx-auto">
+              <div className="flex flex-col items-center space-y-3 p-6 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
+                <div className="w-12 h-12 bg-gradient-to-r from-therapy-400 to-calm-400 rounded-xl flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-white font-semibold">100% Private</div>
+                <div className="text-white/80 text-sm text-center">HIPAA-compliant encryption</div>
+              </div>
+              
+              <div className="flex flex-col items-center space-y-3 p-6 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
+                <div className="w-12 h-12 bg-gradient-to-r from-harmony-400 to-therapy-400 rounded-xl flex items-center justify-center">
+                  <Clock className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-white font-semibold">Always Available</div>
+                <div className="text-white/80 text-sm text-center">24/7 instant access</div>
+              </div>
+              
+              <div className="flex flex-col items-center space-y-3 p-6 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
+                <div className="w-12 h-12 bg-gradient-to-r from-calm-400 to-harmony-400 rounded-xl flex items-center justify-center">
+                  <Brain className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-white font-semibold">Clinically Proven</div>
+                <div className="text-white/80 text-sm text-center">Evidence-based approaches</div>
+              </div>
+            </div>
           </div>
 
           {/* Interactive Chat Demo - Enhanced Mobile */}

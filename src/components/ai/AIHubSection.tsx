@@ -64,18 +64,44 @@ export default function AIHubSection() {
 
   return (
     <div className="text-center w-full max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-12">
-        <h2 className="text-5xl font-bold text-white mb-6 leading-tight">
-          AI Hub
-          <span className="block text-2xl font-normal text-white/80 mt-2">
-            Your Intelligent Therapeutic Ecosystem
+      {/* Enhanced Header with Story */}
+      <div className="mb-16">
+        <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 mb-8">
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span className="text-white font-medium">All Systems Online</span>
+        </div>
+        
+        <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
+          Meet Your
+          <span className="block bg-gradient-to-r from-therapy-300 via-harmony-300 to-calm-300 bg-clip-text text-transparent">
+            AI Therapy Team
           </span>
         </h2>
-        <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-          Experience the future of mental health with our advanced AI modules working in harmony to provide personalized, 
-          comprehensive therapeutic support tailored to your unique needs.
+        
+        <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed mb-8">
+          Four specialized AI modules working together to provide comprehensive mental health support.
+          Each one trained by leading therapists and backed by clinical research.
         </p>
+        
+        {/* Usage Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+          <div className="text-center">
+            <div className="text-3xl font-bold text-white mb-1">50K+</div>
+            <div className="text-white/70 text-sm">Active Sessions Daily</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-white mb-1">95%</div>
+            <div className="text-white/70 text-sm">User Satisfaction</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-white mb-1">24/7</div>
+            <div className="text-white/70 text-sm">Availability</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-white mb-1">40+</div>
+            <div className="text-white/70 text-sm">Therapy Approaches</div>
+          </div>
+        </div>
       </div>
 
       {/* AI Modules Grid */}

@@ -17,6 +17,8 @@ import TrustSection from '@/components/landing/TrustSection';
 import CTASection from '@/components/landing/CTASection';
 import PricingSection from '@/components/PricingSection';
 import AppleProgressBar from '@/components/parallax/AppleProgressBar';
+import MissionSection from '@/components/sections/MissionSection';
+import TechnologySection from '@/components/sections/TechnologySection';
 import {
   HeroBackground,
   AITechnologyBackground,
@@ -84,6 +86,16 @@ const LandingPage = () => {
           <CulturalAISection />
         </ParallaxSection>
 
+        {/* Our Mission Section */}
+        <ParallaxSection 
+          id="mission"
+          backgroundSpeed={0.3}
+          contentSpeed={0.6}
+          background={<ApproachesBackground />}
+        >
+          <MissionSection />
+        </ParallaxSection>
+
         {/* Therapists Section */}
         <ParallaxSection 
           id="therapists"
@@ -94,12 +106,22 @@ const LandingPage = () => {
           <TherapistProfilesSection />
         </ParallaxSection>
 
+        {/* Technology Deep Dive Section */}
+        <ParallaxSection 
+          id="technology"
+          backgroundSpeed={0.4}
+          contentSpeed={0.7}
+          background={<FeaturesBackground />}
+        >
+          <TechnologySection />
+        </ParallaxSection>
+
         {/* Features Section */}
         <ParallaxSection 
           id="features"
           backgroundSpeed={0.4}
           contentSpeed={0.7}
-          background={<FeaturesBackground />}
+          background={<SecurityBackground />}
         >
           <FeaturesSection />
         </ParallaxSection>
@@ -109,7 +131,7 @@ const LandingPage = () => {
           id="approaches"
           backgroundSpeed={0.2}
           contentSpeed={0.5}
-          background={<ApproachesBackground />}
+          background={<HowItWorksBackground />}
         >
           <TherapyApproachesSection />
         </ParallaxSection>
@@ -119,7 +141,7 @@ const LandingPage = () => {
           id="how-it-works"
           backgroundSpeed={0.3}
           contentSpeed={0.6}
-          background={<HowItWorksBackground />}
+          background={<WorkflowBackground />}
         >
           <TrustSection />
         </ParallaxSection>
