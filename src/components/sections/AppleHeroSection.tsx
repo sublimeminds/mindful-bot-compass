@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Clock, Brain, Play, Sparkles } from "lucide-react";
+import { ArrowRight, Play, Sparkles, Shield, Brain } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import GradientLogo from '@/components/ui/GradientLogo';
+import { motion } from 'framer-motion';
+import SafeHavenIcon from '@/components/icons/SafeHavenIcon';
+import AlwaysHereIcon from '@/components/icons/AlwaysHereIcon';
+import ScienceBackedIcon from '@/components/icons/ScienceBackedIcon';
 
 const AppleHeroSection = () => {
   const navigate = useNavigate();
@@ -94,59 +98,161 @@ const AppleHeroSection = () => {
           </p>
         </div>
 
-        {/* Value Props Cards */}
-        <div className={cn(
-          "grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto transition-all duration-1000 delay-400",
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        )}>
-          <div className="group p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-            <div className="w-12 h-12 bg-gradient-to-r from-therapy-600 to-calm-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-              <Shield className="w-6 h-6 text-white" />
+        {/* Enhanced Value Props Cards */}
+        <motion.div 
+          className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12 max-w-5xl mx-auto"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          {/* Safe Haven Card - Taller */}
+          <motion.div 
+            className="group relative p-8 bg-white/90 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl shadow-lg overflow-hidden"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            whileHover={{ y: -8 }}
+          >
+            {/* Glass morphism overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-therapy-100/30 via-white/20 to-calm-100/30 rounded-3xl" />
+            
+            {/* Breathing icon container */}
+            <motion.div 
+              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl"
+              animate={{ 
+                scale: [1, 1.05, 1],
+                boxShadow: [
+                  "0 10px 30px hsl(var(--therapy-500) / 0.3)",
+                  "0 15px 40px hsl(var(--therapy-500) / 0.4)",
+                  "0 10px 30px hsl(var(--therapy-500) / 0.3)"
+                ]
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <SafeHavenIcon size={32} className="text-white drop-shadow-lg" />
+            </motion.div>
+            
+            <div className="relative z-10">
+              <div className="font-bold text-slate-900 text-xl mb-3">Safe Haven</div>
+              <div className="text-slate-700 leading-relaxed">Your thoughts, protected always</div>
+              <div className="text-xs text-slate-500 mt-2 font-medium tracking-wide">HIPAA-COMPLIANT SECURITY</div>
             </div>
-            <div className="font-semibold text-slate-900 mb-2">100% Private</div>
-            <div className="text-sm text-slate-700">HIPAA-compliant security</div>
-          </div>
-          
-          <div className="group p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-            <div className="w-12 h-12 bg-gradient-to-r from-calm-600 to-harmony-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-              <Clock className="w-6 h-6 text-white" />
-            </div>
-            <div className="font-semibold text-slate-900 mb-2">Always Available</div>
-            <div className="text-sm text-slate-700">24/7 instant access</div>
-          </div>
-          
-          <div className="group p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-            <div className="w-12 h-12 bg-gradient-to-r from-harmony-600 to-therapy-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
-            <div className="font-semibold text-slate-900 mb-2">Evidence-Based</div>
-            <div className="text-sm text-slate-700">Clinical-grade AI</div>
-          </div>
-        </div>
 
-        {/* CTA Buttons */}
-        <div className={cn(
-          "flex flex-col sm:flex-row justify-center gap-6 mb-16 transition-all duration-1000 delay-600",
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        )}>
-          <Button
-            size="lg"
-            onClick={() => navigate('/get-started')}
-            className="group bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white font-medium px-8 py-6 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-          >
-            Start Your Journey
-            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
+            {/* Floating particles */}
+            <div className="absolute top-4 right-4 w-2 h-2 bg-therapy-300/40 rounded-full animate-pulse" />
+            <div className="absolute bottom-8 left-6 w-1 h-1 bg-calm-300/60 rounded-full animate-pulse delay-1000" />
+          </motion.div>
           
-          <Button
-            variant="outline"
-            size="lg" 
-            className="group border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-therapy-400 font-medium px-8 py-6 text-lg rounded-2xl transition-all duration-300 hover:scale-105"
+          {/* Always Here Card - Medium */}
+          <motion.div 
+            className="group relative p-7 bg-white/90 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl shadow-lg overflow-hidden"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            whileHover={{ y: -8 }}
           >
-            <Play className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
-            Watch Demo
-          </Button>
-        </div>
+            {/* Glass morphism overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-calm-100/30 via-white/20 to-harmony-100/30 rounded-3xl" />
+            
+            {/* Breathing icon container */}
+            <motion.div 
+              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl"
+              animate={{ 
+                scale: [1, 1.05, 1],
+                boxShadow: [
+                  "0 10px 30px hsl(var(--calm-500) / 0.3)",
+                  "0 15px 40px hsl(var(--calm-500) / 0.4)",
+                  "0 10px 30px hsl(var(--calm-500) / 0.3)"
+                ]
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            >
+              <AlwaysHereIcon size={32} className="text-white drop-shadow-lg" />
+            </motion.div>
+            
+            <div className="relative z-10">
+              <div className="font-bold text-slate-900 text-xl mb-3">Always Here</div>
+              <div className="text-slate-700 leading-relaxed">Support when you need it most</div>
+              <div className="text-xs text-slate-500 mt-2 font-medium tracking-wide">24/7 INSTANT ACCESS</div>
+            </div>
+
+            {/* Floating particles */}
+            <div className="absolute top-6 right-6 w-1.5 h-1.5 bg-calm-300/50 rounded-full animate-pulse delay-500" />
+            <div className="absolute bottom-6 left-8 w-1 h-1 bg-harmony-300/60 rounded-full animate-pulse delay-1500" />
+          </motion.div>
+          
+          {/* Science-Backed Card - Shorter */}
+          <motion.div 
+            className="group relative p-6 bg-white/90 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl shadow-lg overflow-hidden"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            whileHover={{ y: -8 }}
+          >
+            {/* Glass morphism overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-harmony-100/30 via-white/20 to-therapy-100/30 rounded-3xl" />
+            
+            {/* Breathing icon container */}
+            <motion.div 
+              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl"
+              animate={{ 
+                scale: [1, 1.05, 1],
+                boxShadow: [
+                  "0 10px 30px hsl(var(--harmony-500) / 0.3)",
+                  "0 15px 40px hsl(var(--harmony-500) / 0.4)",
+                  "0 10px 30px hsl(var(--harmony-500) / 0.3)"
+                ]
+              }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            >
+              <ScienceBackedIcon size={32} className="text-white drop-shadow-lg" />
+            </motion.div>
+            
+            <div className="relative z-10">
+              <div className="font-bold text-slate-900 text-xl mb-3">Science-Backed</div>
+              <div className="text-slate-700 leading-relaxed">Proven therapeutic methods</div>
+              <div className="text-xs text-slate-500 mt-2 font-medium tracking-wide">CLINICAL-GRADE AI</div>
+            </div>
+
+            {/* Floating particles */}
+            <div className="absolute top-5 right-5 w-2 h-2 bg-harmony-300/40 rounded-full animate-pulse delay-700" />
+            <div className="absolute bottom-10 left-5 w-1 h-1 bg-therapy-300/60 rounded-full animate-pulse delay-2000" />
+          </motion.div>
+        </motion.div>
+
+        {/* Enhanced CTA Buttons */}
+        <motion.div 
+          className="flex flex-col sm:flex-row justify-center gap-6 mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+        >
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              size="lg"
+              onClick={() => navigate('/get-started')}
+              className="group bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white font-medium px-10 py-7 text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
+            >
+              <span className="relative z-10 flex items-center">
+                Start Your Journey
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </span>
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+            </Button>
+          </motion.div>
+          
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              variant="outline"
+              size="lg" 
+              className="group border-2 border-slate-300 bg-white/80 backdrop-blur-sm text-slate-700 hover:bg-white hover:border-therapy-400 font-medium px-10 py-7 text-lg rounded-2xl transition-all duration-500 shadow-lg hover:shadow-xl"
+            >
+              <Play className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+              Watch Demo
+            </Button>
+          </motion.div>
+        </motion.div>
 
         {/* Trust Indicators */}
         <div className={cn(
