@@ -8,6 +8,7 @@ import { BulletproofAuthProvider } from '@/components/bulletproof/BulletproofAut
 import { SecurityProvider } from '@/components/security/SecurityProvider';
 import { ThemeProvider } from '@/utils/BulletproofTheme';
 import ReactErrorBoundary from '@/components/error/ReactErrorBoundary';
+import { TherapistProvider } from '@/contexts/TherapistContext';
 // import Header from '@/components/Header';
 import DatabaseFooter from '@/components/DatabaseFooter';
 import Index from '@/pages/Index';
@@ -63,9 +64,11 @@ function App() {
         <ThemeProvider defaultTheme="light" storageKey="therapysync-theme">
           <SecurityProvider>
             <BulletproofAuthProvider>
-              <Router>
-                <AppContent />
-              </Router>
+              <TherapistProvider>
+                <Router>
+                  <AppContent />
+                </Router>
+              </TherapistProvider>
             </BulletproofAuthProvider>
           </SecurityProvider>
         </ThemeProvider>
