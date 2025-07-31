@@ -117,9 +117,24 @@ const AppleProgressBar = () => {
     );
   }
 
-  // Desktop: Vertical dots with enhanced visibility and section names
+  // Desktop: Vertical dots with enhanced visibility and current section display
   return (
     <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-50">
+      {/* Current Section Display */}
+      <div className={cn(
+        "mb-4 px-4 py-3 rounded-xl border shadow-xl text-center",
+        "transition-all duration-500 ease-out max-w-48",
+        currentTheme.bg,
+        currentTheme.border
+      )}>
+        <div className="text-sm font-bold text-therapy-700">
+          {currentSection?.title}
+        </div>
+        <div className="text-xs text-muted-foreground">
+          {currentSection?.description}
+        </div>
+      </div>
+      
       <div className={cn(
         "relative p-4 rounded-2xl border shadow-2xl",
         "transition-all duration-500 ease-out",

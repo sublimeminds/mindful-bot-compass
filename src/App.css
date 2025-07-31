@@ -125,70 +125,70 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
     
-    /* Complete Therapy Color Scale */
-    --therapy-50: 14 100% 97%;
-    --therapy-100: 14 100% 93%;
-    --therapy-200: 14 100% 87%;
-    --therapy-300: 14 100% 80%;
-    --therapy-400: 14 95% 71%;
-    --therapy-500: 14 91% 62%;
-    --therapy-600: 14 87% 53%;
-    --therapy-700: 14 83% 44%;
-    --therapy-800: 14 79% 35%;
-    --therapy-900: 14 75% 26%;
-    --therapy-950: 14 71% 17%;
+    /* Complete Therapy Color Scale - Saturated Brand Colors */
+    --therapy-50: 14 85% 96%;
+    --therapy-100: 14 90% 91%;
+    --therapy-200: 14 95% 83%;
+    --therapy-300: 14 100% 74%;
+    --therapy-400: 14 100% 65%;
+    --therapy-500: 14 100% 56%;
+    --therapy-600: 14 100% 47%;
+    --therapy-700: 14 95% 38%;
+    --therapy-800: 14 90% 29%;
+    --therapy-900: 14 85% 20%;
+    --therapy-950: 14 80% 11%;
     
-    /* Complete Calm Color Scale */
-    --calm-50: 195 100% 97%;
-    --calm-100: 195 100% 93%;
-    --calm-200: 195 95% 87%;
-    --calm-300: 195 90% 80%;
-    --calm-400: 195 85% 71%;
-    --calm-500: 195 80% 62%;
-    --calm-600: 195 75% 53%;
-    --calm-700: 195 70% 44%;
-    --calm-800: 195 65% 35%;
-    --calm-900: 195 60% 26%;
-    --calm-950: 195 55% 17%;
+    /* Complete Calm Color Scale - Saturated Brand Colors */
+    --calm-50: 195 85% 96%;
+    --calm-100: 195 90% 91%;
+    --calm-200: 195 95% 83%;
+    --calm-300: 195 100% 74%;
+    --calm-400: 195 100% 65%;
+    --calm-500: 195 100% 56%;
+    --calm-600: 195 100% 47%;
+    --calm-700: 195 95% 38%;
+    --calm-800: 195 90% 29%;
+    --calm-900: 195 85% 20%;
+    --calm-950: 195 80% 11%;
 
-    /* Complete Harmony Color Scale */
-    --harmony-50: 330 100% 97%;
-    --harmony-100: 330 100% 93%;
-    --harmony-200: 330 95% 87%;
-    --harmony-300: 330 90% 80%;
-    --harmony-400: 330 85% 71%;
-    --harmony-500: 330 80% 62%;
-    --harmony-600: 330 75% 53%;
-    --harmony-700: 330 70% 44%;
-    --harmony-800: 330 65% 35%;
-    --harmony-900: 330 60% 26%;
-    --harmony-950: 330 55% 17%;
+    /* Complete Harmony Color Scale - Saturated Brand Colors */
+    --harmony-50: 330 85% 96%;
+    --harmony-100: 330 90% 91%;
+    --harmony-200: 330 95% 83%;
+    --harmony-300: 330 100% 74%;
+    --harmony-400: 330 100% 65%;
+    --harmony-500: 330 100% 56%;
+    --harmony-600: 330 100% 47%;
+    --harmony-700: 330 95% 38%;
+    --harmony-800: 330 90% 29%;
+    --harmony-900: 330 85% 20%;
+    --harmony-950: 330 80% 11%;
     
-    /* Complete Balance Color Scale */
-    --balance-50: 45 100% 97%;
-    --balance-100: 45 100% 93%;
-    --balance-200: 45 95% 87%;
-    --balance-300: 45 90% 80%;
-    --balance-400: 45 85% 71%;
-    --balance-500: 45 80% 62%;
-    --balance-600: 45 75% 53%;
-    --balance-700: 45 70% 44%;
-    --balance-800: 45 65% 35%;
-    --balance-900: 45 60% 26%;
-    --balance-950: 45 55% 17%;
+    /* Complete Balance Color Scale - Saturated Brand Colors */
+    --balance-50: 45 85% 96%;
+    --balance-100: 45 90% 91%;
+    --balance-200: 45 95% 83%;
+    --balance-300: 45 100% 74%;
+    --balance-400: 45 100% 65%;
+    --balance-500: 45 100% 56%;
+    --balance-600: 45 100% 47%;
+    --balance-700: 45 95% 38%;
+    --balance-800: 45 90% 29%;
+    --balance-900: 45 85% 20%;
+    --balance-950: 45 80% 11%;
     
-    /* Complete Flow Color Scale */
-    --flow-50: 175 100% 97%;
-    --flow-100: 175 100% 93%;
-    --flow-200: 175 95% 87%;
-    --flow-300: 175 90% 80%;
-    --flow-400: 175 85% 71%;
-    --flow-500: 175 80% 62%;
-    --flow-600: 175 75% 53%;
-    --flow-700: 175 70% 44%;
-    --flow-800: 175 65% 35%;
-    --flow-900: 175 60% 26%;
-    --flow-950: 175 55% 17%;
+    /* Complete Flow Color Scale - Saturated Brand Colors */
+    --flow-50: 175 85% 96%;
+    --flow-100: 175 90% 91%;
+    --flow-200: 175 95% 83%;
+    --flow-300: 175 100% 74%;
+    --flow-400: 175 100% 65%;
+    --flow-500: 175 100% 56%;
+    --flow-600: 175 100% 47%;
+    --flow-700: 175 95% 38%;
+    --flow-800: 175 90% 29%;
+    --flow-900: 175 85% 20%;
+    --flow-950: 175 80% 11%;
     
     /* Therapeutic Shadow & Glow Effects */
     --shadow-therapy-subtle: 0 2px 8px hsla(var(--therapy-500) / 0.15);

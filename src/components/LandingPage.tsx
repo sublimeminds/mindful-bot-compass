@@ -12,7 +12,7 @@ import SuccessStoriesSection from '@/components/landing/SuccessStoriesSection';
 import GlobalReachSection from '@/components/landing/GlobalReachSection';
 import CommunitySection from '@/components/landing/CommunitySection';
 import TrustIndicators from '@/components/landing/TrustIndicators';
-import StatsCounter from '@/components/landing/StatsCounter';
+import TherapistProfilesSection from '@/components/sections/TherapistProfilesSection';
 import TrustSection from '@/components/landing/TrustSection';
 import CTASection from '@/components/landing/CTASection';
 import PricingSection from '@/components/PricingSection';
@@ -91,7 +91,7 @@ const LandingPage = () => {
           contentSpeed={0.6}
           background={<TherapistsBackground />}
         >
-          <StatsCounter />
+          <TherapistProfilesSection />
         </ParallaxSection>
 
         {/* Features Section */}

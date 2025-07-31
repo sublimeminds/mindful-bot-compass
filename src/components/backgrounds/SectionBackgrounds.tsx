@@ -31,17 +31,17 @@ export const CulturalAIBackground = () => (
   </div>
 );
 
-// Stats Counter Background - Clean white
-export const StatsCounterBackground = () => (
+// Therapists Background - Clean professional white with subtle gradient
+export const TherapistsBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-background"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-white to-therapy-50/30"></div>
   </div>
 );
 
-// Features Background - Dark theme with light text
+// Features Background - Vibrant gradient for engaging presentation
 export const FeaturesBackground = () => (
   <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-therapy-600 to-calm-700"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-therapy-600 via-calm-600 to-balance-600"></div>
   </div>
 );
 
@@ -110,6 +110,5 @@ export const CTABackground = () => (
 
 // Legacy aliases for backward compatibility
 export const AITechnologyBackground = TrustIndicatorsBackground;
-export const TherapistsBackground = ApproachesBackground;
 export const HowItWorksBackground = TrustSectionBackground;
 export const BenefitsBackground = SuccessStoriesBackground;
