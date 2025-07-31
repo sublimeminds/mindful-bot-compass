@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Globe, Clock, Languages, Users, Heart, Accessibility } from 'lucide-react';
+import { Globe, Clock, Languages, Users, Heart, Accessibility, ArrowRight } from 'lucide-react';
+import { SafeComponentWrapper } from '@/components/bulletproof/SafeComponentWrapper';
+import { useParallaxScroll } from '@/hooks/useParallaxScroll';
+import GlobalReachIcon from '@/components/icons/custom/GlobalReachIcon';
 
 const GlobalReachSection = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { getTransform, isParallaxEnabled } = useParallaxScroll({ speed: 0.3 });
   const globalStats = [
     { icon: <Globe className="h-6 w-6" />, label: "Countries", value: "50+", description: "Available worldwide" },
     { icon: <Languages className="h-6 w-6" />, label: "Languages", value: "25+", description: "Multilingual support" },
