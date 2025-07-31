@@ -107,7 +107,7 @@ class LovableTaggerSafeGuard {
 
     this.healthCheckInterval = setInterval(() => {
       this.performHealthCheck();
-    }, 2000); // Check every 2 seconds
+    }, 10000); // Check every 10 seconds
 
     console.log('💊 LovableTagger SafeGuard: Health monitoring started');
   }

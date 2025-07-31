@@ -2,21 +2,14 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 
-// === SIMPLIFIED React Safety Check ===
+// === MINIMAL React Safety Check ===
 const verifyReactModules = () => {
-  // Basic React availability check only
-  return (
-    typeof React !== 'undefined' && 
-    React && 
-    typeof React.createElement === 'function' && 
-    typeof React.useState === 'function'
-  );
+  return typeof React !== 'undefined' && React && typeof React.createElement === 'function';
 };
 
-// Single-pass React verification
+// Simple React verification without aggressive reloading
 if (!verifyReactModules()) {
-  console.error('React not available, reloading page...');
-  window.location.reload();
+  console.error('React not available');
 }
 
 import AppSelector from './AppSelector.tsx';
@@ -122,35 +115,10 @@ console.log('🔍 React state before render:', {
   version: React?.version
 });
 
-// Final comprehensive React safety check before render
-const finalReactCheck = () => {
-  const issues = [];
-  
-  if (!React) issues.push('React object missing');
-  if (typeof React.createElement !== 'function') issues.push('createElement missing');
-  if (typeof React.useState !== 'function') issues.push('useState missing');
-  if (typeof React.useEffect !== 'function') issues.push('useEffect missing');
-  
-  if (issues.length > 0) {
-    console.error('CRITICAL: React incomplete before render:', issues);
-    window.location.reload();
-    return false;
-  }
-  
-  return true;
-};
-
-if (finalReactCheck()) {
-  console.log('✅ React is ready for render - all checks passed');
-  
-  // Render with additional error boundary protection
-  try {
-    root.render(<AppSelector />);
-    console.log('✅ Application rendered successfully');
-  } catch (renderError) {
-    console.error('🚨 Render error:', renderError);
-    setTimeout(() => window.location.reload(), 100);
-  }
-} else {
-  console.error('❌ Final React check failed');
+// Simple render without aggressive checks
+try {
+  root.render(<AppSelector />);
+  console.log('✅ Application rendered successfully');
+} catch (renderError) {
+  console.error('🚨 Render error:', renderError);
 }

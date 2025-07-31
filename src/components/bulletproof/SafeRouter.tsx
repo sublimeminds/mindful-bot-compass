@@ -17,7 +17,7 @@ interface SafeRouterState {
 class SafeRouterClass extends Component<SafeRouterProps, SafeRouterState> {
   private mounted = true;
   private retryCount = 0;
-  private maxRetries = 10;
+  private maxRetries = 3;
 
   constructor(props: SafeRouterProps) {
     super(props);
@@ -73,7 +73,7 @@ class SafeRouterClass extends Component<SafeRouterProps, SafeRouterState> {
       if (this.retryCount < this.maxRetries) {
         this.retryCount++;
         console.log(`SafeRouter: React not ready, retry ${this.retryCount}/${this.maxRetries}`);
-        setTimeout(this.checkReactReadiness, 100);
+        setTimeout(this.checkReactReadiness, 500);
       } else {
         // Force initialization after max retries to prevent infinite loading
         console.warn('SafeRouter: Max retries exceeded, forcing initialization');
@@ -83,7 +83,7 @@ class SafeRouterClass extends Component<SafeRouterProps, SafeRouterState> {
       console.error('SafeRouter: React readiness check failed:', error);
       if (this.retryCount < this.maxRetries) {
         this.retryCount++;
-        setTimeout(this.checkReactReadiness, 200);
+        setTimeout(this.checkReactReadiness, 1000);
       } else {
         // Force initialization even with errors to prevent infinite loading
         console.warn('SafeRouter: Forcing initialization after error');
