@@ -26,37 +26,36 @@ const AppleHeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Interactive Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-        {/* Animated geometric shapes */}
+      {/* Apple-Style Clean Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50/90 to-white">
+        {/* Subtle geometric elements for depth */}
         <div 
-          className="absolute w-96 h-96 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 blur-3xl animate-pulse"
+          className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-r from-therapy-100/40 to-calm-100/40 blur-[120px] opacity-60"
           style={{
-            transform: `translate(${mousePosition.x * 50}px, ${mousePosition.y * 50}px)`,
-            top: '10%',
-            left: '10%'
+            transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px)`,
+            top: '5%',
+            left: '-10%'
           }}
         />
         <div 
-          className="absolute w-80 h-80 rounded-full bg-gradient-to-r from-accent/15 to-primary/15 blur-2xl animate-pulse"
+          className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-r from-harmony-100/30 to-therapy-100/30 blur-[100px] opacity-50"
           style={{
-            transform: `translate(${-mousePosition.x * 30}px, ${-mousePosition.y * 30}px)`,
-            bottom: '20%',
-            right: '15%',
-            animationDelay: '1s'
+            transform: `translate(${-mousePosition.x * 15}px, ${-mousePosition.y * 15}px)`,
+            bottom: '10%',
+            right: '-5%'
           }}
         />
         
-        {/* Floating particles */}
-        {[...Array(12)].map((_, i) => (
+        {/* Minimal floating elements */}
+        {[...Array(6)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-2 h-2 bg-primary/30 rounded-full animate-float"
+            className="absolute w-1 h-1 bg-therapy-300/20 rounded-full"
             style={{
-              left: `${10 + (i * 8)}%`,
-              top: `${20 + (i * 5)}%`,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: `${3 + (i % 3)}s`
+              left: `${15 + (i * 12)}%`,
+              top: `${25 + (i * 8)}%`,
+              animation: `float ${4 + (i % 2)}s ease-in-out infinite`,
+              animationDelay: `${i * 1}s`
             }}
           />
         ))}
@@ -83,13 +82,13 @@ const AppleHeroSection = () => {
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         )}>
           <h1 className="text-5xl sm:text-6xl lg:text-8xl font-light leading-tight tracking-tight">
-            <span className="block text-foreground">Mental health</span>
-            <span className="block bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-medium">
+            <span className="block text-slate-900">Mental health</span>
+            <span className="block bg-gradient-to-r from-therapy-600 via-calm-600 to-harmony-600 bg-clip-text text-transparent font-medium">
               that understands you
             </span>
           </h1>
           
-          <p className="text-xl sm:text-2xl lg:text-3xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-light">
+          <p className="text-xl sm:text-2xl lg:text-3xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-light">
             AI therapy that speaks your language, understands your culture,
             <span className="block sm:inline"> and adapts to your unique needs.</span>
           </p>
@@ -100,28 +99,28 @@ const AppleHeroSection = () => {
           "grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto transition-all duration-1000 delay-400",
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         )}>
-          <div className="group p-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-border/50 hover:bg-white/80 transition-all duration-300 hover:scale-105 hover:shadow-lg">
-            <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="group p-6 bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+            <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <Shield className="w-6 h-6 text-white" />
             </div>
-            <div className="font-semibold text-foreground mb-2">100% Private</div>
-            <div className="text-sm text-muted-foreground">HIPAA-compliant security</div>
+            <div className="font-semibold text-slate-900 mb-2">100% Private</div>
+            <div className="text-sm text-slate-600">HIPAA-compliant security</div>
           </div>
           
-          <div className="group p-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-border/50 hover:bg-white/80 transition-all duration-300 hover:scale-105 hover:shadow-lg">
-            <div className="w-12 h-12 bg-gradient-to-r from-secondary to-accent rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="group p-6 bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+            <div className="w-12 h-12 bg-gradient-to-r from-calm-500 to-harmony-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <Clock className="w-6 h-6 text-white" />
             </div>
-            <div className="font-semibold text-foreground mb-2">Always Available</div>
-            <div className="text-sm text-muted-foreground">24/7 instant access</div>
+            <div className="font-semibold text-slate-900 mb-2">Always Available</div>
+            <div className="text-sm text-slate-600">24/7 instant access</div>
           </div>
           
-          <div className="group p-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-border/50 hover:bg-white/80 transition-all duration-300 hover:scale-105 hover:shadow-lg">
-            <div className="w-12 h-12 bg-gradient-to-r from-accent to-primary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="group p-6 bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+            <div className="w-12 h-12 bg-gradient-to-r from-harmony-500 to-therapy-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <Brain className="w-6 h-6 text-white" />
             </div>
-            <div className="font-semibold text-foreground mb-2">Evidence-Based</div>
-            <div className="text-sm text-muted-foreground">Clinical-grade AI</div>
+            <div className="font-semibold text-slate-900 mb-2">Evidence-Based</div>
+            <div className="text-sm text-slate-600">Clinical-grade AI</div>
           </div>
         </div>
 
@@ -133,7 +132,7 @@ const AppleHeroSection = () => {
           <Button
             size="lg"
             onClick={() => navigate('/get-started')}
-            className="group bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-medium px-8 py-6 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            className="group bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white font-medium px-8 py-6 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
             Start Your Journey
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -142,7 +141,7 @@ const AppleHeroSection = () => {
           <Button
             variant="outline"
             size="lg" 
-            className="group border-2 border-border/50 text-foreground hover:bg-accent/10 font-medium px-8 py-6 text-lg rounded-2xl transition-all duration-300 hover:scale-105 hover:border-primary/50"
+            className="group border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-therapy-400 font-medium px-8 py-6 text-lg rounded-2xl transition-all duration-300 hover:scale-105"
           >
             <Play className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
             Watch Demo

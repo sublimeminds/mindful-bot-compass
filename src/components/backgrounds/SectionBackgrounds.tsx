@@ -6,7 +6,7 @@ import React from 'react';
 // Hero Section - Clean Apple-style background
 export const HeroBackground = () => (
   <div className="absolute inset-0 z-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-slate-100"></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50/90 to-white"></div>
   </div>
 );
 
