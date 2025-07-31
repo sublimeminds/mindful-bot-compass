@@ -45,13 +45,13 @@ const SuccessStoriesSection = () => {
     <div className="min-h-screen flex flex-col justify-center w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
       <div className="max-w-7xl mx-auto w-full space-y-8 sm:space-y-12 lg:space-y-16">
         <div className="text-center space-y-4 sm:space-y-6">
-          <Badge className="bg-white/20 text-white border-white/30">
+          <Badge className="bg-white text-gray-900 border-gray-200">
             Real Results
           </Badge>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
             Success Stories & Outcomes
           </h2>
-          <p className="text-base sm:text-lg lg:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Discover how TherapySync has transformed lives through personalized AI therapy
           </p>
         </div>
@@ -59,11 +59,11 @@ const SuccessStoriesSection = () => {
         {/* Statistics Grid - Mobile: 2 columns, Desktop: 4 columns */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {stats.map((stat, index) => (
-            <Card key={index} className="bg-white/10 border-white/20 text-center">
+            <Card key={index} className="bg-white border-gray-200 shadow-lg text-center">
               <CardContent className="p-4 sm:p-6">
-                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 sm:mb-2">{stat.value}</div>
-                <div className="text-xs sm:text-sm font-semibold text-white/90 mb-1">{stat.label}</div>
-                <div className="text-xs text-white/70 leading-relaxed">{stat.description}</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">{stat.value}</div>
+                <div className="text-xs sm:text-sm font-semibold text-gray-700 mb-1">{stat.label}</div>
+                <div className="text-xs text-gray-600 leading-relaxed">{stat.description}</div>
               </CardContent>
             </Card>
           ))}
@@ -72,7 +72,7 @@ const SuccessStoriesSection = () => {
         {/* Testimonials - Mobile: Single column, Desktop: 3 columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-white/10 border-white/20 hover:bg-white/15 transition-all duration-300">
+            <Card key={index} className="bg-white border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-1">
@@ -80,22 +80,22 @@ const SuccessStoriesSection = () => {
                       <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
-                  <Quote className="h-5 w-5 sm:h-6 sm:w-6 text-white/40" />
+                  <Quote className="h-5 w-5 sm:h-6 sm:w-6 text-gray-400" />
                 </div>
                 
-                <blockquote className="text-white/90 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
+                <blockquote className="text-gray-700 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
                   "{testimonial.quote}"
                 </blockquote>
                 
                 <div className="space-y-2 sm:space-y-3">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                    <span className="font-semibold text-white text-sm sm:text-base">{testimonial.name}</span>
-                    <Badge className="bg-healing-100/20 text-healing-200 border-healing-200/30 text-xs self-start">
+                    <span className="font-semibold text-gray-900 text-sm sm:text-base">{testimonial.name}</span>
+                    <Badge className="bg-therapy-100 text-therapy-700 border-therapy-200 text-xs self-start">
                       {testimonial.improvement}
                     </Badge>
                   </div>
                   
-                  <div className="text-xs sm:text-sm text-white/70 space-y-1">
+                  <div className="text-xs sm:text-sm text-gray-600 space-y-1">
                     <div>Condition: {testimonial.condition}</div>
                     <div className="flex justify-between">
                       <span>{testimonial.sessions} sessions</span>

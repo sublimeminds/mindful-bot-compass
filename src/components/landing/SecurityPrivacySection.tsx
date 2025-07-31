@@ -70,7 +70,7 @@ const SecurityPrivacySection = () => {
         <div className="grid grid-cols-2 lg:flex lg:justify-center lg:space-x-6 gap-4 lg:gap-0">
           {certifications.map((cert, index) => (
             <div key={index} className="text-center">
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 sm:p-4 mb-2 border border-white/20">
+              <div className="bg-white rounded-xl p-3 sm:p-4 mb-2 border border-gray-200 shadow-lg">
                 <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-green-400 mx-auto" />
               </div>
               <div className="text-xs sm:text-sm font-semibold text-white">{cert.name}</div>
@@ -82,7 +82,7 @@ const SecurityPrivacySection = () => {
         {/* Security Features Grid - Mobile: Single column, Desktop: 3 columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {securityFeatures.map((feature, index) => (
-            <Card key={index} className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-all duration-300">
+            <Card key={index} className="bg-white border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center space-x-3 sm:space-x-4 mb-4">
                   <div className="p-2 sm:p-3 bg-green-500/20 rounded-xl text-green-400 flex-shrink-0">

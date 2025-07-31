@@ -161,7 +161,7 @@ const InteractiveChatDemo: React.FC<InteractiveChatDemoProps> = ({
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
+      <Card className="shadow-2xl border border-gray-200 bg-white">
         <CardHeader className="text-center pb-4">
           <div className="flex items-center justify-center space-x-2 mb-2">
             <MessageSquare className="h-6 w-6 text-therapy-500" />
