@@ -27,6 +27,7 @@ export const useParallaxScroll = (options: ParallaxOptions = { speed: 0.5 }) => 
   const scrollTimeoutRef = useRef<NodeJS.Timeout>();
 
   const updateScrollY = useCallback(() => {
+    // Force GPU acceleration for smooth parallax
     const newScrollY = window.scrollY;
     setScrollY(newScrollY);
     setIsScrolling(true);
@@ -74,8 +75,20 @@ export const useParallaxScroll = (options: ParallaxOptions = { speed: 0.5 }) => 
 
   const getTransform = useCallback((customSpeed?: number) => {
     const offset = getParallaxOffset(customSpeed);
+    // Force hardware acceleration with translate3d
     return `translate3d(0, ${offset}px, 0)`;
   }, [getParallaxOffset]);
+
+  // Advanced GPU-optimized parallax transforms
+  const getAdvancedTransform = useCallback((customSpeed?: number, rotateX = 0, scale = 1) => {
+    const offset = getParallaxOffset(customSpeed);
+    return `translate3d(0, ${offset}px, 0) rotateX(${rotateX}deg) scale(${scale})`;
+  }, [getParallaxOffset]);
+
+  const getLayeredTransform = useCallback((layer: number, depth = 0.1) => {
+    const offset = scrollY * depth * layer;
+    return `translate3d(0, ${offset}px, 0)`;
+  }, [scrollY]);
 
   return {
     scrollY,
@@ -83,6 +96,8 @@ export const useParallaxScroll = (options: ParallaxOptions = { speed: 0.5 }) => 
     isUserScrolling,
     getParallaxOffset,
     getTransform,
+    getAdvancedTransform,
+    getLayeredTransform,
     isParallaxEnabled: !options.disabled && !isMobile
   };
 };

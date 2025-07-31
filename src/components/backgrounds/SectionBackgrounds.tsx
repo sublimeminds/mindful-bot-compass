@@ -10,10 +10,29 @@ export const HeroBackground = () => (
   </div>
 );
 
-// AI Technology - Subtle blue gradient matching sidebar
+// AI Technology - Enhanced storytelling background with GPU optimization
 export const AITechnologyBackground = () => (
-  <div className="absolute inset-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-calm-50 via-white to-therapy-50/50"></div>
+  <div className="absolute inset-0 overflow-hidden">
+    <div 
+      className="absolute inset-0 bg-gradient-to-br from-white via-therapy-50/30 to-harmony-50/40"
+      style={{ willChange: 'transform' }}
+    ></div>
+    {/* GPU-accelerated floating elements */}
+    <div 
+      className="absolute top-20 left-10 w-32 h-32 bg-therapy-200/20 rounded-full blur-xl animate-pulse"
+      style={{ 
+        transform: 'translate3d(0, 0, 0)',
+        willChange: 'transform, opacity'
+      }}
+    ></div>
+    <div 
+      className="absolute bottom-20 right-10 w-24 h-24 bg-calm-200/20 rounded-full blur-xl animate-pulse"
+      style={{ 
+        transform: 'translate3d(0, 0, 0)',
+        willChange: 'transform, opacity',
+        animationDelay: '1s'
+      }}
+    ></div>
   </div>
 );
 

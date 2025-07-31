@@ -121,29 +121,30 @@ const AppleProgressBar = () => {
   // Desktop: Vertical dots with enhanced visibility and current section display
   return (
     <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-50">
-      {/* Current Section Display */}
+      {/* Fixed Width Current Section Display */}
       <div className={cn(
-        "mb-4 px-4 py-3 rounded-xl border shadow-xl text-center",
-        "transition-all duration-500 ease-out max-w-48",
+        "mb-4 px-4 py-3 rounded-xl border shadow-xl text-center w-48",
+        "transition-all duration-500 ease-out",
         currentTheme.bg,
         currentTheme.border
       )}>
-        <div className="text-sm font-bold text-therapy-700">
+        <div className="text-sm font-bold text-therapy-700 truncate">
           {currentSection?.title}
         </div>
-        <div className="text-xs text-muted-foreground">
+        <div className="text-xs text-muted-foreground truncate">
           {currentSection?.description}
         </div>
       </div>
       
+      {/* Fixed Width Dots Container */}
       <div className={cn(
-        "relative p-4 rounded-2xl border shadow-2xl",
+        "relative p-4 rounded-2xl border shadow-2xl w-16",
         "transition-all duration-500 ease-out",
         currentTheme.bg,
         currentTheme.border
       )}>
         {/* Section dots */}
-        <div className="flex flex-col space-y-3">
+        <div className="flex flex-col items-center space-y-3">
           {sections.map((section, index) => {
             const isActive = index === activeSection;
             const sectionTheme = getSectionTheme(index);
@@ -155,26 +156,31 @@ const AppleProgressBar = () => {
                   className={cn(
                     "relative w-3 h-3 rounded-full transition-all duration-300 ease-out",
                     "hover:scale-125 focus:outline-none focus:ring-2 focus:ring-offset-2",
+                    "transform hover:rotate-12",
                     isActive 
-                      ? cn(sectionTheme.activeDot, "scale-125 shadow-lg") 
+                      ? cn(sectionTheme.activeDot, "scale-125 shadow-lg animate-pulse") 
                       : cn(sectionTheme.dot, "opacity-40 hover:opacity-80 hover:scale-110")
                   )}
+                  style={{
+                    willChange: 'transform',
+                    backfaceVisibility: 'hidden'
+                  }}
                   aria-label={`Go to ${section.title} section`}
                 />
                 
-                {/* Section tooltip */}
+                {/* Enhanced Section tooltip */}
                 <div className={cn(
                   "absolute right-6 top-1/2 transform -translate-y-1/2",
-                  "px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap",
+                  "px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap w-48",
                   "opacity-0 group-hover:opacity-100 transition-all duration-300",
-                  "pointer-events-none border shadow-xl",
+                  "pointer-events-none border shadow-xl backdrop-blur-sm",
                   sectionTheme.bg,
                   sectionTheme.text,
                   sectionTheme.border
                 )}>
                   <div>
-                    <div className="font-semibold">{section.title}</div>
-                    <div className="text-xs opacity-75">{section.description}</div>
+                    <div className="font-semibold truncate">{section.title}</div>
+                    <div className="text-xs opacity-75 truncate">{section.description}</div>
                   </div>
                   
                   {/* Tooltip arrow */}
