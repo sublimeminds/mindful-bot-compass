@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface ScreenSize {
   isMobile: boolean;
@@ -9,6 +9,18 @@ interface ScreenSize {
 }
 
 export const useEnhancedScreenSize = (): ScreenSize => {
+  // Add safety check for React context
+  if (!React || typeof React.useState !== 'function') {
+    console.error('React context is null in useEnhancedScreenSize');
+    return {
+      isMobile: false,
+      isTablet: false,
+      isDesktop: true,
+      width: 1024,
+      height: 768
+    };
+  }
+  
   const [screenSize, setScreenSize] = useState<ScreenSize>({
     isMobile: false,
     isTablet: false,

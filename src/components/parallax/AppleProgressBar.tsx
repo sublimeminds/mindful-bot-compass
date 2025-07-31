@@ -24,8 +24,9 @@ const sections = [
 ];
 
 const AppleProgressBar = () => {
-  const { activeSection, scrollProgress, scrollToSection } = useScrollProgress(sections.map(s => s.id));
-  const { isMobile, isTablet } = useEnhancedScreenSize();
+  try {
+    const { activeSection, scrollProgress, scrollToSection } = useScrollProgress(sections.map(s => s.id));
+    const { isMobile, isTablet } = useEnhancedScreenSize();
 
   // Smart theme detection based on section colors matching the background themes
   const getSectionTheme = (sectionIndex: number) => {
@@ -203,7 +204,11 @@ const AppleProgressBar = () => {
         />
       </div>
     </div>
-  );
+    );
+  } catch (error) {
+    console.error('AppleProgressBar error:', error);
+    return null;
+  }
 };
 
 export default AppleProgressBar;

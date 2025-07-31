@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useEnhancedScreenSize } from './useEnhancedScreenSize';
 
 interface ParallaxOptions {
@@ -7,6 +7,19 @@ interface ParallaxOptions {
 }
 
 export const useParallaxScroll = (options: ParallaxOptions = { speed: 0.5 }) => {
+  // Add safety check for React context
+  if (!React || typeof React.useState !== 'function') {
+    console.error('React context is null in useParallaxScroll');
+    return {
+      scrollY: 0,
+      isScrolling: false,
+      isUserScrolling: false,
+      getParallaxOffset: () => 0,
+      getTransform: () => 'translate3d(0, 0, 0)',
+      isParallaxEnabled: false
+    };
+  }
+  
   const [scrollY, setScrollY] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const [isUserScrolling, setIsUserScrolling] = useState(false);
@@ -75,6 +88,12 @@ export const useParallaxScroll = (options: ParallaxOptions = { speed: 0.5 }) => 
 };
 
 export const useScrollProgress = (sections: string[]) => {
+  // Add safety check for React context
+  if (!React || typeof React.useState !== 'function') {
+    console.error('React context is null in useScrollProgress');
+    return { activeSection: 0, scrollProgress: 0, scrollToSection: () => {} };
+  }
+  
   const [activeSection, setActiveSection] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
 

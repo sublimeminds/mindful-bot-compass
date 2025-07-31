@@ -7,6 +7,12 @@ interface ParallaxContainerProps {
 }
 
 export default function ParallaxContainer({ children, className }: ParallaxContainerProps) {
+  // Add safety check for React context
+  if (!React || typeof React.useEffect !== 'function') {
+    console.error('React context is null in ParallaxContainer');
+    return <div className={className}>{children}</div>;
+  }
+  
   useEffect(() => {
     // Enhanced scroll behavior for Apple-style parallax
     const style = document.createElement('style');
