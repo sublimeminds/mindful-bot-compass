@@ -55,13 +55,13 @@ const features = [
 
 const FeaturesSection = () => {
   return (
-    <div className="min-h-screen flex flex-col justify-center w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 text-white">
+    <div className="min-h-screen flex flex-col justify-center w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 bg-gradient-to-br from-therapy-900/95 via-therapy-800/90 to-calm-900/95">
       <div className="max-w-7xl mx-auto w-full space-y-8 sm:space-y-12 lg:space-y-16">
         <div className="text-center space-y-4 sm:space-y-6">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-white via-therapy-100 to-calm-100 bg-clip-text text-transparent">
             Platform Benefits
           </h2>
-          <p className="text-base sm:text-lg lg:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg lg:text-xl text-therapy-100/90 max-w-3xl mx-auto leading-relaxed">
             Discover the comprehensive features that make our AI therapy platform the most advanced mental health solution.
           </p>
         </div>
@@ -71,7 +71,7 @@ const FeaturesSection = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group relative p-4 sm:p-6 lg:p-8 bg-white/10 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-xl"
+              className="group relative p-4 sm:p-6 lg:p-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/30 hover:bg-white/20 hover:border-white/50 transition-all duration-500 hover:scale-105 shadow-xl hover:shadow-2xl"
             >
               <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6">
                 <div className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${
@@ -87,10 +87,10 @@ const FeaturesSection = () => {
                 </div>
                 
                 <div className="space-y-2 sm:space-y-3">
-                  <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white group-hover:text-therapy-200 transition-colors duration-300">
+                  <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white group-hover:text-therapy-100 transition-colors duration-300">
                     {feature.title}
                   </h3>
-                  <p className="text-white/80 text-xs sm:text-sm lg:text-base leading-relaxed">
+                  <p className="text-white/90 text-xs sm:text-sm lg:text-base leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -101,7 +101,7 @@ const FeaturesSection = () => {
 
         {/* Additional Benefits Showcase */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-          <div className="lg:col-span-2 p-6 sm:p-8 bg-white/10 rounded-3xl border border-white/20 shadow-xl">
+          <div className="lg:col-span-2 p-6 sm:p-8 bg-white/10 backdrop-blur-sm rounded-3xl border border-white/30 shadow-xl">
             <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Advanced AI Capabilities</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-3">
@@ -121,7 +121,7 @@ const FeaturesSection = () => {
             </div>
           </div>
           
-          <div className="p-6 sm:p-8 bg-white/10 rounded-3xl border border-white/20 shadow-xl">
+          <div className="p-6 sm:p-8 bg-white/10 backdrop-blur-sm rounded-3xl border border-white/30 shadow-xl">
             <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Global Impact</h3>
             <div className="space-y-4 sm:space-y-6">
               <div className="text-center">

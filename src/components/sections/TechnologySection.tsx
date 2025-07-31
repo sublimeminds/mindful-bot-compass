@@ -22,6 +22,7 @@ import {
 
 const TechnologySection = () => {
   const [activeTab, setActiveTab] = useState('ai-engine');
+  const [hoveredMetric, setHoveredMetric] = useState<number | null>(null);
 
   const techSpecs = [
     {
@@ -111,7 +112,7 @@ const TechnologySection = () => {
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Technology Hero */}
       <div className="text-center mb-20">
-        <Badge variant="secondary" className="mb-8 bg-white text-foreground border px-6 py-3 text-base font-medium shadow-lg">
+        <Badge variant="secondary" className="mb-8 bg-white/90 backdrop-blur-sm text-foreground border border-white/20 px-6 py-3 text-base font-medium shadow-lg hover:bg-white transition-all duration-300">
           <Code className="w-5 h-5 mr-2" />
           Technology Deep Dive
         </Badge>
@@ -131,10 +132,19 @@ const TechnologySection = () => {
         {/* Performance Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-16">
           {metrics.map((metric, index) => (
-            <div key={index} className="text-center p-6 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl">
-              <div className="text-3xl font-bold text-white mb-2">{metric.value}</div>
+            <div 
+              key={index} 
+              className="text-center p-6 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105 cursor-pointer group"
+              onMouseEnter={() => setHoveredMetric(index)}
+              onMouseLeave={() => setHoveredMetric(null)}
+            >
+              <div className={`text-3xl font-bold mb-2 transition-colors duration-300 ${
+                hoveredMetric === index ? 'text-therapy-200' : 'text-white'
+              }`}>
+                {metric.value}
+              </div>
               <div className="text-white font-semibold mb-1">{metric.label}</div>
-              <div className="text-white/70 text-sm">{metric.description}</div>
+              <div className="text-white/70 text-sm group-hover:text-white/90 transition-colors duration-300">{metric.description}</div>
             </div>
           ))}
         </div>
@@ -172,9 +182,9 @@ const TechnologySection = () => {
 
         {/* Active Technology Detail */}
         {activeSpec && (
-          <Card className="bg-white border-therapy-200 shadow-xl">
+          <Card className="bg-white/95 backdrop-blur-sm border-therapy-200 shadow-xl hover:shadow-2xl transition-all duration-500">
             <CardHeader className="text-center pb-6">
-              <div className={`w-20 h-20 bg-gradient-to-br ${activeSpec.gradient} rounded-full flex items-center justify-center mx-auto mb-6`}>
+              <div className={`w-20 h-20 bg-gradient-to-br ${activeSpec.gradient} rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg hover:scale-110 transition-transform duration-300`}>
                 <activeSpec.icon className="h-10 w-10 text-white" />
               </div>
               <CardTitle className="text-2xl text-foreground">{activeSpec.title}</CardTitle>
@@ -183,9 +193,9 @@ const TechnologySection = () => {
             <CardContent>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {activeSpec.features.map((feature, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-4 bg-therapy-50 rounded-lg border border-therapy-100">
-                    <CheckCircle className="h-5 w-5 text-therapy-600 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-foreground font-medium">{feature}</span>
+                  <div key={index} className="flex items-start space-x-3 p-4 bg-gradient-to-br from-therapy-50 to-therapy-100/50 rounded-lg border border-therapy-200 hover:border-therapy-300 transition-all duration-300 hover:scale-105 group">
+                    <CheckCircle className="h-5 w-5 text-therapy-600 mt-0.5 flex-shrink-0 group-hover:text-therapy-700 transition-colors duration-300" />
+                    <span className="text-sm text-foreground font-medium group-hover:text-therapy-800 transition-colors duration-300">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -206,46 +216,46 @@ const TechnologySection = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          <Card className="bg-white border-therapy-200 hover:shadow-xl transition-all duration-300">
+          <Card className="bg-white/95 backdrop-blur-sm border-therapy-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group">
             <CardContent className="p-8 text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-therapy-500 to-harmony-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-therapy-500 to-harmony-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300">
                 <Database className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-foreground mb-4">Clinical Data Training</h3>
-              <p className="text-muted-foreground leading-relaxed mb-4">
+              <h3 className="text-xl font-bold text-foreground mb-4 group-hover:text-therapy-700 transition-colors duration-300">Clinical Data Training</h3>
+              <p className="text-muted-foreground leading-relaxed mb-4 group-hover:text-foreground transition-colors duration-300">
                 Training on anonymized therapy sessions from licensed professionals across 40+ therapeutic modalities.
               </p>
-              <Badge variant="outline" className="bg-therapy-50 text-therapy-700 border-therapy-200">
+              <Badge variant="outline" className="bg-therapy-50 text-therapy-700 border-therapy-200 group-hover:bg-therapy-100 group-hover:border-therapy-300 transition-all duration-300">
                 10M+ Sessions
               </Badge>
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-therapy-200 hover:shadow-xl transition-all duration-300">
+          <Card className="bg-white/95 backdrop-blur-sm border-therapy-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group">
             <CardContent className="p-8 text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-harmony-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-harmony-500 to-calm-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300">
                 <Eye className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-foreground mb-4">Expert Review</h3>
-              <p className="text-muted-foreground leading-relaxed mb-4">
+              <h3 className="text-xl font-bold text-foreground mb-4 group-hover:text-harmony-700 transition-colors duration-300">Expert Review</h3>
+              <p className="text-muted-foreground leading-relaxed mb-4 group-hover:text-foreground transition-colors duration-300">
                 Licensed therapists review and validate AI responses to ensure clinical accuracy and safety.
               </p>
-              <Badge variant="outline" className="bg-harmony-50 text-harmony-700 border-harmony-200">
+              <Badge variant="outline" className="bg-harmony-50 text-harmony-700 border-harmony-200 group-hover:bg-harmony-100 group-hover:border-harmony-300 transition-all duration-300">
                 500+ Therapists
               </Badge>
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-therapy-200 hover:shadow-xl transition-all duration-300">
+          <Card className="bg-white/95 backdrop-blur-sm border-therapy-200 hover:shadow-xl transition-all duration-300 hover:scale-105 group">
             <CardContent className="p-8 text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-calm-500 to-therapy-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-calm-500 to-therapy-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300">
                 <Activity className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-foreground mb-4">Continuous Learning</h3>
-              <p className="text-muted-foreground leading-relaxed mb-4">
+              <h3 className="text-xl font-bold text-foreground mb-4 group-hover:text-calm-700 transition-colors duration-300">Continuous Learning</h3>
+              <p className="text-muted-foreground leading-relaxed mb-4 group-hover:text-foreground transition-colors duration-300">
                 Real-time feedback loops improve responses while maintaining strict privacy protections.
               </p>
-              <Badge variant="outline" className="bg-calm-50 text-calm-700 border-calm-200">
+              <Badge variant="outline" className="bg-calm-50 text-calm-700 border-calm-200 group-hover:bg-calm-100 group-hover:border-calm-300 transition-all duration-300">
                 24/7 Updates
               </Badge>
             </CardContent>
@@ -254,8 +264,8 @@ const TechnologySection = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-white rounded-3xl p-12 border border-therapy-200 shadow-xl text-center">
-        <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+      <div className="bg-gradient-to-r from-white/95 to-therapy-50/95 backdrop-blur-sm rounded-3xl p-12 border border-therapy-200/50 shadow-xl text-center hover:shadow-2xl transition-all duration-500">
+        <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-therapy-600 to-harmony-600 bg-clip-text text-transparent mb-6">
           Experience the Technology
         </h3>
         <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
@@ -264,7 +274,7 @@ const TechnologySection = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
             size="lg" 
-            className="bg-gradient-to-r from-therapy-500 to-harmony-600 hover:from-therapy-600 hover:to-harmony-700 text-white px-8 py-4 text-lg font-medium group"
+            className="bg-gradient-to-r from-therapy-500 to-harmony-600 hover:from-therapy-600 hover:to-harmony-700 text-white px-8 py-4 text-lg font-medium group shadow-lg hover:shadow-xl transition-all duration-300"
           >
             <MessageSquare className="mr-3 h-5 w-5" />
             Try a Demo Session
@@ -273,7 +283,7 @@ const TechnologySection = () => {
           <Button 
             variant="outline" 
             size="lg" 
-            className="border-therapy-300 text-therapy-600 hover:bg-therapy-50 px-8 py-4 text-lg"
+            className="border-therapy-300 text-therapy-600 hover:bg-therapy-50 hover:border-therapy-400 px-8 py-4 text-lg transition-all duration-300"
           >
             <Network className="mr-3 h-5 w-5" />
             View Architecture

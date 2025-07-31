@@ -12,7 +12,7 @@ import SuccessStoriesSection from '@/components/landing/SuccessStoriesSection';
 import GlobalReachSection from '@/components/landing/GlobalReachSection';
 import CommunitySection from '@/components/landing/CommunitySection';
 import TrustIndicators from '@/components/landing/TrustIndicators';
-import TherapistProfilesSection from '@/components/sections/TherapistProfilesSection';
+import AITherapistTeam from '@/pages/AITherapistTeam';
 import TrustSection from '@/components/landing/TrustSection';
 import CTASection from '@/components/landing/CTASection';
 import PricingSection from '@/components/PricingSection';
@@ -103,7 +103,7 @@ const LandingPage = () => {
           contentSpeed={0.6}
           background={<TherapistsBackground />}
         >
-          <TherapistProfilesSection />
+          <AITherapistTeam />
         </ParallaxSection>
 
         {/* Technology Deep Dive Section */}
@@ -143,17 +143,17 @@ const LandingPage = () => {
           contentSpeed={0.6}
           background={<WorkflowBackground />}
         >
-          <TrustSection />
+          <AIWorkflowSection />
         </ParallaxSection>
 
-        {/* Workflow Section */}
+        {/* Research & Science Section */}
         <ParallaxSection 
-          id="workflow"
+          id="research"
           backgroundSpeed={0.4}
           contentSpeed={0.7}
           background={<WorkflowBackground />}
         >
-          <AIWorkflowSection />
+          <TrustIndicators />
         </ParallaxSection>
 
         {/* Benefits Section */}
@@ -176,7 +176,7 @@ const LandingPage = () => {
           <SuccessStoriesSection />
         </ParallaxSection>
 
-        {/* Security Section */}
+        {/* Security & Privacy Section */}
         <ParallaxSection 
           id="security"
           backgroundSpeed={0.4}
