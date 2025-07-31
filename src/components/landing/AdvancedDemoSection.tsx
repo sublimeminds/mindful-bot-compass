@@ -69,7 +69,7 @@ const AdvancedDemoSection = () => {
           </div>
 
           <Tabs defaultValue="therapists" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-12 bg-white/60 backdrop-blur-sm">
+            <TabsList className="grid w-full grid-cols-4 mb-12 bg-white border border-gray-200 shadow-lg">
               <TabsTrigger value="therapists" className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
                 AI Therapists
@@ -89,7 +89,7 @@ const AdvancedDemoSection = () => {
             </TabsList>
 
             <TabsContent value="therapists" className="space-y-8">
-              <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+              <Card className="bg-white border border-gray-200 shadow-xl">
                 <CardHeader className="text-center">
                   <CardTitle className="text-2xl text-gray-900">Interactive Therapy Demo</CardTitle>
                   <p className="text-gray-600">
@@ -112,7 +112,7 @@ const AdvancedDemoSection = () => {
 
             <TabsContent value="chat" className="space-y-8">
               <div className="grid lg:grid-cols-2 gap-8">
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+                <Card className="bg-white border border-gray-200 shadow-xl">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <MessageCircle className="h-5 w-5 text-therapy-600" />
@@ -163,7 +163,7 @@ const AdvancedDemoSection = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+                <Card className="bg-white border border-gray-200 shadow-xl">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Brain className="h-5 w-5 text-mindful-600" />
@@ -196,7 +196,7 @@ const AdvancedDemoSection = () => {
             </TabsContent>
 
             <TabsContent value="voice" className="space-y-8">
-              <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg max-w-4xl mx-auto">
+              <Card className="bg-white border border-gray-200 shadow-xl max-w-4xl mx-auto">
                 <CardHeader className="text-center">
                   <CardTitle className="text-2xl text-gray-900">Voice Therapy Sessions</CardTitle>
                   <p className="text-gray-600">
@@ -249,7 +249,7 @@ const AdvancedDemoSection = () => {
 
             <TabsContent value="analysis" className="space-y-8">
               <div className="grid lg:grid-cols-3 gap-8">
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+                <Card className="bg-white border border-gray-200 shadow-xl">
                   <CardHeader>
                     <CardTitle className="text-center text-therapy-700">Progress Tracking</CardTitle>
                   </CardHeader>
@@ -257,11 +257,11 @@ const AdvancedDemoSection = () => {
                     <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-therapy-400 to-therapy-600 rounded-full flex items-center justify-center">
                       <span className="text-2xl font-bold text-white">78%</span>
                     </div>
-                    <p className="text-sm text-gray-600">Anxiety Reduction</p>
+                    <p className="text-sm text-gray-700">Anxiety Reduction</p>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+                <Card className="bg-white border border-gray-200 shadow-xl">
                   <CardHeader>
                     <CardTitle className="text-center text-mindful-700">Session Insights</CardTitle>
                   </CardHeader>
@@ -269,11 +269,11 @@ const AdvancedDemoSection = () => {
                     <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-mindful-400 to-mindful-600 rounded-full flex items-center justify-center">
                       <Brain className="h-8 w-8 text-white" />
                     </div>
-                    <p className="text-sm text-gray-600">12 Techniques Used</p>
+                    <p className="text-sm text-gray-700">12 Techniques Used</p>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+                <Card className="bg-white border border-gray-200 shadow-xl">
                   <CardHeader>
                     <CardTitle className="text-center text-harmony-700">Mood Trends</CardTitle>
                   </CardHeader>

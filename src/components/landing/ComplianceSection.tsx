@@ -133,30 +133,30 @@ const ComplianceSection = () => {
         </div>
 
         {/* Additional Trust Indicators */}
-        <div className="mt-16 bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+        <div className="mt-16 bg-white rounded-2xl p-8 border border-gray-200 shadow-xl">
           <div className="text-center mb-8">
             <h3 className="text-2xl font-bold mb-4">Your Data, Your Control</h3>
-            <p className="text-white/80 max-w-2xl mx-auto">
+            <p className="text-gray-700 max-w-2xl mx-auto">
               We believe in complete transparency about how your data is handled, stored, and protected.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-2xl font-bold text-therapy-200 mb-2">256-bit</div>
-              <div className="text-sm text-white/70">Encryption Standard</div>
+              <div className="text-2xl font-bold text-therapy-600 mb-2">256-bit</div>
+              <div className="text-sm text-gray-600">Encryption Standard</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-therapy-200 mb-2">99.9%</div>
-              <div className="text-sm text-white/70">Uptime Guarantee</div>
+              <div className="text-2xl font-bold text-therapy-600 mb-2">99.9%</div>
+              <div className="text-sm text-gray-600">Uptime Guarantee</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-therapy-200 mb-2">24/7</div>
-              <div className="text-sm text-white/70">Security Monitoring</div>
+              <div className="text-2xl font-bold text-therapy-600 mb-2">24/7</div>
+              <div className="text-sm text-gray-600">Security Monitoring</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-therapy-200 mb-2">Zero</div>
-              <div className="text-sm text-white/70">Data Breaches</div>
+              <div className="text-2xl font-bold text-therapy-600 mb-2">Zero</div>
+              <div className="text-sm text-gray-600">Data Breaches</div>
             </div>
           </div>
         </div>

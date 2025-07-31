@@ -384,7 +384,7 @@ const ComprehensiveTherapyApproaches = () => {
           </div>
 
           {/* Enhanced Search and Filter Controls */}
-          <div className="mb-16 bg-white/70 backdrop-blur-lg rounded-3xl p-8 border border-white/50 shadow-2xl">
+          <div className="mb-16 bg-white rounded-3xl p-8 border border-gray-200 shadow-2xl">
             <div className="flex flex-col lg:flex-row gap-6 items-center">
               <div className="relative flex-1 max-w-xl">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />

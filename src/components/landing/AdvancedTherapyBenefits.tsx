@@ -102,7 +102,7 @@ const AdvancedTherapyBenefits = () => {
           {therapeuticAdvantages.map((advantage, index) => (
             <Card 
               key={advantage.title}
-              className={`group relative bg-white/80 backdrop-blur-sm border border-${advantage.color}-200/50 hover:border-${advantage.color}-300/70 transition-all duration-500 hover:shadow-xl hover:shadow-${advantage.color}-500/10 hover:scale-[1.02]`}
+              className={`group relative bg-white border border-${advantage.color}-200 hover:border-${advantage.color}-300 transition-all duration-500 hover:shadow-xl hover:shadow-${advantage.color}-500/20 hover:scale-[1.02]`}
             >
               <CardContent className="p-8">
                 <div className="flex items-start space-x-6">
@@ -135,7 +135,7 @@ const AdvancedTherapyBenefits = () => {
         </div>
 
         {/* Therapeutic Effectiveness Metrics */}
-        <div className="bg-white/60 backdrop-blur-sm rounded-3xl border border-therapy-200/50 p-12 shadow-xl">
+        <div className="bg-white rounded-3xl border border-therapy-200 p-12 shadow-2xl">
           <div className="text-center mb-12">
             <h3 className="text-3xl font-bold text-foreground mb-4">
               Proven Therapeutic Excellence
