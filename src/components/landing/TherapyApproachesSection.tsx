@@ -131,16 +131,16 @@ const TherapyApproachesSection = () => {
 
   return (
     <SafeComponentWrapper name="TherapyApproachesSection">
-      <div id="therapy-approaches" className="py-20 px-4 bg-gradient-to-bl from-healing-50/30 via-balance-50/20 to-therapy-50/30">
+      <div id="therapy-approaches" className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-therapy-100 text-therapy-800 border-therapy-200">
               40+ Specialized Approaches
             </Badge>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl font-bold text-foreground mb-6">
               Comprehensive Therapy Approaches
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Our AI therapists are trained in diverse, evidence-based therapeutic modalities to meet your unique needs and preferences.
             </p>
           </div>

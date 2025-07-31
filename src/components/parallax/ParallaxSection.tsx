@@ -54,16 +54,14 @@ export default function ParallaxSection({
       id={id}
       className={cn(
         "parallax-section relative overflow-hidden",
-        "h-screen w-full", 
+        "min-h-screen w-full", 
         "flex flex-col justify-center items-center",
         className
       )}
       style={{
         scrollSnapAlign: 'start',
         scrollSnapStop: 'always',
-        height: '100vh',
-        minHeight: '100vh',
-        maxHeight: '100vh'
+        minHeight: '100vh'
       }}
     >
       {/* Parallax Background */}

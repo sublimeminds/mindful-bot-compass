@@ -32,46 +32,46 @@ const AppleProgressBar = () => {
     const section = sections[sectionIndex];
     const themes = {
       therapy: { 
-        bg: 'bg-white/95', 
-        dot: 'bg-therapy-400', 
-        text: 'text-therapy-900', 
+        bg: 'bg-white', 
+        dot: 'bg-therapy-500', 
+        text: 'text-therapy-700', 
         border: 'border-therapy-200',
-        activeDot: 'bg-therapy-500 shadow-therapy-500/50'
+        activeDot: 'bg-therapy-600 shadow-lg'
       },
       calm: { 
-        bg: 'bg-white/95', 
-        dot: 'bg-calm-400', 
-        text: 'text-calm-900', 
+        bg: 'bg-white', 
+        dot: 'bg-calm-500', 
+        text: 'text-calm-700', 
         border: 'border-calm-200',
-        activeDot: 'bg-calm-500 shadow-calm-500/50'
+        activeDot: 'bg-calm-600 shadow-lg'
       },
       harmony: { 
-        bg: 'bg-white/95', 
-        dot: 'bg-harmony-400', 
-        text: 'text-harmony-900', 
+        bg: 'bg-white', 
+        dot: 'bg-harmony-500', 
+        text: 'text-harmony-700', 
         border: 'border-harmony-200',
-        activeDot: 'bg-harmony-500 shadow-harmony-500/50'
+        activeDot: 'bg-harmony-600 shadow-lg'
       },
       flow: { 
-        bg: 'bg-white/95', 
-        dot: 'bg-flow-400', 
-        text: 'text-flow-900', 
+        bg: 'bg-white', 
+        dot: 'bg-flow-500', 
+        text: 'text-flow-700', 
         border: 'border-flow-200',
-        activeDot: 'bg-flow-500 shadow-flow-500/50'
+        activeDot: 'bg-flow-600 shadow-lg'
       },
       balance: { 
-        bg: 'bg-white/95', 
-        dot: 'bg-balance-400', 
-        text: 'text-balance-900', 
+        bg: 'bg-white', 
+        dot: 'bg-balance-500', 
+        text: 'text-balance-700', 
         border: 'border-balance-200',
-        activeDot: 'bg-balance-500 shadow-balance-500/50'
+        activeDot: 'bg-balance-600 shadow-lg'
       },
       blue: { 
-        bg: 'bg-white/95', 
-        dot: 'bg-blue-400', 
-        text: 'text-blue-900', 
+        bg: 'bg-white', 
+        dot: 'bg-blue-500', 
+        text: 'text-blue-700', 
         border: 'border-blue-200',
-        activeDot: 'bg-blue-500 shadow-blue-500/50'
+        activeDot: 'bg-blue-600 shadow-lg'
       }
     };
     return themes[section?.theme as keyof typeof themes] || themes.therapy;

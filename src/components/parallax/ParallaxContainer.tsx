@@ -40,9 +40,7 @@ export default function ParallaxContainer({ children, className }: ParallaxConta
       .parallax-section {
         scroll-snap-align: start;
         scroll-snap-stop: always;
-        height: 100vh !important;
         min-height: 100vh !important;
-        max-height: 100vh !important;
         position: relative;
         overflow: hidden;
         isolation: isolate;
@@ -50,6 +48,7 @@ export default function ParallaxContainer({ children, className }: ParallaxConta
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        padding: 2rem 0;
       }
       
       /* Hardware acceleration for all parallax elements */
@@ -87,7 +86,7 @@ export default function ParallaxContainer({ children, className }: ParallaxConta
           scroll-snap-align: start;
           height: auto !important;
           min-height: 100vh !important;
-          padding: clamp(0.5rem, 2vw, 1rem);
+          padding: clamp(1rem, 3vw, 2rem);
         }
         
         .parallax-section > * {

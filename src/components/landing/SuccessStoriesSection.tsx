@@ -45,7 +45,7 @@ const SuccessStoriesSection = () => {
     <div className="min-h-screen flex flex-col justify-center w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
       <div className="max-w-7xl mx-auto w-full space-y-8 sm:space-y-12 lg:space-y-16">
         <div className="text-center space-y-4 sm:space-y-6">
-          <Badge className="bg-healing-100 text-healing-800 border-healing-200">
+          <Badge className="bg-white/20 text-white border-white/30">
             Real Results
           </Badge>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
@@ -59,7 +59,7 @@ const SuccessStoriesSection = () => {
         {/* Statistics Grid - Mobile: 2 columns, Desktop: 4 columns */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {stats.map((stat, index) => (
-            <Card key={index} className="bg-white/10 backdrop-blur-md border-white/20 text-center">
+            <Card key={index} className="bg-white/10 border-white/20 text-center">
               <CardContent className="p-4 sm:p-6">
                 <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 sm:mb-2">{stat.value}</div>
                 <div className="text-xs sm:text-sm font-semibold text-white/90 mb-1">{stat.label}</div>
@@ -72,7 +72,7 @@ const SuccessStoriesSection = () => {
         {/* Testimonials - Mobile: Single column, Desktop: 3 columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-all duration-300">
+            <Card key={index} className="bg-white/10 border-white/20 hover:bg-white/15 transition-all duration-300">
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-1">

@@ -85,13 +85,13 @@ const CommunitySection = () => {
     <div className="min-h-screen flex flex-col justify-center w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
       <div className="max-w-7xl mx-auto w-full space-y-8 sm:space-y-12 lg:space-y-16">
         <div className="text-center space-y-4 sm:space-y-6">
-          <Badge className="bg-purple-100 text-purple-800 border-purple-200">
+          <Badge className="bg-white/20 text-white border-white/30">
             Community & Support
           </Badge>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             You're Not Alone in This Journey
           </h2>
-          <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg lg:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             Connect with a supportive community of individuals who understand your experiences. 
             Share, learn, and grow together in a safe and nurturing environment.
           </p>
@@ -100,18 +100,18 @@ const CommunitySection = () => {
         {/* Community Features - Mobile: 2x2 grid, Desktop: 4 columns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {communityFeatures.map((feature, index) => (
-            <Card key={index} className="bg-white border-therapy-200 hover:bg-therapy-50 transition-all duration-300 text-center shadow-lg">
+            <Card key={index} className="bg-white/10 border-white/20 hover:bg-white/20 transition-all duration-300 text-center">
               <CardContent className="p-4 sm:p-6">
-                <div className="flex justify-center mb-3 sm:mb-4 text-purple-400">
+                <div className="flex justify-center mb-3 sm:mb-4 text-white">
                   {feature.icon}
                 </div>
-                <h3 className="font-semibold text-base sm:text-lg text-foreground mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground text-xs sm:text-sm mb-3 leading-relaxed">{feature.description}</p>
+                <h3 className="font-semibold text-base sm:text-lg text-white mb-2">{feature.title}</h3>
+                <p className="text-white/80 text-xs sm:text-sm mb-3 leading-relaxed">{feature.description}</p>
                 <div className="space-y-2">
-                  <Badge className="bg-therapy-100 text-therapy-700 border-therapy-200 text-xs">
+                  <Badge className="bg-white/20 text-white border-white/30 text-xs">
                     {feature.highlight}
                   </Badge>
-                  <div className="text-xs text-muted-foreground">{feature.participants}</div>
+                  <div className="text-xs text-white/70">{feature.participants}</div>
                 </div>
               </CardContent>
             </Card>
@@ -120,17 +120,17 @@ const CommunitySection = () => {
 
         {/* Support Groups */}
         <div className="mb-16">
-          <h3 className="text-2xl font-bold text-foreground text-center mb-8">Popular Support Groups</h3>
+          <h3 className="text-2xl font-bold text-white text-center mb-8">Popular Support Groups</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {supportTypes.map((group, index) => (
-              <Card key={index} className="bg-white border-therapy-200 hover:bg-therapy-50 transition-all duration-300 shadow-lg">
+              <Card key={index} className="bg-white/10 border-white/20 hover:bg-white/20 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${group.color} flex items-center justify-center mb-4`}>
                     <Heart className="h-6 w-6 text-white" />
                   </div>
-                  <h4 className="font-semibold text-foreground mb-2">{group.type}</h4>
-                  <p className="text-muted-foreground text-sm mb-3">{group.description}</p>
-                  <div className="text-xs text-muted-foreground">{group.members} members</div>
+                  <h4 className="font-semibold text-white mb-2">{group.type}</h4>
+                  <p className="text-white/80 text-sm mb-3">{group.description}</p>
+                  <div className="text-xs text-white/70">{group.members} members</div>
                 </CardContent>
               </Card>
             ))}
@@ -139,20 +139,20 @@ const CommunitySection = () => {
 
         {/* Upcoming Events */}
         <div className="grid lg:grid-cols-2 gap-8">
-          <Card className="bg-white border-therapy-200 shadow-lg">
+          <Card className="bg-white/10 border-white/20">
             <CardContent className="p-6">
-              <h3 className="text-xl font-bold text-foreground mb-6 flex items-center">
-                <Sparkles className="h-6 w-6 mr-2 text-yellow-600" />
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center">
+                <Sparkles className="h-6 w-6 mr-2 text-yellow-400" />
                 Upcoming Events
               </h3>
               <div className="space-y-4">
                 {events.map((event, index) => (
-                  <div key={index} className="flex justify-between items-center p-4 bg-therapy-50 rounded-lg">
+                  <div key={index} className="flex justify-between items-center p-4 bg-white/10 rounded-lg">
                     <div>
-                      <div className="font-semibold text-foreground">{event.title}</div>
-                      <div className="text-sm text-muted-foreground">{event.time}</div>
+                      <div className="font-semibold text-white">{event.title}</div>
+                      <div className="text-sm text-white/70">{event.time}</div>
                     </div>
-                    <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200">
+                    <Badge className="bg-yellow-400/20 text-yellow-300 border-yellow-400/30">
                       {event.type}
                     </Badge>
                   </div>
@@ -161,18 +161,18 @@ const CommunitySection = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-harmony-50 to-therapy-100 border-harmony-200 shadow-lg">
+          <Card className="bg-white/10 border-white/20">
             <CardContent className="p-6 text-center">
-              <h3 className="text-xl font-bold text-foreground mb-4">Join Our Community</h3>
-              <p className="text-muted-foreground mb-6">
+              <h3 className="text-xl font-bold text-white mb-4">Join Our Community</h3>
+              <p className="text-white/80 mb-6">
                 Connect with thousands of members who are on their own journey to better mental health. 
                 Share experiences, find support, and discover you're never alone.
               </p>
               <div className="space-y-3">
-                <Button className="w-full bg-harmony-600 hover:bg-harmony-700 text-white">
+                <Button className="w-full bg-white text-balance-600 hover:bg-white/90">
                   Join Support Groups
                 </Button>
-                <Button variant="outline" className="w-full border-harmony-300 text-harmony-700 hover:bg-harmony-50">
+                <Button variant="outline" className="w-full border-white/30 text-white hover:bg-white/10">
                   Browse Community Forums
                 </Button>
               </div>
