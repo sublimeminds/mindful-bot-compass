@@ -4,13 +4,14 @@ import ParallaxContainer from '@/components/parallax/ParallaxContainer';
 import ParallaxSection from '@/components/parallax/ParallaxSection';
 import AppleHeroSection from '@/components/sections/AppleHeroSection';
 import SecurityShowcase from '@/components/sections/SecurityShowcase';
-import RedesignedAIHubSection from '@/components/ai/RedesignedAIHubSection';
+import NetworkAIHub from '@/components/ai/NetworkAIHub';
 import CulturalAISection from '@/components/cultural/CulturalAISection';
 import EnhancedFeaturesSection from '@/components/features/EnhancedFeaturesSection';
 import StreamlinedApproachesSection from '@/components/sections/StreamlinedApproachesSection';
 import CompactSecuritySection from '@/components/sections/CompactSecuritySection';
 import GetStartedSection from '@/components/sections/GetStartedSection';
-import AITechnologyShowcase from '@/components/sections/AITechnologyShowcase';
+import InteractiveAITechnology from '@/components/sections/InteractiveAITechnology';
+import EnhancedTherapistTeam from '@/components/therapist/EnhancedTherapistTeam';
 import AIWorkflowSection from '@/components/landing/AIWorkflowSection';
 import SuccessStoriesSection from '@/components/landing/SuccessStoriesSection';
 import GlobalReachSection from '@/components/landing/GlobalReachSection';
@@ -65,7 +66,7 @@ const LandingPage = () => {
           contentSpeed={0.6}
           background={<AITechnologyBackground />}
         >
-          <AITechnologyShowcase />
+          <InteractiveAITechnology />
         </ParallaxSection>
 
         {/* AI Hub Section */}
@@ -75,7 +76,7 @@ const LandingPage = () => {
           contentSpeed={0.7}
           background={<AIHubBackground />}
         >
-          <RedesignedAIHubSection />
+          <NetworkAIHub />
         </ParallaxSection>
 
         {/* Cultural AI Section */}
@@ -98,14 +99,14 @@ const LandingPage = () => {
           <MissionSection />
         </ParallaxSection>
 
-        {/* Therapists Section */}
+        {/* Enhanced Therapist Team Section */}
         <ParallaxSection 
           id="therapists"
           backgroundSpeed={0.3}
           contentSpeed={0.6}
           background={<TherapistsBackground />}
         >
-          <AITherapistTeam />
+          <EnhancedTherapistTeam />
         </ParallaxSection>
 
         {/* Technology Deep Dive Section */}
