@@ -269,7 +269,7 @@ const ComprehensiveFeaturesSection = () => {
   };
 
   // Interactive demos for features
-  const featureDemos = {
+  const featureDemos: Record<string, React.ReactNode> = {
     'therapy-chat': (
       <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
         <div className="flex justify-between items-start">
@@ -436,21 +436,25 @@ const ComprehensiveFeaturesSection = () => {
                               {Object.entries(feature.metrics).map(([key, value], idx) => (
                                 <div key={idx} className="bg-gray-50 rounded-lg p-3 text-center">
                                   <div className="text-xs text-gray-500 capitalize mb-1">{key}</div>
-                                  <div className="text-sm font-semibold text-gray-900">{value}</div>
+                                  <div className="text-sm font-semibold text-gray-900">{String(value)}</div>
                                 </div>
                               ))}
                             </div>
 
                             {/* Interactive Demo */}
-                            {activeFeature === feature.id && featureDemos[feature.demo as keyof typeof featureDemos] && (
-                              <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="border-t border-gray-100 pt-6"
-                              >
-                                <div>{featureDemos[feature.demo as keyof typeof featureDemos]}</div>
-                              </motion.div>
+                            {activeFeature === feature.id && (
+                              <>
+                                {featureDemos[feature.demo] && (
+                                  <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="border-t border-gray-100 pt-6"
+                                  >
+                                    {featureDemos[feature.demo]}
+                                  </motion.div>
+                                )}
+                              </>
                             )}
                             
                             <div className="pt-4 border-t border-gray-100">

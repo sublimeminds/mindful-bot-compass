@@ -4,14 +4,14 @@ import ParallaxContainer from '@/components/parallax/ParallaxContainer';
 import ParallaxSection from '@/components/parallax/ParallaxSection';
 import AppleHeroSection from '@/components/sections/AppleHeroSection';
 import SecurityShowcase from '@/components/sections/SecurityShowcase';
-import NetworkAIHub from '@/components/ai/NetworkAIHub';
+import ComprehensiveAIHubSection from '@/components/ai/ComprehensiveAIHubSection';
 import CulturalAISection from '@/components/cultural/CulturalAISection';
-import EnhancedFeaturesSection from '@/components/features/EnhancedFeaturesSection';
+import ComprehensiveFeaturesSection from '@/components/features/ComprehensiveFeaturesSection';
 import StreamlinedApproachesSection from '@/components/sections/StreamlinedApproachesSection';
 import CompactSecuritySection from '@/components/sections/CompactSecuritySection';
 import GetStartedSection from '@/components/sections/GetStartedSection';
 import InteractiveAITechnology from '@/components/sections/InteractiveAITechnology';
-import EnhancedTherapistTeam from '@/components/therapist/EnhancedTherapistTeam';
+import OptimizedTherapistSection from '@/components/sections/OptimizedTherapistSection';
 import AIWorkflowSection from '@/components/landing/AIWorkflowSection';
 import SuccessStoriesSection from '@/components/landing/SuccessStoriesSection';
 import GlobalReachSection from '@/components/landing/GlobalReachSection';
@@ -20,7 +20,7 @@ import AITherapistTeam from '@/pages/AITherapistTeam';
 import Footer from '@/components/Footer';
 import PricingSection from '@/components/PricingSection';
 import AppleProgressBar from '@/components/parallax/AppleProgressBar';
-import MissionSection from '@/components/sections/MissionSection';
+import AnimatedMissionSection from '@/components/sections/AnimatedMissionSection';
 import TechnologySection from '@/components/sections/TechnologySection';
 import {
   HeroBackground,
@@ -76,7 +76,7 @@ const LandingPage = () => {
           contentSpeed={0.7}
           background={<AIHubBackground />}
         >
-          <NetworkAIHub />
+          <ComprehensiveAIHubSection />
         </ParallaxSection>
 
         {/* Cultural AI Section */}
@@ -96,7 +96,7 @@ const LandingPage = () => {
           contentSpeed={0.6}
           background={<MissionBackground />}
         >
-          <MissionSection />
+          <AnimatedMissionSection />
         </ParallaxSection>
 
         {/* Enhanced Therapist Team Section */}
@@ -106,7 +106,7 @@ const LandingPage = () => {
           contentSpeed={0.6}
           background={<TherapistsBackground />}
         >
-          <EnhancedTherapistTeam />
+          <OptimizedTherapistSection />
         </ParallaxSection>
 
         {/* Technology Deep Dive Section */}
@@ -126,7 +126,7 @@ const LandingPage = () => {
           contentSpeed={0.7}
           background={<FeaturesBackground />}
         >
-          <EnhancedFeaturesSection />
+          <ComprehensiveFeaturesSection />
         </ParallaxSection>
 
         {/* Approaches Section */}
