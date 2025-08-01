@@ -98,16 +98,16 @@ const AppleHeroSection = () => {
           </p>
         </div>
 
-        {/* Enhanced Value Props Cards */}
+        {/* Enhanced Value Props Cards - Fixed Centering */}
         <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12 max-w-5xl mx-auto"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12 max-w-5xl mx-auto place-items-center"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          {/* Safe Haven Card - Taller */}
+          {/* Safe Haven Card - Perfectly Centered */}
           <motion.div 
-            className="group relative p-8 bg-white/90 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl shadow-lg overflow-hidden"
+            className="group relative p-8 bg-white/90 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl shadow-lg overflow-hidden w-full max-w-sm mx-auto flex flex-col items-center text-center"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
             transition={{ duration: 0.6, delay: 0.5 }}
@@ -116,9 +116,9 @@ const AppleHeroSection = () => {
             {/* Glass morphism overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-therapy-100/30 via-white/20 to-calm-100/30 rounded-3xl" />
             
-            {/* Breathing icon container */}
+            {/* Breathing icon container - Centered */}
             <motion.div 
-              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl"
+              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl mx-auto bg-gradient-to-br from-therapy-500 to-therapy-600"
               animate={{ 
                 scale: [1, 1.05, 1],
                 boxShadow: [
@@ -143,9 +143,9 @@ const AppleHeroSection = () => {
             <div className="absolute bottom-8 left-6 w-1 h-1 bg-calm-300/60 rounded-full animate-pulse delay-1000" />
           </motion.div>
           
-          {/* Always Here Card - Medium */}
+          {/* Always Here Card - Perfectly Centered */}
           <motion.div 
-            className="group relative p-7 bg-white/90 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl shadow-lg overflow-hidden"
+            className="group relative p-7 bg-white/90 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl shadow-lg overflow-hidden w-full max-w-sm mx-auto flex flex-col items-center text-center"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
             transition={{ duration: 0.6, delay: 0.6 }}
@@ -154,9 +154,9 @@ const AppleHeroSection = () => {
             {/* Glass morphism overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-calm-100/30 via-white/20 to-harmony-100/30 rounded-3xl" />
             
-            {/* Breathing icon container */}
+            {/* Breathing icon container - Centered */}
             <motion.div 
-              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl"
+              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl mx-auto bg-gradient-to-br from-calm-500 to-calm-600"
               animate={{ 
                 scale: [1, 1.05, 1],
                 boxShadow: [
@@ -181,9 +181,9 @@ const AppleHeroSection = () => {
             <div className="absolute bottom-6 left-8 w-1 h-1 bg-harmony-300/60 rounded-full animate-pulse delay-1500" />
           </motion.div>
           
-          {/* Science-Backed Card - Shorter */}
+          {/* Science-Backed Card - Perfectly Centered */}
           <motion.div 
-            className="group relative p-6 bg-white/90 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl shadow-lg overflow-hidden"
+            className="group relative p-6 bg-white/90 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl shadow-lg overflow-hidden w-full max-w-sm mx-auto flex flex-col items-center text-center"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
             transition={{ duration: 0.6, delay: 0.7 }}
@@ -192,9 +192,9 @@ const AppleHeroSection = () => {
             {/* Glass morphism overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-harmony-100/30 via-white/20 to-therapy-100/30 rounded-3xl" />
             
-            {/* Breathing icon container */}
+            {/* Breathing icon container - Centered */}
             <motion.div 
-              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl"
+              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl mx-auto bg-gradient-to-br from-harmony-500 to-harmony-600"
               animate={{ 
                 scale: [1, 1.05, 1],
                 boxShadow: [

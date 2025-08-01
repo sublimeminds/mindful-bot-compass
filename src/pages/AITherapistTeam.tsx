@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Users, Brain, Heart, Shield, Star, Zap, Palette, Mic, Camera, Video, MessageSquare, Target, Compass, Globe, Award, Sparkles, ArrowRight, Check, Play, ChevronDown, Clock, Languages, Headphones } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 import Professional2DAvatar from '@/components/avatar/Professional2DAvatar';
 import UltraSafeAvatarDisplay from '@/components/avatar/UltraSafeAvatarDisplay';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -202,14 +204,21 @@ const AITherapistTeam = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-gradient-to-r from-therapy-600 to-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center gap-2 group">
-                Start Free Consultation
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="bg-white/80 backdrop-blur-sm text-therapy-600 border border-therapy-200 px-8 py-4 rounded-xl font-semibold hover:bg-white transition-all duration-300 flex items-center gap-2">
-                <Play className="h-4 w-4" />
-                Watch Demo
-              </button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Button className="bg-gradient-to-r from-therapy-500 to-blue-500 hover:from-therapy-600 hover:to-blue-600 text-white font-medium px-10 py-7 text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden group">
+                  <span className="relative z-10 flex items-center">
+                    Start Free Consultation
+                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Button variant="outline" className="border-2 border-slate-300 bg-white/80 backdrop-blur-sm text-slate-700 hover:bg-white hover:border-therapy-400 font-medium px-10 py-7 text-lg rounded-2xl transition-all duration-500 shadow-lg hover:shadow-xl">
+                  <Play className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                  Watch Demo
+                </Button>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -274,12 +283,12 @@ const AITherapistTeam = () => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-            {therapistData.map((therapist) => (
-              <div key={therapist.id} className="bg-white rounded-2xl p-6 shadow-sm border border-border hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
-                <div className="relative mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6 mb-16">
+            {therapistData.slice(0, 16).map((therapist) => (
+              <div key={therapist.id} className="bg-white rounded-2xl p-4 shadow-sm border border-border hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
+                <div className="relative mb-4">
                   {/* 2D Avatar Display */}
-                  <div className="w-24 h-24 mx-auto mb-4 cursor-pointer" onClick={() => openTherapistModal(therapist)}>
+                  <div className="w-20 h-20 mx-auto mb-3 cursor-pointer" onClick={() => openTherapistModal(therapist)}>
                     <Professional2DAvatar
                       therapistId={therapist.avatarId}
                       therapistName={therapist.name}
@@ -290,56 +299,55 @@ const AITherapistTeam = () => {
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-foreground mb-2">{therapist.name}</h3>
-                <p className="text-therapy-600 font-medium text-sm mb-1">{therapist.title}</p>
-                <p className="text-blue-600 font-medium text-sm mb-3">{therapist.approach}</p>
-                <p className="text-muted-foreground text-sm mb-4 leading-relaxed line-clamp-3">{therapist.description}</p>
+                <h3 className="text-lg font-bold text-foreground mb-1">{therapist.name}</h3>
+                <p className="text-therapy-600 font-medium text-xs mb-1">{therapist.title}</p>
+                <p className="text-blue-600 font-medium text-xs mb-2">{therapist.approach}</p>
+                <p className="text-muted-foreground text-xs mb-3 leading-relaxed line-clamp-2">{therapist.description}</p>
                 
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {therapist.specialties.slice(0, 3).map((specialty: string, idx: number) => (
-                    <Badge key={idx} variant="outline" className="text-xs">
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {therapist.specialties.slice(0, 2).map((specialty: string, idx: number) => (
+                    <Badge key={idx} variant="outline" className="text-[10px] px-1 py-0">
                       {specialty}
                     </Badge>
                   ))}
-                  {therapist.specialties.length > 3 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{therapist.specialties.length - 3} more
+                  {therapist.specialties.length > 2 && (
+                    <Badge variant="outline" className="text-[10px] px-1 py-0">
+                      +{therapist.specialties.length - 2}
                      </Badge>
                    )}
                  </div>
 
-                 <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
+                 <div className="flex items-center gap-3 mb-3 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" />
+                    <Clock className="h-3 w-3" />
                     <span>24/7</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Languages className="h-4 w-4" />
-                    <span>{therapist.languages.length}+ languages</span>
+                    <Languages className="h-3 w-3" />
+                    <span>{therapist.languages.length}+</span>
                   </div>
                 </div>
 
-                 <div className="space-y-3">
+                 <div className="space-y-2">
                    <button 
                      onClick={() => startDemo(therapist.id)}
-                     className="w-full bg-gradient-to-r from-therapy-500 to-blue-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 group-hover:scale-105"
+                     className="w-full bg-gradient-to-r from-therapy-500 to-blue-500 text-white py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 text-sm"
                    >
                      Try Demo
                    </button>
-                   <div className="flex gap-2">
+                   <div className="flex gap-1">
                      <button 
                        onClick={() => openTherapistModal(therapist)}
-                       className="flex-1 bg-white border border-therapy-200 text-therapy-600 py-2 rounded-xl font-medium hover:bg-therapy-50 transition-all duration-300"
+                       className="flex-1 bg-white border border-therapy-200 text-therapy-600 py-1.5 rounded-lg font-medium hover:bg-therapy-50 transition-all duration-300 text-xs"
                      >
-                       View Details
+                       Details
                      </button>
                      <button 
                        onClick={() => playVoicePreview(therapist.id, therapist.name)}
                        disabled={playingVoice === therapist.id}
-                       className="px-4 bg-white border border-blue-200 text-blue-600 py-2 rounded-xl font-medium hover:bg-blue-50 transition-all duration-300 flex items-center gap-1 disabled:opacity-50"
+                       className="px-2 bg-white border border-blue-200 text-blue-600 py-1.5 rounded-lg font-medium hover:bg-blue-50 transition-all duration-300 flex items-center gap-1 disabled:opacity-50 text-xs"
                      >
                        <Headphones className="h-3 w-3" />
-                       {playingVoice === therapist.id ? 'Playing' : 'Voice'}
                      </button>
                    </div>
                  </div>

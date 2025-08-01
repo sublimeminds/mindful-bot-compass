@@ -81,31 +81,39 @@ const AppleProgressBar = () => {
   const currentSection = sections[activeSection];
 
   if (isMobile || isTablet) {
-    // Mobile/Tablet: Move to right side to avoid header conflict
+    // Mobile/Tablet: Show navigation dots with section info
     return (
-      <div className="fixed top-1/2 right-4 transform -translate-y-1/2 z-40">
+      <div className="fixed top-1/2 right-2 transform -translate-y-1/2 z-40">
         <div className={cn(
-          "border shadow-xl rounded-xl p-2",
+          "border shadow-xl rounded-xl p-3 max-w-[180px]",
           "transition-all duration-500 ease-out",
-          currentTheme.bg,
-          currentTheme.border
+          "bg-white/95 backdrop-blur-sm border-white/30"
         )}>
+          {/* Current section info */}
+          <div className="text-center mb-3 px-2">
+            <div className="text-xs font-bold text-therapy-700 truncate">
+              {currentSection?.title}
+            </div>
+            <div className="text-[10px] text-muted-foreground truncate">
+              {currentSection?.description}
+            </div>
+          </div>
+          
+          {/* Navigation dots */}
           <div className="flex flex-col items-center space-y-2">
             {sections.map((section, index) => {
               const isActive = index === activeSection;
-              const isCompleted = activeSection > index;
+              const sectionTheme = getSectionTheme(index);
               
               return (
                 <button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
                   className={cn(
-                    "w-2 h-2 rounded-full transition-all duration-300",
+                    "w-2.5 h-2.5 rounded-full transition-all duration-300",
                     isActive 
-                      ? "bg-white scale-125 animate-pulse" 
-                      : isCompleted
-                        ? "bg-white/70"
-                        : "bg-white/30 hover:bg-white/50"
+                      ? cn(sectionTheme.activeDot, "scale-125 animate-pulse") 
+                      : cn(sectionTheme.dot, "opacity-40 hover:opacity-80")
                   )}
                   aria-label={`Go to ${section.title} section`}
                 />
@@ -117,9 +125,9 @@ const AppleProgressBar = () => {
     );
   }
 
-  // Desktop: Fixed position at right edge
+  // Desktop: Fixed position at absolute right edge
   return (
-    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 z-50">
+    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 z-50 inset-y-0 flex items-center">
       {/* Fixed Width Current Section Display - positioned completely at edge */}
       <div className={cn(
         "mb-4 px-3 py-2 rounded-l-xl border-l border-t border-b shadow-xl text-center",

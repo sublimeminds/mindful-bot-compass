@@ -70,7 +70,7 @@ const AITechnologyShowcase = () => {
 
   return (
     <SafeComponentWrapper name="AITechnologyShowcase">
-      <div ref={sectionRef} className="py-20 px-4 bg-white relative overflow-hidden">
+      <div ref={sectionRef} className="min-h-screen flex items-center justify-center py-12 px-4 bg-white relative overflow-hidden">
         {/* Enhanced Parallax Background with GPU optimization */}
         <div 
           className="absolute inset-0 opacity-10"
@@ -85,9 +85,9 @@ const AITechnologyShowcase = () => {
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          {/* Storytelling Header */}
+          {/* Storytelling Header - Optimized for Scroll Visibility */}
           <div 
-            className="text-center mb-16"
+            className="text-center mb-12"
             style={{
               transform: isParallaxEnabled ? getTransform(0.1) : 'none',
               willChange: 'transform'
@@ -117,9 +117,9 @@ const AITechnologyShowcase = () => {
             </p>
           </div>
 
-          {/* TherapySync AI Capabilities Grid */}
+          {/* TherapySync AI Capabilities Grid - Optimized Spacing */}
           <div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 max-w-6xl mx-auto"
             style={{
               transform: isParallaxEnabled ? getTransform(0.05) : 'none',
               willChange: 'transform'
