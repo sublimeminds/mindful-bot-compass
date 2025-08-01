@@ -6,9 +6,9 @@ import { cn } from '@/lib/utils';
 import GradientLogo from '@/components/ui/GradientLogo';
 import { motion } from 'framer-motion';
 import AppleStyleButton from '@/components/ui/AppleStyleButton';
-import safeHavenIcon from '@/assets/safe-haven-premium-icon.png';
-import alwaysHereIcon from '@/assets/always-here-premium-icon.png';
-import scienceBackedIcon from '@/assets/science-backed-premium-icon.png';
+import SafeHavenIcon from '@/components/icons/custom/SafeHavenIcon';
+import AlwaysHereIcon from '@/components/icons/custom/AlwaysHereIcon';
+import ScienceBackedIcon from '@/components/icons/custom/ScienceBackedIcon';
 
 const AppleHeroSection = () => {
   const navigate = useNavigate();
@@ -133,7 +133,7 @@ const AppleHeroSection = () => {
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
-              <img src={safeHavenIcon} alt="Safe Haven" className="w-12 h-12 drop-shadow-lg" />
+              <SafeHavenIcon size={48} className="drop-shadow-lg" />
             </motion.div>
             
             <div className="relative z-10">
@@ -174,7 +174,7 @@ const AppleHeroSection = () => {
               }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             >
-              <img src={alwaysHereIcon} alt="Always Here" className="w-12 h-12 drop-shadow-lg" />
+              <AlwaysHereIcon size={48} className="drop-shadow-lg" />
             </motion.div>
             
             <div className="relative z-10">
@@ -215,7 +215,7 @@ const AppleHeroSection = () => {
               }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
             >
-              <img src={scienceBackedIcon} alt="Science-Backed" className="w-12 h-12 drop-shadow-lg" />
+              <ScienceBackedIcon size={48} className="drop-shadow-lg" />
             </motion.div>
             
             <div className="relative z-10">
