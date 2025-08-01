@@ -5,6 +5,9 @@ import { ArrowRight, Play, Bot, User, Shield, Clock, Brain } from "lucide-react"
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import GradientLogo from '@/components/ui/GradientLogo';
+import SafeHavenIcon from '@/components/icons/SafeHavenIcon';
+import AlwaysHereIcon from '@/components/icons/AlwaysHereIcon';
+import ScienceBackedIcon from '@/components/icons/ScienceBackedIcon';
 
 const demoConversation = [
   {
@@ -94,27 +97,27 @@ const EnhancedHeroSection = () => {
             {/* Key Value Propositions */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 max-w-4xl mx-auto">
               <div className="flex flex-col items-center space-y-3 p-6 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
-                <div className="w-12 h-12 bg-gradient-to-r from-therapy-400 to-calm-400 rounded-xl flex items-center justify-center">
-                  <Shield className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-center">
+                  <SafeHavenIcon size={48} className="drop-shadow-lg" />
                 </div>
-                <div className="text-white font-semibold">100% Private</div>
-                <div className="text-white/80 text-sm text-center">HIPAA-compliant encryption</div>
+                <div className="text-white font-semibold">Safe Haven</div>
+                <div className="text-white/80 text-sm text-center">HIPAA-compliant encryption keeps your data secure</div>
               </div>
               
               <div className="flex flex-col items-center space-y-3 p-6 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
-                <div className="w-12 h-12 bg-gradient-to-r from-harmony-400 to-therapy-400 rounded-xl flex items-center justify-center">
-                  <Clock className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-center">
+                  <AlwaysHereIcon size={48} className="drop-shadow-lg" />
                 </div>
-                <div className="text-white font-semibold">Always Available</div>
-                <div className="text-white/80 text-sm text-center">24/7 instant access</div>
+                <div className="text-white font-semibold">Always Here</div>
+                <div className="text-white/80 text-sm text-center">24/7 instant access when you need support</div>
               </div>
               
               <div className="flex flex-col items-center space-y-3 p-6 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
-                <div className="w-12 h-12 bg-gradient-to-r from-calm-400 to-harmony-400 rounded-xl flex items-center justify-center">
-                  <Brain className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-center">
+                  <ScienceBackedIcon size={48} className="drop-shadow-lg" />
                 </div>
-                <div className="text-white font-semibold">Clinically Proven</div>
-                <div className="text-white/80 text-sm text-center">Evidence-based approaches</div>
+                <div className="text-white font-semibold">Science-Backed</div>
+                <div className="text-white/80 text-sm text-center">Evidence-based therapeutic approaches</div>
               </div>
             </div>
           </div>
@@ -228,8 +231,8 @@ const EnhancedHeroSection = () => {
           )}>
             <Card className="bg-white border-therapy-100 hover:shadow-lg transition-all duration-300">
               <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Shield className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-center mx-auto mb-4">
+                  <SafeHavenIcon size={32} className="drop-shadow-sm" />
                 </div>
                 <div className="text-sm font-semibold text-therapy-700 mb-1">HIPAA Compliant</div>
                 <div className="text-xs text-muted-foreground">Enterprise-grade security</div>
@@ -238,8 +241,8 @@ const EnhancedHeroSection = () => {
             
             <Card className="bg-white border-therapy-100 hover:shadow-lg transition-all duration-300">
               <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Clock className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-center mx-auto mb-4">
+                  <AlwaysHereIcon size={32} className="drop-shadow-sm" />
                 </div>
                 <div className="text-sm font-semibold text-therapy-700 mb-1">24/7 Available</div>
                 <div className="text-xs text-muted-foreground">No appointments needed</div>
@@ -248,8 +251,8 @@ const EnhancedHeroSection = () => {
             
             <Card className="bg-white border-therapy-100 hover:shadow-lg transition-all duration-300">
               <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-gradient-to-r from-therapy-500 to-calm-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Brain className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-center mx-auto mb-4">
+                  <ScienceBackedIcon size={32} className="drop-shadow-sm" />
                 </div>
                 <div className="text-sm font-semibold text-therapy-700 mb-1">Evidence-based</div>
                 <div className="text-xs text-muted-foreground">Clinical-grade AI</div>
