@@ -81,26 +81,23 @@ const AppleProgressBar = () => {
   const currentSection = sections[activeSection];
 
   if (isMobile || isTablet) {
-    // Mobile/Tablet: Show navigation dots with section info
+    // Mobile/Tablet: Compact navigation with section tracking
     return (
-      <div className="fixed top-1/2 right-2 transform -translate-y-1/2 z-40">
+      <div className="fixed top-1/2 right-1 transform -translate-y-1/2 z-40">
         <div className={cn(
-          "border shadow-xl rounded-xl p-3 max-w-[180px]",
+          "border shadow-xl rounded-2xl p-2 w-12",
           "transition-all duration-500 ease-out",
           "bg-white/95 backdrop-blur-sm border-white/30"
         )}>
-          {/* Current section info */}
-          <div className="text-center mb-3 px-2">
-            <div className="text-xs font-bold text-therapy-700 truncate">
-              {currentSection?.title}
-            </div>
-            <div className="text-[10px] text-muted-foreground truncate">
-              {currentSection?.description}
+          {/* Compact title indicator */}
+          <div className="text-center mb-2">
+            <div className="text-[8px] font-bold text-therapy-600 truncate">
+              {currentSection?.title.slice(0, 8)}
             </div>
           </div>
           
-          {/* Navigation dots */}
-          <div className="flex flex-col items-center space-y-2">
+          {/* Compact navigation dots */}
+          <div className="flex flex-col items-center space-y-1.5">
             {sections.map((section, index) => {
               const isActive = index === activeSection;
               const sectionTheme = getSectionTheme(index);
@@ -110,9 +107,9 @@ const AppleProgressBar = () => {
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
                   className={cn(
-                    "w-2.5 h-2.5 rounded-full transition-all duration-300",
+                    "w-2 h-2 rounded-full transition-all duration-300",
                     isActive 
-                      ? cn(sectionTheme.activeDot, "scale-125 animate-pulse") 
+                      ? cn(sectionTheme.activeDot, "scale-125") 
                       : cn(sectionTheme.dot, "opacity-40 hover:opacity-80")
                   )}
                   aria-label={`Go to ${section.title} section`}
@@ -125,27 +122,24 @@ const AppleProgressBar = () => {
     );
   }
 
-  // Desktop: Fixed position at absolute right edge
+  // Desktop: Fixed position at absolute right edge with proper section tracking
   return (
-    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 z-50 inset-y-0 flex items-center">
-      {/* Fixed Width Current Section Display - positioned completely at edge */}
+    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 z-50 flex items-center">
+      {/* Compact Section Info - Fixed Width */}
       <div className={cn(
-        "mb-4 px-3 py-2 rounded-l-xl border-l border-t border-b shadow-xl text-center",
-        "w-44 bg-white/95 backdrop-blur-sm border-white/30",
+        "mr-1 px-2 py-1 rounded-l-lg border-l border-t border-b shadow-lg text-center",
+        "w-24 bg-white/95 backdrop-blur-sm border-white/30",
         "transition-all duration-500 ease-out"
       )}>
-        <div className="text-sm font-bold text-therapy-700 truncate">
+        <div className="text-xs font-bold text-therapy-700 truncate">
           {currentSection?.title}
-        </div>
-        <div className="text-xs text-muted-foreground truncate">
-          {currentSection?.description}
         </div>
       </div>
       
-      {/* Fixed Width Dots Container - completely at edge */}
+      {/* Dots Container - Completely at edge */}
       <div className={cn(
-        "relative p-3 rounded-l-2xl border-l border-t border-b shadow-2xl",
-        "w-12 bg-white/95 backdrop-blur-sm border-white/30",
+        "relative p-2 rounded-l-xl border-l border-t border-b shadow-2xl",
+        "w-10 bg-white/95 backdrop-blur-sm border-white/30",
         "transition-all duration-500 ease-out"
       )}>
         {/* Section dots */}

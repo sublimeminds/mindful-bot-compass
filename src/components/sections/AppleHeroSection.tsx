@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import GradientLogo from '@/components/ui/GradientLogo';
 import { motion } from 'framer-motion';
-import SafeHavenIcon from '@/components/icons/SafeHavenIcon';
-import AlwaysHereIcon from '@/components/icons/AlwaysHereIcon';
-import ScienceBackedIcon from '@/components/icons/ScienceBackedIcon';
+import AppleStyleButton from '@/components/ui/AppleStyleButton';
+import safeHavenIcon from '@/assets/safe-haven-premium-icon.png';
+import alwaysHereIcon from '@/assets/always-here-premium-icon.png';
+import scienceBackedIcon from '@/assets/science-backed-premium-icon.png';
 
 const AppleHeroSection = () => {
   const navigate = useNavigate();
@@ -116,20 +117,23 @@ const AppleHeroSection = () => {
             {/* Glass morphism overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-therapy-100/30 via-white/20 to-calm-100/30 rounded-3xl" />
             
-            {/* Breathing icon container - Centered */}
+            {/* Premium icon container - Centered */}
             <motion.div 
-              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl mx-auto bg-gradient-to-br from-therapy-500 to-therapy-600"
+              className="relative w-20 h-20 rounded-3xl flex items-center justify-center mb-6 shadow-2xl mx-auto p-3"
+              style={{
+                background: 'linear-gradient(135deg, hsl(var(--therapy-500)), hsl(var(--therapy-600)))'
+              }}
               animate={{ 
                 scale: [1, 1.05, 1],
                 boxShadow: [
-                  "0 10px 30px hsl(var(--therapy-500) / 0.3)",
-                  "0 15px 40px hsl(var(--therapy-500) / 0.4)",
-                  "0 10px 30px hsl(var(--therapy-500) / 0.3)"
+                  "0 15px 40px hsl(var(--therapy-500) / 0.3)",
+                  "0 20px 50px hsl(var(--therapy-500) / 0.4)",
+                  "0 15px 40px hsl(var(--therapy-500) / 0.3)"
                 ]
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
-              <SafeHavenIcon size={32} className="text-white drop-shadow-lg" />
+              <img src={safeHavenIcon} alt="Safe Haven" className="w-12 h-12 drop-shadow-lg" />
             </motion.div>
             
             <div className="relative z-10">
@@ -154,20 +158,23 @@ const AppleHeroSection = () => {
             {/* Glass morphism overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-calm-100/30 via-white/20 to-harmony-100/30 rounded-3xl" />
             
-            {/* Breathing icon container - Centered */}
+            {/* Premium icon container - Centered */}
             <motion.div 
-              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl mx-auto bg-gradient-to-br from-calm-500 to-calm-600"
+              className="relative w-20 h-20 rounded-3xl flex items-center justify-center mb-6 shadow-2xl mx-auto p-3"
+              style={{
+                background: 'linear-gradient(135deg, hsl(var(--calm-500)), hsl(var(--calm-600)))'
+              }}
               animate={{ 
                 scale: [1, 1.05, 1],
                 boxShadow: [
-                  "0 10px 30px hsl(var(--calm-500) / 0.3)",
-                  "0 15px 40px hsl(var(--calm-500) / 0.4)",
-                  "0 10px 30px hsl(var(--calm-500) / 0.3)"
+                  "0 15px 40px hsl(var(--calm-500) / 0.3)",
+                  "0 20px 50px hsl(var(--calm-500) / 0.4)",
+                  "0 15px 40px hsl(var(--calm-500) / 0.3)"
                 ]
               }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             >
-              <AlwaysHereIcon size={32} className="text-white drop-shadow-lg" />
+              <img src={alwaysHereIcon} alt="Always Here" className="w-12 h-12 drop-shadow-lg" />
             </motion.div>
             
             <div className="relative z-10">
@@ -192,20 +199,23 @@ const AppleHeroSection = () => {
             {/* Glass morphism overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-harmony-100/30 via-white/20 to-therapy-100/30 rounded-3xl" />
             
-            {/* Breathing icon container - Centered */}
+            {/* Premium icon container - Centered */}
             <motion.div 
-              className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-xl mx-auto bg-gradient-to-br from-harmony-500 to-harmony-600"
+              className="relative w-20 h-20 rounded-3xl flex items-center justify-center mb-6 shadow-2xl mx-auto p-3"
+              style={{
+                background: 'linear-gradient(135deg, hsl(var(--harmony-500)), hsl(var(--harmony-600)))'
+              }}
               animate={{ 
                 scale: [1, 1.05, 1],
                 boxShadow: [
-                  "0 10px 30px hsl(var(--harmony-500) / 0.3)",
-                  "0 15px 40px hsl(var(--harmony-500) / 0.4)",
-                  "0 10px 30px hsl(var(--harmony-500) / 0.3)"
+                  "0 15px 40px hsl(var(--harmony-500) / 0.3)",
+                  "0 20px 50px hsl(var(--harmony-500) / 0.4)",
+                  "0 15px 40px hsl(var(--harmony-500) / 0.3)"
                 ]
               }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
             >
-              <ScienceBackedIcon size={32} className="text-white drop-shadow-lg" />
+              <img src={scienceBackedIcon} alt="Science-Backed" className="w-12 h-12 drop-shadow-lg" />
             </motion.div>
             
             <div className="relative z-10">
@@ -227,31 +237,22 @@ const AppleHeroSection = () => {
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-            <Button
-              size="lg"
-              onClick={() => navigate('/get-started')}
-              className="group bg-gradient-to-r from-therapy-500 to-calm-500 hover:from-therapy-600 hover:to-calm-600 text-white font-medium px-10 py-7 text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
-            >
-              <span className="relative z-10 flex items-center">
-                Start Your Journey
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-              </span>
-              {/* Shimmer effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-            </Button>
-          </motion.div>
+          <AppleStyleButton
+            variant="primary"
+            size="lg"
+            onClick={() => navigate('/get-started')}
+            icon={ArrowRight}
+          >
+            Start Your Journey
+          </AppleStyleButton>
           
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-            <Button
-              variant="outline"
-              size="lg" 
-              className="group border-2 border-slate-300 bg-white/80 backdrop-blur-sm text-slate-700 hover:bg-white hover:border-therapy-400 font-medium px-10 py-7 text-lg rounded-2xl transition-all duration-500 shadow-lg hover:shadow-xl"
-            >
-              <Play className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-              Watch Demo
-            </Button>
-          </motion.div>
+          <AppleStyleButton
+            variant="secondary"
+            size="lg" 
+            icon={Play}
+          >
+            Watch Demo
+          </AppleStyleButton>
         </motion.div>
 
         {/* Trust Indicators */}

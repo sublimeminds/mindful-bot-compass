@@ -70,7 +70,9 @@ const AITechnologyShowcase = () => {
 
   return (
     <SafeComponentWrapper name="AITechnologyShowcase">
-      <div ref={sectionRef} className="min-h-screen flex items-center justify-center py-12 px-4 bg-white relative overflow-hidden">
+      <div ref={sectionRef} className="py-8 px-4 bg-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          {/* Optimized for scroll visibility */}
         {/* Enhanced Parallax Background with GPU optimization */}
         <div 
           className="absolute inset-0 opacity-10"
@@ -84,10 +86,9 @@ const AITechnologyShowcase = () => {
           <div className="absolute top-1/2 left-1/2 w-72 h-72 bg-gradient-to-br from-harmony-500/30 to-transparent rounded-full blur-3xl animate-pulse"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
           {/* Storytelling Header - Optimized for Scroll Visibility */}
           <div 
-            className="text-center mb-12"
+            className="text-center mb-8 relative z-10"
             style={{
               transform: isParallaxEnabled ? getTransform(0.1) : 'none',
               willChange: 'transform'

@@ -4,9 +4,9 @@ import ParallaxContainer from '@/components/parallax/ParallaxContainer';
 import ParallaxSection from '@/components/parallax/ParallaxSection';
 import AppleHeroSection from '@/components/sections/AppleHeroSection';
 import SecurityShowcase from '@/components/sections/SecurityShowcase';
-import EnhancedAIHubSection from '@/components/ai/EnhancedAIHubSection';
+import RedesignedAIHubSection from '@/components/ai/RedesignedAIHubSection';
 import CulturalAISection from '@/components/cultural/CulturalAISection';
-import ModernFeaturesSection from '@/components/sections/ModernFeaturesSection';
+import EnhancedFeaturesSection from '@/components/features/EnhancedFeaturesSection';
 import StreamlinedApproachesSection from '@/components/sections/StreamlinedApproachesSection';
 import CompactSecuritySection from '@/components/sections/CompactSecuritySection';
 import GetStartedSection from '@/components/sections/GetStartedSection';
@@ -75,7 +75,7 @@ const LandingPage = () => {
           contentSpeed={0.7}
           background={<AIHubBackground />}
         >
-          <EnhancedAIHubSection />
+          <RedesignedAIHubSection />
         </ParallaxSection>
 
         {/* Cultural AI Section */}
@@ -125,7 +125,7 @@ const LandingPage = () => {
           contentSpeed={0.7}
           background={<FeaturesBackground />}
         >
-          <ModernFeaturesSection />
+          <EnhancedFeaturesSection />
         </ParallaxSection>
 
         {/* Approaches Section */}
