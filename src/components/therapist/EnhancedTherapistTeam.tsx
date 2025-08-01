@@ -110,7 +110,7 @@ const EnhancedTherapistTeam = () => {
         therapeuticTechniques: therapist.therapeutic_techniques || [],
         voiceCharacteristics: typeof therapist.voice_characteristics === 'object' 
           ? JSON.stringify(therapist.voice_characteristics) 
-          : therapist.voice_characteristics || "Professional, supportive voice",
+          : String(therapist.voice_characteristics || "Professional, supportive voice"),
         languages: [
           'English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 
           'Dutch', 'Russian', 'Japanese', 'Chinese', 'Korean', 'Arabic', 
